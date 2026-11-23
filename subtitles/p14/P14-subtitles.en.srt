@@ -1,0 +1,2235 @@
+1
+00:00:02,450 --> 00:00:12,190
+All right, next up is the final chapter on assembly instructions.
+
+2
+00:00:12,870 --> 00:00:17,630
+This part mainly introduces the concept of mixing assembly and C programming,
+
+3
+00:00:17,910 --> 00:00:25,890
+because it will come up in our code later, so we'll talk about it here.
+
+4
+00:00:25,890 --> 00:00:31,490
+So mixing assembly and C really falls into two main categories,
+
+5
+00:00:31,490 --> 00:00:34,070
+one is calling C functions from assembly
+
+6
+00:00:34,070 --> 00:00:35,210
+that's one
+
+7
+00:00:35,210 --> 00:00:36,430
+and the other way around
+
+8
+00:00:36,430 --> 00:00:37,310
+which is in C
+
+9
+00:00:37,310 --> 00:00:39,930
+we can also embed calls to some
+
+10
+00:00:39,930 --> 00:00:41,630
+or write some assembly code
+
+11
+00:00:41,630 --> 00:00:44,650
+These are techniques you'll often use in low-level development.
+
+12
+00:00:44,650 --> 00:00:46,210
+So let me walk you through them here.
+
+13
+00:00:46,210 --> 00:00:47,910
+Let's start with the first part,
+
+14
+00:00:47,910 --> 00:00:49,370
+which is assembly calling C.
+
+15
+00:00:49,370 --> 00:00:51,390
+This part is actually pretty simple,
+
+16
+00:00:51,390 --> 00:00:54,230
+because in the exercise we just did
+
+17
+00:00:54,230 --> 00:00:55,690
+this concept already showed up
+
+18
+00:00:55,690 --> 00:00:56,250
+right?
+
+19
+00:00:56,250 --> 00:01:02,470
+We've already touched on some of these related things.
+
+20
+00:01:02,470 --> 00:01:03,850
+Assembly calling C
+
+21
+00:01:03,850 --> 00:01:06,390
+Now let's take
+
+22
+00:01:06,390 --> 00:01:07,730
+a look at this together.
+
+23
+00:01:07,730 --> 00:01:09,210
+That is to say, C
+
+24
+00:01:09,210 --> 00:01:11,090
+doesn't really have anything special about it.
+
+25
+00:01:11,090 --> 00:01:13,530
+C is, at the end of the day, just a high-level language.
+
+26
+00:01:13,530 --> 00:01:14,870
+After it's compiled,
+
+27
+00:01:14,870 --> 00:01:17,950
+it's really just assembly code and machine instructions.
+
+28
+00:01:17,950 --> 00:01:21,410
+So as long as we follow
+
+29
+00:01:21,410 --> 00:01:24,210
+the function calling process we just talked about,
+
+30
+00:01:24,210 --> 00:01:24,830
+the calling convention,
+
+31
+00:01:24,830 --> 00:01:26,630
+we can actually write
+
+32
+00:01:26,630 --> 00:01:29,670
+correct
+
+33
+00:01:29,670 --> 00:01:32,950
+assembly-calling-C handling like this.
+
+34
+00:01:32,950 --> 00:01:35,290
+Now here,
+
+35
+00:01:35,290 --> 00:01:37,030
+the main thing is to follow the ABI,
+
+36
+00:01:37,030 --> 00:01:37,990
+which is what we just mentioned.
+
+37
+00:01:37,990 --> 00:01:39,070
+That is to say, the ABI,
+
+38
+00:01:39,070 --> 00:01:42,670
+which stands for Abstract Binary Interface,
+
+39
+00:01:42,670 --> 00:01:45,950
+actually involves what we just talked about,
+
+40
+00:01:45,950 --> 00:01:47,470
+for example, the size of data types.
+
+41
+00:01:47,470 --> 00:01:50,950
+That is to say, whether it's assembly or C,
+
+42
+00:01:50,950 --> 00:01:52,290
+you actually deal with data types,
+
+43
+00:01:52,290 --> 00:01:53,730
+for example, how many bytes an int takes up,
+
+44
+00:01:53,730 --> 00:01:57,450
+how many bytes a char takes up,
+
+45
+00:01:57,450 --> 00:02:00,930
+how many characters a character takes up—
+
+46
+00:02:00,930 --> 00:02:01,650
+how many bytes it takes up,
+
+47
+00:02:01,650 --> 00:02:02,590
+concepts like that.
+
+48
+00:02:02,590 --> 00:02:04,370
+Then there are also some memory
+
+49
+00:02:04,370 --> 00:02:05,330
+alignment issues,
+
+50
+00:02:05,330 --> 00:02:06,230
+four-byte alignment,
+
+51
+00:02:06,230 --> 00:02:07,510
+and all that kind of thing.
+
+52
+00:02:07,510 --> 00:02:10,290
+Actually, as long as it's cross-language,
+
+53
+00:02:10,290 --> 00:02:11,830
+underneath it's all the same—
+
+54
+00:02:11,830 --> 00:02:12,610
+you have to deal with all of it.
+
+55
+00:02:12,610 --> 00:02:14,070
+Then there's also function calls,
+
+56
+00:02:14,070 --> 00:02:15,550
+which we just covered.
+
+57
+00:02:15,550 --> 00:02:16,330
+System calls—
+
+58
+00:02:16,330 --> 00:02:17,750
+this might involve,
+
+59
+00:02:17,750 --> 00:02:20,170
+mainly, the applications or user-mode programs,
+
+60
+00:02:20,170 --> 00:02:23,450
+and it's a concept about the interface between them and the operating system.
+
+61
+00:02:23,450 --> 00:02:25,870
+Let's not go into that here.
+
+62
+00:02:25,870 --> 00:02:27,710
+It's not really related to what we're discussing.
+
+63
+00:02:27,710 --> 00:02:29,210
+Then there's another thing,
+
+64
+00:02:29,210 --> 00:02:30,290
+when making a function call,
+
+65
+00:02:30,290 --> 00:02:31,330
+there are certain conventions,
+
+66
+00:02:31,330 --> 00:02:32,130
+for example, the registers,
+
+67
+00:02:32,130 --> 00:02:34,610
+we use a0 and a7 to pass parameters.
+
+68
+00:02:34,610 --> 00:02:35,790
+The return values go in a0 and a1.
+
+69
+00:02:35,790 --> 00:02:37,110
+These are all things we covered earlier.
+
+70
+00:02:37,110 --> 00:02:38,410
+They become part of the specification.
+
+71
+00:02:38,410 --> 00:02:41,570
+So for a specific example,
+
+72
+00:02:41,570 --> 00:02:42,650
+let's take a quick look at one.
+
+73
+00:02:42,650 --> 00:02:43,510
+Very simple.
+
+74
+00:02:43,510 --> 00:02:44,770
+This example,
+
+75
+00:02:44,770 --> 00:02:46,230
+let's take a look at it.
+
+76
+00:02:46,230 --> 00:02:47,770
+It's ASM to C.
+
+77
+00:02:47,770 --> 00:02:49,410
+ASM stands for
+
+78
+00:02:49,410 --> 00:02:56,820
+ASM stands for
+
+79
+00:02:56,820 --> 00:02:57,800
+the abbreviation of 'assembly'.
+
+80
+00:02:57,800 --> 00:02:58,580
+And 'to' m
+
+81
+00:02:58,580 --> 00:03:00,000
+And this 2 here is "to"
+
+82
+00:03:00,000 --> 00:03:01,080
+In English, it's just "to"
+
+83
+00:03:01,080 --> 00:03:03,520
+As in from S-mode to C
+
+84
+00:03:03,520 --> 00:03:04,020
+Right?
+
+85
+00:03:04,020 --> 00:03:04,680
+That's what it means.
+
+86
+00:03:04,680 --> 00:03:07,780
+Just wanted to tell you all
+
+87
+00:03:07,780 --> 00:03:09,100
+a bit about the naming here,
+
+88
+00:03:09,100 --> 00:03:09,700
+why it's called this.
+
+89
+00:03:09,700 --> 00:03:12,420
+So over here,
+
+90
+00:03:12,420 --> 00:03:13,540
+we can see
+
+91
+00:03:13,540 --> 00:03:14,460
+that down here,
+
+92
+00:03:14,460 --> 00:03:17,480
+we actually have an assembly instruction,
+
+93
+00:03:17,480 --> 00:03:19,920
+the test.s file,
+
+94
+00:03:19,920 --> 00:03:20,760
+and right here,
+
+95
+00:03:20,760 --> 00:03:21,680
+we have a test.c.
+
+96
+00:03:21,680 --> 00:03:23,120
+So this is essentially mixed programming.
+
+97
+00:03:23,120 --> 00:03:24,560
+That is, what we have here is
+
+98
+00:03:24,560 --> 00:03:25,220
+actually, we're...
+
+99
+00:03:25,220 --> 00:03:28,520
+we start executing from the assembly in test.c first,
+
+100
+00:03:28,520 --> 00:03:29,260
+and during execution,
+
+101
+00:03:29,260 --> 00:03:31,920
+it will jump into this test.c
+
+102
+00:03:31,920 --> 00:03:33,300
+So how does it jump?
+
+103
+00:03:33,300 --> 00:03:34,300
+It's very simple.
+
+104
+00:03:34,300 --> 00:03:34,960
+Let's take a look.
+
+105
+00:03:34,960 --> 00:03:38,060
+First, let's look at this test.c.
+
+106
+00:03:38,060 --> 00:03:42,080
+This function isn't much different from what we talked about earlier.
+
+107
+00:03:42,080 --> 00:03:43,420
+The main things to understand here are:
+
+108
+00:03:43,420 --> 00:03:44,040
+One is that
+
+109
+00:03:44,040 --> 00:03:46,540
+we first need to prepare a stack area.
+
+110
+00:03:46,540 --> 00:03:48,460
+There's nothing much to say about this.
+
+111
+00:03:48,460 --> 00:03:51,460
+Whether it's C or assembly, we're all writing functions.
+
+112
+00:03:51,460 --> 00:03:52,800
+And functions all need to use the stack.
+
+113
+00:03:52,800 --> 00:03:54,500
+So we all need to prepare a stack
+
+114
+00:03:54,500 --> 00:03:55,480
+area,
+
+115
+00:03:55,480 --> 00:03:58,100
+and we need to take this stack
+
+116
+00:03:58,100 --> 00:03:59,060
+and initialize it.
+
+117
+00:03:59,060 --> 00:04:00,900
+We've covered this before.
+
+118
+00:04:00,900 --> 00:04:02,360
+Then next,
+
+119
+00:04:02,360 --> 00:04:03,600
+that is, we need to
+
+120
+00:04:03,600 --> 00:04:05,460
+go from this start function
+
+121
+00:04:05,460 --> 00:04:06,380
+Start executing.
+
+122
+00:04:06,380 --> 00:04:07,580
+In the course of the execution,
+
+123
+00:04:07,580 --> 00:04:09,660
+we'll call a function foo.
+
+124
+00:04:09,660 --> 00:04:11,080
+This function foo
+
+125
+00:04:11,080 --> 00:04:12,460
+is just a function written in C.
+
+126
+00:04:12,460 --> 00:04:14,400
+Now, as we mentioned earlier,
+
+127
+00:04:14,400 --> 00:04:16,780
+a function name is actually the address of that function.
+
+128
+00:04:16,780 --> 00:04:17,040
+Right?
+
+129
+00:04:17,040 --> 00:04:18,700
+When we learned C,
+
+130
+00:04:18,700 --> 00:04:20,540
+we also talked about the concept of function pointers.
+
+131
+00:04:20,540 --> 00:04:21,820
+The function name is the function's address.
+
+132
+00:04:21,820 --> 00:04:23,740
+So when we're in assembly
+
+133
+00:04:23,740 --> 00:04:25,280
+and want to call a C function,
+
+134
+00:04:25,280 --> 00:04:27,680
+all we actually need to do is take that C
+
+135
+00:04:27,680 --> 00:04:28,640
+function's name
+
+136
+00:04:28,640 --> 00:04:29,600
+and write it right here.
+
+137
+00:04:29,600 --> 00:04:31,300
+Right?
+
+138
+00:04:31,300 --> 00:04:32,920
+It's really just a label.
+
+139
+00:04:32,920 --> 00:04:33,620
+Just a label.
+
+140
+00:04:33,620 --> 00:04:35,540
+So when we call
+
+141
+00:04:35,540 --> 00:04:36,820
+followed by a function name,
+
+142
+00:04:36,820 --> 00:04:38,680
+it will naturally jump to that function and execute it.
+
+143
+00:04:38,680 --> 00:04:40,080
+It's that simple.
+
+144
+00:04:40,080 --> 00:04:41,500
+So the only thing we need to do,
+
+145
+00:04:41,500 --> 00:04:42,580
+is that if we want to pass parameters,
+
+146
+00:04:42,580 --> 00:04:43,920
+then here,
+
+147
+00:04:43,920 --> 00:04:44,840
+we just need to
+
+148
+00:04:44,840 --> 00:04:47,440
+use a0 and a1,
+
+149
+00:04:47,440 --> 00:04:49,000
+the two standard conventions,
+
+150
+00:04:49,000 --> 00:04:49,920
+to pass the parameters, and that's it.
+
+151
+00:04:49,920 --> 00:04:51,180
+Everything before this is the same.
+
+152
+00:04:51,180 --> 00:04:53,040
+We pass 1 and 2 in.
+
+153
+00:04:53,040 --> 00:04:54,180
+Now this function,
+
+154
+00:04:54,180 --> 00:04:56,300
+it takes two parameters,
+
+155
+00:04:56,300 --> 00:04:58,040
+a and b.
+
+156
+00:04:58,040 --> 00:04:59,180
+So we pass the parameters,
+
+157
+00:04:59,180 --> 00:04:59,860
+and then,
+
+158
+00:04:59,860 --> 00:05:02,580
+and then let's pay attention here,
+
+159
+00:05:02,580 --> 00:05:03,060
+at this point,
+
+160
+00:05:03,060 --> 00:05:05,300
+we need to take this function foo,
+
+161
+00:05:05,300 --> 00:05:07,500
+We use the Global directive
+
+162
+00:05:07,500 --> 00:05:08,480
+to declare it.
+
+163
+00:05:08,480 --> 00:05:09,740
+Because this function
+
+164
+00:05:09,740 --> 00:05:11,540
+is not defined in this file,
+
+165
+00:05:11,540 --> 00:05:12,280
+you see?
+
+166
+00:05:12,280 --> 00:05:13,420
+This is basically
+
+167
+00:05:13,420 --> 00:05:15,280
+the same effect as extern in C.
+
+168
+00:05:15,280 --> 00:05:17,200
+In other words, we tell the compiler
+
+169
+00:05:17,200 --> 00:05:18,640
+that this function F0
+
+170
+00:05:18,640 --> 00:05:19,640
+is defined elsewhere,
+
+171
+00:05:19,640 --> 00:05:21,280
+that it's a global thing.
+
+172
+00:05:21,280 --> 00:05:22,920
+Then when it compiles,
+
+173
+00:05:22,920 --> 00:05:23,800
+it won't report errors again,
+
+174
+00:05:23,800 --> 00:05:25,040
+saying it can't find this function, and so on.
+
+175
+00:05:25,040 --> 00:05:28,060
+Because this function
+
+176
+00:05:28,060 --> 00:05:30,060
+is defined in test.c,
+
+177
+00:05:30,060 --> 00:05:31,820
+so we need to declare it here.
+
+178
+00:05:31,820 --> 00:05:34,260
+So basically, for the assembly part,
+
+179
+00:05:34,260 --> 00:05:35,660
+that covers all the content involved.
+
+180
+00:05:35,660 --> 00:05:38,040
+And as for the C part, there's really no difference in how it's written.
+
+181
+00:05:38,040 --> 00:05:41,640
+Just write it the way it's supposed to be written.
+
+182
+00:05:41,640 --> 00:05:43,180
+As for C, well, I think...
+
+183
+00:05:43,180 --> 00:05:45,720
+With this function we have now,
+
+184
+00:05:45,720 --> 00:05:46,940
+we don't need to explain it much more.
+
+185
+00:05:46,940 --> 00:05:48,100
+Now it's just about saying,
+
+186
+00:05:48,100 --> 00:05:50,880
+when you all look at this function now,
+
+187
+00:05:50,880 --> 00:05:52,840
+aren't you already thinking in your heads
+
+188
+00:05:52,840 --> 00:05:55,280
+about the assembly language behind it,
+
+189
+00:05:55,280 --> 00:05:56,400
+what kind of concept that is?
+
+190
+00:05:56,400 --> 00:05:59,420
+Once you've studied this,
+
+191
+00:05:59,420 --> 00:06:01,140
+the way you look at C functions
+
+192
+00:06:01,140 --> 00:06:02,560
+might have a certain...
+
+193
+00:06:02,560 --> 00:06:05,300
+what do you call it?
+
+194
+00:06:05,300 --> 00:06:07,340
+Do you call it a sublimation? Like, an elevation?
+
+195
+00:06:07,340 --> 00:06:08,160
+Or some other concept?
+
+196
+00:06:08,160 --> 00:06:10,760
+Meaning, the way you look at C now,
+
+197
+00:06:10,760 --> 00:06:12,300
+actually, if you can... behind it...
+
+198
+00:06:12,300 --> 00:06:13,300
+the moment you see C,
+
+199
+00:06:13,300 --> 00:06:15,140
+you can picture the assembly behind it,
+
+200
+00:06:15,140 --> 00:06:16,280
+roughly what it looks like.
+
+201
+00:06:16,280 --> 00:06:17,140
+Well, congratulations.
+
+202
+00:06:17,140 --> 00:06:18,220
+That is to say, I think this course,
+
+203
+00:06:18,220 --> 00:06:19,700
+at least you haven't learned it for nothing.
+
+204
+00:06:19,700 --> 00:06:22,340
+Now, when you look at this C code,
+
+205
+00:06:22,340 --> 00:06:23,800
+this thing is actually just a label.
+
+206
+00:06:23,800 --> 00:06:26,240
+Now, its two parameters,
+
+207
+00:06:26,240 --> 00:06:28,520
+well, we can all imagine,
+
+208
+00:06:28,520 --> 00:06:31,500
+when this code is handed over to the compiler to compile,
+
+209
+00:06:31,500 --> 00:06:32,900
+when it generates the code for you,
+
+210
+00:06:32,900 --> 00:06:36,260
+it will definitely help you put A0 and A1,
+
+211
+00:06:36,260 --> 00:06:38,320
+which actually correspond to A and B.
+
+212
+00:06:38,320 --> 00:06:40,460
+At the same time,
+
+213
+00:06:40,460 --> 00:06:41,940
+the return value C here,
+
+214
+00:06:41,940 --> 00:06:44,060
+it will definitely be placed in A1, A0.
+
+215
+00:06:44,060 --> 00:06:45,440
+This is something we definitely need to know.
+
+216
+00:06:45,440 --> 00:06:46,680
+That's pretty much how it works.
+
+217
+00:06:46,680 --> 00:06:47,580
+At the same time,
+
+218
+00:06:47,580 --> 00:06:48,960
+when you look at this code,
+
+219
+00:06:48,960 --> 00:06:51,960
+is it the case that the machine instructions generated from this code,
+
+220
+00:06:51,960 --> 00:06:53,620
+only this one instruction corresponds
+
+221
+00:06:53,620 --> 00:06:55,380
+Now, what's the machine instruction corresponding to this one?
+
+222
+00:06:55,380 --> 00:06:56,980
+No, it's not.
+
+223
+00:06:56,980 --> 00:06:58,160
+We have a
+
+224
+00:06:58,160 --> 00:07:00,700
+piece of code at the entry and
+
+225
+00:07:00,700 --> 00:07:03,420
+that is, when we exit,
+
+226
+00:07:03,420 --> 00:07:03,940
+that piece of code,
+
+227
+00:07:03,940 --> 00:07:04,160
+right?
+
+228
+00:07:04,160 --> 00:07:05,600
+This piece of code,
+
+229
+00:07:05,600 --> 00:07:06,720
+after you compile it,
+
+230
+00:07:06,720 --> 00:07:07,260
+go and take a look,
+
+231
+00:07:07,260 --> 00:07:08,380
+it's actually not the same.
+
+232
+00:07:08,380 --> 00:07:09,780
+Now, can we
+
+233
+00:07:09,780 --> 00:07:10,700
+take a quick look at it?
+
+234
+00:07:10,700 --> 00:07:11,000
+Let me see,
+
+235
+00:07:11,000 --> 00:07:13,560
+this one,
+
+236
+00:07:13,560 --> 00:07:17,560
+let's take a look,
+
+237
+00:07:17,560 --> 00:07:19,040
+can we see this piece of code?
+
+238
+00:07:19,040 --> 00:07:20,640
+Let's take a look,
+
+239
+00:07:20,640 --> 00:07:23,740
+say, right here,
+
+240
+00:07:23,740 --> 00:07:25,020
+you can all take a look.
+
+241
+00:07:25,020 --> 00:07:28,240
+This is what we see after disassembling it back.
+
+242
+00:07:28,240 --> 00:07:29,340
+Look at this part.
+
+243
+00:07:29,340 --> 00:07:31,300
+This is that C function,
+
+244
+00:07:31,300 --> 00:07:34,500
+our a plus b code,
+
+245
+00:07:34,500 --> 00:07:35,420
+and the machine instructions it generates.
+
+246
+00:07:35,420 --> 00:07:36,220
+Actually, in this part,
+
+247
+00:07:36,220 --> 00:07:39,120
+the code before it,
+
+248
+00:07:39,120 --> 00:07:40,340
+we actually correspond to...
+
+249
+00:07:40,340 --> 00:07:42,600
+we didn't write any code to generate it at all.
+
+250
+00:07:42,600 --> 00:07:43,520
+So where does it come from?
+
+251
+00:07:43,520 --> 00:07:45,360
+Well, the compiler does it for us.
+
+252
+00:07:45,360 --> 00:07:46,080
+This is the epilogue.
+
+253
+00:07:46,080 --> 00:07:48,960
+What is it actually doing for us?
+
+254
+00:07:48,960 --> 00:07:50,720
+Pushing to the stack.
+
+255
+00:07:50,720 --> 00:07:51,500
+See that?
+
+256
+00:07:51,500 --> 00:07:53,620
+And then what does it do next?
+
+257
+00:07:53,620 --> 00:07:56,160
+It saves some registers.
+
+258
+00:07:56,160 --> 00:07:56,760
+And so on.
+
+259
+00:07:56,760 --> 00:07:57,580
+And then,
+
+260
+00:07:57,580 --> 00:08:00,380
+this code also won't be generated in our own code.
+
+261
+00:08:00,380 --> 00:08:02,480
+This code is also generated for us by the compiler.
+
+262
+00:08:02,480 --> 00:08:03,860
+It's actually doing a store here.
+
+263
+00:08:03,860 --> 00:08:05,000
+And then,
+
+264
+00:08:05,000 --> 00:08:06,120
+it restores some data,
+
+265
+00:08:06,120 --> 00:08:07,580
+and then stores again.
+
+266
+00:08:07,580 --> 00:08:08,340
+And then return.
+
+267
+00:08:08,340 --> 00:08:10,280
+Did everyone see that?
+
+268
+00:08:10,280 --> 00:08:11,480
+Return, of course, corresponds to
+
+269
+00:08:11,480 --> 00:08:13,260
+something similar to this here.
+
+270
+00:08:13,260 --> 00:08:14,520
+But then,
+
+271
+00:08:14,520 --> 00:08:16,440
+why does it put the result here
+
+272
+00:08:16,440 --> 00:08:18,540
+and save it into a0?
+
+273
+00:08:18,540 --> 00:08:21,120
+That's also a convention.
+
+274
+00:08:21,120 --> 00:08:22,960
+Because the return value has to go into a0.
+
+275
+00:08:22,960 --> 00:08:24,160
+Remember that, right?
+
+276
+00:08:24,160 --> 00:08:27,580
+So when you look at this assembly later on,
+
+277
+00:08:27,580 --> 00:08:28,780
+as for why it's like this,
+
+278
+00:08:28,780 --> 00:08:30,840
+I've already explained the reason to you.
+
+279
+00:08:30,840 --> 00:08:36,550
+This side is the second example.
+
+280
+00:08:36,550 --> 00:08:38,050
+Now, this
+
+281
+00:08:38,050 --> 00:08:44,590
+This is what we mean by assembly calling C.
+
+282
+00:08:44,590 --> 00:08:45,610
+Assembly calling C.
+
+283
+00:08:45,610 --> 00:08:46,270
+Very simple.
+
+284
+00:08:46,270 --> 00:08:48,290
+Now for the second one,
+
+285
+00:08:48,290 --> 00:08:49,670
+what we want to tell you is
+
+286
+00:08:49,670 --> 00:08:50,710
+in C language,
+
+287
+00:08:50,710 --> 00:08:52,830
+if we want to embed some
+
+288
+00:08:52,830 --> 00:08:55,710
+assembly, how do we do it?
+
+289
+00:08:55,710 --> 00:08:57,510
+Just understand this.
+
+290
+00:08:57,510 --> 00:08:59,930
+First of all,
+
+291
+00:08:59,930 --> 00:09:01,730
+if you want to embed assembly in C,
+
+292
+00:09:01,730 --> 00:09:04,310
+you need to write this kind of keyword,
+
+293
+00:09:04,310 --> 00:09:06,630
+that is, a keyword starting with ASM.
+
+294
+00:09:06,630 --> 00:09:08,510
+The syntax is like this.
+
+295
+00:09:08,510 --> 00:09:09,990
+ASM is a keyword,
+
+296
+00:09:09,990 --> 00:09:11,730
+and the square brackets after it mean
+
+297
+00:09:11,730 --> 00:09:14,350
+this keyword is optional.
+
+298
+00:09:14,350 --> 00:09:16,210
+Then it's wrapped in parentheses,
+
+299
+00:09:16,210 --> 00:09:18,830
+and inside are the assembly instructions,
+
+300
+00:09:18,830 --> 00:09:20,570
+while outside it's C language code.
+
+301
+00:09:20,570 --> 00:09:22,450
+Out here, everything is C language instructions.
+
+302
+00:09:22,450 --> 00:09:24,850
+In here, in the middle, we embed
+
+303
+00:09:24,850 --> 00:09:26,250
+a piece of assembly like this.
+
+304
+00:09:26,250 --> 00:09:26,790
+That's how you write it.
+
+305
+00:09:26,790 --> 00:09:28,190
+Now, at the front,
+
+306
+00:09:28,190 --> 00:09:28,810
+there are keywords.
+
+307
+00:09:28,810 --> 00:09:29,750
+And then, volatile,
+
+308
+00:09:29,750 --> 00:09:30,450
+it means that,
+
+309
+00:09:30,450 --> 00:09:31,230
+if you add this,
+
+310
+00:09:31,230 --> 00:09:32,870
+you are telling the compiler,
+
+311
+00:09:32,870 --> 00:09:34,790
+these assembly instructions inside here,
+
+312
+00:09:34,790 --> 00:09:37,290
+you don't want it to optimize them.
+
+313
+00:09:37,290 --> 00:09:38,610
+If you do want optimization,
+
+314
+00:09:38,610 --> 00:09:40,410
+because the compiler might try
+
+315
+00:09:40,410 --> 00:09:41,890
+to optimize your instructions,
+
+316
+00:09:41,890 --> 00:09:44,330
+so if you don't want optimization,
+
+317
+00:09:44,330 --> 00:09:45,530
+just add a volatile.
+
+318
+00:09:45,530 --> 00:09:47,810
+If you don't care,
+
+319
+00:09:47,810 --> 00:09:48,290
+just leave it out.
+
+320
+00:09:48,290 --> 00:09:49,770
+So this part is optional.
+
+321
+00:09:49,770 --> 00:09:49,950
+This
+
+322
+00:09:49,950 --> 00:09:52,650
+sometimes you'll see
+
+323
+00:09:52,650 --> 00:09:53,870
+in front of this there are some additional
+
+324
+00:09:53,870 --> 00:09:55,390
+double slash things like this
+
+325
+00:09:55,390 --> 00:09:56,750
+which actually have the same effect
+
+326
+00:09:56,750 --> 00:09:57,970
+I won't go into that in detail
+
+327
+00:09:57,970 --> 00:09:59,150
+and then
+
+328
+00:09:59,150 --> 00:09:59,650
+this is
+
+329
+00:09:59,650 --> 00:10:01,930
+this is 'asm', which is the keyword
+
+330
+00:10:01,930 --> 00:10:02,950
+and then
+
+331
+00:10:02,950 --> 00:10:04,710
+inside it there are four main parts
+
+332
+00:10:04,710 --> 00:10:06,570
+the first part is wrapped in quotes
+
+333
+00:10:06,570 --> 00:10:07,710
+enclosed
+
+334
+00:10:07,710 --> 00:10:09,690
+and this part is the core of it all
+
+335
+00:10:09,690 --> 00:10:10,990
+this is where the assembly instructions are written
+
+336
+00:10:10,990 --> 00:10:12,870
+now, for the assembly instructions,
+
+337
+00:10:12,870 --> 00:10:14,150
+they are wrapped in double quotes here
+
+338
+00:10:14,150 --> 00:10:15,930
+and if you need multiple instructions,
+
+339
+00:10:15,930 --> 00:10:18,630
+you separate them with a semicolon or backslash n
+
+340
+00:10:18,630 --> 00:10:19,670
+which represents a newline
+
+341
+00:10:19,670 --> 00:10:21,170
+Just split it apart.
+
+342
+00:10:21,170 --> 00:10:22,490
+This is its syntax.
+
+343
+00:10:22,490 --> 00:10:25,130
+Then these three items below
+
+344
+00:10:25,130 --> 00:10:26,090
+are all optional.
+
+345
+00:10:26,090 --> 00:10:26,790
+Note carefully,
+
+346
+00:10:26,790 --> 00:10:27,610
+they are just
+
+347
+00:10:27,610 --> 00:10:29,050
+these three items,
+
+348
+00:10:29,050 --> 00:10:30,970
+they're not actually assembly instructions.
+
+349
+00:10:30,970 --> 00:10:32,970
+They're really a kind of
+
+350
+00:10:32,970 --> 00:10:34,310
+they're really a kind of directive statement,
+
+351
+00:10:34,310 --> 00:10:37,450
+telling the assembler,
+
+352
+00:10:37,450 --> 00:10:39,010
+for this assembly instruction in front of you,
+
+353
+00:10:39,010 --> 00:10:41,470
+there are some special annotations.
+
+354
+00:10:41,470 --> 00:10:43,110
+You can actually understand it that way.
+
+355
+00:10:43,110 --> 00:10:45,130
+So what is it annotating?
+
+356
+00:10:45,130 --> 00:10:46,530
+It's actually annotating
+
+357
+00:10:46,530 --> 00:10:48,150
+in your assembler,
+
+358
+00:10:48,150 --> 00:10:49,490
+for this assembly instruction,
+
+359
+00:10:49,490 --> 00:10:51,490
+what output operands and input operands
+
+360
+00:10:51,490 --> 00:10:52,330
+there are.
+
+361
+00:10:52,330 --> 00:10:54,330
+as well as what might affect this thing,
+
+362
+00:10:54,330 --> 00:10:56,150
+let me briefly introduce each of them to you.
+
+363
+00:10:56,150 --> 00:10:58,090
+Let me show you through an example.
+
+364
+00:10:58,090 --> 00:11:01,090
+What's on the right is actually an example.
+
+365
+00:11:01,090 --> 00:11:02,770
+This example implements a
+
+366
+00:11:02,770 --> 00:11:05,310
+we write a for function in C,
+
+367
+00:11:05,310 --> 00:11:06,610
+and inside this function,
+
+368
+00:11:06,610 --> 00:11:09,250
+what it actually does
+
+369
+00:11:09,250 --> 00:11:11,190
+is implement an A plus B equals C,
+
+370
+00:11:11,190 --> 00:11:12,070
+an effect like that.
+
+371
+00:11:12,070 --> 00:11:14,370
+That is to say, if I don't use assembly,
+
+372
+00:11:14,370 --> 00:11:16,450
+if this part is not written in assembly,
+
+373
+00:11:16,450 --> 00:11:19,970
+it's nothing more than implementing C equals A plus B.
+
+374
+00:11:19,970 --> 00:11:24,150
+But suppose one day I suddenly feel that
+
+375
+00:11:24,150 --> 00:11:26,130
+C plus A -- C's A plus B -- is not efficient enough,
+
+376
+00:11:26,130 --> 00:11:27,810
+and I insist on writing it myself in assembly,
+
+377
+00:11:27,810 --> 00:11:29,850
+then I can still rewrite and change it.
+
+378
+00:11:29,850 --> 00:11:31,110
+So how do we write it?
+
+379
+00:11:31,110 --> 00:11:33,750
+Well, based on the description just now,
+
+380
+00:11:33,750 --> 00:11:34,650
+you've already seen
+
+381
+00:11:34,650 --> 00:11:36,930
+That is to say, this is a keyword that must be written
+
+382
+00:11:36,930 --> 00:11:37,990
+Adding a volatile
+
+383
+00:11:37,990 --> 00:11:40,170
+is basically telling our assembler that
+
+384
+00:11:40,170 --> 00:11:42,930
+for this assembly instruction in here
+
+385
+00:11:42,930 --> 00:11:44,270
+I don't want you to do any optimization
+
+386
+00:11:44,270 --> 00:11:46,450
+Just honestly follow whatever I wrote
+
+387
+00:11:46,450 --> 00:11:48,030
+and generate exactly that
+
+388
+00:11:48,030 --> 00:11:50,150
+Then, next,
+
+389
+00:11:50,150 --> 00:11:51,110
+this here
+
+390
+00:11:51,110 --> 00:11:52,410
+corresponds to this,
+
+391
+00:11:52,410 --> 00:11:54,070
+the output operands.
+
+392
+00:11:54,070 --> 00:11:55,370
+This part specifies
+
+393
+00:11:55,370 --> 00:11:56,730
+and then this corresponds to
+
+394
+00:11:56,730 --> 00:11:58,330
+the description of the input operands.
+
+395
+00:11:58,330 --> 00:12:00,050
+And the third part,
+
+396
+00:12:00,050 --> 00:12:00,790
+I just didn't write it
+
+397
+00:12:00,790 --> 00:12:02,430
+because there isn't really much
+
+398
+00:12:02,430 --> 00:12:03,530
+that needs to be described there,
+
+399
+00:12:03,530 --> 00:12:04,690
+since I only used
+
+400
+00:12:04,690 --> 00:12:05,990
+two registers anyway.
+
+401
+00:12:05,990 --> 00:12:09,130
+So, what do these output operands
+
+402
+00:12:09,130 --> 00:12:10,450
+and input operands mean?
+
+403
+00:12:10,450 --> 00:12:12,430
+Well, the so-called output operands
+
+404
+00:12:12,430 --> 00:12:14,450
+are essentially registers that I might
+
+405
+00:12:14,450 --> 00:12:17,770
+write to—
+
+406
+00:12:17,770 --> 00:12:20,730
+registers whose values I might change.
+
+407
+00:12:20,730 --> 00:12:23,490
+Those registers count as output operands.
+
+408
+00:12:23,490 --> 00:12:25,290
+That's the concept.
+
+409
+00:12:25,290 --> 00:12:27,790
+Conversely, the input
+
+410
+00:12:27,790 --> 00:12:29,090
+concept is the opposite.
+
+411
+00:12:29,090 --> 00:12:32,710
+Now, what exactly am I explaining here?
+
+412
+00:12:32,710 --> 00:12:33,590
+Take a look at this.
+
+413
+00:12:33,590 --> 00:12:36,970
+Because when I was writing this,
+
+414
+00:12:36,970 --> 00:12:40,790
+first of all, I couldn't immediately—
+
+415
+00:12:40,790 --> 00:12:44,110
+that is, I didn't want to absolutely specify
+
+416
+00:12:44,110 --> 00:12:45,710
+exactly which register to use,
+
+417
+00:12:45,710 --> 00:12:49,270
+because which register you actually use,
+
+418
+00:12:49,270 --> 00:12:53,610
+in practice, we generally try to leave that to the compiler
+
+419
+00:12:53,610 --> 00:12:55,110
+to decide for us.
+
+420
+00:12:55,110 --> 00:12:56,230
+We just tell it
+
+421
+00:12:56,230 --> 00:12:57,610
+Here we need a register
+
+422
+00:12:57,610 --> 00:12:58,990
+This needs a register
+
+423
+00:12:58,990 --> 00:13:00,050
+This needs a register
+
+424
+00:13:00,050 --> 00:13:01,750
+Then we take this register
+
+425
+00:13:01,750 --> 00:13:02,450
+and we give it a name
+
+426
+00:13:02,450 --> 00:13:02,990
+See that?
+
+427
+00:13:02,990 --> 00:13:04,230
+We call it sum
+
+428
+00:13:04,230 --> 00:13:05,750
+We call them add1 and add2
+
+429
+00:13:05,750 --> 00:13:07,930
+These are not actual register names
+
+430
+00:13:07,930 --> 00:13:08,370
+Right?
+
+431
+00:13:08,370 --> 00:13:10,790
+What they actually turn into
+
+432
+00:13:10,790 --> 00:13:13,590
+is something the compiler generates for us in practice
+
+433
+00:13:13,590 --> 00:13:16,730
+We don't explicitly force that here
+
+434
+00:13:16,730 --> 00:13:18,630
+The only thing we have to tell it is this
+
+435
+00:13:18,630 --> 00:13:19,670
+What we need to tell it is this
+
+436
+00:13:19,670 --> 00:13:23,130
+Since what we want to implement is C equals A plus B
+
+437
+00:13:23,130 --> 00:13:27,370
+we have to tell the compiler
+
+438
+00:13:27,370 --> 00:13:29,250
+that you need to take this C
+
+439
+00:13:29,250 --> 00:13:32,690
+and associate it with this register
+
+440
+00:13:32,690 --> 00:13:35,030
+and you need to associate this register A with that
+
+441
+00:13:35,030 --> 00:13:37,470
+You need to associate B with this thing
+
+442
+00:13:37,470 --> 00:13:39,490
+Then we tell it through an add instruction
+
+443
+00:13:39,490 --> 00:13:42,470
+Just use this assembly instruction to achieve the effect, and that's it
+
+444
+00:13:42,470 --> 00:13:44,310
+So how do we tell it
+
+445
+00:13:44,310 --> 00:13:45,990
+About this correspondence between them?
+
+446
+00:13:45,990 --> 00:13:48,550
+That is done through these two lines here
+
+447
+00:13:48,550 --> 00:13:50,750
+Because as we said earlier
+
+448
+00:13:50,750 --> 00:13:53,290
+This one specifies the output
+
+449
+00:13:53,290 --> 00:13:57,210
+That is, which register I'm going to write to
+
+450
+00:13:57,210 --> 00:13:58,570
+So on my side here
+
+451
+00:13:58,570 --> 00:14:00,590
+I tell it that the sum register
+
+452
+00:14:00,590 --> 00:14:02,470
+corresponds to this c of ours
+
+453
+00:14:02,470 --> 00:14:03,710
+Because in the end we have to return this c
+
+454
+00:14:03,710 --> 00:14:05,070
+We have to pass it back out, right
+
+455
+00:14:05,070 --> 00:14:06,730
+So we tell it c
+
+456
+00:14:06,730 --> 00:14:08,370
+Then what about add1?
+
+457
+00:14:08,370 --> 00:14:09,310
+And what about add2?
+
+458
+00:14:09,310 --> 00:14:12,190
+They correspond to a and b
+
+459
+00:14:12,190 --> 00:14:16,910
+Which means we bind the registers with the variables defined in C
+
+460
+00:14:16,910 --> 00:14:18,650
+We tie them together
+
+461
+00:14:18,650 --> 00:14:19,690
+made a mapping
+
+462
+00:14:19,690 --> 00:14:23,870
+telling the compiler how to carry out this mapping process
+
+463
+00:14:23,870 --> 00:14:29,110
+so it's really a correspondence effect
+
+464
+00:14:29,110 --> 00:14:31,550
+it's really telling it the corresponding effect
+
+465
+00:14:31,550 --> 00:14:34,590
+now, once that purpose is achieved
+
+466
+00:14:34,590 --> 00:14:37,170
+the compiler will, in the actual process
+
+467
+00:14:37,170 --> 00:14:40,910
+in the actual compilation process, assign us an actual register
+
+468
+00:14:40,910 --> 00:14:42,770
+and then take this register and these things
+
+469
+00:14:42,770 --> 00:14:43,810
+and map them together
+
+470
+00:14:43,810 --> 00:14:45,070
+and of course, on our side here
+
+471
+00:14:45,070 --> 00:14:47,650
+you can see there's also this kind of R syntax written here
+
+472
+00:14:47,650 --> 00:14:48,890
+this R syntax
+
+473
+00:14:48,890 --> 00:14:50,830
+is really just telling it
+
+474
+00:14:50,830 --> 00:14:54,550
+that is, we want to take this variable A and this variable C
+
+475
+00:14:54,550 --> 00:14:56,270
+and map them to registers
+
+476
+00:14:56,270 --> 00:14:59,790
+you can also specify that you put this variable on the stack
+
+477
+00:14:59,790 --> 00:15:01,230
+and map it to memory
+
+478
+00:15:01,230 --> 00:15:01,790
+that works too
+
+479
+00:15:01,790 --> 00:15:06,350
+you indicate that with the character M
+
+480
+00:15:06,350 --> 00:15:08,750
+but here we'll use R
+
+481
+00:15:08,750 --> 00:15:11,150
+just tell it to use the corresponding register, and that's all there is to it
+
+482
+00:15:11,150 --> 00:15:14,150
+So this is one way of writing it.
+
+483
+00:15:14,150 --> 00:15:15,190
+Sometimes,
+
+484
+00:15:15,190 --> 00:15:16,530
+you'll also see code that other people wrote,
+
+485
+00:15:16,530 --> 00:15:17,650
+that is, written in a simpler way.
+
+486
+00:15:17,650 --> 00:15:19,570
+If you want to keep it simple, you can write it like this.
+
+487
+00:15:19,570 --> 00:15:22,170
+In fact, the effect is exactly the same.
+
+488
+00:15:22,170 --> 00:15:22,830
+Now here,
+
+489
+00:15:22,830 --> 00:15:25,470
+all it amounts to is that we don't define any complicated names,
+
+490
+00:15:25,470 --> 00:15:26,310
+like sum or anything like that,
+
+491
+00:15:26,310 --> 00:15:28,050
+or that add1 thing from just now.
+
+492
+00:15:28,050 --> 00:15:28,890
+See what I mean?
+
+493
+00:15:28,890 --> 00:15:31,930
+What we actually used was what?
+
+494
+00:15:31,930 --> 00:15:34,570
+We used 0, 1, and 2 to represent them.
+
+495
+00:15:34,570 --> 00:15:35,530
+Take this 0 here.
+
+496
+00:15:35,530 --> 00:15:36,690
+It actually corresponds to what we just...
+
+497
+00:15:36,690 --> 00:15:37,530
+This is a typo.
+
+498
+00:15:37,530 --> 00:15:38,630
+The 0 actually corresponds to...
+
+499
+00:15:38,630 --> 00:15:39,550
+our...
+
+500
+00:15:39,550 --> 00:15:41,350
+This one is a typo.
+
+501
+00:15:41,350 --> 00:15:41,710
+add1
+
+502
+00:15:41,710 --> 00:15:42,370
+is actually 1,
+
+503
+00:15:42,370 --> 00:15:43,290
+and add2 is 2,
+
+504
+00:15:43,290 --> 00:15:43,650
+right?
+
+505
+00:15:43,650 --> 00:15:44,810
+An effect like this.
+
+506
+00:15:44,810 --> 00:15:45,390
+Now, below,
+
+507
+00:15:45,390 --> 00:15:46,610
+it's actually the same,
+
+508
+00:15:46,610 --> 00:15:47,650
+except that here
+
+509
+00:15:47,650 --> 00:15:49,570
+it doesn't write 0 and 1, 1, 2
+
+510
+00:15:49,570 --> 00:15:50,130
+and those things,
+
+511
+00:15:50,130 --> 00:15:51,290
+because by default
+
+512
+00:15:51,290 --> 00:15:52,390
+it just follows this order.
+
+513
+00:15:52,390 --> 00:15:53,650
+The first one that appears on its side,
+
+514
+00:15:53,650 --> 00:15:53,990
+it uses it
+
+515
+00:15:53,990 --> 00:15:55,010
+to mean 0.
+
+516
+00:15:55,010 --> 00:15:56,270
+This one is 1,
+
+517
+00:15:56,270 --> 00:15:57,030
+and this one is 2.
+
+518
+00:15:57,030 --> 00:15:58,670
+Following this order,
+
+519
+00:15:58,670 --> 00:16:01,130
+they can just be specified by default.
+
+520
+00:16:01,130 --> 00:16:02,190
+So with this kind of thing,
+
+521
+00:16:02,190 --> 00:16:03,330
+is a simplified form of writing.
+
+522
+00:16:03,330 --> 00:16:04,970
+So once you understand
+
+523
+00:16:04,970 --> 00:16:06,750
+what it actually means under the hood,
+
+524
+00:16:06,750 --> 00:16:08,610
+you'll see that in a lot of code,
+
+525
+00:16:08,610 --> 00:16:11,530
+what's commonly used is still this simplified way of writing it,
+
+526
+00:16:11,530 --> 00:16:12,990
+and you should be able to read it.
+
+527
+00:16:12,990 --> 00:16:16,710
+So this gives us
+
+528
+00:16:16,710 --> 00:16:20,450
+a way to write some assembly in C.
+
+529
+00:16:20,450 --> 00:16:21,930
+Of course, the example here is quite simple,
+
+530
+00:16:21,930 --> 00:16:25,250
+and there may be more complex syntax,
+
+531
+00:16:25,250 --> 00:16:28,150
+for instance, since you can write multiple instructions and so on.
+
+532
+00:16:28,150 --> 00:16:29,270
+For more details,
+
+533
+00:16:29,270 --> 00:16:31,470
+you can go to Reference 3,
+
+534
+00:16:31,470 --> 00:16:38,390
+an assembly manual,
+
+535
+00:16:38,390 --> 00:16:40,230
+which has a detailed description
+
+536
+00:16:40,230 --> 00:16:41,790
+of how to embed assembly.
+
+537
+00:16:41,790 --> 00:16:45,630
+We won't go into that here.
+
+538
+00:16:45,630 --> 00:16:46,350
+Just be aware of it.
+
+539
+00:16:46,350 --> 00:16:51,390
+Then, when you get back,
+
+540
+00:16:51,390 --> 00:16:53,490
+try doing some exercises on your own.
+
+541
+00:16:53,490 --> 00:16:54,690
+It's this 5-9.
+
+542
+00:16:54,690 --> 00:16:56,330
+So basically, what it means is
+
+543
+00:16:56,330 --> 00:16:57,690
+you need to take this thing
+
+544
+00:16:57,690 --> 00:16:59,150
+and convert it into assembly.
+
+545
+00:16:59,150 --> 00:17:00,350
+See how you would write it.
+
+546
+00:17:00,350 --> 00:17:01,850
+Give it a try on your own.
+
+547
+00:17:01,850 --> 00:17:05,890
+Now, regarding this,
+
+548
+00:17:05,890 --> 00:17:09,390
+when we talked about assembly instructions,
+
+549
+00:17:09,390 --> 00:17:11,930
+we spent quite a lot of time covering them with you.
+
+550
+00:17:11,930 --> 00:17:12,790
+It took quite a bit of time.
+
+551
+00:17:12,790 --> 00:17:14,510
+There's actually quite a lot of content.
+
+552
+00:17:14,510 --> 00:17:17,650
+We still covered some key points,
+
+553
+00:17:17,650 --> 00:17:18,890
+as well as things that may come up
+
+554
+00:17:18,890 --> 00:17:19,850
+in the later parts of our course.
+
+555
+00:17:19,850 --> 00:17:21,890
+We touched on those here.
+
+556
+00:17:21,890 --> 00:17:23,330
+As for the rest of the content,
+
+557
+00:17:23,330 --> 00:17:25,610
+it will probably still be up to you,
+
+558
+00:17:25,610 --> 00:17:27,150
+during the exercises that come later,
+
+559
+00:17:27,150 --> 00:17:28,630
+to learn it on your own.

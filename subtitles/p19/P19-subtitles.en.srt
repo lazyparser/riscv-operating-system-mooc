@@ -1,0 +1,4319 @@
+1
+00:00:00,000 --> 00:00:05,800
+Today we'll continue with Chapter 9.
+
+2
+00:00:07,680 --> 00:00:27,420
+So from this chapter on, we'll slowly start introducing, that is, when we implement a small operating system, the concept of multitasking, or some of the ready-made concepts you've encountered in Linux, will gradually be brought in here.
+
+3
+00:00:27,420 --> 00:00:28,800
+So in Chapter 9,
+
+4
+00:00:28,800 --> 00:00:30,800
+we'll first look at a simple
+
+5
+00:00:30,800 --> 00:00:33,960
+way to implement cooperative multitasking.
+
+6
+00:00:33,960 --> 00:00:39,860
+So this part mainly first introduces to you
+
+7
+00:00:39,860 --> 00:00:41,860
+the concept of multitasking and the concept of context.
+
+8
+00:00:41,860 --> 00:00:43,840
+Then in the second part,
+
+9
+00:00:43,840 --> 00:00:45,200
+I'll briefly show you
+
+10
+00:00:45,200 --> 00:00:47,620
+how we can, based on this RiskFile,
+
+11
+00:00:47,620 --> 00:00:50,600
+this simulated device here,
+
+12
+00:00:50,600 --> 00:00:53,960
+implement a simple cooperative multitasking.
+
+13
+00:00:53,960 --> 00:00:56,880
+Mainly these two parts.
+
+14
+00:00:56,880 --> 00:01:02,940
+So let's first look at some concepts,
+
+15
+00:01:02,940 --> 00:01:04,500
+like what is multitasking,
+
+16
+00:01:04,500 --> 00:01:05,420
+and context.
+
+17
+00:01:05,420 --> 00:01:16,740
+So first let's look at the so-called concept of a task.
+
+18
+00:01:16,740 --> 00:01:20,140
+As you know, what we're in contact with now,
+
+19
+00:01:20,140 --> 00:01:21,040
+this diagram,
+
+20
+00:01:21,040 --> 00:01:22,400
+actually shows that
+
+21
+00:01:22,400 --> 00:01:25,320
+When we execute code,
+
+22
+00:01:25,320 --> 00:01:26,300
+this function
+
+23
+00:01:26,300 --> 00:01:28,160
+gets called over and over again.
+
+24
+00:01:28,160 --> 00:01:31,460
+So no matter how function A calls function B,
+
+25
+00:01:31,460 --> 00:01:34,060
+and including when it finally returns,
+
+26
+00:01:34,060 --> 00:01:36,240
+you can see that the whole execution process
+
+27
+00:01:36,240 --> 00:01:38,080
+is actually serial,
+
+28
+00:01:38,080 --> 00:01:40,080
+a single stream of instruction execution,
+
+29
+00:01:40,080 --> 00:01:40,920
+right?
+
+30
+00:01:40,920 --> 00:01:43,780
+Now, in the course of this instruction execution stream,
+
+31
+00:01:43,780 --> 00:01:45,560
+we use some concepts involving the stack.
+
+32
+00:01:45,560 --> 00:01:47,460
+This is what we call a...
+
+33
+00:01:47,460 --> 00:01:49,620
+Actually, what we call a task,
+
+34
+00:01:49,620 --> 00:01:52,460
+you can think of it as simply the execution process of a function,
+
+35
+00:01:52,460 --> 00:01:56,160
+a stream of instruction execution.
+
+36
+00:01:56,160 --> 00:01:58,980
+That's the simple concept of a task.
+
+37
+00:01:58,980 --> 00:02:03,100
+Now, what about multi-tasking?
+
+38
+00:02:03,100 --> 00:02:03,920
+Just imagine,
+
+39
+00:02:03,920 --> 00:02:05,240
+suppose we have multiple cores,
+
+40
+00:02:05,240 --> 00:02:08,480
+and each core is running a function.
+
+41
+00:02:08,480 --> 00:02:09,860
+and its subfunctions.
+
+42
+00:02:09,860 --> 00:02:12,920
+So when multiple execution flows are running at the same time,
+
+43
+00:02:12,920 --> 00:02:16,940
+that's actually the simplest form of multitasking.
+
+44
+00:02:16,940 --> 00:02:21,780
+Of course, this requires multiple cores executing simultaneously.
+
+45
+00:02:21,780 --> 00:02:23,400
+If there are two cores, you have two tasks
+
+46
+00:02:23,400 --> 00:02:24,960
+running at the same time.
+
+47
+00:02:24,960 --> 00:02:30,360
+Now sometimes we talk about this hardware,
+
+48
+00:02:30,360 --> 00:02:32,300
+we say the number of cores is always
+
+49
+00:02:32,300 --> 00:02:34,620
+the number of harts is always limited.
+
+50
+00:02:34,620 --> 00:02:37,980
+For example, in the system we're implementing now,
+
+51
+00:02:37,980 --> 00:02:39,580
+we actually only have one core.
+
+52
+00:02:39,580 --> 00:02:41,740
+So since we only have one core,
+
+53
+00:02:41,740 --> 00:02:43,540
+but we still want to run multiple tasks on one core,
+
+54
+00:02:43,540 --> 00:02:45,400
+to be able to achieve multitasking,
+
+55
+00:02:45,400 --> 00:02:46,240
+what do we do?
+
+56
+00:02:46,240 --> 00:02:48,820
+That's actually exactly what we're going to work on.
+
+57
+00:02:48,820 --> 00:02:51,560
+That is, right now we only have one core.
+
+58
+00:02:51,560 --> 00:02:53,520
+By the way, let me mention this,
+
+59
+00:02:53,520 --> 00:02:56,340
+in the exercises,
+
+60
+00:02:56,340 --> 00:02:57,220
+you should have also seen
+
+61
+00:02:57,220 --> 00:02:58,860
+That is, when we run it,
+
+62
+00:02:58,860 --> 00:03:04,170
+when we actually start up QEMU,
+
+63
+00:03:04,170 --> 00:03:05,610
+we have a parameter here,
+
+64
+00:03:05,610 --> 00:03:08,230
+-smp 1,
+
+65
+00:03:08,230 --> 00:03:09,090
+and what that does,
+
+66
+00:03:09,090 --> 00:03:10,650
+basically, is to take our
+
+67
+00:03:10,650 --> 00:03:12,250
+number of cores at startup
+
+68
+00:03:12,250 --> 00:03:14,710
+and limit it to just one.
+
+69
+00:03:14,710 --> 00:03:17,390
+But actually, as we said,
+
+70
+00:03:17,390 --> 00:03:19,670
+this virtual machine actually supports
+
+71
+00:03:19,670 --> 00:03:21,250
+this machine, this virtual machine,
+
+72
+00:03:21,250 --> 00:03:23,210
+actually supports up to 8 cores.
+
+73
+00:03:23,210 --> 00:03:25,310
+So you could actually pass in 8 here.
+
+74
+00:03:25,310 --> 00:03:26,150
+But with 8,
+
+75
+00:03:26,150 --> 00:03:28,510
+we won't actually have all 8 running at the same time.
+
+76
+00:03:28,510 --> 00:03:30,930
+This is covered in our first exercise,
+
+77
+00:03:30,930 --> 00:03:33,570
+the bootstrap exercise,
+
+78
+00:03:33,570 --> 00:03:34,990
+because, as you can already see,
+
+79
+00:03:34,990 --> 00:03:36,370
+we take the other seven and
+
+80
+00:03:36,370 --> 00:03:37,350
+actually suspend them.
+
+81
+00:03:37,350 --> 00:03:40,750
+So what we do later, in fact,
+
+82
+00:03:40,750 --> 00:03:43,210
+is implement multitasking on a single core.
+
+83
+00:03:43,210 --> 00:03:44,750
+So on one core,
+
+84
+00:03:44,750 --> 00:03:45,890
+on one hart,
+
+85
+00:03:45,890 --> 00:03:47,530
+how do we make multiple tasks
+
+86
+00:03:47,530 --> 00:03:48,590
+run at the same time?
+
+87
+00:03:48,590 --> 00:03:50,750
+Well, what we actually adopt is this
+
+88
+00:03:50,750 --> 00:03:52,090
+time-sharing approach,
+
+89
+00:03:52,090 --> 00:03:56,510
+that is, letting these two tasks take turns executing,
+
+90
+00:03:56,510 --> 00:03:59,230
+letting the two tasks take turns executing,
+
+91
+00:03:59,230 --> 00:04:02,650
+taking turns using this hart to achieve it.
+
+92
+00:04:02,650 --> 00:04:04,470
+So each one,
+
+93
+00:04:04,470 --> 00:04:06,130
+we know that once a hart is running,
+
+94
+00:04:06,130 --> 00:04:07,550
+during its execution,
+
+95
+00:04:07,550 --> 00:04:11,250
+its execution state of the hart is really reflected
+
+96
+00:04:11,250 --> 00:04:12,250
+basically in
+
+97
+00:04:12,250 --> 00:04:16,270
+the changes of those 32 registers.
+
+98
+00:04:16,270 --> 00:04:19,230
+So if we want two tasks
+
+99
+00:04:19,230 --> 00:04:20,350
+to be able to execute at the same time,
+
+100
+00:04:20,350 --> 00:04:23,670
+then we will inevitably need to, at the software level,
+
+101
+00:04:23,670 --> 00:04:26,250
+For each of these tasks,
+
+102
+00:04:26,250 --> 00:04:28,810
+the values of the registers it is currently using
+
+103
+00:04:28,810 --> 00:04:30,050
+actually need to be backed up.
+
+104
+00:04:30,050 --> 00:04:31,470
+For example, if we want to let
+
+105
+00:04:31,470 --> 00:04:32,990
+the task on the left run,
+
+106
+00:04:32,990 --> 00:04:35,170
+we need to take the register information
+
+107
+00:04:35,170 --> 00:04:36,270
+of the task on the right,
+
+108
+00:04:36,270 --> 00:04:38,030
+back it up, and save it.
+
+109
+00:04:38,030 --> 00:04:40,210
+Then, when we put
+
+110
+00:04:40,210 --> 00:04:43,310
+the instruction stream on the right,
+
+111
+00:04:43,310 --> 00:04:44,470
+onto the CPU,
+
+112
+00:04:44,470 --> 00:04:45,410
+load it up and run it,
+
+113
+00:04:45,410 --> 00:04:47,070
+we just need to take the information above
+
+114
+00:04:47,070 --> 00:04:49,270
+and restore it back up there, and that's it.
+
+115
+00:04:49,270 --> 00:04:50,570
+So really, it's about doing this
+
+116
+00:04:50,570 --> 00:04:52,450
+kind of switching,
+
+117
+00:04:52,450 --> 00:04:53,690
+this kind of switch.
+
+118
+00:04:53,690 --> 00:04:55,850
+Now, in the process of this switching,
+
+119
+00:04:55,850 --> 00:04:56,570
+these instructions,
+
+120
+00:04:56,570 --> 00:04:57,930
+these registers,
+
+121
+00:04:57,930 --> 00:05:00,110
+This is actually what we call
+
+122
+00:05:00,110 --> 00:05:02,150
+the concept of context.
+
+123
+00:05:02,150 --> 00:05:03,670
+So if we say
+
+124
+00:05:03,670 --> 00:05:05,690
+we want to run multiple tasks on one core,
+
+125
+00:05:05,690 --> 00:05:07,150
+say we have two tasks,
+
+126
+00:05:07,150 --> 00:05:08,650
+then the context of both tasks
+
+127
+00:05:08,650 --> 00:05:09,670
+needs to be maintained by us,
+
+128
+00:05:09,670 --> 00:05:11,110
+and we keep switching
+
+129
+00:05:11,110 --> 00:05:12,970
+which task is running on the CPU.
+
+130
+00:05:12,970 --> 00:05:14,910
+We need to restore this task's
+
+131
+00:05:14,910 --> 00:05:17,690
+context onto the CPU to run,
+
+132
+00:05:17,690 --> 00:05:19,210
+while at the same time saving
+
+133
+00:05:19,210 --> 00:05:21,150
+the context of the other task
+
+134
+00:05:21,150 --> 00:05:22,170
+away, and then do the switch.
+
+135
+00:05:22,170 --> 00:05:24,250
+Through this context switching,
+
+136
+00:05:24,250 --> 00:05:26,030
+we actually achieve the effect of multiple tasks
+
+137
+00:05:26,030 --> 00:05:29,970
+multiplexing a single CPU,
+
+138
+00:05:29,970 --> 00:05:31,050
+a single hart.
+
+139
+00:05:31,050 --> 00:05:33,250
+This is actually equivalent to what we call
+
+140
+00:05:33,250 --> 00:05:34,270
+the concept of a thread.
+
+141
+00:05:34,270 --> 00:05:36,350
+Of course, we call them tasks here.
+
+142
+00:05:36,350 --> 00:05:37,210
+That's a more general term.
+
+143
+00:05:37,210 --> 00:05:40,250
+So what I'm telling you here is this:
+
+144
+00:05:40,250 --> 00:05:41,070
+the so-called task,
+
+145
+00:05:41,070 --> 00:05:41,990
+actually corresponds to
+
+146
+00:05:41,990 --> 00:05:44,670
+the current values of these registers.
+
+147
+00:05:44,670 --> 00:05:47,030
+So when we maintain them,
+
+148
+00:05:47,030 --> 00:05:48,310
+when we save and restore them,
+
+149
+00:05:48,310 --> 00:05:49,470
+we can actually, in memory,
+
+150
+00:05:49,470 --> 00:05:50,570
+define a struct like this.
+
+151
+00:05:50,570 --> 00:05:53,850
+We do have this struct in our code.
+
+152
+00:05:53,850 --> 00:05:56,150
+You can look at our... this...
+
+153
+00:05:56,150 --> 00:05:59,150
+Since today this slide corresponds to
+
+154
+00:05:59,150 --> 00:06:03,170
+our 03 context switch in Shanghai.
+
+155
+00:06:03,170 --> 00:06:04,630
+So starting from this slide,
+
+156
+00:06:04,630 --> 00:06:07,770
+you can see that we introduced a new file,
+
+157
+00:06:07,770 --> 00:06:14,030
+called... it's right here,
+
+158
+00:06:14,030 --> 00:06:14,810
+entry.s.
+
+159
+00:06:14,810 --> 00:06:19,150
+Let me see where this struct is defined.
+
+160
+00:06:19,150 --> 00:06:20,490
+It should be defined in...
+
+161
+00:06:20,490 --> 00:06:28,740
+Let's take a look at
+
+162
+00:06:28,740 --> 00:06:31,000
+where this struct is actually defined.
+
+163
+00:06:31,000 --> 00:06:40,090
+It's not showing up when I search.
+
+164
+00:06:40,090 --> 00:06:46,870
+Hold on, let me check.
+
+165
+00:06:46,870 --> 00:06:48,610
+Where is that file?
+
+166
+00:06:48,610 --> 00:07:04,340
+Right here we're in
+
+167
+00:07:04,340 --> 00:07:06,180
+this os.h file.
+
+168
+00:07:06,180 --> 00:07:08,180
+We included this os.h header.
+
+169
+00:07:08,180 --> 00:07:09,300
+I just didn't find it before.
+
+170
+00:07:09,300 --> 00:07:10,840
+Right here we define
+
+171
+00:07:10,840 --> 00:07:12,720
+the struct context.
+
+172
+00:07:12,720 --> 00:07:13,720
+Now you can see that it actually
+
+173
+00:07:13,720 --> 00:07:16,200
+has all the registers
+
+174
+00:07:16,200 --> 00:07:19,770
+defined in this struct.
+
+175
+00:07:19,770 --> 00:07:21,590
+Of course, we didn't put x0
+
+176
+00:07:21,590 --> 00:07:22,350
+in here,
+
+177
+00:07:22,350 --> 00:07:23,550
+because as we all know, x0,
+
+178
+00:07:23,550 --> 00:07:24,250
+as we learned earlier,
+
+179
+00:07:24,250 --> 00:07:25,210
+is actually
+
+180
+00:07:25,210 --> 00:07:27,030
+a register whose value never changes.
+
+181
+00:07:27,030 --> 00:07:27,990
+So we don't need to
+
+182
+00:07:27,990 --> 00:07:29,470
+maintain it.
+
+183
+00:07:29,470 --> 00:07:30,090
+As for the other values,
+
+184
+00:07:30,090 --> 00:07:30,990
+we do need to maintain them.
+
+185
+00:07:30,990 --> 00:07:33,640
+Good.
+
+186
+00:07:33,640 --> 00:07:35,540
+This is what's known as the concept of context.
+
+187
+00:07:35,540 --> 00:07:39,490
+Now, with this concept in place,
+
+188
+00:07:39,490 --> 00:07:40,630
+let's take a look at
+
+189
+00:07:40,630 --> 00:07:44,130
+the so-called cooperative multitasking design
+
+190
+00:07:44,130 --> 00:07:45,430
+and how to implement it.
+
+191
+00:07:45,430 --> 00:07:48,120
+So here,
+
+192
+00:07:48,120 --> 00:07:48,760
+we should mention one thing,
+
+193
+00:07:48,760 --> 00:07:49,820
+which is that
+
+194
+00:07:49,820 --> 00:07:52,120
+when it comes to multitasking,
+
+195
+00:07:52,120 --> 00:07:53,200
+we have
+
+196
+00:07:53,200 --> 00:07:55,400
+in principle,
+
+197
+00:07:55,400 --> 00:07:56,460
+we divide it into two types:
+
+198
+00:07:56,460 --> 00:07:58,280
+one is called cooperative multitasking,
+
+199
+00:07:58,280 --> 00:08:00,200
+and the other is called preemptive multitasking.
+
+200
+00:08:00,200 --> 00:08:02,020
+What we ultimately want to implement is a
+
+201
+00:08:02,020 --> 00:08:03,160
+Preemptive multitasking
+
+202
+00:08:03,160 --> 00:08:04,340
+But before that,
+
+203
+00:08:04,340 --> 00:08:05,380
+before we do that,
+
+204
+00:08:05,380 --> 00:08:06,080
+let's first take a look at
+
+205
+00:08:06,080 --> 00:08:07,640
+how to implement a cooperative multitasking,
+
+206
+00:08:07,640 --> 00:08:08,960
+how do we implement it?
+
+207
+00:08:08,960 --> 00:08:10,380
+So, what is
+
+208
+00:08:10,380 --> 00:08:11,800
+cooperative multitasking?
+
+209
+00:08:11,800 --> 00:08:13,160
+In English, it's called
+
+210
+00:08:13,160 --> 00:08:15,380
+Cooperative Multitasking.
+
+211
+00:08:15,380 --> 00:08:17,240
+So what does it mean?
+
+212
+00:08:17,240 --> 00:08:18,380
+Well, imagine this:
+
+213
+00:08:18,380 --> 00:08:20,160
+suppose we now
+
+214
+00:08:20,160 --> 00:08:21,540
+have two tasks,
+
+215
+00:08:21,540 --> 00:08:23,220
+the two tasks
+
+216
+00:08:23,220 --> 00:08:24,380
+are like two people,
+
+217
+00:08:24,380 --> 00:08:29,860
+and they have to share one HUD,
+
+218
+00:08:29,860 --> 00:08:31,620
+one CPU.
+
+219
+00:08:31,620 --> 00:08:34,520
+So what does cooperation mean?
+
+220
+00:08:34,520 --> 00:08:36,240
+Well, say at the beginning,
+
+221
+00:08:36,240 --> 00:08:38,300
+It is this person running on the CPU.
+
+222
+00:08:38,300 --> 00:08:40,500
+Then after it runs for a while,
+
+223
+00:08:40,500 --> 00:08:42,200
+it needs to be able to actively
+
+224
+00:08:42,200 --> 00:08:43,860
+yield the CPU.
+
+225
+00:08:43,860 --> 00:08:45,080
+After yielding it,
+
+226
+00:08:45,080 --> 00:08:46,420
+it essentially hands it over to the other one,
+
+227
+00:08:46,420 --> 00:08:48,000
+and then it comes in and runs.
+
+228
+00:08:48,000 --> 00:08:49,260
+After it runs for a while,
+
+229
+00:08:49,260 --> 00:08:51,220
+it yields the CPU again,
+
+230
+00:08:51,220 --> 00:08:51,940
+handing it over to the other one,
+
+231
+00:08:51,940 --> 00:08:52,820
+and then that one comes in and runs.
+
+232
+00:08:52,820 --> 00:08:54,060
+So it is essentially two people
+
+233
+00:08:54,060 --> 00:08:57,180
+actively giving this up,
+
+234
+00:08:57,180 --> 00:08:59,180
+actively giving up the CPU,
+
+235
+00:08:59,180 --> 00:09:01,880
+so that other tasks have a chance to execute.
+
+236
+00:09:01,880 --> 00:09:05,160
+Now, this way of working
+
+237
+00:09:05,160 --> 00:09:08,080
+is called cooperative multitasking.
+
+238
+00:09:08,080 --> 00:09:09,580
+Cooperative multitasking.
+
+239
+00:09:09,580 --> 00:09:12,340
+In fact, we probably don't encounter it much these days,
+
+240
+00:09:12,340 --> 00:09:14,300
+but in early operating systems,
+
+241
+00:09:14,300 --> 00:09:16,760
+It really is a cooperative approach
+
+242
+00:09:16,760 --> 00:09:17,800
+to implementing multitasking.
+
+243
+00:09:17,800 --> 00:09:20,240
+For example, early systems like DOS,
+
+244
+00:09:20,240 --> 00:09:21,520
+these older operating systems,
+
+245
+00:09:21,520 --> 00:09:22,680
+they actually worked this way.
+
+246
+00:09:22,680 --> 00:09:23,940
+Now, with this approach,
+
+247
+00:09:23,940 --> 00:09:25,160
+you naturally get
+
+248
+00:09:25,160 --> 00:09:26,080
+the effect where two tasks
+
+249
+00:09:26,080 --> 00:09:28,960
+take turns
+
+250
+00:09:28,960 --> 00:09:31,260
+running on the CPU.
+
+251
+00:09:31,260 --> 00:09:32,060
+But as you know,
+
+252
+00:09:32,060 --> 00:09:32,780
+this approach
+
+253
+00:09:32,780 --> 00:09:35,540
+also has a very obvious problem,
+
+254
+00:09:35,540 --> 00:09:36,080
+namely,
+
+255
+00:09:36,080 --> 00:09:37,960
+it requires that,
+
+256
+00:09:37,960 --> 00:09:39,720
+when we write these tasks,
+
+257
+00:09:39,720 --> 00:09:40,840
+we know a task,
+
+258
+00:09:40,840 --> 00:09:41,380
+as we mentioned earlier,
+
+259
+00:09:41,380 --> 00:09:42,400
+is really just a function,
+
+260
+00:09:42,400 --> 00:09:42,880
+right?
+
+261
+00:09:42,880 --> 00:09:44,560
+Now these functions
+
+262
+00:09:44,560 --> 00:09:46,820
+in the end, are still written by us.
+
+263
+00:09:46,820 --> 00:09:48,380
+So if you need to
+
+264
+00:09:48,380 --> 00:09:50,020
+actively give up the CPU,
+
+265
+00:09:50,020 --> 00:09:51,880
+that means in this code,
+
+266
+00:09:51,880 --> 00:09:53,480
+you have to call some special functions
+
+267
+00:09:53,480 --> 00:09:54,720
+to release the CPU,
+
+268
+00:09:54,720 --> 00:09:57,640
+that is, to voluntarily give it up.
+
+269
+00:09:57,640 --> 00:09:58,880
+But this thing,
+
+270
+00:09:58,880 --> 00:10:00,260
+if the programmer
+
+271
+00:10:00,260 --> 00:10:01,220
+is not careful when writing it,
+
+272
+00:10:01,220 --> 00:10:02,000
+for example, if he just
+
+273
+00:10:02,000 --> 00:10:04,080
+forgets to do this,
+
+274
+00:10:04,080 --> 00:10:05,380
+and he ends up in an infinite loop,
+
+275
+00:10:05,380 --> 00:10:05,780
+think about it,
+
+276
+00:10:05,780 --> 00:10:07,200
+if his code is badly written
+
+277
+00:10:07,200 --> 00:10:07,880
+and gets stuck in an infinite loop,
+
+278
+00:10:07,880 --> 00:10:08,620
+he never gets the chance
+
+279
+00:10:08,620 --> 00:10:09,700
+to release the CPU,
+
+280
+00:10:09,700 --> 00:10:10,740
+then the other tasks
+
+281
+00:10:10,740 --> 00:10:11,640
+there's no way to execute
+
+282
+00:10:11,640 --> 00:10:13,620
+so with this approach,
+
+283
+00:10:13,620 --> 00:10:15,620
+it's very easy for our operating system
+
+284
+00:10:15,620 --> 00:10:17,220
+in fact, it's very easy to
+
+285
+00:10:17,220 --> 00:10:18,580
+be written badly by tasks
+
+286
+00:10:18,580 --> 00:10:19,520
+and get deadlocked by them
+
+287
+00:10:19,520 --> 00:10:21,860
+so this cooperative multitasking
+
+288
+00:10:21,860 --> 00:10:23,480
+does have certain problems
+
+289
+00:10:23,480 --> 00:10:26,140
+then later we evolved into,
+
+290
+00:10:26,140 --> 00:10:27,840
+that is, using preemptive multitasking
+
+291
+00:10:27,840 --> 00:10:29,260
+now with preemptive multitasking,
+
+292
+00:10:29,260 --> 00:10:30,080
+the idea is basically this:
+
+293
+00:10:30,080 --> 00:10:33,160
+we don't want to let the current task
+
+294
+00:10:33,160 --> 00:10:34,520
+do this by itself
+
+295
+00:10:34,520 --> 00:10:35,360
+instead, the operating system
+
+296
+00:10:35,360 --> 00:10:38,200
+decides the scheduling of tasks
+
+297
+00:10:38,200 --> 00:10:39,360
+it can
+
+298
+00:10:39,360 --> 00:10:41,620
+our operating system can actively take away
+
+299
+00:10:41,620 --> 00:10:43,360
+the current task's use of the processor
+
+300
+00:10:43,360 --> 00:10:45,580
+and then give the processor to other tasks
+
+301
+00:10:45,580 --> 00:10:46,020
+In this case,
+
+302
+00:10:46,020 --> 00:10:46,920
+you can imagine,
+
+303
+00:10:46,920 --> 00:10:48,920
+that is, even if your task
+
+304
+00:10:48,920 --> 00:10:49,860
+falls into an infinite loop,
+
+305
+00:10:49,860 --> 00:10:51,260
+it actually won't affect
+
+306
+00:10:51,260 --> 00:10:52,100
+the entire system.
+
+307
+00:10:52,100 --> 00:10:54,400
+Now, as for how to preempt it,
+
+308
+00:10:54,400 --> 00:10:56,060
+we'll cover that later on.
+
+309
+00:10:56,060 --> 00:10:57,180
+For now,
+
+310
+00:10:57,180 --> 00:10:57,900
+let's first take a look at,
+
+311
+00:10:57,900 --> 00:10:58,380
+that is,
+
+312
+00:10:58,380 --> 00:10:59,360
+how simple
+
+313
+00:10:59,360 --> 00:11:01,440
+cooperative multitasking is implemented.
+
+314
+00:11:01,440 --> 00:11:02,940
+In this chapter,
+
+315
+00:11:02,940 --> 00:11:04,540
+what we're implementing is
+
+316
+00:11:04,540 --> 00:11:08,570
+cooperative multitasking.
+
+317
+00:11:08,570 --> 00:11:09,050
+Right.
+
+318
+00:11:09,050 --> 00:11:10,750
+So we'll
+
+319
+00:11:10,750 --> 00:11:12,270
+explain it to you with a diagram,
+
+320
+00:11:12,270 --> 00:11:12,830
+that is, this one here.
+
+321
+00:11:12,830 --> 00:11:15,310
+One way to implement cooperative multitasking,
+
+322
+00:11:15,310 --> 00:11:15,670
+that is,
+
+323
+00:11:15,670 --> 00:11:16,790
+of course, there are many ways to implement it.
+
+324
+00:11:16,790 --> 00:11:17,790
+Here, we'll
+
+325
+00:11:17,790 --> 00:11:20,250
+take the approach used in our code
+
+326
+00:11:20,250 --> 00:11:21,090
+and walk you through it.
+
+327
+00:11:21,090 --> 00:11:21,990
+All right,
+
+328
+00:11:21,990 --> 00:11:22,230
+so,
+
+329
+00:11:22,230 --> 00:11:23,230
+over here,
+
+330
+00:11:23,230 --> 00:11:24,550
+you can see there are two tasks.
+
+331
+00:11:24,550 --> 00:11:25,310
+One is task A,
+
+332
+00:11:25,310 --> 00:11:25,950
+and the other is task B.
+
+333
+00:11:25,950 --> 00:11:26,290
+Right?
+
+334
+00:11:26,290 --> 00:11:29,270
+Now, with these task A and task B,
+
+335
+00:11:29,270 --> 00:11:32,110
+as we know, a task is
+
+336
+00:11:32,110 --> 00:11:33,110
+really just a function.
+
+337
+00:11:33,110 --> 00:11:34,370
+And a function,
+
+338
+00:11:34,370 --> 00:11:35,990
+whether or not it calls other functions inside,
+
+339
+00:11:35,990 --> 00:11:36,310
+as you know,
+
+340
+00:11:36,310 --> 00:11:38,950
+you can think of it as simply a sequence of instructions.
+
+341
+00:11:38,950 --> 00:11:40,470
+It's just a sequence of instructions.
+
+342
+00:11:40,470 --> 00:11:41,970
+So look at task A here.
+
+343
+00:11:41,970 --> 00:11:43,450
+The instructions go from
+
+344
+00:11:43,450 --> 00:11:44,370
+for example,
+
+345
+00:11:44,370 --> 00:11:46,350
+I, I plus 1, and so on,
+
+346
+00:11:46,350 --> 00:11:47,150
+all the way to I plus M.
+
+347
+00:11:47,150 --> 00:11:48,050
+That's one sequence of instructions.
+
+348
+00:11:48,050 --> 00:11:49,550
+Then for task B,
+
+349
+00:11:49,550 --> 00:11:51,130
+it starts from J, J plus 1,
+
+350
+00:11:51,130 --> 00:11:52,090
+all the way to J plus N.
+
+351
+00:11:52,090 --> 00:11:53,130
+That's also a sequence of instructions,
+
+352
+00:11:53,130 --> 00:11:53,910
+right?
+
+353
+00:11:53,910 --> 00:11:55,650
+So this is the first concept.
+
+354
+00:11:55,650 --> 00:11:56,930
+Now the second one,
+
+355
+00:11:56,930 --> 00:11:58,190
+since we said
+
+356
+00:11:58,190 --> 00:11:59,810
+this is cooperative multitasking,
+
+357
+00:11:59,810 --> 00:12:01,790
+that means we have to, within the task,
+
+358
+00:12:01,790 --> 00:12:02,970
+insert some instructions ourselves,
+
+359
+00:12:02,970 --> 00:12:04,210
+voluntarily giving up the CPU.
+
+360
+00:12:04,210 --> 00:12:06,430
+So here, in the red part,
+
+361
+00:12:06,430 --> 00:12:08,530
+So this call to switch2,
+
+362
+00:12:08,530 --> 00:12:10,590
+is essentially this effect.
+
+363
+00:12:10,590 --> 00:12:12,670
+Of course,
+
+364
+00:12:12,670 --> 00:12:14,730
+the process of voluntarily giving up
+
+365
+00:12:14,730 --> 00:12:16,510
+we summarize it as one
+
+366
+00:12:16,510 --> 00:12:19,030
+function, switch2.
+
+367
+00:12:19,030 --> 00:12:21,430
+So that's equivalent to saying
+
+368
+00:12:21,430 --> 00:12:22,070
+this function,
+
+369
+00:12:22,070 --> 00:12:23,090
+this task A,
+
+370
+00:12:23,090 --> 00:12:24,530
+as soon as it calls switch2,
+
+371
+00:12:24,530 --> 00:12:26,870
+we can imagine that
+
+372
+00:12:26,870 --> 00:12:29,690
+it yields the CPU.
+
+373
+00:12:29,690 --> 00:12:30,890
+Then at that point,
+
+374
+00:12:30,890 --> 00:12:32,130
+we can take another task
+
+375
+00:12:32,130 --> 00:12:33,250
+and load it in.
+
+376
+00:12:33,250 --> 00:12:35,630
+So what exactly does switch2
+
+377
+00:12:35,630 --> 00:12:36,810
+do in there?
+
+378
+00:12:36,810 --> 00:12:38,890
+Actually, based on our earlier introduction,
+
+379
+00:12:38,890 --> 00:12:40,110
+we can know that
+
+380
+00:12:40,110 --> 00:12:42,090
+all it really does in there is one thing:
+
+381
+00:12:42,090 --> 00:12:46,050
+That is to say, since it's going to do a switch,
+
+382
+00:12:46,050 --> 00:12:46,910
+then it needs to
+
+383
+00:12:46,910 --> 00:12:49,350
+not only switch this
+
+384
+00:12:49,350 --> 00:12:51,230
+and load this task in,
+
+385
+00:12:51,230 --> 00:12:52,110
+or take it out,
+
+386
+00:12:52,110 --> 00:12:54,230
+there's actually one more main job it has to do,
+
+387
+00:12:54,230 --> 00:12:57,410
+which is to save and restore this context.
+
+388
+00:12:57,410 --> 00:12:59,890
+So you can see what it does,
+
+389
+00:12:59,890 --> 00:13:01,730
+the first step is to save
+
+390
+00:13:01,730 --> 00:13:05,250
+the context of the previous task,
+
+391
+00:13:05,250 --> 00:13:06,810
+and then,
+
+392
+00:13:06,810 --> 00:13:08,330
+at this point,
+
+393
+00:13:08,330 --> 00:13:09,230
+it performs a switch,
+
+394
+00:13:09,230 --> 00:13:10,530
+switching the context,
+
+395
+00:13:10,530 --> 00:13:11,690
+which means switching the task.
+
+396
+00:13:11,690 --> 00:13:13,310
+Then, when it switches,
+
+397
+00:13:13,310 --> 00:13:14,530
+it still has to do
+
+398
+00:13:14,530 --> 00:13:15,190
+one more thing afterwards,
+
+399
+00:13:15,190 --> 00:13:17,030
+which is to take the new task's
+
+400
+00:13:17,030 --> 00:13:20,510
+context and load it in.
+
+401
+00:13:20,510 --> 00:13:23,650
+So actually, its main job boils down to these few steps.
+
+402
+00:13:23,650 --> 00:13:27,210
+Now over here,
+
+403
+00:13:27,210 --> 00:13:28,570
+look at the return of this function,
+
+404
+00:13:28,570 --> 00:13:29,790
+the last return.
+
+405
+00:13:29,790 --> 00:13:31,970
+Once this return is executed,
+
+406
+00:13:31,970 --> 00:13:33,090
+we can achieve it so that
+
+407
+00:13:33,090 --> 00:13:36,170
+a new task down below starts running.
+
+408
+00:13:36,170 --> 00:13:38,110
+As for how that process works,
+
+409
+00:13:38,110 --> 00:13:38,910
+how is it actually implemented?
+
+410
+00:13:38,910 --> 00:13:41,370
+Let's look at the next diagram.
+
+411
+00:13:41,370 --> 00:13:45,010
+So we know that right now these two tasks,
+
+412
+00:13:45,010 --> 00:13:46,350
+assuming in this model of ours,
+
+413
+00:13:46,350 --> 00:13:48,350
+there is only one CPU for the task,
+
+414
+00:13:48,350 --> 00:13:49,590
+just one CPU.
+
+415
+00:13:49,590 --> 00:13:52,570
+Now inside this CPU,
+
+416
+00:13:52,570 --> 00:13:54,490
+we know that this CPU,
+
+417
+00:13:54,490 --> 00:13:55,790
+has quite a few registers in it,
+
+418
+00:13:55,790 --> 00:13:56,570
+right?
+
+419
+00:13:56,570 --> 00:13:58,310
+There are general-purpose registers,
+
+420
+00:13:58,310 --> 00:14:00,470
+and there are also some CSRs.
+
+421
+00:14:00,470 --> 00:14:02,550
+that is, the control status register.
+
+422
+00:14:02,550 --> 00:14:05,150
+Now, in here,
+
+423
+00:14:05,150 --> 00:14:07,550
+there are two registers we mainly care about.
+
+424
+00:14:07,550 --> 00:14:09,110
+The first register,
+
+425
+00:14:09,110 --> 00:14:12,330
+is this register, ra.
+
+426
+00:14:12,330 --> 00:14:13,430
+Because this thing
+
+427
+00:14:13,430 --> 00:14:15,330
+is related to our ret and call instructions.
+
+428
+00:14:15,330 --> 00:14:16,970
+Think back to
+
+429
+00:14:16,970 --> 00:14:18,090
+when we talked about
+
+430
+00:14:18,090 --> 00:14:19,150
+assembly instructions earlier,
+
+431
+00:14:19,150 --> 00:14:19,510
+right here.
+
+432
+00:14:19,510 --> 00:14:21,530
+All of these concepts will be used here.
+
+433
+00:14:21,530 --> 00:14:24,950
+ra, as we know, is used to store the return address.
+
+434
+00:14:24,950 --> 00:14:25,770
+So,
+
+435
+00:14:25,770 --> 00:14:28,650
+there is also one more register,
+
+436
+00:14:28,650 --> 00:14:29,950
+called mscratch, a register.
+
+437
+00:14:29,950 --> 00:14:30,810
+This register,
+
+438
+00:14:30,810 --> 00:14:34,430
+it is actually a register under privilege mode,
+
+439
+00:14:34,430 --> 00:14:37,650
+a privileged register under Machine mode.
+
+440
+00:14:37,650 --> 00:14:39,210
+We use this register,
+
+441
+00:14:39,210 --> 00:14:40,090
+What is it used for?
+
+442
+00:14:40,090 --> 00:14:42,410
+We now use it like a
+
+443
+00:14:42,410 --> 00:14:43,370
+as a pointer,
+
+444
+00:14:43,370 --> 00:14:45,490
+used to point to our
+
+445
+00:14:45,490 --> 00:14:49,470
+which context is currently being handled
+
+446
+00:14:49,470 --> 00:14:51,190
+So for this purpose,
+
+447
+00:14:51,190 --> 00:14:53,310
+we actually need to give every task
+
+448
+00:14:53,310 --> 00:14:55,290
+its own allocated context space.
+
+449
+00:14:55,290 --> 00:14:56,590
+So these two things,
+
+450
+00:14:56,590 --> 00:14:58,950
+you can think of context A and context B,
+
+451
+00:14:58,950 --> 00:15:01,070
+as actually being located
+
+452
+00:15:01,070 --> 00:15:03,290
+in two blocks of space in memory.
+
+453
+00:15:03,290 --> 00:15:04,090
+Inside here,
+
+454
+00:15:04,090 --> 00:15:06,610
+what is stored is this task's
+
+455
+00:15:06,610 --> 00:15:10,710
+own general-purpose register contents.
+
+456
+00:15:10,710 --> 00:15:11,350
+This actually corresponds to
+
+457
+00:15:11,350 --> 00:15:13,510
+what we just introduced to you,
+
+458
+00:15:13,510 --> 00:15:17,110
+which is really just a struct block like this,
+
+459
+00:15:17,110 --> 00:15:18,710
+the context struct,
+
+460
+00:15:18,710 --> 00:15:21,610
+which we define in memory.
+
+461
+00:15:21,610 --> 00:15:22,590
+one for each task.
+
+462
+00:15:22,590 --> 00:15:24,650
+And then we use this,
+
+463
+00:15:24,650 --> 00:15:26,850
+which basically means we'll use
+
+464
+00:15:26,850 --> 00:15:29,090
+this mscratch
+
+465
+00:15:29,090 --> 00:15:30,850
+register,
+
+466
+00:15:30,850 --> 00:15:31,950
+sort of like a pointer,
+
+467
+00:15:31,950 --> 00:15:33,930
+pointing to it at one moment,
+
+468
+00:15:33,930 --> 00:15:35,770
+and then to the other one at the next.
+
+469
+00:15:35,770 --> 00:15:38,290
+That's how we implement the context switch.
+
+470
+00:15:38,290 --> 00:15:40,670
+Switching context is basically just
+
+471
+00:15:40,670 --> 00:15:41,690
+doing this.
+
+472
+00:15:41,690 --> 00:15:47,030
+Let's take a look at how this process runs.
+
+473
+00:15:47,030 --> 00:15:48,730
+Let me walk you through it.
+
+474
+00:15:48,730 --> 00:15:52,970
+First, of course, the first step is to do some initialization.
+
+475
+00:15:52,970 --> 00:15:54,130
+Now, the initialization work,
+
+476
+00:15:54,130 --> 00:15:59,190
+we essentially need to initialize some of the contents in these registers.
+
+477
+00:15:59,190 --> 00:16:00,270
+Initialize them.
+
+478
+00:16:00,270 --> 00:16:03,110
+So at the very beginning,
+
+479
+00:16:03,110 --> 00:16:07,350
+since we have two RAs, the addresses,
+
+480
+00:16:07,350 --> 00:16:12,590
+we initialize both of them to the address of the first instruction of our task.
+
+481
+00:16:12,590 --> 00:16:15,970
+On the left is i.
+
+482
+00:16:15,970 --> 00:16:17,650
+On the right is j.
+
+483
+00:16:17,650 --> 00:16:19,510
+This is the initialization.
+
+484
+00:16:19,510 --> 00:16:21,430
+After the initialization is done,
+
+485
+00:16:21,430 --> 00:16:24,230
+we then initialize this mscratch register
+
+486
+00:16:24,230 --> 00:16:25,050
+as well.
+
+487
+00:16:25,050 --> 00:16:26,110
+Its initialization, at the very beginning,
+
+488
+00:16:26,110 --> 00:16:27,070
+let's assume the first one,
+
+489
+00:16:27,070 --> 00:16:29,170
+the task loaded is task a,
+
+490
+00:16:29,170 --> 00:16:31,470
+then we make this register,
+
+491
+00:16:31,470 --> 00:16:33,310
+point to this,
+
+492
+00:16:33,310 --> 00:16:35,190
+the context on the left.
+
+493
+00:16:35,190 --> 00:16:37,030
+The left points to this,
+
+494
+00:16:37,030 --> 00:16:38,830
+the address of this context on the left.
+
+495
+00:16:38,830 --> 00:16:39,730
+It holds an address inside.
+
+496
+00:16:39,730 --> 00:16:42,090
+All right, that's the initialization.
+
+497
+00:16:42,090 --> 00:16:44,010
+After the initialization is done,
+
+498
+00:16:44,010 --> 00:16:45,030
+we start running.
+
+499
+00:16:45,030 --> 00:16:45,970
+So take a look, everyone.
+
+500
+00:16:45,970 --> 00:16:47,590
+Suppose at the very beginning,
+
+501
+00:16:47,590 --> 00:16:50,790
+it starts running from this task on the left
+
+502
+00:16:50,790 --> 00:16:52,670
+so what does this represent
+
+503
+00:16:52,670 --> 00:16:53,850
+this represents the pc value
+
+504
+00:16:53,850 --> 00:16:54,990
+we talked about this earlier, right
+
+505
+00:16:54,990 --> 00:16:56,850
+it's our program's
+
+506
+00:16:56,850 --> 00:16:58,910
+current execution address
+
+507
+00:16:58,910 --> 00:17:00,370
+this pc pointer
+
+508
+00:17:00,370 --> 00:17:01,790
+the value in the pc register
+
+509
+00:17:01,790 --> 00:17:04,870
+so first we run this task on the left
+
+510
+00:17:04,870 --> 00:17:07,670
+first we execute the first i instruction
+
+511
+00:17:07,670 --> 00:17:09,870
+then we execute the second i+1 instruction
+
+512
+00:17:09,870 --> 00:17:12,770
+now the key is when it executes this instruction
+
+513
+00:17:12,770 --> 00:17:14,430
+for example, this task on the left
+
+514
+00:17:14,430 --> 00:17:16,650
+wants to voluntarily give up the CPU
+
+515
+00:17:16,650 --> 00:17:19,950
+so it has to call this switch to function
+
+516
+00:17:19,950 --> 00:17:22,230
+now everyone knows that this call function
+
+517
+00:17:22,230 --> 00:17:23,490
+not call this function, but the call instruction
+
+518
+00:17:23,490 --> 00:17:24,850
+this call instruction
+
+519
+00:17:24,850 --> 00:17:27,890
+in assembly, what does it actually do
+
+520
+00:17:27,890 --> 00:17:30,210
+it actually puts
+
+521
+00:17:30,210 --> 00:17:31,570
+As we mentioned earlier,
+
+522
+00:17:31,570 --> 00:17:34,170
+it will take the next instruction after this instruction,
+
+523
+00:17:34,170 --> 00:17:37,110
+which is the address of this instruction, and put it where?
+
+524
+00:17:37,110 --> 00:17:40,630
+It will put it into the CPU's RA register,
+
+525
+00:17:40,630 --> 00:17:40,950
+right?
+
+526
+00:17:40,950 --> 00:17:43,450
+We covered this earlier, right?
+
+527
+00:17:43,450 --> 00:17:46,070
+So when we execute this call instruction,
+
+528
+00:17:46,070 --> 00:17:48,810
+it will take the address of the RA + M instruction,
+
+529
+00:17:48,810 --> 00:17:51,530
+and save it into RA.
+
+530
+00:17:51,530 --> 00:17:53,810
+This is all just the normal function call process,
+
+531
+00:17:53,810 --> 00:17:54,390
+right?
+
+532
+00:17:54,390 --> 00:17:56,010
+And then,
+
+533
+00:17:56,010 --> 00:17:59,930
+it will jump into the switch2 function to execute.
+
+534
+00:17:59,930 --> 00:18:02,290
+Now, this switch2 function,
+
+535
+00:18:02,290 --> 00:18:04,630
+for switching this upper context,
+
+536
+00:18:04,630 --> 00:18:06,470
+is the core logic,
+
+537
+00:18:06,470 --> 00:18:07,950
+its first step,
+
+538
+00:18:07,950 --> 00:18:09,370
+is to save the previous one.
+
+539
+00:18:09,370 --> 00:18:10,290
+The previous one, as we know,
+
+540
+00:18:10,290 --> 00:18:11,770
+now what we mean by the previous one is that one.
+
+541
+00:18:11,770 --> 00:18:14,290
+The previous, the previous context
+
+542
+00:18:14,290 --> 00:18:16,010
+it becomes next instead
+
+543
+00:18:16,010 --> 00:18:18,230
+because we are about to switch to it
+
+544
+00:18:18,230 --> 00:18:20,030
+So when we say the previous context
+
+545
+00:18:20,030 --> 00:18:21,090
+we actually mean it
+
+546
+00:18:21,090 --> 00:18:23,670
+Now, its context,
+
+547
+00:18:23,670 --> 00:18:24,670
+what we mean by context,
+
+548
+00:18:24,670 --> 00:18:25,670
+is really just
+
+549
+00:18:25,670 --> 00:18:27,430
+what we call saving
+
+550
+00:18:27,430 --> 00:18:30,310
+the idea of saving the context,
+
+551
+00:18:30,310 --> 00:18:30,870
+basically means that
+
+552
+00:18:30,870 --> 00:18:33,670
+we take the values of these registers inside the CPU
+
+553
+00:18:33,670 --> 00:18:35,850
+and move them out of the registers
+
+554
+00:18:35,850 --> 00:18:39,410
+into the memory area corresponding to this task
+
+555
+00:18:39,410 --> 00:18:40,850
+into that memory
+
+556
+00:18:40,850 --> 00:18:41,990
+into that context area
+
+557
+00:18:41,990 --> 00:18:43,410
+and save them there
+
+558
+00:18:43,410 --> 00:18:44,790
+and save them there
+
+559
+00:18:44,790 --> 00:18:45,590
+So as you can see,
+
+560
+00:18:45,590 --> 00:18:47,330
+this value, originally this was RA plus M
+
+561
+00:18:47,330 --> 00:18:50,550
+So in the following process,
+
+562
+00:18:50,550 --> 00:18:51,750
+after saving it,
+
+563
+00:18:51,750 --> 00:18:53,430
+then for the one on the left,
+
+564
+00:18:53,430 --> 00:18:55,530
+go into its stack frame,
+
+565
+00:18:55,530 --> 00:18:57,150
+and this ra will become what?
+
+566
+00:18:57,150 --> 00:18:57,710
+ra plus m.
+
+567
+00:18:57,710 --> 00:18:58,410
+Right?
+
+568
+00:18:58,410 --> 00:19:02,220
+So once this becomes ra plus m,
+
+569
+00:19:02,220 --> 00:19:04,400
+this is saved,
+
+570
+00:19:04,400 --> 00:19:05,680
+and of course there are some other registers as well,
+
+571
+00:19:05,680 --> 00:19:06,400
+which we won't go into.
+
+572
+00:19:06,400 --> 00:19:07,860
+They all need to be saved.
+
+573
+00:19:07,860 --> 00:19:09,120
+Once the saving is done,
+
+574
+00:19:09,120 --> 00:19:13,360
+we can proceed to the next step, which is the switch.
+
+575
+00:19:13,360 --> 00:19:14,680
+So what we mean by the switch,
+
+576
+00:19:14,680 --> 00:19:15,480
+as I just mentioned,
+
+577
+00:19:15,480 --> 00:19:17,000
+is really just switching this pointer.
+
+578
+00:19:17,000 --> 00:19:19,540
+It used to point to it,
+
+579
+00:19:19,540 --> 00:19:20,700
+and now we switch it,
+
+580
+00:19:20,700 --> 00:19:22,560
+pointing it to the task on the right.
+
+581
+00:19:22,560 --> 00:19:23,400
+So the so-called switch
+
+582
+00:19:23,400 --> 00:19:24,540
+is really just taking this pointer
+
+583
+00:19:24,540 --> 00:19:27,060
+and switching it from the left side to the right side.
+
+584
+00:19:27,060 --> 00:19:29,860
+Then, after switching to the right side,
+
+585
+00:19:29,860 --> 00:19:30,660
+as we know,
+
+586
+00:19:30,660 --> 00:19:32,420
+this task now on the right
+
+587
+00:19:32,420 --> 00:19:34,700
+is going to start doing what?
+
+588
+00:19:34,700 --> 00:19:36,280
+It's getting ready to run on the CPU.
+
+589
+00:19:36,280 --> 00:19:37,560
+So in order for it to run,
+
+590
+00:19:37,560 --> 00:19:39,860
+we need to take the things inside it,
+
+591
+00:19:39,860 --> 00:19:42,580
+the contents of its original context,
+
+592
+00:19:42,580 --> 00:19:46,380
+and restore them into our CPU.
+
+593
+00:19:46,380 --> 00:19:49,860
+Restore them into the CPU to perform the context switch.
+
+594
+00:19:49,860 --> 00:19:53,280
+So the next step, this restore
+
+595
+00:19:53,280 --> 00:19:55,220
+of the next context,
+
+596
+00:19:55,220 --> 00:19:58,900
+is really about taking the values inside
+
+597
+00:19:58,900 --> 00:20:00,960
+the context of task b
+
+598
+00:20:00,960 --> 00:20:03,780
+and restoring them into the registers,
+
+599
+00:20:03,780 --> 00:20:05,820
+loading them from memory into
+
+600
+00:20:05,820 --> 00:20:07,540
+this
+
+601
+00:20:07,540 --> 00:20:10,660
+loaded into this CPU's
+
+602
+00:20:10,660 --> 00:20:11,400
+registers.
+
+603
+00:20:11,400 --> 00:20:13,980
+Now, the instruction it uses, think back for a moment,
+
+604
+00:20:13,980 --> 00:20:15,000
+it should actually be what?
+
+605
+00:20:15,000 --> 00:20:16,980
+That is, for the one earlier,
+
+606
+00:20:16,980 --> 00:20:19,520
+the one writing to memory, what was used?
+
+607
+00:20:19,520 --> 00:20:22,060
+It should be the store instruction,
+
+608
+00:20:22,060 --> 00:20:23,640
+right? And over here,
+
+609
+00:20:23,640 --> 00:20:25,140
+it should be the load instruction.
+
+610
+00:20:25,140 --> 00:20:28,420
+I won't go into this,
+
+611
+00:20:28,420 --> 00:20:30,060
+you can go look at it yourself.
+
+612
+00:20:30,060 --> 00:20:32,800
+So this restore process
+
+613
+00:20:32,800 --> 00:20:35,100
+will take this value j
+
+614
+00:20:35,100 --> 00:20:38,840
+and load it in.
+
+615
+00:20:38,840 --> 00:20:40,060
+So here it becomes j.
+
+616
+00:20:40,060 --> 00:20:40,460
+Right?
+
+617
+00:20:40,460 --> 00:20:42,340
+Now the next step
+
+618
+00:20:42,340 --> 00:20:46,060
+is the key return statement.
+
+619
+00:20:46,060 --> 00:20:47,520
+We know that this return,
+
+620
+00:20:47,520 --> 00:20:48,820
+this return instruction
+
+621
+00:20:48,820 --> 00:20:50,080
+What it will actually do
+
+622
+00:20:50,080 --> 00:20:51,400
+is it will go by this
+
+623
+00:20:51,400 --> 00:20:54,840
+according to the value of this ra
+
+624
+00:20:54,840 --> 00:20:58,660
+and jump to the corresponding place
+
+625
+00:20:58,660 --> 00:21:00,520
+Now, here is a j
+
+626
+00:21:00,520 --> 00:21:02,040
+Do you all know what this j means?
+
+627
+00:21:02,040 --> 00:21:05,300
+In fact, it is actually the position of this instruction
+
+628
+00:21:05,300 --> 00:21:06,860
+Right, everyone?
+
+629
+00:21:06,860 --> 00:21:08,700
+So, this thing
+
+630
+00:21:08,700 --> 00:21:11,630
+after the e-return
+
+631
+00:21:11,630 --> 00:21:13,450
+our PC pointer will naturally
+
+632
+00:21:13,450 --> 00:21:15,710
+jump right over to taskB
+
+633
+00:21:15,710 --> 00:21:20,130
+And that is how a jump between tasks is achieved
+
+634
+00:21:20,130 --> 00:21:22,390
+In essence, it is still a function call
+
+635
+00:21:22,390 --> 00:21:24,050
+In essence, it is still a function call
+
+636
+00:21:24,050 --> 00:21:25,450
+But this function call
+
+637
+00:21:25,450 --> 00:21:27,010
+is different from an ordinary function call
+
+638
+00:21:27,010 --> 00:21:28,630
+Because with an ordinary function call
+
+639
+00:21:28,630 --> 00:21:31,250
+the context does not change
+
+640
+00:21:31,250 --> 00:21:33,670
+But in the current situation
+
+641
+00:21:33,670 --> 00:21:36,470
+Besides achieving the function jump, what's crucial is that we switched the context
+
+642
+00:21:36,470 --> 00:21:39,030
+So the whole execution environment changed
+
+643
+00:21:39,030 --> 00:21:42,770
+The entire running environment became a new task
+
+644
+00:21:42,770 --> 00:21:45,630
+On this CPU,
+
+645
+00:21:45,630 --> 00:21:47,450
+running in a brand-new environment.
+
+646
+00:21:47,450 --> 00:21:48,970
+And this is how we achieved a task switch.
+
+647
+00:21:48,970 --> 00:21:52,210
+So what comes next,
+
+648
+00:21:52,210 --> 00:21:54,210
+none of this is complicated — it just continues executing.
+
+649
+00:21:54,210 --> 00:21:57,650
+Now moving on,
+
+650
+00:21:57,650 --> 00:21:59,290
+let's demonstrate switching back.
+
+651
+00:21:59,290 --> 00:22:01,150
+Suppose TaskB,
+
+652
+00:22:01,150 --> 00:22:03,570
+also doesn't want to run anymore,
+
+653
+00:22:03,570 --> 00:22:06,630
+and it wants to release this CPU.
+
+654
+00:22:06,630 --> 00:22:08,310
+Well, this process,
+
+655
+00:22:08,310 --> 00:22:09,570
+based on our earlier analysis,
+
+656
+00:22:09,570 --> 00:22:11,870
+is actually quite similar.
+
+657
+00:22:11,870 --> 00:22:13,190
+So the first step,
+
+658
+00:22:13,190 --> 00:22:13,930
+it takes the address of the
+
+659
+00:22:13,930 --> 00:22:17,800
+J加N instruction just below,
+
+660
+00:22:17,800 --> 00:22:20,940
+and stores it
+
+661
+00:22:20,940 --> 00:22:23,000
+and it's saved in here.
+
+662
+00:22:23,000 --> 00:22:23,700
+Right?
+
+663
+00:22:23,700 --> 00:22:24,420
+It gets saved in here.
+
+664
+00:22:24,420 --> 00:22:26,780
+By a store instruction, that's the effect we get.
+
+665
+00:22:26,780 --> 00:22:27,860
+And then,
+
+666
+00:22:27,860 --> 00:22:29,220
+we say that
+
+667
+00:22:29,220 --> 00:22:31,560
+it jumps right here.
+
+668
+00:22:31,560 --> 00:22:33,380
+Then likewise, saving the context,
+
+669
+00:22:33,380 --> 00:22:39,140
+and then,
+
+670
+00:22:39,140 --> 00:22:40,200
+switching.
+
+671
+00:22:40,200 --> 00:22:42,480
+Right?
+
+672
+00:22:42,480 --> 00:22:42,860
+Switching.
+
+673
+00:22:42,860 --> 00:22:44,040
+After the switch is done,
+
+674
+00:22:44,040 --> 00:22:44,540
+it restores again.
+
+675
+00:22:44,540 --> 00:22:46,500
+That is, it takes task A,
+
+676
+00:22:46,500 --> 00:22:47,820
+and restores it back in.
+
+677
+00:22:47,820 --> 00:22:49,440
+Task A,
+
+678
+00:22:49,440 --> 00:22:51,860
+the contents saved in here,
+
+679
+00:22:51,860 --> 00:22:52,900
+will all be restored back in.
+
+680
+00:22:52,900 --> 00:22:57,340
+Restored back in.
+
+681
+00:22:57,340 --> 00:23:00,000
+After the restore is complete,
+
+682
+00:23:00,000 --> 00:23:01,000
+in the same way,
+
+683
+00:23:01,000 --> 00:23:01,760
+it must return
+
+684
+00:23:01,760 --> 00:23:03,600
+to where? To this one.
+
+685
+00:23:03,600 --> 00:23:05,400
+This —
+
+686
+00:23:05,400 --> 00:23:06,820
+at this point, once the restore is done,
+
+687
+00:23:06,820 --> 00:23:09,920
+the i plus m we saved earlier takes effect.
+
+688
+00:23:09,920 --> 00:23:10,900
+Because at this point,
+
+689
+00:23:10,900 --> 00:23:12,840
+the return still looks at this value.
+
+690
+00:23:12,840 --> 00:23:13,980
+So at this point it jumps to
+
+691
+00:23:13,980 --> 00:23:15,400
+the instruction i plus m.
+
+692
+00:23:15,400 --> 00:23:19,720
+And,
+
+693
+00:23:19,720 --> 00:23:21,920
+it happens to be exactly the
+
+694
+00:23:21,920 --> 00:23:22,860
+next instruction after our call instruction.
+
+695
+00:23:22,860 --> 00:23:24,880
+So this task is essentially —
+
+696
+00:23:24,880 --> 00:23:26,040
+if you don't count
+
+697
+00:23:26,040 --> 00:23:27,380
+the process of being interrupted in the middle —
+
+698
+00:23:27,380 --> 00:23:28,480
+you can imagine this
+
+699
+00:23:28,480 --> 00:23:29,220
+this task
+
+700
+00:23:29,220 --> 00:23:30,720
+is actually just running in —
+
+701
+00:23:30,720 --> 00:23:31,820
+running continuously
+
+702
+00:23:31,820 --> 00:23:34,220
+Now of course, this switching process is very fast.
+
+703
+00:23:34,220 --> 00:23:35,820
+If the switch is fast enough,
+
+704
+00:23:35,820 --> 00:23:36,920
+you basically can't see
+
+705
+00:23:36,920 --> 00:23:40,020
+the switching that happens in between,
+
+706
+00:23:40,020 --> 00:23:40,840
+and so you can
+
+707
+00:23:40,840 --> 00:23:43,560
+So from the perspective of a single task,
+
+708
+00:23:43,560 --> 00:23:45,420
+it is actually still running smoothly,
+
+709
+00:23:45,420 --> 00:23:47,460
+and that's how we achieve task switching.
+
+710
+00:23:47,460 --> 00:23:53,400
+That is the whole switching process for us.
+
+711
+00:23:53,400 --> 00:23:56,400
+The core content is really right here.
+
+712
+00:23:56,400 --> 00:23:57,200
+to perform the tasks.
+
+713
+00:23:57,200 --> 00:23:59,720
+Now that we understand this,
+
+714
+00:23:59,720 --> 00:24:02,200
+it's really just a matter of looking at how our code implements it.
+
+715
+00:24:02,200 --> 00:24:06,360
+So this key switching function,
+
+716
+00:24:06,360 --> 00:24:09,160
+corresponding to what we just had, is very simple.
+
+717
+00:24:09,160 --> 00:24:10,300
+Our switching function,
+
+718
+00:24:10,300 --> 00:24:11,040
+you can imagine,
+
+719
+00:24:11,040 --> 00:24:12,300
+this switching function,
+
+720
+00:24:12,300 --> 00:24:13,600
+we wrote it in assembly.
+
+721
+00:24:13,600 --> 00:24:14,620
+Because this switching function
+
+722
+00:24:14,620 --> 00:24:17,220
+has extremely high performance requirements.
+
+723
+00:24:17,220 --> 00:24:19,080
+During the switching process,
+
+724
+00:24:19,080 --> 00:24:19,880
+it will be used very frequently,
+
+725
+00:24:19,880 --> 00:24:21,100
+so on our side,
+
+726
+00:24:21,100 --> 00:24:23,180
+it is written in assembly.
+
+727
+00:24:23,180 --> 00:24:24,860
+Now, building on what we learned earlier,
+
+728
+00:24:24,860 --> 00:24:26,080
+we talked about before how,
+
+729
+00:24:26,080 --> 00:24:27,200
+in practice, assembly
+
+730
+00:24:27,200 --> 00:24:27,940
+can essentially be
+
+731
+00:24:27,940 --> 00:24:30,120
+defined together with C code.
+
+732
+00:24:30,120 --> 00:24:31,160
+So when we write it this way,
+
+733
+00:24:31,160 --> 00:24:32,340
+you can actually imagine
+
+734
+00:24:32,340 --> 00:24:33,120
+that there is
+
+735
+00:24:33,120 --> 00:24:33,940
+a C-language function like this.
+
+736
+00:24:33,940 --> 00:24:35,760
+Let me sketch it out as a demonstration.
+
+737
+00:24:35,760 --> 00:24:36,720
+Its first...
+
+738
+00:24:36,720 --> 00:24:37,900
+it has only one parameter,
+
+739
+00:24:37,900 --> 00:24:38,500
+and this parameter
+
+740
+00:24:38,500 --> 00:24:41,420
+points to the address of the next context.
+
+741
+00:24:41,420 --> 00:24:43,060
+So this address,
+
+742
+00:24:43,060 --> 00:24:45,700
+according to our calling convention,
+
+743
+00:24:45,700 --> 00:24:48,760
+as you know, is actually placed in the register a0.
+
+744
+00:24:48,760 --> 00:24:51,960
+Then when we come in,
+
+745
+00:24:51,960 --> 00:24:55,520
+here,
+
+746
+00:24:55,520 --> 00:24:58,600
+this and this thing,
+
+747
+00:24:58,600 --> 00:25:01,760
+are actually two assembly macros.
+
+748
+00:25:01,760 --> 00:25:02,920
+Take a look at them after class.
+
+749
+00:25:02,920 --> 00:25:05,900
+What they achieve is taking this context,
+
+750
+00:25:05,900 --> 00:25:07,800
+this one is save.
+
+751
+00:25:07,800 --> 00:25:08,960
+So what does Save mean?
+
+752
+00:25:08,960 --> 00:25:14,300
+storing the registers in the CPU
+
+753
+00:25:14,300 --> 00:25:15,840
+into memory.
+
+754
+00:25:15,840 --> 00:25:18,180
+And then the so-called restore
+
+755
+00:25:18,180 --> 00:25:21,320
+is taking the context in memory
+
+756
+00:25:21,320 --> 00:25:23,020
+and putting it back into the CPU.
+
+757
+00:25:23,020 --> 00:25:24,880
+So those are the two macros.
+
+758
+00:25:24,880 --> 00:25:27,340
+And in between is a switch.
+
+759
+00:25:27,340 --> 00:25:28,820
+This switch, as you can see,
+
+760
+00:25:28,820 --> 00:25:29,940
+actually makes use of
+
+761
+00:25:29,940 --> 00:25:31,540
+The CSR instruction we learned earlier
+
+762
+00:25:31,540 --> 00:25:33,720
+It is actually
+
+763
+00:25:33,720 --> 00:25:35,740
+This CSR instruction, everyone remember it?
+
+764
+00:25:35,740 --> 00:25:36,500
+We talked about it before
+
+765
+00:25:36,500 --> 00:25:38,060
+Combining with what we discussed earlier
+
+766
+00:25:38,060 --> 00:25:40,560
+It is actually just a write operation on the CSR register
+
+767
+00:25:40,560 --> 00:25:42,440
+A write operation on this register
+
+768
+00:25:42,440 --> 00:25:44,420
+A write operation
+
+769
+00:25:44,420 --> 00:25:46,340
+Write the value in A0 into it
+
+770
+00:25:46,340 --> 00:25:49,480
+Now we know that A0 is actually a pointer
+
+771
+00:25:49,480 --> 00:25:52,000
+A pointer to the next context
+
+772
+00:25:52,000 --> 00:25:55,140
+So once you write it, doesn't that achieve the effect of changing it?
+
+773
+00:25:55,140 --> 00:25:55,340
+Right?
+
+774
+00:25:55,340 --> 00:25:58,440
+Look at the diagram from earlier and think about it yourselves
+
+775
+00:25:58,440 --> 00:26:02,180
+Then we won't say more about these earlier parts
+
+776
+00:26:02,180 --> 00:26:07,800
+This is mainly because in this process
+
+777
+00:26:07,800 --> 00:26:09,680
+It uses T6 as a parameter
+
+778
+00:26:09,680 --> 00:26:12,180
+I won't say more about that
+
+779
+00:26:12,180 --> 00:26:17,710
+Then this CSRRW
+
+780
+00:26:17,710 --> 00:26:22,410
+Actually, this achieves the two registers
+
+781
+00:26:22,410 --> 00:26:24,850
+you can do the swap in a single atomic operation.
+
+782
+00:26:24,850 --> 00:26:29,310
+Now, as for why we use t6,
+
+783
+00:26:29,310 --> 00:26:32,170
+we have a comment about it in the code.
+
+784
+00:26:32,170 --> 00:26:33,950
+The reason is actually that
+
+785
+00:26:33,950 --> 00:26:35,750
+during this execution process,
+
+786
+00:26:35,750 --> 00:26:38,630
+it needs to save every general-purpose register.
+
+787
+00:26:38,630 --> 00:26:40,310
+And this t6,
+
+788
+00:26:40,310 --> 00:26:42,590
+it is actually in our set of general-purpose registers,
+
+789
+00:26:42,590 --> 00:26:44,390
+it should be the last register.
+
+790
+00:26:44,390 --> 00:26:49,070
+So we use it as the parameter of this function,
+
+791
+00:26:49,070 --> 00:26:52,960
+because it is the last one to be overwritten.
+
+792
+00:26:52,960 --> 00:26:56,420
+Nothing else to it, really.
+
+793
+00:26:56,420 --> 00:26:57,880
+This function is very simple,
+
+794
+00:26:57,880 --> 00:27:00,560
+but you need to understand the underlying principle.
+
+795
+00:27:00,560 --> 00:27:05,710
+So our overall, this whole Shanghai document
+
+796
+00:27:05,710 --> 00:27:07,110
+that is, cooperative multitasking,
+
+797
+00:27:07,110 --> 00:27:09,630
+we actually complete it in two steps.
+
+798
+00:27:09,630 --> 00:27:12,270
+Let me briefly walk you through it.
+
+799
+00:27:12,270 --> 00:27:15,190
+In fact, in our code,
+
+800
+00:27:15,190 --> 00:27:16,210
+um,
+
+801
+00:27:16,210 --> 00:27:18,610
+Three and four, these two things
+
+802
+00:27:18,610 --> 00:27:23,450
+are both about task switching and cooperative
+
+803
+00:27:23,450 --> 00:27:24,530
+uh
+
+804
+00:27:24,530 --> 00:27:25,810
+multitasking.
+
+805
+00:27:25,810 --> 00:27:27,070
+Now, four,
+
+806
+00:27:27,070 --> 00:27:29,050
+in the end, actually implements cooperative multitasking.
+
+807
+00:27:29,050 --> 00:27:30,250
+As for three,
+
+808
+00:27:30,250 --> 00:27:31,870
+you can actually think of it as, before we
+
+809
+00:27:31,870 --> 00:27:32,650
+uh
+
+810
+00:27:32,650 --> 00:27:35,210
+implement the final cooperative multitasking,
+
+811
+00:27:35,210 --> 00:27:37,790
+we need to try to figure out how to implement the first step.
+
+812
+00:27:37,790 --> 00:27:39,590
+This so-called first step is the context switch.
+
+813
+00:27:39,590 --> 00:27:40,770
+How do we implement this step?
+
+814
+00:27:40,770 --> 00:27:44,710
+So this example three,
+
+815
+00:27:44,710 --> 00:27:46,790
+only implements the context switch,
+
+816
+00:27:46,790 --> 00:27:47,870
+this first-step example.
+
+817
+00:27:47,870 --> 00:27:51,670
+Its design is very simple.
+
+818
+00:27:51,670 --> 00:27:53,750
+That is, we first define a context,
+
+819
+00:27:53,750 --> 00:27:55,670
+and then,
+
+820
+00:27:55,670 --> 00:27:58,670
+we now define the first task.
+
+821
+00:27:58,670 --> 00:28:00,670
+task0, this first task,
+
+822
+00:28:00,670 --> 00:28:01,770
+this task doesn't do much.
+
+823
+00:28:01,770 --> 00:28:03,750
+It just keeps printing,
+
+824
+00:28:03,750 --> 00:28:08,750
+about every 1000 ticks,
+
+825
+00:28:08,750 --> 00:28:10,730
+and then it prints "running".
+
+826
+00:28:10,730 --> 00:28:14,450
+This task will never exit,
+
+827
+00:28:14,450 --> 00:28:15,450
+it keeps running in there forever.
+
+828
+00:28:15,450 --> 00:28:17,890
+And then, correspondingly,
+
+829
+00:28:17,890 --> 00:28:18,950
+for this task,
+
+830
+00:28:18,950 --> 00:28:21,050
+since it needs to have its own stack,
+
+831
+00:28:21,050 --> 00:28:22,770
+we need to define a stack of its own,
+
+832
+00:28:22,770 --> 00:28:24,770
+and define its own context,
+
+833
+00:28:24,770 --> 00:28:26,250
+since we only have one task here,
+
+834
+00:28:26,250 --> 00:28:27,350
+we just define one
+
+835
+00:28:27,350 --> 00:28:29,610
+corresponding stack and corresponding context, and that's it.
+
+836
+00:28:29,610 --> 00:28:31,850
+And once we have that,
+
+837
+00:28:31,850 --> 00:28:34,250
+we implement an initialization.
+
+838
+00:28:34,250 --> 00:28:35,930
+Note carefully here,
+
+839
+00:28:35,930 --> 00:28:37,390
+this corresponds to the initialization process
+
+840
+00:28:37,390 --> 00:28:39,390
+that I explained to you earlier.
+
+841
+00:28:39,390 --> 00:28:41,530
+We're actually taking this task's
+
+842
+00:28:41,530 --> 00:28:45,790
+Here we're actually initializing this stack.
+
+843
+00:28:45,790 --> 00:28:48,970
+This is actually what we explained to you earlier.
+
+844
+00:28:48,970 --> 00:28:51,990
+We take the first instruction of this task's
+
+845
+00:28:51,990 --> 00:28:55,630
+The function's name is actually the address of that function.
+
+846
+00:28:55,630 --> 00:28:58,950
+In other words, it's the address of the function's first instruction.
+
+847
+00:28:58,950 --> 00:29:00,410
+Take the address of that first instruction
+
+848
+00:29:00,410 --> 00:29:01,830
+and save it into ra.
+
+849
+00:29:01,830 --> 00:29:06,130
+If you combine this with the initialization part of the animation we showed earlier,
+
+850
+00:29:06,130 --> 00:29:07,970
+you can see what's going on here.
+
+851
+00:29:07,970 --> 00:29:09,910
+Then,
+
+852
+00:29:09,910 --> 00:29:13,750
+the first step to making the switch work,
+
+853
+00:29:13,750 --> 00:29:15,630
+that is, switching to the first user program,
+
+854
+00:29:15,630 --> 00:29:20,070
+so what's here is actually still the same task as before.
+
+855
+00:29:20,070 --> 00:29:23,190
+The thing we actually need to implement is this function called schedule.
+
+856
+00:29:23,190 --> 00:29:25,010
+For this schedule function,
+
+857
+00:29:25,010 --> 00:29:27,530
+internally it just calls a switch2.
+
+858
+00:29:27,530 --> 00:29:28,510
+But this function,
+
+859
+00:29:28,510 --> 00:29:31,590
+note that this function is actually defined in assembly.
+
+860
+00:29:31,590 --> 00:29:33,970
+And as for the argument it passes,
+
+861
+00:29:33,970 --> 00:29:35,510
+That is next.
+
+862
+00:29:35,510 --> 00:29:36,470
+next is this one.
+
+863
+00:29:36,470 --> 00:29:38,410
+This context is actually it.
+
+864
+00:29:38,410 --> 00:29:39,850
+It is our first task.
+
+865
+00:29:39,850 --> 00:29:40,610
+The corresponding context.
+
+866
+00:29:40,610 --> 00:29:42,910
+We take the context of this first task
+
+867
+00:29:42,910 --> 00:29:43,750
+and pass it into here.
+
+868
+00:29:43,750 --> 00:29:44,730
+Once this function is called,
+
+869
+00:29:44,730 --> 00:29:47,730
+it switches into the first task.
+
+870
+00:29:47,730 --> 00:29:51,660
+And then, our
+
+871
+00:29:51,660 --> 00:29:54,400
+after the kernel is up and running,
+
+872
+00:29:54,400 --> 00:29:55,800
+as everyone knows, it actually goes through
+
+873
+00:29:55,800 --> 00:29:57,520
+the start_kernel entry point.
+
+874
+00:29:57,520 --> 00:29:59,140
+Inside it,
+
+875
+00:29:59,140 --> 00:30:01,280
+the first step is to do an initialization,
+
+876
+00:30:01,280 --> 00:30:04,700
+and then this step performs the task switch.
+
+877
+00:30:04,700 --> 00:30:06,020
+So please note,
+
+878
+00:30:06,020 --> 00:30:09,680
+what we are really emphasizing here is that
+
+879
+00:30:09,680 --> 00:30:10,920
+this task, in fact,
+
+880
+00:30:10,920 --> 00:30:13,680
+even though we call it task zero,
+
+881
+00:30:13,680 --> 00:30:17,420
+Actually, from the perspective of our whole system,
+
+882
+00:30:17,420 --> 00:30:22,420
+it can really be considered the second task.
+
+883
+00:30:22,420 --> 00:30:24,580
+Why do I say that?
+
+884
+00:30:24,580 --> 00:30:27,400
+Well, the setup process we did earlier,
+
+885
+00:30:27,400 --> 00:30:29,820
+you can consider that as our task zero.
+
+886
+00:30:29,820 --> 00:30:30,660
+This switch,
+
+887
+00:30:30,660 --> 00:30:31,740
+switching over to this task,
+
+888
+00:30:31,740 --> 00:30:33,640
+that's actually our second one,
+
+889
+00:30:33,640 --> 00:30:35,820
+so you can think of it as task one.
+
+890
+00:30:35,820 --> 00:30:36,760
+Please keep that in mind.
+
+891
+00:30:36,760 --> 00:30:38,160
+There are really two tasks.
+
+892
+00:30:38,160 --> 00:30:40,720
+It's just that the task we initialized,
+
+893
+00:30:40,720 --> 00:30:41,680
+it runs very quickly.
+
+894
+00:30:41,680 --> 00:30:43,240
+Once it gets to this step and sets everything up,
+
+895
+00:30:43,240 --> 00:30:45,140
+it jumps over to the first task.
+
+896
+00:30:45,140 --> 00:30:48,940
+That's our first step.
+
+897
+00:30:48,940 --> 00:30:52,180
+Now, the corresponding part here,
+
+898
+00:30:52,180 --> 00:30:55,930
+as for the code,
+
+899
+00:30:55,930 --> 00:30:57,150
+take a look at it yourselves when you get back.
+
+900
+00:30:57,150 --> 00:30:57,610
+This one.
+
+901
+00:30:57,610 --> 00:31:04,240
+I can't switch over in time.
+
+902
+00:31:04,240 --> 00:31:18,810
+That is to say, what we're talking about now, this thing in 03,
+
+903
+00:31:18,810 --> 00:31:21,170
+when we run it,
+
+904
+00:31:21,170 --> 00:31:31,250
+you can see that at the very beginning,
+
+905
+00:31:31,250 --> 00:31:33,830
+actually, this printing of hello rbos,
+
+906
+00:31:33,830 --> 00:31:37,650
+you can think of it as task zero, the very first task of our system,
+
+907
+00:31:37,650 --> 00:31:38,630
+it is running,
+
+908
+00:31:38,630 --> 00:31:40,350
+and while it's running,
+
+909
+00:31:40,350 --> 00:31:43,150
+once you see this thing printed out,
+
+910
+00:31:43,150 --> 00:31:45,990
+that means we've actually switched over to our first user task,
+
+911
+00:31:45,990 --> 00:31:48,270
+our first task has started running.
+
+912
+00:31:48,270 --> 00:31:50,190
+That's actually what it means.
+
+913
+00:31:50,190 --> 00:31:53,210
+So when you see this thing printed out,
+
+914
+00:31:53,210 --> 00:31:54,250
+it means our first task
+
+915
+00:31:54,250 --> 00:31:55,730
+has already switched over,
+
+916
+00:31:55,730 --> 00:31:57,490
+which means the context switch was successful.
+
+917
+00:31:57,490 --> 00:32:02,290
+Then our fourth example,
+
+918
+00:32:02,290 --> 00:32:04,890
+that's our cooperative task,
+
+919
+00:32:04,890 --> 00:32:06,670
+that is, Multitask,
+
+920
+00:32:06,670 --> 00:32:10,710
+that's the one that implements cooperative multitasking.
+
+921
+00:32:10,710 --> 00:32:11,610
+Let's take a look at the effect first.
+
+922
+00:32:11,610 --> 00:32:22,830
+As you can see, look at this,
+
+923
+00:32:22,830 --> 00:32:25,640
+it keeps changing, right?
+
+924
+00:32:25,640 --> 00:32:30,100
+Now, during this process,
+
+925
+00:32:30,100 --> 00:32:32,800
+we actually have two tasks running.
+
+926
+00:32:32,800 --> 00:32:36,480
+0 and 1 are running alternately.
+
+927
+00:32:36,480 --> 00:32:37,960
+This alternation process
+
+928
+00:32:37,960 --> 00:32:39,200
+is actually achieved through
+
+929
+00:32:39,200 --> 00:32:41,020
+this cooperative
+
+930
+00:32:41,020 --> 00:32:44,080
+voluntarily giving up the CPU.
+
+931
+00:32:44,080 --> 00:32:45,360
+These two tasks,
+
+932
+00:32:45,360 --> 00:32:46,880
+let's take a look.
+
+933
+00:32:46,880 --> 00:32:50,480
+Now, in this implementation of
+
+934
+00:32:50,480 --> 00:32:56,040
+this multitasking scheduling,
+
+935
+00:32:56,040 --> 00:32:57,580
+when we implemented it,
+
+936
+00:32:57,580 --> 00:32:58,580
+we actually made
+
+937
+00:32:58,580 --> 00:32:59,420
+some improvements on the original basis.
+
+938
+00:32:59,420 --> 00:33:00,720
+You can compare them.
+
+939
+00:33:00,720 --> 00:33:02,300
+Take the 03 and 04 examples.
+
+940
+00:33:02,300 --> 00:33:04,860
+The main modifications are
+
+941
+00:33:04,860 --> 00:33:05,780
+Let me demonstrate this for you.
+
+942
+00:33:05,780 --> 00:33:06,620
+It's right here at this point.
+
+943
+00:33:06,620 --> 00:33:08,420
+So originally in 03,
+
+944
+00:33:08,420 --> 00:33:11,920
+it only defined one task and one task stack.
+
+945
+00:33:11,920 --> 00:33:14,140
+But after we moved to 04,
+
+946
+00:33:14,140 --> 00:33:16,060
+we actually made a few improvements.
+
+947
+00:33:16,060 --> 00:33:18,420
+What we actually did was define,
+
+948
+00:33:18,420 --> 00:33:21,720
+we took all the task stacks
+
+949
+00:33:21,720 --> 00:33:25,280
+and the task structs, and defined them as an array.
+
+950
+00:33:25,280 --> 00:33:26,620
+Right now,
+
+951
+00:33:26,620 --> 00:33:29,540
+in other words, in our system,
+
+952
+00:33:29,540 --> 00:33:31,580
+we can support up to 10 tasks,
+
+953
+00:33:31,580 --> 00:33:33,320
+10 tasks running at the same time.
+
+954
+00:33:33,320 --> 00:33:34,580
+10 tasks.
+
+955
+00:33:34,580 --> 00:33:36,940
+And then,
+
+956
+00:33:36,940 --> 00:33:40,560
+when we use it, we actually implemented
+
+957
+00:33:40,560 --> 00:33:43,140
+that is to say, the task selection,
+
+958
+00:33:43,140 --> 00:33:45,260
+we do it through this variable.
+
+959
+00:33:45,260 --> 00:33:47,000
+top is used to
+
+960
+00:33:47,000 --> 00:33:51,180
+indicate how many tasks we have created in total.
+
+961
+00:33:51,180 --> 00:33:54,400
+Then current is used to point to
+
+962
+00:33:54,400 --> 00:33:56,080
+the current task.
+
+963
+00:33:56,080 --> 00:33:57,080
+Since it's an array,
+
+964
+00:33:57,080 --> 00:33:58,260
+we just define an integer,
+
+965
+00:33:58,260 --> 00:34:00,700
+and its value is actually the index into this array.
+
+966
+00:34:00,700 --> 00:34:02,600
+So this integer value
+
+967
+00:34:02,600 --> 00:34:05,080
+is used to point to the current task.
+
+968
+00:34:05,080 --> 00:34:06,340
+Then here,
+
+969
+00:34:06,340 --> 00:34:08,600
+every time schedule is called,
+
+970
+00:34:08,600 --> 00:34:11,000
+we actually use this logic
+
+971
+00:34:11,000 --> 00:34:15,500
+to compute the position of the next task.
+
+972
+00:34:15,500 --> 00:34:16,580
+Now this,
+
+973
+00:34:16,580 --> 00:34:17,180
+as you can probably tell,
+
+974
+00:34:17,180 --> 00:34:19,500
+by doing this modulo operation,
+
+975
+00:34:19,500 --> 00:34:22,780
+you can actually achieve a round-robin
+
+976
+00:34:22,780 --> 00:34:23,820
+a round-robin.
+
+977
+00:34:23,820 --> 00:34:26,900
+So what we use is a round-robin approach.
+
+978
+00:34:26,900 --> 00:34:29,380
+That's why, if you look at the output,
+
+979
+00:34:29,380 --> 00:34:30,820
+it first goes from 0 to 1,
+
+980
+00:34:30,820 --> 00:34:32,440
+and after 1 finishes, it goes back to 0.
+
+981
+00:34:32,440 --> 00:34:34,160
+Because if we say we only have two,
+
+982
+00:34:34,160 --> 00:34:36,620
+then this top value is actually 2.
+
+983
+00:34:36,620 --> 00:34:37,600
+And with 2,
+
+984
+00:34:37,600 --> 00:34:39,820
+they just cycle between 0 and 1.
+
+985
+00:34:39,820 --> 00:34:41,520
+So taking the modulus gives us exactly that effect.
+
+986
+00:34:41,520 --> 00:34:44,140
+Everything else stays the same.
+
+987
+00:34:44,140 --> 00:34:46,340
+And then we took this schedule,
+
+988
+00:34:46,340 --> 00:34:47,300
+wrapped it up a bit,
+
+989
+00:34:47,300 --> 00:34:49,840
+and turned it into a task_yield.
+
+990
+00:34:49,840 --> 00:34:52,340
+Yield means voluntarily giving up the CPU.
+
+991
+00:34:52,340 --> 00:34:55,520
+So for our two tasks,
+
+992
+00:34:55,520 --> 00:34:59,180
+we created them as two tasks.
+
+993
+00:34:59,180 --> 00:35:02,800
+Then we also defined a TaskCreator,
+
+994
+00:35:02,800 --> 00:35:05,780
+used to create the tasks.
+
+995
+00:35:05,780 --> 00:35:08,560
+Inside this main function,
+
+996
+00:35:08,560 --> 00:35:11,280
+we can create two tasks,
+
+997
+00:35:11,280 --> 00:35:14,380
+pass in the functions for the two tasks,
+
+998
+00:35:14,380 --> 00:35:16,240
+and we get two tasks created.
+
+999
+00:35:16,240 --> 00:35:18,320
+And then inside each task,
+
+1000
+00:35:18,320 --> 00:35:19,760
+we actively call TaskYield.
+
+1001
+00:35:19,760 --> 00:35:21,040
+to give up the CPU
+
+1002
+00:35:21,040 --> 00:35:23,760
+and then implement the switching between two tasks
+
+1003
+00:35:23,760 --> 00:35:25,800
+to achieve that effect
+
+1004
+00:35:25,800 --> 00:35:28,360
+This code is actually quite simple
+
+1005
+00:35:28,360 --> 00:35:29,200
+So here I just
+
+1006
+00:35:29,200 --> 00:35:32,760
+didn't go into that much detail
+
+1007
+00:35:32,760 --> 00:35:33,400
+You can
+
+1008
+00:35:33,400 --> 00:35:34,440
+mainly I'll leave it to you
+
+1009
+00:35:34,440 --> 00:35:35,320
+to read through it on your own
+
+1010
+00:35:35,320 --> 00:35:36,720
+So regarding this
+
+1011
+00:35:36,720 --> 00:35:38,540
+cooperative multitasking,
+
+1012
+00:35:38,540 --> 00:35:41,040
+that should be about it
+
+1013
+00:35:41,040 --> 00:35:47,150
+This is the calling situation within the group functions
+
+1014
+00:35:47,150 --> 00:35:49,950
+The calling situation within the group functions
+
+1015
+00:35:49,950 --> 00:35:51,290
+Inside the group functions,
+
+1016
+00:35:51,290 --> 00:35:51,810
+basically what happens is
+
+1017
+00:35:51,810 --> 00:35:54,070
+first initialize schedule
+
+1018
+00:35:54,070 --> 00:35:56,350
+initialize the related stuff
+
+1019
+00:35:56,350 --> 00:35:57,810
+and then OSM
+
+1020
+00:35:57,810 --> 00:35:59,090
+Inside OSM, as you can see
+
+1021
+00:35:59,090 --> 00:36:00,790
+It's through task_create
+
+1022
+00:36:00,790 --> 00:36:02,650
+that we created two tasks.
+
+1023
+00:36:02,650 --> 00:36:04,090
+And then,
+
+1024
+00:36:04,090 --> 00:36:05,490
+when schedule is called again,
+
+1025
+00:36:05,490 --> 00:36:07,930
+it actually switches from our task 0 here,
+
+1026
+00:36:07,930 --> 00:36:08,530
+that is, this one,
+
+1027
+00:36:08,530 --> 00:36:10,830
+switching over to task 0.
+
+1028
+00:36:10,830 --> 00:36:13,430
+First it switches to task 0,
+
+1029
+00:36:13,430 --> 00:36:15,850
+and then the two tasks begin,
+
+1030
+00:36:15,850 --> 00:36:17,250
+switching back and forth between each other.
+
+1031
+00:36:17,250 --> 00:36:20,230
+That's the effect schedule achieves.
+
+1032
+00:36:20,230 --> 00:36:23,950
+Now, once the two tasks start switching,
+
+1033
+00:36:23,950 --> 00:36:24,750
+right here,
+
+1034
+00:36:24,750 --> 00:36:25,830
+look, why does he say
+
+1035
+00:36:25,830 --> 00:36:26,810
+we never come back here again?
+
+1036
+00:36:26,810 --> 00:36:27,190
+It's because
+
+1037
+00:36:27,190 --> 00:36:29,270
+it never switches back here.
+
+1038
+00:36:29,270 --> 00:36:30,430
+That is, the task
+
+1039
+00:36:30,430 --> 00:36:33,490
+represented by this start_kernel function,
+
+1040
+00:36:33,490 --> 00:36:34,370
+this task
+
+1041
+00:36:34,370 --> 00:36:35,710
+In fact, it won't switch back
+
+1042
+00:36:35,710 --> 00:36:36,830
+Pay attention to this
+
+1043
+00:36:36,830 --> 00:36:38,270
+Actually, there's no way you'll see this line printed
+
+1044
+00:36:38,270 --> 00:36:39,470
+You'll never see this line
+
+1045
+00:36:39,470 --> 00:36:43,790
+So this is a
+
+1046
+00:36:43,790 --> 00:36:44,930
+cooperative multitasking
+
+1047
+00:36:44,930 --> 00:36:45,950
+simple implementation
+
+1048
+00:36:45,950 --> 00:36:48,570
+After you go back,
+
+1049
+00:36:48,570 --> 00:36:51,030
+based on what we covered in class
+
+1050
+00:36:51,030 --> 00:36:53,370
+and the explanation I just gave you
+
+1051
+00:36:53,370 --> 00:36:55,950
+take 9, 9-1, and 9-2
+
+1052
+00:36:55,950 --> 00:36:58,950
+and give them a try
+
+1053
+00:36:58,950 --> 00:37:06,050
+Now, regarding this cooperative multitasking,
+
+1054
+00:37:06,050 --> 00:37:07,530
+the most essential part
+
+1055
+00:37:07,530 --> 00:37:09,450
+is really that you need to understand
+
+1056
+00:37:09,450 --> 00:37:15,330
+our concepts about the related initialization
+
+1057
+00:37:15,330 --> 00:37:18,970
+and, during the task execution,
+
+1058
+00:37:18,970 --> 00:37:21,150
+how this switching process is actually implemented
+
+1059
+00:37:21,150 --> 00:37:24,810
+Once you understand this diagram,
+
+1060
+00:37:24,810 --> 00:37:26,930
+when you go and look at the code,
+
+1061
+00:37:26,930 --> 00:37:28,850
+So I hope this code will be
+
+1062
+00:37:28,850 --> 00:37:30,530
+a bit easier for you to understand.
+
+1063
+00:37:30,530 --> 00:37:32,550
+So for today,
+
+1064
+00:37:32,550 --> 00:37:34,850
+that's really all the content I wanted to cover.
+
+1065
+00:37:34,850 --> 00:37:35,690
+With the remaining time,
+
+1066
+00:37:35,690 --> 00:37:37,230
+this code really still
+
+1067
+00:37:37,230 --> 00:37:38,390
+needs you to spend some time
+
+1068
+00:37:38,390 --> 00:37:39,870
+digesting and understanding it.
+
+1069
+00:37:39,870 --> 00:37:42,370
+So for the rest of the time,
+
+1070
+00:37:42,370 --> 00:37:43,650
+we'll leave it to you
+
+1071
+00:37:43,650 --> 00:37:45,750
+to go through today's material,
+
+1072
+00:37:45,750 --> 00:37:50,050
+including printing to the console window,
+
+1073
+00:37:50,050 --> 00:37:53,690
+memory allocation,
+
+1074
+00:37:53,690 --> 00:37:55,290
+dynamic memory management,
+
+1075
+00:37:55,290 --> 00:37:56,330
+and also
+
+1076
+00:37:56,330 --> 00:37:58,550
+the code for cooperative multitasking.
+
+1077
+00:37:58,550 --> 00:38:00,190
+Go through it on your own,
+
+1078
+00:38:00,190 --> 00:38:01,570
+and once you understand it,
+
+1079
+00:38:01,570 --> 00:38:03,890
+do the corresponding exercises,
+
+1080
+00:38:03,890 --> 00:38:05,350
+and that should be about it.

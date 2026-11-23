@@ -1,0 +1,4611 @@
+1
+00:00:00,000 --> 00:00:10,680
+All right, good morning everyone. In the last class, we mainly talked about some concepts on computer organization principles, right?
+
+2
+00:00:11,980 --> 00:00:21,480
+So today we're moving on to Chapter 2, because as we know, the goal of this course is to develop an operating system.
+
+3
+00:00:21,480 --> 00:00:26,200
+Now, at the end of last class we talked about, if you want to develop an operating system,
+
+4
+00:00:26,200 --> 00:00:31,060
+you first need to have some understanding of the interface to the underlying hardware.
+
+5
+00:00:31,060 --> 00:00:34,200
+And the interface between the operating system and the underlying hardware,
+
+6
+00:00:34,200 --> 00:00:34,980
+we call it what?
+
+7
+00:00:34,980 --> 00:00:37,880
+It's called IC, that is, the instruction set, right?
+
+8
+00:00:37,880 --> 00:00:40,620
+So today we're going to give you an introduction
+
+9
+00:00:40,620 --> 00:00:42,640
+to some related concepts about instruction sets.
+
+10
+00:00:42,640 --> 00:00:47,780
+This class has two main parts.
+
+11
+00:00:47,780 --> 00:00:49,740
+First, I'll introduce to you
+
+12
+00:00:49,740 --> 00:00:52,800
+roughly what the concept of IC, the instruction set, is.
+
+13
+00:00:52,800 --> 00:00:54,180
+And the second part,
+
+14
+00:00:54,180 --> 00:00:57,360
+because this course targets a
+
+15
+00:00:57,360 --> 00:01:01,820
+specific instruction set called RISC-V.
+
+16
+00:01:01,820 --> 00:01:04,560
+So we will also give you an introduction
+
+17
+00:01:04,560 --> 00:01:05,800
+to the RISC-V instruction set.
+
+18
+00:01:05,800 --> 00:01:07,800
+That's how it is.
+
+19
+00:01:07,800 --> 00:01:10,680
+Now, this is ours.
+
+20
+00:01:10,680 --> 00:01:14,020
+Starting from this chapter, we'll have some reference manuals.
+
+21
+00:01:14,020 --> 00:01:15,140
+the referenced material
+
+22
+00:01:15,140 --> 00:01:17,340
+you should take a look
+
+23
+00:01:17,340 --> 00:01:18,400
+after class, that is
+
+24
+00:01:18,400 --> 00:01:21,260
+and it will also be noted in the slides
+
+25
+00:01:21,260 --> 00:01:23,300
+that is, some content or figures
+
+26
+00:01:23,300 --> 00:01:26,100
+referenced which sources, Reference 1, Reference 2
+
+27
+00:01:26,100 --> 00:01:27,580
+they'll be listed right here
+
+28
+00:01:27,580 --> 00:01:32,200
+among them,
+
+29
+00:01:32,200 --> 00:01:33,800
+Reference 1 and Reference 2
+
+30
+00:01:33,800 --> 00:01:35,020
+are actually the RISC-V
+
+31
+00:01:35,020 --> 00:01:36,660
+privileged architecture standard specification
+
+32
+00:01:36,660 --> 00:01:38,080
+this is in our
+
+33
+00:01:38,080 --> 00:01:39,640
+I don't know if after you go back
+
+34
+00:01:39,640 --> 00:01:41,040
+that is,
+
+35
+00:01:41,040 --> 00:01:44,240
+did you download the thing on Yun and above?
+
+36
+00:01:44,240 --> 00:01:46,360
+that under reference
+
+37
+00:01:46,360 --> 00:01:49,220
+in the references there are these two
+
+38
+00:01:49,220 --> 00:01:52,240
+should I go over this for you?
+
+39
+00:01:52,240 --> 00:01:53,200
+let me point it out
+
+40
+00:01:53,200 --> 00:02:02,690
+under this REFS, which is reference
+
+41
+00:02:02,690 --> 00:02:05,750
+Right below here, there's this thing.
+
+42
+00:02:05,750 --> 00:02:11,390
+The first two are called Reference 1 and Reference 2.
+
+43
+00:02:11,390 --> 00:02:12,770
+These actually refer to these two documents.
+
+44
+00:02:12,770 --> 00:02:18,700
+This one and this one.
+
+45
+00:02:18,700 --> 00:02:23,430
+Hold on a second.
+
+46
+00:02:23,430 --> 00:02:27,270
+This one and, I believe, this one.
+
+47
+00:02:27,270 --> 00:02:28,130
+These two.
+
+48
+00:02:28,130 --> 00:02:29,730
+Then there's one more.
+
+49
+00:02:29,730 --> 00:02:34,430
+There's one more called Reference 3.
+
+50
+00:02:34,430 --> 00:02:37,370
+Reference 3 is the RISC-V manual.
+
+51
+00:02:37,370 --> 00:02:38,630
+This should be it.
+
+52
+00:02:38,630 --> 00:02:40,430
+It should be this one.
+
+53
+00:02:40,430 --> 00:02:42,310
+It's this one.
+
+54
+00:02:42,310 --> 00:02:45,070
+This one is in Chinese.
+
+55
+00:02:45,070 --> 00:02:47,770
+The other two are in English.
+
+56
+00:02:47,770 --> 00:02:52,720
+As for this third one, the Chinese one,
+
+57
+00:02:52,720 --> 00:02:54,600
+you can actually use it as
+
+58
+00:02:54,600 --> 00:02:57,060
+an introductory manual for learning
+
+59
+00:02:57,060 --> 00:02:58,800
+the RISC-V instruction set.
+
+60
+00:02:58,800 --> 00:03:03,940
+It was translated by people here in China.
+
+61
+00:03:03,940 --> 00:03:05,620
+The original was written in English
+
+62
+00:03:05,620 --> 00:03:06,600
+and has been translated into Chinese.
+
+63
+00:03:06,600 --> 00:03:10,420
+Relatively speaking, it might be more accessible to students in China,
+
+64
+00:03:10,420 --> 00:03:11,760
+so you can start with this document
+
+65
+00:03:11,760 --> 00:03:13,640
+to get a general sense of the whole picture first.
+
+66
+00:03:13,640 --> 00:03:16,100
+Then the first two are the standard specifications,
+
+67
+00:03:16,100 --> 00:03:16,880
+and they're entirely in English.
+
+68
+00:03:16,880 --> 00:03:20,240
+During the course, we'll go through this reference document together,
+
+69
+00:03:20,240 --> 00:03:21,920
+and
+
+70
+00:03:21,920 --> 00:03:23,960
+we'll also refer back to these materials often later on.
+
+71
+00:03:23,960 --> 00:03:26,820
+So let's start with the first part,
+
+72
+00:03:26,820 --> 00:03:28,760
+which is a basic introduction to the ISA.
+
+73
+00:03:28,760 --> 00:03:30,700
+It mainly covers a few sections.
+
+74
+00:03:30,700 --> 00:03:33,160
+First, an introduction to exactly what RISC-V is.
+
+75
+00:03:33,160 --> 00:03:36,000
+Second, why we want to design RISC-V.
+
+76
+00:03:36,000 --> 00:03:42,320
+And then it introduces some related concepts about the RISC-V instruction set,
+
+77
+00:03:42,320 --> 00:03:45,060
+such as the classification of instruction sets,
+
+78
+00:03:45,060 --> 00:03:46,600
+instruction set width,
+
+79
+00:03:46,600 --> 00:03:48,480
+and also some things about instruction sets —
+
+80
+00:03:48,480 --> 00:03:51,840
+that is, we have many kinds of instruction sets today.
+
+81
+00:03:51,840 --> 00:03:54,680
+Now let me also introduce some of the more well-known instruction sets to you.
+
+82
+00:03:54,680 --> 00:04:00,010
+So first, let's look at exactly what RISC-V is.
+
+83
+00:04:00,010 --> 00:04:01,390
+Well, RISC-V
+
+84
+00:04:01,390 --> 00:04:02,910
+is actually an English abbreviation.
+
+85
+00:04:02,910 --> 00:04:04,610
+In this course of ours,
+
+86
+00:04:04,610 --> 00:04:07,110
+we'll run into a lot of English abbreviations.
+
+87
+00:04:07,110 --> 00:04:08,290
+So in the lecture slides,
+
+88
+00:04:08,290 --> 00:04:09,590
+we've spelled out these English abbreviations
+
+89
+00:04:09,590 --> 00:04:11,010
+for you in detail as well.
+
+90
+00:04:11,010 --> 00:04:13,970
+You should still get familiar with them,
+
+91
+00:04:13,970 --> 00:04:15,910
+because when you're...
+
+92
+00:04:15,910 --> 00:04:19,170
+since this kind of, how should I put it,
+
+93
+00:04:19,170 --> 00:04:21,470
+I mean, material on computer systems
+
+94
+00:04:21,470 --> 00:04:22,450
+is mostly in English.
+
+95
+00:04:22,450 --> 00:04:23,330
+And in English,
+
+96
+00:04:23,330 --> 00:04:25,230
+these abbreviations
+
+97
+00:04:25,230 --> 00:04:26,130
+are used very heavily.
+
+98
+00:04:26,130 --> 00:04:28,050
+Plus, once you understand what the abbreviation stands for,
+
+99
+00:04:28,050 --> 00:04:30,450
+you'll grasp the concept itself better.
+
+100
+00:04:30,450 --> 00:04:31,830
+So I do recommend that you...
+
+101
+00:04:31,830 --> 00:04:36,410
+So try to memorize the original English term.
+
+102
+00:04:36,410 --> 00:04:38,890
+And that will also help everyone improve their English a bit.
+
+103
+00:04:38,890 --> 00:04:40,070
+Just a little boost.
+
+104
+00:04:40,070 --> 00:04:42,490
+So what is ISA?
+
+105
+00:04:42,490 --> 00:04:45,070
+In Chinese we translate it as 指令集架构, or instruction set architecture.
+
+106
+00:04:45,070 --> 00:04:49,630
+It's the abbreviation of the English phrase "instruction set architecture".
+
+107
+00:04:49,630 --> 00:04:49,990
+Right?
+
+108
+00:04:49,990 --> 00:04:52,070
+Once you see that, you'll remember it.
+
+109
+00:04:52,070 --> 00:04:54,450
+And the concept of ISA becomes very easy to understand.
+
+110
+00:04:54,450 --> 00:04:56,410
+So, when we talk about the instruction set architecture,
+
+111
+00:04:56,410 --> 00:04:57,910
+what exactly is it?
+
+112
+00:04:57,910 --> 00:04:59,090
+Well, right here,
+
+113
+00:04:59,090 --> 00:05:00,130
+I've written it in bold for you,
+
+114
+00:05:00,130 --> 00:05:01,290
+just to emphasize the point.
+
+115
+00:05:01,290 --> 00:05:01,750
+That is to say,
+
+116
+00:05:01,750 --> 00:05:02,970
+it is not...
+
+117
+00:05:02,970 --> 00:05:05,270
+it is not some simple...
+
+118
+00:05:05,270 --> 00:05:06,110
+in other words, what is it? Some of you might treat the instruction set architecture,
+
+119
+00:05:06,110 --> 00:05:07,830
+that is,
+
+120
+00:05:07,830 --> 00:05:08,250
+well,
+
+121
+00:05:08,250 --> 00:05:10,290
+Because you've all learned some assembly and such,
+
+122
+00:05:10,290 --> 00:05:11,790
+you might simply understand it as
+
+123
+00:05:11,790 --> 00:05:12,730
+just some, like,
+
+124
+00:05:12,730 --> 00:05:13,850
+assembly language,
+
+125
+00:05:13,850 --> 00:05:15,990
+or something used for programming.
+
+126
+00:05:15,990 --> 00:05:16,570
+But in reality,
+
+127
+00:05:16,570 --> 00:05:18,430
+it's far more than that.
+
+128
+00:05:18,430 --> 00:05:20,050
+I should say that we call it...
+
+129
+00:05:20,050 --> 00:05:21,970
+its fundamental concept
+
+130
+00:05:21,970 --> 00:05:23,550
+is that it is a specification of an interface.
+
+131
+00:05:23,550 --> 00:05:25,430
+Now, since it's a set of interface specifications,
+
+132
+00:05:25,430 --> 00:05:26,670
+it is actually a standard.
+
+133
+00:05:26,670 --> 00:05:28,070
+You see what I mean?
+
+134
+00:05:28,070 --> 00:05:31,310
+Don't confuse it with a kind of assembly language
+
+135
+00:05:31,310 --> 00:05:32,310
+and mix the two up.
+
+136
+00:05:32,310 --> 00:05:33,710
+So on this,
+
+137
+00:05:33,710 --> 00:05:36,270
+we can actually see it from the figure on the right.
+
+138
+00:05:36,270 --> 00:05:37,990
+You can really tell from it,
+
+139
+00:05:37,990 --> 00:05:39,830
+and in fact this figure was mentioned in the last class too.
+
+140
+00:05:39,830 --> 00:05:42,590
+That is, which level RISC-V sits at.
+
+141
+00:05:42,590 --> 00:05:44,570
+We've talked about this diagram before.
+
+142
+00:05:44,570 --> 00:05:46,070
+The top part is actually the software part,
+
+143
+00:05:46,070 --> 00:05:47,030
+and the bottom is the hardware part,
+
+144
+00:05:47,030 --> 00:05:47,410
+right?
+
+145
+00:05:47,410 --> 00:05:49,990
+Now, once the software part on top is layered,
+
+146
+00:05:49,990 --> 00:05:52,170
+the very top layer is the application layer,
+
+147
+00:05:52,170 --> 00:05:53,930
+meaning the applications we write, this concept.
+
+148
+00:05:53,930 --> 00:05:56,650
+And in the middle is the operating system.
+
+149
+00:05:56,650 --> 00:05:58,470
+Now, between the operating system and the application layer,
+
+150
+00:05:58,470 --> 00:05:59,550
+there is also an interface,
+
+151
+00:05:59,550 --> 00:05:59,850
+right?
+
+152
+00:05:59,850 --> 00:06:00,930
+There is also a set of specifications.
+
+153
+00:06:00,930 --> 00:06:01,890
+What is that set of interfaces called?
+
+154
+00:06:01,890 --> 00:06:03,770
+Someone mentioned it last class:
+
+155
+00:06:03,770 --> 00:06:04,530
+it's called system calls,
+
+156
+00:06:04,530 --> 00:06:04,890
+right?
+
+157
+00:06:04,890 --> 00:06:05,750
+Now, system calls,
+
+158
+00:06:05,750 --> 00:06:06,130
+as we know,
+
+159
+00:06:06,130 --> 00:06:08,370
+should really also be a standard,
+
+160
+00:06:08,370 --> 00:06:09,630
+not just a simple set of functions.
+
+161
+00:06:09,630 --> 00:06:10,370
+Why is that?
+
+162
+00:06:10,370 --> 00:06:11,890
+Because you've all heard of
+
+163
+00:06:11,890 --> 00:06:13,410
+the concept of POSIX, right?
+
+164
+00:06:13,410 --> 00:06:14,470
+POSIX.
+
+165
+00:06:14,470 --> 00:06:15,650
+POSIX is a set of standards.
+
+166
+00:06:15,650 --> 00:06:16,550
+You get that, right?
+
+167
+00:06:16,550 --> 00:06:17,730
+It's just that its form
+
+168
+00:06:17,730 --> 00:06:20,150
+manifests as a set of C-language function calls.
+
+169
+00:06:20,150 --> 00:06:21,110
+But actually,
+
+170
+00:06:21,110 --> 00:06:22,630
+if you go look at the POSIX standard,
+
+171
+00:06:22,630 --> 00:06:24,370
+it's really a body of text,
+
+172
+00:06:24,370 --> 00:06:25,430
+a book.
+
+173
+00:06:25,430 --> 00:06:26,890
+It spells out in there
+
+174
+00:06:26,890 --> 00:06:28,790
+this is what you should do, and this, and this.
+
+175
+00:06:28,790 --> 00:06:29,610
+That's what it means.
+
+176
+00:06:29,610 --> 00:06:31,550
+So RSA is something like that.
+
+177
+00:06:31,550 --> 00:06:32,690
+It's also a set of standards,
+
+178
+00:06:32,690 --> 00:06:34,370
+not just simply telling you
+
+179
+00:06:34,370 --> 00:06:35,930
+some assembly language instructions.
+
+180
+00:06:35,930 --> 00:06:37,630
+It's not limited to just those things.
+
+181
+00:06:37,630 --> 00:06:41,950
+So beneath this RISC-V
+
+182
+00:06:41,950 --> 00:06:43,510
+is what we call the hardware.
+
+183
+00:06:43,510 --> 00:06:44,230
+Now, as for the hardware,
+
+184
+00:06:44,230 --> 00:06:45,970
+on this diagram here we
+
+185
+00:06:45,970 --> 00:06:47,910
+have already given you a hint about this hardware.
+
+186
+00:06:47,910 --> 00:06:49,690
+Actually, in the industry,
+
+187
+00:06:49,690 --> 00:06:51,370
+we call it
+
+188
+00:06:51,370 --> 00:06:52,990
+Microarchitecture.
+
+189
+00:06:52,990 --> 00:06:53,890
+So, from now on,
+
+190
+00:06:53,890 --> 00:06:56,070
+if you get involved in some low-level development,
+
+191
+00:06:56,070 --> 00:06:57,530
+this microarchitecture
+
+192
+00:06:57,530 --> 00:07:00,610
+is what we often refer to as the concept of microarchitecture.
+
+193
+00:07:00,610 --> 00:07:03,230
+So what is microarchitecture?
+
+194
+00:07:03,230 --> 00:07:04,050
+As for microarchitecture,
+
+195
+00:07:04,050 --> 00:07:05,870
+you can take an example.
+
+196
+00:07:05,870 --> 00:07:06,450
+That is to say,
+
+197
+00:07:06,450 --> 00:07:10,110
+the one you may have used a lot before,
+
+198
+00:07:10,110 --> 00:07:11,350
+is probably something like x86,
+
+199
+00:07:11,350 --> 00:07:13,190
+that instruction set architecture,
+
+200
+00:07:13,190 --> 00:07:13,550
+right?
+
+201
+00:07:13,550 --> 00:07:17,150
+So we know that for the x86 instruction set architecture,
+
+202
+00:07:17,150 --> 00:07:17,930
+it's
+
+203
+00:07:17,930 --> 00:07:20,150
+it's just a standard,
+
+204
+00:07:20,150 --> 00:07:21,650
+and someone actually has to implement it,
+
+205
+00:07:21,650 --> 00:07:21,970
+right?
+
+206
+00:07:21,970 --> 00:07:24,690
+And the one who implements it,
+
+207
+00:07:24,690 --> 00:07:27,370
+is actually not necessarily only Intel.
+
+208
+00:07:27,370 --> 00:07:29,390
+Are you familiar with this concept?
+
+209
+00:07:29,390 --> 00:07:31,590
+I mean, for this x86 instruction set architecture,
+
+210
+00:07:31,590 --> 00:07:33,970
+apart from Intel implementing it,
+
+211
+00:07:33,970 --> 00:07:35,530
+I mean, apart from Intel's chips implementing it,
+
+212
+00:07:35,530 --> 00:07:38,270
+what other company also does x86?
+
+213
+00:07:38,270 --> 00:07:39,990
+A fairly well-known company.
+
+214
+00:07:39,990 --> 00:07:43,230
+There's a company called AMD, right?
+
+215
+00:07:43,230 --> 00:07:46,670
+So both it and Intel implement
+
+216
+00:07:46,670 --> 00:07:48,550
+the x86 instruction set architecture,
+
+217
+00:07:48,550 --> 00:07:50,630
+but the specific implementation underneath
+
+218
+00:07:50,630 --> 00:07:51,570
+is different, right?
+
+219
+00:07:51,570 --> 00:07:52,970
+And their specific implementation
+
+220
+00:07:52,970 --> 00:07:55,070
+is a concept called microarchitecture.
+
+221
+00:07:55,070 --> 00:07:56,910
+it's something tied to the hardware
+
+222
+00:07:56,910 --> 00:07:57,650
+everyone follow me there
+
+223
+00:07:57,650 --> 00:07:59,050
+now, as for microarchitecture,
+
+224
+00:07:59,050 --> 00:08:00,910
+what is it actually concerned with?
+
+225
+00:08:00,910 --> 00:08:01,950
+you can think about what it cares about,
+
+226
+00:08:01,950 --> 00:08:03,290
+since it's tied to the hardware,
+
+227
+00:08:03,290 --> 00:08:04,530
+then it must be related to
+
+228
+00:08:04,530 --> 00:08:06,250
+the manufacturing side of things, right?
+
+229
+00:08:06,250 --> 00:08:07,610
+so what does it care about?
+
+230
+00:08:07,610 --> 00:08:08,530
+for example, this chip,
+
+231
+00:08:08,530 --> 00:08:10,050
+if you want to build this chip,
+
+232
+00:08:10,050 --> 00:08:11,710
+if you want to implement this interface,
+
+233
+00:08:11,710 --> 00:08:12,890
+it's just like our software,
+
+234
+00:08:12,890 --> 00:08:14,750
+if software wants to implement the POSIX interface,
+
+235
+00:08:14,750 --> 00:08:17,170
+we have plenty of C library functions, right?
+
+236
+00:08:17,170 --> 00:08:19,330
+and those C library functions could be made by this vendor,
+
+237
+00:08:19,330 --> 00:08:19,930
+or by that vendor.
+
+238
+00:08:19,930 --> 00:08:22,450
+Right now we have many kinds of C libraries,
+
+239
+00:08:22,450 --> 00:08:24,590
+there's the GNU C library,
+
+240
+00:08:24,590 --> 00:08:25,830
+and there are other C libraries as well.
+
+241
+00:08:25,830 --> 00:08:29,150
+Now, the instruction set architecture is like this too
+
+242
+00:08:29,150 --> 00:08:30,430
+The microarchitecture is hardware
+
+243
+00:08:30,430 --> 00:08:32,790
+It's one implementation of the instruction set architecture
+
+244
+00:08:32,790 --> 00:08:34,690
+And what it mainly cares about is
+
+245
+00:08:34,690 --> 00:08:37,930
+For example, things like power consumption per unit area
+
+246
+00:08:37,930 --> 00:08:40,430
+For example, how the execution is actually implemented
+
+247
+00:08:40,430 --> 00:08:43,510
+Everyone builds the same set of X86 CPUs
+
+248
+00:08:43,510 --> 00:08:45,210
+Why might Intel's be a bit faster
+
+249
+00:08:45,210 --> 00:08:45,930
+While the other one is slower
+
+250
+00:08:45,930 --> 00:08:48,230
+Why does one generate more heat
+
+251
+00:08:48,230 --> 00:08:49,230
+While the other generates less
+
+252
+00:08:49,230 --> 00:08:51,270
+And the thing they care about most
+
+253
+00:08:51,270 --> 00:08:51,970
+In the end, what is it
+
+254
+00:08:51,970 --> 00:08:52,950
+It's the issue of cost
+
+255
+00:08:52,950 --> 00:08:53,590
+Think about it, isn't that right
+
+256
+00:08:53,590 --> 00:08:54,510
+So
+
+257
+00:08:54,510 --> 00:08:56,250
+These are the things the microarchitecture cares about
+
+258
+00:08:56,250 --> 00:08:56,970
+Of course
+
+259
+00:08:56,970 --> 00:09:01,190
+For us as software programmers
+
+260
+00:09:01,190 --> 00:09:02,870
+We may not care that much
+
+261
+00:09:02,870 --> 00:09:03,930
+the reality of this microarchitecture,
+
+262
+00:09:03,930 --> 00:09:05,130
+what we mainly care about is
+
+263
+00:09:05,130 --> 00:09:06,390
+still this set of interfaces.
+
+264
+00:09:06,390 --> 00:09:08,210
+So once we have this set of IAC interfaces,
+
+265
+00:09:08,210 --> 00:09:09,830
+we no longer have to deal with
+
+266
+00:09:09,830 --> 00:09:10,450
+this microarchitecture underneath
+
+267
+00:09:10,450 --> 00:09:12,530
+—the specific microarchitecture.
+
+268
+00:09:12,530 --> 00:09:13,810
+You see what I mean, right?
+
+269
+00:09:13,810 --> 00:09:14,890
+Our world,
+
+270
+00:09:14,890 --> 00:09:16,730
+or at least the world of computers,
+
+271
+00:09:16,730 --> 00:09:17,610
+is layered just like this.
+
+272
+00:09:17,610 --> 00:09:19,210
+It's wrapped up layer by layer.
+
+273
+00:09:19,210 --> 00:09:22,810
+So everyone just does their job at each layer.
+
+274
+00:09:22,810 --> 00:09:25,490
+So when we say this microprice
+
+275
+00:09:25,490 --> 00:09:26,730
+—not microprice—
+
+276
+00:09:26,730 --> 00:09:27,890
+meaning the instruction set,
+
+277
+00:09:27,890 --> 00:09:29,490
+what exactly does it define?
+
+278
+00:09:29,490 --> 00:09:31,550
+Let's just list it briefly here.
+
+279
+00:09:31,550 --> 00:09:34,430
+Later on, when we get to the details,
+
+280
+00:09:34,430 --> 00:09:35,370
+we'll go through them one by one.
+
+281
+00:09:35,370 --> 00:09:36,890
+Let me briefly explain here.
+
+282
+00:09:36,890 --> 00:09:39,130
+For example, it defines some basic data types.
+
+283
+00:09:39,130 --> 00:09:41,790
+For instance, this byte.
+
+284
+00:09:41,790 --> 00:09:43,230
+Or what a word is.
+
+285
+00:09:43,230 --> 00:09:45,470
+These names actually come from the microarchitecture,
+
+286
+00:09:45,470 --> 00:09:48,110
+and they're defined for you from the instruction set perspective.
+
+287
+00:09:48,110 --> 00:09:50,270
+For example, one byte is 8 bits,
+
+288
+00:09:50,270 --> 00:09:50,490
+right?
+
+289
+00:09:50,490 --> 00:09:51,890
+How much is one word?
+
+290
+00:09:51,890 --> 00:09:55,070
+It's 32 bits,
+
+291
+00:09:55,070 --> 00:09:55,490
+correct?
+
+292
+00:09:55,490 --> 00:09:56,390
+A halfword.
+
+293
+00:09:56,390 --> 00:09:58,210
+We'll run into this concept a lot later on.
+
+294
+00:09:58,210 --> 00:09:59,730
+A halfword is 16 bits.
+
+295
+00:09:59,730 --> 00:10:00,810
+They're all multiples of 8.
+
+296
+00:10:00,810 --> 00:10:03,430
+What else is there?
+
+297
+00:10:03,430 --> 00:10:05,050
+What else does the ISA define?
+
+298
+00:10:05,050 --> 00:10:05,870
+Registers.
+
+299
+00:10:05,870 --> 00:10:06,910
+Because as we said,
+
+300
+00:10:06,910 --> 00:10:09,350
+when we interact with the hardware to operate it,
+
+301
+00:10:09,350 --> 00:10:10,650
+When it comes to the CPU,
+
+302
+00:10:10,650 --> 00:10:12,570
+it is mainly about operating its registers.
+
+303
+00:10:12,570 --> 00:10:13,690
+For example, this
+
+304
+00:10:13,690 --> 00:10:15,170
+given architecture,
+
+305
+00:10:15,170 --> 00:10:16,470
+that is, on this CPU,
+
+306
+00:10:16,470 --> 00:10:18,010
+how many kinds of registers it implements,
+
+307
+00:10:18,010 --> 00:10:19,490
+those have also been standardized.
+
+308
+00:10:19,490 --> 00:10:21,630
+Then what each register is for,
+
+309
+00:10:21,630 --> 00:10:21,890
+and so on.
+
+310
+00:10:21,890 --> 00:10:22,970
+Then there is
+
+311
+00:10:22,970 --> 00:10:24,010
+a third thing,
+
+312
+00:10:24,010 --> 00:10:25,410
+which is what everyone cares about most,
+
+313
+00:10:25,410 --> 00:10:25,850
+and that is instructions.
+
+314
+00:10:25,850 --> 00:10:27,450
+Because when we write assembly,
+
+315
+00:10:27,450 --> 00:10:29,650
+it is mainly programming,
+
+316
+00:10:29,650 --> 00:10:31,230
+and how each of its
+
+317
+00:10:31,230 --> 00:10:32,690
+statements is written out.
+
+318
+00:10:32,690 --> 00:10:33,950
+That is really the concept of instructions.
+
+319
+00:10:33,950 --> 00:10:35,810
+Then there are addressing modes,
+
+320
+00:10:35,810 --> 00:10:37,470
+and how exceptions and interrupts are handled.
+
+321
+00:10:37,470 --> 00:10:37,930
+and so on and so forth
+
+322
+00:10:37,930 --> 00:10:39,170
+Let me just list a few things here.
+
+323
+00:10:39,170 --> 00:10:40,130
+So the main thing we want to...
+
+324
+00:10:40,130 --> 00:10:41,770
+This is mainly to get a better feel for...
+
+325
+00:10:41,770 --> 00:10:42,110
+That is, what is...
+
+326
+00:10:42,110 --> 00:10:43,450
+What I mean is, an instruction set architecture...
+
+327
+00:10:43,450 --> 00:10:44,310
+is a standard.
+
+328
+00:10:44,310 --> 00:10:45,230
+It defines a lot of things...
+
+329
+00:10:45,230 --> 00:10:46,210
+rather than just being simply...
+
+330
+00:10:46,210 --> 00:10:47,750
+an assembly language.
+
+331
+00:10:47,750 --> 00:10:48,450
+So everyone...
+
+332
+00:10:48,450 --> 00:10:51,550
+This slide is mainly to emphasize this point to you.
+
+333
+00:10:51,550 --> 00:10:54,890
+Now, as we said...
+
+334
+00:10:54,890 --> 00:10:58,230
+why do we design this instruction set architecture?
+
+335
+00:10:58,230 --> 00:10:59,310
+Actually, we mentioned it just now.
+
+336
+00:10:59,310 --> 00:11:00,250
+It's the concept of layering.
+
+337
+00:11:00,250 --> 00:11:00,850
+Think about it, isn't that right?
+
+338
+00:11:00,850 --> 00:11:02,390
+Once we have this thing...
+
+339
+00:11:02,390 --> 00:11:05,230
+we can say that for the upper-layer software...
+
+340
+00:11:05,230 --> 00:11:06,150
+so this upper-layer software...
+
+341
+00:11:06,150 --> 00:11:08,210
+It actually refers to writing an operating system,
+
+342
+00:11:08,210 --> 00:11:09,890
+this kind of low-level stuff like a bootloader,
+
+343
+00:11:09,890 --> 00:11:12,190
+the developers involved in this kind of work.
+
+344
+00:11:12,190 --> 00:11:13,750
+They also do software,
+
+345
+00:11:13,750 --> 00:11:16,010
+so they don't need to care about
+
+346
+00:11:16,010 --> 00:11:17,570
+the underlying circuit structure.
+
+347
+00:11:17,570 --> 00:11:18,430
+And that circuit structure
+
+348
+00:11:18,430 --> 00:11:19,590
+is what we just talked about,
+
+349
+00:11:19,590 --> 00:11:20,670
+the concept of microarchitecture.
+
+350
+00:11:20,670 --> 00:11:24,450
+We actually just interact with the underlying layer through a standard set of interfaces,
+
+351
+00:11:24,450 --> 00:11:27,110
+and that's all we need to do.
+
+352
+00:11:27,110 --> 00:11:29,610
+Now, on this diagram,
+
+353
+00:11:29,610 --> 00:11:30,350
+let me point something out to you,
+
+354
+00:11:30,350 --> 00:11:32,130
+which is that we should also understand
+
+355
+00:11:32,130 --> 00:11:34,970
+the development history of this RSA instruction set architecture.
+
+356
+00:11:34,970 --> 00:11:36,970
+That is, the first to propose
+
+357
+00:11:36,970 --> 00:11:39,050
+this instruction set architecture
+
+358
+00:11:39,050 --> 00:11:40,150
+was who?
+
+359
+00:11:40,150 --> 00:11:41,790
+It was the company IBM.
+
+360
+00:11:41,790 --> 00:11:44,310
+Do you all know the full name of IBM?
+
+361
+00:11:44,310 --> 00:11:49,560
+that is, International Business Machines
+
+362
+00:11:49,560 --> 00:11:52,100
+it was actually originally a hardware company
+
+363
+00:11:52,100 --> 00:11:52,720
+it made machines
+
+364
+00:11:52,720 --> 00:11:53,780
+you can tell just from the name
+
+365
+00:11:53,780 --> 00:11:55,540
+it made computers
+
+366
+00:11:55,540 --> 00:11:58,540
+so back when it was doing this
+
+367
+00:11:58,540 --> 00:12:01,860
+probably in the last century
+
+368
+00:12:01,860 --> 00:12:03,240
+which decade was that again
+
+369
+00:12:03,240 --> 00:12:03,920
+I don't know, the 60s
+
+370
+00:12:03,920 --> 00:12:05,180
+or maybe the 70s
+
+371
+00:12:05,180 --> 00:12:07,200
+so when it was developing
+
+372
+00:12:07,200 --> 00:12:09,100
+this kind of computer
+
+373
+00:12:09,100 --> 00:12:11,240
+being a pioneer, it was like this
+
+374
+00:12:11,240 --> 00:12:12,680
+before there were instruction set architectures
+
+375
+00:12:12,680 --> 00:12:15,240
+as everyone knows, for every model of computer
+
+376
+00:12:15,240 --> 00:12:16,660
+its processor
+
+377
+00:12:16,660 --> 00:12:19,080
+its operating interface
+
+378
+00:12:19,080 --> 00:12:20,140
+was different
+
+379
+00:12:20,140 --> 00:12:21,000
+say this computer
+
+380
+00:12:21,000 --> 00:12:22,460
+there were, for example, 10 computers
+
+381
+00:12:22,460 --> 00:12:24,180
+That company had 20 computers
+
+382
+00:12:24,180 --> 00:12:25,580
+and each computer served a different purpose.
+
+383
+00:12:25,580 --> 00:12:27,300
+So things were pretty chaotic.
+
+384
+00:12:27,300 --> 00:12:28,480
+Now, for IBM,
+
+385
+00:12:28,480 --> 00:12:30,660
+by that time they had already grown to the point
+
+386
+00:12:30,660 --> 00:12:32,000
+where their company's products
+
+387
+00:12:32,000 --> 00:12:33,580
+had reached three or four models,
+
+388
+00:12:33,580 --> 00:12:36,280
+and they found this problem was getting more and more serious.
+
+389
+00:12:36,280 --> 00:12:36,740
+Think about it,
+
+390
+00:12:36,740 --> 00:12:38,140
+because of this—
+
+391
+00:12:38,140 --> 00:12:41,160
+since the underlying interfaces were different,
+
+392
+00:12:41,160 --> 00:12:42,480
+they had to have four teams,
+
+393
+00:12:42,480 --> 00:12:43,500
+at least four teams.
+
+394
+00:12:43,500 --> 00:12:45,660
+The software teams had to develop different
+
+395
+00:12:45,660 --> 00:12:46,780
+compilers,
+
+396
+00:12:46,780 --> 00:12:49,960
+operating systems, and so on.
+
+397
+00:12:49,960 --> 00:12:52,800
+So the cost was just too high for them.
+
+398
+00:12:52,800 --> 00:12:56,440
+So starting with the IBM 360 machine—
+
+399
+00:12:56,440 --> 00:12:58,980
+this machine, which is this one in this picture—
+
+400
+00:12:58,980 --> 00:13:01,440
+let's take a look at what early computers looked like.
+
+401
+00:13:01,440 --> 00:13:03,900
+This is the machine
+
+402
+00:13:03,900 --> 00:13:09,360
+and it really doesn't look much like our computers today.
+
+403
+00:13:09,360 --> 00:13:10,100
+Do you all see that?
+
+404
+00:13:10,100 --> 00:13:12,540
+There are so many buttons on it.
+
+405
+00:13:12,540 --> 00:13:14,320
+You can think of these buttons as,
+
+406
+00:13:14,320 --> 00:13:16,500
+how should I put it,
+
+407
+00:13:16,500 --> 00:13:18,420
+this thing is actually
+
+408
+00:13:18,420 --> 00:13:19,880
+the early concept of the console.
+
+409
+00:13:19,880 --> 00:13:22,260
+You know, our computers today have what's called a
+
+410
+00:13:22,260 --> 00:13:22,820
+Console,
+
+411
+00:13:22,820 --> 00:13:23,960
+that console,
+
+412
+00:13:23,960 --> 00:13:26,340
+the one where you're always typing away at the keyboard,
+
+413
+00:13:26,340 --> 00:13:28,140
+that input interface.
+
+414
+00:13:28,140 --> 00:13:29,200
+Don't we call that the console?
+
+415
+00:13:29,200 --> 00:13:30,480
+Well, the early console
+
+416
+00:13:30,480 --> 00:13:31,740
+was really just this thing.
+
+417
+00:13:31,740 --> 00:13:33,620
+It had a lot of buttons on it,
+
+418
+00:13:33,620 --> 00:13:34,720
+for controlling the computer,
+
+419
+00:13:34,720 --> 00:13:35,740
+for making it do things,
+
+420
+00:13:35,740 --> 00:13:37,300
+switches and so on.
+
+421
+00:13:37,300 --> 00:13:40,120
+So this machine is called the 360.
+
+422
+00:13:40,120 --> 00:13:42,340
+So IBM, starting from this machine,
+
+423
+00:13:42,340 --> 00:13:44,680
+defined the first instruction set architecture.
+
+424
+00:13:44,680 --> 00:13:45,800
+And what it defined,
+
+425
+00:13:45,800 --> 00:13:47,840
+is basically what we just talked about:
+
+426
+00:13:47,840 --> 00:13:49,620
+what registers there are,
+
+427
+00:13:49,620 --> 00:13:50,700
+these instructions,
+
+428
+00:13:50,700 --> 00:13:53,820
+and also the concept of a byte.
+
+429
+00:13:53,820 --> 00:13:55,920
+So in all the computing we've done so far,
+
+430
+00:13:55,920 --> 00:13:56,720
+this concept of a byte
+
+431
+00:13:56,720 --> 00:13:58,800
+actually started with this computer.
+
+432
+00:13:58,800 --> 00:13:59,420
+Before that,
+
+433
+00:13:59,420 --> 00:14:01,140
+everyone's standards were kind of all over the place.
+
+434
+00:14:01,140 --> 00:14:03,600
+So starting from this computer,
+
+435
+00:14:03,600 --> 00:14:04,740
+we defined it:
+
+436
+00:14:04,740 --> 00:14:05,500
+one byte
+
+437
+00:14:05,500 --> 00:14:06,700
+is eight bits.
+
+438
+00:14:06,700 --> 00:14:08,600
+This standard was set right there,
+
+439
+00:14:08,600 --> 00:14:09,600
+and we've been using it ever since.
+
+440
+00:14:09,600 --> 00:14:10,980
+That's how it is.
+
+441
+00:14:10,980 --> 00:14:12,320
+That's how history played out.
+
+442
+00:14:12,340 --> 00:14:17,300
+So it created a kind of abstraction between hardware and software.
+
+443
+00:14:17,300 --> 00:14:23,720
+So after RISC came along,
+
+444
+00:14:23,720 --> 00:14:26,180
+we're still in that situation today.
+
+445
+00:14:26,180 --> 00:14:30,800
+Alright, so now that we understand what an instruction set architecture is,
+
+446
+00:14:30,800 --> 00:14:33,000
+and why instruction set architectures were invented in the first place,
+
+447
+00:14:33,000 --> 00:14:36,740
+let's look at some concepts related to instruction set architectures.
+
+448
+00:14:36,740 --> 00:14:39,040
+Because they'll come up from time to time later on,
+
+449
+00:14:39,040 --> 00:14:40,320
+so we should get familiar with them.
+
+450
+00:14:40,320 --> 00:14:43,120
+So mainly what I want to talk about here
+
+451
+00:14:43,120 --> 00:14:44,220
+is the classification
+
+452
+00:14:44,220 --> 00:14:45,840
+of instruction set architectures.
+
+453
+00:14:45,840 --> 00:14:47,460
+Typically,
+
+454
+00:14:47,460 --> 00:14:49,840
+this is actually covered in many textbooks
+
+455
+00:14:49,840 --> 00:14:51,100
+as well,
+
+456
+00:14:51,100 --> 00:14:52,720
+the typical split is into two types:
+
+457
+00:14:52,720 --> 00:14:53,820
+one is called CISC,
+
+458
+00:14:53,820 --> 00:14:54,820
+and the other is called RISC.
+
+459
+00:14:54,820 --> 00:14:56,060
+So CISC,
+
+460
+00:14:56,060 --> 00:14:57,740
+its full name is
+
+461
+00:14:57,740 --> 00:15:00,720
+Complex Instruction Set Computing.
+
+462
+00:15:00,720 --> 00:15:02,320
+In other words, the complex instruction set.
+
+463
+00:15:02,320 --> 00:15:03,760
+Now, RISC
+
+464
+00:15:03,760 --> 00:15:07,200
+stands for Reduced Instruction Set Computing,
+
+465
+00:15:07,200 --> 00:15:08,320
+which is the reduced instruction set.
+
+466
+00:15:08,320 --> 00:15:09,800
+Now, the one we'll talk about later,
+
+467
+00:15:09,800 --> 00:15:10,600
+that RISC-5,
+
+468
+00:15:10,600 --> 00:15:12,100
+you can tell just from the name
+
+469
+00:15:12,100 --> 00:15:12,880
+which category our RISC-5
+
+470
+00:15:12,880 --> 00:15:13,760
+belongs to.
+
+471
+00:15:13,760 --> 00:15:16,140
+It falls under this classic instruction set category.
+
+472
+00:15:16,140 --> 00:15:18,300
+Now, the main
+
+473
+00:15:18,300 --> 00:15:22,260
+difference between the two, where does it lie?
+
+474
+00:15:22,260 --> 00:15:23,260
+It's written up here too.
+
+475
+00:15:23,260 --> 00:15:25,220
+With the complex instruction set,
+
+476
+00:15:25,220 --> 00:15:26,040
+you can think of it this way:
+
+477
+00:15:26,040 --> 00:15:29,900
+its instructions,
+
+478
+00:15:29,900 --> 00:15:31,620
+its...
+
+479
+00:15:31,620 --> 00:15:34,220
+you can understand it like this:
+
+480
+00:15:34,220 --> 00:15:35,500
+in order to implement,
+
+481
+00:15:35,500 --> 00:15:36,300
+Take a computer, for example,
+
+482
+00:15:36,300 --> 00:15:37,380
+it has many functions, right?
+
+483
+00:15:37,380 --> 00:15:39,320
+And for each of these functions,
+
+484
+00:15:39,320 --> 00:15:41,540
+you design a dedicated instruction
+
+485
+00:15:41,540 --> 00:15:43,580
+to go with it.
+
+486
+00:15:43,760 --> 00:15:46,700
+Now, as you can imagine, as computers develop,
+
+487
+00:15:46,700 --> 00:15:47,940
+and their functions become more and more complex,
+
+488
+00:15:47,940 --> 00:15:50,320
+a certain trend is bound to emerge.
+
+489
+00:15:50,320 --> 00:15:53,960
+That is, when the CPU is implemented based on a complex instruction set,
+
+490
+00:15:53,960 --> 00:15:56,340
+built around this concept,
+
+491
+00:15:56,340 --> 00:15:58,380
+the number of instructions it supports grows,
+
+492
+00:15:58,380 --> 00:15:59,620
+and keeps getting larger and larger,
+
+493
+00:15:59,620 --> 00:16:00,780
+more and more bloated, right?
+
+494
+00:16:00,780 --> 00:16:03,680
+Now, a classic instruction set
+
+495
+00:16:03,680 --> 00:16:05,660
+takes a different approach.
+
+496
+00:16:05,660 --> 00:16:07,420
+The idea is to use a few—
+
+497
+00:16:07,420 --> 00:16:09,740
+to define a set of common, basic instructions,
+
+498
+00:16:09,740 --> 00:16:11,260
+and then for more complex functions,
+
+499
+00:16:11,260 --> 00:16:12,420
+you use those basic instructions—
+
+500
+00:16:12,420 --> 00:16:14,480
+combining them through addition, subtraction, multiplication, division
+
+501
+00:16:14,480 --> 00:16:15,580
+Like these basic instructions,
+
+502
+00:16:15,580 --> 00:16:16,600
+you put them together.
+
+503
+00:16:16,600 --> 00:16:18,000
+So this way,
+
+504
+00:16:18,000 --> 00:16:19,500
+it keeps the instructions... that is, the number of instructions,
+
+505
+00:16:19,500 --> 00:16:22,180
+the number of them,
+
+506
+00:16:22,180 --> 00:16:23,220
+the variety,
+
+507
+00:16:23,220 --> 00:16:24,400
+from growing too fast.
+
+508
+00:16:24,400 --> 00:16:27,700
+Now, some of you might ask,
+
+509
+00:16:27,700 --> 00:16:30,180
+why does this happen?
+
+510
+00:16:30,180 --> 00:16:31,560
+This is also for historical reasons,
+
+511
+00:16:31,560 --> 00:16:33,780
+because back in the early days,
+
+512
+00:16:33,780 --> 00:16:35,160
+actually the first ones to come out were
+
+513
+00:16:35,160 --> 00:16:36,760
+the complex instruction set computers.
+
+514
+00:16:36,760 --> 00:16:37,980
+They came out early on.
+
+515
+00:16:37,980 --> 00:16:39,240
+So why is that?
+
+516
+00:16:39,240 --> 00:16:40,060
+It's mainly because,
+
+517
+00:16:40,060 --> 00:16:41,740
+as you know, in that era,
+
+518
+00:16:41,740 --> 00:16:43,080
+inside a computer,
+
+519
+00:16:43,080 --> 00:16:45,140
+what was the most precious resource?
+
+520
+00:16:45,140 --> 00:16:48,500
+Actually, even looking at it now,
+
+521
+00:16:48,500 --> 00:16:50,060
+In fact, this phenomenon still exists,
+
+522
+00:16:50,060 --> 00:16:54,740
+that is, its memory is extremely precious,
+
+523
+00:16:54,740 --> 00:16:56,440
+because back then, given the manufacturing process
+
+524
+00:16:56,440 --> 00:16:57,140
+and cost issues,
+
+525
+00:16:57,140 --> 00:16:58,880
+a computer, like the one we just saw,
+
+526
+00:16:58,880 --> 00:17:01,220
+inside such a complex computer,
+
+527
+00:17:01,220 --> 00:17:03,180
+its memory could be pitifully small.
+
+528
+00:17:03,180 --> 00:17:06,160
+That was caused by the conditions at the time.
+
+529
+00:17:06,160 --> 00:17:08,240
+So, since memory was scarce,
+
+530
+00:17:08,240 --> 00:17:08,840
+then, as you know,
+
+531
+00:17:08,840 --> 00:17:09,960
+when writing programs,
+
+532
+00:17:09,960 --> 00:17:10,680
+what did they have to do?
+
+533
+00:17:10,680 --> 00:17:12,200
+They had to be extremely frugal.
+
+534
+00:17:12,200 --> 00:17:12,720
+Right?
+
+535
+00:17:12,720 --> 00:17:14,560
+If I want to implement a very complex function,
+
+536
+00:17:14,560 --> 00:17:17,100
+the program I write to generate this,
+
+537
+00:17:17,100 --> 00:17:18,120
+it has to be as short as possible.
+
+538
+00:17:18,120 --> 00:17:21,880
+Because the storage,
+
+539
+00:17:21,880 --> 00:17:25,200
+probably, even on a mainframe like this,
+
+540
+00:17:25,200 --> 00:17:27,840
+it was probably only a few tens of...
+
+541
+00:17:27,840 --> 00:17:29,420
+I'm not sure if it ever reached the megabyte level
+
+542
+00:17:29,420 --> 00:17:30,840
+it was pitifully small
+
+543
+00:17:30,840 --> 00:17:33,020
+We might not really feel this nowadays,
+
+544
+00:17:33,020 --> 00:17:34,600
+but back in the day, even a single byte
+
+545
+00:17:34,600 --> 00:17:36,500
+had to be saved.
+
+546
+00:17:36,500 --> 00:17:38,340
+So think about it — given that starting point,
+
+547
+00:17:38,340 --> 00:17:40,680
+they wanted the instructions
+
+548
+00:17:40,680 --> 00:17:41,740
+that is, the code you write,
+
+549
+00:17:41,740 --> 00:17:43,500
+the machine instructions generated from it,
+
+550
+00:17:43,500 --> 00:17:45,320
+to be as short as possible,
+
+551
+00:17:45,320 --> 00:17:46,660
+so every single instruction
+
+552
+00:17:46,660 --> 00:17:47,560
+had to be fully utilized
+
+553
+00:17:47,560 --> 00:17:48,900
+to accomplish a specific function.
+
+554
+00:17:48,900 --> 00:17:49,480
+Think about it — isn't that the case?
+
+555
+00:17:49,480 --> 00:17:52,000
+So naturally, this phenomenon emerged.
+
+556
+00:17:52,000 --> 00:17:53,600
+And later on,
+
+557
+00:17:53,600 --> 00:17:55,860
+as our technology advanced,
+
+558
+00:17:55,860 --> 00:17:56,320
+as we know,
+
+559
+00:17:56,320 --> 00:17:57,820
+memory
+
+560
+00:17:57,820 --> 00:18:00,020
+and everything became cheap.
+
+561
+00:18:00,020 --> 00:18:02,140
+Now, as for the size of this program,
+
+562
+00:18:02,140 --> 00:18:03,820
+we actually don't care that much anymore.
+
+563
+00:18:03,820 --> 00:18:05,320
+What we care about more is what?
+
+564
+00:18:05,320 --> 00:18:06,620
+What we care about more is
+
+565
+00:18:06,620 --> 00:18:08,140
+its,
+
+566
+00:18:08,140 --> 00:18:12,620
+for us programmers, a kind of
+
+567
+00:18:12,620 --> 00:18:13,760
+comprehensibility,
+
+568
+00:18:13,760 --> 00:18:14,640
+readability,
+
+569
+00:18:14,640 --> 00:18:15,700
+including that,
+
+570
+00:18:15,700 --> 00:18:16,960
+this compiler,
+
+571
+00:18:16,960 --> 00:18:17,720
+its,
+
+572
+00:18:17,720 --> 00:18:19,280
+since the compiler is also getting more and more complex,
+
+573
+00:18:19,280 --> 00:18:21,040
+then we can actually design this instruction
+
+574
+00:18:21,040 --> 00:18:21,860
+to be very simple,
+
+575
+00:18:21,860 --> 00:18:23,080
+and let the compiler help us
+
+576
+00:18:23,080 --> 00:18:24,920
+assemble these complex functions.
+
+577
+00:18:24,920 --> 00:18:25,620
+Don't you think so?
+
+578
+00:18:25,620 --> 00:18:26,940
+This,
+
+579
+00:18:26,940 --> 00:18:28,560
+or let's say,
+
+580
+00:18:28,560 --> 00:18:29,860
+let me give you an example from our daily life.
+
+581
+00:18:29,860 --> 00:18:31,500
+Actually, this might make it easier for everyone to understand.
+
+582
+00:18:31,500 --> 00:18:32,180
+You all know,
+
+583
+00:18:32,180 --> 00:18:33,940
+for example, take Chinese characters.
+
+584
+00:18:33,940 --> 00:18:36,480
+You've all studied Chinese in school, right?
+
+585
+00:18:36,480 --> 00:18:38,020
+In the early days of Chinese writing,
+
+586
+00:18:38,020 --> 00:18:39,760
+classical Chinese versus modern vernacular Chinese,
+
+587
+00:18:39,760 --> 00:18:40,580
+what's the relationship there?
+
+588
+00:18:40,580 --> 00:18:41,980
+Well, it's actually kind of similar to,
+
+589
+00:18:41,980 --> 00:18:43,100
+the idea of complex instruction sets versus,
+
+590
+00:18:43,100 --> 00:18:44,700
+simple instruction sets.
+
+591
+00:18:44,700 --> 00:18:46,400
+With the classical Chinese of the past,
+
+592
+00:18:46,400 --> 00:18:46,780
+as you know,
+
+593
+00:18:46,780 --> 00:18:48,020
+a single Chinese character had to convey,
+
+594
+00:18:48,020 --> 00:18:48,880
+a really complex meaning.
+
+595
+00:18:48,880 --> 00:18:49,800
+Think about it, isn't that right?
+
+596
+00:18:49,800 --> 00:18:50,440
+Why?
+
+597
+00:18:50,440 --> 00:18:51,800
+Why did our Chinese,
+
+598
+00:18:51,800 --> 00:18:52,580
+our ancestors,
+
+599
+00:18:52,580 --> 00:18:53,460
+design our classical writing,
+
+600
+00:18:53,460 --> 00:18:55,020
+to be like that?
+
+601
+00:18:55,020 --> 00:18:57,020
+Because as everyone knows,
+
+602
+00:18:57,020 --> 00:18:58,980
+in the early days, paper was too expensive.
+
+603
+00:18:58,980 --> 00:19:00,720
+And it wasn't even paper — what was it?
+
+604
+00:19:00,720 --> 00:19:02,580
+It was those bamboo strips,
+
+605
+00:19:02,580 --> 00:19:03,700
+that kind of thing, right?
+
+606
+00:19:03,700 --> 00:19:05,120
+In the West, they didn't even have that.
+
+607
+00:19:05,120 --> 00:19:06,360
+They wrote on parchment and so on.
+
+608
+00:19:06,360 --> 00:19:08,180
+Only highly educated people could write.
+
+609
+00:19:08,180 --> 00:19:10,260
+Common people simply had no chance to write at all.
+
+610
+00:19:10,260 --> 00:19:11,980
+So since these bamboo strips
+
+611
+00:19:11,980 --> 00:19:13,940
+were so complicated to produce,
+
+612
+00:19:13,940 --> 00:19:16,700
+every single character had to fully express a meaning.
+
+613
+00:19:16,700 --> 00:19:17,400
+That is to say, each character
+
+614
+00:19:17,400 --> 00:19:19,140
+packed in a particularly rich set of meanings.
+
+615
+00:19:19,140 --> 00:19:21,600
+We used to talk about that saying,
+
+616
+00:19:21,600 --> 00:19:23,480
+the one about 'sweating oxen crossing the ford' —
+
+617
+00:19:23,480 --> 00:19:24,740
+or 'learning rich enough to fill five carts'.
+
+618
+00:19:24,740 --> 00:19:26,720
+Do you know how many books five carts could hold?
+
+619
+00:19:26,720 --> 00:19:28,140
+Actually, those books didn't have that many characters.
+
+620
+00:19:28,140 --> 00:19:28,820
+Do you all know that?
+
+621
+00:19:28,820 --> 00:19:29,900
+In the past, educated people
+
+622
+00:19:29,900 --> 00:19:31,920
+probably didn't read all that many books in their whole lives.
+
+623
+00:19:31,920 --> 00:19:34,300
+But because every character carries so many meanings,
+
+624
+00:19:34,300 --> 00:19:36,020
+the amount of information conveyed was actually quite large.
+
+625
+00:19:36,020 --> 00:19:37,240
+Then later on,
+
+626
+00:19:37,240 --> 00:19:38,980
+with vernacular writing and cheaper paper,
+
+627
+00:19:38,980 --> 00:19:41,520
+the cost of learning kept dropping,
+
+628
+00:19:41,520 --> 00:19:43,160
+and that's how vernacular writing came about.
+
+629
+00:19:43,160 --> 00:19:44,280
+Why use vernacular writing?
+
+630
+00:19:44,280 --> 00:19:45,600
+Simply because it's easier to understand.
+
+631
+00:19:45,600 --> 00:19:46,600
+Think about it, isn't that right?
+
+632
+00:19:46,600 --> 00:19:47,540
+So this classic instruction set,
+
+633
+00:19:47,540 --> 00:19:50,020
+the trend now is to develop toward the classic instruction set.
+
+634
+00:19:50,020 --> 00:19:52,300
+And there's a similar reason behind that, too.
+
+635
+00:19:52,300 --> 00:19:53,560
+Of course, the two of them
+
+636
+00:19:53,560 --> 00:19:54,520
+are also converging with each other.
+
+637
+00:19:54,520 --> 00:19:55,240
+So this one,
+
+638
+00:19:55,240 --> 00:19:57,380
+if we look at it from a historical perspective,
+
+639
+00:19:57,380 --> 00:19:58,460
+there is this classification,
+
+640
+00:19:58,460 --> 00:20:00,340
+and that is the complex instruction set.
+
+641
+00:20:00,340 --> 00:20:01,920
+the concept of a classic instruction set
+
+642
+00:20:01,920 --> 00:20:04,900
+Now, the RISC-V we'll be learning later on,
+
+643
+00:20:04,900 --> 00:20:05,540
+should be a
+
+644
+00:20:05,540 --> 00:20:07,480
+it's also a standard classic instruction set.
+
+645
+00:20:07,480 --> 00:20:10,020
+As for complex instruction sets,
+
+646
+00:20:10,020 --> 00:20:11,200
+early on, for example, Intel's
+
+647
+00:20:11,200 --> 00:20:12,540
+processor,
+
+648
+00:20:12,540 --> 00:20:14,700
+it was, from the very beginning, a complex instruction set.
+
+649
+00:20:14,700 --> 00:20:15,320
+And now,
+
+650
+00:20:15,320 --> 00:20:18,860
+it's also slowly shifting towards a classic instruction set.
+
+651
+00:20:18,860 --> 00:20:22,510
+So that's what we just talked about—
+
+652
+00:20:22,510 --> 00:20:23,950
+the classification of instruction sets.
+
+653
+00:20:23,950 --> 00:20:25,210
+Now the next one,
+
+654
+00:20:25,210 --> 00:20:27,010
+is about this instruction set's
+
+655
+00:20:27,010 --> 00:20:28,230
+concept of width.
+
+656
+00:20:28,230 --> 00:20:31,610
+Because when we buy computers these days,
+
+657
+00:20:31,610 --> 00:20:33,750
+we actually often care about this too,
+
+658
+00:20:33,750 --> 00:20:34,910
+like, say, this notion of 32-bit
+
+659
+00:20:34,910 --> 00:20:36,090
+and 64-bit.
+
+660
+00:20:36,090 --> 00:20:38,830
+Well, this actually has to do with the instruction set.
+
+661
+00:20:38,830 --> 00:20:40,930
+And later, when we write code,
+
+662
+00:20:40,930 --> 00:20:42,750
+we'll keep bringing up this concept too.
+
+663
+00:20:42,750 --> 00:20:45,850
+So now we need to be clear on,
+
+664
+00:20:45,850 --> 00:20:48,450
+what exactly does this width refer to?
+
+665
+00:20:48,450 --> 00:20:51,630
+When we say this width, what does it actually mean?
+
+666
+00:20:51,630 --> 00:20:53,210
+It actually refers to the CPU—
+
+667
+00:20:53,210 --> 00:20:57,070
+the general-purpose registers in the processor,
+
+668
+00:20:57,070 --> 00:20:58,070
+their width.
+
+669
+00:20:58,070 --> 00:20:59,710
+We know that a register,
+
+670
+00:20:59,710 --> 00:21:01,530
+you can think of it as basically a storage unit,
+
+671
+00:21:01,530 --> 00:21:03,470
+individual storage units,
+
+672
+00:21:03,470 --> 00:21:05,570
+storage units inside the CPU.
+
+673
+00:21:05,570 --> 00:21:07,410
+This concept—our concept of registers—
+
+674
+00:21:07,410 --> 00:21:08,690
+in the diagram from last class,
+
+675
+00:21:08,690 --> 00:21:09,570
+go back and take another look at it.
+
+676
+00:21:09,570 --> 00:21:10,510
+Where does it sit?
+
+677
+00:21:10,510 --> 00:21:11,870
+What role does it play inside?
+
+678
+00:21:11,870 --> 00:21:13,330
+Still remember?
+
+679
+00:21:13,330 --> 00:21:14,790
+Think back to what we went through last class,
+
+680
+00:21:14,790 --> 00:21:16,010
+the one I demonstrated to you.
+
+681
+00:21:16,010 --> 00:21:17,290
+the execution process of a program
+
+682
+00:21:17,290 --> 00:21:18,950
+what role does that register play in it
+
+683
+00:21:18,950 --> 00:21:20,250
+because as we said,
+
+684
+00:21:20,250 --> 00:21:22,630
+when the CPU is actually processing data,
+
+685
+00:21:22,630 --> 00:21:24,210
+it can't just directly take that
+
+686
+00:21:24,210 --> 00:21:25,670
+data out of memory
+
+687
+00:21:25,670 --> 00:21:26,290
+and start using it right away.
+
+688
+00:21:26,290 --> 00:21:27,850
+It first has to take the data in memory
+
+689
+00:21:27,850 --> 00:21:30,650
+and put it into the registers inside the CPU,
+
+690
+00:21:30,650 --> 00:21:31,870
+and only then can it work on it
+
+691
+00:21:31,870 --> 00:21:32,770
+from the registers.
+
+692
+00:21:32,770 --> 00:21:33,290
+Right?
+
+693
+00:21:33,290 --> 00:21:35,330
+So registers are extremely important.
+
+694
+00:21:35,330 --> 00:21:37,310
+Now, the size of this register
+
+695
+00:21:37,310 --> 00:21:38,270
+determines the
+
+696
+00:21:38,270 --> 00:21:39,590
+so-called
+
+697
+00:21:39,590 --> 00:21:41,070
+width of the ISA instruction set,
+
+698
+00:21:41,070 --> 00:21:42,570
+and it actually also determines
+
+699
+00:21:42,570 --> 00:21:44,190
+the processing power of this CPU.
+
+700
+00:21:44,190 --> 00:21:45,730
+Now, a typical
+
+701
+00:21:45,730 --> 00:21:46,930
+Now, as for the size of this register,
+
+702
+00:21:46,930 --> 00:21:47,730
+we've listed it here:
+
+703
+00:21:47,730 --> 00:21:49,910
+there are 8-bit, 16-bit, 32-bit, and 64-bit.
+
+704
+00:21:49,910 --> 00:21:50,890
+What that actually refers to is,
+
+705
+00:21:50,890 --> 00:21:52,250
+a 'bit' is just one binary digit.
+
+706
+00:21:52,250 --> 00:21:53,170
+One binary digit,
+
+707
+00:21:53,170 --> 00:21:54,190
+one bit,
+
+708
+00:21:54,190 --> 00:21:55,890
+which is a 0 or a 1 — one bit.
+
+709
+00:21:55,890 --> 00:21:57,950
+Now over here,
+
+710
+00:21:57,950 --> 00:21:58,670
+I've just laid out a simple list,
+
+711
+00:21:58,670 --> 00:21:59,490
+meaning that one 8-bit value...
+
+712
+00:21:59,490 --> 00:22:01,290
+and you'll often need to have this
+
+713
+00:22:01,290 --> 00:22:01,970
+in your head,
+
+714
+00:22:01,970 --> 00:22:03,190
+you need to be familiar with this kind of calculation,
+
+715
+00:22:03,190 --> 00:22:05,410
+because in low-level development,
+
+716
+00:22:05,410 --> 00:22:06,610
+you're very often dealing with individual bits,
+
+717
+00:22:06,610 --> 00:22:07,910
+calculating bit by bit,
+
+718
+00:22:07,910 --> 00:22:08,470
+and encoding things.
+
+719
+00:22:08,470 --> 00:22:10,450
+So these numbers,
+
+720
+00:22:10,450 --> 00:22:12,130
+you should all get quite familiar with them going forward.
+
+721
+00:22:12,130 --> 00:22:13,550
+256, 6536
+
+722
+00:22:13,550 --> 00:22:15,010
+But that second number is too long
+
+723
+00:22:15,010 --> 00:22:15,810
+so we won't memorize it.
+
+724
+00:22:15,810 --> 00:22:18,810
+But these are all powers of 2.
+
+725
+00:22:18,810 --> 00:22:22,170
+What do they look like in hexadecimal?
+
+726
+00:22:22,170 --> 00:22:23,790
+When you see these numbers,
+
+727
+00:22:23,790 --> 00:22:25,510
+you should develop a kind of professional instinct.
+
+728
+00:22:25,510 --> 00:22:27,470
+What do I mean by professional instinct?
+
+729
+00:22:27,470 --> 00:22:30,490
+You'll gradually cultivate this sense over time.
+
+730
+00:22:30,490 --> 00:22:31,950
+Then low-level development
+
+731
+00:22:31,950 --> 00:22:33,530
+will probably become easier to get into.
+
+732
+00:22:33,530 --> 00:22:36,630
+Now, as for 8-bit CPUs,
+
+733
+00:22:36,630 --> 00:22:37,850
+in the early days they were definitely all...
+
+734
+00:22:37,850 --> 00:22:39,470
+There were even 4-bit ones,
+
+735
+00:22:39,470 --> 00:22:40,670
+for example, from Intel,
+
+736
+00:22:40,670 --> 00:22:43,510
+there was a chip called 4004.
+
+737
+00:22:43,510 --> 00:22:45,210
+You can tell from the 4 at the beginning that it's 4-bit.
+
+738
+00:22:45,210 --> 00:22:46,550
+As for the 8-bit ones,
+
+739
+00:22:46,550 --> 00:22:48,730
+they were actually the first to become more practical.
+
+740
+00:22:48,730 --> 00:22:49,690
+So we say
+
+741
+00:22:49,690 --> 00:22:51,870
+The classic 8-bit machine is what
+
+742
+00:22:51,870 --> 00:22:52,790
+the 8051.
+
+743
+00:22:52,790 --> 00:22:54,050
+As for the 8051,
+
+744
+00:22:54,050 --> 00:22:56,130
+I don't know if you guys at school now
+
+745
+00:22:56,130 --> 00:22:58,870
+still cover this chip in class.
+
+746
+00:22:58,870 --> 00:23:00,390
+I think it should probably be phased out by now,
+
+747
+00:23:00,390 --> 00:23:01,370
+because it's just too old.
+
+748
+00:23:01,370 --> 00:23:02,390
+Really too old.
+
+749
+00:23:02,390 --> 00:23:03,450
+But back in our day,
+
+750
+00:23:03,450 --> 00:23:04,530
+when we were learning microcontrollers,
+
+751
+00:23:04,530 --> 00:23:05,550
+this chip was still around,
+
+752
+00:23:05,550 --> 00:23:06,070
+and we actually used this one,
+
+753
+00:23:06,070 --> 00:23:07,410
+because this chip was so famous,
+
+754
+00:23:07,410 --> 00:23:08,130
+it was used incredibly widely,
+
+755
+00:23:08,130 --> 00:23:10,130
+both internationally and,
+
+756
+00:23:10,130 --> 00:23:11,170
+in particular, here in China.
+
+757
+00:23:11,170 --> 00:23:12,970
+So it's an 8-bit machine,
+
+758
+00:23:12,970 --> 00:23:14,230
+meaning that inside it,
+
+759
+00:23:14,230 --> 00:23:14,990
+each register
+
+760
+00:23:14,990 --> 00:23:16,210
+is only 8 bits wide.
+
+761
+00:23:16,210 --> 00:23:18,290
+It can only read 8 bits at a time.
+
+762
+00:23:18,290 --> 00:23:19,350
+That much data into it.
+
+763
+00:23:19,350 --> 00:23:20,710
+So you can imagine its processing power.
+
+764
+00:23:20,710 --> 00:23:23,770
+Then later it became 16-bit.
+
+765
+00:23:23,770 --> 00:23:24,410
+With 16-bit,
+
+766
+00:23:24,410 --> 00:23:25,750
+the more typical ones
+
+767
+00:23:25,750 --> 00:23:27,610
+are the 8086,
+
+768
+00:23:27,610 --> 00:23:29,310
+and also MSP,
+
+769
+00:23:29,310 --> 00:23:31,350
+which are some microcontrollers from TI.
+
+770
+00:23:31,350 --> 00:23:33,610
+So for something like the 8086,
+
+771
+00:23:33,610 --> 00:23:35,230
+what we call x86, x86,
+
+772
+00:23:35,230 --> 00:23:37,310
+actually started from the 8086 generation.
+
+773
+00:23:37,310 --> 00:23:39,830
+8086, 80286, 386, 486.
+
+774
+00:23:39,830 --> 00:23:40,730
+That's where it comes from.
+
+775
+00:23:40,730 --> 00:23:42,370
+Now, this 8086,
+
+776
+00:23:42,370 --> 00:23:43,310
+was the earliest one,
+
+777
+00:23:43,310 --> 00:23:44,610
+and it was actually still 16-bit.
+
+778
+00:23:44,610 --> 00:23:45,950
+Then later,
+
+779
+00:23:45,950 --> 00:23:48,010
+moving on to the 286 and 386,
+
+780
+00:23:48,010 --> 00:23:50,070
+32-bit ones started to appear.
+
+781
+00:23:50,070 --> 00:23:51,730
+So at that time,
+
+782
+00:23:51,730 --> 00:23:54,130
+after we entered the 32-bit era,
+
+783
+00:23:54,130 --> 00:23:55,590
+our computers and the like,
+
+784
+00:23:55,590 --> 00:23:57,090
+that era started to arrive,
+
+785
+00:23:57,090 --> 00:23:58,510
+the PC started to come along.
+
+786
+00:23:58,510 --> 00:23:59,830
+And now,
+
+787
+00:23:59,830 --> 00:24:01,890
+we can say that the mainstream processors,
+
+788
+00:24:01,890 --> 00:24:03,850
+have actually all transitioned to 64-bit.
+
+789
+00:24:03,850 --> 00:24:04,370
+Now, as we know,
+
+790
+00:24:04,370 --> 00:24:05,750
+when it comes to the kind of
+
+791
+00:24:05,750 --> 00:24:07,150
+chips we buy these days,
+
+792
+00:24:07,150 --> 00:24:08,790
+their 64-bit
+
+793
+00:24:08,790 --> 00:24:09,470
+actually refers to
+
+794
+00:24:09,470 --> 00:24:12,270
+the width of their general-purpose registers,
+
+795
+00:24:12,270 --> 00:24:13,310
+which is 64 bits.
+
+796
+00:24:13,310 --> 00:24:15,770
+The range that a single 64-bit number
+
+797
+00:24:15,770 --> 00:24:16,630
+can represent,
+
+798
+00:24:16,630 --> 00:24:17,910
+that is quite astounding.
+
+799
+00:24:17,910 --> 00:24:19,770
+Right now, the mainstream devices,
+
+800
+00:24:19,770 --> 00:24:21,650
+including our phones
+
+801
+00:24:21,650 --> 00:24:23,510
+I won't say anything about PCs
+
+802
+00:24:23,510 --> 00:24:24,350
+And then there are servers
+
+803
+00:24:24,350 --> 00:24:27,150
+Those are generally 64-bit
+
+804
+00:24:27,150 --> 00:24:28,190
+Now some of you might say,
+
+805
+00:24:28,190 --> 00:24:31,650
+why don't we have 128-bit yet?
+
+806
+00:24:31,650 --> 00:24:33,910
+Indeed, we don't
+
+807
+00:24:33,910 --> 00:24:34,570
+Unfortunately
+
+808
+00:24:34,570 --> 00:24:39,510
+Strictly speaking, there is no 128-bit general-purpose computer,
+
+809
+00:24:39,510 --> 00:24:40,570
+no 128-bit general-purpose processor
+
+810
+00:24:40,570 --> 00:24:42,070
+Not yet
+
+811
+00:24:42,070 --> 00:24:42,970
+The reason is very simple
+
+812
+00:24:42,970 --> 00:24:44,710
+It's just not practical yet
+
+813
+00:24:44,710 --> 00:24:46,110
+Because human needs
+
+814
+00:24:46,110 --> 00:24:47,490
+haven't reached that level
+
+815
+00:24:47,490 --> 00:24:49,190
+I remember reading an article,
+
+816
+00:24:49,190 --> 00:24:49,750
+someone said
+
+817
+00:24:49,750 --> 00:24:51,230
+that even if you take
+
+818
+00:24:51,230 --> 00:24:53,130
+all the atoms
+
+819
+00:24:53,130 --> 00:24:54,150
+on the entire Earth
+
+820
+00:24:54,150 --> 00:24:54,810
+and add them all up,
+
+821
+00:24:54,810 --> 00:24:56,610
+it's not much bigger than 128 bits
+
+822
+00:24:56,610 --> 00:24:59,110
+the number of values it can represent isn't that much larger
+
+823
+00:24:59,110 --> 00:25:00,730
+what this really means is
+
+824
+00:25:00,730 --> 00:25:01,770
+there's just no real possibility
+
+825
+00:25:01,770 --> 00:25:04,390
+of doing computations with 128-bit data
+
+826
+00:25:04,390 --> 00:25:05,930
+but then again, it's hard to say for sure
+
+827
+00:25:05,930 --> 00:25:08,690
+maybe as technology advances
+
+828
+00:25:08,690 --> 00:25:11,450
+128-bit will come along at some point too
+
+829
+00:25:11,450 --> 00:25:14,910
+for now, at least, let's not worry about any of that
+
+830
+00:25:14,910 --> 00:25:16,550
+later on, when we
+
+831
+00:25:16,550 --> 00:25:18,950
+when we actually build the operating system,
+
+832
+00:25:18,950 --> 00:25:20,550
+we'll choose a 32-bit system
+
+833
+00:25:20,550 --> 00:25:21,510
+64-bit
+
+834
+00:25:21,510 --> 00:25:24,750
+the reason we choose a 32-bit system
+
+835
+00:25:24,750 --> 00:25:26,590
+is really just to make the calculations easier for you
+
+836
+00:25:26,590 --> 00:25:27,630
+when you do those calculations
+
+837
+00:25:27,630 --> 00:25:28,210
+you see what I mean? if you had a 64-bit number
+
+838
+00:25:28,210 --> 00:25:29,570
+and I asked you to
+
+839
+00:25:29,570 --> 00:25:30,690
+do the arithmetic on it
+
+840
+00:25:30,690 --> 00:25:31,270
+perform some operations
+
+841
+00:25:31,270 --> 00:25:33,270
+it might get a little tricky
+
+842
+00:25:33,270 --> 00:25:34,010
+it's not that we can't do it
+
+843
+00:25:34,010 --> 00:25:36,610
+but from a teaching standpoint,
+
+844
+00:25:36,610 --> 00:25:38,830
+we've decided 32-bit is enough.
+
+845
+00:25:38,830 --> 00:25:40,890
+Besides, 32-bit still has its place
+
+846
+00:25:40,890 --> 00:25:42,770
+in today's industry.
+
+847
+00:25:42,770 --> 00:25:44,550
+For example, in embedded systems,
+
+848
+00:25:44,550 --> 00:25:45,890
+it's still used extensively.
+
+849
+00:25:45,890 --> 00:25:47,830
+So we went with 32-bit
+
+850
+00:25:47,830 --> 00:25:49,390
+for you to practice with.
+
+851
+00:25:49,390 --> 00:25:53,930
+That's the concept of instruction set width.
+
+852
+00:25:53,930 --> 00:25:55,790
+Now at the same time, keep this in mind:
+
+853
+00:25:55,790 --> 00:25:57,930
+often when students learn this concept,
+
+854
+00:25:57,930 --> 00:25:59,490
+they confuse two things.
+
+855
+00:25:59,490 --> 00:26:03,550
+The width of the instruction set and the length
+
+856
+00:26:03,550 --> 00:26:06,630
+of each instruction are two different concepts.
+
+857
+00:26:06,630 --> 00:26:07,910
+For instance, some students say,
+
+858
+00:26:07,910 --> 00:26:10,170
+when they hear the CPU is 32-bit,
+
+859
+00:26:10,170 --> 00:26:11,130
+or the CPU is 64-bit,
+
+860
+00:26:11,130 --> 00:26:13,590
+does that mean each instruction is 32 or 64
+
+861
+00:26:13,590 --> 00:26:15,190
+That's not necessarily the case.
+
+862
+00:26:15,190 --> 00:26:18,090
+For example, the RISC 5
+
+863
+00:26:18,090 --> 00:26:19,290
+instruction set that we're going to learn,
+
+864
+00:26:19,290 --> 00:26:21,010
+whether it's a 32-bit processor
+
+865
+00:26:21,010 --> 00:26:22,310
+or a 64-bit processor,
+
+866
+00:26:22,310 --> 00:26:23,470
+the instruction encoding,
+
+867
+00:26:23,470 --> 00:26:25,350
+each instruction is 32 bits.
+
+868
+00:26:25,350 --> 00:26:26,490
+You really need to keep that in mind.
+
+869
+00:26:26,490 --> 00:26:32,290
+So don't get that mixed up.
+
+870
+00:26:32,290 --> 00:26:34,710
+That's the concept of the width of the instruction set.
+
+871
+00:26:34,710 --> 00:26:37,990
+Now, moving on,
+
+872
+00:26:37,990 --> 00:26:40,130
+let's take a look at
+
+873
+00:26:40,130 --> 00:26:41,150
+let me see here,
+
+874
+00:26:41,150 --> 00:26:43,230
+let's take a look at
+
+875
+00:26:43,230 --> 00:26:47,350
+what famous instruction sets there are.
+
+876
+00:26:47,350 --> 00:26:52,910
+Now, I don't know if any of you have come across these before.
+
+877
+00:26:52,910 --> 00:26:55,130
+Which ones have you encountered?
+
+878
+00:26:55,130 --> 00:26:57,850
+When you learned assembly at your school,
+
+879
+00:26:57,850 --> 00:26:58,590
+which one did you learn?
+
+880
+00:26:58,590 --> 00:27:03,040
+What was it?
+
+881
+00:27:03,040 --> 00:27:03,920
+Is it x86?
+
+882
+00:27:03,920 --> 00:27:05,200
+It should be.
+
+883
+00:27:05,200 --> 00:27:06,420
+Because x86, in our country,
+
+884
+00:27:06,420 --> 00:27:08,500
+is used relatively more.
+
+885
+00:27:08,500 --> 00:27:11,420
+So, we won't say much more about x86.
+
+886
+00:27:11,420 --> 00:27:12,280
+It actually just is
+
+887
+00:27:12,280 --> 00:27:14,100
+I even got some icons here.
+
+888
+00:27:14,100 --> 00:27:14,680
+How nice they look.
+
+889
+00:27:14,680 --> 00:27:15,660
+So this is x86, right.
+
+890
+00:27:15,660 --> 00:27:17,080
+Let's play a matching game.
+
+891
+00:27:17,080 --> 00:27:18,360
+Can everyone connect them?
+
+892
+00:27:18,360 --> 00:27:19,920
+Which one is x86?
+
+893
+00:27:19,920 --> 00:27:21,480
+Is it this one?
+
+894
+00:27:21,480 --> 00:27:22,680
+It's definitely this one.
+
+895
+00:27:22,680 --> 00:27:23,360
+Intel Inside.
+
+896
+00:27:23,360 --> 00:27:24,800
+That advertisement is plastered everywhere.
+
+897
+00:27:24,800 --> 00:27:25,660
+It has squeezed out our entire domestic market.
+
+898
+00:27:25,660 --> 00:27:26,320
+Every bit of it.
+
+899
+00:27:26,320 --> 00:27:29,400
+So, we won't say much more about x86.
+
+900
+00:27:29,400 --> 00:27:33,200
+Have you all heard of this, SPARC?
+
+901
+00:27:33,200 --> 00:27:38,960
+Does anyone know who it connected to?
+
+902
+00:27:38,960 --> 00:27:41,200
+Speak a bit louder, can I hear you?
+
+903
+00:27:41,200 --> 00:27:42,620
+Sun, is that right?
+
+904
+00:27:42,620 --> 00:27:44,560
+Good, you all still remember.
+
+905
+00:27:44,560 --> 00:27:45,340
+That's not easy.
+
+906
+00:27:45,340 --> 00:27:46,140
+This Sun...
+
+907
+00:27:46,140 --> 00:27:50,780
+Sun, actually, in the history of our computing development...
+
+908
+00:27:50,780 --> 00:27:52,520
+it was once a...
+
+909
+00:27:52,520 --> 00:27:54,980
+played a very pivotal role.
+
+910
+00:27:54,980 --> 00:27:57,860
+It was a... wasn't it the dominant leader?
+
+911
+00:27:57,860 --> 00:27:59,560
+I don't know if it can really count as the dominant leader.
+
+912
+00:27:59,560 --> 00:28:02,800
+Back in its day, it was actually very powerful in the market.
+
+913
+00:28:02,800 --> 00:28:04,440
+And its...
+
+914
+00:28:04,440 --> 00:28:08,940
+founder, I think, was also a university professor.
+
+915
+00:28:08,940 --> 00:28:09,380
+I remember.
+
+916
+00:28:09,380 --> 00:28:13,120
+After he built this thing,
+
+917
+00:28:13,120 --> 00:28:14,920
+he went and founded a company himself.
+
+918
+00:28:14,920 --> 00:28:16,460
+He left the university.
+
+919
+00:28:16,460 --> 00:28:19,560
+And so he founded this...
+
+920
+00:28:19,560 --> 00:28:20,440
+But, unfortunately...
+
+921
+00:28:20,440 --> 00:28:21,760
+This company,
+
+922
+00:28:21,760 --> 00:28:22,580
+like all of you
+
+923
+00:28:22,580 --> 00:28:24,760
+are probably still using Java and such,
+
+924
+00:28:24,760 --> 00:28:26,980
+it actually did not just do hardware,
+
+925
+00:28:26,980 --> 00:28:27,960
+it did software too,
+
+926
+00:28:27,960 --> 00:28:30,720
+including operating systems.
+
+927
+00:28:30,720 --> 00:28:33,180
+It had an operating system called Solaris.
+
+928
+00:28:33,180 --> 00:28:35,700
+And the Java language that we use,
+
+929
+00:28:35,700 --> 00:28:38,300
+was actually invented by this company too.
+
+930
+00:28:38,300 --> 00:28:39,320
+Unfortunately,
+
+931
+00:28:39,320 --> 00:28:42,080
+it ran into some commercial problems,
+
+932
+00:28:42,080 --> 00:28:45,020
+and eventually, as we say, the company couldn't hold on anymore.
+
+933
+00:28:45,020 --> 00:28:49,580
+So which company ended up swallowing it up?
+
+934
+00:28:49,580 --> 00:28:50,440
+You probably know,
+
+935
+00:28:50,440 --> 00:28:52,680
+it's Oracle, right?
+
+936
+00:28:52,680 --> 00:28:54,000
+Oracle swallowed it up.
+
+937
+00:28:54,000 --> 00:28:57,320
+Now, after Oracle acquired this,
+
+938
+00:28:57,320 --> 00:28:58,800
+unfortunately it didn't carry on with this,
+
+939
+00:28:58,800 --> 00:29:00,660
+its CPU business,
+
+940
+00:29:00,660 --> 00:29:01,960
+that is, the hardware side of the business.
+
+941
+00:29:01,960 --> 00:29:03,180
+it was able to continue and carry that on
+
+942
+00:29:03,180 --> 00:29:04,440
+but later it was terminated
+
+943
+00:29:04,440 --> 00:29:05,160
+so this
+
+944
+00:29:05,160 --> 00:29:07,040
+this chip, in fact,
+
+945
+00:29:07,040 --> 00:29:08,960
+is rarely seen nowadays
+
+946
+00:29:08,960 --> 00:29:09,720
+but
+
+947
+00:29:09,720 --> 00:29:11,560
+not that many years ago,
+
+948
+00:29:11,560 --> 00:29:13,520
+actually, in many of our domestic
+
+949
+00:29:13,520 --> 00:29:14,340
+large
+
+950
+00:29:14,340 --> 00:29:15,960
+it was mainly pushed for some
+
+951
+00:29:15,960 --> 00:29:17,020
+building servers and such,
+
+952
+00:29:17,020 --> 00:29:17,820
+things like that,
+
+953
+00:29:17,820 --> 00:29:19,580
+like some of our telecom equipment,
+
+954
+00:29:19,580 --> 00:29:21,400
+the servers inside banking equipment,
+
+955
+00:29:21,400 --> 00:29:23,460
+it was used quite a lot there
+
+956
+00:29:24,000 --> 00:29:26,320
+Now, which one is Power?
+
+957
+00:29:26,320 --> 00:29:28,140
+Which company is it from?
+
+958
+00:29:28,140 --> 00:29:30,080
+It's from IBM.
+
+959
+00:29:30,080 --> 00:29:33,540
+Oh, I forgot to mention earlier,
+
+960
+00:29:33,540 --> 00:29:34,080
+this X86
+
+961
+00:29:34,080 --> 00:29:38,720
+We say it's a classic complex instruction set architecture.
+
+962
+00:29:38,720 --> 00:29:41,420
+And as for the ones below,
+
+963
+00:29:41,420 --> 00:29:43,760
+most of these are classic instruction set architectures too.
+
+964
+00:29:43,760 --> 00:29:45,740
+These are all classic instruction sets,
+
+965
+00:29:45,740 --> 00:29:47,800
+that is, reduced instruction set architectures.
+
+966
+00:29:47,800 --> 00:29:50,520
+Now, Power is from IBM,
+
+967
+00:29:50,520 --> 00:29:53,660
+and it's still used in these 64-bit systems.
+
+968
+00:29:53,660 --> 00:29:55,040
+That's because IBM,
+
+969
+00:29:55,040 --> 00:29:58,400
+well, it actually does everything from hardware to software.
+
+970
+00:29:58,400 --> 00:30:01,140
+Its products are still in use today.
+
+971
+00:30:01,140 --> 00:30:03,760
+It's just that we don't usually come into contact with them much,
+
+972
+00:30:03,760 --> 00:30:07,040
+because they're mainly used in large enterprises,
+
+973
+00:30:07,040 --> 00:30:10,540
+like banking and power companies,
+
+974
+00:30:10,540 --> 00:30:13,660
+running on those big servers.
+
+975
+00:30:13,660 --> 00:30:16,480
+Now, ARM goes without saying,
+
+976
+00:30:16,480 --> 00:30:18,660
+because we should all be fairly familiar with it.
+
+977
+00:30:18,660 --> 00:30:21,380
+And as for ARM as a company,
+
+978
+00:30:21,380 --> 00:30:23,520
+it actually came along quite late,
+
+979
+00:30:23,520 --> 00:30:28,380
+but you could say that
+
+980
+00:30:28,380 --> 00:30:30,900
+its market positioning has been quite accurate.
+
+981
+00:30:30,900 --> 00:30:34,360
+It was mainly aimed at that point in time
+
+982
+00:30:34,360 --> 00:30:37,700
+that is, at handheld devices and mobile computing
+
+983
+00:30:37,700 --> 00:30:38,660
+which is really our mobile phones
+
+984
+00:30:38,660 --> 00:30:42,740
+At that time, in the course of mobile phone development,
+
+985
+00:30:42,740 --> 00:30:43,980
+it seized this opportunity
+
+986
+00:30:43,980 --> 00:30:47,560
+while other companies did not seize it.
+
+987
+00:30:47,560 --> 00:30:50,400
+The most classic example is a company like Intel,
+
+988
+00:30:50,400 --> 00:30:51,140
+Intel
+
+989
+00:30:51,140 --> 00:30:54,620
+simply failed to seize this mobile phone
+
+990
+00:30:54,620 --> 00:30:56,980
+opportunity in the development of mobile devices.
+
+991
+00:30:56,980 --> 00:30:58,160
+It's not that they didn't see it—
+
+992
+00:30:58,160 --> 00:30:59,360
+they did see it,
+
+993
+00:30:59,360 --> 00:31:01,060
+because everyone is smart,
+
+994
+00:31:01,060 --> 00:31:02,140
+and they all knew they should do it.
+
+995
+00:31:02,140 --> 00:31:04,300
+But why didn't Intel do it?
+
+996
+00:31:04,300 --> 00:31:07,880
+The reason is that they
+
+997
+00:31:07,880 --> 00:31:10,920
+had done so well in PCs and servers.
+
+998
+00:31:10,920 --> 00:31:11,940
+As we know, when they
+
+999
+00:31:11,940 --> 00:31:14,540
+when you've done something so well,
+
+1000
+00:31:14,540 --> 00:31:15,540
+asking you to immediately change course
+
+1001
+00:31:15,540 --> 00:31:17,180
+when you go do an unfamiliar line of business,
+
+1002
+00:31:17,180 --> 00:31:20,180
+there's actually a psychological resistance to it.
+
+1003
+00:31:20,180 --> 00:31:21,820
+You all understand what I mean by that, right?
+
+1004
+00:31:21,820 --> 00:31:22,380
+So, that being said,
+
+1005
+00:31:22,380 --> 00:31:23,540
+but ARM,
+
+1006
+00:31:23,540 --> 00:31:24,340
+it had no baggage.
+
+1007
+00:31:24,340 --> 00:31:24,920
+The moment it got started,
+
+1008
+00:31:24,920 --> 00:31:25,800
+it jumped straight into doing this.
+
+1009
+00:31:25,800 --> 00:31:26,660
+Because if it didn't do this,
+
+1010
+00:31:26,660 --> 00:31:27,260
+it would be dead.
+
+1011
+00:31:27,260 --> 00:31:28,420
+You see what I mean.
+
+1012
+00:31:28,420 --> 00:31:29,480
+And as for Intel,
+
+1013
+00:31:29,480 --> 00:31:31,160
+it had that...
+
+1014
+00:31:31,160 --> 00:31:32,680
+that business was just too profitable.
+
+1015
+00:31:32,680 --> 00:31:33,580
+Back then, PCs,
+
+1016
+00:31:33,580 --> 00:31:34,620
+servers and all that,
+
+1017
+00:31:34,620 --> 00:31:35,380
+it was making way too much money.
+
+1018
+00:31:35,380 --> 00:31:37,000
+So it looked down on that business.
+
+1019
+00:31:37,000 --> 00:31:37,720
+It just didn't care for it.
+
+1020
+00:31:37,720 --> 00:31:38,960
+And as a result, ARM rose right up.
+
+1021
+00:31:38,960 --> 00:31:40,580
+so this is kind of a happy coincidence
+
+1022
+00:31:40,580 --> 00:31:42,280
+there is no deep reason behind it
+
+1023
+00:31:42,280 --> 00:31:43,220
+so what about ARM?
+
+1024
+00:31:43,220 --> 00:31:44,320
+well, riding on
+
+1025
+00:31:44,320 --> 00:31:46,060
+the spring breeze of mobile computing,
+
+1026
+00:31:46,060 --> 00:31:47,740
+it took off all at once
+
+1027
+00:31:47,740 --> 00:31:49,600
+and now our
+
+1028
+00:31:49,600 --> 00:31:51,200
+small devices,
+
+1029
+00:31:51,200 --> 00:31:51,780
+lightweight devices,
+
+1030
+00:31:51,780 --> 00:31:52,920
+mobile devices of this kind,
+
+1031
+00:31:52,920 --> 00:31:54,820
+mobile phones are basically all ARM
+
+1032
+00:31:54,820 --> 00:31:55,480
+ARM chips
+
+1033
+00:31:55,480 --> 00:31:58,180
+so its main characteristic
+
+1034
+00:31:58,180 --> 00:31:58,460
+is that
+
+1035
+00:31:58,460 --> 00:32:00,680
+its chips,
+
+1036
+00:32:00,680 --> 00:32:02,420
+because it uses a reduced instruction set architecture,
+
+1037
+00:32:02,420 --> 00:32:03,120
+its
+
+1038
+00:32:03,120 --> 00:32:05,480
+power consumption and everything is very low,
+
+1039
+00:32:05,480 --> 00:32:08,140
+and furthermore,
+
+1040
+00:32:08,140 --> 00:32:09,900
+what it adopts is quite different from other companies
+
+1041
+00:32:09,900 --> 00:32:10,360
+It's not like that.
+
+1042
+00:32:10,360 --> 00:32:11,320
+ARM, as we know,
+
+1043
+00:32:11,320 --> 00:32:12,400
+it doesn't make chips.
+
+1044
+00:32:12,400 --> 00:32:13,780
+What does it actually do?
+
+1045
+00:32:13,780 --> 00:32:15,100
+It sells something
+
+1046
+00:32:15,100 --> 00:32:16,740
+like intellectual property,
+
+1047
+00:32:16,740 --> 00:32:18,180
+this kind of IP concept.
+
+1048
+00:32:18,180 --> 00:32:18,400
+Right?
+
+1049
+00:32:18,400 --> 00:32:19,860
+They design the stuff,
+
+1050
+00:32:19,860 --> 00:32:21,700
+provide the solution,
+
+1051
+00:32:21,700 --> 00:32:22,640
+and then
+
+1052
+00:32:22,640 --> 00:32:24,240
+sell that solution to others,
+
+1053
+00:32:24,240 --> 00:32:24,920
+and others build with it.
+
+1054
+00:32:24,920 --> 00:32:25,620
+That's actually how it works.
+
+1055
+00:32:25,620 --> 00:32:27,840
+Take the chips Huawei makes, for example.
+
+1056
+00:32:27,840 --> 00:32:30,480
+They've really just bought ARM's solution.
+
+1057
+00:32:30,480 --> 00:32:33,280
+But Huawei,
+
+1058
+00:32:33,280 --> 00:32:34,240
+it does make chips,
+
+1059
+00:32:34,240 --> 00:32:35,280
+but in reality, Huawei,
+
+1060
+00:32:35,280 --> 00:32:36,420
+to make chips, uses the instruction set architecture
+
+1061
+00:32:36,420 --> 00:32:37,780
+It's still ARM's intellectual property.
+
+1062
+00:32:37,780 --> 00:32:39,900
+So,
+
+1063
+00:32:39,900 --> 00:32:41,580
+another one is MIPS.
+
+1064
+00:32:41,580 --> 00:32:42,700
+MIPS is this one.
+
+1065
+00:32:42,700 --> 00:32:44,020
+This MIPS,
+
+1066
+00:32:44,020 --> 00:32:46,080
+this is,
+
+1067
+00:32:46,080 --> 00:32:49,400
+let me see which American university this was from.
+
+1068
+00:32:49,400 --> 00:32:54,600
+I've forgotten all of a sudden.
+
+1069
+00:32:54,600 --> 00:32:57,160
+He was also at a university.
+
+1070
+00:32:57,160 --> 00:32:59,940
+Was it in California?
+
+1071
+00:32:59,940 --> 00:33:01,180
+Or which university was it?
+
+1072
+00:33:01,180 --> 00:33:02,680
+A professor at an American university
+
+1073
+00:33:02,680 --> 00:33:05,520
+invented this whole thing.
+
+1074
+00:33:05,520 --> 00:33:07,120
+Then later he started a business,
+
+1075
+00:33:07,120 --> 00:33:08,180
+founded a company,
+
+1076
+00:33:08,180 --> 00:33:10,100
+and created MIPS.
+
+1077
+00:33:10,100 --> 00:33:11,600
+Now, MIPS,
+
+1078
+00:33:11,600 --> 00:33:14,360
+its history has been quite a winding road.
+
+1079
+00:33:14,360 --> 00:33:17,700
+Actually, in its early days it was technologically very advanced.
+
+1080
+00:33:17,700 --> 00:33:19,680
+It used a reduced instruction set architecture.
+
+1081
+00:33:19,680 --> 00:33:23,920
+So it went into a lot of our embedded devices
+
+1082
+00:33:23,920 --> 00:33:28,860
+including especially chips used in routers, where it was really common
+
+1083
+00:33:28,860 --> 00:33:34,040
+But later on, for market reasons as well,
+
+1084
+00:33:34,040 --> 00:33:35,660
+it just didn't continue
+
+1085
+00:33:35,660 --> 00:33:40,200
+and after that it kept getting acquired and bought up by other companies
+
+1086
+00:33:40,200 --> 00:33:43,000
+until in the end it just couldn't go on
+
+1087
+00:33:43,000 --> 00:33:44,180
+And now,
+
+1088
+00:33:44,180 --> 00:33:45,260
+MIPS, the company,
+
+1089
+00:33:45,260 --> 00:33:46,220
+there's a piece of recent news
+
+1090
+00:33:46,220 --> 00:33:46,800
+saying that
+
+1091
+00:33:46,800 --> 00:33:48,440
+it's also preparing to move over
+
+1092
+00:33:48,440 --> 00:33:49,880
+to RISC-V,
+
+1093
+00:33:49,880 --> 00:33:51,420
+so that's how it turned out
+
+1094
+00:33:51,420 --> 00:33:52,240
+So it's quite a pity, really
+
+1095
+00:33:52,240 --> 00:33:53,580
+But actually, MIPS,
+
+1096
+00:33:53,580 --> 00:33:55,580
+this instruction set architecture,
+
+1097
+00:33:55,580 --> 00:33:58,160
+in the course of our computer's
+
+1098
+00:33:58,160 --> 00:33:58,960
+development,
+
+1099
+00:33:58,960 --> 00:34:01,000
+still played a very significant role
+
+1100
+00:34:01,000 --> 00:34:02,840
+In particular, I mean,
+
+1101
+00:34:02,840 --> 00:34:05,940
+For example, some of our classic
+
+1102
+00:34:05,940 --> 00:34:07,320
+early classic
+
+1103
+00:34:07,320 --> 00:34:10,300
+computer science textbooks,
+
+1104
+00:34:10,300 --> 00:34:13,940
+because it was invented by a university professor,
+
+1105
+00:34:13,940 --> 00:34:14,740
+in the textbooks,
+
+1106
+00:34:14,740 --> 00:34:17,780
+actually many textbooks use MIPS to teach,
+
+1107
+00:34:17,780 --> 00:34:20,860
+including what we're going to cover later,
+
+1108
+00:34:20,860 --> 00:34:22,660
+the RISC-V instruction set architecture,
+
+1109
+00:34:22,660 --> 00:34:26,720
+it actually borrowed many concepts from MIPS.
+
+1110
+00:34:26,720 --> 00:34:27,660
+So these two,
+
+1111
+00:34:27,660 --> 00:34:30,620
+MIPS and RISC-V, these two things,
+
+1112
+00:34:30,620 --> 00:34:32,440
+they actually share quite a history.
+
+1113
+00:34:32,440 --> 00:34:33,720
+Quite a history.
+
+1114
+00:34:33,720 --> 00:34:35,000
+Which university was it?
+
+1115
+00:34:35,000 --> 00:34:35,460
+Let me think,
+
+1116
+00:34:35,460 --> 00:34:37,200
+I can't recall it right now.
+
+1117
+00:34:37,200 --> 00:34:38,860
+I think it was at
+
+1118
+00:34:38,860 --> 00:34:43,940
+it was that...
+
+1119
+00:34:43,940 --> 00:34:45,720
+I actually forgot it.
+
+1120
+00:34:45,720 --> 00:34:47,240
+It's Stanford University.
+
+1121
+00:34:47,240 --> 00:34:49,020
+There's a person at Stanford University called
+
+1122
+00:34:49,020 --> 00:34:51,500
+The Chinese translation is
+
+1123
+00:34:51,500 --> 00:34:52,940
+Have you heard of it?
+
+1124
+00:34:52,940 --> 00:34:57,120
+What seems more familiar is a
+
+1125
+00:34:57,120 --> 00:34:57,880
+famous wine, right?
+
+1126
+00:34:57,880 --> 00:34:59,060
+Actually,
+
+1127
+00:34:59,060 --> 00:35:01,820
+you may also know this name,
+
+1128
+00:35:01,820 --> 00:35:02,060
+which is
+
+1129
+00:35:02,060 --> 00:35:04,740
+Xuan,
+
+1130
+00:35:04,740 --> 00:35:06,920
+is it this Xuan?
+
+1131
+00:35:06,920 --> 00:35:08,600
+Xuannisi,
+
+1132
+00:35:08,600 --> 00:35:14,260
+have you heard this name?
+
+1133
+00:35:14,260 --> 00:35:16,880
+A luxury brand,
+
+1134
+00:35:16,880 --> 00:35:17,900
+a luxury brand,
+
+1135
+00:35:17,900 --> 00:35:19,600
+but actually it's a foreign person's
+
+1136
+00:35:19,600 --> 00:35:20,800
+surname, I think,
+
+1137
+00:35:20,800 --> 00:35:22,060
+Is this the surname or the given name?
+
+1138
+00:35:22,060 --> 00:35:26,080
+So this professor is actually called Xuenishi,
+
+1139
+00:35:26,080 --> 00:35:29,380
+and he invented this thing at Stanford University.
+
+1140
+00:35:29,380 --> 00:35:30,920
+Alright then,
+
+1141
+00:35:30,920 --> 00:35:34,000
+That covers most of the better-known ones.
+
+1142
+00:35:34,000 --> 00:35:35,080
+Of course, there are some others,
+
+1143
+00:35:35,080 --> 00:35:36,180
+but since our time is limited,
+
+1144
+00:35:36,180 --> 00:35:37,760
+I won't go on about them here.
+
+1145
+00:35:37,760 --> 00:35:39,840
+So mainly,
+
+1146
+00:35:39,840 --> 00:35:42,060
+this course is about learning RISC-V.
+
+1147
+00:35:42,060 --> 00:35:47,220
+RISC-V is a new instruction set architecture that has been rising recently.
+
+1148
+00:35:47,220 --> 00:35:50,840
+As for the content related to this instruction set architecture,
+
+1149
+00:35:50,840 --> 00:35:53,020
+I'll stop the brief introduction right here.
+
+1150
+00:35:53,020 --> 00:36:00,180
+How about we take a break first?
+
+1151
+00:36:00,180 --> 00:36:02,720
+Because last time it seemed like the lecture went on too long.
+
+1152
+00:36:02,720 --> 00:36:08,300
+Let's try to keep each lecture to around 40 minutes.
+
+1153
+00:36:08,300 --> 00:36:09,800
+Let's take a break first.

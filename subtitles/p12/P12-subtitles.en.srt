@@ -1,0 +1,5855 @@
+1
+00:00:01,140 --> 00:00:26,900
+So today, first, let's take another look at conditional branch instructions. Conditional branch instructions are called Conditional Branch Instructions in English. They are mainly used in our code — as we know, besides sequential execution, we have things like the most basic conditional judgment in C, the if-else statement, which is actually carried out by these assembly instructions, these machine instructions.
+
+2
+00:00:26,900 --> 00:00:31,180
+So in the conditional branch instructions of Risk5,
+
+3
+00:00:31,180 --> 00:00:33,160
+there are several kinds,
+
+4
+00:00:33,160 --> 00:00:35,220
+and let's take a look.
+
+5
+00:00:35,220 --> 00:00:38,180
+There are BEQ, BNE, BLT,
+
+6
+00:00:38,180 --> 00:00:39,980
+and these names
+
+7
+00:00:39,980 --> 00:00:41,020
+actually have meanings.
+
+8
+00:00:41,020 --> 00:00:44,800
+As for their specific meanings,
+
+9
+00:00:44,800 --> 00:00:47,100
+we can see them here, which I have also listed for you.
+
+10
+00:00:47,100 --> 00:00:49,280
+So for BEQ,
+
+11
+00:00:49,280 --> 00:00:52,340
+it is actually branch if equal.
+
+12
+00:00:52,340 --> 00:00:53,500
+What that means is,
+
+13
+00:00:53,500 --> 00:00:54,140
+what does it mean?
+
+14
+00:00:54,140 --> 00:00:56,540
+It checks whether two numbers are equal.
+
+15
+00:00:56,540 --> 00:00:57,920
+If they are equal,
+
+16
+00:00:57,920 --> 00:00:59,320
+then it jumps.
+
+17
+00:00:59,320 --> 00:01:01,280
+Branch means to branch,
+
+18
+00:01:01,280 --> 00:01:03,140
+forking means jumping.
+
+19
+00:01:03,140 --> 00:01:06,220
+The others are similar,
+
+20
+00:01:06,220 --> 00:01:08,400
+BNE
+
+21
+00:01:08,400 --> 00:01:10,980
+Now, once you remember this English term,
+
+22
+00:01:10,980 --> 00:01:12,400
+when you memorize this,
+
+23
+00:01:12,400 --> 00:01:15,620
+the name of the command becomes much easier to remember.
+
+24
+00:01:15,620 --> 00:01:18,280
+This is one thing everyone should pay attention to.
+
+25
+00:01:18,280 --> 00:01:20,660
+And there's another thing,
+
+26
+00:01:20,660 --> 00:01:24,160
+which is these conditional branch instructions,
+
+27
+00:01:24,160 --> 00:01:26,220
+the encoding format they use,
+
+28
+00:01:26,220 --> 00:01:28,960
+we call it B-type.
+
+29
+00:01:28,960 --> 00:01:30,820
+So why is it called B-type?
+
+30
+00:01:30,820 --> 00:01:32,200
+Now you all understand what this B means, right?
+
+31
+00:01:32,200 --> 00:01:33,540
+It actually stands for branch,
+
+32
+00:01:33,540 --> 00:01:36,400
+it comes from conditional branch instructions.
+
+33
+00:01:36,400 --> 00:01:38,600
+This encoding format,
+
+34
+00:01:38,600 --> 00:01:39,360
+this encoding scheme,
+
+35
+00:01:39,360 --> 00:01:40,160
+you can take a look at it.
+
+36
+00:01:40,160 --> 00:01:41,960
+There's a diagram down below,
+
+37
+00:01:41,960 --> 00:01:44,040
+which I've laid out for you.
+
+38
+00:01:44,040 --> 00:01:45,260
+As we can see from it,
+
+39
+00:01:45,260 --> 00:01:47,840
+bits 0 to 6 are still,
+
+40
+00:01:47,840 --> 00:01:49,060
+that is, the lower bits 0 to 6,
+
+41
+00:01:49,060 --> 00:01:50,720
+it still holds the opcode
+
+42
+00:01:50,720 --> 00:01:51,800
+right
+
+43
+00:01:51,800 --> 00:01:53,600
+and then there's also
+
+44
+00:01:53,600 --> 00:01:54,880
+two fields that hold registers
+
+45
+00:01:54,880 --> 00:01:55,900
+RS1 and RS2
+
+46
+00:01:55,900 --> 00:01:57,940
+now as for function3
+
+47
+00:01:57,940 --> 00:01:59,560
+it's used together with the opcode to
+
+48
+00:01:59,560 --> 00:02:01,300
+uniquely identify the
+
+49
+00:02:01,300 --> 00:02:03,520
+type of this instruction
+
+50
+00:02:03,520 --> 00:02:05,380
+and then there's also an immediate value
+
+51
+00:02:05,380 --> 00:02:06,060
+as you can see
+
+52
+00:02:06,060 --> 00:02:07,360
+this immediate value
+
+53
+00:02:07,360 --> 00:02:09,420
+now some of you might
+
+54
+00:02:09,420 --> 00:02:10,600
+have some confusion about the
+
+55
+00:02:10,600 --> 00:02:11,740
+encoding method of this immediate
+
+56
+00:02:11,740 --> 00:02:12,960
+and feel a bit puzzled
+
+57
+00:02:12,960 --> 00:02:14,260
+which is that this immediate value
+
+58
+00:02:14,260 --> 00:02:15,760
+is not kept together in one piece
+
+59
+00:02:15,760 --> 00:02:16,320
+do you all see that
+
+60
+00:02:16,320 --> 00:02:18,320
+that is, for the immediate value as a whole
+
+61
+00:02:18,320 --> 00:02:18,960
+It is a
+
+62
+00:02:18,960 --> 00:02:21,940
+The numbers written here are
+
+63
+00:02:21,940 --> 00:02:24,500
+the lowest is bit 1
+
+64
+00:02:24,500 --> 00:02:25,760
+and the highest goes up to
+
+65
+00:02:25,760 --> 00:02:28,000
+bit 12
+
+66
+00:02:28,000 --> 00:02:29,580
+So you can see that
+
+67
+00:02:29,580 --> 00:02:33,040
+for the full 12 bits of data
+
+68
+00:02:33,040 --> 00:02:34,160
+they are not placed together
+
+69
+00:02:34,160 --> 00:02:35,940
+They are actually distributed across
+
+70
+00:02:35,940 --> 00:02:36,940
+the entire
+
+71
+00:02:36,940 --> 00:02:40,140
+encoding format, in two separate places
+
+72
+00:02:40,140 --> 00:02:41,780
+And in the two places,
+
+73
+00:02:41,780 --> 00:02:43,240
+the format is actually still
+
+74
+00:02:43,240 --> 00:02:45,380
+bits 1 to 4 are here
+
+75
+00:02:45,380 --> 00:02:48,260
+then it jumps over here and puts bits 5 to 10
+
+76
+00:02:48,260 --> 00:02:49,620
+bits 5 to 10, then it jumps here again to
+
+77
+00:02:49,620 --> 00:02:51,900
+put bit 11, and then bit 12 is placed here
+
+78
+00:02:51,900 --> 00:02:52,820
+They are not placed consecutively
+
+79
+00:02:52,820 --> 00:02:53,420
+Do you see that?
+
+80
+00:02:53,420 --> 00:02:56,140
+Don't be surprised by this
+
+81
+00:02:56,140 --> 00:02:57,420
+As you all know,
+
+82
+00:02:57,420 --> 00:02:59,680
+this is a machine instruction.
+
+83
+00:02:59,680 --> 00:03:01,340
+The way machine instructions are encoded,
+
+84
+00:03:01,340 --> 00:03:02,760
+it's really mainly considered
+
+85
+00:03:02,760 --> 00:03:05,300
+for the sake of the underlying hardware's
+
+86
+00:03:05,300 --> 00:03:06,860
+processing efficiency.
+
+87
+00:03:06,860 --> 00:03:08,380
+So this encoding scheme
+
+88
+00:03:08,380 --> 00:03:10,480
+is designed entirely for
+
+89
+00:03:10,480 --> 00:03:12,380
+the processing efficiency of the underlying hardware.
+
+90
+00:03:12,380 --> 00:03:14,320
+Now, when we're programming,
+
+91
+00:03:14,320 --> 00:03:15,660
+we don't actually need to worry about this.
+
+92
+00:03:15,660 --> 00:03:16,900
+All we need to know is
+
+93
+00:03:16,900 --> 00:03:18,720
+that these two parts
+
+94
+00:03:18,720 --> 00:03:21,200
+together make up an immediate number --
+
+95
+00:03:21,200 --> 00:03:23,200
+a 12-bit immediate value --
+
+96
+00:03:23,200 --> 00:03:24,620
+and that's enough.
+
+97
+00:03:24,620 --> 00:03:26,740
+That's one thing.
+
+98
+00:03:26,740 --> 00:03:28,880
+And then there's another,
+
+99
+00:03:28,880 --> 00:03:29,760
+which is this:
+
+100
+00:03:29,760 --> 00:03:30,580
+we know that this
+
+101
+00:03:30,580 --> 00:03:31,760
+So besides knowing that
+
+102
+00:03:31,760 --> 00:03:33,300
+these conditional branch instructions,
+
+103
+00:03:33,300 --> 00:03:34,300
+they operate on certain —
+
+104
+00:03:34,300 --> 00:03:35,980
+that is, whether things are equal,
+
+105
+00:03:35,980 --> 00:03:36,660
+not equal,
+
+106
+00:03:36,660 --> 00:03:37,880
+they're divided into several groups like this.
+
+107
+00:03:37,880 --> 00:03:38,140
+Right?
+
+108
+00:03:38,140 --> 00:03:38,760
+As you can see,
+
+109
+00:03:38,760 --> 00:03:41,480
+one checks for equality,
+
+110
+00:03:41,480 --> 00:03:43,340
+and one branches if not equal.
+
+111
+00:03:43,340 --> 00:03:44,340
+Then there's another one,
+
+112
+00:03:44,340 --> 00:03:46,500
+which branches if less than.
+
+113
+00:03:46,500 --> 00:03:48,000
+And another one that branches if greater than or equal.
+
+114
+00:03:48,000 --> 00:03:49,160
+Less than and greater than or equal —
+
+115
+00:03:49,160 --> 00:03:50,020
+we know those are a pair,
+
+116
+00:03:50,020 --> 00:03:50,380
+right?
+
+117
+00:03:50,380 --> 00:03:52,240
+So that's one.
+
+118
+00:03:52,240 --> 00:03:54,060
+And then there's another one, that is to say,
+
+119
+00:03:54,060 --> 00:03:55,260
+there's also this one here —
+
+120
+00:03:55,260 --> 00:03:57,500
+you see, apart from this BLT,
+
+121
+00:03:57,500 --> 00:03:58,520
+There's also a BLTU.
+
+122
+00:03:58,520 --> 00:04:01,160
+And for BGE, there's a BGEU.
+
+123
+00:04:01,160 --> 00:04:02,400
+Now the only difference
+
+124
+00:04:02,400 --> 00:04:03,560
+is that it has an extra U at the end.
+
+125
+00:04:03,560 --> 00:04:05,500
+So what does this U mean?
+
+126
+00:04:05,500 --> 00:04:07,480
+It stands for the unsigned concept.
+
+127
+00:04:07,480 --> 00:04:08,280
+That is to say, when they
+
+128
+00:04:08,280 --> 00:04:09,820
+If there's a U added,
+
+129
+00:04:09,820 --> 00:04:11,600
+it means that when they compare,
+
+130
+00:04:11,600 --> 00:04:14,480
+the comparison is done as unsigned numbers.
+
+131
+00:04:14,480 --> 00:04:15,520
+In other words, the sign bit actually,
+
+132
+00:04:15,520 --> 00:04:17,520
+you can just treat everything as a positive number.
+
+133
+00:04:17,520 --> 00:04:20,840
+Now, if there's no U,
+
+134
+00:04:20,840 --> 00:04:22,720
+it uses the signed representation.
+
+135
+00:04:22,720 --> 00:04:24,980
+So in this case, this immediate value's—
+
+136
+00:04:24,980 --> 00:04:26,780
+I mean, this isn't an immediate value,
+
+137
+00:04:26,780 --> 00:04:28,600
+it's the number stored in the register—
+
+138
+00:04:28,600 --> 00:04:31,080
+if it's a positive or negative number,
+
+139
+00:04:31,080 --> 00:04:32,660
+it does take part in the comparison.
+
+140
+00:04:32,660 --> 00:04:34,880
+That is, the comparison is performed as signed values.
+
+141
+00:04:34,880 --> 00:04:37,640
+This is when these instructions were designed.
+
+142
+00:04:37,640 --> 00:04:38,600
+We need to pay attention to this.
+
+143
+00:04:38,600 --> 00:04:42,560
+So in total, the classification goes like this.
+
+144
+00:04:42,560 --> 00:04:45,080
+It ends up being six in total.
+
+145
+00:04:45,080 --> 00:04:47,940
+Six conditional branch instructions.
+
+146
+00:04:47,940 --> 00:04:52,760
+You can actually memorize them in pairs.
+
+147
+00:04:52,760 --> 00:04:56,720
+Now that we understand this,
+
+148
+00:04:56,720 --> 00:04:57,920
+the last point is that
+
+149
+00:04:57,920 --> 00:04:59,700
+because in the end it needs a jump,
+
+150
+00:04:59,700 --> 00:05:01,060
+when this jump happens,
+
+151
+00:05:01,060 --> 00:05:01,760
+this target,
+
+152
+00:05:01,760 --> 00:05:03,300
+the target address of the jump,
+
+153
+00:05:03,300 --> 00:05:04,340
+how is it calculated?
+
+154
+00:05:04,340 --> 00:05:06,900
+This is something we need to understand.
+
+155
+00:05:06,900 --> 00:05:09,000
+As you can see,
+
+156
+00:05:09,000 --> 00:05:11,700
+the way it is calculated is right here.
+
+157
+00:05:11,700 --> 00:05:14,160
+We've listed it out for you here,
+
+158
+00:05:14,160 --> 00:05:16,520
+that is, the method for calculating the jump target address.
+
+159
+00:05:16,520 --> 00:05:18,160
+And how is it calculated?
+
+160
+00:05:18,160 --> 00:05:21,820
+It is based on the immediate value in the encoding.
+
+161
+00:05:21,820 --> 00:05:23,520
+Multiply this immediate by two.
+
+162
+00:05:23,520 --> 00:05:25,540
+After sign extension,
+
+163
+00:05:25,540 --> 00:05:26,620
+pay attention here, read carefully.
+
+164
+00:05:26,620 --> 00:05:28,900
+Of course, what I've done here is take the English from the specification
+
+165
+00:05:28,900 --> 00:05:30,520
+and translate it into Chinese
+
+166
+00:05:30,520 --> 00:05:31,580
+for everyone here.
+
+167
+00:05:31,580 --> 00:05:33,800
+Once you've understood this,
+
+168
+00:05:33,800 --> 00:05:36,280
+go back and take a look at the standard itself.
+
+169
+00:05:36,280 --> 00:05:38,260
+That might give you an even better understanding.
+
+170
+00:05:38,260 --> 00:05:41,200
+So, first multiply this immediate by two,
+
+171
+00:05:41,200 --> 00:05:42,800
+then after sign extension,
+
+172
+00:05:42,800 --> 00:05:45,200
+add it to the PC value,
+
+173
+00:05:45,200 --> 00:05:47,000
+and only then can you get the final target address.
+
+174
+00:05:47,000 --> 00:05:50,500
+So what does this multiplying by 2 mean?
+
+175
+00:05:50,500 --> 00:05:51,520
+Actually, what it means is
+
+176
+00:05:51,520 --> 00:05:53,560
+it actually shows that
+
+177
+00:05:53,560 --> 00:05:55,040
+the immediate it finally gets
+
+178
+00:05:55,040 --> 00:05:56,420
+is definitely a multiple of 2.
+
+179
+00:05:56,420 --> 00:05:57,640
+Do you all understand?
+
+180
+00:05:57,640 --> 00:05:59,140
+It's definitely a multiple of 2.
+
+181
+00:05:59,140 --> 00:06:00,400
+like 2,
+
+182
+00:06:00,400 --> 00:06:01,240
+4,
+
+183
+00:06:01,240 --> 00:06:02,960
+8, values like that.
+
+184
+00:06:02,960 --> 00:06:04,940
+Now why is that the case?
+
+185
+00:06:04,940 --> 00:06:05,700
+It's mainly because
+
+186
+00:06:05,700 --> 00:06:06,400
+it's that
+
+187
+00:06:06,400 --> 00:06:07,840
+as we mentioned earlier,
+
+188
+00:06:07,840 --> 00:06:08,740
+in instruction encoding,
+
+189
+00:06:08,740 --> 00:06:10,160
+when instructions are laid out in memory,
+
+190
+00:06:10,160 --> 00:06:11,580
+there's this concept of alignment.
+
+191
+00:06:11,580 --> 00:06:12,100
+That is to say,
+
+192
+00:06:12,100 --> 00:06:13,600
+each instruction
+
+193
+00:06:13,600 --> 00:06:16,020
+may follow this... I mean,
+
+194
+00:06:16,020 --> 00:06:18,200
+that is to say,
+
+195
+00:06:18,200 --> 00:06:20,260
+of course, here in our case,
+
+196
+00:06:20,260 --> 00:06:21,440
+since the exercises we'll do later
+
+197
+00:06:21,440 --> 00:06:23,860
+don't involve these compressed instructions,
+
+198
+00:06:23,860 --> 00:06:25,580
+but we know
+
+199
+00:06:25,580 --> 00:06:27,040
+that, as we discussed earlier,
+
+200
+00:06:27,040 --> 00:06:28,440
+this RISC-V...
+
+201
+00:06:28,440 --> 00:06:30,400
+It supports this compressed instruction format.
+
+202
+00:06:30,400 --> 00:06:31,960
+Now, as for compressed instructions,
+
+203
+00:06:31,960 --> 00:06:33,520
+each instruction
+
+204
+00:06:33,520 --> 00:06:35,040
+compared to our normal ones today,
+
+205
+00:06:35,040 --> 00:06:35,860
+for normal instructions, we know
+
+206
+00:06:35,860 --> 00:06:37,320
+how many bytes is one instruction?
+
+207
+00:06:37,320 --> 00:06:38,000
+We covered this earlier,
+
+208
+00:06:38,000 --> 00:06:38,480
+you still remember, right?
+
+209
+00:06:38,480 --> 00:06:40,460
+It's 4 bytes per instruction,
+
+210
+00:06:40,460 --> 00:06:40,800
+right?
+
+211
+00:06:40,800 --> 00:06:42,640
+But with the compressed format,
+
+212
+00:06:42,640 --> 00:06:44,500
+it's an instruction extension,
+
+213
+00:06:44,500 --> 00:06:45,200
+specifically the C extension.
+
+214
+00:06:45,200 --> 00:06:45,940
+With the C extension,
+
+215
+00:06:45,940 --> 00:06:47,480
+one instruction is
+
+216
+00:06:47,480 --> 00:06:48,640
+half of that,
+
+217
+00:06:48,640 --> 00:06:51,340
+and since it's half,
+
+218
+00:06:51,340 --> 00:06:53,060
+it means a single instruction actually
+
+219
+00:06:53,060 --> 00:06:54,040
+takes up 2 bytes,
+
+220
+00:06:54,040 --> 00:06:58,460
+and multiplying that by 2,
+
+221
+00:06:58,460 --> 00:06:59,720
+That's actually what this case is about.
+
+222
+00:06:59,720 --> 00:07:01,940
+At least that's how I understand it.
+
+223
+00:07:01,940 --> 00:07:02,920
+You can all look at it this way.
+
+224
+00:07:02,920 --> 00:07:03,540
+Understand it like this.
+
+225
+00:07:03,540 --> 00:07:04,540
+So, since
+
+226
+00:07:04,540 --> 00:07:06,000
+this instruction
+
+227
+00:07:06,000 --> 00:07:07,100
+has a minimum alignment
+
+228
+00:07:07,100 --> 00:07:08,660
+of two bytes,
+
+229
+00:07:08,660 --> 00:07:10,120
+then when we
+
+230
+00:07:10,120 --> 00:07:11,900
+encode it,
+
+231
+00:07:11,900 --> 00:07:13,100
+that last bit behind it,
+
+232
+00:07:13,100 --> 00:07:14,980
+that is, the one corresponding to two to the power of one,
+
+233
+00:07:14,980 --> 00:07:15,500
+that bit,
+
+234
+00:07:15,500 --> 00:07:16,620
+can actually be omitted.
+
+235
+00:07:16,620 --> 00:07:17,440
+We don't need to write it in.
+
+236
+00:07:17,440 --> 00:07:17,880
+Think about it, right?
+
+237
+00:07:17,880 --> 00:07:18,760
+Because it's always zero.
+
+238
+00:07:18,760 --> 00:07:20,280
+Think about it — the lowest bit is always zero.
+
+239
+00:07:20,280 --> 00:07:21,600
+In other words, its address,
+
+240
+00:07:21,600 --> 00:07:23,260
+the last bit of the address is always zero.
+
+241
+00:07:23,260 --> 00:07:23,840
+So this bit
+
+242
+00:07:23,840 --> 00:07:25,060
+doesn't need to be part of the encoding.
+
+243
+00:07:25,060 --> 00:07:26,260
+So this way, we can save one
+
+244
+00:07:26,260 --> 00:07:27,080
+save one bit.
+
+245
+00:07:27,080 --> 00:07:28,320
+You see what I mean, right?
+
+246
+00:07:28,320 --> 00:07:29,180
+So when they
+
+247
+00:07:29,180 --> 00:07:30,860
+designed the instructions,
+
+248
+00:07:30,860 --> 00:07:32,120
+this is how they saved space.
+
+249
+00:07:32,120 --> 00:07:32,620
+So
+
+250
+00:07:32,620 --> 00:07:33,300
+if you look at it,
+
+251
+00:07:33,300 --> 00:07:33,960
+if you look at this,
+
+252
+00:07:33,960 --> 00:07:35,080
+this immediate,
+
+253
+00:07:35,080 --> 00:07:35,940
+this number here,
+
+254
+00:07:35,940 --> 00:07:37,020
+you can see it starts from 1,
+
+255
+00:07:37,020 --> 00:07:38,420
+encoding begins at bit 1, right?
+
+256
+00:07:38,420 --> 00:07:38,820
+So right here,
+
+257
+00:07:38,820 --> 00:07:39,560
+there is no bit 0.
+
+258
+00:07:39,560 --> 00:07:40,240
+Notice that, everyone.
+
+259
+00:07:40,240 --> 00:07:40,980
+No bit 0.
+
+260
+00:07:40,980 --> 00:07:43,500
+So that means these 12 bits are actually the upper 12 bits.
+
+261
+00:07:43,500 --> 00:07:47,500
+In fact, this whole address is really a 13-bit value.
+
+262
+00:07:47,500 --> 00:07:50,180
+Now, with 13 bits, we also have to consider sign extension.
+
+263
+00:07:50,180 --> 00:07:52,320
+That is, it can represent both positive and negative numbers.
+
+264
+00:07:52,320 --> 00:07:56,580
+So its actual range is from negative 4096 to 4094.
+
+265
+00:07:56,580 --> 00:07:58,480
+You can work this number out for yourselves when you get back.
+
+266
+00:07:58,480 --> 00:08:01,900
+Based on the related concepts I just introduced to you,
+
+267
+00:08:01,900 --> 00:08:03,940
+you can guess why it's this range.
+
+268
+00:08:03,940 --> 00:08:05,160
+Why is it this range?
+
+269
+00:08:05,160 --> 00:08:07,580
+Anyway,
+
+270
+00:08:07,580 --> 00:08:09,120
+it eventually produces a value,
+
+271
+00:08:09,120 --> 00:08:11,960
+and note that this value is added to the PC.
+
+272
+00:08:11,960 --> 00:08:16,740
+So when it jumps, the jump is relative to the current PC value.
+
+273
+00:08:16,740 --> 00:08:18,060
+Please keep that in mind too.
+
+274
+00:08:18,060 --> 00:08:20,300
+In other words, based on the current PC value,
+
+275
+00:08:20,300 --> 00:08:24,740
+it jumps to an address roughly 4K above or below,
+
+276
+00:08:24,740 --> 00:08:26,940
+jumping to a new address to fetch the value.
+
+277
+00:08:26,940 --> 00:08:33,900
+So that's how the target address is calculated.
+
+278
+00:08:33,900 --> 00:08:37,680
+It's also an important concept for understanding jump and conditional branch instructions.
+
+279
+00:08:37,680 --> 00:08:41,620
+Then, when it comes to the actual programming,
+
+280
+00:08:41,620 --> 00:08:43,240
+when you're writing code,
+
+281
+00:08:43,240 --> 00:08:45,720
+Actually, to make things easier for us programmers,
+
+282
+00:08:45,720 --> 00:08:49,380
+we don't actually go and do it like this afterwards,
+
+283
+00:08:49,380 --> 00:08:51,640
+writing an actual number.
+
+284
+00:08:51,640 --> 00:08:54,160
+Because if you were to write these values directly,
+
+285
+00:08:54,160 --> 00:08:55,660
+it would mean that when you're programming,
+
+286
+00:08:55,660 --> 00:08:58,660
+you'd have to work out the absolute address of every single instruction yourself.
+
+287
+00:08:58,660 --> 00:08:59,340
+Think about it, right?
+
+288
+00:08:59,340 --> 00:09:00,680
+There's really no need,
+
+289
+00:09:00,680 --> 00:09:03,400
+because we have the compiler to do that calculation for us.
+
+290
+00:09:03,400 --> 00:09:05,360
+So when we actually write the code,
+
+291
+00:09:05,360 --> 00:09:07,280
+we don't write the immediate values directly.
+
+292
+00:09:07,280 --> 00:09:08,680
+We use labels instead.
+
+293
+00:09:08,680 --> 00:09:10,060
+You all remember the concept of a label, right?
+
+294
+00:09:10,060 --> 00:09:10,860
+That is, a label.
+
+295
+00:09:10,860 --> 00:09:12,260
+We talked about this earlier.
+
+296
+00:09:12,260 --> 00:09:13,380
+What exactly is a label?
+
+297
+00:09:13,380 --> 00:09:14,820
+It's really just the concept of an address.
+
+298
+00:09:14,820 --> 00:09:15,660
+It's just that,
+
+299
+00:09:15,660 --> 00:09:18,000
+you don't have to write this address yourself.
+
+300
+00:09:18,000 --> 00:09:19,400
+It's at compile time
+
+301
+00:09:19,400 --> 00:09:21,680
+With the compiler and linker working together to help you
+
+302
+00:09:21,680 --> 00:09:23,060
+help you compute this value
+
+303
+00:09:23,060 --> 00:09:24,500
+and generate this machine instruction.
+
+304
+00:09:24,500 --> 00:09:25,320
+Does everyone understand?
+
+305
+00:09:25,320 --> 00:09:27,760
+So when we actually program,
+
+306
+00:09:27,760 --> 00:09:29,480
+we just need to write that label.
+
+307
+00:09:29,480 --> 00:09:31,240
+We can look at an example in a moment,
+
+308
+00:09:31,240 --> 00:09:32,640
+and you'll understand this concept.
+
+309
+00:09:32,640 --> 00:09:34,840
+So in summary,
+
+310
+00:09:34,840 --> 00:09:36,360
+for these conditional branch instructions,
+
+311
+00:09:36,360 --> 00:09:38,720
+that's all the related concepts.
+
+312
+00:09:38,720 --> 00:09:47,500
+What I just covered are the six basic conditional branch instructions.
+
+313
+00:09:47,500 --> 00:09:51,300
+Now, based on these six basic conditional branch instructions,
+
+314
+00:09:51,300 --> 00:09:57,200
+our assembly manual's specification
+
+315
+00:09:57,200 --> 00:10:00,940
+actually also defines some commonly used pseudo-instructions for us.
+
+316
+00:10:00,940 --> 00:10:04,060
+We also learned the concept of pseudo-instructions in the last class.
+
+317
+00:10:04,060 --> 00:10:08,160
+In fact, a pseudo-instruction is essentially just an alias for a basic instruction,
+
+318
+00:10:08,160 --> 00:10:08,520
+right?
+
+319
+00:10:08,520 --> 00:10:09,800
+For our convenience,
+
+320
+00:10:09,800 --> 00:10:11,780
+you can see that for some special
+
+321
+00:10:11,780 --> 00:10:13,160
+some special operations
+
+322
+00:10:13,160 --> 00:10:17,520
+For example, things like less than or equal to,
+
+323
+00:10:17,520 --> 00:10:19,160
+these are actually
+
+324
+00:10:19,160 --> 00:10:23,840
+just equivalent instructions derived through transformation.
+
+325
+00:10:23,840 --> 00:10:24,960
+You can go back and look at them yourselves.
+
+326
+00:10:24,960 --> 00:10:26,880
+We won't go through them one by one here.
+
+327
+00:10:26,880 --> 00:10:28,520
+So those are four instructions.
+
+328
+00:10:28,520 --> 00:10:30,640
+Now, what about these six instructions below?
+
+329
+00:10:30,640 --> 00:10:32,340
+Actually, these six instructions
+
+330
+00:10:32,340 --> 00:10:33,580
+are quite special.
+
+331
+00:10:33,580 --> 00:10:36,800
+They all perform a special comparison with a particular number,
+
+332
+00:10:36,800 --> 00:10:39,280
+they all do a special comparison with 0.
+
+333
+00:10:39,280 --> 00:10:41,300
+Because, as we know, when we program,
+
+334
+00:10:41,300 --> 00:10:43,100
+a huge number of operations compare against 0.
+
+335
+00:10:43,100 --> 00:10:44,720
+I don't know if you've
+
+336
+00:10:44,720 --> 00:10:46,120
+for example, when programming in C,
+
+337
+00:10:46,120 --> 00:10:47,280
+ever noticed this pattern.
+
+338
+00:10:47,280 --> 00:10:49,000
+In your code, there are lots of places
+
+339
+00:10:49,000 --> 00:10:50,140
+where you compare against 0.
+
+340
+00:10:50,140 --> 00:10:52,320
+So we need to take this kind of
+
+341
+00:10:52,320 --> 00:10:53,820
+Instructions that compare against 0
+
+342
+00:10:53,820 --> 00:10:55,540
+we define them specially
+
+343
+00:10:55,540 --> 00:10:57,280
+Of course, they are defined as pseudo-instructions
+
+344
+00:10:57,280 --> 00:10:58,980
+just to make them convenient for us to use
+
+345
+00:10:58,980 --> 00:11:00,900
+For example, we often have
+
+346
+00:11:00,900 --> 00:11:01,840
+loops, for instance
+
+347
+00:11:01,840 --> 00:11:03,020
+if you still remember
+
+348
+00:11:03,020 --> 00:11:04,460
+that loop of yours, that negative loop
+
+349
+00:11:04,460 --> 00:11:05,340
+in the end, right
+
+350
+00:11:05,340 --> 00:11:06,360
+say you keep incrementing
+
+351
+00:11:06,360 --> 00:11:07,100
+or decrementing
+
+352
+00:11:07,100 --> 00:11:08,540
+until it goes down to 0, and then it compares
+
+353
+00:11:08,540 --> 00:11:09,640
+and also, sometimes
+
+354
+00:11:09,640 --> 00:11:10,600
+say a function's return value
+
+355
+00:11:10,600 --> 00:11:12,140
+is also compared against 0
+
+356
+00:11:12,140 --> 00:11:12,420
+right?
+
+357
+00:11:12,420 --> 00:11:14,120
+When we do a system call
+
+358
+00:11:14,120 --> 00:11:17,400
+generally, returning what number means success?
+
+359
+00:11:17,400 --> 00:11:18,620
+Remember that?
+
+360
+00:11:18,620 --> 00:11:20,760
+In our C language
+
+361
+00:11:20,760 --> 00:11:22,440
+When you make that system call,
+
+362
+00:11:22,440 --> 00:11:23,980
+it generally returns 0 to indicate success.
+
+363
+00:11:23,980 --> 00:11:25,180
+Right?
+
+364
+00:11:25,180 --> 00:11:26,820
+When those of you first started learning C,
+
+365
+00:11:26,820 --> 00:11:27,580
+you might not quite have understood
+
+366
+00:11:27,580 --> 00:11:28,120
+why on earth
+
+367
+00:11:28,120 --> 00:11:29,920
+we use 0 to mean success.
+
+368
+00:11:29,920 --> 00:11:31,960
+It's because 0 is a very special value.
+
+369
+00:11:31,960 --> 00:11:33,100
+Any non-zero value
+
+370
+00:11:33,100 --> 00:11:33,800
+means what?
+
+371
+00:11:33,800 --> 00:11:34,140
+Failure.
+
+372
+00:11:34,140 --> 00:11:35,120
+A failure code.
+
+373
+00:11:35,120 --> 00:11:35,540
+Right?
+
+374
+00:11:35,540 --> 00:11:36,460
+So
+
+375
+00:11:36,460 --> 00:11:37,820
+very often in our code,
+
+376
+00:11:37,820 --> 00:11:38,740
+in lots of places,
+
+377
+00:11:38,740 --> 00:11:39,560
+we compare against 0.
+
+378
+00:11:39,560 --> 00:11:40,000
+So,
+
+379
+00:11:40,000 --> 00:11:41,140
+it's the same in assembly.
+
+380
+00:11:41,140 --> 00:11:42,660
+The comparison against 0
+
+381
+00:11:42,660 --> 00:11:43,760
+certain special operations
+
+382
+00:11:43,760 --> 00:11:45,900
+are also grouped together separately
+
+383
+00:11:45,900 --> 00:11:47,400
+and a set of instructions is placed here
+
+384
+00:11:47,400 --> 00:11:48,300
+of course these are pseudo-instructions
+
+385
+00:11:48,300 --> 00:11:51,220
+so to sum it all up
+
+386
+00:11:51,220 --> 00:11:52,380
+in our code
+
+387
+00:11:52,380 --> 00:11:54,100
+every place that involves a condition check
+
+388
+00:11:54,100 --> 00:11:56,680
+will use this kind of jump
+
+389
+00:11:56,680 --> 00:11:57,560
+branch instruction
+
+390
+00:11:57,560 --> 00:11:58,680
+conditional branch instruction
+
+391
+00:11:58,680 --> 00:12:03,480
+now the basic syntax
+
+392
+00:12:03,480 --> 00:12:04,460
+is not complicated
+
+393
+00:12:04,460 --> 00:12:05,880
+so we'll stop here for this part
+
+394
+00:12:05,880 --> 00:12:08,580
+now let's look at an exercise
+
+395
+00:12:08,580 --> 00:12:10,360
+for example
+
+396
+00:12:10,360 --> 00:12:12,040
+down here below
+
+397
+00:12:12,040 --> 00:12:13,560
+is a piece of code written in C
+
+398
+00:12:13,560 --> 00:12:15,400
+you can think about it
+
+399
+00:12:15,400 --> 00:12:15,880
+that is to say
+
+400
+00:12:15,880 --> 00:12:19,540
+what kind of assembly instructions we can use
+
+401
+00:12:19,540 --> 00:12:22,360
+write out an equivalent form
+
+402
+00:12:22,360 --> 00:12:24,140
+Now, of course, the source code
+
+403
+00:12:24,140 --> 00:12:25,700
+is something I've already provided to you
+
+404
+00:12:25,700 --> 00:12:26,640
+in the exercises
+
+405
+00:12:26,640 --> 00:12:27,240
+not in the exercises,
+
+406
+00:12:27,240 --> 00:12:30,140
+in that ASM code directory
+
+407
+00:12:30,140 --> 00:12:31,780
+But for now, we can, in class,
+
+408
+00:12:31,780 --> 00:12:33,460
+think it through ourselves.
+
+409
+00:12:33,460 --> 00:12:35,720
+What do you think, using something like this,
+
+410
+00:12:35,720 --> 00:12:39,320
+first, the first instruction assigns a value to i.
+
+411
+00:12:39,320 --> 00:12:42,080
+So since we're writing assembly instructions,
+
+412
+00:12:42,080 --> 00:12:44,460
+as you know, these kinds of variables in C,
+
+413
+00:12:44,460 --> 00:12:46,240
+can actually be seen here as just a what?
+
+414
+00:12:46,240 --> 00:12:48,080
+Can't they be seen as a register?
+
+415
+00:12:48,080 --> 00:12:48,560
+Think about it, can't they?
+
+416
+00:12:48,560 --> 00:12:51,280
+So we can actually assign a register,
+
+417
+00:12:51,280 --> 00:12:53,180
+take the initial value of this register,
+
+418
+00:12:53,180 --> 00:12:53,940
+and set it to 0.
+
+419
+00:12:53,940 --> 00:12:57,000
+Now, combining this with the knowledge we learned earlier,
+
+420
+00:12:57,000 --> 00:12:58,240
+as you know, for a register,
+
+421
+00:12:58,240 --> 00:13:00,120
+If we want to assign it a value,
+
+422
+00:13:00,120 --> 00:13:01,900
+which instruction can we use to do that?
+
+423
+00:13:01,900 --> 00:13:04,840
+We covered this before.
+
+424
+00:13:04,840 --> 00:13:06,880
+There is a dedicated pseudo-instruction called li.
+
+425
+00:13:06,880 --> 00:13:08,120
+Remember?
+
+426
+00:13:08,120 --> 00:13:09,600
+What does li mean?
+
+427
+00:13:09,600 --> 00:13:12,620
+It stands for load immediate.
+
+428
+00:13:12,620 --> 00:13:14,560
+It loads an immediate value.
+
+429
+00:13:14,560 --> 00:13:15,180
+Right?
+
+430
+00:13:15,180 --> 00:13:17,320
+What's the advantage of using this instruction?
+
+431
+00:13:17,320 --> 00:13:21,840
+Remember?
+
+432
+00:13:21,840 --> 00:13:24,280
+When we construct a large number,
+
+433
+00:13:24,280 --> 00:13:25,100
+it's very complicated.
+
+434
+00:13:25,100 --> 00:13:26,340
+Remember what we covered in the last lecture?
+
+435
+00:13:26,340 --> 00:13:27,980
+When we write code,
+
+436
+00:13:27,980 --> 00:13:30,140
+we don't need to construct it specially ourselves.
+
+437
+00:13:30,140 --> 00:13:31,080
+We use a pseudo-instruction.
+
+438
+00:13:31,080 --> 00:13:32,000
+li is a pseudo-instruction.
+
+439
+00:13:32,000 --> 00:13:33,700
+It's handed off to the assembler.
+
+440
+00:13:33,700 --> 00:13:34,300
+And the assembler...
+
+441
+00:13:34,300 --> 00:13:36,320
+it will help us, based on this actual number,
+
+442
+00:13:36,320 --> 00:13:39,060
+generate one or more
+
+443
+00:13:39,060 --> 00:13:40,600
+actual machine instructions,
+
+444
+00:13:40,600 --> 00:13:40,960
+right?
+
+445
+00:13:40,960 --> 00:13:41,920
+to construct a number,
+
+446
+00:13:41,920 --> 00:13:43,020
+what happens if it's a large number?
+
+447
+00:13:43,020 --> 00:13:44,900
+For a large number, there are several cases again.
+
+448
+00:13:44,900 --> 00:13:45,520
+Remember that?
+
+449
+00:13:45,520 --> 00:13:48,360
+Recall everything you've learned before.
+
+450
+00:13:48,360 --> 00:13:49,860
+Now, since we're here,
+
+451
+00:13:49,860 --> 00:13:50,780
+the number is still very simple.
+
+452
+00:13:50,780 --> 00:13:51,180
+It's 0.
+
+453
+00:13:51,180 --> 00:13:52,480
+So we just use li
+
+454
+00:13:52,480 --> 00:13:54,480
+to define a register
+
+455
+00:13:54,480 --> 00:13:55,940
+and set it to 0, and that's it.
+
+456
+00:13:55,940 --> 00:13:57,200
+Now below,
+
+457
+00:13:57,200 --> 00:13:58,060
+this y loop,
+
+458
+00:13:58,060 --> 00:13:58,600
+at this point,
+
+459
+00:13:58,600 --> 00:14:00,280
+this involves condition checks.
+
+460
+00:14:00,280 --> 00:14:00,900
+Did everyone see that?
+
+461
+00:14:00,900 --> 00:14:01,600
+Right? I mean
+
+462
+00:14:01,600 --> 00:14:03,340
+what is this value being compared against?
+
+463
+00:14:03,340 --> 00:14:06,780
+What value is this i being compared to?
+
+464
+00:14:06,780 --> 00:14:08,000
+Under what condition
+
+465
+00:14:08,000 --> 00:14:08,780
+will it do something?
+
+466
+00:14:08,780 --> 00:14:09,940
+He understands this concept.
+
+467
+00:14:09,940 --> 00:14:12,080
+So here,
+
+468
+00:14:12,080 --> 00:14:12,880
+it's essentially just
+
+469
+00:14:12,880 --> 00:14:14,920
+a conditional comparison.
+
+470
+00:14:14,920 --> 00:14:16,620
+We keep incrementing this i
+
+471
+00:14:16,620 --> 00:14:17,440
+over and over.
+
+472
+00:14:17,440 --> 00:14:19,300
+What method can we use to implement the increment?
+
+473
+00:14:19,300 --> 00:14:21,820
+We learned earlier
+
+474
+00:14:21,820 --> 00:14:22,620
+that basic kind of
+
+475
+00:14:22,620 --> 00:14:23,420
+arithmetic operation
+
+476
+00:14:23,420 --> 00:14:23,980
+is just adding one.
+
+477
+00:14:23,980 --> 00:14:24,720
+Think about it, isn't that right?
+
+478
+00:14:24,720 --> 00:14:25,580
+It's just add
+
+479
+00:14:25,580 --> 00:14:26,600
+— the concept of add,
+
+480
+00:14:26,600 --> 00:14:27,040
+right?
+
+481
+00:14:27,040 --> 00:14:28,620
+an addi, or just an add
+
+482
+00:14:28,620 --> 00:14:29,920
+and that's all it takes to implement it.
+
+483
+00:14:29,920 --> 00:14:30,500
+Then,
+
+484
+00:14:30,500 --> 00:14:31,460
+we keep adding to this i,
+
+485
+00:14:31,460 --> 00:14:32,740
+and after adding it a certain number of times,
+
+486
+00:14:32,740 --> 00:14:33,060
+we take it,
+
+487
+00:14:33,060 --> 00:14:34,160
+and each time we add once,
+
+488
+00:14:34,160 --> 00:14:35,600
+what number do we compare it with?
+
+489
+00:14:35,600 --> 00:14:38,960
+We compare it with that,
+
+490
+00:14:38,960 --> 00:14:40,220
+the value 5.
+
+491
+00:14:40,220 --> 00:14:40,560
+Right?
+
+492
+00:14:40,560 --> 00:14:42,100
+So where is this 5?
+
+493
+00:14:42,100 --> 00:14:42,620
+This 5,
+
+494
+00:14:42,620 --> 00:14:44,100
+we said 5 is a constant.
+
+495
+00:14:44,100 --> 00:14:45,060
+When we compare,
+
+496
+00:14:45,060 --> 00:14:45,800
+we still have to put this 5
+
+497
+00:14:45,800 --> 00:14:46,980
+into a register to do the comparison.
+
+498
+00:14:46,980 --> 00:14:47,660
+Think about it, isn't that right?
+
+499
+00:14:47,660 --> 00:14:49,040
+So besides
+
+500
+00:14:49,040 --> 00:14:49,940
+needing to designate a register,
+
+501
+00:14:49,940 --> 00:14:50,700
+to hold this
+
+502
+00:14:50,700 --> 00:14:52,060
+besides the variable i,
+
+503
+00:14:52,060 --> 00:14:53,540
+we also need another register
+
+504
+00:14:53,540 --> 00:14:55,160
+to hold the constant value 5
+
+505
+00:14:55,160 --> 00:14:56,920
+because inside the CPU,
+
+506
+00:14:56,920 --> 00:14:57,640
+it's impossible
+
+507
+00:14:57,640 --> 00:14:58,580
+to compare directly
+
+508
+00:14:58,580 --> 00:14:59,280
+from memory,
+
+509
+00:14:59,280 --> 00:15:00,440
+it has to take the values
+
+510
+00:15:00,440 --> 00:15:01,760
+and put them into
+
+511
+00:15:01,760 --> 00:15:02,800
+the registers first,
+
+512
+00:15:02,800 --> 00:15:03,260
+don't you think?
+
+513
+00:15:03,260 --> 00:15:04,200
+So for this code,
+
+514
+00:15:04,200 --> 00:15:05,740
+don't you need at least two registers?
+
+515
+00:15:05,740 --> 00:15:06,700
+Right?
+
+516
+00:15:06,700 --> 00:15:07,860
+So,
+
+517
+00:15:07,860 --> 00:15:09,100
+then what?
+
+518
+00:15:09,100 --> 00:15:10,240
+Then you take these two registers,
+
+519
+00:15:10,240 --> 00:15:11,600
+and keep comparing and comparing their values.
+
+520
+00:15:11,600 --> 00:15:12,900
+When the two values
+
+521
+00:15:12,900 --> 00:15:13,800
+when they're equal
+
+522
+00:15:13,800 --> 00:15:15,480
+that tells us whether to keep looping
+
+523
+00:15:15,480 --> 00:15:16,220
+we don't loop anymore
+
+524
+00:15:16,220 --> 00:15:16,680
+think about it, right?
+
+525
+00:15:16,680 --> 00:15:18,580
+so, this
+
+526
+00:15:18,580 --> 00:15:20,040
+when we write it
+
+527
+00:15:20,040 --> 00:15:21,640
+it's really just about this much code
+
+528
+00:15:21,640 --> 00:15:22,820
+feel free to take a look
+
+529
+00:15:22,820 --> 00:15:23,540
+that is to say
+
+530
+00:15:23,540 --> 00:15:25,940
+combined with our earlier analysis
+
+531
+00:15:25,940 --> 00:15:30,250
+building on the analysis we just did
+
+532
+00:15:30,250 --> 00:15:30,990
+first of all
+
+533
+00:15:30,990 --> 00:15:32,110
+we define two variables
+
+534
+00:15:32,110 --> 00:15:33,690
+one is 5
+
+535
+00:15:33,690 --> 00:15:34,350
+X5
+
+536
+00:15:34,350 --> 00:15:35,770
+we use this X5 thing
+
+537
+00:15:35,770 --> 00:15:37,350
+this concept of X5
+
+538
+00:15:37,350 --> 00:15:38,410
+as we covered earlier
+
+539
+00:15:38,410 --> 00:15:40,610
+in RISC-V, the registers
+
+540
+00:15:40,610 --> 00:15:41,470
+all have numbers
+
+541
+00:15:41,470 --> 00:15:42,490
+So how many registers are there in total?
+
+542
+00:15:42,490 --> 00:15:45,650
+There are 32 registers in total.
+
+543
+00:15:45,650 --> 00:15:45,930
+Right?
+
+544
+00:15:45,930 --> 00:15:47,130
+32 general-purpose registers.
+
+545
+00:15:47,130 --> 00:15:48,030
+Use whichever one you want.
+
+546
+00:15:48,030 --> 00:15:49,130
+Of course, you can't just use them however you like.
+
+547
+00:15:49,130 --> 00:15:50,310
+In fact, they're not completely free to use.
+
+548
+00:15:50,310 --> 00:15:51,470
+We'll talk about that later.
+
+549
+00:15:51,470 --> 00:15:53,910
+But at this stage,
+
+550
+00:15:53,910 --> 00:15:55,250
+we can treat them as free to use.
+
+551
+00:15:55,250 --> 00:15:56,930
+Let's use X5.
+
+552
+00:15:56,930 --> 00:15:57,930
+For example, suppose we use X5.
+
+553
+00:15:57,930 --> 00:15:58,830
+Now, with X5,
+
+554
+00:15:58,830 --> 00:15:59,910
+well, this X5,
+
+555
+00:15:59,910 --> 00:16:02,010
+in the C code,
+
+556
+00:16:02,010 --> 00:16:03,070
+actually corresponds to i.
+
+557
+00:16:03,070 --> 00:16:06,190
+Because later, what are we doing with this X5?
+
+558
+00:16:06,190 --> 00:16:08,730
+We keep adding 1 to it.
+
+559
+00:16:08,730 --> 00:16:09,790
+You can see that, right?
+
+560
+00:16:09,790 --> 00:16:13,450
+So this 5...
+
+561
+00:16:13,450 --> 00:16:15,410
+We need to put it into a register,
+
+562
+00:16:15,410 --> 00:16:17,130
+because when it comes to the final comparison,
+
+563
+00:16:17,130 --> 00:16:19,450
+the CPU is actually taking two registers
+
+564
+00:16:19,450 --> 00:16:20,090
+and comparing them.
+
+565
+00:16:20,090 --> 00:16:22,310
+So this 5 also has to go into a register.
+
+566
+00:16:22,310 --> 00:16:24,330
+So we'll define another X6,
+
+567
+00:16:24,330 --> 00:16:25,890
+and put this 5 in there.
+
+568
+00:16:25,890 --> 00:16:27,830
+So this X6 essentially represents this 5,
+
+569
+00:16:27,830 --> 00:16:30,120
+right?
+
+570
+00:16:30,120 --> 00:16:31,260
+And then,
+
+571
+00:16:31,260 --> 00:16:35,380
+down below we need to repeatedly increment this i,
+
+572
+00:16:35,380 --> 00:16:36,900
+which means adding 1 to x5.
+
+573
+00:16:36,900 --> 00:16:38,740
+And each time we add one,
+
+574
+00:16:38,740 --> 00:16:39,960
+as I just said, I do a comparison,
+
+575
+00:16:39,960 --> 00:16:41,840
+comparing x5 with x6.
+
+576
+00:16:41,840 --> 00:16:44,460
+We just learned this bne earlier,
+
+577
+00:16:44,460 --> 00:16:45,560
+what does it mean?
+
+578
+00:16:45,560 --> 00:16:46,460
+It's branch.
+
+579
+00:16:46,460 --> 00:16:50,180
+What does ne mean?
+
+580
+00:16:50,180 --> 00:16:52,200
+It means not equal, right?
+
+581
+00:16:52,200 --> 00:16:52,780
+not equal
+
+582
+00:16:52,780 --> 00:16:54,380
+So if they're not equal,
+
+583
+00:16:54,380 --> 00:16:55,340
+we just
+
+584
+00:16:55,340 --> 00:16:57,140
+jump
+
+585
+00:16:57,140 --> 00:16:58,140
+jump to loop.
+
+586
+00:16:58,140 --> 00:17:00,020
+And loop, as we know, is really just an address.
+
+587
+00:17:00,020 --> 00:17:02,440
+So from here, it actually starts the
+
+588
+00:17:02,440 --> 00:17:03,660
+increment by 1 for the next round.
+
+589
+00:17:03,660 --> 00:17:04,220
+Think about it, right?
+
+590
+00:17:04,220 --> 00:17:06,500
+Because this x5,
+
+591
+00:17:06,500 --> 00:17:07,320
+starts out as 0,
+
+592
+00:17:07,320 --> 00:17:08,600
+after one increment it's 1,
+
+593
+00:17:08,600 --> 00:17:09,480
+and they're still equal.
+
+594
+00:17:09,480 --> 00:17:10,560
+If they're not equal, we jump.
+
+595
+00:17:10,560 --> 00:17:11,460
+Do you follow what I mean?
+
+596
+00:17:11,460 --> 00:17:12,980
+Then it increments by 1 again,
+
+597
+00:17:12,980 --> 00:17:14,220
+and eventually it will reach a point,
+
+598
+00:17:14,220 --> 00:17:15,380
+when does it become 5?
+
+599
+00:17:15,380 --> 00:17:15,880
+Think about it, right?
+
+600
+00:17:15,880 --> 00:17:18,140
+And when it becomes 5,
+
+601
+00:17:18,140 --> 00:17:18,900
+it won't jump
+
+602
+00:17:18,900 --> 00:17:19,840
+and just continues straight down
+
+603
+00:17:19,840 --> 00:17:20,960
+and jumps out of that Y loop
+
+604
+00:17:20,960 --> 00:17:22,980
+so that's essentially the effect
+
+605
+00:17:22,980 --> 00:17:24,320
+now, what else is there
+
+606
+00:17:24,320 --> 00:17:24,860
+let's try it out
+
+607
+00:17:24,860 --> 00:17:25,460
+so here's the thing
+
+608
+00:17:25,460 --> 00:17:25,900
+we can see that
+
+609
+00:17:25,900 --> 00:17:28,120
+on our side, we don't write an immediate address
+
+610
+00:17:28,120 --> 00:17:29,240
+we just write a label
+
+611
+00:17:29,240 --> 00:17:31,380
+after this loop is compiled and linked
+
+612
+00:17:31,380 --> 00:17:32,400
+what exactly is the value
+
+613
+00:17:32,400 --> 00:17:33,540
+we actually don't know
+
+614
+00:17:33,540 --> 00:17:35,120
+we don't know at the time of writing the code
+
+615
+00:17:35,120 --> 00:17:35,520
+right?
+
+616
+00:17:35,520 --> 00:17:36,980
+only the compiler knows
+
+617
+00:17:36,980 --> 00:17:38,880
+the compiler will finally generate
+
+618
+00:17:38,880 --> 00:17:39,600
+this instruction,
+
+619
+00:17:39,600 --> 00:17:40,780
+telling you what this value is
+
+620
+00:17:40,780 --> 00:17:43,280
+and that's how we achieve our
+
+621
+00:17:43,280 --> 00:17:45,480
+So that's the final result we end up with.
+
+622
+00:17:45,480 --> 00:17:48,560
+The code is already there.
+
+623
+00:17:48,560 --> 00:17:50,540
+Let's give everyone some time now.
+
+624
+00:17:50,540 --> 00:17:52,660
+Open up that code.
+
+625
+00:17:52,660 --> 00:17:54,120
+Use the environment we set up last time.
+
+626
+00:17:54,120 --> 00:17:55,320
+Let's step through it ourselves in debug mode.
+
+627
+00:17:55,320 --> 00:17:56,720
+and trace through this code.
+
+628
+00:17:56,720 --> 00:17:57,140
+It's very simple.
+
+629
+00:17:57,140 --> 00:17:59,200
+You still remember which make command to use, right?
+
+630
+00:17:59,240 --> 00:18:00,520
+It's make debug, right?
+
+631
+00:18:00,520 --> 00:18:01,560
+Step through it.
+
+632
+00:18:01,560 --> 00:18:04,700
+As you step through, take a look at what's happening in between.
+
+633
+00:18:04,700 --> 00:18:07,680
+Watch the changes in those registers I just mentioned.
+
+634
+00:18:07,680 --> 00:18:10,980
+That should help deepen your understanding of this.
+
+635
+00:18:10,980 --> 00:18:11,940
+At the same time,
+
+636
+00:18:11,940 --> 00:18:13,540
+pay attention to the addresses it jumps to.
+
+637
+00:18:13,540 --> 00:19:18,950
+Let's first try it ourselves quickly.
+
+638
+00:19:18,950 --> 00:19:53,720
+Let me demonstrate that for everyone.
+
+639
+00:19:53,720 --> 00:19:54,960
+It's really simple.
+
+640
+00:19:54,960 --> 00:19:56,300
+Let's take a look together.
+
+641
+00:19:56,300 --> 00:19:56,920
+So,
+
+642
+00:19:56,920 --> 00:20:00,840
+this code,
+
+643
+00:20:00,840 --> 00:20:01,760
+it's in this directory.
+
+644
+00:20:01,760 --> 00:20:03,780
+This is very simple,
+
+645
+00:20:03,780 --> 00:20:06,920
+this assembly syntax,
+
+646
+00:20:06,920 --> 00:20:08,080
+we won't go into it again.
+
+647
+00:20:08,080 --> 00:20:09,740
+Now let's take another look
+
+648
+00:20:09,740 --> 00:20:11,200
+at this debugging process.
+
+649
+00:20:11,200 --> 00:20:13,600
+For example, we run make a debug.
+
+650
+00:20:13,600 --> 00:20:15,460
+After make a debug,
+
+651
+00:20:15,460 --> 00:20:17,280
+here we're actually tracking
+
+652
+00:20:17,280 --> 00:20:19,740
+the changes in x5, x6, x7,
+
+653
+00:20:19,740 --> 00:20:21,760
+the changing states of these three registers,
+
+654
+00:20:21,760 --> 00:20:22,360
+and that's it.
+
+655
+00:20:22,360 --> 00:20:24,100
+Now here we can see,
+
+656
+00:20:24,100 --> 00:20:28,980
+here is the address of each instruction in the final generated code.
+
+657
+00:20:28,980 --> 00:20:35,060
+Our first instruction actually starts at 0x8000.
+
+658
+00:20:35,060 --> 00:20:36,380
+As for why this value is what it is,
+
+659
+00:20:36,380 --> 00:20:38,680
+we won't worry about that for now.
+
+660
+00:20:38,680 --> 00:20:39,760
+Let's first take a look at
+
+661
+00:20:39,760 --> 00:20:42,440
+So after entering this state,
+
+662
+00:20:42,440 --> 00:20:46,080
+we know the command for single-step execution is which one?
+
+663
+00:20:46,080 --> 00:20:48,300
+In GDB it's the si command,
+
+664
+00:20:48,300 --> 00:20:50,420
+the 'si' command, short for Single Instruction.
+
+665
+00:20:50,420 --> 00:20:51,940
+So at the very beginning,
+
+666
+00:20:51,940 --> 00:20:54,020
+we first take this x5 register
+
+667
+00:20:54,020 --> 00:20:54,760
+and assign it 0.
+
+668
+00:20:54,760 --> 00:20:55,740
+Now over here,
+
+669
+00:20:55,740 --> 00:20:57,280
+at the moment it first starts executing,
+
+670
+00:20:57,280 --> 00:20:58,800
+the value of x5
+
+671
+00:20:58,800 --> 00:21:00,540
+is a non-zero value.
+
+672
+00:21:00,540 --> 00:21:02,060
+Then after running si,
+
+673
+00:21:02,060 --> 00:21:04,100
+we check x5 again,
+
+674
+00:21:04,100 --> 00:21:05,320
+and it has become 0.
+
+675
+00:21:05,320 --> 00:21:05,660
+Right?
+
+676
+00:21:05,660 --> 00:21:07,560
+It has taken effect.
+
+677
+00:21:07,560 --> 00:21:09,660
+Then the next step,
+
+678
+00:21:09,660 --> 00:21:11,780
+is to assign x6 the value 5.
+
+679
+00:21:11,780 --> 00:21:13,500
+So we want to watch the value of x6.
+
+680
+00:21:13,500 --> 00:21:14,420
+At the start it is 0.
+
+681
+00:21:14,420 --> 00:21:16,200
+Now if we single-step one more time
+
+682
+00:21:16,200 --> 00:21:18,280
+we can see that the value of X6
+
+683
+00:21:18,280 --> 00:21:19,160
+has become 5.
+
+684
+00:21:19,160 --> 00:21:19,480
+Right?
+
+685
+00:21:19,480 --> 00:21:21,360
+That register is changing there.
+
+686
+00:21:21,360 --> 00:21:22,940
+So next,
+
+687
+00:21:22,940 --> 00:21:24,180
+we need to take X5
+
+688
+00:21:24,180 --> 00:21:25,820
+and add 1 to its value.
+
+689
+00:21:25,820 --> 00:21:28,220
+So let's watch the value of X5.
+
+690
+00:21:28,220 --> 00:21:29,680
+After executing this step,
+
+691
+00:21:29,680 --> 00:21:31,280
+what should it become?
+
+692
+00:21:31,280 --> 00:21:33,300
+It should become 1.
+
+693
+00:21:33,300 --> 00:21:34,620
+You can see it's now 1 here.
+
+694
+00:21:34,620 --> 00:21:35,340
+Right?
+
+695
+00:21:35,340 --> 00:21:36,460
+Then the next step,
+
+696
+00:21:36,460 --> 00:21:37,220
+is the comparison.
+
+697
+00:21:37,220 --> 00:21:39,040
+So at this point,
+
+698
+00:21:39,040 --> 00:21:40,920
+we know X5 is 11
+
+699
+00:21:40,920 --> 00:21:42,380
+and X6 is 5.
+
+700
+00:21:42,380 --> 00:21:44,220
+So are the two values equal?
+
+701
+00:21:44,220 --> 00:21:45,480
+not equal
+
+702
+00:21:45,480 --> 00:21:47,520
+so if they're not equal, we jump
+
+703
+00:21:47,520 --> 00:21:48,000
+right?
+
+704
+00:21:48,000 --> 00:21:49,020
+what this instruction means is
+
+705
+00:21:49,020 --> 00:21:50,220
+if they're not equal, jump
+
+706
+00:21:50,220 --> 00:21:51,100
+jump to where?
+
+707
+00:21:51,100 --> 00:21:51,620
+jump to loop
+
+708
+00:21:51,620 --> 00:21:53,520
+so where is this loop?
+
+709
+00:21:53,520 --> 00:21:54,500
+according to our code
+
+710
+00:21:54,500 --> 00:21:56,100
+we know where loop actually is
+
+711
+00:21:56,100 --> 00:22:00,260
+loop is returning to the position of the add instruction
+
+712
+00:22:00,260 --> 00:22:00,520
+right?
+
+713
+00:22:00,520 --> 00:22:03,340
+what is the address of this add instruction?
+
+714
+00:22:03,340 --> 00:22:07,700
+just now we saw the address of the add instruction is 0x8008
+
+715
+00:22:07,700 --> 00:22:08,960
+this address
+
+716
+00:22:08,960 --> 00:22:10,700
+so if we step one more time
+
+717
+00:22:10,700 --> 00:22:11,620
+it should jump back
+
+718
+00:22:11,620 --> 00:22:12,560
+and continue executing
+
+719
+00:22:12,560 --> 00:22:15,220
+continue with the instruction at 0x8008
+
+720
+00:22:15,220 --> 00:22:18,000
+you see, the current pc value has already jumped
+
+721
+00:22:18,000 --> 00:22:19,600
+we're back to this x800, right?
+
+722
+00:22:19,600 --> 00:22:19,800
+see?
+
+723
+00:22:19,800 --> 00:22:21,920
+So it keeps going back and forth like this.
+
+724
+00:22:21,920 --> 00:22:23,100
+And then eventually,
+
+725
+00:22:23,100 --> 00:22:24,820
+our values will become different.
+
+726
+00:22:24,820 --> 00:22:25,900
+Eventually,
+
+727
+00:22:25,900 --> 00:22:27,060
+we'll see
+
+728
+00:22:27,060 --> 00:22:28,280
+if we track the value of x5,
+
+729
+00:22:28,280 --> 00:22:29,040
+it's still 3 right now.
+
+730
+00:22:29,040 --> 00:22:31,500
+Now step again.
+
+731
+00:22:31,500 --> 00:22:36,500
+If we single-step once more,
+
+732
+00:22:36,500 --> 00:22:38,000
+it becomes 4.
+
+733
+00:22:38,000 --> 00:22:39,660
+Alright, step again.
+
+734
+00:22:39,660 --> 00:22:44,840
+Now you can see
+
+735
+00:22:44,840 --> 00:22:46,460
+it has become 5 at this point.
+
+736
+00:22:46,460 --> 00:22:47,720
+So 5 and 5,
+
+737
+00:22:47,720 --> 00:22:49,360
+these two values are now equal.
+
+738
+00:22:49,360 --> 00:22:49,540
+right?
+
+739
+00:22:49,540 --> 00:22:50,820
+And when they're equal,
+
+740
+00:22:50,820 --> 00:22:51,700
+this instruction, as you know,
+
+741
+00:22:51,700 --> 00:22:53,280
+Will it jump back to this position again?
+
+742
+00:22:53,280 --> 00:22:54,400
+No, it won't.
+
+743
+00:22:54,400 --> 00:22:55,820
+So in that case,
+
+744
+00:22:55,820 --> 00:22:56,540
+under these circumstances,
+
+745
+00:22:56,540 --> 00:22:57,540
+if we single-step through it,
+
+746
+00:22:57,540 --> 00:22:59,660
+you can see it has already continued moving forward,
+
+747
+00:22:59,660 --> 00:23:01,080
+and it starts going to
+
+748
+00:23:01,080 --> 00:23:02,840
+the address 10.
+
+749
+00:23:02,840 --> 00:23:03,780
+Now this instruction here,
+
+750
+00:23:03,780 --> 00:23:05,560
+it's one of ours below,
+
+751
+00:23:05,560 --> 00:23:06,820
+an infinite loop.
+
+752
+00:23:06,820 --> 00:23:07,940
+This infinite loop is actually there to
+
+753
+00:23:07,940 --> 00:23:09,060
+prevent our program from exiting,
+
+754
+00:23:09,060 --> 00:23:09,380
+right?
+
+755
+00:23:09,380 --> 00:23:10,640
+This is basically
+
+756
+00:23:10,640 --> 00:23:13,520
+the basic usage of this kind of
+
+757
+00:23:13,520 --> 00:23:16,200
+branch instruction.
+
+758
+00:23:16,200 --> 00:23:17,780
+You can go back and
+
+759
+00:23:17,780 --> 00:23:19,000
+look at it together on your own.
+
+760
+00:23:19,000 --> 00:23:20,640
+OK, so this is
+
+761
+00:23:20,640 --> 00:23:23,860
+Conditional branch instructions.
+
+762
+00:23:23,860 --> 00:23:27,040
+So next,
+
+763
+00:23:27,040 --> 00:23:28,260
+let's look at the next part,
+
+764
+00:23:28,260 --> 00:23:28,660
+which is,
+
+765
+00:23:28,660 --> 00:23:31,040
+this exercise,
+
+766
+00:23:31,040 --> 00:23:32,200
+you'll go back and do it on your own.
+
+767
+00:23:32,200 --> 00:23:33,000
+I won't walk through it
+
+768
+00:23:33,000 --> 00:23:33,840
+for everyone here.
+
+769
+00:23:33,840 --> 00:23:38,180
+So next,
+
+770
+00:23:38,180 --> 00:23:38,800
+what we just covered,
+
+771
+00:23:38,800 --> 00:23:39,860
+they were called conditional
+
+772
+00:23:39,860 --> 00:23:41,500
+branches,
+
+773
+00:23:41,500 --> 00:23:42,840
+meaning they jump based on
+
+774
+00:23:42,840 --> 00:23:44,780
+evaluating a condition.
+
+775
+00:23:44,780 --> 00:23:45,960
+Now below that,
+
+776
+00:23:45,960 --> 00:23:46,680
+there's another group
+
+777
+00:23:46,680 --> 00:23:47,580
+that are also jump instructions.
+
+778
+00:23:47,580 --> 00:23:48,980
+This group of jump instructions,
+
+779
+00:23:48,980 --> 00:23:49,760
+we call them
+
+780
+00:23:49,760 --> 00:23:51,480
+unconditional jump instructions.
+
+781
+00:23:51,480 --> 00:23:51,720
+That is,
+
+782
+00:23:51,720 --> 00:23:53,480
+it does not judge based on a condition,
+
+783
+00:23:53,480 --> 00:23:54,660
+so to speak.
+
+784
+00:23:54,660 --> 00:23:56,980
+Now, as for these unconditional branch instructions,
+
+785
+00:23:56,980 --> 00:23:58,480
+there are two in total:
+
+786
+00:23:58,480 --> 00:23:59,240
+one is called JAL,
+
+787
+00:23:59,240 --> 00:24:00,200
+and one is called JALR.
+
+788
+00:24:00,200 --> 00:24:01,320
+Let's take a look at them together.
+
+789
+00:24:01,320 --> 00:24:02,640
+So the first one,
+
+790
+00:24:02,640 --> 00:24:03,520
+is called JAL.
+
+791
+00:24:03,520 --> 00:24:05,700
+JAL stands for Jump and Link.
+
+792
+00:24:05,700 --> 00:24:07,240
+So why,
+
+793
+00:24:07,240 --> 00:24:08,960
+is there also a concept of Link here?
+
+794
+00:24:08,960 --> 00:24:10,620
+We'll probably see this later,
+
+795
+00:24:10,620 --> 00:24:11,580
+that is, where are these instructions,
+
+796
+00:24:11,580 --> 00:24:12,760
+frequently used?
+
+797
+00:24:12,760 --> 00:24:15,420
+They're used in function calls.
+
+798
+00:24:15,420 --> 00:24:18,380
+We'll look at the specifics later.
+
+799
+00:24:18,380 --> 00:24:21,420
+Now for an instruction like JAL,
+
+800
+00:24:21,420 --> 00:24:22,600
+its instruction format,
+
+801
+00:24:22,600 --> 00:24:23,720
+is called JType.
+
+802
+00:24:23,720 --> 00:24:24,580
+So now you all know
+
+803
+00:24:24,580 --> 00:24:26,680
+the encoding format we talked about earlier,
+
+804
+00:24:26,680 --> 00:24:27,820
+where does JType come from?
+
+805
+00:24:27,820 --> 00:24:29,440
+The J stands for jump.
+
+806
+00:24:29,440 --> 00:24:30,040
+It means jump.
+
+807
+00:24:30,040 --> 00:24:31,980
+And it,
+
+808
+00:24:31,980 --> 00:24:33,340
+this encoding format,
+
+809
+00:24:33,340 --> 00:24:35,080
+as you can see, there's an opcode,
+
+810
+00:24:35,080 --> 00:24:35,880
+then an rd,
+
+811
+00:24:35,880 --> 00:24:36,780
+and after that,
+
+812
+00:24:36,780 --> 00:24:38,500
+it holds an immediate value.
+
+813
+00:24:38,500 --> 00:24:39,300
+This immediate value,
+
+814
+00:24:39,300 --> 00:24:41,220
+is roughly,
+
+815
+00:24:41,220 --> 00:24:43,800
+it's about 20 bits, 20 bits.
+
+816
+00:24:43,800 --> 00:24:44,540
+It takes up 20 bits,
+
+817
+00:24:44,540 --> 00:24:47,500
+which is a pretty large range.
+
+818
+00:24:48,640 --> 00:24:50,500
+It is used for calling subroutines,
+
+819
+00:24:50,500 --> 00:24:51,400
+as we've mentioned before.
+
+820
+00:24:51,400 --> 00:24:52,100
+And then,
+
+821
+00:24:52,100 --> 00:24:54,000
+Now, the key here is how this 20-bit
+
+822
+00:24:54,000 --> 00:24:55,440
+immediate is used.
+
+823
+00:24:55,440 --> 00:24:56,860
+It actually determines
+
+824
+00:24:56,860 --> 00:24:58,240
+the address we jump to,
+
+825
+00:24:58,240 --> 00:24:59,840
+the target address
+
+826
+00:24:59,840 --> 00:25:02,640
+It determines the final
+
+827
+00:25:02,640 --> 00:25:03,560
+target address of our jump.
+
+828
+00:25:03,560 --> 00:25:05,220
+Now, the calculation method
+
+829
+00:25:05,220 --> 00:25:06,460
+is listed here for you.
+
+830
+00:25:06,460 --> 00:25:07,640
+Please take a careful look
+
+831
+00:25:07,640 --> 00:25:08,480
+and understand this,
+
+832
+00:25:08,480 --> 00:25:11,200
+because it will help you
+
+833
+00:25:11,200 --> 00:25:12,720
+understand the execution process
+
+834
+00:25:12,720 --> 00:25:13,400
+of programs later on.
+
+835
+00:25:13,400 --> 00:25:14,700
+Pay attention to this.
+
+836
+00:25:14,700 --> 00:25:16,260
+It actually takes this
+
+837
+00:25:16,260 --> 00:25:17,900
+immediate value,
+
+838
+00:25:17,900 --> 00:25:18,480
+which is 20 bits in total,
+
+839
+00:25:18,480 --> 00:25:19,700
+and multiplies this 20-bit-wide
+
+840
+00:25:19,700 --> 00:25:21,100
+immediate by 2
+
+841
+00:25:21,100 --> 00:25:22,320
+Why multiply by 2?
+
+842
+00:25:22,320 --> 00:25:24,120
+This is the same as before.
+
+843
+00:25:24,120 --> 00:25:26,940
+The reason is the same as before.
+
+844
+00:25:26,940 --> 00:25:27,460
+It means
+
+845
+00:25:27,460 --> 00:25:29,400
+look at this encoding,
+
+846
+00:25:29,400 --> 00:25:32,620
+it goes from 1 to 20,
+
+847
+00:25:32,620 --> 00:25:34,280
+not starting from 0.
+
+848
+00:25:34,280 --> 00:25:35,240
+Because as we mentioned earlier,
+
+849
+00:25:35,240 --> 00:25:36,340
+since all instructions are
+
+850
+00:25:36,340 --> 00:25:38,980
+definitely at multiples of 2,
+
+851
+00:25:38,980 --> 00:25:40,540
+the address of an instruction is definitely a multiple of 2,
+
+852
+00:25:40,540 --> 00:25:41,740
+so the last bit is always 0.
+
+853
+00:25:41,740 --> 00:25:42,980
+There's no need to encode it,
+
+854
+00:25:42,980 --> 00:25:45,040
+so we just leave it out.
+
+855
+00:25:45,040 --> 00:25:46,880
+So this,
+
+856
+00:25:46,880 --> 00:25:48,040
+that's why we multiply by 2.
+
+857
+00:25:48,040 --> 00:25:48,860
+After multiplying by 2,
+
+858
+00:25:48,860 --> 00:25:50,180
+it's still sign-extended the same way.
+
+859
+00:25:50,180 --> 00:25:51,160
+So it can
+
+860
+00:25:51,160 --> 00:25:53,740
+store what is actually a signed number in here.
+
+861
+00:25:53,740 --> 00:25:56,460
+This tells us the jump can be a forward or backward jump.
+
+862
+00:25:56,460 --> 00:25:58,820
+It can jump forward, and it can also jump backward.
+
+863
+00:25:58,820 --> 00:26:01,220
+So what is the jump based on?
+
+864
+00:26:01,220 --> 00:26:03,940
+Actually, it's still the same thing — the jump is based on the PC value.
+
+865
+00:26:03,940 --> 00:26:05,220
+That is to say, the value it finally computes
+
+866
+00:26:05,220 --> 00:26:08,420
+The value it finally computes gets added to the current PC value,
+
+867
+00:26:08,420 --> 00:26:09,820
+and that gives the final result.
+
+868
+00:26:09,820 --> 00:26:12,360
+This is what's called a PC-based jump.
+
+869
+00:26:12,360 --> 00:26:14,940
+Now, since its range is relatively large,
+
+870
+00:26:14,940 --> 00:26:17,580
+the branch instruction we looked at earlier,
+
+871
+00:26:17,580 --> 00:26:21,120
+it only has about a dozen or so bits, right?
+
+872
+00:26:21,160 --> 00:26:21,880
+A dozen or so bits.
+
+873
+00:26:21,880 --> 00:26:23,460
+I just looked at it and forgot.
+
+874
+00:26:23,460 --> 00:26:26,080
+It's 12 bits.
+
+875
+00:26:26,080 --> 00:26:27,520
+So this one,
+
+876
+00:26:27,520 --> 00:26:29,020
+over here on this side,
+
+877
+00:26:29,020 --> 00:26:29,520
+there are 20 bits.
+
+878
+00:26:29,520 --> 00:26:30,080
+So 20 bits.
+
+879
+00:26:30,080 --> 00:26:32,260
+It can express a range that's a bit larger.
+
+880
+00:26:32,260 --> 00:26:34,020
+Earlier, it could only jump within a 4K range.
+
+881
+00:26:34,020 --> 00:26:36,500
+This way, it can jump within a range of one megabyte.
+
+882
+00:26:36,500 --> 00:26:38,320
+jump within a range of one megabyte.
+
+883
+00:26:38,320 --> 00:26:43,240
+So this is how its address is calculated.
+
+884
+00:26:43,240 --> 00:26:44,540
+Now there's one more.
+
+885
+00:26:44,540 --> 00:26:46,860
+It's a little different from the previous command.
+
+886
+00:26:46,860 --> 00:26:47,940
+That is, it has an rd here.
+
+887
+00:26:47,940 --> 00:26:50,180
+So what does rd mean?
+
+888
+00:26:50,180 --> 00:26:52,180
+It means that when this instruction executes,
+
+889
+00:26:52,180 --> 00:26:53,820
+besides jumping
+
+890
+00:26:53,820 --> 00:26:55,400
+to a new address
+
+891
+00:26:55,400 --> 00:26:56,840
+and continuing to run from there,
+
+892
+00:26:56,840 --> 00:27:00,580
+it also takes the instruction right after this JL
+
+893
+00:27:00,580 --> 00:27:01,060
+that is,
+
+894
+00:27:01,060 --> 00:27:02,940
+that is,
+
+895
+00:27:02,940 --> 00:27:03,480
+that is,
+
+896
+00:27:03,480 --> 00:27:05,340
+suppose this is a JL instruction.
+
+897
+00:27:05,340 --> 00:27:06,120
+Then the JL's
+
+898
+00:27:06,120 --> 00:27:07,680
+suppose this is a JL instruction.
+
+899
+00:27:07,680 --> 00:27:09,340
+Then there might be another
+
+900
+00:27:09,340 --> 00:27:10,080
+instruction below it.
+
+901
+00:27:10,080 --> 00:27:12,540
+It takes the address of this instruction
+
+902
+00:27:12,540 --> 00:27:15,100
+and writes it into RD.
+
+903
+00:27:15,100 --> 00:27:16,780
+As for what RD actually is,
+
+904
+00:27:16,780 --> 00:27:17,740
+that's up to you to decide.
+
+905
+00:27:17,740 --> 00:27:19,780
+It writes it into there,
+
+906
+00:27:19,780 --> 00:27:21,840
+saved as a return address.
+
+907
+00:27:21,840 --> 00:27:22,300
+So why does it put it in here?
+
+908
+00:27:22,300 --> 00:27:24,140
+Why does it put it in this register?
+
+909
+00:27:24,140 --> 00:27:25,340
+What exactly is it used for?
+
+910
+00:27:25,340 --> 00:27:26,460
+We'll see that later,
+
+911
+00:27:26,460 --> 00:27:27,280
+and I'll explain it to you.
+
+912
+00:27:27,280 --> 00:27:29,080
+In other words, it takes this
+
+913
+00:27:29,080 --> 00:27:31,240
+Actually, at this point,
+
+914
+00:27:31,240 --> 00:27:32,240
+you can probably already guess
+
+915
+00:27:32,240 --> 00:27:32,740
+what it's used for.
+
+916
+00:27:32,740 --> 00:27:33,740
+Think about it this way:
+
+917
+00:27:33,740 --> 00:27:35,800
+suppose the goal of this instruction
+
+918
+00:27:35,800 --> 00:27:37,820
+is to jump to a new function to execute.
+
+919
+00:27:37,820 --> 00:27:39,500
+Then after this function finishes executing,
+
+920
+00:27:39,500 --> 00:27:40,160
+don't we need to come back?
+
+921
+00:27:40,160 --> 00:27:40,660
+Think about it, right?
+
+922
+00:27:40,660 --> 00:27:41,720
+When it comes back, what does it do?
+
+923
+00:27:41,720 --> 00:27:43,360
+When it comes back, isn't it going to execute
+
+924
+00:27:43,360 --> 00:27:44,260
+the next instruction?
+
+925
+00:27:44,260 --> 00:27:44,860
+Think about it, right?
+
+926
+00:27:44,860 --> 00:27:46,880
+So it takes this
+
+927
+00:27:46,880 --> 00:27:48,880
+next instruction address,
+
+928
+00:27:48,880 --> 00:27:51,400
+that is, it saves the address of this instruction in this place,
+
+929
+00:27:51,400 --> 00:27:54,780
+and the purpose is to let this function eventually return back.
+
+930
+00:27:54,780 --> 00:27:56,200
+That's the idea.
+
+931
+00:27:56,200 --> 00:27:59,960
+So we say the purpose of this unconditional jump instruction
+
+932
+00:27:59,960 --> 00:28:01,840
+is usually to call a subroutine,
+
+933
+00:28:01,840 --> 00:28:04,360
+and that's exactly where the subfunction is reflected.
+
+934
+00:28:04,360 --> 00:28:05,680
+So as for this RD,
+
+935
+00:28:05,680 --> 00:28:09,260
+let me go over what I just said so you can understand it again.
+
+936
+00:28:09,260 --> 00:28:12,980
+Now, in actual programming,
+
+937
+00:28:12,980 --> 00:28:13,860
+it's the same thing—that is,
+
+938
+00:28:13,860 --> 00:28:17,980
+we also don't write this address directly in the code.
+
+939
+00:28:17,980 --> 00:28:19,220
+We also write a label,
+
+940
+00:28:19,220 --> 00:28:20,680
+and the compiler generates it in the end.
+
+941
+00:28:20,680 --> 00:28:23,240
+I won't explain that here.
+
+942
+00:28:23,240 --> 00:28:26,300
+So this is an instruction called JAL.
+
+943
+00:28:26,300 --> 00:28:29,760
+And it corresponds to this instruction here.
+
+944
+00:28:29,760 --> 00:28:32,060
+There is also another instruction called JALR.
+
+945
+00:28:32,060 --> 00:28:35,060
+The only difference between these two instructions
+
+946
+00:28:35,060 --> 00:28:37,060
+is that, as we know, this JAL
+
+947
+00:28:37,060 --> 00:28:39,200
+basically means it takes the target address
+
+948
+00:28:39,200 --> 00:28:41,580
+it takes the target address it wants to jump to
+
+949
+00:28:41,580 --> 00:28:43,980
+and encodes it directly inside the instruction.
+
+950
+00:28:43,980 --> 00:28:47,280
+So the target address is encoded directly in there.
+
+951
+00:28:47,280 --> 00:28:49,140
+As for JALR,
+
+952
+00:28:49,140 --> 00:28:49,780
+it actually
+
+953
+00:28:49,780 --> 00:28:52,300
+is also jump and link,
+
+954
+00:28:52,300 --> 00:28:52,820
+but
+
+955
+00:28:52,820 --> 00:28:53,720
+the R here
+
+956
+00:28:53,720 --> 00:28:54,760
+stands for register.
+
+957
+00:28:54,760 --> 00:28:55,380
+That is to say,
+
+958
+00:28:55,380 --> 00:28:56,660
+it actually takes this
+
+959
+00:28:56,660 --> 00:28:58,540
+target address it wants to jump to
+
+960
+00:28:58,540 --> 00:29:01,160
+and stores it in a register.
+
+961
+00:29:01,160 --> 00:29:01,900
+And then,
+
+962
+00:29:01,900 --> 00:29:03,040
+it takes the target address
+
+963
+00:29:03,040 --> 00:29:04,960
+out of this register
+
+964
+00:29:04,960 --> 00:29:06,580
+and performs the calculation.
+
+965
+00:29:06,580 --> 00:29:07,780
+Note this carefully.
+
+966
+00:29:07,780 --> 00:29:09,820
+So that's why it's called JALR.
+
+967
+00:29:09,820 --> 00:29:10,520
+This one,
+
+968
+00:29:10,520 --> 00:29:12,080
+so,
+
+969
+00:29:12,080 --> 00:29:14,840
+the difference between it and that JAL
+
+970
+00:29:14,840 --> 00:29:16,700
+instruction, JAL,
+
+971
+00:29:16,700 --> 00:29:17,700
+the difference is,
+
+972
+00:29:17,700 --> 00:29:19,700
+first of all, its encoding format is not quite the same.
+
+973
+00:29:19,700 --> 00:29:22,740
+It uses the I-type we talked about earlier,
+
+974
+00:29:22,740 --> 00:29:24,240
+which is a kind of...
+
+975
+00:29:24,240 --> 00:29:26,500
+When did we first come across this I-type?
+
+976
+00:29:26,500 --> 00:29:27,540
+It was with that addi
+
+977
+00:29:27,540 --> 00:29:28,660
+instruction that we encountered it,
+
+978
+00:29:28,660 --> 00:29:28,920
+right?
+
+979
+00:29:28,920 --> 00:29:30,640
+It uses an I-type,
+
+980
+00:29:30,640 --> 00:29:31,860
+not a J-type.
+
+981
+00:29:31,860 --> 00:29:34,340
+And it's also used for calling a subroutine.
+
+982
+00:29:34,340 --> 00:29:35,400
+That goes without saying.
+
+983
+00:29:35,400 --> 00:29:37,100
+So the key point is this:
+
+984
+00:29:37,100 --> 00:29:38,660
+when it makes the jump,
+
+985
+00:29:38,660 --> 00:29:40,620
+how is the target address calculated?
+
+986
+00:29:40,620 --> 00:29:42,500
+Now, as for the calculation method,
+
+987
+00:29:42,500 --> 00:29:43,340
+take a careful look, everyone.
+
+988
+00:29:43,340 --> 00:29:46,060
+First of all, the RSE here,
+
+989
+00:29:46,060 --> 00:29:48,640
+that actually corresponds to what we call the register.
+
+990
+00:29:48,640 --> 00:29:49,920
+That's the RSE.
+
+991
+00:29:49,920 --> 00:29:52,560
+Since it uses I-type encoding,
+
+992
+00:29:52,560 --> 00:29:55,840
+it also has a field that holds an immediate number.
+
+993
+00:29:55,840 --> 00:29:57,600
+It's just that the range of this immediate number is a bit smaller.
+
+994
+00:29:57,600 --> 00:30:00,200
+The JAL earlier used 20 bits.
+
+995
+00:30:00,200 --> 00:30:02,660
+Here, part of it is used up by RSE,
+
+996
+00:30:02,660 --> 00:30:05,340
+so it can only use 12 bits here.
+
+997
+00:30:05,340 --> 00:30:09,200
+Then it takes this 12-bit immediate number,
+
+998
+00:30:09,200 --> 00:30:10,420
+and sign-extends it.
+
+999
+00:30:10,420 --> 00:30:11,820
+That doesn't need any further explanation.
+
+1000
+00:30:11,820 --> 00:30:14,140
+Sign extension means it can still jump forward or backward.
+
+1001
+00:30:14,140 --> 00:30:16,580
+So the sign-extended value,
+
+1002
+00:30:16,580 --> 00:30:17,920
+added to the value in the register,
+
+1003
+00:30:17,920 --> 00:30:20,900
+that is, the sum of these two things
+
+1004
+00:30:20,900 --> 00:30:23,120
+is the difference from what we saw before.
+
+1005
+00:30:23,120 --> 00:30:24,560
+It is based on a register
+
+1006
+00:30:24,560 --> 00:30:26,360
+to compute the final address.
+
+1007
+00:30:26,360 --> 00:30:29,400
+After adding these values to get the result,
+
+1008
+00:30:29,400 --> 00:30:32,000
+then the lowest bit is set to 0.
+
+1009
+00:30:32,000 --> 00:30:33,620
+This is still the same as before,
+
+1010
+00:30:33,620 --> 00:30:36,920
+that is, ensuring two-byte alignment.
+
+1011
+00:30:36,920 --> 00:30:39,420
+So when it jumps,
+
+1012
+00:30:39,420 --> 00:30:41,580
+unlike the previous instruction,
+
+1013
+00:30:41,580 --> 00:30:44,860
+which we know jumps forward or backward based on the PC value,
+
+1014
+00:30:44,860 --> 00:30:49,200
+here it jumps forward or backward based on the register.
+
+1015
+00:30:49,200 --> 00:30:50,460
+That is where the difference lies.
+
+1016
+00:30:50,460 --> 00:30:56,820
+So this is its method for computing the jump target address.
+
+1017
+00:30:56,820 --> 00:30:58,520
+Now, similarly,
+
+1018
+00:30:58,520 --> 00:31:00,860
+in order to support function calls and returns,
+
+1019
+00:31:00,860 --> 00:31:03,380
+it still needs to write the address of the next instruction
+
+1020
+00:31:03,380 --> 00:31:05,080
+into rd.
+
+1021
+00:31:05,080 --> 00:31:08,480
+And then when that subroutine returns,
+
+1022
+00:31:08,480 --> 00:31:10,120
+it will use the value in this rd
+
+1023
+00:31:10,120 --> 00:31:12,620
+to jump back,
+
+1024
+00:31:12,620 --> 00:31:14,360
+jumping to the next instruction and continuing execution
+
+1025
+00:31:14,360 --> 00:31:15,500
+right?
+
+1026
+00:31:15,500 --> 00:31:17,380
+This is the same as JAL.
+
+1027
+00:31:17,380 --> 00:31:19,880
+So these two instructions,
+
+1028
+00:31:19,880 --> 00:31:22,820
+from the introduction and description I just gave you,
+
+1029
+00:31:22,820 --> 00:31:23,440
+you can see
+
+1030
+00:31:23,440 --> 00:31:26,700
+that JAL and JLR
+
+1031
+00:31:26,700 --> 00:31:28,060
+are a bit of a mouthful to say,
+
+1032
+00:31:28,060 --> 00:31:29,980
+a bit of a mouthful,
+
+1033
+00:31:29,980 --> 00:31:32,080
+but just understand what they mean.
+
+1034
+00:31:32,080 --> 00:31:33,840
+Jump and link,
+
+1035
+00:31:33,840 --> 00:31:35,340
+jump and link.
+
+1036
+00:31:35,340 --> 00:31:41,180
+They are both instances specifically designed for our function calls.
+
+1037
+00:31:41,180 --> 00:31:43,320
+Keep that in mind.
+
+1038
+00:31:43,320 --> 00:31:47,060
+As for the branch and conditional jump we saw earlier,
+
+1039
+00:31:47,060 --> 00:31:51,140
+they are actually designed for writing if-else in our code,
+
+1040
+00:31:51,140 --> 00:31:54,180
+for that kind of logic.
+
+1041
+00:31:54,180 --> 00:31:54,740
+Think about it, right?
+
+1042
+00:31:54,740 --> 00:32:00,800
+So that's all I'll say about the concepts.
+
+1043
+00:32:00,800 --> 00:32:04,120
+Next, let's go through some examples
+
+1044
+00:32:04,120 --> 00:32:05,380
+to get a feel for
+
+1045
+00:32:05,380 --> 00:32:07,520
+how these instructions are used.
+
+1046
+00:32:07,520 --> 00:32:09,980
+Now, for this example,
+
+1047
+00:32:09,980 --> 00:32:12,140
+what we've actually provided for you is
+
+1048
+00:32:12,140 --> 00:32:13,540
+a piece of code called JALR.
+
+1049
+00:32:13,540 --> 00:32:14,360
+Under that directory,
+
+1050
+00:32:14,360 --> 00:32:15,700
+let's take a look.
+
+1051
+00:32:15,700 --> 00:32:18,120
+The one in here,
+
+1052
+00:32:18,120 --> 00:32:21,000
+the example inside JALR,
+
+1053
+00:32:21,000 --> 00:32:22,900
+is actually implementing
+
+1054
+00:32:22,900 --> 00:32:25,840
+something equivalent to a piece of our C code,
+
+1055
+00:32:25,840 --> 00:32:27,540
+this chunk of code here.
+
+1056
+00:32:27,540 --> 00:32:30,520
+Because by default, that is,
+
+1057
+00:32:30,520 --> 00:32:31,360
+for this course,
+
+1058
+00:32:31,360 --> 00:32:33,220
+we assume you're already familiar with C,
+
+1059
+00:32:33,220 --> 00:32:34,260
+but maybe not so familiar with assembly,
+
+1060
+00:32:34,260 --> 00:32:35,980
+so we often go the other way around.
+
+1061
+00:32:35,980 --> 00:32:37,480
+First, I'll explain it to you in
+
+1062
+00:32:37,480 --> 00:32:38,380
+C,
+
+1063
+00:32:38,380 --> 00:32:39,460
+what function we want to implement,
+
+1064
+00:32:39,460 --> 00:32:40,360
+and then
+
+1065
+00:32:40,360 --> 00:32:41,360
+we'll convert it
+
+1066
+00:32:41,360 --> 00:32:42,520
+into assembly.
+
+1067
+00:32:42,520 --> 00:32:44,540
+That's the learning approach.
+
+1068
+00:32:44,540 --> 00:32:47,710
+Let's take a look at
+
+1069
+00:32:47,710 --> 00:32:48,870
+this function.
+
+1070
+00:32:48,870 --> 00:32:50,610
+You can see this piece of code.
+
+1071
+00:32:50,610 --> 00:32:51,430
+What does it mean?
+
+1072
+00:32:51,430 --> 00:32:53,030
+It means that here
+
+1073
+00:32:53,030 --> 00:32:55,630
+we've defined two global variables,
+
+1074
+00:32:55,630 --> 00:32:56,130
+right?
+
+1075
+00:32:56,130 --> 00:32:57,650
+Now, these two global variables,
+
+1076
+00:32:57,650 --> 00:32:58,230
+written out here,
+
+1077
+00:32:58,230 --> 00:32:59,210
+means that in the code,
+
+1078
+00:32:59,210 --> 00:33:01,010
+we'll generally need to use two registers,
+
+1079
+00:33:01,010 --> 00:33:01,210
+right?
+
+1080
+00:33:01,210 --> 00:33:02,690
+to store these two values.
+
+1081
+00:33:02,690 --> 00:33:07,130
+So the execution of the function starts here,
+
+1082
+00:33:07,130 --> 00:33:09,370
+because we named this function start,
+
+1083
+00:33:09,370 --> 00:33:11,950
+which is basically like what we had earlier,
+
+1084
+00:33:11,950 --> 00:33:14,710
+that start label we used in so many of our exercises,
+
+1085
+00:33:14,710 --> 00:33:15,450
+right?
+
+1086
+00:33:15,450 --> 00:33:19,570
+It's essentially the starting position of our instruction execution,
+
+1087
+00:33:19,570 --> 00:33:20,190
+the starting address.
+
+1088
+00:33:20,190 --> 00:33:21,550
+Execution begins from here.
+
+1089
+00:33:21,550 --> 00:33:23,170
+Now, during this execution,
+
+1090
+00:33:23,170 --> 00:33:25,910
+you can see it will go and call a function called sum.
+
+1091
+00:33:25,910 --> 00:33:29,030
+So this is calling a function,
+
+1092
+00:33:29,030 --> 00:33:30,430
+what we call a function call in C.
+
+1093
+00:33:30,430 --> 00:33:32,310
+Now, as for this function call, by now you should know,
+
+1094
+00:33:32,310 --> 00:33:35,250
+it must be using which instruction we learned earlier?
+
+1095
+00:33:35,250 --> 00:33:39,920
+It must be either JAL or JAL, right?
+
+1096
+00:33:39,920 --> 00:33:40,700
+Think about it, isn't that right?
+
+1097
+00:33:40,700 --> 00:33:42,360
+You can use either one,
+
+1098
+00:33:42,360 --> 00:33:47,640
+that is, the JAL or the JALR instruction,
+
+1099
+00:33:47,640 --> 00:33:48,940
+the Jump and Link instruction.
+
+1100
+00:33:48,940 --> 00:33:53,980
+So after calling this function,
+
+1101
+00:33:53,980 --> 00:33:55,240
+We know that as this program executes,
+
+1102
+00:33:55,240 --> 00:33:57,580
+this logic will definitely jump to this place,
+
+1103
+00:33:57,580 --> 00:33:59,420
+and then execute this.
+
+1104
+00:33:59,420 --> 00:34:02,820
+What it actually executes is secondary.
+
+1105
+00:34:02,820 --> 00:34:04,080
+So, say it executes
+
+1106
+00:34:04,080 --> 00:34:05,300
+something like A plus B.
+
+1107
+00:34:05,300 --> 00:34:06,640
+So what's the key here?
+
+1108
+00:34:06,640 --> 00:34:07,240
+The key is,
+
+1109
+00:34:07,240 --> 00:34:08,280
+after this function finishes executing,
+
+1110
+00:34:08,280 --> 00:34:09,240
+as we know in C,
+
+1111
+00:34:09,240 --> 00:34:10,760
+after a function finishes executing,
+
+1112
+00:34:10,760 --> 00:34:11,520
+to return from it,
+
+1113
+00:34:11,520 --> 00:34:13,120
+what statement do we usually call?
+
+1114
+00:34:13,120 --> 00:34:14,280
+We call a return.
+
+1115
+00:34:14,280 --> 00:34:15,440
+Think about it, right?
+
+1116
+00:34:15,440 --> 00:34:16,540
+So, return—
+
+1117
+00:34:16,540 --> 00:34:17,420
+it needs to know now,
+
+1118
+00:34:17,420 --> 00:34:19,200
+what does return actually mean?
+
+1119
+00:34:19,200 --> 00:34:21,240
+In the end, this return statement,
+
+1120
+00:34:21,240 --> 00:34:22,180
+actually still corresponds to
+
+1121
+00:34:22,180 --> 00:34:24,300
+For a JALR instruction,
+
+1122
+00:34:24,300 --> 00:34:26,300
+let's take a look at
+
+1123
+00:34:26,300 --> 00:34:28,160
+the rough implementation process,
+
+1124
+00:34:28,160 --> 00:34:29,940
+what's roughly involved.
+
+1125
+00:34:29,940 --> 00:34:31,060
+First,
+
+1126
+00:34:31,060 --> 00:34:35,060
+if we call the SUM function,
+
+1127
+00:34:35,060 --> 00:34:37,040
+we can actually write it as a single instruction,
+
+1128
+00:34:37,040 --> 00:34:39,560
+called JALX5SUM.
+
+1129
+00:34:39,560 --> 00:34:42,080
+Building on what we just described,
+
+1130
+00:34:42,080 --> 00:34:43,540
+what did we just say?
+
+1131
+00:34:43,540 --> 00:34:45,780
+That is, for the target address you want to jump to,
+
+1132
+00:34:45,780 --> 00:34:47,100
+we don't need to write an immediate value.
+
+1133
+00:34:47,100 --> 00:34:49,040
+We actually just need to take this label,
+
+1134
+00:34:49,040 --> 00:34:49,960
+which is really just a
+
+1135
+00:34:49,960 --> 00:34:53,200
+so-called label, which is just the name of a function,
+
+1136
+00:34:53,200 --> 00:34:54,920
+and write it out and hand it over.
+
+1137
+00:34:54,920 --> 00:34:57,240
+And once we hand it over,
+
+1138
+00:34:57,240 --> 00:34:59,240
+the compiler and the linker
+
+1139
+00:34:59,240 --> 00:35:01,220
+will compute the actual target address for us.
+
+1140
+00:35:01,220 --> 00:35:02,720
+And then...
+
+1141
+00:35:02,720 --> 00:35:03,760
+Take note of this
+
+1142
+00:35:03,760 --> 00:35:04,920
+This JAL instruction
+
+1143
+00:35:04,920 --> 00:35:07,340
+has an rd register
+
+1144
+00:35:07,340 --> 00:35:08,660
+This rd register
+
+1145
+00:35:08,660 --> 00:35:09,240
+as we just mentioned
+
+1146
+00:35:09,240 --> 00:35:10,120
+what is it used to hold?
+
+1147
+00:35:10,120 --> 00:35:11,280
+It holds
+
+1148
+00:35:11,280 --> 00:35:14,740
+for this JAL instruction,
+
+1149
+00:35:14,740 --> 00:35:16,400
+the address of the next instruction
+
+1150
+00:35:16,400 --> 00:35:17,200
+is placed here
+
+1151
+00:35:17,200 --> 00:35:18,780
+So that's why I marked this in red here
+
+1152
+00:35:18,780 --> 00:35:20,220
+Basically, you can imagine it this way
+
+1153
+00:35:20,220 --> 00:35:20,900
+Just imagine
+
+1154
+00:35:20,900 --> 00:35:23,260
+that after we finish calling
+
+1155
+00:35:23,260 --> 00:35:24,400
+the SUM function
+
+1156
+00:35:24,400 --> 00:35:26,240
+there is definitely another instruction after it
+
+1157
+00:35:26,240 --> 00:35:27,700
+and this instruction here
+
+1158
+00:35:27,700 --> 00:35:30,400
+the address of this instruction
+
+1159
+00:35:30,400 --> 00:35:32,500
+it will store it into
+
+1160
+00:35:32,500 --> 00:35:34,400
+the X5 register
+
+1161
+00:35:34,400 --> 00:35:35,000
+So everyone,
+
+1162
+00:35:35,000 --> 00:35:37,360
+what is it stored here for?
+
+1163
+00:35:37,360 --> 00:35:38,880
+What is it used for?
+
+1164
+00:35:38,880 --> 00:35:40,820
+This brings us back to what we just talked about,
+
+1165
+00:35:40,820 --> 00:35:41,800
+this return.
+
+1166
+00:35:41,800 --> 00:35:45,200
+Now, this return statement,
+
+1167
+00:35:45,200 --> 00:35:46,640
+it actually corresponds to,
+
+1168
+00:35:46,640 --> 00:35:47,420
+that is, it is called,
+
+1169
+00:35:47,420 --> 00:35:49,000
+we can translate it into,
+
+1170
+00:35:49,000 --> 00:35:50,380
+the JALR instruction.
+
+1171
+00:35:50,380 --> 00:35:52,060
+As for the JALR instruction,
+
+1172
+00:35:52,060 --> 00:35:52,840
+as we mentioned earlier,
+
+1173
+00:35:52,840 --> 00:35:54,180
+what is its purpose?
+
+1174
+00:35:54,180 --> 00:35:55,540
+Based on the way it's written here,
+
+1175
+00:35:55,540 --> 00:35:56,360
+let's understand,
+
+1176
+00:35:56,360 --> 00:35:57,620
+in practice,
+
+1177
+00:35:57,620 --> 00:36:00,740
+how does it compute the target address?
+
+1178
+00:36:00,740 --> 00:36:02,900
+It uses 0x5.
+
+1179
+00:36:02,900 --> 00:36:03,720
+What does 0x5 mean?
+
+1180
+00:36:03,720 --> 00:36:06,760
+It means it's based on the value in x5.
+
+1181
+00:36:06,760 --> 00:36:08,600
+add an immediate value.
+
+1182
+00:36:08,600 --> 00:36:10,080
+This immediate value is simply 0.
+
+1183
+00:36:10,080 --> 00:36:11,360
+So, in that case,
+
+1184
+00:36:11,360 --> 00:36:13,260
+the target address it jumps to,
+
+1185
+00:36:13,260 --> 00:36:14,440
+is actually equal to x5.
+
+1186
+00:36:14,440 --> 00:36:15,040
+Think about it, isn't that right?
+
+1187
+00:36:15,040 --> 00:36:17,360
+Because the way it computes the target address,
+
+1188
+00:36:17,360 --> 00:36:19,140
+is x5 plus 0,
+
+1189
+00:36:19,140 --> 00:36:21,540
+and that's how it gets it.
+
+1190
+00:36:21,540 --> 00:36:23,260
+Now, as you all know, x5,
+
+1191
+00:36:23,260 --> 00:36:25,560
+this statement here is executed first.
+
+1192
+00:36:25,560 --> 00:36:26,320
+When it executes,
+
+1193
+00:36:26,320 --> 00:36:27,700
+it puts a value into x5.
+
+1194
+00:36:27,700 --> 00:36:28,480
+What value does it put in?
+
+1195
+00:36:28,480 --> 00:36:30,900
+It puts the address
+
+1196
+00:36:30,900 --> 00:36:32,620
+of the next instruction over here.
+
+1197
+00:36:32,620 --> 00:36:33,120
+Think about it, isn't that right?
+
+1198
+00:36:33,120 --> 00:36:35,940
+So when you add 0 here,
+
+1199
+00:36:35,940 --> 00:36:37,260
+the address it actually jumps to,
+
+1200
+00:36:37,260 --> 00:36:39,060
+doesn't it end up jumping back over here again?
+
+1201
+00:36:39,060 --> 00:36:39,780
+Think about it, everyone.
+
+1202
+00:36:39,780 --> 00:36:41,480
+Is that what it means?
+
+1203
+00:36:41,480 --> 00:36:43,080
+Can you figure it out?
+
+1204
+00:36:43,080 --> 00:36:44,800
+Everyone needs to get this straight.
+
+1205
+00:36:44,800 --> 00:36:47,140
+With these two instructions, there's basically no problem.
+
+1206
+00:36:47,140 --> 00:36:49,240
+That is, we use this register,
+
+1207
+00:36:49,240 --> 00:36:50,280
+the register x5,
+
+1208
+00:36:50,280 --> 00:36:53,280
+and when it jumps over here,
+
+1209
+00:36:53,280 --> 00:36:55,140
+it actually does one more thing,
+
+1210
+00:36:55,140 --> 00:36:57,400
+namely, it takes the address of its next instruction
+
+1211
+00:36:57,400 --> 00:36:59,160
+and saves it into x5.
+
+1212
+00:36:59,160 --> 00:37:00,160
+It stores it there.
+
+1213
+00:37:00,160 --> 00:37:01,380
+What is it stored there for?
+
+1214
+00:37:01,380 --> 00:37:03,020
+It's for the return.
+
+1215
+00:37:03,020 --> 00:37:03,900
+You see what I mean,
+
+1216
+00:37:03,900 --> 00:37:04,940
+it's for its use.
+
+1217
+00:37:04,940 --> 00:37:05,800
+When it uses it,
+
+1218
+00:37:05,800 --> 00:37:06,740
+it uses jr,
+
+1219
+00:37:06,740 --> 00:37:08,700
+and based on the value of x5,
+
+1220
+00:37:08,700 --> 00:37:11,360
+it computes the return address.
+
+1221
+00:37:11,360 --> 00:37:12,300
+And that's the return address.
+
+1222
+00:37:12,300 --> 00:37:13,260
+So it jumps back again.
+
+1223
+00:37:13,260 --> 00:37:14,780
+So the whole process is this:
+
+1224
+00:37:14,780 --> 00:37:16,840
+jump up and execute,
+
+1225
+00:37:16,840 --> 00:37:18,660
+then return and jump back.
+
+1226
+00:37:18,660 --> 00:37:20,480
+It makes sense, right?
+
+1227
+00:37:20,480 --> 00:37:21,580
+This is how we implement
+
+1228
+00:37:21,580 --> 00:37:23,500
+the process of a function call and return.
+
+1229
+00:37:23,500 --> 00:37:26,020
+You can see that, right?
+
+1230
+00:37:26,020 --> 00:37:28,740
+So everyone, take this code
+
+1231
+00:37:28,740 --> 00:37:30,180
+and combine it with what we covered last time,
+
+1232
+00:37:30,180 --> 00:37:31,140
+and go over it yourselves.
+
+1233
+00:37:31,140 --> 00:37:32,020
+I mean the code,
+
+1234
+00:37:32,020 --> 00:37:33,520
+take a look at it yourself when you get back.
+
+1235
+00:37:33,520 --> 00:37:37,140
+Just go through the code in the course material,
+
+1236
+00:37:37,140 --> 00:37:39,020
+and make sure you understand the concept I just described.
+
+1237
+00:37:39,020 --> 00:37:51,720
+As for the debugging process,
+
+1238
+00:37:51,720 --> 00:37:55,160
+I won't walk you through it,
+
+1239
+00:37:55,160 --> 00:38:03,720
+since we already spent a bit of time earlier.
+
+1240
+00:38:03,720 --> 00:38:06,440
+Let's finish covering these jump instructions.
+
+1241
+00:38:06,440 --> 00:38:07,080
+Let's call it a day.
+
+1242
+00:38:07,080 --> 00:38:11,000
+Okay, this code example,
+
+1243
+00:38:11,000 --> 00:38:12,040
+we'll just go over it on our own.
+
+1244
+00:38:12,040 --> 00:38:13,380
+I won't demonstrate it for you again.
+
+1245
+00:38:13,380 --> 00:38:16,120
+So basically,
+
+1246
+00:38:16,120 --> 00:38:18,060
+for unconditional jumps
+
+1247
+00:38:18,060 --> 00:38:18,740
+we have two instructions.
+
+1248
+00:38:18,740 --> 00:38:19,980
+One is j,
+
+1249
+00:38:19,980 --> 00:38:21,420
+and the other is jal, or jump and link register.
+
+1250
+00:38:21,420 --> 00:38:22,060
+Two instructions.
+
+1251
+00:38:22,060 --> 00:38:23,160
+Saying the full names,
+
+1252
+00:38:23,160 --> 00:38:24,220
+seems to flow a bit better.
+
+1253
+00:38:24,220 --> 00:38:26,120
+The abbreviations are a bit of a tongue-twister.
+
+1254
+00:38:26,120 --> 00:38:28,320
+Now, here,
+
+1255
+00:38:28,320 --> 00:38:29,040
+let's bring up one more concept.
+
+1256
+00:38:29,040 --> 00:38:30,100
+That is, as we can see,
+
+1257
+00:38:30,100 --> 00:38:31,820
+just now when we introduced
+
+1258
+00:38:31,820 --> 00:38:33,700
+the jal instruction to you,
+
+1259
+00:38:33,700 --> 00:38:34,540
+as we mentioned earlier,
+
+1260
+00:38:34,540 --> 00:38:36,000
+as for its jump range,
+
+1261
+00:38:36,000 --> 00:38:37,660
+It's based on the PC
+
+1262
+00:38:37,660 --> 00:38:38,400
+up and down
+
+1263
+00:38:38,400 --> 00:38:39,500
+that is,
+
+1264
+00:38:39,500 --> 00:38:41,260
+that's already a very large range
+
+1265
+00:38:41,260 --> 00:38:43,160
+meaning it can jump within a 1-megabyte range
+
+1266
+00:38:43,160 --> 00:38:43,420
+right?
+
+1267
+00:38:43,420 --> 00:38:45,080
+But as we know
+
+1268
+00:38:45,080 --> 00:38:46,660
+the programs we're writing now
+
+1269
+00:38:46,660 --> 00:38:49,300
+might exceed 1 megabyte in size
+
+1270
+00:38:49,300 --> 00:38:51,180
+The programs you're writing now
+
+1271
+00:38:51,180 --> 00:38:53,000
+if the program you write is fairly small
+
+1272
+00:38:53,000 --> 00:38:53,660
+it might compile down to
+
+1273
+00:38:53,660 --> 00:38:55,480
+roughly a few K or a few tens of K
+
+1274
+00:38:55,480 --> 00:38:57,000
+which means its range
+
+1275
+00:38:57,000 --> 00:38:57,720
+is about that size
+
+1276
+00:38:57,720 --> 00:38:57,940
+right?
+
+1277
+00:38:57,940 --> 00:39:00,480
+But as your program grows
+
+1278
+00:39:00,480 --> 00:39:01,360
+just imagine
+
+1279
+00:39:01,360 --> 00:39:03,680
+when you run some large programs nowadays
+
+1280
+00:39:03,680 --> 00:39:05,980
+a single executable can get really big
+
+1281
+00:39:05,980 --> 00:39:06,940
+It might exceed 1 megabyte.
+
+1282
+00:39:06,940 --> 00:39:08,020
+So at that point,
+
+1283
+00:39:08,020 --> 00:39:10,880
+if you try to jump within a range that exceeds 1 megabyte,
+
+1284
+00:39:10,880 --> 00:39:13,980
+then simply using an instruction like JAL,
+
+1285
+00:39:13,980 --> 00:39:15,820
+well, that's actually going to cause problems.
+
+1286
+00:39:15,820 --> 00:39:17,460
+Think about it — wouldn't that be an issue?
+
+1287
+00:39:17,460 --> 00:39:19,240
+So what do we do?
+
+1288
+00:39:19,240 --> 00:39:21,600
+The people who designed the assembly instructions
+
+1289
+00:39:21,600 --> 00:39:23,460
+have definitely thought this through for us.
+
+1290
+00:39:23,460 --> 00:39:26,380
+That is to say, how to handle longer-distance jumps.
+
+1291
+00:39:26,380 --> 00:39:30,100
+In terms of data, we generally call this a 'far jump'.
+
+1292
+00:39:30,100 --> 00:39:33,540
+So when you look at materials later on,
+
+1293
+00:39:33,540 --> 00:39:34,160
+you'll often see
+
+1294
+00:39:34,160 --> 00:39:38,860
+that relative to this 'far jump',
+
+1295
+00:39:38,860 --> 00:39:40,220
+there's what we call a 'near jump',
+
+1296
+00:39:40,220 --> 00:39:42,240
+which is a short-distance jump.
+
+1297
+00:39:42,240 --> 00:39:45,460
+Because it can only jump up or down about 1 megabyte.
+
+1298
+00:39:45,460 --> 00:39:47,720
+But if you need to jump beyond that range,
+
+1299
+00:39:47,720 --> 00:39:50,780
+that's what's called a long-distance jump.
+
+1300
+00:39:50,780 --> 00:39:53,100
+So how do we implement a long-distance jump?
+
+1301
+00:39:53,100 --> 00:39:54,680
+Let's actually think about it this way.
+
+1302
+00:39:54,680 --> 00:39:55,760
+We actually talked about this earlier.
+
+1303
+00:39:55,760 --> 00:39:57,020
+When we construct a large number,
+
+1304
+00:39:57,020 --> 00:39:58,160
+remember what method we used?
+
+1305
+00:39:58,160 --> 00:40:01,720
+We introduced this concept called AUIPC, right?
+
+1306
+00:40:01,720 --> 00:40:02,720
+Remember that?
+
+1307
+00:40:02,720 --> 00:40:04,740
+By the same logic,
+
+1308
+00:40:04,740 --> 00:40:05,740
+we can also,
+
+1309
+00:40:05,740 --> 00:40:09,600
+basically bring in the AUIPC instruction,
+
+1310
+00:40:09,600 --> 00:40:11,380
+to help us construct a large number,
+
+1311
+00:40:11,380 --> 00:40:13,460
+and implement this long-distance jump.
+
+1312
+00:40:13,460 --> 00:40:14,600
+On this,
+
+1313
+00:40:14,600 --> 00:40:16,140
+let me just briefly mention it.
+
+1314
+00:40:16,140 --> 00:40:18,480
+I won't go into the details here.
+
+1315
+00:40:18,480 --> 00:40:19,640
+Just be aware that
+
+1316
+00:40:19,640 --> 00:40:20,820
+there's such a concept, and that's enough.
+
+1317
+00:40:20,820 --> 00:40:23,780
+Okay.
+
+1318
+00:40:23,780 --> 00:40:26,320
+So that's the long-distance jump I just talked about.
+
+1319
+00:40:26,320 --> 00:40:28,700
+Now there's another concept,
+
+1320
+00:40:28,700 --> 00:40:30,500
+which is that when we do jumps,
+
+1321
+00:40:30,500 --> 00:40:31,800
+Actually, there's no need to return.
+
+1322
+00:40:31,800 --> 00:40:33,400
+So when there's no need to return,
+
+1323
+00:40:33,400 --> 00:40:35,280
+let's connect this with the example we just discussed.
+
+1324
+00:40:35,280 --> 00:40:36,600
+When we returned just now,
+
+1325
+00:40:36,600 --> 00:40:37,320
+take a look at this example.
+
+1326
+00:40:37,320 --> 00:40:39,640
+What did we actually have to do?
+
+1327
+00:40:39,640 --> 00:40:41,480
+We had to take the return address,
+
+1328
+00:40:41,480 --> 00:40:43,400
+and save it in a register,
+
+1329
+00:40:43,400 --> 00:40:43,700
+right?
+
+1330
+00:40:43,700 --> 00:40:46,200
+And then use it when returning.
+
+1331
+00:40:46,200 --> 00:40:47,300
+So now, since we're...
+
+1332
+00:40:47,300 --> 00:40:49,400
+Suppose I call a function now,
+
+1333
+00:40:49,400 --> 00:40:50,580
+and this function doesn't need to return.
+
+1334
+00:40:50,580 --> 00:40:52,260
+That is, the program simply ends.
+
+1335
+00:40:52,260 --> 00:40:53,480
+Take this program for example,
+
+1336
+00:40:53,480 --> 00:40:54,240
+this is just an exit.
+
+1337
+00:40:54,240 --> 00:40:55,860
+Once it exits, it's done.
+
+1338
+00:40:55,860 --> 00:40:56,820
+It doesn't execute,
+
+1339
+00:40:56,820 --> 00:40:57,880
+it doesn't continue executing.
+
+1340
+00:40:57,880 --> 00:40:59,680
+So what do we do in this case?
+
+1341
+00:40:59,680 --> 00:41:00,540
+So actually it's very simple.
+
+1342
+00:41:00,540 --> 00:41:02,400
+We just don't use a register to
+
+1343
+00:41:02,400 --> 00:41:03,940
+save this return address, and that's it.
+
+1344
+00:41:03,940 --> 00:41:04,560
+Think about it, isn't that right?
+
+1345
+00:41:04,560 --> 00:41:08,060
+But according to the requirement of this instruction,
+
+1346
+00:41:08,060 --> 00:41:09,620
+here we must fill in a
+
+1347
+00:41:09,620 --> 00:41:11,300
+register name.
+
+1348
+00:41:11,300 --> 00:41:13,400
+So which register should we use?
+
+1349
+00:41:13,400 --> 00:41:15,440
+This brings us to what we talked about earlier.
+
+1350
+00:41:15,440 --> 00:41:17,600
+When we designed RISC-V,
+
+1351
+00:41:17,600 --> 00:41:18,900
+it has a special register.
+
+1352
+00:41:18,900 --> 00:41:19,660
+You still remember, right?
+
+1353
+00:41:19,660 --> 00:41:20,620
+It's called x0.
+
+1354
+00:41:20,620 --> 00:41:24,120
+This register is actually very special,
+
+1355
+00:41:24,120 --> 00:41:24,560
+right?
+
+1356
+00:41:24,560 --> 00:41:27,460
+Reading this register always gives you 0,
+
+1357
+00:41:27,460 --> 00:41:30,400
+and writing data into this register is completely meaningless.
+
+1358
+00:41:30,400 --> 00:41:33,900
+This actually means this register cannot be used to hold any value for us.
+
+1359
+00:41:33,900 --> 00:41:38,760
+So if we want to implement this kind of non-returning jump,
+
+1360
+00:41:38,760 --> 00:41:43,600
+actually, as you can see here, they all use x0.
+
+1361
+00:41:43,600 --> 00:41:46,480
+So to make things easier for everyone to write,
+
+1362
+00:41:46,480 --> 00:41:49,940
+this way of writing is replaced with some pseudo-instructions.
+
+1363
+00:41:49,940 --> 00:41:52,760
+That is to say, as long as it's a J or a JR,
+
+1364
+00:41:52,760 --> 00:41:56,080
+then what actually happens is that the rd field is
+
+1365
+00:41:56,080 --> 00:41:58,100
+replaced with x0.
+
+1366
+00:41:58,100 --> 00:42:00,240
+That achieves this kind of jump that doesn't return.
+
+1367
+00:42:00,240 --> 00:42:01,160
+So this kind of thing is
+
+1368
+00:42:01,160 --> 00:42:05,740
+for when you don't need to return,
+
+1369
+00:42:05,740 --> 00:42:07,140
+you can use this kind of instruction to implement it.
+
+1370
+00:42:07,140 --> 00:42:10,820
+Just something for everyone to be aware of.
+
+1371
+00:42:10,820 --> 00:42:18,480
+Alright, having said that,
+
+1372
+00:42:18,480 --> 00:42:24,480
+we've basically covered conditional jump instructions as well.
+
+1373
+00:42:24,480 --> 00:42:25,060
+So finally,
+
+1374
+00:42:25,060 --> 00:42:26,720
+let me give everyone a brief summary.
+
+1375
+00:42:26,720 --> 00:42:28,380
+Up to this point,
+
+1376
+00:42:28,380 --> 00:42:30,620
+of all the things we've covered,
+
+1377
+00:42:30,620 --> 00:42:31,660
+one concept is
+
+1378
+00:42:31,660 --> 00:42:32,820
+the concept of the addressed mode.
+
+1379
+00:42:32,820 --> 00:42:34,940
+So the so-called addressed mode
+
+1380
+00:42:34,940 --> 00:42:35,640
+means that
+
+1381
+00:42:35,640 --> 00:42:36,820
+In an instruction,
+
+1382
+00:42:36,820 --> 00:42:38,500
+one way to locate an operand
+
+1383
+00:42:38,500 --> 00:42:39,840
+or its address
+
+1384
+00:42:39,840 --> 00:42:41,400
+Now, from everything we've covered so far,
+
+1385
+00:42:41,400 --> 00:42:42,400
+across all the instructions,
+
+1386
+00:42:42,400 --> 00:42:43,640
+the addressing modes involved
+
+1387
+00:42:43,640 --> 00:42:44,940
+— I'll briefly summarize them here for you.
+
+1388
+00:42:44,940 --> 00:42:46,640
+let me give you a quick summary here.
+
+1389
+00:42:46,640 --> 00:42:48,460
+The first one is called
+
+1390
+00:42:48,460 --> 00:42:49,460
+immediate addressing.
+
+1391
+00:42:49,460 --> 00:42:50,820
+It's very simple:
+
+1392
+00:42:50,820 --> 00:42:51,960
+the operand
+
+1393
+00:42:51,960 --> 00:42:52,860
+is the instruction itself.
+
+1394
+00:42:52,860 --> 00:42:54,520
+Here's an example,
+
+1395
+00:42:54,520 --> 00:42:55,160
+you probably remember it,
+
+1396
+00:42:55,160 --> 00:42:55,840
+addi,
+
+1397
+00:42:55,840 --> 00:42:57,780
+which is of course an addition instruction.
+
+1398
+00:42:57,780 --> 00:42:58,580
+With this instruction,
+
+1399
+00:42:58,580 --> 00:42:59,980
+the number it operates on
+
+1400
+00:42:59,980 --> 00:43:01,460
+is actually given by the instruction itself
+
+1401
+00:43:01,460 --> 00:43:02,540
+embedded in this instruction
+
+1402
+00:43:02,540 --> 00:43:02,960
+isn't it?
+
+1403
+00:43:02,960 --> 00:43:04,420
+the number 20 here
+
+1404
+00:43:04,420 --> 00:43:05,920
+isn't it embedded in this instruction?
+
+1405
+00:43:05,920 --> 00:43:07,140
+its operand
+
+1406
+00:43:07,140 --> 00:43:08,800
+is directly embedded in this instruction
+
+1407
+00:43:08,800 --> 00:43:09,800
+So we call this
+
+1408
+00:43:09,800 --> 00:43:10,960
+an immediate operand
+
+1409
+00:43:10,960 --> 00:43:11,840
+It doesn't need to
+
+1410
+00:43:11,840 --> 00:43:13,280
+it's not stored in some special place
+
+1411
+00:43:13,280 --> 00:43:14,540
+it's right there in the instruction
+
+1412
+00:43:14,540 --> 00:43:15,820
+This is called an immediate operand
+
+1413
+00:43:15,820 --> 00:43:17,640
+Now, there's another type
+
+1414
+00:43:17,640 --> 00:43:20,500
+which we call a register operand
+
+1415
+00:43:20,500 --> 00:43:21,900
+With a register operand,
+
+1416
+00:43:21,900 --> 00:43:23,540
+the data it operates on
+
+1417
+00:43:23,540 --> 00:43:25,180
+is stored in a register
+
+1418
+00:43:25,180 --> 00:43:28,640
+and we access the register to get the operand
+
+1419
+00:43:28,640 --> 00:43:31,240
+A typical example is the add instruction
+
+1420
+00:43:31,240 --> 00:43:31,840
+right?
+
+1421
+00:43:31,840 --> 00:43:36,000
+In this add instruction, all the operands
+
+1422
+00:43:36,000 --> 00:43:37,420
+are kept in registers,
+
+1423
+00:43:37,420 --> 00:43:38,580
+x6 and x7.
+
+1424
+00:43:38,580 --> 00:43:39,520
+That's one type.
+
+1425
+00:43:39,520 --> 00:43:42,800
+Now the third type is called base-plus-offset addressing.
+
+1426
+00:43:42,800 --> 00:43:44,380
+Base-plus-offset addressing means
+
+1427
+00:43:44,380 --> 00:43:47,020
+it works by using what?
+
+1428
+00:43:47,020 --> 00:43:49,180
+By using a base plus an offset.
+
+1429
+00:43:49,180 --> 00:43:50,480
+So the so-called base,
+
+1430
+00:43:50,480 --> 00:43:53,140
+its base address is kept in a register.
+
+1431
+00:43:53,140 --> 00:43:54,160
+Then,
+
+1432
+00:43:54,160 --> 00:43:56,020
+inside the instruction itself,
+
+1433
+00:43:56,020 --> 00:43:57,480
+you place an immediate value,
+
+1434
+00:43:57,480 --> 00:43:58,580
+place an immediate value,
+
+1435
+00:43:58,580 --> 00:43:59,460
+and then
+
+1436
+00:43:59,460 --> 00:44:02,000
+add that immediate value to the value in the register,
+
+1437
+00:44:02,000 --> 00:44:03,360
+which gives you an address.
+
+1438
+00:44:03,360 --> 00:44:04,400
+Then, based on that address,
+
+1439
+00:44:04,400 --> 00:44:07,100
+you go and find the operand you want to operate on.
+
+1440
+00:44:07,100 --> 00:44:08,780
+That's the third type.
+
+1441
+00:44:08,780 --> 00:44:09,940
+This is called register-relative addressing.
+
+1442
+00:44:09,940 --> 00:44:11,400
+And then the last kind,
+
+1443
+00:44:11,400 --> 00:44:12,540
+which is what we
+
+1444
+00:44:12,540 --> 00:44:14,840
+have already seen several times earlier,
+
+1445
+00:44:14,840 --> 00:44:17,260
+is that we take a PC value,
+
+1446
+00:44:17,260 --> 00:44:19,340
+base it on the PC value,
+
+1447
+00:44:19,340 --> 00:44:21,600
+and add an offset to it,
+
+1448
+00:44:21,600 --> 00:44:24,180
+to get the final address.
+
+1449
+00:44:24,180 --> 00:44:26,340
+This is called PC-relative addressing.
+
+1450
+00:44:26,340 --> 00:44:27,620
+So here,
+
+1451
+00:44:27,620 --> 00:44:29,020
+regarding this,
+
+1452
+00:44:29,020 --> 00:44:30,280
+the concept of addressing modes,
+
+1453
+00:44:30,280 --> 00:44:31,360
+it is really also
+
+1454
+00:44:31,360 --> 00:44:32,540
+an important concept in
+
+1455
+00:44:32,540 --> 00:44:33,460
+our assembly instructions.
+
+1456
+00:44:33,460 --> 00:44:34,620
+So here,
+
+1457
+00:44:34,620 --> 00:44:35,840
+let's take this opportunity
+
+1458
+00:44:35,840 --> 00:44:37,140
+to summarize this for everyone here,
+
+1459
+00:44:37,140 --> 00:44:38,540
+so you can get familiar with
+
+1460
+00:44:38,540 --> 00:44:40,100
+this related knowledge.
+
+1461
+00:44:40,100 --> 00:44:43,470
+So, this part about
+
+1462
+00:44:43,470 --> 00:44:44,850
+the assembly instructions
+
+1463
+00:44:44,850 --> 00:44:47,050
+is basically where we'll leave it for now.
+
+1464
+00:44:47,050 --> 00:44:48,590
+Let's take a short break.

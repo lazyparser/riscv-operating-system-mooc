@@ -1,0 +1,3923 @@
+1
+00:00:00,000 --> 00:00:28,090
+Chapter 4, embedded development. Because when we go on to develop an operating system, honestly, it involves a lot of techniques related to embedded development. So here, as one chapter, I'll cover some preliminary content for you: I'll introduce the concept of embedded development, the concept of cross-compilation, and some tools and software commonly used in embedded development, including GDB, the QEMU emulator, and MIC.
+
+2
+00:00:28,090 --> 00:00:31,910
+So first, let's take a look at
+
+3
+00:00:31,910 --> 00:00:33,150
+what embedded development is.
+
+4
+00:00:33,150 --> 00:00:39,040
+So, embedded development,
+
+5
+00:00:39,040 --> 00:00:40,680
+you can look at this diagram.
+
+6
+00:00:40,680 --> 00:00:42,720
+This diagram is actually a
+
+7
+00:00:42,720 --> 00:00:46,060
+if later on you go out and do this kind of
+
+8
+00:00:46,060 --> 00:00:47,820
+say, developing drivers,
+
+9
+00:00:47,820 --> 00:00:49,600
+developing operating systems,
+
+10
+00:00:49,600 --> 00:00:50,900
+that kind of work,
+
+11
+00:00:50,900 --> 00:00:53,180
+then this is actually the kind of work environment you'll have.
+
+12
+00:00:53,180 --> 00:00:54,500
+It's a bit different from our
+
+13
+00:00:54,500 --> 00:00:56,320
+non-embedded development,
+
+14
+00:00:56,320 --> 00:00:58,780
+that is, the common local development environment.
+
+15
+00:00:58,780 --> 00:00:59,520
+It's a little different,
+
+16
+00:00:59,520 --> 00:01:00,800
+because if it's local development,
+
+17
+00:01:00,800 --> 00:01:04,460
+basically just having one computer like this is enough.
+
+18
+00:01:04,460 --> 00:01:04,960
+Right?
+
+19
+00:01:04,960 --> 00:01:07,500
+For example, you just grab a computer here,
+
+20
+00:01:07,500 --> 00:01:08,140
+and as long as it can connect to the internet,
+
+21
+00:01:08,140 --> 00:01:10,940
+Basically, your environment is pretty much all set up.
+
+22
+00:01:10,940 --> 00:01:14,120
+But if you're doing embedded development,
+
+23
+00:01:14,120 --> 00:01:16,060
+that is far from enough.
+
+24
+00:01:16,060 --> 00:01:17,880
+In particular, we...
+
+25
+00:01:17,880 --> 00:01:20,100
+because the programs we need to run
+
+26
+00:01:20,100 --> 00:01:21,240
+often have to run on
+
+27
+00:01:21,240 --> 00:01:22,640
+a separate
+
+28
+00:01:22,640 --> 00:01:24,620
+what we call a target board.
+
+29
+00:01:24,620 --> 00:01:25,440
+That is, on
+
+30
+00:01:25,440 --> 00:01:26,440
+say, a development board,
+
+31
+00:01:26,440 --> 00:01:27,980
+or on another machine.
+
+32
+00:01:27,980 --> 00:01:29,660
+In that case,
+
+33
+00:01:29,660 --> 00:01:32,720
+we at least need to set up a small development environment,
+
+34
+00:01:32,720 --> 00:01:34,560
+maybe through a router,
+
+35
+00:01:34,560 --> 00:01:37,400
+connecting those two machines together.
+
+36
+00:01:37,400 --> 00:01:38,440
+Now, this machine here,
+
+37
+00:01:38,440 --> 00:01:39,600
+is called the target board,
+
+38
+00:01:39,600 --> 00:01:41,140
+and this machine here is called the host,
+
+39
+00:01:41,140 --> 00:01:42,320
+meaning the main machine,
+
+40
+00:01:42,320 --> 00:01:43,420
+and this one is called the target machine.
+
+41
+00:01:43,420 --> 00:01:45,100
+on the host machine, generally,
+
+42
+00:01:45,100 --> 00:01:49,420
+we do things like compiling, editing, and debugging.
+
+43
+00:01:49,420 --> 00:01:51,800
+And this target board,
+
+44
+00:01:51,800 --> 00:01:53,140
+what mainly runs on it
+
+45
+00:01:53,140 --> 00:01:54,820
+might be running on another machine,
+
+46
+00:01:54,820 --> 00:01:55,740
+right?
+
+47
+00:01:55,740 --> 00:01:58,300
+Just get familiar with this setup.
+
+48
+00:01:58,300 --> 00:02:01,800
+Now, embedded development,
+
+49
+00:02:01,800 --> 00:02:04,560
+it happens in a specific hardware environment,
+
+50
+00:02:04,560 --> 00:02:06,540
+developing for a particular piece of hardware.
+
+51
+00:02:06,540 --> 00:02:08,680
+So the connection with the hardware
+
+52
+00:02:08,680 --> 00:02:10,620
+is quite tight.
+
+53
+00:02:10,620 --> 00:02:11,360
+Very often you need to
+
+54
+00:02:11,360 --> 00:02:13,360
+keep in mind that your program
+
+55
+00:02:13,360 --> 00:02:16,060
+is not running locally,
+
+56
+00:02:16,060 --> 00:02:18,660
+but on some special hardware.
+
+57
+00:02:18,660 --> 00:02:20,360
+What exactly is on that hardware,
+
+58
+00:02:20,360 --> 00:02:21,460
+you need to be quite familiar with it,
+
+59
+00:02:21,460 --> 00:02:24,200
+and only then can you do the development.
+
+60
+00:02:24,200 --> 00:02:25,740
+Well, with an operating system, that's even more true.
+
+61
+00:02:25,740 --> 00:02:26,800
+Because when you develop an operating system,
+
+62
+00:02:26,800 --> 00:02:27,840
+you definitely need to know
+
+63
+00:02:27,840 --> 00:02:30,640
+the machine your operating system runs on
+
+64
+00:02:30,640 --> 00:02:31,660
+is
+
+65
+00:02:31,660 --> 00:02:33,020
+for example,
+
+66
+00:02:33,020 --> 00:02:35,700
+whether the CPU is x86,
+
+67
+00:02:35,700 --> 00:02:37,020
+or RISC-V,
+
+68
+00:02:37,020 --> 00:02:37,320
+right?
+
+69
+00:02:37,320 --> 00:02:38,480
+So at the very least, that's what you need to know.
+
+70
+00:02:38,480 --> 00:02:40,020
+And you can't really develop it locally,
+
+71
+00:02:40,020 --> 00:02:40,740
+because with local development,
+
+72
+00:02:40,740 --> 00:02:42,040
+there's already an operating system on your local machine.
+
+73
+00:02:42,040 --> 00:02:43,560
+So of course there's no need for you to develop another operating system.
+
+74
+00:02:43,560 --> 00:02:44,860
+Your operating system is definitely going to run on a
+
+75
+00:02:44,860 --> 00:02:47,320
+machine that has no system on it,
+
+76
+00:02:47,320 --> 00:02:48,140
+right?
+
+77
+00:02:48,140 --> 00:02:49,160
+So,
+
+78
+00:02:49,160 --> 00:02:52,000
+if you want to build an operating system,
+
+79
+00:02:52,000 --> 00:02:53,660
+it actually falls under a kind of lightweight agile development,
+
+80
+00:02:53,660 --> 00:02:58,090
+and so
+
+81
+00:02:58,090 --> 00:03:01,090
+So, since this is embedded development,
+
+82
+00:03:01,090 --> 00:03:04,010
+meaning the target machine and the host are two separate machines,
+
+83
+00:03:04,010 --> 00:03:06,210
+we came up with a concept,
+
+84
+00:03:06,210 --> 00:03:08,110
+called the concept of cross-compilation.
+
+85
+00:03:08,110 --> 00:03:12,110
+Now, what exactly is this concept?
+
+86
+00:03:12,110 --> 00:03:14,210
+If you haven't done embedded development before,
+
+87
+00:03:14,210 --> 00:03:14,890
+you probably know very little about it.
+
+88
+00:03:14,890 --> 00:03:17,810
+So I'll go ahead and explain it to everyone here.
+
+89
+00:03:17,810 --> 00:03:19,310
+First, let's say
+
+90
+00:03:19,310 --> 00:03:21,450
+we can define a few concepts:
+
+91
+00:03:21,450 --> 00:03:22,650
+the build system,
+
+92
+00:03:22,650 --> 00:03:25,090
+the host system, and the target system.
+
+93
+00:03:25,930 --> 00:03:27,490
+I've already circled the important parts here
+
+94
+00:03:27,490 --> 00:03:28,870
+in black text,
+
+95
+00:03:28,870 --> 00:03:30,590
+so feel free to follow along with me.
+
+96
+00:03:30,590 --> 00:03:32,030
+What is the build system?
+
+97
+00:03:32,030 --> 00:03:32,650
+The build system.
+
+98
+00:03:32,650 --> 00:03:33,950
+What is it used for?
+
+99
+00:03:33,950 --> 00:03:37,470
+It's used to generate the compiler and other auxiliary programs that let you control compilation.
+
+100
+00:03:37,470 --> 00:03:39,910
+That is to say, the GCC you normally use.
+
+101
+00:03:39,910 --> 00:03:40,730
+This kind of compiler
+
+102
+00:03:40,730 --> 00:03:42,370
+actually has to be built as well
+
+103
+00:03:42,370 --> 00:03:42,910
+think about it, right?
+
+104
+00:03:42,910 --> 00:03:44,770
+It's not just there by nature
+
+105
+00:03:44,770 --> 00:03:46,110
+It has to be built too
+
+106
+00:03:46,110 --> 00:03:47,130
+So how do we build it?
+
+107
+00:03:47,130 --> 00:03:49,390
+On which machine do we build it?
+
+108
+00:03:49,390 --> 00:03:52,090
+That machine is called the build system
+
+109
+00:03:52,090 --> 00:03:54,910
+And once it's built, what do we do with it?
+
+110
+00:03:54,910 --> 00:03:55,970
+We run it, right?
+
+111
+00:03:55,970 --> 00:03:56,610
+Exactly
+
+112
+00:03:56,610 --> 00:03:59,630
+So on which machine do we run this compiler?
+
+113
+00:03:59,630 --> 00:04:02,130
+The system where this compiler runs
+
+114
+00:04:02,130 --> 00:04:03,530
+is called the host system
+
+115
+00:04:03,530 --> 00:04:07,170
+So what is the compiler for?
+
+116
+00:04:07,170 --> 00:04:10,550
+The compiler is used to generate another program
+
+117
+00:04:10,550 --> 00:04:11,050
+think about it, right?
+
+118
+00:04:11,050 --> 00:04:12,030
+It is itself a program
+
+119
+00:04:12,030 --> 00:04:14,010
+and it's used to generate another program
+
+120
+00:04:14,010 --> 00:04:15,830
+And the application program it generates
+
+121
+00:04:15,830 --> 00:04:17,230
+Where does it run? It runs on the target machine.
+
+122
+00:04:17,230 --> 00:04:18,610
+So the machine that runs this program is called the target system.
+
+123
+00:04:18,610 --> 00:04:21,770
+So we have three concepts:
+
+124
+00:04:21,770 --> 00:04:23,090
+the build system, the host system, and the target system.
+
+125
+00:04:23,090 --> 00:04:24,690
+With these three concepts,
+
+126
+00:04:24,690 --> 00:04:28,370
+we can define what native compilation is,
+
+127
+00:04:28,370 --> 00:04:30,490
+and what cross-compilation is.
+
+128
+00:04:30,490 --> 00:04:32,630
+The formula is very simple.
+
+129
+00:04:32,630 --> 00:04:34,010
+You should be able to read it yourselves.
+
+130
+00:04:34,010 --> 00:04:36,030
+What does build equals host equals target mean?
+
+131
+00:04:36,030 --> 00:04:37,770
+Let me translate it into plain language.
+
+132
+00:04:37,770 --> 00:04:41,090
+What does it mean?
+
+133
+00:04:41,090 --> 00:04:43,170
+It means that,
+
+134
+00:04:43,170 --> 00:04:44,310
+for example, on this computer of mine,
+
+135
+00:04:44,310 --> 00:04:45,570
+I built my compiler on this computer,
+
+136
+00:04:45,570 --> 00:04:48,110
+right?
+
+137
+00:04:48,110 --> 00:04:50,650
+And at the same time,
+
+138
+00:04:50,650 --> 00:04:53,190
+the compiler itself also runs on this computer,
+
+139
+00:04:53,190 --> 00:04:54,050
+and the programs it produces also run on this computer.
+
+140
+00:04:54,050 --> 00:04:55,190
+In that case, this is called native compilation.
+
+141
+00:04:55,190 --> 00:04:58,330
+I'm also running my compiler on my computer,
+
+142
+00:04:58,330 --> 00:04:59,850
+and at the same time,
+
+143
+00:04:59,850 --> 00:05:01,310
+what I generate —
+
+144
+00:05:01,310 --> 00:05:03,170
+the application programs I build with my compiler —
+
+145
+00:05:03,170 --> 00:05:04,470
+also run on the same computer I'm on.
+
+146
+00:05:04,470 --> 00:05:07,910
+So what do we call this way of working?
+
+147
+00:05:07,910 --> 00:05:08,970
+It's called native compilation.
+
+148
+00:05:08,970 --> 00:05:12,570
+If you're not involved in embedded development,
+
+149
+00:05:12,570 --> 00:05:14,490
+most of the work you do is actually native compilation.
+
+150
+00:05:14,490 --> 00:05:17,350
+It's just that you probably don't build the compiler yourselves —
+
+151
+00:05:17,350 --> 00:05:20,070
+you probably just grab a compiler,
+
+152
+00:05:20,070 --> 00:05:20,270
+right?
+
+153
+00:05:20,270 --> 00:05:22,130
+But your computer —
+
+154
+00:05:22,130 --> 00:05:23,670
+say your computer is x86 —
+
+155
+00:05:23,670 --> 00:05:26,070
+then that compiler you grabbed,
+
+156
+00:05:26,070 --> 00:05:26,950
+it was probably also built on a machine that —
+
+157
+00:05:26,950 --> 00:05:30,210
+most likely, it was also compiled on an X86 machine.
+
+158
+00:05:30,210 --> 00:05:32,270
+So your build system and your host system,
+
+159
+00:05:32,270 --> 00:05:33,150
+they're the same system.
+
+160
+00:05:33,150 --> 00:05:34,090
+And at the same time,
+
+161
+00:05:34,090 --> 00:05:36,490
+The executable program you generate with this compiler,
+
+162
+00:05:36,490 --> 00:05:37,990
+doesn't it also run on x86?
+
+163
+00:05:37,990 --> 00:05:39,090
+So naturally,
+
+164
+00:05:39,090 --> 00:05:40,630
+this way of working,
+
+165
+00:05:40,630 --> 00:05:42,990
+is what we call native compilation.
+
+166
+00:05:42,990 --> 00:05:45,270
+As for cross-compilation,
+
+167
+00:05:45,270 --> 00:05:46,510
+in general,
+
+168
+00:05:46,510 --> 00:05:47,510
+the way we define cross-compilation,
+
+169
+00:05:47,510 --> 00:05:49,150
+is that the first two are the same,
+
+170
+00:05:49,150 --> 00:05:51,410
+but mainly, the executable you generate,
+
+171
+00:05:51,410 --> 00:05:52,970
+does not run on your host machine.
+
+172
+00:05:52,970 --> 00:05:54,710
+Just like in that diagram earlier,
+
+173
+00:05:54,710 --> 00:05:59,290
+you generate an executable here,
+
+174
+00:05:59,290 --> 00:06:00,170
+let's say it's called A.out,
+
+175
+00:06:00,170 --> 00:06:02,490
+but this A.out,
+
+176
+00:06:02,490 --> 00:06:03,990
+does it run on this computer?
+
+177
+00:06:03,990 --> 00:06:04,930
+No, it doesn't.
+
+178
+00:06:04,930 --> 00:06:06,990
+You have to use a network or some other method,
+
+179
+00:06:06,990 --> 00:06:08,810
+to take this A.out application and do what with it?
+
+180
+00:06:08,810 --> 00:06:11,930
+You have to download it onto this board to run it.
+
+181
+00:06:11,930 --> 00:06:13,050
+You also understand what I'm saying
+
+182
+00:06:13,050 --> 00:06:15,650
+the processor on this board
+
+183
+00:06:15,650 --> 00:06:16,890
+and the processor in your computer
+
+184
+00:06:16,890 --> 00:06:19,090
+might not even be the same instruction set at all
+
+185
+00:06:19,090 --> 00:06:21,190
+Your machine might be X86
+
+186
+00:06:21,190 --> 00:06:24,710
+while this one on top might be RISC 5
+
+187
+00:06:24,710 --> 00:06:29,470
+In that kind of situation, you get that cross
+
+188
+00:06:29,470 --> 00:06:31,410
+compilation working environment
+
+189
+00:06:31,410 --> 00:06:32,930
+Everyone can follow, right?
+
+190
+00:06:32,930 --> 00:06:42,750
+We also have a diagram here
+
+191
+00:06:42,750 --> 00:06:43,470
+that everyone can take a look at
+
+192
+00:06:43,470 --> 00:06:46,220
+Let's take another look
+
+193
+00:06:46,220 --> 00:06:48,140
+This diagram is actually also talking about this same thing
+
+194
+00:06:48,140 --> 00:06:51,740
+That is, combining the formula we just talked about
+
+195
+00:06:51,740 --> 00:06:53,260
+If, for example, look at this
+
+196
+00:06:53,260 --> 00:06:55,780
+This tool of ours is called...
+
+197
+00:06:55,780 --> 00:06:57,580
+We normally type GCC
+
+198
+00:06:57,580 --> 00:07:00,620
+But actually, when we type GCC
+
+199
+00:07:00,620 --> 00:07:04,620
+this GCC is really just a soft link
+
+200
+00:07:04,620 --> 00:07:10,350
+I don't know if any of you have ever looked into it
+
+201
+00:07:10,350 --> 00:07:12,970
+So where is this GCC of yours?
+
+202
+00:07:12,970 --> 00:07:14,710
+For example, when we type gcc,
+
+203
+00:07:14,710 --> 00:07:16,310
+what exactly is this gcc?
+
+204
+00:07:16,310 --> 00:07:20,180
+We can type "whereis gcc",
+
+205
+00:07:20,180 --> 00:07:22,700
+and as you can see, after we run whereis gcc,
+
+206
+00:07:22,700 --> 00:07:23,460
+it tells us
+
+207
+00:07:23,460 --> 00:07:25,420
+that your gcc is actually at this full path right here.
+
+208
+00:07:25,420 --> 00:07:26,120
+Right?
+
+209
+00:07:26,120 --> 00:07:27,920
+So what exactly is this thing?
+
+210
+00:07:27,920 --> 00:07:30,360
+Let's dig a little deeper.
+
+211
+00:07:30,360 --> 00:07:40,460
+You can see that the gcc you're running
+
+212
+00:07:40,460 --> 00:07:41,520
+is actually this thing.
+
+213
+00:07:41,520 --> 00:07:42,800
+Now, is this thing
+
+214
+00:07:42,800 --> 00:07:44,020
+actually an application program?
+
+215
+00:07:44,020 --> 00:07:44,760
+Not quite.
+
+216
+00:07:44,760 --> 00:07:45,700
+What is it actually?
+
+217
+00:07:45,700 --> 00:07:47,860
+It's a symbolic link.
+
+218
+00:07:47,860 --> 00:07:48,520
+Do you all see that?
+
+219
+00:07:48,520 --> 00:07:50,060
+The concept of a symbolic link.
+
+220
+00:07:50,060 --> 00:07:50,620
+If you're not familiar with it,
+
+221
+00:07:50,620 --> 00:07:51,980
+Read this one yourself.
+
+222
+00:07:51,980 --> 00:07:52,940
+So this
+
+223
+00:07:52,940 --> 00:07:54,220
+it points to that again.
+
+224
+00:07:54,220 --> 00:07:55,420
+Now what is this thing again?
+
+225
+00:07:55,420 --> 00:07:56,660
+Let's keep tracing.
+
+226
+00:07:56,660 --> 00:08:03,940
+This one is still a symbolic link.
+
+227
+00:08:03,940 --> 00:08:04,720
+Layer after layer of wrapping.
+
+228
+00:08:04,720 --> 00:08:05,940
+It actually wraps it up.
+
+229
+00:08:05,940 --> 00:08:07,860
+This is for everyone's convenience.
+
+230
+00:08:07,860 --> 00:08:09,160
+It actually points to this.
+
+231
+00:08:09,160 --> 00:08:10,480
+Now this thing,
+
+232
+00:08:10,480 --> 00:08:11,700
+if we trace it further,
+
+233
+00:08:11,700 --> 00:08:20,800
+I didn't type that wrong, did I?
+
+234
+00:08:20,800 --> 00:08:23,620
+OK
+
+235
+00:08:23,620 --> 00:08:24,700
+At this point we've already...
+
+236
+00:08:24,700 --> 00:08:26,460
+ZR8 is no longer a symbolic link.
+
+237
+00:08:26,460 --> 00:08:28,740
+This is the thing we actually run.
+
+238
+00:08:28,740 --> 00:08:29,520
+In other words, when you type,
+
+239
+00:08:29,520 --> 00:08:30,520
+when you type GCC,
+
+240
+00:08:30,520 --> 00:08:32,020
+what you're actually running is this thing.
+
+241
+00:08:32,020 --> 00:08:34,500
+This actually tells us
+
+242
+00:08:34,500 --> 00:08:36,540
+it's actually a build tool that runs
+
+243
+00:08:36,540 --> 00:08:40,040
+on an x86 64-bit machine
+
+244
+00:08:40,040 --> 00:08:41,120
+a compiler
+
+245
+00:08:41,120 --> 00:08:43,680
+So that means,
+
+246
+00:08:43,680 --> 00:08:46,100
+your compiler actually
+
+247
+00:08:46,100 --> 00:08:47,760
+runs on x86
+
+248
+00:08:47,760 --> 00:08:48,860
+At the same time,
+
+249
+00:08:48,860 --> 00:08:49,140
+we
+
+250
+00:08:49,140 --> 00:08:50,440
+but in order to
+
+251
+00:08:50,440 --> 00:08:52,160
+in order to compile our program,
+
+252
+00:08:52,160 --> 00:08:53,960
+what do we need to do first?
+
+253
+00:08:53,960 --> 00:08:55,540
+We need to build a compiler ourselves,
+
+254
+00:08:55,540 --> 00:08:57,240
+because with this program,
+
+255
+00:08:57,240 --> 00:09:00,200
+when we normally type GCC,
+
+256
+00:09:00,200 --> 00:09:01,680
+the a.out you compile
+
+257
+00:09:01,680 --> 00:09:03,560
+can only run on the x86 machine
+
+258
+00:09:03,560 --> 00:09:04,620
+You can't run it on
+
+259
+00:09:04,620 --> 00:09:06,320
+a RISC-V machine
+
+260
+00:09:06,320 --> 00:09:07,460
+You all know that, right?
+
+261
+00:09:07,460 --> 00:09:09,640
+So if we just use GCC directly,
+
+262
+00:09:09,640 --> 00:09:10,720
+it won't work.
+
+263
+00:09:10,720 --> 00:09:13,100
+We have to build a compiler ourselves.
+
+264
+00:09:13,100 --> 00:09:15,900
+Of course, the process of building that compiler
+
+265
+00:09:15,900 --> 00:09:17,160
+is something I won't go into here.
+
+266
+00:09:17,160 --> 00:09:17,860
+This compiler,
+
+267
+00:09:17,860 --> 00:09:19,440
+we've already built it for you,
+
+268
+00:09:19,440 --> 00:09:20,380
+and placed it up front,
+
+269
+00:09:20,380 --> 00:09:21,240
+in that tools directory
+
+270
+00:09:21,240 --> 00:09:22,660
+that I introduced to you earlier.
+
+271
+00:09:22,660 --> 00:09:23,860
+So this tool
+
+272
+00:09:23,860 --> 00:09:26,200
+is made using that compiler,
+
+273
+00:09:26,200 --> 00:09:28,340
+because once we have the source code,
+
+274
+00:09:28,340 --> 00:09:29,680
+we can use that compiler
+
+275
+00:09:29,680 --> 00:09:31,020
+to produce
+
+276
+00:09:31,020 --> 00:09:34,180
+a compiler for RISC-V 64-bit machines.
+
+277
+00:09:34,180 --> 00:09:36,900
+Then when we do our daily work,
+
+278
+00:09:36,900 --> 00:09:40,300
+we use this compiler for development.
+
+279
+00:09:40,300 --> 00:09:42,240
+So we generate a newlib,
+
+280
+00:09:42,240 --> 00:09:43,420
+and this newlib
+
+281
+00:09:43,420 --> 00:09:45,000
+Because we're using a 64-bit machine
+
+282
+00:09:45,000 --> 00:09:47,900
+and compiling this with the RISC-V 64 toolchain, cross-compiling it
+
+283
+00:09:47,900 --> 00:09:49,060
+so this program
+
+284
+00:09:49,060 --> 00:09:51,460
+can it run on your local x86 machine?
+
+285
+00:09:51,460 --> 00:09:53,140
+No, it can't.
+
+286
+00:09:53,140 --> 00:09:54,780
+You can try running it
+
+287
+00:09:54,780 --> 00:09:56,020
+and it will throw an error.
+
+288
+00:09:56,020 --> 00:09:57,760
+So we have to take this program
+
+289
+00:09:57,760 --> 00:10:00,780
+and put it on a RISC-V 64
+
+290
+00:10:00,780 --> 00:10:03,280
+target machine to run it.
+
+291
+00:10:03,280 --> 00:10:05,160
+Now, this machine,
+
+292
+00:10:05,160 --> 00:10:07,740
+when we do the experiments,
+
+293
+00:10:07,740 --> 00:10:09,540
+is actually emulated with an emulator.
+
+294
+00:10:09,540 --> 00:10:10,900
+Of course, you can also
+
+295
+00:10:10,900 --> 00:10:13,760
+actually go out and get a real RISC-V board.
+
+296
+00:10:13,760 --> 00:10:16,020
+You can buy those on the market now.
+
+297
+00:10:16,020 --> 00:10:18,300
+So through this process,
+
+298
+00:10:18,300 --> 00:10:19,040
+everyone should get a feel for it.
+
+299
+00:10:19,040 --> 00:10:20,520
+This is what we call cross-compilation.
+
+300
+00:10:20,520 --> 00:10:22,300
+Cross-compilation.
+
+301
+00:10:22,300 --> 00:10:25,640
+not done entirely on the local machine
+
+302
+00:10:25,640 --> 00:10:27,520
+it involves two machines
+
+303
+00:10:27,520 --> 00:10:28,560
+the host and the target
+
+304
+00:10:28,560 --> 00:10:30,560
+Now, for these kinds of tools,
+
+305
+00:10:30,560 --> 00:10:31,720
+we also have some naming conventions,
+
+306
+00:10:31,720 --> 00:10:32,760
+but I won't go into detail about them.
+
+307
+00:10:32,760 --> 00:10:33,620
+From the earlier examples,
+
+308
+00:10:33,620 --> 00:10:34,280
+you can get a feel for
+
+309
+00:10:34,280 --> 00:10:36,360
+what those names represent,
+
+310
+00:10:36,360 --> 00:10:36,920
+right?
+
+311
+00:10:36,920 --> 00:10:38,400
+As for the rest,
+
+312
+00:10:38,400 --> 00:10:39,460
+these names,
+
+313
+00:10:39,460 --> 00:10:40,660
+I won't elaborate on them.
+
+314
+00:10:40,660 --> 00:10:41,440
+So, these,
+
+315
+00:10:41,440 --> 00:10:43,020
+so the GCC we run,
+
+316
+00:10:43,020 --> 00:10:43,620
+is actually
+
+317
+00:10:43,620 --> 00:10:45,000
+the GCC we normally run,
+
+318
+00:10:45,000 --> 00:10:46,060
+is actually a wrapper,
+
+319
+00:10:46,060 --> 00:10:47,080
+it's actually this thing,
+
+320
+00:10:47,080 --> 00:10:48,280
+it's this thing.
+
+321
+00:10:48,280 --> 00:10:49,800
+Its full name is this thing.
+
+322
+00:10:49,800 --> 00:10:51,140
+If you're interested,
+
+323
+00:10:51,140 --> 00:10:54,220
+you can look it up yourselves after class.
+
+324
+00:10:54,220 --> 00:10:57,040
+That's the concept of cross-compilation.
+
+325
+00:10:57,040 --> 00:10:58,680
+Alright then,
+
+326
+00:10:58,680 --> 00:11:01,300
+next let's talk about debuggers.
+
+327
+00:11:01,300 --> 00:11:03,100
+Because we often —
+
+328
+00:11:03,100 --> 00:11:05,300
+especially in assembly programming —
+
+329
+00:11:05,300 --> 00:11:07,320
+when it comes to debugging, later on we'll
+
+330
+00:11:07,320 --> 00:11:09,020
+when we talk about assembly programming,
+
+331
+00:11:09,020 --> 00:11:10,140
+we'll be using a debugger.
+
+332
+00:11:10,140 --> 00:11:12,280
+So let's also get to know debuggers a bit.
+
+333
+00:11:12,280 --> 00:11:14,880
+Now, in the GNU development environment,
+
+334
+00:11:14,880 --> 00:11:17,080
+there is a GNU debugger called
+
+335
+00:11:17,080 --> 00:11:18,060
+GDB.
+
+336
+00:11:18,060 --> 00:11:20,860
+Actually, its full name is GNU's debug —
+
+337
+00:11:20,860 --> 00:11:22,620
+that is,
+
+338
+00:11:22,620 --> 00:11:24,380
+an abbreviation of GNU's debug.
+
+339
+00:11:24,380 --> 00:11:26,820
+Now, as for this debugger,
+
+340
+00:11:26,820 --> 00:11:28,540
+I wonder if any of you have used it before.
+
+341
+00:11:28,540 --> 00:11:30,260
+Have you used it?
+
+342
+00:11:30,260 --> 00:11:32,480
+Have you used it in your regular development?
+
+343
+00:11:32,480 --> 00:11:33,060
+A debugger.
+
+344
+00:11:33,060 --> 00:11:35,640
+If you all use graphical interfaces,
+
+345
+00:11:35,640 --> 00:11:38,520
+what you see may just be a graphical interface.
+
+346
+00:11:38,520 --> 00:11:40,240
+But behind it, it's really this thing.
+
+347
+00:11:40,240 --> 00:11:42,120
+It's just that many graphical interfaces,
+
+348
+00:11:42,120 --> 00:11:45,200
+well, on the front end, they just wrap it with a GUI.
+
+349
+00:11:45,200 --> 00:11:48,480
+So this GDB,
+
+350
+00:11:48,480 --> 00:11:49,320
+well, it's exactly this kind of thing.
+
+351
+00:11:49,320 --> 00:11:51,360
+So when debugging,
+
+352
+00:11:51,360 --> 00:11:51,900
+you can,
+
+353
+00:11:51,900 --> 00:11:54,240
+that is, when we debug normally,
+
+354
+00:11:54,240 --> 00:11:55,380
+it's actually a process like this.
+
+355
+00:11:55,380 --> 00:11:58,080
+Debugging is divided into two types.
+
+356
+00:11:58,080 --> 00:11:59,080
+One is called local debugging,
+
+357
+00:11:59,080 --> 00:12:01,160
+and the other is called remote debugging.
+
+358
+00:12:01,160 --> 00:12:02,640
+So for local debugging,
+
+359
+00:12:02,640 --> 00:12:04,500
+it's similar to local development.
+
+360
+00:12:04,500 --> 00:12:06,100
+That is, the program you're running
+
+361
+00:12:06,100 --> 00:12:07,300
+It runs locally.
+
+362
+00:12:07,300 --> 00:12:09,700
+And that remote debugging,
+
+363
+00:12:09,700 --> 00:12:11,240
+is really used in those cross-environment scenarios.
+
+364
+00:12:11,240 --> 00:12:12,760
+Let's talk about local debugging first.
+
+365
+00:12:12,760 --> 00:12:14,080
+Local debugging is probably more familiar to you.
+
+366
+00:12:14,080 --> 00:12:14,860
+It's very simple.
+
+367
+00:12:14,860 --> 00:12:16,440
+After you generate an executable program,
+
+368
+00:12:16,440 --> 00:12:17,440
+what do you just type?
+
+369
+00:12:17,440 --> 00:12:18,760
+For example, you generate an a.out,
+
+370
+00:12:18,760 --> 00:12:20,060
+and then how do you debug it?
+
+371
+00:12:20,060 --> 00:12:21,940
+You just use GDB, right?
+
+372
+00:12:21,940 --> 00:12:23,460
+Just follow it with a.out, and that's it.
+
+373
+00:12:23,460 --> 00:12:23,620
+Isn't that right?
+
+374
+00:12:23,620 --> 00:12:26,200
+So what actually happens behind the scenes?
+
+375
+00:12:26,200 --> 00:12:28,720
+In fact, when you run this,
+
+376
+00:12:28,720 --> 00:12:32,620
+say you typed GDB,
+
+377
+00:12:32,620 --> 00:12:34,600
+followed by a.out,
+
+378
+00:12:34,600 --> 00:12:36,440
+and then hit Enter — what happens?
+
+379
+00:12:36,440 --> 00:12:37,180
+Have you ever thought about that?
+
+380
+00:12:37,180 --> 00:12:40,000
+Well, this may involve some
+
+381
+00:12:40,000 --> 00:12:41,460
+some stuff under Linux
+
+382
+00:12:41,460 --> 00:12:42,620
+that is, it will
+
+383
+00:12:42,620 --> 00:12:44,680
+once this GDB is up and running,
+
+384
+00:12:44,680 --> 00:12:47,620
+it will first fork out a child process.
+
+385
+00:12:47,620 --> 00:12:49,200
+Inside this child process,
+
+386
+00:12:49,200 --> 00:12:50,780
+it will go and run
+
+387
+00:12:50,780 --> 00:12:55,260
+run the program you're debugging,
+
+388
+00:12:55,260 --> 00:12:56,820
+the target program being debugged.
+
+389
+00:12:56,820 --> 00:12:58,820
+It runs in a separate process,
+
+390
+00:12:58,820 --> 00:13:00,720
+and then this GDB program of yours,
+
+391
+00:13:00,720 --> 00:13:04,620
+also runs in its own independent process.
+
+392
+00:13:04,620 --> 00:13:05,920
+Then the two processes,
+
+393
+00:13:05,920 --> 00:13:09,400
+through the special ptrace system call,
+
+394
+00:13:09,400 --> 00:13:10,460
+establish a connection.
+
+395
+00:13:10,460 --> 00:13:14,660
+It actually makes that program being debugged,
+
+396
+00:13:14,660 --> 00:13:15,800
+that process,
+
+397
+00:13:15,800 --> 00:13:17,260
+you set breakpoints, right?
+
+398
+00:13:17,260 --> 00:13:18,140
+Remember?
+
+399
+00:13:18,140 --> 00:13:19,640
+When debugging, you have to set breakpoints.
+
+400
+00:13:19,640 --> 00:13:20,720
+The breakpoint you set
+
+401
+00:13:20,720 --> 00:13:21,740
+Once it runs to this point,
+
+402
+00:13:21,740 --> 00:13:24,060
+it will actually suspend this process,
+
+403
+00:13:24,060 --> 00:13:26,180
+putting it into what's called
+
+404
+00:13:26,180 --> 00:13:28,320
+a suspended state.
+
+405
+00:13:28,320 --> 00:13:30,140
+You've probably learned about this before,
+
+406
+00:13:30,140 --> 00:13:31,840
+if you've studied process debugging,
+
+407
+00:13:31,840 --> 00:13:32,620
+that state,
+
+408
+00:13:32,620 --> 00:13:33,560
+the several states of a process.
+
+409
+00:13:33,560 --> 00:13:35,360
+Can you still recall,
+
+410
+00:13:35,360 --> 00:13:35,960
+how many states are there?
+
+411
+00:13:35,960 --> 00:13:37,300
+Running state,
+
+412
+00:13:37,300 --> 00:13:38,140
+what else?
+
+413
+00:13:38,140 --> 00:13:41,980
+From running state,
+
+414
+00:13:41,980 --> 00:13:43,020
+there's something called sleeping state,
+
+415
+00:13:43,020 --> 00:13:43,340
+right?
+
+416
+00:13:43,340 --> 00:13:45,860
+And then some kind of stopped state,
+
+417
+00:13:45,860 --> 00:13:47,600
+and finally it has to enter some kind of zombie state,
+
+418
+00:13:47,600 --> 00:13:49,620
+right? You still remember?
+
+419
+00:13:49,620 --> 00:13:51,420
+These concepts actually all come into play here.
+
+420
+00:13:51,420 --> 00:13:52,540
+If you want to go look
+
+421
+00:13:52,540 --> 00:13:55,380
+It will suspend this process
+
+422
+00:13:55,380 --> 00:13:57,500
+and then we can look at the process
+
+423
+00:13:57,500 --> 00:13:59,980
+some context information when it is stopped at this point,
+
+424
+00:13:59,980 --> 00:14:01,980
+like the information of all the registers, becomes visible.
+
+425
+00:14:01,980 --> 00:14:03,540
+So this is actually called
+
+426
+00:14:03,540 --> 00:14:04,600
+local debugging.
+
+427
+00:14:04,600 --> 00:14:08,410
+Local debugging is this kind of process.
+
+428
+00:14:08,410 --> 00:14:10,590
+Now, if you want to debug a program
+
+429
+00:14:10,590 --> 00:14:13,010
+that is not local, like when we debug an operating system,
+
+430
+00:14:13,010 --> 00:14:15,850
+or when we debug some cross environments,
+
+431
+00:14:15,850 --> 00:14:18,590
+then it actually needs to
+
+432
+00:14:18,590 --> 00:14:24,110
+start a remote service called this GDB Server on the target machine.
+
+433
+00:14:24,110 --> 00:14:26,590
+So actually my GDB application
+
+434
+00:14:26,590 --> 00:14:28,030
+interacts with this service,
+
+435
+00:14:28,030 --> 00:14:30,510
+and this service proxies our debugging process.
+
+436
+00:14:30,510 --> 00:14:32,610
+And then the program being debugged
+
+437
+00:14:32,610 --> 00:14:34,510
+is running on another target machine,
+
+438
+00:14:34,510 --> 00:14:36,830
+while your debugging machine is the local machine.
+
+439
+00:14:36,830 --> 00:14:40,690
+The two machines have to be connected through the network.
+
+440
+00:14:40,690 --> 00:14:45,470
+So this is called remote debugging.
+
+441
+00:14:45,470 --> 00:14:48,070
+So later, when we give you exercises,
+
+442
+00:14:48,070 --> 00:14:49,250
+for example, when we do our demonstrations,
+
+443
+00:14:49,250 --> 00:14:54,470
+it's actually a form of remote debugging.
+
+444
+00:14:54,470 --> 00:14:55,830
+And for us,
+
+445
+00:14:55,830 --> 00:14:57,030
+this target machine,
+
+446
+00:14:57,030 --> 00:15:00,990
+we also use an emulator to simulate it.
+
+447
+00:15:00,990 --> 00:15:04,650
+We use an emulator to stand in for a real one.
+
+448
+00:15:04,650 --> 00:15:06,750
+As for GDB,
+
+449
+00:15:06,750 --> 00:15:07,750
+it supports various languages.
+
+450
+00:15:07,750 --> 00:15:08,690
+We won't go into that.
+
+451
+00:15:08,690 --> 00:15:10,770
+Now, as we mentioned earlier,
+
+452
+00:15:10,770 --> 00:15:15,250
+we will use an emulator to simulate the target machine many times later on.
+
+453
+00:15:15,250 --> 00:15:17,770
+Of course, we could also get a real machine,
+
+454
+00:15:17,770 --> 00:15:18,630
+but that's too much hassle.
+
+455
+00:15:18,630 --> 00:15:22,330
+So what is an emulator?
+
+456
+00:15:22,330 --> 00:15:25,630
+I won't go into the GDB debugging workflow here.
+
+457
+00:15:25,630 --> 00:15:27,370
+It's very simple.
+
+458
+00:15:27,370 --> 00:15:32,150
+You all surely know the basic workflow.
+
+459
+00:15:32,150 --> 00:15:34,690
+So let's take a look at the emulator.
+
+460
+00:15:34,690 --> 00:15:38,570
+The emulator we'll mainly use later is called QML.
+
+461
+00:15:38,570 --> 00:15:40,910
+I don't know if you've heard of this one.
+
+462
+00:15:40,910 --> 00:15:42,850
+It's used quite a lot nowadays.
+
+463
+00:15:42,850 --> 00:15:44,490
+QMU actually stands for
+
+464
+00:15:44,490 --> 00:15:46,930
+Quick Emulator.
+
+465
+00:15:46,930 --> 00:15:48,910
+Emulator means simulation,
+
+466
+00:15:48,910 --> 00:15:49,270
+right?
+
+467
+00:15:49,270 --> 00:15:51,450
+So QMU is Quick
+
+468
+00:15:51,450 --> 00:15:52,550
+— basically a fast emulator.
+
+469
+00:15:52,550 --> 00:15:55,570
+It was written by a French engineer
+
+470
+00:15:55,570 --> 00:15:56,790
+named Fabrice Ballard.
+
+471
+00:15:56,790 --> 00:15:58,410
+What is written
+
+472
+00:15:58,410 --> 00:16:00,590
+You could say this guy is
+
+473
+00:16:00,590 --> 00:16:02,090
+fairly well known in the computer world.
+
+474
+00:16:02,090 --> 00:16:03,330
+He's a bit of a prodigy.
+
+475
+00:16:03,330 --> 00:16:05,670
+He's developed a lot of interesting things,
+
+476
+00:16:05,670 --> 00:16:07,690
+and QMU is one of them.
+
+477
+00:16:07,690 --> 00:16:09,650
+It's quite popular now,
+
+478
+00:16:09,650 --> 00:16:12,330
+and it's often used for system emulation.
+
+479
+00:16:12,330 --> 00:16:14,930
+Now, this software
+
+480
+00:16:14,930 --> 00:16:17,950
+mainly runs on things like Linux.
+
+481
+00:16:17,950 --> 00:16:18,790
+On this kind of system,
+
+482
+00:16:18,790 --> 00:16:21,270
+it can support multiple architectures,
+
+483
+00:16:21,270 --> 00:16:25,630
+emulating a real machine.
+
+484
+00:16:25,630 --> 00:16:28,250
+Now, as for this software, QEMU,
+
+485
+00:16:28,250 --> 00:16:29,550
+it has two main modes.
+
+486
+00:16:29,550 --> 00:16:31,210
+One is called user mode,
+
+487
+00:16:31,210 --> 00:16:32,530
+and the other is called system mode.
+
+488
+00:16:32,530 --> 00:16:33,770
+Just so you all get the idea,
+
+489
+00:16:33,770 --> 00:16:35,430
+user mode means
+
+490
+00:16:35,430 --> 00:16:37,750
+it runs an application directly.
+
+491
+00:16:37,750 --> 00:16:38,990
+What does that mean? Well,
+
+492
+00:16:38,990 --> 00:16:40,510
+for example, suppose I've just run
+
+493
+00:16:40,510 --> 00:16:43,630
+and produced an A.out
+
+494
+00:16:43,630 --> 00:16:44,990
+executable program.
+
+495
+00:16:44,990 --> 00:16:46,430
+Let me give you a quick demo.
+
+496
+00:16:46,430 --> 00:16:53,550
+Let me see if I have...
+
+497
+00:16:53,550 --> 00:16:59,700
+if we have time,
+
+498
+00:16:59,700 --> 00:17:00,520
+we still have a little time,
+
+499
+00:17:00,520 --> 00:17:01,700
+so let me give you a quick demo of
+
+500
+00:17:01,700 --> 00:17:04,020
+the basic use of this emulator.
+
+501
+00:17:04,020 --> 00:17:04,980
+That is to say,
+
+502
+00:17:04,980 --> 00:17:07,000
+after you go back,
+
+503
+00:17:07,000 --> 00:17:08,020
+you can all try it out yourselves.
+
+504
+00:17:08,020 --> 00:17:08,720
+Actually, this
+
+505
+00:17:08,720 --> 00:17:10,200
+example I gave you,
+
+506
+00:17:10,200 --> 00:17:11,460
+it corresponds to
+
+507
+00:17:11,460 --> 00:17:14,340
+the one in our
+
+508
+00:17:14,340 --> 00:17:18,940
+exercise, this one
+
+509
+00:17:18,940 --> 00:17:22,490
+in the exercise,
+
+510
+00:17:22,490 --> 00:17:24,130
+4.4-2,
+
+511
+00:17:24,130 --> 00:17:26,770
+4-1 we actually kind of did along the way as well.
+
+512
+00:17:26,770 --> 00:17:27,530
+4-2,
+
+513
+00:17:27,530 --> 00:17:30,110
+that is to say, now,
+
+514
+00:17:30,110 --> 00:17:33,090
+first we need to cross-compile,
+
+515
+00:17:33,090 --> 00:17:34,710
+we're not doing native compilation here.
+
+516
+00:17:34,710 --> 00:17:35,710
+So suppose we still have
+
+517
+00:17:35,710 --> 00:17:37,510
+that application program from before,
+
+518
+00:17:37,510 --> 00:17:48,100
+suppose we still have this program,
+
+519
+00:17:48,100 --> 00:17:49,940
+but for this kind of program,
+
+520
+00:17:49,940 --> 00:17:52,080
+now we want to turn it into a runnable executable,
+
+521
+00:17:52,080 --> 00:17:53,660
+It's not running on x86.
+
+522
+00:17:53,660 --> 00:17:56,180
+We're running it on the RISC-V platform.
+
+523
+00:17:56,180 --> 00:17:58,580
+Of course, we run it using an emulator.
+
+524
+00:17:58,580 --> 00:18:00,140
+So how do we do this?
+
+525
+00:18:00,140 --> 00:18:01,120
+Well, actually,
+
+526
+00:18:01,120 --> 00:18:03,520
+first of all, we know we need to compile it.
+
+527
+00:18:03,520 --> 00:18:05,300
+Now, for compilation, can we still use GCC at this point?
+
+528
+00:18:05,300 --> 00:18:06,800
+As we discussed earlier,
+
+529
+00:18:06,800 --> 00:18:07,620
+you can't use GCC.
+
+530
+00:18:07,620 --> 00:18:09,320
+We need to use a cross-compilation environment.
+
+531
+00:18:09,320 --> 00:18:12,680
+And we've already provided that environment for you up here.
+
+532
+00:18:12,680 --> 00:18:14,700
+So it's called RISC-V,
+
+533
+00:18:14,700 --> 00:18:16,640
+a GCC that starts with that prefix.
+
+534
+00:18:16,640 --> 00:18:17,740
+The full name is this.
+
+535
+00:18:17,740 --> 00:18:19,580
+So we use this GCC,
+
+536
+00:18:19,580 --> 00:18:21,260
+and first generate the build.
+
+537
+00:18:21,260 --> 00:18:21,780
+Let's take a look.
+
+538
+00:18:21,780 --> 00:18:24,960
+Now, when compiling,
+
+539
+00:18:24,960 --> 00:18:25,440
+you need
+
+540
+00:18:25,440 --> 00:18:28,160
+to add some parameters.
+
+541
+00:18:28,160 --> 00:18:30,280
+for example, it's called
+
+542
+00:18:30,280 --> 00:18:38,820
+you can probably still read this
+
+543
+00:18:38,820 --> 00:18:41,400
+RV32 RMA
+
+544
+00:18:41,400 --> 00:18:43,960
+if you listened carefully in the last lecture
+
+545
+00:18:43,960 --> 00:18:44,880
+you should know what this means
+
+546
+00:18:44,880 --> 00:18:45,920
+what does it mean?
+
+547
+00:18:45,920 --> 00:18:48,400
+it means the program we want to generate is a
+
+548
+00:18:48,400 --> 00:18:51,180
+RISC-V
+
+549
+00:18:51,180 --> 00:18:53,420
+32-bit system
+
+550
+00:18:53,420 --> 00:18:54,780
+supporting
+
+551
+00:18:54,780 --> 00:18:57,640
+which instruction sets does this CPU support?
+
+552
+00:18:57,700 --> 00:18:59,140
+the integer instruction set
+
+553
+00:18:59,140 --> 00:19:01,340
+M is multiply
+
+554
+00:19:01,340 --> 00:19:03,140
+that's the multiply and divide instruction set
+
+555
+00:19:03,140 --> 00:19:04,540
+and what about A?
+
+556
+00:19:04,540 --> 00:19:06,160
+that's the atomic operation instruction set
+
+557
+00:19:06,160 --> 00:19:06,820
+you understand, right?
+
+558
+00:19:06,820 --> 00:19:08,100
+it's these things
+
+559
+00:19:08,100 --> 00:19:10,820
+that is to say, the program we compile and generate
+
+560
+00:19:10,820 --> 00:19:13,660
+can run on a CPU that supports these instruction sets
+
+561
+00:19:13,660 --> 00:19:15,180
+And then
+
+562
+00:19:15,180 --> 00:19:17,000
+we specify it again
+
+563
+00:19:17,000 --> 00:19:20,140
+not this one
+
+564
+00:19:20,140 --> 00:19:26,770
+I'll just put it right here
+
+565
+00:19:26,770 --> 00:19:28,470
+I won't explain too much for now
+
+566
+00:19:28,470 --> 00:19:31,370
+it's mainly specified through this
+
+567
+00:19:31,370 --> 00:19:34,830
+for example, how many bits an integer is
+
+568
+00:19:34,830 --> 00:19:37,190
+how many bits a long integer is
+
+569
+00:19:37,190 --> 00:19:38,690
+I won't explain this part
+
+570
+00:19:38,690 --> 00:19:39,210
+and then
+
+571
+00:19:39,210 --> 00:19:41,630
+after that, we can just directly
+
+572
+00:19:41,630 --> 00:19:42,990
+the syntax afterward is the same
+
+573
+00:19:42,990 --> 00:19:48,640
+why is it running so slowly
+
+574
+00:19:48,640 --> 00:19:49,280
+okay
+
+575
+00:19:49,280 --> 00:19:50,320
+that is to say
+
+576
+00:19:50,320 --> 00:19:52,320
+the main difference from our usual GCC
+
+577
+00:19:52,320 --> 00:19:54,380
+is actually just that this part is different
+
+578
+00:19:54,380 --> 00:19:56,820
+we need to use a cross-
+
+579
+00:19:56,820 --> 00:19:59,660
+compiler for RISC-V to do the compilation
+
+580
+00:19:59,660 --> 00:20:01,080
+so this way
+
+581
+00:20:01,080 --> 00:20:03,080
+And it generated an a.out file.
+
+582
+00:20:03,080 --> 00:20:03,700
+This a.out,
+
+583
+00:20:03,700 --> 00:20:04,360
+everyone, pay attention here.
+
+584
+00:20:04,360 --> 00:20:05,380
+This a.out, well,
+
+585
+00:20:05,380 --> 00:20:10,830
+it's actually not for x86.
+
+586
+00:20:10,830 --> 00:20:11,650
+You can use the
+
+587
+00:20:11,650 --> 00:20:12,890
+file command to take a look.
+
+588
+00:20:12,890 --> 00:20:14,210
+It will tell you
+
+589
+00:20:14,210 --> 00:20:15,570
+what kind of machine this is.
+
+590
+00:20:15,570 --> 00:20:17,630
+It's a RISC-V one.
+
+591
+00:20:17,630 --> 00:20:18,970
+If you try to run
+
+592
+00:20:18,970 --> 00:20:19,930
+this a.out directly on our machine,
+
+593
+00:20:19,930 --> 00:20:20,370
+this a.out,
+
+594
+00:20:20,370 --> 00:20:22,330
+it will throw an error.
+
+595
+00:20:22,330 --> 00:20:26,250
+Sorry, I mistyped.
+
+596
+00:20:26,250 --> 00:20:26,930
+See that?
+
+597
+00:20:26,930 --> 00:20:29,410
+It says it cannot be executed.
+
+598
+00:20:29,410 --> 00:20:29,670
+Why?
+
+599
+00:20:29,670 --> 00:20:31,470
+Of course it can't be executed,
+
+600
+00:20:31,470 --> 00:20:32,210
+because inside it,
+
+601
+00:20:32,210 --> 00:20:33,390
+these are RISC-V instructions
+
+602
+00:20:33,390 --> 00:20:33,850
+right?
+
+603
+00:20:33,850 --> 00:20:35,770
+So how do we execute them?
+
+604
+00:20:35,770 --> 00:20:36,450
+One approach
+
+605
+00:20:36,450 --> 00:20:37,310
+is to take this A.out
+
+606
+00:20:37,310 --> 00:20:37,630
+and put it on
+
+607
+00:20:37,630 --> 00:20:39,510
+say you have a RISC-V board
+
+608
+00:20:39,510 --> 00:20:40,570
+you just take this adenaut
+
+609
+00:20:40,570 --> 00:20:43,290
+via a USB drive or whatever method
+
+610
+00:20:43,290 --> 00:20:45,670
+or the network, and burn it onto the board
+
+611
+00:20:45,670 --> 00:20:46,990
+then just run it on the board
+
+612
+00:20:46,990 --> 00:20:48,750
+Of course, we don't have that board right now
+
+613
+00:20:48,750 --> 00:20:50,030
+so we'll use an emulator to run it
+
+614
+00:20:50,030 --> 00:20:51,170
+That's the idea of an emulator
+
+615
+00:20:51,170 --> 00:20:52,330
+So how do we run it?
+
+616
+00:20:52,330 --> 00:20:55,830
+We run our QML application
+
+617
+00:20:55,830 --> 00:20:59,200
+As I just said
+
+618
+00:20:59,200 --> 00:21:01,600
+what we're demoing now is called user mode
+
+619
+00:21:01,600 --> 00:21:05,160
+which means we just run adenaut directly on top of it
+
+620
+00:21:05,160 --> 00:21:06,840
+so it's basically like
+
+621
+00:21:06,840 --> 00:21:08,420
+Your program,
+
+622
+00:21:08,420 --> 00:21:09,820
+it just runs
+
+623
+00:21:09,820 --> 00:21:11,220
+as if it were running
+
+624
+00:21:11,220 --> 00:21:14,790
+on a Linux system,
+
+625
+00:21:14,790 --> 00:21:16,110
+and it can run this program,
+
+626
+00:21:16,110 --> 00:21:17,790
+and then print out hello world.
+
+627
+00:21:17,790 --> 00:21:18,850
+You all understand what I mean?
+
+628
+00:21:18,850 --> 00:21:20,830
+So this is one way,
+
+629
+00:21:20,830 --> 00:21:22,570
+it actually just simulates
+
+630
+00:21:22,570 --> 00:21:23,770
+being able to execute a process,
+
+631
+00:21:23,770 --> 00:21:25,090
+open a process,
+
+632
+00:21:25,090 --> 00:21:28,450
+and just run your program.
+
+633
+00:21:28,450 --> 00:21:29,870
+So that's one way of working.
+
+634
+00:21:29,870 --> 00:21:32,490
+And then there's another way,
+
+635
+00:21:32,490 --> 00:21:33,590
+which is when we develop
+
+636
+00:21:33,590 --> 00:21:34,630
+this operating system later on,
+
+637
+00:21:34,630 --> 00:21:36,170
+because as we know,
+
+638
+00:21:36,170 --> 00:21:38,690
+when developing an operating system,
+
+639
+00:21:38,690 --> 00:21:40,290
+the thing is,
+
+640
+00:21:40,290 --> 00:21:41,250
+you can, how should I put it,
+
+641
+00:21:41,250 --> 00:21:41,570
+That is to say,
+
+642
+00:21:41,570 --> 00:21:43,890
+when I run it this way,
+
+643
+00:21:43,890 --> 00:21:45,090
+you can think of this
+
+644
+00:21:45,090 --> 00:21:48,030
+this emulator as actually
+
+645
+00:21:48,030 --> 00:21:48,930
+simulating
+
+646
+00:21:48,930 --> 00:21:50,250
+down to which layer does it simulate?
+
+647
+00:21:50,250 --> 00:21:51,650
+Let's combine this with
+
+648
+00:21:51,650 --> 00:21:54,590
+the diagram from earlier,
+
+649
+00:21:54,590 --> 00:21:57,170
+let's pull up that diagram and take another look.
+
+650
+00:21:57,170 --> 00:22:06,950
+Think about it.
+
+651
+00:22:06,950 --> 00:22:07,950
+That is, if
+
+652
+00:22:07,950 --> 00:22:10,690
+when I use this approach to
+
+653
+00:22:10,690 --> 00:22:13,190
+run an application,
+
+654
+00:22:13,190 --> 00:22:14,930
+this emulator,
+
+655
+00:22:14,930 --> 00:22:17,310
+which level does it simulate down to?
+
+656
+00:22:17,310 --> 00:22:19,170
+which level does it simulate down to?
+
+657
+00:22:19,170 --> 00:22:22,290
+which level does it simulate down to?
+
+658
+00:22:22,290 --> 00:22:26,050
+It simulates this level here.
+
+659
+00:22:26,050 --> 00:22:26,530
+Think about it, isn't that right?
+
+660
+00:22:26,530 --> 00:22:28,150
+Because this application
+
+661
+00:22:28,150 --> 00:22:29,130
+Isn't it an a.out?
+
+662
+00:22:29,130 --> 00:22:29,750
+Think about it, isn't it?
+
+663
+00:22:29,750 --> 00:22:31,010
+Isn't it?
+
+664
+00:22:31,010 --> 00:22:33,810
+It's actually simulating at this level.
+
+665
+00:22:33,810 --> 00:22:34,950
+That's why it's called the user layer.
+
+666
+00:22:34,950 --> 00:22:35,970
+User mode.
+
+667
+00:22:35,970 --> 00:22:37,170
+Because this program...
+
+668
+00:22:37,170 --> 00:22:39,090
+This program is a program running in user mode.
+
+669
+00:22:39,090 --> 00:22:39,870
+a.out.
+
+670
+00:22:39,870 --> 00:22:43,370
+But later on, when we develop
+
+671
+00:22:43,370 --> 00:22:44,590
+an operating system,
+
+672
+00:22:44,590 --> 00:22:46,610
+can you still run it this way?
+
+673
+00:22:46,610 --> 00:22:48,210
+That definitely won't work.
+
+674
+00:22:48,230 --> 00:22:49,950
+Because in this mode,
+
+675
+00:22:49,950 --> 00:22:52,230
+our simulator actually has to simulate at this layer.
+
+676
+00:22:52,230 --> 00:22:52,850
+Think about it, doesn't it?
+
+677
+00:22:52,850 --> 00:22:54,190
+It has to sink down one layer.
+
+678
+00:22:54,190 --> 00:22:55,690
+Go down one layer.
+
+679
+00:22:55,690 --> 00:22:57,910
+And a simulator of this kind
+
+680
+00:22:57,910 --> 00:23:00,930
+is what's called system-level emulation.
+
+681
+00:23:00,930 --> 00:23:07,600
+So this QEMU of ours
+
+682
+00:23:07,600 --> 00:23:09,180
+has two main modes of operation.
+
+683
+00:23:09,180 --> 00:23:11,720
+This user mode is the one I just demonstrated for you.
+
+684
+00:23:11,720 --> 00:23:16,820
+Now, if you want to use an emulator to develop an operating system,
+
+685
+00:23:16,820 --> 00:23:20,660
+then what you need to simulate is a system-level layer.
+
+686
+00:23:20,660 --> 00:23:22,820
+You have to simulate the entire computer system,
+
+687
+00:23:22,820 --> 00:23:24,020
+essentially as a whole
+
+688
+00:23:24,020 --> 00:23:26,460
+starting the simulation from the logical level.
+
+689
+00:23:26,460 --> 00:23:29,720
+This approach is called system mode.
+
+690
+00:23:29,720 --> 00:23:34,720
+Our later development will mainly focus on system mode.
+
+691
+00:23:34,720 --> 00:23:36,500
+We'll demonstrate that to you when we get there.
+
+692
+00:23:36,500 --> 00:23:39,780
+Here, we're mainly using user mode
+
+693
+00:23:39,780 --> 00:23:41,480
+to give you a sense of
+
+694
+00:23:41,480 --> 00:23:43,380
+how this QEMU is used.
+
+695
+00:23:43,380 --> 00:23:47,520
+It can emulate a different architecture.
+
+696
+00:23:47,520 --> 00:23:56,540
+I won't go into that now.
+
+697
+00:23:56,540 --> 00:23:58,260
+Later, when we get to system mode,
+
+698
+00:23:58,260 --> 00:23:58,980
+we'll take a look then.
+
+699
+00:23:58,980 --> 00:24:03,730
+So as for emulators,
+
+700
+00:24:03,730 --> 00:24:06,070
+that's all for now.
+
+701
+00:24:06,070 --> 00:24:07,710
+Everything has been covered fairly quickly.
+
+702
+00:24:07,710 --> 00:24:10,790
+Later on, when you go through the exercises,
+
+703
+00:24:10,790 --> 00:24:11,870
+we can take our time and get a feel for it.
+
+704
+00:24:11,870 --> 00:24:12,990
+So, the last one,
+
+705
+00:24:12,990 --> 00:24:14,010
+is the make tool.
+
+706
+00:24:14,010 --> 00:24:16,430
+I think most of you have probably used this tool before.
+
+707
+00:24:16,430 --> 00:24:18,150
+So I'll just talk about it briefly myself.
+
+708
+00:24:18,150 --> 00:24:18,630
+That is,
+
+709
+00:24:18,630 --> 00:24:21,830
+we know what the make tool is mainly used for.
+
+710
+00:24:21,830 --> 00:24:24,410
+So, what's your own understanding of it now?
+
+711
+00:24:24,410 --> 00:24:25,910
+You must have used it, right?
+
+712
+00:24:25,910 --> 00:24:26,530
+You must have used it.
+
+713
+00:24:26,530 --> 00:24:26,990
+Right?
+
+714
+00:24:26,990 --> 00:24:30,050
+That is, when your project gets big,
+
+715
+00:24:30,050 --> 00:24:31,070
+if you only have one file,
+
+716
+00:24:31,070 --> 00:24:32,390
+you don't really need make.
+
+717
+00:24:32,390 --> 00:24:32,610
+Right?
+
+718
+00:24:32,610 --> 00:24:35,570
+But if you have quite a few programs,
+
+719
+00:24:35,570 --> 00:24:36,970
+quite a few files,
+
+720
+00:24:36,970 --> 00:24:39,170
+then you need an automated way
+
+721
+00:24:39,170 --> 00:24:42,410
+to help you compile and build this system,
+
+722
+00:24:42,410 --> 00:24:43,370
+you'll use make.
+
+723
+00:24:43,370 --> 00:24:46,860
+So, make,
+
+724
+00:24:46,860 --> 00:24:49,140
+it's an automated management tool.
+
+725
+00:24:49,140 --> 00:24:51,260
+Specifically,
+
+726
+00:24:51,260 --> 00:24:52,180
+it only knows
+
+727
+00:24:52,180 --> 00:24:53,920
+how to... that is to say,
+
+728
+00:24:53,920 --> 00:24:56,240
+how do you tell it to build the system?
+
+729
+00:24:56,240 --> 00:24:58,300
+Actually, it's through a makefile.
+
+730
+00:24:58,300 --> 00:25:01,320
+You can think of the makefile as
+
+731
+00:25:01,320 --> 00:25:01,820
+basically
+
+732
+00:25:01,820 --> 00:25:05,280
+we write some statements in the makefile
+
+733
+00:25:05,280 --> 00:25:07,020
+to tell make
+
+734
+00:25:07,020 --> 00:25:11,660
+how to carry out this automated build process.
+
+735
+00:25:11,660 --> 00:25:12,660
+Right?
+
+736
+00:25:12,660 --> 00:25:19,040
+So how does make
+
+737
+00:25:19,040 --> 00:25:20,860
+find this makefile?
+
+738
+00:25:20,860 --> 00:25:21,340
+Very simple.
+
+739
+00:25:21,340 --> 00:25:22,220
+By default,
+
+740
+00:25:22,220 --> 00:25:24,360
+it will look in the current working directory,
+
+741
+00:25:24,360 --> 00:25:26,820
+to look for that file with the same name
+
+742
+00:25:26,820 --> 00:25:29,380
+Now, if you want to specify a particular makefile,
+
+743
+00:25:29,380 --> 00:25:30,680
+you just add the -f parameter.
+
+744
+00:25:30,680 --> 00:25:32,400
+I won't go into that.
+
+745
+00:25:32,420 --> 00:25:36,620
+So the most essential point about a Makefile,
+
+746
+00:25:36,620 --> 00:25:38,680
+the syntax inside it,
+
+747
+00:25:38,680 --> 00:25:40,540
+is actually made up of one rule after another,
+
+748
+00:25:40,540 --> 00:25:40,920
+right?
+
+749
+00:25:40,920 --> 00:25:43,140
+You all still remember this format, right?
+
+750
+00:25:43,140 --> 00:25:45,440
+Now, the thing to pay special attention to is that
+
+751
+00:25:45,440 --> 00:25:46,300
+each rule,
+
+752
+00:25:46,300 --> 00:25:47,540
+consists of several parts.
+
+753
+00:25:47,540 --> 00:25:48,860
+The first part,
+
+754
+00:25:48,860 --> 00:25:50,120
+is a target,
+
+755
+00:25:50,120 --> 00:25:51,300
+followed by a dependency.
+
+756
+00:25:51,300 --> 00:25:52,300
+And then,
+
+757
+00:25:52,300 --> 00:25:54,400
+what comes below,
+
+758
+00:25:54,400 --> 00:25:55,800
+are commands, one after another,
+
+759
+00:25:55,800 --> 00:25:56,060
+right?
+
+760
+00:25:56,060 --> 00:25:57,900
+The part in front...
+
+761
+00:25:57,900 --> 00:25:59,940
+Over here, this must be a tab.
+
+762
+00:25:59,940 --> 00:26:01,780
+When you write this, make sure you never
+
+763
+00:26:01,780 --> 00:26:03,200
+get it wrong.
+
+764
+00:26:03,200 --> 00:26:09,080
+There are also some explicit syntax rules.
+
+765
+00:26:09,080 --> 00:26:10,380
+What do I mean by explicit syntax rules?
+
+766
+00:26:10,380 --> 00:26:11,520
+Let me mention that briefly.
+
+767
+00:26:11,520 --> 00:26:14,100
+A single file can contain multiple rules.
+
+768
+00:26:14,100 --> 00:26:14,360
+Right?
+
+769
+00:26:14,360 --> 00:26:17,200
+You might write several rules, quite a few rules.
+
+770
+00:26:17,200 --> 00:26:21,020
+So one MAC file might have several rules in it.
+
+771
+00:26:21,020 --> 00:26:23,460
+Then when I run MAC,
+
+772
+00:26:23,460 --> 00:26:25,360
+how does it know which rule to execute?
+
+773
+00:26:25,360 --> 00:26:27,640
+Which rule does it execute first?
+
+774
+00:26:27,640 --> 00:26:29,060
+If you don't specify one,
+
+775
+00:26:29,060 --> 00:26:31,220
+how does it behave by default?
+
+776
+00:26:31,220 --> 00:26:31,960
+As you probably know,
+
+777
+00:26:31,960 --> 00:26:35,080
+if you don't explicitly specify it,
+
+778
+00:26:35,080 --> 00:26:36,980
+by default it takes the first rule
+
+779
+00:26:36,980 --> 00:26:40,960
+as its default rule and runs that.
+
+780
+00:26:40,960 --> 00:26:41,180
+Right?
+
+781
+00:26:41,180 --> 00:26:44,700
+If you want to write it further down,
+
+782
+00:26:44,700 --> 00:26:46,320
+you need to add one at the front,
+
+783
+00:26:46,320 --> 00:26:47,300
+.PHONY or .DEFAULT_GOAL,
+
+784
+00:26:47,300 --> 00:26:48,340
+which is the default rule,
+
+785
+00:26:48,340 --> 00:26:49,260
+the default target,
+
+786
+00:26:49,260 --> 00:26:50,420
+to specify it,
+
+787
+00:26:50,420 --> 00:26:52,560
+to make it clear
+
+788
+00:26:52,560 --> 00:26:53,760
+that this is the default one,
+
+789
+00:26:53,760 --> 00:26:54,300
+and that's it.
+
+790
+00:26:54,300 --> 00:26:55,460
+If you use this method,
+
+791
+00:26:55,460 --> 00:26:56,760
+it's fine to put your default rule at the end,
+
+792
+00:26:56,760 --> 00:26:57,600
+it doesn't matter,
+
+793
+00:26:57,600 --> 00:26:59,840
+it doesn't have to be the first one.
+
+794
+00:26:59,840 --> 00:27:02,620
+Now, there are also some phony rules.
+
+795
+00:27:02,620 --> 00:27:03,800
+Phony rules, in fact, mean
+
+796
+00:27:03,800 --> 00:27:06,320
+they specify certain actions,
+
+797
+00:27:06,320 --> 00:27:08,120
+but they don't participate in the rule derivation.
+
+798
+00:27:08,120 --> 00:27:09,300
+Right?
+
+799
+00:27:09,300 --> 00:27:13,880
+Let me just quickly walk you through these.
+
+800
+00:27:13,880 --> 00:27:17,400
+And then this part after it,
+
+801
+00:27:17,400 --> 00:27:20,140
+I think I'll skip those
+
+802
+00:27:20,140 --> 00:27:23,240
+that is, the derivation process of this rule
+
+803
+00:27:23,240 --> 00:27:29,530
+I won't go over that with you either
+
+804
+00:27:29,530 --> 00:27:31,830
+So over here,
+
+805
+00:27:31,830 --> 00:27:32,870
+I still have a bit of time
+
+806
+00:27:32,870 --> 00:27:35,150
+so I'll use it to, that is, tie it right into this makefile
+
+807
+00:27:35,150 --> 00:27:35,930
+and walk you through it
+
+808
+00:27:35,930 --> 00:27:39,050
+That is, some of the makefile stuff in our code,
+
+809
+00:27:39,050 --> 00:27:41,870
+it's a good chance to get everyone familiar with it again.
+
+810
+00:27:41,870 --> 00:27:42,310
+So,
+
+811
+00:27:42,310 --> 00:27:45,600
+okay, let's take a look here.
+
+812
+00:27:45,600 --> 00:27:58,650
+Of course, if you're up to it,
+
+813
+00:27:58,650 --> 00:28:00,190
+you should be able to read it on your own after you go back.
+
+814
+00:28:00,190 --> 00:28:03,750
+I'm just walking through it with you here.
+
+815
+00:28:03,750 --> 00:28:05,050
+The makefile in this project of ours.
+
+816
+00:28:05,050 --> 00:28:27,640
+Ah.
+
+817
+00:28:27,640 --> 00:28:29,980
+Once you've finished downloading this directory,
+
+818
+00:28:29,980 --> 00:28:31,200
+open it up.
+
+819
+00:28:31,200 --> 00:28:38,970
+Uh.
+
+820
+00:28:38,970 --> 00:28:41,510
+All of our code is placed under this directory.
+
+821
+00:28:41,510 --> 00:28:43,010
+Uh,
+
+822
+00:28:43,010 --> 00:28:45,990
+we covered this above.
+
+823
+00:28:45,990 --> 00:28:47,930
+This is ASM, some assembly code.
+
+824
+00:28:47,930 --> 00:28:49,370
+And the operating system is this code.
+
+825
+00:28:49,370 --> 00:28:52,190
+Now, if we take one of the examples,
+
+826
+00:28:52,190 --> 00:28:53,990
+we know that in here,
+
+827
+00:28:53,990 --> 00:28:55,830
+there's a makefile, right?
+
+828
+00:28:55,830 --> 00:28:57,650
+Let's take a quick look at this makefile.
+
+829
+00:28:57,650 --> 00:28:59,130
+As for this makefile,
+
+830
+00:28:59,130 --> 00:29:02,150
+it's a good chance to review things with everyone.
+
+831
+00:29:02,150 --> 00:29:03,110
+For instance, this one here,
+
+832
+00:29:03,110 --> 00:29:04,610
+what is this called?
+
+833
+00:29:04,610 --> 00:29:05,930
+What is this doing?
+
+834
+00:29:05,930 --> 00:29:09,920
+This is defining a variable in the makefile, right?
+
+835
+00:29:09,920 --> 00:29:12,560
+This is a variable name.
+
+836
+00:29:12,560 --> 00:29:13,600
+The equals sign after it.
+
+837
+00:29:13,600 --> 00:29:16,040
+After that is really just a string substitution.
+
+838
+00:29:16,040 --> 00:29:16,580
+Right?
+
+839
+00:29:16,580 --> 00:29:18,580
+We won't go into the specifics.
+
+840
+00:29:18,580 --> 00:29:20,600
+Here on the left, it's defining some variables.
+
+841
+00:29:20,600 --> 00:29:23,300
+And then, this is also defining a variable.
+
+842
+00:29:23,300 --> 00:29:25,200
+Now this one,
+
+843
+00:29:25,200 --> 00:29:26,660
+can everyone still follow
+
+844
+00:29:26,660 --> 00:29:27,480
+what this is doing?
+
+845
+00:29:27,480 --> 00:29:32,440
+This is a special syntax in makefile.
+
+846
+00:29:32,440 --> 00:29:33,720
+What can it do?
+
+847
+00:29:33,720 --> 00:29:38,300
+It can take the contents of this variable
+
+848
+00:29:38,300 --> 00:29:41,460
+and substitute them according to a pattern,
+
+849
+00:29:41,460 --> 00:29:45,640
+replacing everything with the .s suffix
+
+850
+00:29:45,640 --> 00:29:46,920
+with .o.
+
+851
+00:29:46,920 --> 00:29:49,860
+So what is this thing?
+
+852
+00:29:49,860 --> 00:29:50,580
+This thing, we just
+
+853
+00:29:50,580 --> 00:29:55,650
+expand this thing.
+
+854
+00:29:55,650 --> 00:30:00,830
+So after this line is executed,
+
+855
+00:30:00,830 --> 00:30:03,090
+what does this objs variable actually become?
+
+856
+00:30:03,090 --> 00:30:06,070
+It just becomes start.o, right?
+
+857
+00:30:06,070 --> 00:30:08,510
+Everyone gets that, right?
+
+858
+00:30:08,510 --> 00:30:10,610
+Let me walk you through it again.
+
+859
+00:30:10,610 --> 00:30:13,150
+Since we're not
+
+860
+00:30:13,150 --> 00:30:14,470
+doing a dedicated makefile course,
+
+861
+00:30:14,470 --> 00:30:15,970
+So, to avoid people
+
+862
+00:30:15,970 --> 00:30:17,370
+not understanding this file,
+
+863
+00:30:17,370 --> 00:30:18,290
+I'll go ahead and explain it.
+
+864
+00:30:18,290 --> 00:30:19,310
+And then,
+
+865
+00:30:19,310 --> 00:30:21,090
+what does this plus-equals mean?
+
+866
+00:30:21,090 --> 00:30:23,230
+It means append,
+
+867
+00:30:23,230 --> 00:30:23,530
+right?
+
+868
+00:30:23,530 --> 00:30:24,310
+Append.
+
+869
+00:30:24,310 --> 00:30:26,630
+So this likewise takes
+
+870
+00:30:26,630 --> 00:30:28,210
+what's in this variable
+
+871
+00:30:28,210 --> 00:30:29,870
+and does pattern substitution.
+
+872
+00:30:29,870 --> 00:30:32,290
+Then after this substitution,
+
+873
+00:30:32,290 --> 00:30:33,490
+this
+
+874
+00:30:33,490 --> 00:30:36,530
+becomes kernel.o,
+
+875
+00:30:36,530 --> 00:30:36,750
+right?
+
+876
+00:30:36,750 --> 00:30:39,090
+So what does this obj end up becoming?
+
+877
+00:30:39,090 --> 00:30:42,290
+Doesn't it become start.o
+
+878
+00:30:42,290 --> 00:30:43,370
+space
+
+879
+00:30:43,370 --> 00:30:44,950
+kernel.o,
+
+880
+00:30:44,950 --> 00:30:45,710
+right?
+
+881
+00:30:45,710 --> 00:30:50,710
+So these two .o files are exactly the two object files we're ultimately trying to generate.
+
+882
+00:30:50,710 --> 00:30:52,490
+That's really all there is to it, right?
+
+883
+00:30:52,490 --> 00:30:53,890
+OK.
+
+884
+00:30:53,890 --> 00:30:58,330
+Now, look at this os.elf — what is it?
+
+885
+00:30:58,330 --> 00:31:02,100
+This is our real goal.
+
+886
+00:31:02,100 --> 00:31:06,740
+The thing we want to end up building is this target.
+
+887
+00:31:06,740 --> 00:31:08,860
+What does this target actually depend on?
+
+888
+00:31:08,860 --> 00:31:09,860
+It's os.elf.
+
+889
+00:31:09,860 --> 00:31:11,540
+This is the kernel file we want to produce.
+
+890
+00:31:11,540 --> 00:31:12,820
+Does everyone follow?
+
+891
+00:31:12,820 --> 00:31:17,240
+So we keep recursively tracing this file's dependency chain layer by layer.
+
+892
+00:31:17,240 --> 00:31:19,280
+So what does the elf file depend on?
+
+893
+00:31:19,280 --> 00:31:21,660
+It depends on OBJS.
+
+894
+00:31:21,660 --> 00:31:25,420
+This OBJS, as we said, is what we just computed over here.
+
+895
+00:31:25,420 --> 00:31:29,340
+It's that kernel.o and that start.o, right?
+
+896
+00:31:29,340 --> 00:31:30,680
+What does that tell us?
+
+897
+00:31:30,680 --> 00:31:35,320
+It tells us that for our kernel's executable program to be built,
+
+898
+00:31:35,320 --> 00:31:37,480
+those two .o files have to be built first.
+
+899
+00:31:37,480 --> 00:31:38,620
+I want everyone to understand what I mean here.
+
+900
+00:31:38,620 --> 00:31:40,900
+So how are those two .o files built?
+
+901
+00:31:40,900 --> 00:31:43,960
+It's accomplished through this command down here.
+
+902
+00:31:43,960 --> 00:31:45,160
+Okay.
+
+903
+00:31:45,160 --> 00:31:47,240
+So basically, this rule is
+
+904
+00:31:47,240 --> 00:31:48,940
+derived this way.
+
+905
+00:31:48,940 --> 00:31:50,260
+And then down here,
+
+906
+00:31:50,260 --> 00:31:51,800
+it's also this kind of syntax in the makefile.
+
+907
+00:31:51,800 --> 00:31:53,800
+It actually tells us explicitly
+
+908
+00:31:53,800 --> 00:31:56,400
+when we want to build a .o file,
+
+909
+00:31:56,400 --> 00:31:57,560
+what kind of
+
+910
+00:31:57,560 --> 00:32:00,620
+command should be used to do it.
+
+911
+00:32:00,620 --> 00:32:02,480
+Now, this cc here,
+
+912
+00:32:02,480 --> 00:32:05,060
+actually just means using that compiler.
+
+913
+00:32:05,060 --> 00:32:07,460
+Alright.
+
+914
+00:32:07,460 --> 00:32:10,720
+The rest are just phony rules.
+
+915
+00:32:10,720 --> 00:32:11,120
+These,
+
+916
+00:32:11,120 --> 00:32:12,600
+for example, when you want to run it,
+
+917
+00:32:12,600 --> 00:32:13,900
+you just type make run.
+
+918
+00:32:13,900 --> 00:32:16,900
+If you want to debug,
+
+919
+00:32:16,900 --> 00:32:17,900
+you type make debug.
+
+920
+00:32:17,900 --> 00:32:19,440
+Right?
+
+921
+00:32:19,440 --> 00:32:21,820
+This make debug
+
+922
+00:32:21,820 --> 00:32:22,840
+you can see what it runs
+
+923
+00:32:22,840 --> 00:32:23,520
+when debugging,
+
+924
+00:32:23,520 --> 00:32:24,840
+it runs QEMU
+
+925
+00:32:24,840 --> 00:32:26,820
+and the run target also runs QEMU
+
+926
+00:32:26,820 --> 00:32:27,520
+which is the emulator.
+
+927
+00:32:27,520 --> 00:32:30,080
+So it starts up that emulator,
+
+928
+00:32:30,080 --> 00:32:32,940
+and then takes the kernel image we built
+
+929
+00:32:32,940 --> 00:32:34,540
+and loads it into the emulator to run.
+
+930
+00:32:34,540 --> 00:32:36,720
+This is the concept of cross development.
+
+931
+00:32:36,720 --> 00:32:37,940
+Even though we're using an emulator,
+
+932
+00:32:37,940 --> 00:32:39,800
+it's really the same idea as debugging on a
+
+933
+00:32:39,800 --> 00:32:41,720
+real board.
+
+934
+00:32:41,720 --> 00:32:44,580
+Alright,
+
+935
+00:32:44,580 --> 00:32:45,980
+basically the Makefile,
+
+936
+00:32:45,980 --> 00:32:48,520
+I'll just briefly cover it up to here.
+
+937
+00:32:48,520 --> 00:32:50,920
+After all, we're not specifically here to teach the Makefile.
+
+938
+00:32:50,920 --> 00:32:53,680
+If any of you have any questions about the Makefile,
+
+939
+00:32:53,680 --> 00:32:55,660
+since it can actually get quite complicated to use,
+
+940
+00:32:55,660 --> 00:32:56,520
+if you have any questions
+
+941
+00:32:56,520 --> 00:32:57,980
+You might need to go take a look at it yourself.
+
+942
+00:32:57,980 --> 00:33:00,720
+Or if there's a chance, maybe we'll do a Makefile course later.
+
+943
+00:33:00,720 --> 00:33:04,300
+Because that's not the focus of these courses.
+
+944
+00:33:04,300 --> 00:33:06,380
+So we just skim over it,
+
+945
+00:33:06,380 --> 00:33:07,800
+giving you a quick pass.
+
+946
+00:33:07,800 --> 00:33:08,920
+So the main point is,
+
+947
+00:33:08,920 --> 00:33:09,940
+I hope everyone gets a sense of one thing:
+
+948
+00:33:09,940 --> 00:33:12,660
+through studying these courses,
+
+949
+00:33:12,660 --> 00:33:13,900
+the idea is really,
+
+950
+00:33:13,900 --> 00:33:16,840
+what should we let you understand?
+
+951
+00:33:16,840 --> 00:33:19,140
+That is, to develop a kernel,
+
+952
+00:33:19,140 --> 00:33:20,660
+what knowledge do we need to master?
+
+953
+00:33:20,660 --> 00:33:21,940
+See what I mean?
+
+954
+00:33:21,940 --> 00:33:24,040
+This is basically the idea of a knowledge map.
+
+955
+00:33:24,040 --> 00:33:26,640
+That is, through studying these courses,
+
+956
+00:33:26,640 --> 00:33:27,100
+we need to...
+
+957
+00:33:27,100 --> 00:33:28,440
+if in the future you want to go into
+
+958
+00:33:28,440 --> 00:33:29,780
+work in this area,
+
+959
+00:33:29,780 --> 00:33:32,060
+which pieces of knowledge do you need to master one by one,
+
+960
+00:33:32,060 --> 00:33:32,920
+and then stack them together?
+
+961
+00:33:32,920 --> 00:33:35,140
+Then finally you can go develop a kernel.
+
+962
+00:33:35,140 --> 00:33:37,680
+So these related dependencies,
+
+963
+00:33:37,680 --> 00:33:38,720
+we'll just cover them in
+
+964
+00:33:38,720 --> 00:33:39,940
+actually, the preliminary part.
+
+965
+00:33:39,940 --> 00:33:41,940
+Basically, next class
+
+966
+00:33:41,940 --> 00:33:43,160
+we'll start talking about assembly.
+
+967
+00:33:43,160 --> 00:33:45,840
+This is also a key part of our course,
+
+968
+00:33:45,840 --> 00:33:47,700
+because for low-level development,
+
+969
+00:33:47,700 --> 00:33:50,460
+you can't get away from some assembly language stuff.
+
+970
+00:33:50,460 --> 00:33:53,080
+So at least before we talk about assembly,
+
+971
+00:33:53,080 --> 00:33:54,280
+all of our preliminary material
+
+972
+00:33:54,280 --> 00:33:56,060
+is pretty much all we have.
+
+973
+00:33:56,060 --> 00:33:57,360
+The related techniques,
+
+974
+00:33:57,360 --> 00:33:59,040
+how to use these tools,
+
+975
+00:33:59,040 --> 00:33:59,780
+you may need to
+
+976
+00:33:59,780 --> 00:34:01,320
+take your time later on and
+
+977
+00:34:01,320 --> 00:34:02,800
+gradually get a feel for them yourselves.
+
+978
+00:34:02,800 --> 00:34:04,340
+Okay, today's class
+
+979
+00:34:04,340 --> 00:34:05,240
+will end here.
+
+980
+00:34:05,240 --> 00:34:05,700
+Alright.
+
+981
+00:34:05,700 --> 00:34:06,280
+Thank you, everyone.

@@ -1,0 +1,5126 @@
+[
+ {
+  "id": 0,
+  "text": "Chapter 11, external device interrupts. It covers another kind of trap."
+ },
+ {
+  "id": 1,
+  "text": "For the interrupt part, we mainly introduce interrupt classification, the registers designed for interrupts, the interrupt handling process, and also the PLIC, which is an interrupt-related peripheral."
+ },
+ {
+  "id": 2,
+  "text": "So there is one more thing:"
+ },
+ {
+  "id": 3,
+  "text": "once we"
+ },
+ {
+  "id": 4,
+  "text": "finish covering the basic concepts"
+ },
+ {
+  "id": 5,
+  "text": "of interrupts for you,"
+ },
+ {
+  "id": 6,
+  "text": "we will show you"
+ },
+ {
+  "id": 7,
+  "text": "something,"
+ },
+ {
+  "id": 8,
+  "text": "that is,"
+ },
+ {
+  "id": 9,
+  "text": "remember our UART device?"
+ },
+ {
+  "id": 10,
+  "text": "In the beginning we used"
+ },
+ {
+  "id": 11,
+  "text": "UART to print on the"
+ },
+ {
+  "id": 12,
+  "text": "screen"
+ },
+ {
+  "id": 13,
+  "text": "Hello RVOS,"
+ },
+ {
+  "id": 14,
+  "text": "right?"
+ },
+ {
+  "id": 15,
+  "text": "Well, at that time,"
+ },
+ {
+  "id": 16,
+  "text": "we used"
+ },
+ {
+  "id": 17,
+  "text": "what is called the polling approach."
+ },
+ {
+  "id": 18,
+  "text": "Now that we've studied interrupts,"
+ },
+ {
+  "id": 19,
+  "text": "let's take a look"
+ },
+ {
+  "id": 20,
+  "text": "How to use the interrupt-driven approach"
+ },
+ {
+  "id": 21,
+  "text": "to handle device input from the serial port"
+ },
+ {
+  "id": 22,
+  "text": "That roughly covers the contents"
+ },
+ {
+  "id": 23,
+  "text": "So here are the reference materials"
+ },
+ {
+  "id": 24,
+  "text": "Let's start with the first part"
+ },
+ {
+  "id": 25,
+  "text": "The classification of interrupts"
+ },
+ {
+  "id": 26,
+  "text": "So this"
+ },
+ {
+  "id": 27,
+  "text": "When we talk about interrupts,"
+ },
+ {
+  "id": 28,
+  "text": "traps are divided into exceptions and interrupts"
+ },
+ {
+  "id": 29,
+  "text": "And interrupts are further divided"
+ },
+ {
+  "id": 30,
+  "text": "Interrupts are further divided"
+ },
+ {
+  "id": 31,
+  "text": "Overall, we can classify interrupts into"
+ },
+ {
+  "id": 32,
+  "text": "two major categories"
+ },
+ {
+  "id": 33,
+  "text": "One is called local interrupts"
+ },
+ {
+  "id": 34,
+  "text": "and the other is called global interrupts"
+ },
+ {
+  "id": 35,
+  "text": "In fact, these local interrupts"
+ },
+ {
+  "id": 36,
+  "text": "are further divided into software interrupts and timer interrupts"
+ },
+ {
+  "id": 37,
+  "text": "So in fact, this corresponds to"
+ },
+ {
+  "id": 38,
+  "text": "in fact, just interrupts"
+ },
+ {
+  "id": 39,
+  "text": "In fact, you can also think of it as three categories"
+ },
+ {
+  "id": 40,
+  "text": "that is, software interrupts"
+ },
+ {
+  "id": 41,
+  "text": "software interrupts"
+ },
+ {
+  "id": 42,
+  "text": "timer interrupts"
+ },
+ {
+  "id": 43,
+  "text": "and external interrupts."
+ },
+ {
+  "id": 44,
+  "text": "Now, this thing,"
+ },
+ {
+  "id": 45,
+  "text": "in fact, in the RISC-V specification,"
+ },
+ {
+  "id": 46,
+  "text": "is actually written out pretty clearly."
+ },
+ {
+  "id": 47,
+  "text": "You can"
+ },
+ {
+  "id": 48,
+  "text": "actually it is still this table."
+ },
+ {
+  "id": 49,
+  "text": "In this table,"
+ },
+ {
+  "id": 50,
+  "text": "you can see that this table at the time,"
+ },
+ {
+  "id": 51,
+  "text": "we actually just took the M-Course"
+ },
+ {
+  "id": 52,
+  "text": "that table,"
+ },
+ {
+  "id": 53,
+  "text": "Table 3.6,"
+ },
+ {
+  "id": 54,
+  "text": "and removed the exception part from it."
+ },
+ {
+  "id": 55,
+  "text": "So we only look at the interrupt part."
+ },
+ {
+  "id": 56,
+  "text": "Then the highest bit is still 1,"
+ },
+ {
+  "id": 57,
+  "text": "and its exception code"
+ },
+ {
+  "id": 58,
+  "text": "from 0123 up to 11,"
+ },
+ {
+  "id": 59,
+  "text": "is actually related to the concept I just talked about."
+ },
+ {
+  "id": 60,
+  "text": "Take a look at this."
+ },
+ {
+  "id": 61,
+  "text": "For example, this part,"
+ },
+ {
+  "id": 62,
+  "text": "it is divided like this."
+ },
+ {
+  "id": 63,
+  "text": "That is to say, this block here,"
+ },
+ {
+  "id": 64,
+  "text": "it is all software interrupts."
+ },
+ {
+  "id": 65,
+  "text": "This block here,"
+ },
+ {
+  "id": 66,
+  "text": "is all timer interrupts."
+ },
+ {
+  "id": 67,
+  "text": "This block is all external interrupts."
+ },
+ {
+  "id": 68,
+  "text": "Now, these software interrupts,"
+ },
+ {
+  "id": 69,
+  "text": "they are further divided according to the privilege level at which they occur,"
+ },
+ {
+  "id": 70,
+  "text": "that is, when the interrupt happens,"
+ },
+ {
+  "id": 71,
+  "text": "the privilege mode the hart is in,"
+ },
+ {
+  "id": 72,
+  "text": "so they are split into User, Supervisor, and Machine."
+ },
+ {
+  "id": 73,
+  "text": "And it is the same for the ones below."
+ },
+ {
+  "id": 74,
+  "text": "Each category is again divided into three."
+ },
+ {
+  "id": 75,
+  "text": "User, Supervisor, Machine."
+ },
+ {
+  "id": 76,
+  "text": "That is how it is divided."
+ },
+ {
+  "id": 77,
+  "text": "But regardless,"
+ },
+ {
+  "id": 78,
+  "text": "these three here are actually software interrupts."
+ },
+ {
+  "id": 79,
+  "text": "And this one here is the timer interrupt."
+ },
+ {
+  "id": 80,
+  "text": "This is the external interrupt"
+ },
+ {
+  "id": 81,
+  "text": "which corresponds to these categories here"
+ },
+ {
+  "id": 82,
+  "text": "Now, in terms of physical wiring"
+ },
+ {
+  "id": 83,
+  "text": "that is, physically speaking"
+ },
+ {
+  "id": 84,
+  "text": "you can think of it this way"
+ },
+ {
+  "id": 85,
+  "text": "this hart,"
+ },
+ {
+  "id": 86,
+  "text": "as a CPU,"
+ },
+ {
+  "id": 87,
+  "text": "actually has three pins,"
+ },
+ {
+  "id": 88,
+  "text": "each hart has three pins,"
+ },
+ {
+  "id": 89,
+  "text": "connected to these three types of interrupts respectively."
+ },
+ {
+  "id": 90,
+  "text": "For example, this figure here"
+ },
+ {
+  "id": 91,
+  "text": "is one I took"
+ },
+ {
+  "id": 92,
+  "text": "from this FU540,"
+ },
+ {
+  "id": 93,
+  "text": "a diagram taken from that chip."
+ },
+ {
+  "id": 94,
+  "text": "The emulator we use,"
+ },
+ {
+  "id": 95,
+  "text": "that QEMU,"
+ },
+ {
+  "id": 96,
+  "text": "this emulator was actually developed with reference to this real device,"
+ },
+ {
+  "id": 97,
+  "text": "it was developed based on it."
+ },
+ {
+  "id": 98,
+  "text": "So we often also refer to the schematic of this device"
+ },
+ {
+  "id": 99,
+  "text": "as a reference."
+ },
+ {
+  "id": 100,
+  "text": "Let me take some diagrams from this RISC-V reference material."
+ },
+ {
+  "id": 101,
+  "text": "and use them to give you an introduction."
+ },
+ {
+  "id": 102,
+  "text": "Now, as you can also see in this diagram,"
+ },
+ {
+  "id": 103,
+  "text": "when it was drawn,"
+ },
+ {
+  "id": 104,
+  "text": "one hart has software interrupts connected to it,"
+ },
+ {
+  "id": 105,
+  "text": "timer interrupts, and external interrupts — three categories."
+ },
+ {
+  "id": 106,
+  "text": "In fact, they come in through three pins,"
+ },
+ {
+  "id": 107,
+  "text": "three separate, independent interrupts."
+ },
+ {
+  "id": 108,
+  "text": "Now, this slide of ours,"
+ },
+ {
+  "id": 109,
+  "text": "is actually focused on this external interrupt,"
+ },
+ {
+  "id": 110,
+  "text": "that is, the peripheral interrupt."
+ },
+ {
+  "id": 111,
+  "text": "Let's take a look at this peripheral interrupt,"
+ },
+ {
+  "id": 112,
+  "text": "and what the handling process looks like."
+ },
+ {
+  "id": 113,
+  "text": "Now, whenever it comes to interrupt handling,"
+ },
+ {
+  "id": 114,
+  "text": "we also run into a set of registers here."
+ },
+ {
+  "id": 115,
+  "text": "This diagram of ours,"
+ },
+ {
+  "id": 116,
+  "text": "is really the earlier one."
+ },
+ {
+  "id": 117,
+  "text": "So up here in this one,"
+ },
+ {
+  "id": 118,
+  "text": "we already have quite a few counters listed,"
+ },
+ {
+  "id": 119,
+  "text": "and we've already covered all of them."
+ },
+ {
+  "id": 120,
+  "text": "All of them have been covered"
+ },
+ {
+  "id": 121,
+  "text": "Now there are two left"
+ },
+ {
+  "id": 122,
+  "text": "These two right here"
+ },
+ {
+  "id": 123,
+  "text": "These two counters we haven't talked about yet"
+ },
+ {
+  "id": 124,
+  "text": "And we haven't covered them"
+ },
+ {
+  "id": 125,
+  "text": "These two counters of ours"
+ },
+ {
+  "id": 126,
+  "text": "are both related to interrupts"
+ },
+ {
+  "id": 127,
+  "text": "So, that's why"
+ },
+ {
+  "id": 128,
+  "text": "we want to briefly mention them here"
+ },
+ {
+  "id": 129,
+  "text": "Let's first take a look at"
+ },
+ {
+  "id": 130,
+  "text": "this one"
+ },
+ {
+  "id": 131,
+  "text": "give me just a second here"
+ },
+ {
+  "id": 132,
+  "text": "Let's first take a look at"
+ },
+ {
+  "id": 133,
+  "text": "one called MRE"
+ },
+ {
+  "id": 134,
+  "text": "which stands for Machine Interrupt Enable"
+ },
+ {
+  "id": 135,
+  "text": "Now this register here"
+ },
+ {
+  "id": 136,
+  "text": "is actually used to control"
+ },
+ {
+  "id": 137,
+  "text": "those three types of interrupts we mentioned"
+ },
+ {
+  "id": 138,
+  "text": "namely software interrupts, timer interrupts, and"
+ },
+ {
+  "id": 139,
+  "text": "external peripheral interrupts"
+ },
+ {
+  "id": 140,
+  "text": "Now, as we mentioned earlier,"
+ },
+ {
+  "id": 141,
+  "text": "that mstatus register"
+ },
+ {
+  "id": 142,
+  "text": "also has a global interrupt enable,"
+ },
+ {
+  "id": 143,
+  "text": "so that is a global interrupt."
+ },
+ {
+  "id": 144,
+  "text": "In other words, for the interrupt in mstatus,"
+ },
+ {
+  "id": 145,
+  "text": "it's mstatus,"
+ },
+ {
+  "id": 146,
+  "text": "doesn't it also have"
+ },
+ {
+  "id": 147,
+  "text": "that MIE flag bit in there?"
+ },
+ {
+  "id": 148,
+  "text": "So this is a"
+ },
+ {
+  "id": 149,
+  "text": "this is something you can think of as"
+ },
+ {
+  "id": 150,
+  "text": "a global interrupt."
+ },
+ {
+  "id": 151,
+  "text": "Once this thing is turned off,"
+ },
+ {
+  "id": 152,
+  "text": "basically all interrupts,"
+ },
+ {
+  "id": 153,
+  "text": "no matter whether you enable them or not,"
+ },
+ {
+  "id": 154,
+  "text": "are completely disabled."
+ },
+ {
+  "id": 155,
+  "text": "So, but then,"
+ },
+ {
+  "id": 156,
+  "text": "this is divided into several levels."
+ },
+ {
+  "id": 157,
+  "text": "The first level,"
+ },
+ {
+  "id": 158,
+  "text": "is this MIE,"
+ },
+ {
+  "id": 159,
+  "text": "which is the global interrupt enable."
+ },
+ {
+  "id": 160,
+  "text": "So after this interrupt is enabled,"
+ },
+ {
+  "id": 161,
+  "text": "we can also"
+ },
+ {
+  "id": 162,
+  "text": "for this External, Timer, and Software"
+ },
+ {
+  "id": 163,
+  "text": "these three categories of interrupts,"
+ },
+ {
+  "id": 164,
+  "text": "we can also set them individually."
+ },
+ {
+  "id": 165,
+  "text": "That's actually what it means."
+ },
+ {
+  "id": 166,
+  "text": "So MIE,"
+ },
+ {
+  "id": 167,
+  "text": "think of it as a second-level interrupt control,"
+ },
+ {
+  "id": 168,
+  "text": "control flags,"
+ },
+ {
+  "id": 169,
+  "text": "control switches."
+ },
+ {
+  "id": 170,
+  "text": "Similarly,"
+ },
+ {
+  "id": 171,
+  "text": "it also corresponds to, that is,"
+ },
+ {
+  "id": 172,
+  "text": "it is also divided into U, S, and M,"
+ },
+ {
+  "id": 173,
+  "text": "each category is divided into these three types, U, S, and M."
+ },
+ {
+  "id": 174,
+  "text": "This is MIE,"
+ },
+ {
+  "id": 175,
+  "text": "the role of this register."
+ },
+ {
+  "id": 176,
+  "text": "Then there is one called MIP."
+ },
+ {
+  "id": 177,
+  "text": "This MIP,"
+ },
+ {
+  "id": 178,
+  "text": "actually this,"
+ },
+ {
+  "id": 179,
+  "text": "you can think of it as being used for writing."
+ },
+ {
+  "id": 180,
+  "text": "is that it is used to set things up."
+ },
+ {
+  "id": 181,
+  "text": "Now MIP, on the other hand, is actually used for reading."
+ },
+ {
+  "id": 182,
+  "text": "It actually"
+ },
+ {
+  "id": 183,
+  "text": "by reading these corresponding flag bits in it,"
+ },
+ {
+  "id": 184,
+  "text": "we can find out, in the current different modes,"
+ },
+ {
+  "id": 185,
+  "text": "whether each of these interrupts has occurred or not."
+ },
+ {
+  "id": 186,
+  "text": "If it is 1,"
+ },
+ {
+  "id": 187,
+  "text": "it means this interrupt has currently occurred."
+ },
+ {
+  "id": 188,
+  "text": "If it is 0,"
+ },
+ {
+  "id": 189,
+  "text": "it means this interrupt has not occurred."
+ },
+ {
+  "id": 190,
+  "text": "So that is essentially the role it serves."
+ },
+ {
+  "id": 191,
+  "text": "So these two registers,"
+ },
+ {
+  "id": 192,
+  "text": "which are related to interrupts,"
+ },
+ {
+  "id": 193,
+  "text": "are ones we need to understand."
+ },
+ {
+  "id": 194,
+  "text": "Now, the interrupt handling process,"
+ },
+ {
+  "id": 195,
+  "text": "in fact, is similar to what we covered earlier,"
+ },
+ {
+  "id": 196,
+  "text": "so we can go through it a bit faster."
+ },
+ {
+  "id": 197,
+  "text": "That is to say, it is still divided into several steps."
+ },
+ {
+  "id": 198,
+  "text": "Among them,"
+ },
+ {
+  "id": 199,
+  "text": "when an interrupt occurs,"
+ },
+ {
+  "id": 200,
+  "text": "The HART will automatically do the following to execute"
+ },
+ {
+  "id": 201,
+  "text": "Now, over here,"
+ },
+ {
+  "id": 202,
+  "text": "the only thing to pay attention to is"
+ },
+ {
+  "id": 203,
+  "text": "which step is a bit different?"
+ },
+ {
+  "id": 204,
+  "text": "That is, compared with exceptions,"
+ },
+ {
+  "id": 205,
+  "text": "which step is different?"
+ },
+ {
+  "id": 206,
+  "text": "It will actually take"
+ },
+ {
+  "id": 207,
+  "text": "the value of the instruction after the current PC,"
+ },
+ {
+  "id": 208,
+  "text": "and copy it into NPC."
+ },
+ {
+  "id": 209,
+  "text": "The reason for this was actually explained"
+ },
+ {
+  "id": 210,
+  "text": "earlier."
+ },
+ {
+  "id": 211,
+  "text": "The main effect is that,"
+ },
+ {
+  "id": 212,
+  "text": "because when an interrupt occurs,"
+ },
+ {
+  "id": 213,
+  "text": "what effect is it actually trying to achieve?"
+ },
+ {
+  "id": 214,
+  "text": "The idea is that this normal control flow,"
+ },
+ {
+  "id": 215,
+  "text": "it has been interrupted,"
+ },
+ {
+  "id": 216,
+  "text": "and that's what we call an interrupt."
+ },
+ {
+  "id": 217,
+  "text": "So after it's interrupted,"
+ },
+ {
+  "id": 218,
+  "text": "once the interrupt handling and execution"
+ },
+ {
+  "id": 219,
+  "text": "of the handler function is done,"
+ },
+ {
+  "id": 220,
+  "text": "When it comes back,"
+ },
+ {
+  "id": 221,
+  "text": "it can pick up right where it left off,"
+ },
+ {
+  "id": 222,
+  "text": "rather than from this instruction."
+ },
+ {
+  "id": 223,
+  "text": "Actually, when executing this function,"
+ },
+ {
+  "id": 224,
+  "text": "this instruction has already finished executing."
+ },
+ {
+  "id": 225,
+  "text": "After this instruction has finished executing,"
+ },
+ {
+  "id": 226,
+  "text": "it will then go and execute the next one below,"
+ },
+ {
+  "id": 227,
+  "text": "this interrupt handler."
+ },
+ {
+  "id": 228,
+  "text": "Now, when it comes back,"
+ },
+ {
+  "id": 229,
+  "text": "it expects to continue executing from the following instructions."
+ },
+ {
+  "id": 230,
+  "text": "So it actually automatically takes this,"
+ },
+ {
+  "id": 231,
+  "text": "the address of the next instruction,"
+ },
+ {
+  "id": 232,
+  "text": "and copies it into here."
+ },
+ {
+  "id": 233,
+  "text": "That way, after it comes back,"
+ },
+ {
+  "id": 234,
+  "text": "it can go on and execute the next instruction."
+ },
+ {
+  "id": 235,
+  "text": "So this whole normal execution flow,"
+ },
+ {
+  "id": 236,
+  "text": "if you don't care about interrupts,"
+ },
+ {
+  "id": 237,
+  "text": "you can think of this process as actually not having,"
+ },
+ {
+  "id": 238,
+  "text": "it's still actually executing sequentially,"
+ },
+ {
+  "id": 239,
+  "text": "with no interference at all."
+ },
+ {
+  "id": 240,
+  "text": "but it actually gets interfered with"
+ },
+ {
+  "id": 241,
+  "text": "it actually gets interrupted, I should say"
+ },
+ {
+  "id": 242,
+  "text": "otherwise, there is really no difference from the exception handling we covered earlier"
+ },
+ {
+  "id": 243,
+  "text": "so I won't repeat it here"
+ },
+ {
+  "id": 244,
+  "text": "and then, that is to say,"
+ },
+ {
+  "id": 245,
+  "text": "the return is the same as well"
+ },
+ {
+  "id": 246,
+  "text": "so this handling, in fact,"
+ },
+ {
+  "id": 247,
+  "text": "there isn't much difference at all"
+ },
+ {
+  "id": 248,
+  "text": "alright, this processing flow,"
+ },
+ {
+  "id": 249,
+  "text": "we'll just cover it briefly up to here"
+ },
+ {
+  "id": 250,
+  "text": "so,"
+ },
+ {
+  "id": 251,
+  "text": "next, we're going to introduce"
+ },
+ {
+  "id": 252,
+  "text": "a component related to interrupts, called the PLIC"
+ },
+ {
+  "id": 253,
+  "text": "such a component"
+ },
+ {
+  "id": 254,
+  "text": "a device"
+ },
+ {
+  "id": 255,
+  "text": "now, as we know,"
+ },
+ {
+  "id": 256,
+  "text": "because what we're talking about now is external interrupts"
+ },
+ {
+  "id": 257,
+  "text": "software interrupts and timer interrupts"
+ },
+ {
+  "id": 258,
+  "text": "we'll cover those in later chapters"
+ },
+ {
+  "id": 259,
+  "text": "let's first look at external interrupts"
+ },
+ {
+  "id": 260,
+  "text": "So, so-called external interrupts,"
+ },
+ {
+  "id": 261,
+  "text": "external interrupts actually refer to interrupts generated by peripheral devices."
+ },
+ {
+  "id": 262,
+  "text": "That is to say, we've seen this diagram several times before."
+ },
+ {
+  "id": 263,
+  "text": "It means that on our bus,"
+ },
+ {
+  "id": 264,
+  "text": "this CPU and these external devices,"
+ },
+ {
+  "id": 265,
+  "text": "they're all actually connected to the bus."
+ },
+ {
+  "id": 266,
+  "text": "So this external CPU,"
+ },
+ {
+  "id": 267,
+  "text": "based on the instructions placed in memory,"
+ },
+ {
+  "id": 268,
+  "text": "just executes them sequentially, executing and executing and executing."
+ },
+ {
+  "id": 269,
+  "text": "Now, during execution,"
+ },
+ {
+  "id": 270,
+  "text": "suppose this peripheral device,"
+ },
+ {
+  "id": 271,
+  "text": "if it has something"
+ },
+ {
+  "id": 272,
+  "text": "it wants to notify our CPU about,"
+ },
+ {
+  "id": 273,
+  "text": "it can do so through an interrupt,"
+ },
+ {
+  "id": 274,
+  "text": "to notify our CPU."
+ },
+ {
+  "id": 275,
+  "text": "Then the CPU's execution will be interrupted,"
+ },
+ {
+  "id": 276,
+  "text": "and it will then go and execute,"
+ },
+ {
+  "id": 277,
+  "text": "go and respond to this peripheral device."
+ },
+ {
+  "id": 278,
+  "text": "In fact, it achieves this kind of effect."
+ },
+ {
+  "id": 279,
+  "text": "Now, there are many kinds of these peripheral devices."
+ },
+ {
+  "id": 280,
+  "text": "So these peripherals"
+ },
+ {
+  "id": 281,
+  "text": "can all affect the execution flow of our CPU."
+ },
+ {
+  "id": 282,
+  "text": "But as we know,"
+ },
+ {
+  "id": 283,
+  "text": "based on what we just introduced,"
+ },
+ {
+  "id": 284,
+  "text": "for external interrupts,"
+ },
+ {
+  "id": 285,
+  "text": "our CPU actually only has a single input pin."
+ },
+ {
+  "id": 286,
+  "text": "That is to say, there are many peripherals,"
+ },
+ {
+  "id": 287,
+  "text": "and we can't possibly take one interrupt line"
+ },
+ {
+  "id": 288,
+  "text": "from each peripheral into the CPU,"
+ },
+ {
+  "id": 289,
+  "text": "right?"
+ },
+ {
+  "id": 290,
+  "text": "Besides, the set of peripherals changes often,"
+ },
+ {
+  "id": 291,
+  "text": "and there may even be hot-plugging."
+ },
+ {
+  "id": 292,
+  "text": "If we brought in one pin"
+ },
+ {
+  "id": 293,
+  "text": "for every single peripheral,"
+ },
+ {
+  "id": 294,
+  "text": "then the CPU design would become far too complex."
+ },
+ {
+  "id": 295,
+  "text": "So in practice,"
+ },
+ {
+  "id": 296,
+  "text": "our CPU has only one"
+ },
+ {
+  "id": 297,
+  "text": "input pin for external interrupts."
+ },
+ {
+  "id": 298,
+  "text": "So what do we do?"
+ },
+ {
+  "id": 299,
+  "text": "This is where a conversion comes into play."
+ },
+ {
+  "id": 300,
+  "text": "and aggregation is a problem"
+ },
+ {
+  "id": 301,
+  "text": "So that's why we introduced"
+ },
+ {
+  "id": 302,
+  "text": "a device called the PLIC."
+ },
+ {
+  "id": 303,
+  "text": "This device,"
+ },
+ {
+  "id": 304,
+  "text": "you can think of this device as"
+ },
+ {
+  "id": 305,
+  "text": "basically a Hub."
+ },
+ {
+  "id": 306,
+  "text": "Its full name is"
+ },
+ {
+  "id": 307,
+  "text": "Platform Level Interruptor Controller,"
+ },
+ {
+  "id": 308,
+  "text": "which is a platform-level interrupt controller."
+ },
+ {
+  "id": 309,
+  "text": "It is an interrupt controller."
+ },
+ {
+  "id": 310,
+  "text": "Now, why is it called Platform Level?"
+ },
+ {
+  "id": 311,
+  "text": "We talked about Platform earlier."
+ },
+ {
+  "id": 312,
+  "text": "You can understand it as basically an SoC,"
+ },
+ {
+  "id": 313,
+  "text": "right?"
+ },
+ {
+  "id": 314,
+  "text": "So it is a type of interrupt controller that is integrated into the SoC."
+ },
+ {
+  "id": 315,
+  "text": "of interrupt controller."
+ },
+ {
+  "id": 316,
+  "text": "Of course, there are other types of interrupt controllers as well."
+ },
+ {
+  "id": 317,
+  "text": "What we mainly introduce here"
+ },
+ {
+  "id": 318,
+  "text": "is the Platform-type interrupt controller."
+ },
+ {
+  "id": 319,
+  "text": "Now, its main function"
+ },
+ {
+  "id": 320,
+  "text": "What this picture shows is that"
+ },
+ {
+  "id": 321,
+  "text": "on the left side here,"
+ },
+ {
+  "id": 322,
+  "text": "there are lots and lots of peripherals."
+ },
+ {
+  "id": 323,
+  "text": "Right?"
+ },
+ {
+  "id": 324,
+  "text": "There are lots and lots of peripherals."
+ },
+ {
+  "id": 325,
+  "text": "So coming in from that side,"
+ },
+ {
+  "id": 326,
+  "text": "on the left,"
+ },
+ {
+  "id": 327,
+  "text": "you have lots and lots of pins coming in,"
+ },
+ {
+  "id": 328,
+  "text": "like a hub,"
+ },
+ {
+  "id": 329,
+  "text": "all hooked up together."
+ },
+ {
+  "id": 330,
+  "text": "But over here,"
+ },
+ {
+  "id": 331,
+  "text": "going out,"
+ },
+ {
+  "id": 332,
+  "text": "for a single HUT,"
+ },
+ {
+  "id": 333,
+  "text": "there is only one pin."
+ },
+ {
+  "id": 334,
+  "text": "Of course, since there are quite a few HUTs on this side,"
+ },
+ {
+  "id": 335,
+  "text": "it can,"
+ },
+ {
+  "id": 336,
+  "text": "for each HUT,"
+ },
+ {
+  "id": 337,
+  "text": "route a separate line out."
+ },
+ {
+  "id": 338,
+  "text": "But if we"
+ },
+ {
+  "id": 339,
+  "text": "look at just one HUT,"
+ },
+ {
+  "id": 340,
+  "text": "In fact,"
+ },
+ {
+  "id": 341,
+  "text": "it's just like a multiplexer"
+ },
+ {
+  "id": 342,
+  "text": "that is, there are lots and lots of lines here,"
+ },
+ {
+  "id": 343,
+  "text": "but over here,"
+ },
+ {
+  "id": 344,
+  "text": "only one line comes out"
+ },
+ {
+  "id": 345,
+  "text": "So this PLIC,"
+ },
+ {
+  "id": 346,
+  "text": "it's actually just like a multiplexer."
+ },
+ {
+  "id": 347,
+  "text": "It,"
+ },
+ {
+  "id": 348,
+  "text": "on its left side,"
+ },
+ {
+  "id": 349,
+  "text": "faces a whole bunch of external devices,"
+ },
+ {
+  "id": 350,
+  "text": "while over here,"
+ },
+ {
+  "id": 351,
+  "text": "there is only one line."
+ },
+ {
+  "id": 352,
+  "text": "So what it does in this,"
+ },
+ {
+  "id": 353,
+  "text": "its main function,"
+ },
+ {
+  "id": 354,
+  "text": "is really just,"
+ },
+ {
+  "id": 355,
+  "text": "as everyone knows,"
+ },
+ {
+  "id": 356,
+  "text": "the CPU,"
+ },
+ {
+  "id": 357,
+  "text": "it can only,"
+ },
+ {
+  "id": 358,
+  "text": "handle one kind of interrupt at a time"
+ },
+ {
+  "id": 359,
+  "text": "So what it does here is"
+ },
+ {
+  "id": 360,
+  "text": "It just acts as an agent."
+ },
+ {
+  "id": 361,
+  "text": "Based on the type of interrupt here,"
+ },
+ {
+  "id": 362,
+  "text": "or some other things,"
+ },
+ {
+  "id": 363,
+  "text": "which we will talk about,"
+ },
+ {
+  "id": 364,
+  "text": "like its priority and so on,"
+ },
+ {
+  "id": 365,
+  "text": "it can filter them out"
+ },
+ {
+  "id": 366,
+  "text": "and let only one current interrupt through."
+ },
+ {
+  "id": 367,
+  "text": "If there are multiple interrupts"
+ },
+ {
+  "id": 368,
+  "text": "happening at the same time,"
+ },
+ {
+  "id": 369,
+  "text": "it will only let one interrupt through."
+ },
+ {
+  "id": 370,
+  "text": "And then,"
+ },
+ {
+  "id": 371,
+  "text": "for the ones on the left,"
+ },
+ {
+  "id": 372,
+  "text": "it coordinates all the interrupts,"
+ },
+ {
+  "id": 373,
+  "text": "and on the right side,"
+ },
+ {
+  "id": 374,
+  "text": "it serves one hart,"
+ },
+ {
+  "id": 375,
+  "text": "essentially"
+ },
+ {
+  "id": 376,
+  "text": "playing that kind of role."
+ },
+ {
+  "id": 377,
+  "text": "This is the interrupt controller."
+ },
+ {
+  "id": 378,
+  "text": "Why did we have to invent"
+ },
+ {
+  "id": 379,
+  "text": "the interrupt controller?"
+ },
+ {
+  "id": 380,
+  "text": "The main purpose of this kind of device"
+ },
+ {
+  "id": 381,
+  "text": "Now, on the left,"
+ },
+ {
+  "id": 382,
+  "text": "we have lots and lots of peripherals."
+ },
+ {
+  "id": 383,
+  "text": "If every peripheral has its own interrupt line,"
+ },
+ {
+  "id": 384,
+  "text": "then this,"
+ },
+ {
+  "id": 385,
+  "text": "in terms of terminology,"
+ },
+ {
+  "id": 386,
+  "text": "we call it an interrupt source."
+ },
+ {
+  "id": 387,
+  "text": "Because all interrupts originate and come from these peripherals,"
+ },
+ {
+  "id": 388,
+  "text": "so we call them interrupt sources."
+ },
+ {
+  "id": 389,
+  "text": "For every interrupt source,"
+ },
+ {
+  "id": 390,
+  "text": "we give it a code number."
+ },
+ {
+  "id": 391,
+  "text": "We'll cover the related concepts later on."
+ },
+ {
+  "id": 392,
+  "text": "So these terms,"
+ },
+ {
+  "id": 393,
+  "text": "I'll introduce them to you as well."
+ },
+ {
+  "id": 394,
+  "text": "So this is called an interrupt source."
+ },
+ {
+  "id": 395,
+  "text": "Now, in RISC-V,"
+ },
+ {
+  "id": 396,
+  "text": "in its specification,"
+ },
+ {
+  "id": 397,
+  "text": "what it specifies is that,"
+ },
+ {
+  "id": 398,
+  "text": "the current rule is that,"
+ },
+ {
+  "id": 399,
+  "text": "these interrupt sources"
+ },
+ {
+  "id": 400,
+  "text": "There are 53 of them defined in total, as standard"
+ },
+ {
+  "id": 401,
+  "text": "So its value,"
+ },
+ {
+  "id": 402,
+  "text": "it goes from 0 to 53"
+ },
+ {
+  "id": 403,
+  "text": "But number 0 among them,"
+ },
+ {
+  "id": 404,
+  "text": "this interrupt source,"
+ },
+ {
+  "id": 405,
+  "text": "it is not actually assigned to"
+ },
+ {
+  "id": 406,
+  "text": "any specific peripheral,"
+ },
+ {
+  "id": 407,
+  "text": "but is reserved,"
+ },
+ {
+  "id": 408,
+  "text": "reserved and unused."
+ },
+ {
+  "id": 409,
+  "text": "So the actual valid range"
+ },
+ {
+  "id": 410,
+  "text": "of interrupt sources,"
+ },
+ {
+  "id": 411,
+  "text": "is from 1 to 53."
+ },
+ {
+  "id": 412,
+  "text": "Now later on,"
+ },
+ {
+  "id": 413,
+  "text": "aren't we going to show you an example,"
+ },
+ {
+  "id": 414,
+  "text": "the one with the serial port device?"
+ },
+ {
+  "id": 415,
+  "text": "Well, the serial port device,"
+ },
+ {
+  "id": 416,
+  "text": "it also has an interrupt line coming in,"
+ },
+ {
+  "id": 417,
+  "text": "since it's a peripheral too."
+ },
+ {
+  "id": 418,
+  "text": "Now, this interrupt source of the serial port device,"
+ },
+ {
+  "id": 419,
+  "text": "right here,"
+ },
+ {
+  "id": 420,
+  "text": "We define it as a level"
+ },
+ {
+  "id": 421,
+  "text": "Just so you're aware of it."
+ },
+ {
+  "id": 422,
+  "text": "This is what we call an interrupt source."
+ },
+ {
+  "id": 423,
+  "text": "Now, this thing, the PLIC,"
+ },
+ {
+  "id": 424,
+  "text": "is itself a peripheral,"
+ },
+ {
+  "id": 425,
+  "text": "it is also a peripheral, right?"
+ },
+ {
+  "id": 426,
+  "text": "So, if we want to access,"
+ },
+ {
+  "id": 427,
+  "text": "or rather, to operate this kind of peripheral,"
+ },
+ {
+  "id": 428,
+  "text": "of course we also do it through its registers"
+ },
+ {
+  "id": 429,
+  "text": "to access it."
+ },
+ {
+  "id": 430,
+  "text": "And this, likewise,"
+ },
+ {
+  "id": 431,
+  "text": "is the same as the UART we talked about earlier,"
+ },
+ {
+  "id": 432,
+  "text": "that is to say, all peripherals,"
+ },
+ {
+  "id": 433,
+  "text": "they all use memory-mapped I/O,"
+ },
+ {
+  "id": 434,
+  "text": "to let us access their registers."
+ },
+ {
+  "id": 435,
+  "text": "So, according to"
+ },
+ {
+  "id": 436,
+  "text": "the definition in our emulator,"
+ },
+ {
+  "id": 437,
+  "text": "the range of all of its PLIC registers,"
+ },
+ {
+  "id": 438,
+  "text": "is specified to be within this range,"
+ },
+ {
+  "id": 439,
+  "text": "namely 0XC"
+ },
+ {
+  "id": 440,
+  "text": "followed by 6 zeros"
+ },
+ {
+  "id": 441,
+  "text": "so this starts at this address"
+ },
+ {
+  "id": 442,
+  "text": "and then there's this range of addresses after it"
+ },
+ {
+  "id": 443,
+  "text": "used to allocate registers for it"
+ },
+ {
+  "id": 444,
+  "text": "Now the diagram on the right"
+ },
+ {
+  "id": 445,
+  "text": "actually shows exactly what I mean"
+ },
+ {
+  "id": 446,
+  "text": "That is, this is basically a peripheral"
+ },
+ {
+  "id": 447,
+  "text": "Last time we wrote UART here, right?"
+ },
+ {
+  "id": 448,
+  "text": "Here it's the PRC"
+ },
+ {
+  "id": 449,
+  "text": "The range of some of the PRC's registers"
+ },
+ {
+  "id": 450,
+  "text": "is allocated within this range"
+ },
+ {
+  "id": 451,
+  "text": "For details, you can refer to"
+ },
+ {
+  "id": 452,
+  "text": "this code"
+ },
+ {
+  "id": 453,
+  "text": "So its base address"
+ },
+ {
+  "id": 454,
+  "text": "is this one"
+ },
+ {
+  "id": 455,
+  "text": "PLC"
+ },
+ {
+  "id": 456,
+  "text": "This just defines a base address"
+ },
+ {
+  "id": 457,
+  "text": "So which ones are there?"
+ },
+ {
+  "id": 458,
+  "text": "Which ones does this PLC have?"
+ },
+ {
+  "id": 459,
+  "text": "Which interface registers does it have for programming?"
+ },
+ {
+  "id": 460,
+  "text": "So here,"
+ },
+ {
+  "id": 461,
+  "text": "let me first introduce to you,"
+ },
+ {
+  "id": 462,
+  "text": "the first thing,"
+ },
+ {
+  "id": 463,
+  "text": "as we mentioned earlier,"
+ },
+ {
+  "id": 464,
+  "text": "this PLIC,"
+ },
+ {
+  "id": 465,
+  "text": "one of its very important functions,"
+ },
+ {
+  "id": 466,
+  "text": "is that based on the priority of the interrupt,"
+ },
+ {
+  "id": 467,
+  "text": "it can select one to come through."
+ },
+ {
+  "id": 468,
+  "text": "So,"
+ },
+ {
+  "id": 469,
+  "text": "we can actually handle multiple"
+ },
+ {
+  "id": 470,
+  "text": "if there are multiple devices,"
+ },
+ {
+  "id": 471,
+  "text": "multiple peripherals,"
+ },
+ {
+  "id": 472,
+  "text": "then the priorities of the interrupt sources of these multiple peripherals,"
+ },
+ {
+  "id": 473,
+  "text": "we can actually configure them individually."
+ },
+ {
+  "id": 474,
+  "text": "We can set them,"
+ },
+ {
+  "id": 475,
+  "text": "and how do we set them?"
+ },
+ {
+  "id": 476,
+  "text": "Through a register called priority, for example."
+ },
+ {
+  "id": 477,
+  "text": "Now this register,"
+ },
+ {
+  "id": 478,
+  "text": "its address starts from base,"
+ },
+ {
+  "id": 479,
+  "text": "and then based on the interrupt number times 4"
+ },
+ {
+  "id": 480,
+  "text": "Because each register is 32 bits wide,"
+ },
+ {
+  "id": 481,
+  "text": "which is 4 bytes."
+ },
+ {
+  "id": 482,
+  "text": "So you use that as the offset."
+ },
+ {
+  "id": 483,
+  "text": "Each PLIC interrupt source corresponds to one register."
+ },
+ {
+  "id": 484,
+  "text": "So if your board has,"
+ },
+ {
+  "id": 485,
+  "text": "let's say it has fifty,"
+ },
+ {
+  "id": 486,
+  "text": "fifty-two or fifty-three of them,"
+ },
+ {
+  "id": 487,
+  "text": "then it's just one"
+ },
+ {
+  "id": 488,
+  "text": "one register per interrupt source,"
+ },
+ {
+  "id": 489,
+  "text": "that's basically the idea."
+ },
+ {
+  "id": 490,
+  "text": "That's one concept."
+ },
+ {
+  "id": 491,
+  "text": "The second one is,"
+ },
+ {
+  "id": 492,
+  "text": "the actual value you configure,"
+ },
+ {
+  "id": 493,
+  "text": "it's a number,"
+ },
+ {
+  "id": 494,
+  "text": "and that number"
+ },
+ {
+  "id": 495,
+  "text": "ranges from 0 to 7."
+ },
+ {
+  "id": 496,
+  "text": "Among them, 0 means"
+ },
+ {
+  "id": 497,
+  "text": "if you set this interrupt source,"
+ },
+ {
+  "id": 498,
+  "text": "if you configure it to 0,"
+ },
+ {
+  "id": 499,
+  "text": "it effectively means"
+ },
+ {
+  "id": 500,
+  "text": "this interrupt source cannot be used"
+ },
+ {
+  "id": 501,
+  "text": "it cannot be used"
+ },
+ {
+  "id": 502,
+  "text": "and the value goes from 1 to 7"
+ },
+ {
+  "id": 503,
+  "text": "1 means the smaller the value, the lower it is"
+ },
+ {
+  "id": 504,
+  "text": "1 is the lowest"
+ },
+ {
+  "id": 505,
+  "text": "7 means this interrupt source has a higher priority"
+ },
+ {
+  "id": 506,
+  "text": "so the PLIC, based on the priority of your interrupt source,"
+ },
+ {
+  "id": 507,
+  "text": "it will make some decisions"
+ },
+ {
+  "id": 508,
+  "text": "and of course, if the priority is higher,"
+ },
+ {
+  "id": 509,
+  "text": "of course it will handle it first"
+ },
+ {
+  "id": 510,
+  "text": "and submit it to the CPU for processing"
+ },
+ {
+  "id": 511,
+  "text": "and you might have configured two interrupt sources"
+ },
+ {
+  "id": 512,
+  "text": "with priorities that are the same, right?"
+ },
+ {
+  "id": 513,
+  "text": "so if they are the same,"
+ },
+ {
+  "id": 514,
+  "text": "according to the specification,"
+ },
+ {
+  "id": 515,
+  "text": "it will further distinguish them by the ID value of the interrupt source"
+ },
+ {
+  "id": 516,
+  "text": "if the ID value is smaller,"
+ },
+ {
+  "id": 517,
+  "text": "the priority is higher"
+ },
+ {
+  "id": 518,
+  "text": "that is how it works"
+ },
+ {
+  "id": 519,
+  "text": "so it is essentially a two-level decision and handling process"
+ },
+ {
+  "id": 520,
+  "text": "This is priority handling."
+ },
+ {
+  "id": 521,
+  "text": "Now, in our code,"
+ },
+ {
+  "id": 522,
+  "text": "here we've also listed some of the related content in our code."
+ },
+ {
+  "id": 523,
+  "text": "It's actually this code."
+ },
+ {
+  "id": 524,
+  "text": "It's actually based on the concept we just covered."
+ },
+ {
+  "id": 525,
+  "text": "First, we defined a macro,"
+ },
+ {
+  "id": 526,
+  "text": "called PIC priority,"
+ },
+ {
+  "id": 527,
+  "text": "and its parameter is ID."
+ },
+ {
+  "id": 528,
+  "text": "ID is the ID value of the interrupt source,"
+ },
+ {
+  "id": 529,
+  "text": "the number of the interrupt source."
+ },
+ {
+  "id": 530,
+  "text": "Then, this logic below,"
+ },
+ {
+  "id": 531,
+  "text": "actually, this piece of code,"
+ },
+ {
+  "id": 532,
+  "text": "what does it actually mean?"
+ },
+ {
+  "id": 533,
+  "text": "It actually means that,"
+ },
+ {
+  "id": 534,
+  "text": "URLQ,"
+ },
+ {
+  "id": 535,
+  "text": "this thing is actually,"
+ },
+ {
+  "id": 536,
+  "text": "the interrupt number of our UART device."
+ },
+ {
+  "id": 537,
+  "text": "This was earlier,"
+ },
+ {
+  "id": 538,
+  "text": "it's right here, right?"
+ },
+ {
+  "id": 539,
+  "text": "It's already here."
+ },
+ {
+  "id": 540,
+  "text": "I've listed them for you as well."
+ },
+ {
+  "id": 541,
+  "text": "So if we set it to 1,"
+ },
+ {
+  "id": 542,
+  "text": "what does that tell us?"
+ },
+ {
+  "id": 543,
+  "text": "It means we take this UART0 device peripheral,"
+ },
+ {
+  "id": 544,
+  "text": "and set its priority to 1."
+ },
+ {
+  "id": 545,
+  "text": "And 1 is actually a relatively low priority."
+ },
+ {
+  "id": 546,
+  "text": "That's what it means."
+ },
+ {
+  "id": 547,
+  "text": "This is the priority setting."
+ },
+ {
+  "id": 548,
+  "text": "Now the next register,"
+ },
+ {
+  "id": 549,
+  "text": "it's called pending."
+ },
+ {
+  "id": 550,
+  "text": "The pending register,"
+ },
+ {
+  "id": 551,
+  "text": "it is actually used to... through this,"
+ },
+ {
+  "id": 552,
+  "text": "when we read this pending register,"
+ },
+ {
+  "id": 553,
+  "text": "we can find out whether a particular interrupt source has occurred."
+ },
+ {
+  "id": 554,
+  "text": "That's actually what it's used for."
+ },
+ {
+  "id": 555,
+  "text": "Now for this pending register,"
+ },
+ {
+  "id": 556,
+  "text": "each PLIC actually has two of them,"
+ },
+ {
+  "id": 557,
+  "text": "because each one is 32 bits."
+ },
+ {
+  "id": 558,
+  "text": "But as we know, with 32 bits,"
+ },
+ {
+  "id": 559,
+  "text": "it can represent at most 32 interrupt sources, right?"
+ },
+ {
+  "id": 560,
+  "text": "But as the specification says,"
+ },
+ {
+  "id": 561,
+  "text": "there are already more than 50 of these, right?"
+ },
+ {
+  "id": 562,
+  "text": "53 of them."
+ },
+ {
+  "id": 563,
+  "text": "So one register isn't enough."
+ },
+ {
+  "id": 564,
+  "text": "That's why it defines two registers to represent them."
+ },
+ {
+  "id": 565,
+  "text": "Each bit represents one."
+ },
+ {
+  "id": 566,
+  "text": "So, for example, the first one,"
+ },
+ {
+  "id": 567,
+  "text": "bit zero of the pending register,"
+ },
+ {
+  "id": 568,
+  "text": "represents interrupt source number 0."
+ },
+ {
+  "id": 569,
+  "text": "Then bit one,"
+ },
+ {
+  "id": 570,
+  "text": "represents interrupt source number 1."
+ },
+ {
+  "id": 571,
+  "text": "So each one represents a single source."
+ },
+ {
+  "id": 572,
+  "text": "If this value,"
+ },
+ {
+  "id": 573,
+  "text": "if each bit is 1,"
+ },
+ {
+  "id": 574,
+  "text": "it means the interrupt has occurred,"
+ },
+ {
+  "id": 575,
+  "text": "and is pending."
+ },
+ {
+  "id": 576,
+  "text": "If it is 0,"
+ },
+ {
+  "id": 577,
+  "text": "it means that interrupt source has not occurred."
+ },
+ {
+  "id": 578,
+  "text": "That's actually all it means."
+ },
+ {
+  "id": 579,
+  "text": "So"
+ },
+ {
+  "id": 580,
+  "text": "This pending register"
+ },
+ {
+  "id": 581,
+  "text": "can be both read and written."
+ },
+ {
+  "id": 582,
+  "text": "Through this claim mechanism, this claim method,"
+ },
+ {
+  "id": 583,
+  "text": "I'll explain it to you later,"
+ },
+ {
+  "id": 584,
+  "text": "you can clear its, this pending bit."
+ },
+ {
+  "id": 585,
+  "text": "The pending bit."
+ },
+ {
+  "id": 586,
+  "text": "Now it also says here,"
+ },
+ {
+  "id": 587,
+  "text": "bit 0 corresponds to..."
+ },
+ {
+  "id": 588,
+  "text": "Because interrupt source number 0 doesn't exist,"
+ },
+ {
+  "id": 589,
+  "text": "so this value,"
+ },
+ {
+  "id": 590,
+  "text": "writing to it is actually meaningless."
+ },
+ {
+  "id": 591,
+  "text": "And the value read out is always 0."
+ },
+ {
+  "id": 592,
+  "text": "Okay."
+ },
+ {
+  "id": 593,
+  "text": "This is the pending register."
+ },
+ {
+  "id": 594,
+  "text": "Then,"
+ },
+ {
+  "id": 595,
+  "text": "we can also control this"
+ },
+ {
+  "id": 596,
+  "text": "interrupt source,"
+ },
+ {
+  "id": 597,
+  "text": "whether to turn it on,"
+ },
+ {
+  "id": 598,
+  "text": "enable it or disable it,"
+ },
+ {
+  "id": 599,
+  "text": "ah."
+ },
+ {
+  "id": 600,
+  "text": "So this"
+ },
+ {
+  "id": 601,
+  "text": "as we said,"
+ },
+ {
+  "id": 602,
+  "text": "this"
+ },
+ {
+  "id": 603,
+  "text": "um,"
+ },
+ {
+  "id": 604,
+  "text": "this register,"
+ },
+ {
+  "id": 605,
+  "text": "it's one hart, one of these,"
+ },
+ {
+  "id": 606,
+  "text": "ah,"
+ },
+ {
+  "id": 607,
+  "text": "one hart,"
+ },
+ {
+  "id": 608,
+  "text": "one hart, two of them,"
+ },
+ {
+  "id": 609,
+  "text": "one hart, two of them,"
+ },
+ {
+  "id": 610,
+  "text": "and the reason is the same, that is,"
+ },
+ {
+  "id": 611,
+  "text": "because"
+ },
+ {
+  "id": 612,
+  "text": "because a single Enable register can only handle 32 of them,"
+ },
+ {
+  "id": 613,
+  "text": "so you need two to handle 53 of them."
+ },
+ {
+  "id": 614,
+  "text": "But there are two of them for each hart,"
+ },
+ {
+  "id": 615,
+  "text": "because it's configured per hart."
+ },
+ {
+  "id": 616,
+  "text": "Similarly, one bit controls one,"
+ },
+ {
+  "id": 617,
+  "text": "this part is pretty simple."
+ },
+ {
+  "id": 618,
+  "text": "Just get a general idea of it."
+ },
+ {
+  "id": 619,
+  "text": "This is for controlling the interrupt sources."
+ },
+ {
+  "id": 620,
+  "text": "a register for enabling and disabling them"
+ },
+ {
+  "id": 621,
+  "text": "Now, our related code"
+ },
+ {
+  "id": 622,
+  "text": "also"
+ },
+ {
+  "id": 623,
+  "text": "the reference code, which you can take a look at"
+ },
+ {
+  "id": 624,
+  "text": "also defines a macro"
+ },
+ {
+  "id": 625,
+  "text": "So this"
+ },
+ {
+  "id": 626,
+  "text": "parameter takes a"
+ },
+ {
+  "id": 627,
+  "text": "current hart ID"
+ },
+ {
+  "id": 628,
+  "text": "and then we set the UART"
+ },
+ {
+  "id": 629,
+  "text": "interrupt source"
+ },
+ {
+  "id": 630,
+  "text": "So these many bits are actually what we just talked about"
+ },
+ {
+  "id": 631,
+  "text": "each bit corresponds to one, based on"
+ },
+ {
+  "id": 632,
+  "text": "its number, or rather its corresponding bit position"
+ },
+ {
+  "id": 633,
+  "text": "This is the"
+ },
+ {
+  "id": 634,
+  "text": "enable register"
+ },
+ {
+  "id": 635,
+  "text": "And then there's another one"
+ },
+ {
+  "id": 636,
+  "text": "called threshold"
+ },
+ {
+  "id": 637,
+  "text": "that is, the priority threshold"
+ },
+ {
+  "id": 638,
+  "text": "We can, for this hart,"
+ },
+ {
+  "id": 639,
+  "text": "set the priority threshold for interrupt sources"
+ },
+ {
+  "id": 640,
+  "text": "So it's actually used to control"
+ },
+ {
+  "id": 641,
+  "text": "Think of it like a threshold bar"
+ },
+ {
+  "id": 642,
+  "text": "So if you set this threshold value"
+ },
+ {
+  "id": 643,
+  "text": "If this of yours"
+ },
+ {
+  "id": 644,
+  "text": "Because as we said, the interrupt source itself"
+ },
+ {
+  "id": 645,
+  "text": "We can set its priority"
+ },
+ {
+  "id": 646,
+  "text": "If this priority"
+ },
+ {
+  "id": 647,
+  "text": "Is less than or equal to this threshold value"
+ },
+ {
+  "id": 648,
+  "text": "Then it's essentially like saying"
+ },
+ {
+  "id": 649,
+  "text": "This interrupt happens"
+ },
+ {
+  "id": 650,
+  "text": "It will be discarded"
+ },
+ {
+  "id": 651,
+  "text": "Now for this threshold value"
+ },
+ {
+  "id": 652,
+  "text": "If we set it to 0"
+ },
+ {
+  "id": 653,
+  "text": "Then it essentially means that"
+ },
+ {
+  "id": 654,
+  "text": "As long as the original priority of your interrupt source"
+ },
+ {
+  "id": 655,
+  "text": "Is a non-zero number"
+ },
+ {
+  "id": 656,
+  "text": "Then basically it can be accepted"
+ },
+ {
+  "id": 657,
+  "text": "But if you set this threshold value to 7"
+ },
+ {
+  "id": 658,
+  "text": "Then it's essentially like saying"
+ },
+ {
+  "id": 659,
+  "text": "All these interrupt sources will just be discarded"
+ },
+ {
+  "id": 660,
+  "text": "That is to say, through this setting"
+ },
+ {
+  "id": 661,
+  "text": "this threshold can further control"
+ },
+ {
+  "id": 662,
+  "text": "filtering out certain"
+ },
+ {
+  "id": 663,
+  "text": "filtering out certain interrupt sources based on this priority"
+ },
+ {
+  "id": 664,
+  "text": "Here is a relevant example of the code for handling this."
+ },
+ {
+  "id": 665,
+  "text": "Just take a look at this."
+ },
+ {
+  "id": 666,
+  "text": "So, earlier,"
+ },
+ {
+  "id": 667,
+  "text": "these were just registers that control various switches"
+ },
+ {
+  "id": 668,
+  "text": "and thresholds."
+ },
+ {
+  "id": 669,
+  "text": "Now there are two more."
+ },
+ {
+  "id": 670,
+  "text": "One is called claim complete."
+ },
+ {
+  "id": 671,
+  "text": "Let's also take a look at these two registers."
+ },
+ {
+  "id": 672,
+  "text": "These two are,"
+ },
+ {
+  "id": 673,
+  "text": "as we said, these two registers,"
+ },
+ {
+  "id": 674,
+  "text": "first of all, what we need to understand is that"
+ },
+ {
+  "id": 675,
+  "text": "these two registers are actually the same register"
+ },
+ {
+  "id": 676,
+  "text": "— their addresses are actually identical."
+ },
+ {
+  "id": 677,
+  "text": "However,"
+ },
+ {
+  "id": 678,
+  "text": "the reason they are kept separate"
+ },
+ {
+  "id": 679,
+  "text": "is mainly because the effects they produce are different."
+ },
+ {
+  "id": 680,
+  "text": "So we just gave it two names."
+ },
+ {
+  "id": 681,
+  "text": "Now, what about Claim?"
+ },
+ {
+  "id": 682,
+  "text": "It's actually a read operation on this same register."
+ },
+ {
+  "id": 683,
+  "text": "And the write operation on it,"
+ },
+ {
+  "id": 684,
+  "text": "we call it Complete."
+ },
+ {
+  "id": 685,
+  "text": "That's what it means."
+ },
+ {
+  "id": 686,
+  "text": "Now, the read operation,"
+ },
+ {
+  "id": 687,
+  "text": "we call it Claim."
+ },
+ {
+  "id": 688,
+  "text": "What Claim actually achieves,"
+ },
+ {
+  "id": 689,
+  "text": "is that it can get the ID of"
+ },
+ {
+  "id": 690,
+  "text": "the highest-priority interrupt source currently pending."
+ },
+ {
+  "id": 691,
+  "text": "After a successful Claim,"
+ },
+ {
+  "id": 692,
+  "text": "it clears the corresponding pending bit."
+ },
+ {
+  "id": 693,
+  "text": "And Complete,"
+ },
+ {
+  "id": 694,
+  "text": "basically is like saying,"
+ },
+ {
+  "id": 695,
+  "text": "we notify the PLIC through our program"
+ },
+ {
+  "id": 696,
+  "text": "that we've finished handling an interrupt."
+ },
+ {
+  "id": 697,
+  "text": "Because as everyone knows, once this interrupt happens,"
+ },
+ {
+  "id": 698,
+  "text": "it still has to end up in our interrupt handling function."
+ },
+ {
+  "id": 699,
+  "text": "So how do we notify this PLIC?"
+ },
+ {
+  "id": 700,
+  "text": "Is this interrupt handled?"
+ },
+ {
+  "id": 701,
+  "text": "Yes, it's handled."
+ },
+ {
+  "id": 702,
+  "text": "We just use this Complete"
+ },
+ {
+  "id": 703,
+  "text": "to write to this Complete register, and that's it."
+ },
+ {
+  "id": 704,
+  "text": "So the PLIC,"
+ },
+ {
+  "id": 705,
+  "text": "actually, through this mechanism,"
+ },
+ {
+  "id": 706,
+  "text": "it can"
+ },
+ {
+  "id": 707,
+  "text": "as you know, it's possible that"
+ },
+ {
+  "id": 708,
+  "text": "multiple interrupts occur at the same time."
+ },
+ {
+  "id": 709,
+  "text": "Then it may hand the first interrupt"
+ },
+ {
+  "id": 710,
+  "text": "to us, and after we've finished handling it,"
+ },
+ {
+  "id": 711,
+  "text": "when does it hand us"
+ },
+ {
+  "id": 712,
+  "text": "the second interrupt?"
+ },
+ {
+  "id": 713,
+  "text": "It actually depends on us notifying it,"
+ },
+ {
+  "id": 714,
+  "text": "through this complete mechanism,"
+ },
+ {
+  "id": 715,
+  "text": "notifying it"
+ },
+ {
+  "id": 716,
+  "text": "when the second interrupt"
+ },
+ {
+  "id": 717,
+  "text": "can be let in again,"
+ },
+ {
+  "id": 718,
+  "text": "right?"
+ },
+ {
+  "id": 719,
+  "text": "This is what claim and complete are about."
+ },
+ {
+  "id": 720,
+  "text": "the effect it is meant to achieve"
+ },
+ {
+  "id": 721,
+  "text": "So basically,"
+ },
+ {
+  "id": 722,
+  "text": "these are some related functions."
+ },
+ {
+  "id": 723,
+  "text": "Here I'll just"
+ },
+ {
+  "id": 724,
+  "text": "you can combine the concepts we just covered"
+ },
+ {
+  "id": 725,
+  "text": "and let's take a look."
+ },
+ {
+  "id": 726,
+  "text": "We've wrapped all of this up,"
+ },
+ {
+  "id": 727,
+  "text": "so basically regarding"
+ },
+ {
+  "id": 728,
+  "text": "the programming interface this PLIC provides,"
+ },
+ {
+  "id": 729,
+  "text": "how do we control it?"
+ },
+ {
+  "id": 730,
+  "text": "How do we use this interface to interact with it?"
+ },
+ {
+  "id": 731,
+  "text": "That's where we'll leave it for now."
+ },
+ {
+  "id": 732,
+  "text": "So next,"
+ },
+ {
+  "id": 733,
+  "text": "we'll mainly use this diagram"
+ },
+ {
+  "id": 734,
+  "text": "to understand"
+ },
+ {
+  "id": 735,
+  "text": "how exactly an interrupt occurs,"
+ },
+ {
+  "id": 736,
+  "text": "and what the process looks like in between."
+ },
+ {
+  "id": 737,
+  "text": "We set these counters,"
+ },
+ {
+  "id": 738,
+  "text": "and what role do they actually play?"
+ },
+ {
+  "id": 739,
+  "text": "Now, this diagram"
+ },
+ {
+  "id": 740,
+  "text": "Actually, I copied this diagram from the PIC specification,"
+ },
+ {
+  "id": 741,
+  "text": "a figure I took from the spec."
+ },
+ {
+  "id": 742,
+  "text": "We modified it slightly,"
+ },
+ {
+  "id": 743,
+  "text": "to illustrate the operating flow of the PIC."
+ },
+ {
+  "id": 744,
+  "text": "Now, on this diagram,"
+ },
+ {
+  "id": 745,
+  "text": "first, let's get a sense of what it shows."
+ },
+ {
+  "id": 746,
+  "text": "What's being conveyed here is that"
+ },
+ {
+  "id": 747,
+  "text": "this is a PIC,"
+ },
+ {
+  "id": 748,
+  "text": "this whole thing is a PIC."
+ },
+ {
+  "id": 749,
+  "text": "Now, up here,"
+ },
+ {
+  "id": 750,
+  "text": "for the sake of example,"
+ },
+ {
+  "id": 751,
+  "text": "let's say it has two external devices connected in,"
+ },
+ {
+  "id": 752,
+  "text": "two lines — one is called 1,"
+ },
+ {
+  "id": 753,
+  "text": "the other is called 2."
+ },
+ {
+  "id": 754,
+  "text": "You can think of them as two peripherals."
+ },
+ {
+  "id": 755,
+  "text": "Then over here,"
+ },
+ {
+  "id": 756,
+  "text": "it is actually connected to two CPUs,"
+ },
+ {
+  "id": 757,
+  "text": "right?"
+ },
+ {
+  "id": 758,
+  "text": "Two CPUs coming out."
+ },
+ {
+  "id": 759,
+  "text": "This one is actually considered to be a"
+ },
+ {
+  "id": 760,
+  "text": "an interrupt line for external interrupts"
+ },
+ {
+  "id": 761,
+  "text": "So for a CPU,"
+ },
+ {
+  "id": 762,
+  "text": "there are actually two interrupt sources."
+ },
+ {
+  "id": 763,
+  "text": "But there's only one line here."
+ },
+ {
+  "id": 764,
+  "text": "And then,"
+ },
+ {
+  "id": 765,
+  "text": "this actually reflects"
+ },
+ {
+  "id": 766,
+  "text": "the concept of those registers we just talked about."
+ },
+ {
+  "id": 767,
+  "text": "This is the priority setting."
+ },
+ {
+  "id": 768,
+  "text": "That is, when we set the priority,"
+ },
+ {
+  "id": 769,
+  "text": "as for that priority,"
+ },
+ {
+  "id": 770,
+  "text": "don't we set it for individual interrupt sources?"
+ },
+ {
+  "id": 771,
+  "text": "Well, this thing here actually corresponds to that."
+ },
+ {
+  "id": 772,
+  "text": "It's the setting, the setting."
+ },
+ {
+  "id": 773,
+  "text": "This is used to control"
+ },
+ {
+  "id": 774,
+  "text": "the priority of interrupt source 2."
+ },
+ {
+  "id": 775,
+  "text": "And this is used to control"
+ },
+ {
+  "id": 776,
+  "text": "the priority of interrupt source 1."
+ },
+ {
+  "id": 777,
+  "text": "Then as for these things,"
+ },
+ {
+  "id": 778,
+  "text": "RE actually stands for enable,"
+ },
+ {
+  "id": 779,
+  "text": "corresponding to the enable registers."
+ },
+ {
+  "id": 780,
+  "text": "This register,"
+ },
+ {
+  "id": 781,
+  "text": "the register where we actually do the enable,"
+ },
+ {
+  "id": 782,
+  "text": "depending on the different HART,"
+ },
+ {
+  "id": 783,
+  "text": "we can individually"
+ },
+ {
+  "id": 784,
+  "text": "configure these different interrupt sources separately."
+ },
+ {
+  "id": 785,
+  "text": "As you can see, right?"
+ },
+ {
+  "id": 786,
+  "text": "For example, this"
+ },
+ {
+  "id": 787,
+  "text": "these two are for the two on this HART,"
+ },
+ {
+  "id": 788,
+  "text": "and these two,"
+ },
+ {
+  "id": 789,
+  "text": "again, are configured for this HART."
+ },
+ {
+  "id": 790,
+  "text": "This is the Enable."
+ },
+ {
+  "id": 791,
+  "text": "And then"
+ },
+ {
+  "id": 792,
+  "text": "this one is for the"
+ },
+ {
+  "id": 793,
+  "text": "Stretch Hold, that is, the threshold,"
+ },
+ {
+  "id": 794,
+  "text": "setting the"
+ },
+ {
+  "id": 795,
+  "text": "threshold for each interrupt source,"
+ },
+ {
+  "id": 796,
+  "text": "setting the threshold for each HART."
+ },
+ {
+  "id": 797,
+  "text": "It should be the threshold for each HART,"
+ },
+ {
+  "id": 798,
+  "text": "right?"
+ },
+ {
+  "id": 799,
+  "text": "Let me take a look."
+ },
+ {
+  "id": 800,
+  "text": "The threshold is set for the HOT level."
+ },
+ {
+  "id": 801,
+  "text": "The threshold is for the HOT level."
+ },
+ {
+  "id": 802,
+  "text": "So this is"
+ },
+ {
+  "id": 803,
+  "text": "a threshold for HOT."
+ },
+ {
+  "id": 804,
+  "text": "This is the threshold."
+ },
+ {
+  "id": 805,
+  "text": "And then,"
+ },
+ {
+  "id": 806,
+  "text": "this part here,"
+ },
+ {
+  "id": 807,
+  "text": "is actually the Pending bit."
+ },
+ {
+  "id": 808,
+  "text": "That's what I use"
+ },
+ {
+  "id": 809,
+  "text": "by reading it out,"
+ },
+ {
+  "id": 810,
+  "text": "we know whether this"
+ },
+ {
+  "id": 811,
+  "text": "interrupt has occurred or not."
+ },
+ {
+  "id": 812,
+  "text": "And this one here"
+ },
+ {
+  "id": 813,
+  "text": "is Claim and Complete."
+ },
+ {
+  "id": 814,
+  "text": "Claim and Complete."
+ },
+ {
+  "id": 815,
+  "text": "We go and"
+ },
+ {
+  "id": 816,
+  "text": "read this claim and complete,"
+ },
+ {
+  "id": 817,
+  "text": "and go write"
+ },
+ {
+  "id": 818,
+  "text": "to complete,"
+ },
+ {
+  "id": 819,
+  "text": "which is this register."
+ },
+ {
+  "id": 820,
+  "text": "So in this figure,"
+ },
+ {
+  "id": 821,
+  "text": "all the registers we just introduced,"
+ },
+ {
+  "id": 822,
+  "text": "they're all covered here."
+ },
+ {
+  "id": 823,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 824,
+  "text": "Let me give you an example."
+ },
+ {
+  "id": 825,
+  "text": "Suppose we have two interrupt sources."
+ },
+ {
+  "id": 826,
+  "text": "After these two interrupt sources occur,"
+ },
+ {
+  "id": 827,
+  "text": "what happens to us?"
+ },
+ {
+  "id": 828,
+  "text": "How we set these registers,"
+ },
+ {
+  "id": 829,
+  "text": "what effect will that have?"
+ },
+ {
+  "id": 830,
+  "text": "Now suppose we set"
+ },
+ {
+  "id": 831,
+  "text": "the priority of interrupt source 1 to 1,"
+ },
+ {
+  "id": 832,
+  "text": "and the priority of interrupt source 2 to 2."
+ },
+ {
+  "id": 833,
+  "text": "What that means is,"
+ },
+ {
+  "id": 834,
+  "text": "as we know, the larger this value is,"
+ },
+ {
+  "id": 835,
+  "text": "the higher its priority."
+ },
+ {
+  "id": 836,
+  "text": "So basically, interrupt source 2"
+ },
+ {
+  "id": 837,
+  "text": "has the higher priority."
+ },
+ {
+  "id": 838,
+  "text": "And then,"
+ },
+ {
+  "id": 839,
+  "text": "for example, if we also set"
+ },
+ {
+  "id": 840,
+  "text": "For Hart"
+ },
+ {
+  "id": 841,
+  "text": "let's say for Hart 0,"
+ },
+ {
+  "id": 842,
+  "text": "we enable both of its interrupts."
+ },
+ {
+  "id": 843,
+  "text": "And on this side, we disable them."
+ },
+ {
+  "id": 844,
+  "text": "Now once this is disabled,"
+ },
+ {
+  "id": 845,
+  "text": "as you all know, nothing can actually get through,"
+ },
+ {
+  "id": 846,
+  "text": "Hart 0 can't get through here."
+ },
+ {
+  "id": 847,
+  "text": "And then,"
+ },
+ {
+  "id": 848,
+  "text": "we also go and set this,"
+ },
+ {
+  "id": 849,
+  "text": "its threshold."
+ },
+ {
+  "id": 850,
+  "text": "The threshold,"
+ },
+ {
+  "id": 851,
+  "text": "for example, let's set it to 0."
+ },
+ {
+  "id": 852,
+  "text": "Setting it to 0, as we covered earlier,"
+ },
+ {
+  "id": 853,
+  "text": "means it effectively"
+ },
+ {
+  "id": 854,
+  "text": "lets all interrupts through,"
+ },
+ {
+  "id": 855,
+  "text": "lets all interrupts through."
+ },
+ {
+  "id": 856,
+  "text": "Okay."
+ },
+ {
+  "id": 857,
+  "text": "So suppose this"
+ },
+ {
+  "id": 858,
+  "text": "peripheral 1 and interrupt 2"
+ },
+ {
+  "id": 859,
+  "text": "occur."
+ },
+ {
+  "id": 860,
+  "text": "Now, of course, the example we're using here is one where they happen at the same time."
+ },
+ {
+  "id": 861,
+  "text": "But happening at the same time,"
+ },
+ {
+  "id": 862,
+  "text": "doesn't mean"
+ },
+ {
+  "id": 863,
+  "text": "they actually come in at the same time."
+ },
+ {
+  "id": 864,
+  "text": "That's something you all need to keep in mind."
+ },
+ {
+  "id": 865,
+  "text": "So,"
+ },
+ {
+  "id": 866,
+  "text": "so first,"
+ },
+ {
+  "id": 867,
+  "text": "we judge them based on priority."
+ },
+ {
+  "id": 868,
+  "text": "We know that priority 1"
+ },
+ {
+  "id": 869,
+  "text": "is lower than priority 2,"
+ },
+ {
+  "id": 870,
+  "text": "so which interrupt"
+ },
+ {
+  "id": 871,
+  "text": "gets in first?"
+ },
+ {
+  "id": 872,
+  "text": "Well, it's definitely interrupt 2 that comes in first,"
+ },
+ {
+  "id": 873,
+  "text": "right?"
+ },
+ {
+  "id": 874,
+  "text": "Besides, this path is open,"
+ },
+ {
+  "id": 875,
+  "text": "so it can come in."
+ },
+ {
+  "id": 876,
+  "text": "The path below can't come in."
+ },
+ {
+  "id": 877,
+  "text": "In other words, this second one, the Hot"
+ },
+ {
+  "id": 878,
+  "text": "—it can't get in here,"
+ },
+ {
+  "id": 879,
+  "text": "because this path"
+ },
+ {
+  "id": 880,
+  "text": "This path is currently closed off."
+ },
+ {
+  "id": 881,
+  "text": "It's closed off."
+ },
+ {
+  "id": 882,
+  "text": "It's been disabled."
+ },
+ {
+  "id": 883,
+  "text": "Meaning this can't get through."
+ },
+ {
+  "id": 884,
+  "text": "Now, once it does get through,"
+ },
+ {
+  "id": 885,
+  "text": "this point, because the Threshold is also 0,"
+ },
+ {
+  "id": 886,
+  "text": "so 0 is definitely less than 2,"
+ },
+ {
+  "id": 887,
+  "text": "so it can definitely get in as well."
+ },
+ {
+  "id": 888,
+  "text": "So once it gets in,"
+ },
+ {
+  "id": 889,
+  "text": "then, after it gets in,"
+ },
+ {
+  "id": 890,
+  "text": "we say that this source 2,"
+ },
+ {
+  "id": 891,
+  "text": "it's basically as if this interrupt lights up."
+ },
+ {
+  "id": 892,
+  "text": "Once this light comes on,"
+ },
+ {
+  "id": 893,
+  "text": "the light coming on is basically like saying,"
+ },
+ {
+  "id": 894,
+  "text": "the interrupt on our CPU side has occurred."
+ },
+ {
+  "id": 895,
+  "text": "It will then,"
+ },
+ {
+  "id": 896,
+  "text": "the execution process on our CPU here will get interrupted."
+ },
+ {
+  "id": 897,
+  "text": "So the interruption takes us into our interrupt handler,"
+ },
+ {
+  "id": 898,
+  "text": "and we go and handle this interrupt."
+ },
+ {
+  "id": 899,
+  "text": "Now, as for the handling process,"
+ },
+ {
+  "id": 900,
+  "text": "Actually, what we need to do"
+ },
+ {
+  "id": 901,
+  "text": "is figure out"
+ },
+ {
+  "id": 902,
+  "text": "which source came in."
+ },
+ {
+  "id": 903,
+  "text": "We do this by calling claim,"
+ },
+ {
+  "id": 904,
+  "text": "and by calling claim,"
+ },
+ {
+  "id": 905,
+  "text": "we can find out,"
+ },
+ {
+  "id": 906,
+  "text": "because we know that"
+ },
+ {
+  "id": 907,
+  "text": "after the claim call,"
+ },
+ {
+  "id": 908,
+  "text": "it returns the ID of that interrupt source."
+ },
+ {
+  "id": 909,
+  "text": "So then we know,"
+ },
+ {
+  "id": 910,
+  "text": "for example, say this is 1 2,"
+ },
+ {
+  "id": 911,
+  "text": "so it's number 2."
+ },
+ {
+  "id": 912,
+  "text": "Once we know from claim"
+ },
+ {
+  "id": 913,
+  "text": "that it's number 2,"
+ },
+ {
+  "id": 914,
+  "text": "we go into the switch-case logic,"
+ },
+ {
+  "id": 915,
+  "text": "right?"
+ },
+ {
+  "id": 916,
+  "text": "We handle the logic for this interrupt source number 2,"
+ },
+ {
+  "id": 917,
+  "text": "and once that's done,"
+ },
+ {
+  "id": 918,
+  "text": "what else do we need to do?"
+ },
+ {
+  "id": 919,
+  "text": "We need to"
+ },
+ {
+  "id": 920,
+  "text": "One thing to mention here is that if we do a claim"
+ },
+ {
+  "id": 921,
+  "text": "then this"
+ },
+ {
+  "id": 922,
+  "text": "this pending bit will actually be cleared"
+ },
+ {
+  "id": 923,
+  "text": "this pending bit will actually be cleared"
+ },
+ {
+  "id": 924,
+  "text": "And then, after we're done handling it"
+ },
+ {
+  "id": 925,
+  "text": "we call this complete operation"
+ },
+ {
+  "id": 926,
+  "text": "Now, complete actually means going to"
+ },
+ {
+  "id": 927,
+  "text": "going to write to this complete register"
+ },
+ {
+  "id": 928,
+  "text": "So once we write to it,"
+ },
+ {
+  "id": 929,
+  "text": "it's essentially like saying"
+ },
+ {
+  "id": 930,
+  "text": "we've notified the PLIC"
+ },
+ {
+  "id": 931,
+  "text": "that this"
+ },
+ {
+  "id": 932,
+  "text": "current interrupt"
+ },
+ {
+  "id": 933,
+  "text": "has been handled"
+ },
+ {
+  "id": 934,
+  "text": "After it's handled,"
+ },
+ {
+  "id": 935,
+  "text": "then as you can imagine,"
+ },
+ {
+  "id": 936,
+  "text": "interrupt 2 is done"
+ },
+ {
+  "id": 937,
+  "text": "Once it's done,"
+ },
+ {
+  "id": 938,
+  "text": "then of course, as you know,"
+ },
+ {
+  "id": 939,
+  "text": "interrupt 1 actually"
+ },
+ {
+  "id": 940,
+  "text": "this part is blocked right here"
+ },
+ {
+  "id": 941,
+  "text": "and never gets in"
+ },
+ {
+  "id": 942,
+  "text": "right?"
+ },
+ {
+  "id": 943,
+  "text": "Then this interrupt number 1"
+ },
+ {
+  "id": 944,
+  "text": "will come in."
+ },
+ {
+  "id": 945,
+  "text": "So over here"
+ },
+ {
+  "id": 946,
+  "text": "for number 1, the"
+ },
+ {
+  "id": 947,
+  "text": "Pending bit lights up again."
+ },
+ {
+  "id": 948,
+  "text": "And once it lights up,"
+ },
+ {
+  "id": 949,
+  "text": "then our"
+ },
+ {
+  "id": 950,
+  "text": "in effect, our CPU"
+ },
+ {
+  "id": 951,
+  "text": "can handle interrupt number 1."
+ },
+ {
+  "id": 952,
+  "text": "So this,"
+ },
+ {
+  "id": 953,
+  "text": "in a nutshell, is how PLIC does its arbitration."
+ },
+ {
+  "id": 954,
+  "text": "That's how it works for us."
+ },
+ {
+  "id": 955,
+  "text": "So just get a general idea of it."
+ },
+ {
+  "id": 956,
+  "text": "Now, the last part of this chapter"
+ },
+ {
+  "id": 957,
+  "text": "is to give you an example."
+ },
+ {
+  "id": 958,
+  "text": "That is, after we've learned"
+ },
+ {
+  "id": 959,
+  "text": "how interrupt handling works,"
+ },
+ {
+  "id": 960,
+  "text": "Let's take a look"
+ },
+ {
+  "id": 961,
+  "text": "at how we can use some of the related knowledge about interrupts"
+ },
+ {
+  "id": 962,
+  "text": "to implement"
+ },
+ {
+  "id": 963,
+  "text": "that is, still using the UART device"
+ },
+ {
+  "id": 964,
+  "text": "because as we discussed earlier,"
+ },
+ {
+  "id": 965,
+  "text": "we used the UART to implement an output."
+ },
+ {
+  "id": 966,
+  "text": "Now, through interrupts,"
+ },
+ {
+  "id": 967,
+  "text": "we're going to implement an input."
+ },
+ {
+  "id": 968,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 969,
+  "text": "It means that when we're on the console,"
+ },
+ {
+  "id": 970,
+  "text": "say we type a character,"
+ },
+ {
+  "id": 971,
+  "text": "it actually goes through the keyboard,"
+ },
+ {
+  "id": 972,
+  "text": "and then through this console,"
+ },
+ {
+  "id": 973,
+  "text": "it sends it to that serial port."
+ },
+ {
+  "id": 974,
+  "text": "In other words,"
+ },
+ {
+  "id": 975,
+  "text": "the data gets sent to"
+ },
+ {
+  "id": 976,
+  "text": "this serial port device."
+ },
+ {
+  "id": 977,
+  "text": "Then this serial port device,"
+ },
+ {
+  "id": 978,
+  "text": "it will essentially,"
+ },
+ {
+  "id": 979,
+  "text": "it will get a"
+ },
+ {
+  "id": 980,
+  "text": "it will generate an interrupt to notify"
+ },
+ {
+  "id": 981,
+  "text": "this CPU, right?"
+ },
+ {
+  "id": 982,
+  "text": "Let me take a look at this."
+ },
+ {
+  "id": 983,
+  "text": "Let's go over the principle of this"
+ },
+ {
+  "id": 984,
+  "text": "briefly first."
+ },
+ {
+  "id": 985,
+  "text": "That is to say,"
+ },
+ {
+  "id": 986,
+  "text": "we know that"
+ },
+ {
+  "id": 987,
+  "text": "let's say this is our CPU,"
+ },
+ {
+  "id": 988,
+  "text": "and then"
+ },
+ {
+  "id": 989,
+  "text": "on the outside,"
+ },
+ {
+  "id": 990,
+  "text": "it has a PRC connected to it."
+ },
+ {
+  "id": 991,
+  "text": "As for the PRC,"
+ },
+ {
+  "id": 992,
+  "text": "there's a UART device connected on the outside."
+ },
+ {
+  "id": 993,
+  "text": "This UART device,"
+ },
+ {
+  "id": 994,
+  "text": "and this one here"
+ },
+ {
+  "id": 995,
+  "text": "is the P-L-I-C,"
+ },
+ {
+  "id": 996,
+  "text": "this thing right here."
+ },
+ {
+  "id": 997,
+  "text": "And this one here,"
+ },
+ {
+  "id": 998,
+  "text": "maybe this is our HOT,"
+ },
+ {
+  "id": 999,
+  "text": "the CPU."
+ },
+ {
+  "id": 1000,
+  "text": "Now, this UART,"
+ },
+ {
+  "id": 1001,
+  "text": "this thing here,"
+ },
+ {
+  "id": 1002,
+  "text": "is actually all"
+ },
+ {
+  "id": 1003,
+  "text": "essentially inside our"
+ },
+ {
+  "id": 1004,
+  "text": "SoC, this platform,"
+ },
+ {
+  "id": 1005,
+  "text": "right?"
+ },
+ {
+  "id": 1006,
+  "text": "Now this one,"
+ },
+ {
+  "id": 1007,
+  "text": "if we're talking about a real physical device,"
+ },
+ {
+  "id": 1008,
+  "text": "it connects through this serial port device,"
+ },
+ {
+  "id": 1009,
+  "text": "and hooks up to a host machine of ours."
+ },
+ {
+  "id": 1010,
+  "text": "I've drawn it kind of small,"
+ },
+ {
+  "id": 1011,
+  "text": "but in reality this thing is a bit bigger."
+ },
+ {
+  "id": 1012,
+  "text": "Now this host machine,"
+ },
+ {
+  "id": 1013,
+  "text": "through this side here,"
+ },
+ {
+  "id": 1014,
+  "text": "through the keyboard,"
+ },
+ {
+  "id": 1015,
+  "text": "this side is the console."
+ },
+ {
+  "id": 1016,
+  "text": "So we type a character C here,"
+ },
+ {
+  "id": 1017,
+  "text": "let's say we type a character C,"
+ },
+ {
+  "id": 1018,
+  "text": "then this character C,"
+ },
+ {
+  "id": 1019,
+  "text": "goes through this serial cable,"
+ },
+ {
+  "id": 1020,
+  "text": "it gets transmitted right up to this point"
+ },
+ {
+  "id": 1021,
+  "text": "Now, how does this UART take this"
+ },
+ {
+  "id": 1022,
+  "text": "it receives this character C,"
+ },
+ {
+  "id": 1023,
+  "text": "how does it notify our CPU? It actually does it through this,"
+ },
+ {
+  "id": 1024,
+  "text": "it sends out an interrupt"
+ },
+ {
+  "id": 1025,
+  "text": "and then our handling flow goes like this:"
+ },
+ {
+  "id": 1026,
+  "text": "once the interrupt comes in,"
+ },
+ {
+  "id": 1027,
+  "text": "it knows a character has arrived,"
+ },
+ {
+  "id": 1028,
+  "text": "and then we can take this character"
+ },
+ {
+  "id": 1029,
+  "text": "and read it out from this,"
+ },
+ {
+  "id": 1030,
+  "text": "and after reading it out,"
+ },
+ {
+  "id": 1031,
+  "text": "we use the output we implemented before,"
+ },
+ {
+  "id": 1032,
+  "text": "take this content,"
+ },
+ {
+  "id": 1033,
+  "text": "write it through this,"
+ },
+ {
+  "id": 1034,
+  "text": "write it back,"
+ },
+ {
+  "id": 1035,
+  "text": "and then through this"
+ },
+ {
+  "id": 1036,
+  "text": "serial line, write it out again,"
+ },
+ {
+  "id": 1037,
+  "text": "and on the screen"
+ },
+ {
+  "id": 1038,
+  "text": "we will see a C appear."
+ },
+ {
+  "id": 1039,
+  "text": "That's how the whole flow works."
+ },
+ {
+  "id": 1040,
+  "text": "What we actually want is to use this kind of"
+ },
+ {
+  "id": 1041,
+  "text": "flow like this"
+ },
+ {
+  "id": 1042,
+  "text": "So the one just now,"
+ },
+ {
+  "id": 1043,
+  "text": "this line here,"
+ },
+ {
+  "id": 1044,
+  "text": "is actually an interrupt,"
+ },
+ {
+  "id": 1045,
+  "text": "it notifies us through an interrupt."
+ },
+ {
+  "id": 1046,
+  "text": "Now, for writing it back,"
+ },
+ {
+  "id": 1047,
+  "text": "actually, writing it back,"
+ },
+ {
+  "id": 1048,
+  "text": "it reuses"
+ },
+ {
+  "id": 1049,
+  "text": "our original"
+ },
+ {
+  "id": 1050,
+  "text": "logic from the very beginning,"
+ },
+ {
+  "id": 1051,
+  "text": "which is the polling approach,"
+ },
+ {
+  "id": 1052,
+  "text": "and then writes it out."
+ },
+ {
+  "id": 1053,
+  "text": "This way,"
+ },
+ {
+  "id": 1054,
+  "text": "we see a C on the screen."
+ },
+ {
+  "id": 1055,
+  "text": "Let's first take a look at the effect,"
+ },
+ {
+  "id": 1056,
+  "text": "and demonstrate this effect,"
+ },
+ {
+  "id": 1057,
+  "text": "so everyone can better understand what I mean."
+ },
+ {
+  "id": 1058,
+  "text": "Here, we enter the sixth interrupt example,"
+ },
+ {
+  "id": 1059,
+  "text": "which we have already compiled."
+ },
+ {
+  "id": 1060,
+  "text": "So let's run it."
+ },
+ {
+  "id": 1061,
+  "text": "Now, everyone can see that this task is actually still running."
+ },
+ {
+  "id": 1062,
+  "text": "But on the keyboard,"
+ },
+ {
+  "id": 1063,
+  "text": "for example, I type a C."
+ },
+ {
+  "id": 1064,
+  "text": "When you see this C,"
+ },
+ {
+  "id": 1065,
+  "text": "it triggers an external..."
+ },
+ {
+  "id": 1066,
+  "text": "it triggers an external interrupt,"
+ },
+ {
+  "id": 1067,
+  "text": "right?"
+ },
+ {
+  "id": 1068,
+  "text": "Let me stop this."
+ },
+ {
+  "id": 1069,
+  "text": "Now I press a C again."
+ },
+ {
+  "id": 1070,
+  "text": "If I keep pressing it,"
+ },
+ {
+  "id": 1071,
+  "text": "it will keep triggering interrupts."
+ },
+ {
+  "id": 1072,
+  "text": "So this..."
+ },
+ {
+  "id": 1073,
+  "text": "this line being printed out"
+ },
+ {
+  "id": 1074,
+  "text": "means that if..."
+ },
+ {
+  "id": 1075,
+  "text": "if this line gets printed out,"
+ },
+ {
+  "id": 1076,
+  "text": "that is to say, this line,"
+ },
+ {
+  "id": 1077,
+  "text": "if it gets printed out,"
+ },
+ {
+  "id": 1078,
+  "text": "then it shows that this..."
+ },
+ {
+  "id": 1079,
+  "text": "interrupt"
+ },
+ {
+  "id": 1080,
+  "text": "This UART,"
+ },
+ {
+  "id": 1081,
+  "text": "after it receives this data,"
+ },
+ {
+  "id": 1082,
+  "text": "the interrupt is generated."
+ },
+ {
+  "id": 1083,
+  "text": "This generation,"
+ },
+ {
+  "id": 1084,
+  "text": "and then it takes this C,"
+ },
+ {
+  "id": 1085,
+  "text": "reads it out from the interrupt,"
+ },
+ {
+  "id": 1086,
+  "text": "and then echoes it back."
+ },
+ {
+  "id": 1087,
+  "text": "This is actually done by writing it out."
+ },
+ {
+  "id": 1088,
+  "text": "We achieve this effect."
+ },
+ {
+  "id": 1089,
+  "text": "Let's take a look"
+ },
+ {
+  "id": 1090,
+  "text": "at how our code implements this."
+ },
+ {
+  "id": 1091,
+  "text": "So first of all,"
+ },
+ {
+  "id": 1092,
+  "text": "for this PRC,"
+ },
+ {
+  "id": 1093,
+  "text": "we need to do some corresponding initialization"
+ },
+ {
+  "id": 1094,
+  "text": "for this peripheral."
+ },
+ {
+  "id": 1095,
+  "text": "Actually, this is all implemented in the PRC,"
+ },
+ {
+  "id": 1096,
+  "text": "in this init function."
+ },
+ {
+  "id": 1097,
+  "text": "Now, these things,"
+ },
+ {
+  "id": 1098,
+  "text": "based on what we discussed earlier,"
+ },
+ {
+  "id": 1099,
+  "text": "this is setting its priority."
+ },
+ {
+  "id": 1100,
+  "text": "Setting it, whether it's enabled."
+ },
+ {
+  "id": 1101,
+  "text": "It's its switch, the hold."
+ },
+ {
+  "id": 1102,
+  "text": "Right?"
+ },
+ {
+  "id": 1103,
+  "text": "So what are these two steps doing?"
+ },
+ {
+  "id": 1104,
+  "text": "These two steps are exactly what we talked about earlier."
+ },
+ {
+  "id": 1105,
+  "text": "That is, this MRE register."
+ },
+ {
+  "id": 1106,
+  "text": "And the MSTATE register."
+ },
+ {
+  "id": 1107,
+  "text": "As for this thing,"
+ },
+ {
+  "id": 1108,
+  "text": "actually our MRE,"
+ },
+ {
+  "id": 1109,
+  "text": "as we mentioned before,"
+ },
+ {
+  "id": 1110,
+  "text": "it can control"
+ },
+ {
+  "id": 1111,
+  "text": "As we said, interrupts come in three kinds."
+ },
+ {
+  "id": 1112,
+  "text": "External interrupts,"
+ },
+ {
+  "id": 1113,
+  "text": "software interrupts,"
+ },
+ {
+  "id": 1114,
+  "text": "and timer interrupts."
+ },
+ {
+  "id": 1115,
+  "text": "We can enable them"
+ },
+ {
+  "id": 1116,
+  "text": "individually."
+ },
+ {
+  "id": 1117,
+  "text": "So what we're actually doing here is taking this"
+ },
+ {
+  "id": 1118,
+  "text": "E, which stands for external,"
+ },
+ {
+  "id": 1119,
+  "text": "meaning external"
+ },
+ {
+  "id": 1120,
+  "text": "External interrupts."
+ },
+ {
+  "id": 1121,
+  "text": "We did an enable."
+ },
+ {
+  "id": 1122,
+  "text": "At that time, everyone should pay attention to how it is written."
+ },
+ {
+  "id": 1123,
+  "text": "It first reads out the value in this register,"
+ },
+ {
+  "id": 1124,
+  "text": "then sets the corresponding bit,"
+ },
+ {
+  "id": 1125,
+  "text": "and then we write it back."
+ },
+ {
+  "id": 1126,
+  "text": "That is actually the process."
+ },
+ {
+  "id": 1127,
+  "text": "This ensures that the values in the other registers"
+ },
+ {
+  "id": 1128,
+  "text": "will not be"
+ },
+ {
+  "id": 1129,
+  "text": "modified by us."
+ },
+ {
+  "id": 1130,
+  "text": "Now this is actually a global interrupt enable."
+ },
+ {
+  "id": 1131,
+  "text": "This is actually the global interrupt."
+ },
+ {
+  "id": 1132,
+  "text": "So for this interrupt, as you can see,"
+ },
+ {
+  "id": 1133,
+  "text": "it goes level by level, with many levels."
+ },
+ {
+  "id": 1134,
+  "text": "This one is global."
+ },
+ {
+  "id": 1135,
+  "text": "And this one is"
+ },
+ {
+  "id": 1136,
+  "text": "the three main categories."
+ },
+ {
+  "id": 1137,
+  "text": "Software interrupts,"
+ },
+ {
+  "id": 1138,
+  "text": "timer interrupts, and external interrupts."
+ },
+ {
+  "id": 1139,
+  "text": "You can also turn each of them on and off separately."
+ },
+ {
+  "id": 1140,
+  "text": "And then here you can also use this"
+ },
+ {
+  "id": 1141,
+  "text": "And here there's also, for the interrupt source,"
+ },
+ {
+  "id": 1142,
+  "text": "setting this HART up with a"
+ },
+ {
+  "id": 1143,
+  "text": "PRC-level"
+ },
+ {
+  "id": 1144,
+  "text": "enable"
+ },
+ {
+  "id": 1145,
+  "text": "Right?"
+ },
+ {
+  "id": 1146,
+  "text": "And then here you can also use"
+ },
+ {
+  "id": 1147,
+  "text": "the threshold register,"
+ },
+ {
+  "id": 1148,
+  "text": "to filter"
+ },
+ {
+  "id": 1149,
+  "text": "the interrupt sources."
+ },
+ {
+  "id": 1150,
+  "text": "So as we can see,"
+ },
+ {
+  "id": 1151,
+  "text": "this whole interrupt handling process"
+ },
+ {
+  "id": 1152,
+  "text": "is actually divided into many levels."
+ },
+ {
+  "id": 1153,
+  "text": "At each level,"
+ },
+ {
+  "id": 1154,
+  "text": "we have quite a few stages,"
+ },
+ {
+  "id": 1155,
+  "text": "and at every level we can control"
+ },
+ {
+  "id": 1156,
+  "text": "whether this interrupt"
+ },
+ {
+  "id": 1157,
+  "text": "gets handled or not."
+ },
+ {
+  "id": 1158,
+  "text": "This process is still a bit complicated."
+ },
+ {
+  "id": 1159,
+  "text": "Now these two lines refer to claim and complete,"
+ },
+ {
+  "id": 1160,
+  "text": "Let's skip that one."
+ },
+ {
+  "id": 1161,
+  "text": "This is inside the prc."
+ },
+ {
+  "id": 1162,
+  "text": "We'll set up the code here."
+ },
+ {
+  "id": 1163,
+  "text": "This is our one..."
+ },
+ {
+  "id": 1164,
+  "text": "In this step, we'll add this new file."
+ },
+ {
+  "id": 1165,
+  "text": "Now, there's some processing done in here."
+ },
+ {
+  "id": 1166,
+  "text": "Now, as far as day-to-day work goes,"
+ },
+ {
+  "id": 1167,
+  "text": "as far as this trap goes,"
+ },
+ {
+  "id": 1168,
+  "text": "inside the trap handler,"
+ },
+ {
+  "id": 1169,
+  "text": "what we actually do is"
+ },
+ {
+  "id": 1170,
+  "text": "this switch."
+ },
+ {
+  "id": 1171,
+  "text": "First, we distinguish whether it's an interrupt."
+ },
+ {
+  "id": 1172,
+  "text": "If it is an interrupt,"
+ },
+ {
+  "id": 1173,
+  "text": "since the highest bit is 1,"
+ },
+ {
+  "id": 1174,
+  "text": "that means it's an interrupt."
+ },
+ {
+  "id": 1175,
+  "text": "For interrupts, we go by this cos,"
+ },
+ {
+  "id": 1176,
+  "text": "that is, the mcos that was passed in,"
+ },
+ {
+  "id": 1177,
+  "text": "this value,"
+ },
+ {
+  "id": 1178,
+  "text": "this value here."
+ },
+ {
+  "id": 1179,
+  "text": "For 1234, when it's 11,"
+ },
+ {
+  "id": 1180,
+  "text": "This value should actually be"
+ },
+ {
+  "id": 1181,
+  "text": "I think we covered this earlier,"
+ },
+ {
+  "id": 1182,
+  "text": "so let's take a look."
+ },
+ {
+  "id": 1183,
+  "text": "Right here,"
+ },
+ {
+  "id": 1184,
+  "text": "it corresponds to this entry in this table:"
+ },
+ {
+  "id": 1185,
+  "text": "1234."
+ },
+ {
+  "id": 1186,
+  "text": "So now we should have"
+ },
+ {
+  "id": 1187,
+  "text": "an external interrupt,"
+ },
+ {
+  "id": 1188,
+  "text": "so it should be this block."
+ },
+ {
+  "id": 1189,
+  "text": "So we should have"
+ },
+ {
+  "id": 1190,
+  "text": "a machine-mode external"
+ },
+ {
+  "id": 1191,
+  "text": "interrupt, so this value is 11."
+ },
+ {
+  "id": 1192,
+  "text": "This one is 11."
+ },
+ {
+  "id": 1193,
+  "text": "That's too much,"
+ },
+ {
+  "id": 1194,
+  "text": "so over here it's 11."
+ },
+ {
+  "id": 1195,
+  "text": "Now, if it's 11,"
+ },
+ {
+  "id": 1196,
+  "text": "as we know,"
+ },
+ {
+  "id": 1197,
+  "text": "then it's an external"
+ },
+ {
+  "id": 1198,
+  "text": "interrupt in machine mode."
+ },
+ {
+  "id": 1199,
+  "text": "So at this point"
+ },
+ {
+  "id": 1200,
+  "text": "we just enter this interrupt handler"
+ },
+ {
+  "id": 1201,
+  "text": "Now, in this interrupt handler,"
+ },
+ {
+  "id": 1202,
+  "text": "we can see the processing flow."
+ },
+ {
+  "id": 1203,
+  "text": "The first step is to claim."
+ },
+ {
+  "id": 1204,
+  "text": "As for the claim process,"
+ },
+ {
+  "id": 1205,
+  "text": "as we talked about earlier,"
+ },
+ {
+  "id": 1206,
+  "text": "claim is done through its function,"
+ },
+ {
+  "id": 1207,
+  "text": "which returns the number of an interrupt source."
+ },
+ {
+  "id": 1208,
+  "text": "Now, this interrupt source number,"
+ },
+ {
+  "id": 1209,
+  "text": "based on what we know now,"
+ },
+ {
+  "id": 1210,
+  "text": "since we are handling the UART,"
+ },
+ {
+  "id": 1211,
+  "text": "we check that"
+ },
+ {
+  "id": 1212,
+  "text": "if this number is the UART,"
+ },
+ {
+  "id": 1213,
+  "text": "then we handle one"
+ },
+ {
+  "id": 1214,
+  "text": "and enter the UART's"
+ },
+ {
+  "id": 1215,
+  "text": "handler function."
+ },
+ {
+  "id": 1216,
+  "text": "We enter the UART,"
+ },
+ {
+  "id": 1217,
+  "text": "and then after the handling is done,"
+ },
+ {
+  "id": 1218,
+  "text": "please note, don't forget,"
+ },
+ {
+  "id": 1219,
+  "text": "you have to call a Complete."
+ },
+ {
+  "id": 1220,
+  "text": "This way,"
+ },
+ {
+  "id": 1221,
+  "text": "we can essentially notify the PLIC,"
+ },
+ {
+  "id": 1222,
+  "text": "that our handling is done,"
+ },
+ {
+  "id": 1223,
+  "text": "so it can let the next interrupt come in."
+ },
+ {
+  "id": 1224,
+  "text": "Pay attention to this, don't forget it."
+ },
+ {
+  "id": 1225,
+  "text": "Now, in the UART logic,"
+ },
+ {
+  "id": 1226,
+  "text": "what we need to do is"
+ },
+ {
+  "id": 1227,
+  "text": "initialize it."
+ },
+ {
+  "id": 1228,
+  "text": "In this initialization part,"
+ },
+ {
+  "id": 1229,
+  "text": "we need to add one thing, which is to take this"
+ },
+ {
+  "id": 1230,
+  "text": "interrupt controller inside our UART,"
+ },
+ {
+  "id": 1231,
+  "text": "and turn it on."
+ },
+ {
+  "id": 1232,
+  "text": "Please note this."
+ },
+ {
+  "id": 1233,
+  "text": "And also, its interrupts are split,"
+ },
+ {
+  "id": 1234,
+  "text": "since you know the UART is split into two lines for receiving and transmitting,"
+ },
+ {
+  "id": 1235,
+  "text": "so what we control here is the interrupt in the receive direction,"
+ },
+ {
+  "id": 1236,
+  "text": "because right now we are"
+ },
+ {
+  "id": 1237,
+  "text": "for this example,"
+ },
+ {
+  "id": 1238,
+  "text": "what we actually want to receive is a piece of"
+ },
+ {
+  "id": 1239,
+  "text": "data sent from the console."
+ },
+ {
+  "id": 1240,
+  "text": "As we have already explained to you earlier"
+ },
+ {
+  "id": 1241,
+  "text": "So this function"
+ },
+ {
+  "id": 1242,
+  "text": "Is exactly what we just saw"
+ },
+ {
+  "id": 1243,
+  "text": "It just got dropped in all the way down"
+ },
+ {
+  "id": 1244,
+  "text": "Right"
+ },
+ {
+  "id": 1245,
+  "text": "That's exactly how it gets dropped in"
+ },
+ {
+  "id": 1246,
+  "text": "So once it drops in"
+ },
+ {
+  "id": 1247,
+  "text": "The logic inside here is very simple"
+ },
+ {
+  "id": 1248,
+  "text": "Once we can make it here"
+ },
+ {
+  "id": 1249,
+  "text": "That means the character has already come in"
+ },
+ {
+  "id": 1250,
+  "text": "The character has already come in"
+ },
+ {
+  "id": 1251,
+  "text": "Then we just need to use a getC function"
+ },
+ {
+  "id": 1252,
+  "text": "To read it out"
+ },
+ {
+  "id": 1253,
+  "text": "Now this getC function"
+ },
+ {
+  "id": 1254,
+  "text": "Is implemented right here"
+ },
+ {
+  "id": 1255,
+  "text": "The related logic here"
+ },
+ {
+  "id": 1256,
+  "text": "Why is it done this way"
+ },
+ {
+  "id": 1257,
+  "text": "I won't explain that"
+ },
+ {
+  "id": 1258,
+  "text": "Go back and take a look at it yourselves"
+ },
+ {
+  "id": 1259,
+  "text": "So after we read out a character"
+ },
+ {
+  "id": 1260,
+  "text": "Based on what we just explained,"
+ },
+ {
+  "id": 1261,
+  "text": "we'll write it out again,"
+ },
+ {
+  "id": 1262,
+  "text": "write it out again with putc."
+ },
+ {
+  "id": 1263,
+  "text": "So once it's written out,"
+ },
+ {
+  "id": 1264,
+  "text": "our controller"
+ },
+ {
+  "id": 1265,
+  "text": "will write it to our console."
+ },
+ {
+  "id": 1266,
+  "text": "So on the console"
+ },
+ {
+  "id": 1267,
+  "text": "we see the character c appear."
+ },
+ {
+  "id": 1268,
+  "text": "That's how it comes about."
+ },
+ {
+  "id": 1269,
+  "text": "Right here we've written the character out,"
+ },
+ {
+  "id": 1270,
+  "text": "and after writing it,"
+ },
+ {
+  "id": 1271,
+  "text": "we output a carriage return,"
+ },
+ {
+  "id": 1272,
+  "text": "and continue on."
+ },
+ {
+  "id": 1273,
+  "text": "This is the example I just demonstrated to you."
+ },
+ {
+  "id": 1274,
+  "text": "That's how it works."
+ },
+ {
+  "id": 1275,
+  "text": "I'll stop here for now."
+ },
+ {
+  "id": 1276,
+  "text": "As for the exercises on this interrupt,"
+ },
+ {
+  "id": 1277,
+  "text": "go back and work through them yourselves."
+ },
+ {
+  "id": 1278,
+  "text": "All right,"
+ },
+ {
+  "id": 1279,
+  "text": "now regarding this external interrupt,"
+ },
+ {
+  "id": 1280,
+  "text": "That's all we'll cover for you here."
+ }
+]

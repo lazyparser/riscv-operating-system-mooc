@@ -1,0 +1,3771 @@
+1
+00:00:00,140 --> 00:00:24,250
+Next, we will introduce Chapter 15. The topic of Chapter 15 is software timers. This chapter is relatively short and is mainly divided into three parts. The first part introduces the classification of software timers. The second part introduces the design and implementation of software timers,
+
+2
+00:00:24,250 --> 00:00:26,970
+and the third part introduces
+
+3
+00:00:26,970 --> 00:00:31,580
+that is, when it comes to software timers,
+
+4
+00:00:31,580 --> 00:00:35,620
+there are some optimization scenarios
+
+5
+00:00:35,620 --> 00:00:41,040
+Let's first look at the first part: classification.
+
+6
+00:00:41,040 --> 00:00:44,000
+So, timers,
+
+7
+00:00:44,000 --> 00:00:45,160
+in our previous chapters
+
+8
+00:00:45,160 --> 00:00:46,800
+have actually been introduced to you already.
+
+9
+00:00:46,800 --> 00:00:48,320
+There are hardware timers
+
+10
+00:00:48,320 --> 00:00:50,280
+and software timers.
+
+11
+00:00:50,280 --> 00:00:51,600
+In one of our earlier chapters,
+
+12
+00:00:51,600 --> 00:00:53,460
+we actually talked about hardware timers.
+
+13
+00:00:53,460 --> 00:00:55,620
+In Chapter 12,
+
+14
+00:00:55,620 --> 00:00:57,460
+as for hardware timers,
+
+15
+00:00:57,460 --> 00:00:59,880
+from our earlier study,
+
+16
+00:00:59,880 --> 00:01:01,500
+we know that for hardware timers,
+
+17
+00:01:01,500 --> 00:01:02,700
+their advantage,
+
+18
+00:01:02,700 --> 00:01:04,020
+which was also mentioned here,
+
+19
+00:01:04,020 --> 00:01:05,960
+is that because they directly use
+
+20
+00:01:05,960 --> 00:01:08,540
+an external interrupt to send notifications
+
+21
+00:01:08,540 --> 00:01:10,400
+So the advantage is high precision
+
+22
+00:01:10,400 --> 00:01:10,920
+Right
+
+23
+00:01:10,920 --> 00:01:13,880
+For example, that external timer of yours
+
+24
+00:01:13,880 --> 00:01:16,820
+If you set its precision to 10 nanoseconds
+
+25
+00:01:16,820 --> 00:01:18,500
+Then when you actually run it
+
+26
+00:01:18,500 --> 00:01:20,200
+It can guarantee that at 10 nanoseconds
+
+27
+00:01:20,200 --> 00:01:21,700
+At that fixed frequency
+
+28
+00:01:21,700 --> 00:01:23,540
+It can deliver interrupts to you
+
+29
+00:01:23,540 --> 00:01:27,220
+So we can actually use those 10 nanoseconds as our precision
+
+30
+00:01:27,220 --> 00:01:29,420
+To carry out some logical control
+
+31
+00:01:29,420 --> 00:01:30,620
+However,
+
+32
+00:01:30,620 --> 00:01:32,120
+Its drawback
+
+33
+00:01:32,120 --> 00:01:32,760
+Is of course also quite obvious
+
+34
+00:01:32,760 --> 00:01:36,080
+Which is that up there there's only this one
+
+35
+00:01:36,080 --> 00:01:36,880
+Right
+
+36
+00:01:36,880 --> 00:01:37,840
+A limited number
+
+37
+00:01:37,840 --> 00:01:39,440
+You can't just have as many as you want
+
+38
+00:01:39,440 --> 00:01:40,360
+Logically speaking, if
+
+39
+00:01:40,360 --> 00:01:42,240
+When we normally develop applications at the upper level
+
+40
+00:01:42,240 --> 00:01:43,320
+It's possible that if
+
+41
+00:01:43,320 --> 00:01:46,440
+When it comes to creating timers,
+
+42
+00:01:46,440 --> 00:01:47,940
+I don't know if any of you have written this kind of program,
+
+43
+00:01:47,940 --> 00:01:49,940
+meaning you might create them multiple times,
+
+44
+00:01:49,940 --> 00:01:52,060
+or you run a lot of timers.
+
+45
+00:01:52,060 --> 00:01:54,280
+Now, if the hardware can only handle one,
+
+46
+00:01:54,280 --> 00:01:56,480
+and you rely entirely on the hardware timer to do the timing,
+
+47
+00:01:56,480 --> 00:01:58,360
+then that's simply impossible.
+
+48
+00:01:58,360 --> 00:01:59,260
+So,
+
+49
+00:01:59,260 --> 00:02:01,940
+on top of the hardware timer, we need to,
+
+50
+00:02:01,940 --> 00:02:02,800
+essentially,
+
+51
+00:02:02,800 --> 00:02:04,160
+inside the operating system,
+
+52
+00:02:04,160 --> 00:02:06,240
+offer you a richer set of timer services,
+
+53
+00:02:06,240 --> 00:02:09,160
+implemented in software.
+
+54
+00:02:09,160 --> 00:02:11,540
+And that is what we're going to introduce today:
+
+55
+00:02:11,540 --> 00:02:12,660
+the software timer.
+
+56
+00:02:12,660 --> 00:02:15,540
+Now, the software timer,
+
+57
+00:02:15,540 --> 00:02:16,580
+as we say, it is based on,
+
+58
+00:02:16,580 --> 00:02:18,740
+it is actually built on the capabilities provided by the hardware timer,
+
+59
+00:02:18,740 --> 00:02:21,320
+wrapped up and layered on top of it,
+
+60
+00:02:21,320 --> 00:02:22,220
+to produce the final result.
+
+61
+00:02:22,220 --> 00:02:24,620
+It extends the limits of this hardware timer.
+
+62
+00:02:24,620 --> 00:02:24,880
+It can
+
+63
+00:02:24,880 --> 00:02:27,200
+That is to say, since it's implemented in software,
+
+64
+00:02:27,200 --> 00:02:27,860
+think about it — isn't it true that
+
+65
+00:02:27,860 --> 00:02:29,740
+then, that is to say, as long as our
+
+66
+00:02:29,740 --> 00:02:31,300
+in other words,
+
+67
+00:02:31,300 --> 00:02:33,240
+you can implement as many as you want,
+
+68
+00:02:33,240 --> 00:02:34,960
+as long as your code
+
+69
+00:02:34,960 --> 00:02:35,760
+this memory or whatever
+
+70
+00:02:35,760 --> 00:02:38,560
+there's no such limit,
+
+71
+00:02:38,560 --> 00:02:40,880
+then we can provide more timers.
+
+72
+00:02:40,880 --> 00:02:42,480
+But the downside is that it's relatively low,
+
+73
+00:02:42,480 --> 00:02:43,100
+because we know
+
+74
+00:02:43,100 --> 00:02:46,840
+underneath it's still built on the precision of the hardware timer.
+
+75
+00:02:46,840 --> 00:02:49,900
+So your precision cannot exceed that of the hardware timer.
+
+76
+00:02:49,900 --> 00:02:52,900
+And on top of that, once you stack some software implementation on it,
+
+77
+00:02:52,900 --> 00:02:55,320
+its precision will in practice generally be lower than
+
+78
+00:02:55,320 --> 00:02:58,000
+the precision of the hardware timer.
+
+79
+00:02:58,000 --> 00:02:59,560
+But,
+
+80
+00:02:59,560 --> 00:03:00,320
+and moreover,
+
+81
+00:03:00,320 --> 00:03:01,260
+As for its precision,
+
+82
+00:03:01,260 --> 00:03:03,160
+because this concept of TIC
+
+83
+00:03:03,160 --> 00:03:05,080
+we already covered when we talked about the hardware timer,
+
+84
+00:03:05,080 --> 00:03:05,380
+right?
+
+85
+00:03:05,380 --> 00:03:06,220
+So, when it comes to this,
+
+86
+00:03:06,220 --> 00:03:08,440
+its precision,
+
+87
+00:03:08,440 --> 00:03:10,660
+in general, is also an integer multiple of TIC,
+
+88
+00:03:10,660 --> 00:03:13,020
+since underneath, it works in units of TIC
+
+89
+00:03:13,020 --> 00:03:15,240
+the hardware timer triggers in units of TIC.
+
+90
+00:03:15,240 --> 00:03:16,560
+So it's triggered in those units.
+
+91
+00:03:16,560 --> 00:03:18,040
+So on the layer above,
+
+92
+00:03:18,040 --> 00:03:20,400
+in general, its precision can only be an integer multiple of TIC.
+
+93
+00:03:20,400 --> 00:03:27,580
+That was the broad classification of timers we just mentioned.
+
+94
+00:03:27,580 --> 00:03:30,240
+Now let's focus on software timers.
+
+95
+00:03:30,240 --> 00:03:31,920
+As for software timers,
+
+96
+00:03:31,920 --> 00:03:34,240
+in theory,
+
+97
+00:03:34,240 --> 00:03:36,340
+we can divide them into several types.
+
+98
+00:03:36,340 --> 00:03:40,640
+First, if we go by how the timer is set,
+
+99
+00:03:40,640 --> 00:03:41,780
+we have two types.
+
+100
+00:03:41,780 --> 00:03:42,540
+One is called one-shot
+
+101
+00:03:42,540 --> 00:03:43,420
+One is called periodic
+
+102
+00:03:43,420 --> 00:03:45,100
+What do we mean by one-shot?
+
+103
+00:03:45,100 --> 00:03:46,820
+Well, it's basically like saying
+
+104
+00:03:46,820 --> 00:03:48,520
+the timer interrupt we set up earlier
+
+105
+00:03:48,520 --> 00:03:49,860
+is essentially one-shot in nature
+
+106
+00:03:49,860 --> 00:03:54,420
+Meaning, every time the timer fires
+
+107
+00:03:54,420 --> 00:03:56,540
+that timer naturally becomes invalid
+
+108
+00:03:56,540 --> 00:03:56,840
+Right?
+
+109
+00:03:56,840 --> 00:04:00,000
+If you still want to achieve
+
+110
+00:04:00,000 --> 00:04:01,560
+the periodic behavior I'll talk about later
+
+111
+00:04:01,560 --> 00:04:04,800
+then when we implemented this periodic triggering earlier
+
+112
+00:04:04,800 --> 00:04:06,180
+actually, every time the timer fired
+
+113
+00:04:06,180 --> 00:04:07,380
+we had to set it up again
+
+114
+00:04:07,380 --> 00:04:08,260
+Right?
+
+115
+00:04:08,260 --> 00:04:09,760
+Only by setting it up again
+
+116
+00:04:09,760 --> 00:04:10,840
+does it basically trigger once more
+
+117
+00:04:10,840 --> 00:04:13,320
+So since each time is really still one-shot
+
+118
+00:04:13,320 --> 00:04:14,980
+and the idea of periodic means that
+
+119
+00:04:14,980 --> 00:04:16,000
+it's basically like saying
+
+120
+00:04:16,000 --> 00:04:17,660
+you only need to set it up once
+
+121
+00:04:17,660 --> 00:04:19,280
+After that, it will keep triggering automatically.
+
+122
+00:04:19,280 --> 00:04:20,900
+That is the effect we want to achieve.
+
+123
+00:04:20,900 --> 00:04:21,860
+This is called periodic.
+
+124
+00:04:21,860 --> 00:04:23,100
+Now, with this kind of periodic behavior,
+
+125
+00:04:23,100 --> 00:04:25,540
+usually we can only wrap it up through software.
+
+126
+00:04:25,540 --> 00:04:26,680
+So a hardware timer,
+
+127
+00:04:26,680 --> 00:04:28,920
+in fact, can only be one-shot.
+
+128
+00:04:28,920 --> 00:04:29,940
+But with a software timer,
+
+129
+00:04:29,940 --> 00:04:32,560
+we can wrap it up to be periodic.
+
+130
+00:04:32,560 --> 00:04:36,130
+In other words, you only need to create it once,
+
+131
+00:04:36,130 --> 00:04:39,350
+and from then on it keeps firing periodically, infinitely.
+
+132
+00:04:39,350 --> 00:04:41,490
+Unless you explicitly stop it,
+
+133
+00:04:41,490 --> 00:04:42,970
+this is periodic firing.
+
+134
+00:04:42,970 --> 00:04:46,590
+Now, if it follows this execution model,
+
+135
+00:04:46,590 --> 00:04:48,070
+that is, when the timer expires,
+
+136
+00:04:48,070 --> 00:04:52,090
+we know it must go and execute a timer handler function,
+
+137
+00:04:52,090 --> 00:04:53,290
+a response handler function.
+
+138
+00:04:53,290 --> 00:04:54,690
+Now, this handler function,
+
+139
+00:04:54,690 --> 00:04:58,810
+the context and environment in which it executes may vary.
+
+140
+00:04:58,810 --> 00:05:01,090
+And depending on the different execution contexts and environments,
+
+141
+00:05:01,090 --> 00:05:02,390
+We divide them into two kinds.
+
+142
+00:05:02,390 --> 00:05:03,390
+One kind is
+
+143
+00:05:03,390 --> 00:05:05,950
+it executes in the interrupt context environment.
+
+144
+00:05:05,950 --> 00:05:07,890
+And the other kind
+
+145
+00:05:07,890 --> 00:05:09,570
+executes in the task context environment.
+
+146
+00:05:09,570 --> 00:05:12,890
+Now, what does it mean to execute in the interrupt context environment?
+
+147
+00:05:12,890 --> 00:05:15,210
+Take our earlier hardware timer example,
+
+148
+00:05:15,210 --> 00:05:16,970
+which is definitely executing in
+
+149
+00:05:16,970 --> 00:05:18,550
+the hardware context—
+
+150
+00:05:18,550 --> 00:05:20,310
+that is, the interrupt context environment.
+
+151
+00:05:20,310 --> 00:05:22,210
+So if it executes in
+
+152
+00:05:22,210 --> 00:05:23,710
+the interrupt context environment,
+
+153
+00:05:23,710 --> 00:05:24,950
+then this kind
+
+154
+00:05:24,950 --> 00:05:27,950
+is somewhat similar to the previous spinlock
+
+155
+00:05:27,950 --> 00:05:28,550
+in terms of its effect,
+
+156
+00:05:28,550 --> 00:05:29,430
+maybe a bit alike.
+
+157
+00:05:29,430 --> 00:05:30,470
+That is to say, it's the same,
+
+158
+00:05:30,470 --> 00:05:31,930
+because it runs in the interrupt,
+
+159
+00:05:31,930 --> 00:05:32,790
+so when it executes,
+
+160
+00:05:32,790 --> 00:05:34,190
+the execution process
+
+161
+00:05:34,190 --> 00:05:35,710
+It has to be as short as possible.
+
+162
+00:05:35,710 --> 00:05:36,510
+It can't be too long.
+
+163
+00:05:36,510 --> 00:05:37,810
+Otherwise, it will cause the
+
+164
+00:05:37,810 --> 00:05:39,330
+response of the overall system
+
+165
+00:05:39,330 --> 00:05:40,030
+to slow down.
+
+166
+00:05:40,030 --> 00:05:42,890
+But the right side,
+
+167
+00:05:42,890 --> 00:05:43,490
+is also quite clear.
+
+168
+00:05:43,490 --> 00:05:44,730
+That is, it definitely
+
+169
+00:05:44,730 --> 00:05:45,770
+responds quite quickly,
+
+170
+00:05:45,770 --> 00:05:46,050
+right?
+
+171
+00:05:46,050 --> 00:05:47,110
+The real-time responsiveness is relatively high.
+
+172
+00:05:47,110 --> 00:05:48,350
+So this,
+
+173
+00:05:48,350 --> 00:05:49,510
+if it is
+
+174
+00:05:49,510 --> 00:05:50,670
+so-called
+
+175
+00:05:50,670 --> 00:05:52,230
+running in a foreground environment,
+
+176
+00:05:52,230 --> 00:05:52,870
+actually that means
+
+177
+00:05:52,870 --> 00:05:53,790
+because essentially
+
+178
+00:05:53,790 --> 00:05:54,490
+this timer mechanism
+
+179
+00:05:54,490 --> 00:05:57,070
+is all triggered through interrupts.
+
+180
+00:05:57,070 --> 00:05:57,750
+It's just that
+
+181
+00:05:57,750 --> 00:05:58,370
+If you want to
+
+182
+00:05:58,370 --> 00:06:01,150
+for example, if you have a handler
+
+183
+00:06:01,150 --> 00:06:01,910
+that takes a relatively long time
+
+184
+00:06:01,910 --> 00:06:02,710
+and might
+
+185
+00:06:02,710 --> 00:06:03,870
+even go to sleep
+
+186
+00:06:03,870 --> 00:06:05,750
+then how do you achieve this kind of
+
+187
+00:06:05,750 --> 00:06:06,890
+this kind of effect?
+
+188
+00:06:06,890 --> 00:06:07,770
+Actually, the only way
+
+189
+00:06:07,770 --> 00:06:11,490
+is that inside the interrupt handler
+
+190
+00:06:11,490 --> 00:06:12,890
+you spawn a new task
+
+191
+00:06:12,890 --> 00:06:14,710
+or make use of an existing task
+
+192
+00:06:14,730 --> 00:06:16,730
+and use that task to carry out your actual logic
+
+193
+00:06:16,730 --> 00:06:19,290
+So as far as this interrupt is concerned,
+
+194
+00:06:19,290 --> 00:06:22,010
+it itself still executes quickly and returns
+
+195
+00:06:22,010 --> 00:06:23,750
+but because your actual work
+
+196
+00:06:23,750 --> 00:06:25,530
+is deferred to a task's context,
+
+197
+00:06:25,530 --> 00:06:28,750
+implemented in a task's context,
+
+198
+00:06:28,750 --> 00:06:29,890
+then in this situation,
+
+199
+00:06:29,890 --> 00:06:32,810
+we consider this kind of timer handling
+
+200
+00:06:32,810 --> 00:06:35,890
+to be a task-context processing environment
+
+201
+00:06:35,890 --> 00:06:39,050
+So its advantage is that
+
+202
+00:06:39,050 --> 00:06:40,210
+because it is implemented inside a task,
+
+203
+00:06:40,210 --> 00:06:42,510
+the task can be suspended
+
+204
+00:06:42,510 --> 00:06:43,070
+or put to sleep.
+
+205
+00:06:43,070 --> 00:06:44,770
+But the real-time responsiveness is definitely a bit worse,
+
+206
+00:06:44,770 --> 00:06:47,710
+because the code execution inside the task
+
+207
+00:06:47,710 --> 00:06:50,950
+depends on when the task gets scheduled.
+
+208
+00:06:50,950 --> 00:06:53,190
+And scheduling time doesn't mean that
+
+209
+00:06:53,190 --> 00:06:53,950
+once your timer expires,
+
+210
+00:06:53,950 --> 00:06:55,370
+you will definitely be scheduled.
+
+211
+00:06:55,370 --> 00:06:59,030
+It might only get scheduled under other conditions.
+
+212
+00:06:59,030 --> 00:07:00,650
+So its real-time response
+
+213
+00:07:00,650 --> 00:07:01,930
+might be relatively a bit worse.
+
+214
+00:07:01,930 --> 00:07:06,050
+So for everyone today,
+
+215
+00:07:06,050 --> 00:07:08,210
+in today's class we implement the timer,
+
+216
+00:07:08,210 --> 00:07:11,350
+relatively speaking, not making it that complex.
+
+217
+00:07:11,350 --> 00:07:17,710
+Actually, the main focus is to introduce the one-shot timer,
+
+218
+00:07:17,710 --> 00:07:19,910
+and the function we execute
+
+219
+00:07:19,910 --> 00:07:22,290
+is also implemented in the interrupt context,
+
+220
+00:07:22,290 --> 00:07:24,270
+which is relatively simpler.
+
+221
+00:07:24,270 --> 00:07:33,010
+Alright, so now let's look at this class,
+
+222
+00:07:33,010 --> 00:07:36,750
+where we implement a software timer ourselves, and some of the considerations involved.
+
+223
+00:07:36,750 --> 00:07:45,280
+So first of all, as a piece of software,
+
+224
+00:07:45,280 --> 00:07:47,940
+when we build this software timer,
+
+225
+00:07:47,940 --> 00:07:48,980
+it's really just about
+
+226
+00:07:48,980 --> 00:07:49,540
+as I just said,
+
+227
+00:07:49,540 --> 00:07:52,520
+it's really just about providing a better,
+
+228
+00:07:52,520 --> 00:07:54,040
+for the application layer,
+
+229
+00:07:54,040 --> 00:07:56,460
+providing a better service,
+
+230
+00:07:56,460 --> 00:07:56,840
+right?
+
+231
+00:07:56,840 --> 00:07:58,860
+So externally,
+
+232
+00:07:58,860 --> 00:07:59,760
+the interface we provide,
+
+233
+00:07:59,760 --> 00:08:01,120
+we need to nail that down first.
+
+234
+00:08:01,120 --> 00:08:02,420
+And this interface,
+
+235
+00:08:02,420 --> 00:08:03,680
+it's fairly simple.
+
+236
+00:08:03,680 --> 00:08:04,160
+First of all,
+
+237
+00:08:04,160 --> 00:08:05,320
+on our side,
+
+238
+00:08:05,320 --> 00:08:09,460
+we've defined a struct,
+
+239
+00:08:09,460 --> 00:08:10,300
+and the relevant code,
+
+240
+00:08:10,300 --> 00:08:12,140
+you can go and look at that.
+
+241
+00:08:12,140 --> 00:08:14,600
+code os10
+
+242
+00:08:14,600 --> 00:08:16,680
+sw is short for software
+
+243
+00:08:16,680 --> 00:08:18,000
+the software timer's
+
+244
+00:08:18,000 --> 00:08:19,000
+header file inside
+
+245
+00:08:19,000 --> 00:08:20,200
+the os.h header file
+
+246
+00:08:20,200 --> 00:08:22,760
+defines the related interfaces and functions
+
+247
+00:08:22,760 --> 00:08:24,740
+Now, this timer
+
+248
+00:08:24,740 --> 00:08:27,700
+is actually a struct for our software timer
+
+249
+00:08:27,700 --> 00:08:29,340
+Inside this struct,
+
+250
+00:08:29,340 --> 00:08:31,660
+our design is relatively simple
+
+251
+00:08:31,660 --> 00:08:34,240
+The first two parameters
+
+252
+00:08:34,240 --> 00:08:38,080
+are both related to the timer's execution function
+
+253
+00:08:38,080 --> 00:08:39,260
+When a timer expires,
+
+254
+00:08:39,260 --> 00:08:40,900
+all it does is execute a function
+
+255
+00:08:40,900 --> 00:08:44,080
+And that function is of course defined by the user
+
+256
+00:08:44,080 --> 00:08:44,920
+After defining it,
+
+257
+00:08:44,920 --> 00:08:47,320
+we register it
+
+258
+00:08:47,320 --> 00:08:48,200
+into the kernel
+
+259
+00:08:48,200 --> 00:08:50,540
+and the kernel saves it
+
+260
+00:08:50,540 --> 00:08:51,160
+When saving it,
+
+261
+00:08:51,160 --> 00:08:55,660
+Here, it's essentially saving the entry address of the function,
+
+262
+00:08:55,660 --> 00:08:56,560
+which is a function pointer.
+
+263
+00:08:56,560 --> 00:09:00,300
+And this is a pointer to its parameter.
+
+264
+00:09:00,300 --> 00:09:03,060
+This parameter will ultimately be passed inside,
+
+265
+00:09:03,060 --> 00:09:05,760
+so when this function is called back internally,
+
+266
+00:09:05,760 --> 00:09:07,320
+it will still be passed in.
+
+267
+00:09:07,320 --> 00:09:09,640
+Those are the first two parameters,
+
+268
+00:09:09,640 --> 00:09:11,040
+the first two attributes.
+
+269
+00:09:11,040 --> 00:09:12,800
+Now, the third attribute,
+
+270
+00:09:12,800 --> 00:09:14,660
+is actually related to our internal
+
+271
+00:09:14,660 --> 00:09:17,280
+software timer implementation,
+
+272
+00:09:17,280 --> 00:09:18,680
+a timeout counter.
+
+273
+00:09:18,680 --> 00:09:20,660
+As for exactly how to use this,
+
+274
+00:09:20,660 --> 00:09:22,500
+we'll explain it to you later.
+
+275
+00:09:22,500 --> 00:09:25,100
+So this is one of its
+
+276
+00:09:25,100 --> 00:09:26,700
+internal structs.
+
+277
+00:09:26,700 --> 00:09:28,840
+Now, below this,
+
+278
+00:09:28,840 --> 00:09:31,740
+are the two interfaces provided.
+
+279
+00:09:31,740 --> 00:09:32,880
+One is for creation,
+
+280
+00:09:32,880 --> 00:09:34,440
+and the other is a deletion interface.
+
+281
+00:09:34,440 --> 00:09:36,900
+Creating one means, for example, if the user wants to
+
+282
+00:09:36,900 --> 00:09:39,440
+create a timer themselves,
+
+283
+00:09:39,440 --> 00:09:40,520
+they just call this interface.
+
+284
+00:09:40,520 --> 00:09:41,720
+Then when it's no longer needed,
+
+285
+00:09:41,720 --> 00:09:42,520
+you just delete it.
+
+286
+00:09:42,520 --> 00:09:45,040
+Now, when creating this interface,
+
+287
+00:09:45,040 --> 00:09:45,840
+the parameters it passes
+
+288
+00:09:45,840 --> 00:09:47,240
+include the two parameters you see here,
+
+289
+00:09:47,240 --> 00:09:48,740
+which actually correspond to this thing.
+
+290
+00:09:48,740 --> 00:09:51,900
+That is, after the user defines a function outside,
+
+291
+00:09:51,900 --> 00:09:54,940
+they pass in its address and parameters,
+
+292
+00:09:54,940 --> 00:09:56,400
+and we'll record it.
+
+293
+00:09:56,400 --> 00:09:57,000
+Then,
+
+294
+00:09:57,000 --> 00:09:59,260
+this timeout value,
+
+295
+00:09:59,260 --> 00:10:00,100
+basically means,
+
+296
+00:10:00,100 --> 00:10:01,740
+for a timer,
+
+297
+00:10:01,740 --> 00:10:02,640
+you want to go from,
+
+298
+00:10:02,640 --> 00:10:03,620
+say, the current moment,
+
+299
+00:10:03,620 --> 00:10:05,420
+for how long,
+
+300
+00:10:05,420 --> 00:10:06,520
+which is the timeout.
+
+301
+00:10:06,520 --> 00:10:07,760
+this is when the timer fires
+
+302
+00:10:07,760 --> 00:10:09,980
+that is, it is specified through this
+
+303
+00:10:09,980 --> 00:10:10,900
+and as for this one,
+
+304
+00:10:10,900 --> 00:10:12,040
+its unit is the tick
+
+305
+00:10:12,040 --> 00:10:13,860
+let me just mention this briefly
+
+306
+00:10:13,860 --> 00:10:16,540
+because what we built is fairly simple,
+
+307
+00:10:16,540 --> 00:10:19,160
+all of our internal timing
+
+308
+00:10:19,160 --> 00:10:20,720
+is done in units of ticks
+
+309
+00:10:20,720 --> 00:10:22,280
+now, the concept of the tick
+
+310
+00:10:22,280 --> 00:10:23,540
+when we talked about the hardware timer
+
+311
+00:10:23,540 --> 00:10:24,180
+we already covered that
+
+312
+00:10:24,180 --> 00:10:26,260
+if you don't remember, go back and review it
+
+313
+00:10:26,260 --> 00:10:29,500
+and as for deletion,
+
+314
+00:10:29,500 --> 00:10:31,060
+after this function executes successfully,
+
+315
+00:10:31,060 --> 00:10:32,140
+it returns this
+
+316
+00:10:32,140 --> 00:10:33,520
+the pointer to the object
+
+317
+00:10:33,520 --> 00:10:34,820
+that created this timer
+
+318
+00:10:34,820 --> 00:10:36,440
+so when deleting it,
+
+319
+00:10:36,440 --> 00:10:37,660
+you just pass this pointer
+
+320
+00:10:37,660 --> 00:10:38,360
+back in again
+
+321
+00:10:38,360 --> 00:10:39,240
+We can then find
+
+322
+00:10:39,240 --> 00:10:40,160
+the corresponding struct,
+
+323
+00:10:40,160 --> 00:10:41,860
+and stop it.
+
+324
+00:10:41,860 --> 00:10:45,200
+This is the set of interfaces we designed.
+
+325
+00:10:45,200 --> 00:10:51,360
+Now, inside the kernel,
+
+326
+00:10:51,360 --> 00:10:52,460
+internally, we
+
+327
+00:10:52,460 --> 00:10:53,720
+actually use the simplest
+
+328
+00:10:53,720 --> 00:10:55,140
+array-based approach to implement it.
+
+329
+00:10:55,140 --> 00:10:55,820
+For now, that's how it is.
+
+330
+00:10:55,820 --> 00:10:57,020
+An array approach.
+
+331
+00:10:57,020 --> 00:10:57,840
+We define a
+
+332
+00:10:57,840 --> 00:10:59,280
+software timer array,
+
+333
+00:10:59,280 --> 00:11:00,340
+and it can hold at most
+
+334
+00:11:00,340 --> 00:11:01,440
+10 timers.
+
+335
+00:11:02,160 --> 00:11:03,140
+This way,
+
+336
+00:11:03,140 --> 00:11:05,100
+of course, that number could be larger,
+
+337
+00:11:05,100 --> 00:11:07,200
+but this is just for demonstration,
+
+338
+00:11:07,200 --> 00:11:07,940
+so we set it to 10.
+
+339
+00:11:07,940 --> 00:11:09,920
+Actually, you could open as many as you want.
+
+340
+00:11:09,920 --> 00:11:17,980
+And then there is also the timer's
+
+341
+00:11:17,980 --> 00:11:20,040
+This is the initialization function for the entire module.
+
+342
+00:11:20,040 --> 00:11:23,240
+This one is generally not meant to be called directly by users.
+
+343
+00:11:23,240 --> 00:11:25,080
+This is during our kernel boot process,
+
+344
+00:11:25,080 --> 00:11:27,480
+it goes and initializes the whole software timer
+
+345
+00:11:27,480 --> 00:11:29,360
+-- essentially a subsystem --
+
+346
+00:11:29,360 --> 00:11:30,540
+Now, internally it's very simple.
+
+347
+00:11:30,540 --> 00:11:32,200
+It's really just a for loop,
+
+348
+00:11:32,200 --> 00:11:32,920
+because it's an array,
+
+349
+00:11:32,920 --> 00:11:34,120
+so we iterate through it once,
+
+350
+00:11:34,120 --> 00:11:38,860
+and then we take every member inside
+
+351
+00:11:38,860 --> 00:11:40,680
+and reset it to an initial
+
+352
+00:11:40,680 --> 00:11:41,940
+-- reset it to an initial value.
+
+353
+00:11:41,940 --> 00:11:45,000
+So mainly, it sets its
+
+354
+00:11:45,000 --> 00:11:47,220
+callback function and parameters both to NULL.
+
+355
+00:11:47,220 --> 00:11:54,790
+And then,
+
+356
+00:11:54,790 --> 00:11:58,370
+its create function and delete function,
+
+357
+00:11:58,370 --> 00:11:59,930
+let me briefly introduce each of them to you.
+
+358
+00:11:59,930 --> 00:12:01,490
+So the create function,
+
+359
+00:12:01,490 --> 00:12:04,430
+it's actually also very simple.
+
+360
+00:12:04,430 --> 00:12:07,350
+So this preceding part of the logic,
+
+361
+00:12:07,350 --> 00:12:09,590
+It's basically looking for an available one.
+
+362
+00:12:09,590 --> 00:12:10,830
+Since it's an array,
+
+363
+00:12:10,830 --> 00:12:11,210
+it goes and looks.
+
+364
+00:12:11,210 --> 00:12:12,170
+When it searches,
+
+365
+00:12:12,170 --> 00:12:13,330
+the check is done through this:
+
+366
+00:12:13,330 --> 00:12:15,690
+whether the pointer to its callback function
+
+367
+00:12:15,690 --> 00:12:16,350
+is null or not,
+
+368
+00:12:16,350 --> 00:12:18,450
+to determine whether this timer
+
+369
+00:12:18,450 --> 00:12:20,650
+has already been used.
+
+370
+00:12:20,650 --> 00:12:21,530
+This array entry,
+
+371
+00:12:21,530 --> 00:12:22,750
+whether this member is being used.
+
+372
+00:12:22,750 --> 00:12:24,770
+So as you can imagine,
+
+373
+00:12:24,770 --> 00:12:25,430
+when deleting,
+
+374
+00:12:25,430 --> 00:12:26,850
+we also need to make sure to take this
+
+375
+00:12:26,850 --> 00:12:28,650
+and set this field of the member
+
+376
+00:12:28,650 --> 00:12:30,190
+back to null, and that's it.
+
+377
+00:12:30,190 --> 00:12:32,050
+So once we find one,
+
+378
+00:12:32,050 --> 00:12:32,790
+we break out of the loop.
+
+379
+00:12:32,790 --> 00:12:34,490
+If we do find one and come out,
+
+380
+00:12:34,490 --> 00:12:37,050
+then after coming out of this,
+
+381
+00:12:37,050 --> 00:12:38,270
+Take the parameters here
+
+382
+00:12:38,270 --> 00:12:41,430
+Take the parameters passed in by this system call
+
+383
+00:12:41,430 --> 00:12:42,830
+and place them in one by one
+
+384
+00:12:42,830 --> 00:12:45,050
+to save them
+
+385
+00:12:45,050 --> 00:12:46,510
+Then
+
+386
+00:12:46,510 --> 00:12:46,930
+here
+
+387
+00:12:46,930 --> 00:12:48,270
+there is a timeout value
+
+388
+00:12:48,270 --> 00:12:49,950
+We will take this
+
+389
+00:12:49,950 --> 00:12:51,690
+take this timeout value
+
+390
+00:12:51,690 --> 00:12:53,550
+based on this variable
+
+391
+00:12:53,550 --> 00:12:54,530
+When we talked earlier about
+
+392
+00:12:54,530 --> 00:12:55,770
+the hardware timer
+
+393
+00:12:55,770 --> 00:12:56,750
+you may remember
+
+394
+00:12:56,750 --> 00:12:58,390
+it is actually an internal
+
+395
+00:12:58,390 --> 00:13:00,410
+global tick count
+
+396
+00:13:00,410 --> 00:13:02,450
+Every time the timer fires
+
+397
+00:13:02,450 --> 00:13:04,010
+that is, when the hardware timer fires
+
+398
+00:13:04,010 --> 00:13:05,170
+this number increments by one
+
+399
+00:13:05,170 --> 00:13:07,090
+So we will use this to
+
+400
+00:13:07,090 --> 00:13:08,250
+which is basically saying
+
+401
+00:13:08,250 --> 00:13:09,570
+It keeps track of the system's
+
+402
+00:13:09,570 --> 00:13:10,910
+current tick count.
+
+403
+00:13:10,910 --> 00:13:13,390
+Then we take that tick count
+
+404
+00:13:13,390 --> 00:13:15,550
+and, based on the timeout passed in,
+
+405
+00:13:15,550 --> 00:13:16,830
+add it together,
+
+406
+00:13:16,830 --> 00:13:18,670
+and save it into this member.
+
+407
+00:13:18,670 --> 00:13:20,610
+So basically, what this does is
+
+408
+00:13:20,610 --> 00:13:23,610
+record the number it will reach when it expires.
+
+409
+00:13:23,610 --> 00:13:24,950
+Later on,
+
+410
+00:13:24,950 --> 00:13:28,290
+we'll keep comparing this number against the tick count.
+
+411
+00:13:28,290 --> 00:13:29,490
+When they are equal,
+
+412
+00:13:29,490 --> 00:13:32,330
+that means the timer has expired.
+
+413
+00:13:32,330 --> 00:13:34,310
+It's really that simple.
+
+414
+00:13:34,310 --> 00:13:38,350
+So that's the logic behind creating one.
+
+415
+00:13:38,350 --> 00:13:40,690
+Now, what about deletion?
+
+416
+00:13:40,690 --> 00:13:42,870
+That's also very simple.
+
+417
+00:13:42,870 --> 00:13:48,490
+As I mentioned earlier, through the pointer to the timer we pass in,
+
+418
+00:13:48,490 --> 00:13:52,110
+we find the corresponding entry in the array.
+
+419
+00:13:52,110 --> 00:13:52,950
+Once we find it,
+
+420
+00:13:52,950 --> 00:13:54,690
+we simply clear it out.
+
+421
+00:13:54,690 --> 00:13:55,750
+and that's all there is to it.
+
+422
+00:13:55,750 --> 00:13:57,810
+As for this timeout field,
+
+423
+00:13:57,810 --> 00:13:58,550
+we actually don't need to clear it.
+
+424
+00:13:58,550 --> 00:14:00,670
+Because every time we create a new one,
+
+425
+00:14:00,670 --> 00:14:01,930
+we assign it a new value again.
+
+426
+00:14:01,930 --> 00:14:02,990
+So we don't clear it.
+
+427
+00:14:02,990 --> 00:14:03,890
+For the other parts,
+
+428
+00:14:03,890 --> 00:14:05,890
+we just make sure to clear them.
+
+429
+00:14:05,890 --> 00:14:07,690
+Especially this one, it must be cleared.
+
+430
+00:14:07,690 --> 00:14:10,150
+Because we use it to determine whether this timer
+
+431
+00:14:10,150 --> 00:14:13,590
+is, by this, this, this array member,
+
+432
+00:14:13,590 --> 00:14:15,270
+whether it is currently in use — that's what this flag is for.
+
+433
+00:14:15,270 --> 00:14:17,450
+All of this is pretty simple.
+
+434
+00:14:17,450 --> 00:14:23,840
+Now, as for the execution logic,
+
+435
+00:14:23,840 --> 00:14:26,140
+we use the hardware timer underneath
+
+436
+00:14:26,140 --> 00:14:30,160
+to actually drive the logic of this software timer.
+
+437
+00:14:30,160 --> 00:14:32,780
+So the overall execution flow,
+
+438
+00:14:32,780 --> 00:14:33,500
+roughly speaking, is like this.
+
+439
+00:14:33,500 --> 00:14:35,040
+Let me quickly walk you through it.
+
+440
+00:14:35,040 --> 00:14:36,000
+That is to say,
+
+441
+00:14:36,000 --> 00:14:38,640
+For example, once an interrupt occurs, the hardware
+
+442
+00:14:38,640 --> 00:14:40,480
+that is, once a timer interrupt occurs,
+
+443
+00:14:40,480 --> 00:14:43,620
+then based on what we introduced to you earlier,
+
+444
+00:14:43,620 --> 00:14:44,800
+we know that this piece of logic
+
+445
+00:14:44,800 --> 00:14:46,380
+actually hasn't been changed much.
+
+446
+00:14:46,380 --> 00:14:48,820
+It definitely enters our
+
+447
+00:14:48,820 --> 00:14:51,040
+interrupt handler,
+
+448
+00:14:51,040 --> 00:14:52,340
+the exception handler trap.
+
+449
+00:14:52,340 --> 00:14:53,320
+Now, the trap,
+
+450
+00:14:53,320 --> 00:14:54,880
+based on our judgment,
+
+451
+00:14:54,880 --> 00:14:55,820
+it is actually a...
+
+452
+00:14:55,820 --> 00:14:57,180
+we know this one
+
+453
+00:14:57,180 --> 00:14:58,680
+should be classified as an interrupt,
+
+454
+00:14:58,680 --> 00:14:59,140
+right?
+
+455
+00:14:59,140 --> 00:14:59,740
+It's an interrupt.
+
+456
+00:14:59,740 --> 00:15:01,180
+Now, for interrupts,
+
+457
+00:15:01,180 --> 00:15:02,320
+we say there are several kinds:
+
+458
+00:15:02,320 --> 00:15:05,760
+there are software interrupts,
+
+459
+00:15:05,760 --> 00:15:06,780
+timer interrupts,
+
+460
+00:15:06,780 --> 00:15:08,520
+and external interrupts.
+
+461
+00:15:08,520 --> 00:15:08,840
+Right?
+
+462
+00:15:08,840 --> 00:15:09,720
+Let's recall.
+
+463
+00:15:09,720 --> 00:15:11,780
+Then 7 is the timer interrupt.
+
+464
+00:15:11,780 --> 00:15:12,920
+For the timer interrupt,
+
+465
+00:15:12,920 --> 00:15:14,900
+we enter our time handler,
+
+466
+00:15:14,900 --> 00:15:16,860
+that is, the timer interrupt handler function.
+
+467
+00:15:16,860 --> 00:15:18,500
+So it goes into this function of ours.
+
+468
+00:15:18,500 --> 00:15:19,720
+Now, in this function,
+
+469
+00:15:19,720 --> 00:15:21,860
+the logic at the beginning,
+
+470
+00:15:21,860 --> 00:15:24,460
+we actually mainly
+
+471
+00:15:24,460 --> 00:15:26,960
+in the logic we had at the time,
+
+472
+00:15:26,960 --> 00:15:29,400
+there were mainly these three steps.
+
+473
+00:15:29,400 --> 00:15:30,100
+Right?
+
+474
+00:15:30,100 --> 00:15:34,220
+This one is the maintenance of the global tick count.
+
+475
+00:15:34,220 --> 00:15:35,460
+This one,
+
+476
+00:15:35,460 --> 00:15:36,680
+no, sorry, that was wrong.
+
+477
+00:15:36,680 --> 00:15:37,400
+This one,
+
+478
+00:15:37,400 --> 00:15:41,060
+this one loads the hardware timer for the next time.
+
+479
+00:15:41,060 --> 00:15:42,580
+This is just a quick review.
+
+480
+00:15:42,580 --> 00:15:44,940
+Now the third one is related to scheduling.
+
+481
+00:15:44,940 --> 00:15:47,500
+Because this is essentially the core logic of preemption.
+
+482
+00:15:47,500 --> 00:15:49,480
+So here, in our case,
+
+483
+00:15:49,480 --> 00:15:52,780
+we mainly added this function called timecheck.
+
+484
+00:15:52,780 --> 00:15:56,240
+This is the logic we added for our software timer.
+
+485
+00:15:56,240 --> 00:15:58,440
+When you look at it, compare the two side by side.
+
+486
+00:15:58,440 --> 00:16:00,920
+Now, timecheck,
+
+487
+00:16:00,920 --> 00:16:04,020
+that is the core logic behind our software timer implementation.
+
+488
+00:16:04,020 --> 00:16:05,660
+So inside this function,
+
+489
+00:16:05,660 --> 00:16:12,340
+it actually uses this to go through this array,
+
+490
+00:16:12,340 --> 00:16:14,340
+based on the current tick count,
+
+491
+00:16:14,340 --> 00:16:17,900
+the global tick count maintained by the hardware timer,
+
+492
+00:16:17,900 --> 00:16:22,020
+and the value stored inside each timer.
+
+493
+00:16:22,020 --> 00:16:23,200
+We talked about this value earlier.
+
+494
+00:16:23,200 --> 00:16:26,480
+It actually records when this timer is supposed to expire.
+
+495
+00:16:26,480 --> 00:16:30,320
+It checks whether this tick count has become greater than or equal to it.
+
+496
+00:16:30,320 --> 00:16:31,880
+If so, we consider the timer to have expired.
+
+497
+00:16:31,880 --> 00:16:32,840
+Once the timer has expired,
+
+498
+00:16:32,840 --> 00:16:36,140
+we use the recorded function,
+
+499
+00:16:36,140 --> 00:16:38,900
+this pointer here,
+
+500
+00:16:38,900 --> 00:16:44,560
+and we go ahead and call this software timer's handler function.
+
+501
+00:16:44,560 --> 00:16:46,960
+This one is set by the user.
+
+502
+00:16:46,960 --> 00:16:52,060
+So inside here, we basically do a callback.
+
+503
+00:16:52,060 --> 00:16:54,180
+We call back our timer handler function,
+
+504
+00:16:54,180 --> 00:16:55,860
+the software timer handler function.
+
+505
+00:16:55,860 --> 00:16:57,420
+And after the processing is done,
+
+506
+00:16:57,420 --> 00:16:59,800
+we just clear out this timer.
+
+507
+00:16:59,800 --> 00:17:05,480
+So what we've implemented is only a non-periodic, one-time, single-shot timer.
+
+508
+00:17:05,480 --> 00:17:06,860
+Also, please note something.
+
+509
+00:17:06,860 --> 00:17:10,580
+Since this whole process runs in interrupt context,
+
+510
+00:17:10,580 --> 00:17:13,360
+the execution of our function here,
+
+511
+00:17:13,360 --> 00:17:15,840
+in fact, belongs to this kind of interrupt context.
+
+512
+00:17:15,840 --> 00:17:18,240
+Relate this to the concepts we covered earlier.
+
+513
+00:17:18,240 --> 00:17:21,300
+Our current implementation uses this approach.
+
+514
+00:17:21,300 --> 00:17:24,960
+So when you implement this,
+
+515
+00:17:24,960 --> 00:17:29,280
+when you use our software timer to do the software timer handling,
+
+516
+00:17:29,280 --> 00:17:32,260
+there are actually some issues to watch out for in this function.
+
+517
+00:17:32,260 --> 00:17:33,760
+Because it runs in interrupt context,
+
+518
+00:17:33,760 --> 00:17:38,900
+you need to pay attention to what we already covered earlier.
+
+519
+00:17:38,900 --> 00:17:41,620
+Now, after this call,
+
+520
+00:17:41,620 --> 00:17:42,360
+the whole process...
+
+521
+00:17:42,360 --> 00:17:46,780
+So this is the trigger process of our software timer.
+
+522
+00:17:46,780 --> 00:17:49,120
+Earlier we talked about creation and deletion.
+
+523
+00:17:49,120 --> 00:17:52,300
+As for triggering, it goes through this path here.
+
+524
+00:17:52,300 --> 00:17:57,960
+It mainly involves the timer interrupt we mentioned earlier,
+
+525
+00:17:57,960 --> 00:17:59,160
+this concept.
+
+526
+00:17:59,160 --> 00:18:05,270
+Now let's go through a few simple examples.
+
+527
+00:18:05,270 --> 00:18:07,450
+Let's see how this timer works,
+
+528
+00:18:07,450 --> 00:18:10,210
+and how it meets our requirements.
+
+529
+00:18:10,210 --> 00:18:13,490
+So this here is a diagram.
+
+530
+00:18:13,490 --> 00:18:14,510
+The tick on this side,
+
+531
+00:18:14,510 --> 00:18:17,850
+that's the one we talked about earlier, maintained by the internal hardware timer,
+
+532
+00:18:17,850 --> 00:18:21,590
+the global tick count, the system tick count.
+
+533
+00:18:21,590 --> 00:18:26,090
+And over here is the list that implements our software timer.
+
+534
+00:18:26,090 --> 00:18:27,790
+Right now it's actually an array.
+
+535
+00:18:27,790 --> 00:18:31,310
+So let's say this here is our timeline.
+
+536
+00:18:31,310 --> 00:18:33,510
+Let's say our current time
+
+537
+00:18:33,510 --> 00:18:36,190
+starts from a tick count of 100.
+
+538
+00:18:36,190 --> 00:18:37,270
+As for the tick,
+
+539
+00:18:37,270 --> 00:18:38,530
+let's say in our code,
+
+540
+00:18:38,530 --> 00:18:41,150
+the tick period is set to one second.
+
+541
+00:18:41,150 --> 00:18:46,170
+That is, a hardware timer interrupt comes once every second
+
+542
+00:18:46,170 --> 00:18:47,470
+timer interrupt
+
+543
+00:18:47,470 --> 00:18:48,670
+hardware timer interrupt
+
+544
+00:18:48,670 --> 00:18:49,770
+once every second
+
+545
+00:18:49,770 --> 00:18:55,270
+So suppose at the moment of tick 100,
+
+546
+00:18:55,270 --> 00:18:57,570
+we create two
+
+547
+00:18:57,570 --> 00:18:59,550
+that is, we call timer_create,
+
+548
+00:18:59,550 --> 00:19:01,330
+creating two software timers
+
+549
+00:19:01,330 --> 00:19:03,450
+Now suppose what we want is
+
+550
+00:19:03,450 --> 00:19:04,610
+for the first software timer
+
+551
+00:19:04,610 --> 00:19:05,810
+to time out after one second,
+
+552
+00:19:05,810 --> 00:19:08,370
+and the second software timer to time out after two seconds
+
+553
+00:19:08,370 --> 00:19:09,830
+Now the key question is,
+
+554
+00:19:09,830 --> 00:19:10,970
+for our setting,
+
+555
+00:19:10,970 --> 00:19:12,710
+what should its timeout value be?
+
+556
+00:19:12,710 --> 00:19:15,290
+Well, you can imagine it like this
+
+557
+00:19:15,290 --> 00:19:16,970
+Suppose we're the first timer,
+
+558
+00:19:16,970 --> 00:19:18,290
+to time out after one second
+
+559
+00:19:18,290 --> 00:19:19,610
+then it times out at this point
+
+560
+00:19:19,610 --> 00:19:21,890
+and the second one after two seconds
+
+561
+00:19:21,890 --> 00:19:22,630
+It's this point that times out.
+
+562
+00:19:22,630 --> 00:19:24,770
+So it's nothing more than a 101
+
+563
+00:19:24,770 --> 00:19:26,010
+and a 102, right?
+
+564
+00:19:26,010 --> 00:19:27,850
+Now, when we actually set it,
+
+565
+00:19:27,850 --> 00:19:30,490
+the parameter we actually pass in,
+
+566
+00:19:30,490 --> 00:19:31,970
+really just needs to be 1 and 2.
+
+567
+00:19:31,970 --> 00:19:35,370
+But since we add 1 and 100 together,
+
+568
+00:19:35,370 --> 00:19:36,410
+we get 101.
+
+569
+00:19:36,410 --> 00:19:38,210
+And for 2 and 100,
+
+570
+00:19:38,210 --> 00:19:39,910
+adding 100 gives us 102.
+
+571
+00:19:39,910 --> 00:19:44,570
+So the values we actually store in the internal software timer,
+
+572
+00:19:44,570 --> 00:19:47,610
+the member values, are definitely a 101 and a 102.
+
+573
+00:19:47,610 --> 00:19:51,310
+Alright, so suppose this is all set up at this point,
+
+574
+00:19:51,310 --> 00:19:52,730
+and we start running.
+
+575
+00:19:52,730 --> 00:19:56,150
+Now this interrupt,
+
+576
+00:19:56,150 --> 00:19:57,690
+it keeps firing.
+
+577
+00:19:57,690 --> 00:19:59,150
+And the Tick count,
+
+578
+00:19:59,150 --> 00:20:00,950
+every time a hardware interrupt comes in,
+
+579
+00:20:00,950 --> 00:20:02,430
+this value keeps changing.
+
+580
+00:20:02,430 --> 00:20:04,390
+And when it reaches 100,
+
+581
+00:20:04,390 --> 00:20:06,250
+Based on the logic we talked about earlier,
+
+582
+00:20:06,250 --> 00:20:08,090
+every time the timer period comes around,
+
+583
+00:20:08,090 --> 00:20:09,530
+besides incrementing this value,
+
+584
+00:20:09,530 --> 00:20:11,090
+it goes and does a timer check.
+
+585
+00:20:11,090 --> 00:20:12,710
+Now, for the timer check,
+
+586
+00:20:12,710 --> 00:20:14,150
+it will go and compare,
+
+587
+00:20:14,150 --> 00:20:15,210
+iterating through all these timers,
+
+588
+00:20:15,210 --> 00:20:17,930
+comparing their timer values against this tick value.
+
+589
+00:20:17,930 --> 00:20:21,410
+Once this value is greater than or equal to it, and the condition is met,
+
+590
+00:20:21,410 --> 00:20:22,330
+that means it has expired.
+
+591
+00:20:22,330 --> 00:20:23,350
+So at this point,
+
+592
+00:20:23,350 --> 00:20:24,970
+this Time1 on the left has expired.
+
+593
+00:20:24,970 --> 00:20:25,690
+Once it expires,
+
+594
+00:20:25,690 --> 00:20:26,750
+it has timed out,
+
+595
+00:20:26,750 --> 00:20:27,590
+and the timeout will trigger
+
+596
+00:20:27,590 --> 00:20:28,450
+its handler function.
+
+597
+00:20:28,450 --> 00:20:30,530
+So from the software level,
+
+598
+00:20:30,530 --> 00:20:32,830
+this timer has timed out.
+
+599
+00:20:32,830 --> 00:20:34,750
+And after the timeout is handled,
+
+600
+00:20:34,750 --> 00:20:35,530
+it will be deleted.
+
+601
+00:20:35,530 --> 00:20:37,170
+So next,
+
+602
+00:20:37,170 --> 00:20:38,310
+the second one.
+
+603
+00:20:38,310 --> 00:20:40,110
+Now suppose at this point,
+
+604
+00:20:40,110 --> 00:20:41,450
+at this point here,
+
+605
+00:20:41,450 --> 00:20:42,930
+we get another timer,
+
+606
+00:20:42,930 --> 00:20:43,550
+timer3.
+
+607
+00:20:43,550 --> 00:20:45,190
+So for this timer3,
+
+608
+00:20:45,190 --> 00:20:46,610
+let's say it's again a three-second timeout.
+
+609
+00:20:46,610 --> 00:20:47,930
+Now think about it,
+
+610
+00:20:47,930 --> 00:20:48,810
+what should this value be
+
+611
+00:20:48,810 --> 00:20:49,950
+at this point?
+
+612
+00:20:49,950 --> 00:20:52,830
+Well, based on our earlier experience,
+
+613
+00:20:52,830 --> 00:20:53,350
+as you know,
+
+614
+00:20:53,350 --> 00:20:54,830
+since it's a three-second timeout,
+
+615
+00:20:54,830 --> 00:20:55,670
+that means,
+
+616
+00:20:55,670 --> 00:20:57,090
+starting from this moment,
+
+617
+00:20:57,090 --> 00:20:58,190
+it times out after three seconds.
+
+618
+00:20:58,190 --> 00:20:59,430
+One second,
+
+619
+00:20:59,430 --> 00:21:00,090
+two seconds,
+
+620
+00:21:00,090 --> 00:21:00,530
+three seconds.
+
+621
+00:21:00,530 --> 00:21:02,530
+So we definitely need to put 4
+
+622
+00:21:02,530 --> 00:21:03,270
+right?
+
+623
+00:21:03,270 --> 00:21:05,330
+But when we pass in the parameter,
+
+624
+00:21:05,330 --> 00:21:06,930
+we're actually still passing 3.
+
+625
+00:21:06,930 --> 00:21:09,370
+So how do we get 104?
+
+626
+00:21:09,370 --> 00:21:10,730
+Very simple.
+
+627
+00:21:10,730 --> 00:21:11,490
+Because this value,
+
+628
+00:21:11,490 --> 00:21:14,110
+right now we're adding this value to 3,
+
+629
+00:21:14,110 --> 00:21:14,670
+think about it, isn't that right?
+
+630
+00:21:14,670 --> 00:21:16,870
+So naturally we get 104.
+
+631
+00:21:16,870 --> 00:21:19,810
+So the way we do it here,
+
+632
+00:21:19,810 --> 00:21:21,850
+what we actually put here is 104.
+
+633
+00:21:21,850 --> 00:21:23,690
+Now,
+
+634
+00:21:23,690 --> 00:21:26,690
+the three of them are created.
+
+635
+00:21:26,690 --> 00:21:29,330
+It was created at time 101,
+
+636
+00:21:29,330 --> 00:21:31,050
+and it expires after 3 seconds.
+
+637
+00:21:31,050 --> 00:21:35,990
+Now suppose we reach 102 at this point,
+
+638
+00:21:35,990 --> 00:21:36,710
+after 102,
+
+639
+00:21:36,710 --> 00:21:38,770
+as you know, this timer expires again,
+
+640
+00:21:38,770 --> 00:21:41,170
+so the second timer times out.
+
+641
+00:21:41,170 --> 00:21:42,730
+triggers the corresponding function.
+
+642
+00:21:42,730 --> 00:21:44,190
+Then, next,
+
+643
+00:21:44,190 --> 00:21:46,870
+the tick count goes up by 103.
+
+644
+00:21:46,870 --> 00:21:49,750
+At 103, it actually hasn't timed out yet.
+
+645
+00:21:49,750 --> 00:21:50,950
+No timeout.
+
+646
+00:21:50,950 --> 00:21:52,910
+Then, when it reaches 104,
+
+647
+00:21:52,910 --> 00:21:57,250
+as you know, time3 will also have timed out by then.
+
+648
+00:21:57,250 --> 00:21:59,290
+So from this example,
+
+649
+00:21:59,290 --> 00:22:00,670
+we can see that,
+
+650
+00:22:00,670 --> 00:22:02,790
+even though there is only one hardware timer underneath,
+
+651
+00:22:02,790 --> 00:22:05,790
+on the software side, we can actually set up,
+
+652
+00:22:05,790 --> 00:22:08,110
+set up many timers at the same time.
+
+653
+00:22:08,110 --> 00:22:09,750
+So how do we implement that?
+
+654
+00:22:09,750 --> 00:22:11,910
+It's actually done using the mechanism we covered earlier.
+
+655
+00:22:11,910 --> 00:22:15,160
+This is what's called a software timer.
+
+656
+00:22:15,160 --> 00:22:16,860
+Take a moment to let that sink in.
+
+657
+00:22:16,860 --> 00:22:23,250
+Now for the third part,
+
+658
+00:22:23,250 --> 00:22:25,950
+basically, the software timer we implemented earlier,
+
+659
+00:22:25,950 --> 00:22:26,730
+is fairly simple.
+
+660
+00:22:26,730 --> 00:22:29,150
+In fact, this software timer
+
+661
+00:22:29,150 --> 00:22:31,270
+There are many places where we can optimize.
+
+662
+00:22:31,270 --> 00:22:33,010
+The main goal of optimization is this:
+
+663
+00:22:33,010 --> 00:22:35,810
+we want the software timer to handle things efficiently.
+
+664
+00:22:35,810 --> 00:22:37,730
+Because as everyone knows, with timers,
+
+665
+00:22:37,730 --> 00:22:39,530
+if you set up a lot of timers,
+
+666
+00:22:39,530 --> 00:22:42,790
+and you traverse them using this kind of array-based approach,
+
+667
+00:22:42,790 --> 00:22:45,590
+the efficiency is really not going to be very high.
+
+668
+00:22:45,590 --> 00:22:46,150
+Don't you all agree?
+
+669
+00:22:46,150 --> 00:22:49,950
+Especially since every time we have to go in here,
+
+670
+00:22:49,950 --> 00:22:53,610
+and if its timers are implemented using an array,
+
+671
+00:22:53,610 --> 00:22:55,470
+the memory has to be allocated upfront.
+
+672
+00:22:55,470 --> 00:22:58,950
+So the memory usage is not really optimal either.
+
+673
+00:22:58,950 --> 00:23:05,030
+So there are actually many places where it's worth optimizing the implementation of this software timer.
+
+674
+00:23:05,030 --> 00:23:10,170
+Now, this is the current implementation of our software timer.
+
+675
+00:23:10,170 --> 00:23:13,390
+We can see that because our core data structure is designed as an array,
+
+676
+00:23:13,390 --> 00:23:17,150
+a lot of the code in here relies on a for loop to traverse it.
+
+677
+00:23:17,150 --> 00:23:21,250
+And this array also reserves a lot of space.
+
+678
+00:23:21,250 --> 00:23:24,650
+So as you know, if you were asked to implement this kind of thing,
+
+679
+00:23:24,650 --> 00:23:26,190
+the first thing you'd probably think of is,
+
+680
+00:23:26,190 --> 00:23:29,910
+first, from the perspective of saving memory,
+
+681
+00:23:29,910 --> 00:23:31,630
+Or, in terms of flexibility,
+
+682
+00:23:31,630 --> 00:23:34,110
+we actually prefer to use a linked list.
+
+683
+00:23:34,110 --> 00:23:34,690
+Think about it, right?
+
+684
+00:23:34,690 --> 00:23:36,390
+So with a linked list,
+
+685
+00:23:36,390 --> 00:23:37,770
+the first thing is that
+
+686
+00:23:37,770 --> 00:23:43,630
+the allocation of the data space in memory
+
+687
+00:23:43,630 --> 00:23:45,390
+becomes much more flexible.
+
+688
+00:23:45,390 --> 00:23:47,850
+You only create as much as you need,
+
+689
+00:23:47,850 --> 00:23:49,090
+rather than like our array,
+
+690
+00:23:49,090 --> 00:23:49,930
+where we allocate a big chunk all at once.
+
+691
+00:23:49,930 --> 00:23:51,370
+Because with software timers,
+
+692
+00:23:51,370 --> 00:23:52,690
+there might be cases where we need a lot of them,
+
+693
+00:23:52,690 --> 00:23:54,390
+and then the pressure on our array would be quite high.
+
+694
+00:23:54,390 --> 00:23:58,710
+So that's why we use a linked list approach.
+
+695
+00:23:58,710 --> 00:23:59,550
+Now, there is another thing,
+
+696
+00:23:59,550 --> 00:24:02,370
+which is that,
+
+697
+00:24:02,370 --> 00:24:05,390
+even if we do use an array,
+
+698
+00:24:05,390 --> 00:24:07,270
+as it stands right now,
+
+699
+00:24:07,270 --> 00:24:12,270
+when we actually go and create these objects,
+
+700
+00:24:12,270 --> 00:24:14,790
+we simply check whether their space is empty.
+
+701
+00:24:14,790 --> 00:24:16,410
+Now, during the search process,
+
+702
+00:24:16,410 --> 00:24:19,110
+with the timers being used,
+
+703
+00:24:19,110 --> 00:24:22,670
+more and more, that is, once some of them are used up,
+
+704
+00:24:22,670 --> 00:24:23,690
+they get cleared out.
+
+705
+00:24:23,690 --> 00:24:25,030
+So there are a lot of holes in the middle,
+
+706
+00:24:25,030 --> 00:24:25,490
+right?
+
+707
+00:24:25,490 --> 00:24:27,250
+So this is actually not very efficient.
+
+708
+00:24:27,250 --> 00:24:28,070
+And besides,
+
+709
+00:24:28,070 --> 00:24:30,190
+our time ordering —
+
+710
+00:24:30,190 --> 00:24:31,910
+it's possible that,
+
+711
+00:24:31,910 --> 00:24:34,370
+for the timers in the array, with longer timeouts,
+
+712
+00:24:34,370 --> 00:24:35,510
+they end up being placed at the front.
+
+713
+00:24:35,510 --> 00:24:37,490
+So actually, if we,
+
+714
+00:24:37,490 --> 00:24:39,350
+sort them by their timeout time,
+
+715
+00:24:39,350 --> 00:24:41,030
+that is, keeping this guaranteed,
+
+716
+00:24:41,030 --> 00:24:42,370
+inside the linked list —
+
+717
+00:24:42,370 --> 00:24:43,490
+whether it's a linked list or an array —
+
+718
+00:24:43,490 --> 00:24:45,310
+if it's this,
+
+719
+00:24:45,310 --> 00:24:47,610
+its timer's Timeout value —
+
+720
+00:24:47,610 --> 00:24:49,850
+if it's sorted by time,
+
+721
+00:24:49,850 --> 00:24:52,310
+So the probability of us hitting it,
+
+722
+00:24:52,310 --> 00:24:56,430
+actually, since timers must expire in chronological order,
+
+723
+00:24:56,430 --> 00:24:57,890
+that's one of its characteristics,
+
+724
+00:24:57,890 --> 00:25:00,250
+that is, the closer a timer is to the present,
+
+725
+00:25:00,250 --> 00:25:02,810
+the more certainly it will be placed at the very front of the list.
+
+726
+00:25:02,810 --> 00:25:04,910
+That will certainly speed up the odds of hitting it,
+
+727
+00:25:04,910 --> 00:25:05,810
+so it may be a bit greater.
+
+728
+00:25:05,810 --> 00:25:08,330
+So in fact, we have many kinds of optimizations.
+
+729
+00:25:08,330 --> 00:25:10,110
+That is, the first one is,
+
+730
+00:25:10,110 --> 00:25:11,950
+sort the timers by their timeout time.
+
+731
+00:25:11,950 --> 00:25:13,710
+Whether we use an array or a list,
+
+732
+00:25:13,710 --> 00:25:18,450
+it will certainly also optimize our search for a timer.
+
+733
+00:25:18,450 --> 00:25:20,770
+Put the timers whose times are near,
+
+734
+00:25:20,770 --> 00:25:24,210
+that is, the earlier ones, at the front of the search.
+
+735
+00:25:24,210 --> 00:25:25,430
+And then there's another one,
+
+736
+00:25:25,430 --> 00:25:26,310
+which is using a linked list.
+
+737
+00:25:26,310 --> 00:25:29,630
+Naturally, on the one hand, that also saves space.
+
+738
+00:25:29,630 --> 00:25:33,050
+And in this linked list,
+
+739
+00:25:33,050 --> 00:25:34,050
+it is also quite flexible.
+
+740
+00:25:34,050 --> 00:25:35,490
+Insertion and deletion are also quite flexible.
+
+741
+00:25:35,490 --> 00:25:39,970
+especially when you want to do sorting,
+
+742
+00:25:39,970 --> 00:25:41,030
+actually, if you use a linked list,
+
+743
+00:25:41,030 --> 00:25:43,650
+the implementation is more flexible than with an array.
+
+744
+00:25:43,650 --> 00:25:46,930
+You can try implementing this on your own.
+
+745
+00:25:46,930 --> 00:25:49,330
+So we have an exercise here,
+
+746
+00:25:49,330 --> 00:25:52,370
+exercise 15-1 of this chapter,
+
+747
+00:25:52,370 --> 00:25:53,630
+and what we really hope is that,
+
+748
+00:25:53,630 --> 00:25:55,650
+building on what you've learned so far,
+
+749
+00:25:55,650 --> 00:25:58,150
+you go and optimize,
+
+750
+00:25:58,150 --> 00:26:00,970
+and make this piece of code a bit better.
+
+751
+00:26:00,970 --> 00:26:05,230
+This is the first part of our optimization.
+
+752
+00:26:05,230 --> 00:26:10,650
+And actually, there's still room for optimization.
+
+753
+00:26:10,650 --> 00:26:12,430
+For this timer,
+
+754
+00:26:12,430 --> 00:26:13,530
+there is in fact still room for optimization.
+
+755
+00:26:13,530 --> 00:26:16,900
+As we know,
+
+756
+00:26:16,900 --> 00:26:18,300
+whether we implement it using an array,
+
+757
+00:26:18,300 --> 00:26:19,640
+or using a linked list,
+
+758
+00:26:19,640 --> 00:26:23,140
+once there are many timers,
+
+759
+00:26:23,140 --> 00:26:25,500
+the process of searching and locating,
+
+760
+00:26:25,500 --> 00:26:28,520
+is simply unavoidable.
+
+761
+00:26:28,520 --> 00:26:30,060
+So let's assume in this example
+
+762
+00:26:30,060 --> 00:26:30,960
+you can see that
+
+763
+00:26:30,960 --> 00:26:31,800
+this 135 here
+
+764
+00:26:31,800 --> 00:26:32,780
+is this timers value
+
+765
+00:26:32,780 --> 00:26:33,920
+Assume they are still sorted
+
+766
+00:26:33,920 --> 00:26:35,680
+This side is still already sorted
+
+767
+00:26:35,680 --> 00:26:36,720
+Even if they are sorted,
+
+768
+00:26:36,720 --> 00:26:37,260
+we know
+
+769
+00:26:37,260 --> 00:26:38,660
+the search process
+
+770
+00:26:38,660 --> 00:26:39,820
+still cannot be avoided
+
+771
+00:26:39,820 --> 00:26:41,080
+And as this linked list
+
+772
+00:26:41,080 --> 00:26:42,040
+or this array
+
+773
+00:26:42,040 --> 00:26:43,740
+has more and more elements in it,
+
+774
+00:26:43,740 --> 00:26:46,700
+the search time will keep growing
+
+775
+00:26:46,700 --> 00:26:47,300
+Because everyone knows,
+
+776
+00:26:47,300 --> 00:26:48,120
+in this situation,
+
+777
+00:26:48,120 --> 00:26:50,140
+based on our data structures
+
+778
+00:26:50,140 --> 00:26:52,120
+algorithm complexity,
+
+779
+00:26:52,120 --> 00:26:52,820
+if we analyze it,
+
+780
+00:26:52,820 --> 00:26:55,320
+we've learned this before, right?
+
+781
+00:26:55,320 --> 00:26:56,260
+The complexity of this algorithm,
+
+782
+00:26:56,260 --> 00:26:59,920
+for something like a linked list and this kind of array,
+
+783
+00:26:59,920 --> 00:27:01,720
+the complexity of its search
+
+784
+00:27:01,720 --> 00:27:02,460
+should be what?
+
+785
+00:27:02,460 --> 00:27:04,340
+Just a simple linear
+
+786
+00:27:04,340 --> 00:27:05,860
+array or linked list,
+
+787
+00:27:05,860 --> 00:27:07,840
+its complexity
+
+788
+00:27:07,840 --> 00:27:10,420
+is definitely O(N).
+
+789
+00:27:10,420 --> 00:27:10,880
+The answer, right?
+
+790
+00:27:10,880 --> 00:27:13,120
+So what does O(N) mean?
+
+791
+00:27:13,120 --> 00:27:14,280
+It means that it's actually a
+
+792
+00:27:14,280 --> 00:27:17,280
+X equals Y,
+
+793
+00:27:17,280 --> 00:27:19,420
+Y equals X kind of effect.
+
+794
+00:27:19,420 --> 00:27:20,660
+In other words, when the
+
+795
+00:27:20,660 --> 00:27:22,920
+number of searches
+
+796
+00:27:22,920 --> 00:27:23,500
+and the
+
+797
+00:27:23,500 --> 00:27:26,480
+number of implementation steps of this algorithm
+
+798
+00:27:26,480 --> 00:27:29,360
+is directly proportional to the number of elements,
+
+799
+00:27:29,360 --> 00:27:30,400
+the more elements you have,
+
+800
+00:27:30,400 --> 00:27:32,260
+the more execution steps
+
+801
+00:27:32,260 --> 00:27:33,500
+it's definitely growing linearly,
+
+802
+00:27:33,500 --> 00:27:35,180
+a linear relationship.
+
+803
+00:27:35,180 --> 00:27:36,500
+Now, this kind of linear growth,
+
+804
+00:27:36,500 --> 00:27:38,220
+I should say, is not a very good
+
+805
+00:27:38,220 --> 00:27:39,780
+well,
+
+806
+00:27:39,780 --> 00:27:41,740
+the efficiency is not very high,
+
+807
+00:27:41,740 --> 00:27:42,620
+not very high at all.
+
+808
+00:27:42,620 --> 00:27:47,040
+So how can we further optimize
+
+809
+00:27:47,040 --> 00:27:48,480
+this software timer?
+
+810
+00:27:48,480 --> 00:27:52,340
+Well, here's what we can actually do.
+
+811
+00:27:52,340 --> 00:27:56,120
+On top of what we already have,
+
+812
+00:27:56,120 --> 00:28:01,200
+we can basically add
+
+813
+00:28:01,200 --> 00:28:03,400
+another layer on top of it.
+
+814
+00:28:03,400 --> 00:28:04,260
+Adding another layer,
+
+815
+00:28:04,260 --> 00:28:06,420
+as you can see, if we add another layer,
+
+816
+00:28:06,420 --> 00:28:07,500
+what kind of effect does that give us?
+
+817
+00:28:07,500 --> 00:28:10,640
+It means it takes every fixed interval,
+
+818
+00:28:10,640 --> 00:28:12,460
+this is essentially like the bottom,
+
+819
+00:28:12,460 --> 00:28:14,100
+the very bottom is essentially level one,
+
+820
+00:28:14,100 --> 00:28:16,100
+and then we abstract level two from it.
+
+821
+00:28:16,100 --> 00:28:16,760
+As for the second level,
+
+822
+00:28:16,760 --> 00:28:18,020
+as for this second level,
+
+823
+00:28:18,020 --> 00:28:19,140
+it basically means
+
+824
+00:28:19,140 --> 00:28:20,660
+taking
+
+825
+00:28:20,660 --> 00:28:23,040
+some of its element nodes inside,
+
+826
+00:28:23,040 --> 00:28:25,320
+if we extract them out,
+
+827
+00:28:25,320 --> 00:28:29,340
+it's somewhat like the effect of binary search,
+
+828
+00:28:29,340 --> 00:28:30,480
+somewhat like the effect of binary search.
+
+829
+00:28:30,480 --> 00:28:32,220
+Now, with this binary search kind of effect,
+
+830
+00:28:32,220 --> 00:28:33,000
+you can
+
+831
+00:28:33,000 --> 00:28:35,160
+simply compare the two effects.
+
+832
+00:28:35,160 --> 00:28:36,460
+Now, in the one below,
+
+833
+00:28:36,460 --> 00:28:38,220
+as you know, it's still linear,
+
+834
+00:28:38,220 --> 00:28:39,660
+meaning that to find this 20,
+
+835
+00:28:39,660 --> 00:28:43,060
+we have to traverse from left to right one by one.
+
+836
+00:28:43,060 --> 00:28:44,100
+And traversing one by one,
+
+837
+00:28:44,100 --> 00:28:47,720
+inside here we have one, two, three, four, five, six, seven,
+
+838
+00:28:47,720 --> 00:28:49,200
+that is, it takes at least seven times,
+
+839
+00:28:49,200 --> 00:28:50,400
+right?
+
+840
+00:28:50,400 --> 00:28:51,260
+seven nodes.
+
+841
+00:28:51,260 --> 00:28:54,220
+before we can find this node 20.
+
+842
+00:28:54,220 --> 00:28:55,760
+Now, if we
+
+843
+00:28:55,760 --> 00:28:57,640
+if, on this structure,
+
+844
+00:28:57,640 --> 00:28:59,500
+we abstract this second layer,
+
+845
+00:28:59,500 --> 00:29:01,260
+then our traversal process
+
+846
+00:29:01,260 --> 00:29:02,820
+will actually be much faster.
+
+847
+00:29:02,820 --> 00:29:03,920
+As you can see,
+
+848
+00:29:03,920 --> 00:29:04,980
+with this on top,
+
+849
+00:29:04,980 --> 00:29:07,820
+1, 5, 10, 1, 2, 3, 4 — four steps,
+
+850
+00:29:07,820 --> 00:29:08,780
+and it can reach this.
+
+851
+00:29:08,780 --> 00:29:10,440
+Right?
+
+852
+00:29:10,440 --> 00:29:13,820
+Now, if we keep going with this idea,
+
+853
+00:29:13,820 --> 00:29:17,280
+that is, if we find that there are more nodes at the bottom,
+
+854
+00:29:17,280 --> 00:29:20,840
+and we build a third level,
+
+855
+00:29:20,840 --> 00:29:22,180
+a third level,
+
+856
+00:29:22,180 --> 00:29:27,700
+then the number of steps relative to this would be even smaller.
+
+857
+00:29:27,700 --> 00:29:30,420
+In other words, if it were three levels,
+
+858
+00:29:30,420 --> 00:29:32,020
+that is, you first go from 1 to 11,
+
+859
+00:29:32,020 --> 00:29:34,640
+at 11 we see that 20 is greater than 11,
+
+860
+00:29:34,640 --> 00:29:36,620
+but smaller than 26.
+
+861
+00:29:36,620 --> 00:29:38,760
+So we just retreat to its
+
+862
+00:29:38,760 --> 00:29:40,720
+second-to-last level.
+
+863
+00:29:40,720 --> 00:29:42,500
+Now down there is 17.
+
+864
+00:29:42,500 --> 00:29:43,740
+17 is bigger than it,
+
+865
+00:29:43,740 --> 00:29:44,960
+but if it's smaller than 26,
+
+866
+00:29:44,960 --> 00:29:47,180
+then going one step further, we hit it very quickly.
+
+867
+00:29:47,180 --> 00:29:49,040
+So this blue portion, the hit
+
+868
+00:29:49,040 --> 00:29:51,100
+curve will actually be compared to the green one
+
+869
+00:29:51,100 --> 00:29:52,600
+it will actually still be more
+
+870
+00:29:52,600 --> 00:29:53,900
+it will be more
+
+871
+00:29:53,900 --> 00:29:55,440
+So this kind of thing,
+
+872
+00:29:55,440 --> 00:29:56,060
+according to these numbers,
+
+873
+00:29:56,060 --> 00:29:58,380
+this is actually like a pyramid structure going up.
+
+874
+00:29:58,380 --> 00:30:01,080
+So if you look at it from top to bottom,
+
+875
+00:30:01,080 --> 00:30:02,420
+you can actually see
+
+876
+00:30:02,420 --> 00:30:04,500
+that it's really the concept of binary search,
+
+877
+00:30:04,500 --> 00:30:04,880
+right?
+
+878
+00:30:04,880 --> 00:30:06,420
+Doesn't it look a bit like binary search?
+
+879
+00:30:06,420 --> 00:30:07,960
+Now, as we know, with binary search,
+
+880
+00:30:07,960 --> 00:30:10,120
+like the binary search method,
+
+881
+00:30:10,120 --> 00:30:12,500
+Actually, it's also used quite often in data structures,
+
+882
+00:30:12,500 --> 00:30:12,780
+right?
+
+883
+00:30:12,780 --> 00:30:16,520
+Now, this kind of binary-search-like approach for linked lists,
+
+884
+00:30:16,520 --> 00:30:18,340
+this kind of hierarchical level-by-level method,
+
+885
+00:30:18,340 --> 00:30:20,740
+we actually have a term for it.
+
+886
+00:30:20,740 --> 00:30:21,920
+That is, this method,
+
+887
+00:30:21,920 --> 00:30:23,580
+we call it the skip list algorithm.
+
+888
+00:30:23,580 --> 00:30:25,280
+If you're interested,
+
+889
+00:30:25,280 --> 00:30:28,100
+you can look up the basic idea of the skip list algorithm.
+
+890
+00:30:28,100 --> 00:30:29,160
+Here,
+
+891
+00:30:29,160 --> 00:30:30,240
+I'll just give you a brief overview.
+
+892
+00:30:30,240 --> 00:30:32,760
+This is a way to do it.
+
+893
+00:30:32,760 --> 00:30:35,820
+For its search-hit algorithm,
+
+894
+00:30:35,820 --> 00:30:38,180
+we can actually do some further optimization.
+
+895
+00:30:38,180 --> 00:30:39,860
+That is, once we have this sorting,
+
+896
+00:30:39,860 --> 00:30:41,740
+we can actually do more than just sort.
+
+897
+00:30:41,740 --> 00:30:43,100
+As long as we have sorting as a basis,
+
+898
+00:30:43,100 --> 00:30:45,180
+we can actually bring in binary search.
+
+899
+00:30:45,180 --> 00:30:48,900
+Now, with this kind of skip list approach,
+
+900
+00:30:48,900 --> 00:30:50,620
+according to these estimates,
+
+901
+00:30:50,620 --> 00:30:51,420
+We know that when we talk about binary search,
+
+902
+00:30:51,420 --> 00:30:53,980
+it's usually the idea of log base 2,
+
+903
+00:30:53,980 --> 00:30:55,580
+and so its curve,
+
+904
+00:30:55,580 --> 00:30:57,240
+it's something like,
+
+905
+00:30:57,240 --> 00:30:58,980
+you know, for log n,
+
+906
+00:30:58,980 --> 00:31:01,120
+it looks like this,
+
+907
+00:31:01,120 --> 00:31:01,840
+and then log 2,
+
+908
+00:31:01,840 --> 00:31:03,620
+log base 2,
+
+909
+00:31:03,620 --> 00:31:04,620
+it's a curve like this,
+
+910
+00:31:04,620 --> 00:31:07,820
+which means when n grows larger this way,
+
+911
+00:31:07,820 --> 00:31:10,820
+the number of execution steps,
+
+912
+00:31:10,820 --> 00:31:12,820
+its growth trend,
+
+913
+00:31:12,820 --> 00:31:16,100
+is actually relatively much gentler than that one,
+
+914
+00:31:16,100 --> 00:31:17,880
+which is a fairly good thing,
+
+915
+00:31:17,880 --> 00:31:21,660
+when our element nodes,
+
+916
+00:31:21,660 --> 00:31:23,060
+like, say, our timers,
+
+917
+00:31:23,060 --> 00:31:24,500
+the number of software timers,
+
+918
+00:31:24,500 --> 00:31:26,080
+gets fairly large,
+
+919
+00:31:26,080 --> 00:31:28,740
+then its number of execution steps,
+
+920
+00:31:28,740 --> 00:31:30,360
+will be fewer.
+
+921
+00:31:30,360 --> 00:31:32,060
+its growth trend becomes much smaller.
+
+922
+00:31:32,060 --> 00:31:34,600
+This is the skip list idea.
+
+923
+00:31:34,600 --> 00:31:37,940
+This is also one way for us to optimize software timers.
+
+924
+00:31:37,940 --> 00:31:41,020
+So I'll give you a brief introduction to it.
+
+925
+00:31:41,020 --> 00:31:44,440
+The hope is really that you'll use software techniques
+
+926
+00:31:44,440 --> 00:31:45,840
+to further optimize it.
+
+927
+00:31:45,840 --> 00:31:47,400
+Now, our exercise 15-2
+
+928
+00:31:47,400 --> 00:31:51,940
+is actually implemented using this kind of skip list algorithm.
+
+929
+00:31:51,940 --> 00:31:55,080
+You can go home and try implementing it.
+
+930
+00:31:55,080 --> 00:31:56,860
+That is to say, as you can see,
+
+931
+00:31:56,860 --> 00:31:59,680
+when it comes to our operating system,
+
+932
+00:31:59,680 --> 00:32:02,420
+beyond some of the basic concepts of the underlying hardware,
+
+933
+00:32:02,420 --> 00:32:05,200
+a lot of what comes next actually involves the software side.
+
+934
+00:32:05,200 --> 00:32:06,960
+And the more software there is,
+
+935
+00:32:06,960 --> 00:32:10,520
+the more data structures and algorithms
+
+936
+00:32:10,520 --> 00:32:11,540
+can come into play.
+
+937
+00:32:11,540 --> 00:32:14,140
+It's said that throughout the whole operating system,
+
+938
+00:32:14,140 --> 00:32:18,500
+there's still quite a bit of algorithmic optimization to be done on the software side.
+
+939
+00:32:18,500 --> 00:32:19,800
+Just something for you to be aware of.
+
+940
+00:32:19,800 --> 00:32:25,700
+Alright, so that's the overall summary of this exercise.
+
+941
+00:32:25,700 --> 00:32:28,460
+Go back and try doing that together yourselves.
+
+942
+00:32:28,460 --> 00:32:32,340
+So as for this software timer,
+
+943
+00:32:32,340 --> 00:32:36,540
+we'll stop our introduction of it right here.

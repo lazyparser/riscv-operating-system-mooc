@@ -1,0 +1,8579 @@
+1
+00:00:00,080 --> 00:00:23,940
+Alright, let's get started. Today we're going to begin Chapter 10. Let me quickly recap: in Chapter 9, we introduced how to implement what's called a cooperative multitasking system, right? A mutual-aid, cooperative multitasking system.
+
+2
+00:00:23,940 --> 00:00:25,620
+Now, we also mentioned
+
+3
+00:00:25,620 --> 00:00:27,160
+that when it comes to multitasking,
+
+4
+00:00:27,160 --> 00:00:29,180
+aside from this cooperative approach,
+
+5
+00:00:29,180 --> 00:00:31,920
+in modern operating systems,
+
+6
+00:00:31,920 --> 00:00:33,720
+what's actually used more often
+
+7
+00:00:33,720 --> 00:00:35,460
+is preemptive multitasking.
+
+8
+00:00:35,460 --> 00:00:38,060
+Now, since we're going to talk about preemption,
+
+9
+00:00:38,060 --> 00:00:39,240
+there are some concepts
+
+10
+00:00:39,240 --> 00:00:40,440
+we need to understand first,
+
+11
+00:00:40,440 --> 00:00:41,740
+namely, the knowledge
+
+12
+00:00:41,740 --> 00:00:43,620
+about exceptions,
+
+13
+00:00:43,620 --> 00:00:44,100
+interrupts,
+
+14
+00:00:44,100 --> 00:00:45,000
+and related topics.
+
+15
+00:00:45,000 --> 00:00:45,720
+So today,
+
+16
+00:00:45,720 --> 00:00:47,340
+our entire lecture,
+
+17
+00:00:47,340 --> 00:00:48,620
+all of these chapters,
+
+18
+00:00:48,620 --> 00:00:49,780
+will revolve around implementing a
+
+19
+00:00:49,780 --> 00:00:51,320
+preemptive multitasking system.
+
+20
+00:00:51,320 --> 00:00:52,480
+So first of all,
+
+21
+00:00:52,480 --> 00:00:53,260
+let's take a look at
+
+22
+00:00:53,260 --> 00:00:56,480
+the topics related to interrupts and exceptions
+
+23
+00:00:56,480 --> 00:00:58,800
+in this type of system
+
+24
+00:00:58,800 --> 00:01:00,720
+So in the upcoming chapter 10
+
+25
+00:01:00,720 --> 00:01:02,660
+Traps and Exceptions
+
+26
+00:01:02,660 --> 00:01:07,710
+we mainly divide it into these parts
+
+27
+00:01:07,710 --> 00:01:09,550
+First, let me introduce
+
+28
+00:01:09,550 --> 00:01:10,570
+what control flow is
+
+29
+00:01:10,570 --> 00:01:11,710
+and what a trap is
+
+30
+00:01:11,710 --> 00:01:13,270
+Then, second,
+
+31
+00:01:13,270 --> 00:01:15,590
+I'll explain how in RISC-V
+
+32
+00:01:15,590 --> 00:01:17,690
+handling a trap
+
+33
+00:01:17,690 --> 00:01:19,710
+involves which programming interfaces
+
+34
+00:01:19,710 --> 00:01:20,910
+that is, the use of registers
+
+35
+00:01:20,910 --> 00:01:23,210
+And then we'll look at
+
+36
+00:01:23,210 --> 00:01:26,650
+the trap handling flow in RISC-V
+
+37
+00:01:26,650 --> 00:01:28,990
+I'll roughly cover it in three parts
+
+38
+00:01:28,990 --> 00:01:30,650
+Related reference materials
+
+39
+00:01:30,650 --> 00:01:32,370
+mainly the standard specifications
+
+40
+00:01:32,370 --> 00:01:34,630
+I won't go into those again
+
+41
+00:01:34,630 --> 00:01:36,590
+Good, let's first take a look
+
+42
+00:01:36,590 --> 00:01:39,370
+at the concepts of control flow and traps.
+
+43
+00:01:39,370 --> 00:01:43,170
+So first, let's understand what control flow is.
+
+44
+00:01:43,170 --> 00:01:43,890
+Control flow,
+
+45
+00:01:43,890 --> 00:01:46,390
+as we call it in English, is called control flow.
+
+46
+00:01:46,390 --> 00:01:47,410
+Actually,
+
+47
+00:01:47,410 --> 00:01:51,510
+it corresponds to what we'll talk about later,
+
+48
+00:01:51,510 --> 00:01:52,230
+exceptional control flow.
+
+49
+00:01:52,230 --> 00:01:53,870
+That is to say, the so-called control flow
+
+50
+00:01:53,870 --> 00:01:54,890
+is the non-exceptional kind,
+
+51
+00:01:54,890 --> 00:01:56,210
+the normal kind of control flow.
+
+52
+00:01:56,210 --> 00:01:58,870
+So when we talk about our programming,
+
+53
+00:01:58,870 --> 00:01:59,550
+our programs,
+
+54
+00:01:59,550 --> 00:02:01,010
+the programs we write ourselves,
+
+55
+00:02:01,010 --> 00:02:01,990
+the process of their execution
+
+56
+00:02:01,990 --> 00:02:03,310
+can actually be thought of
+
+57
+00:02:03,310 --> 00:02:05,690
+as a kind of normal control flow,
+
+58
+00:02:05,690 --> 00:02:06,490
+that is, control flow.
+
+59
+00:02:06,490 --> 00:02:08,410
+Of course, in this process,
+
+60
+00:02:08,410 --> 00:02:11,390
+apart from some arithmetic instructions,
+
+61
+00:02:11,390 --> 00:02:13,430
+Beyond these basic instructions,
+
+62
+00:02:13,430 --> 00:02:15,430
+we also have things like branch instructions.
+
+63
+00:02:15,430 --> 00:02:17,090
+You've studied jump by now, right?
+
+64
+00:02:17,090 --> 00:02:19,230
+That is, conditional branch instructions,
+
+65
+00:02:19,230 --> 00:02:20,790
+as well as unconditional jump instructions.
+
+66
+00:02:20,790 --> 00:02:22,810
+Now, whether it's an unconditional jump
+
+67
+00:02:22,810 --> 00:02:24,110
+or a conditional jump,
+
+68
+00:02:24,110 --> 00:02:26,110
+as long as it's a control flow
+
+69
+00:02:26,110 --> 00:02:28,270
+that our own program controls itself,
+
+70
+00:02:28,270 --> 00:02:29,970
+it belongs to normal control flow,
+
+71
+00:02:29,970 --> 00:02:31,370
+the normal execution flow.
+
+72
+00:02:31,370 --> 00:02:34,390
+Now, corresponding to this normal control flow,
+
+73
+00:02:34,390 --> 00:02:35,490
+on the other hand,
+
+74
+00:02:35,490 --> 00:02:37,630
+we have what we call exceptional control flow,
+
+75
+00:02:37,630 --> 00:02:40,190
+called Exceptional Control Flow,
+
+76
+00:02:40,190 --> 00:02:41,790
+abbreviated as ECP.
+
+77
+00:02:41,790 --> 00:02:43,610
+Now, this exceptional control flow,
+
+78
+00:02:43,610 --> 00:02:44,390
+what it actually means is that
+
+79
+00:02:44,390 --> 00:02:46,950
+it is outside the control scope of our program,
+
+80
+00:02:46,950 --> 00:02:51,010
+and it is mainly divided into two major categories.
+
+81
+00:02:51,010 --> 00:02:52,870
+One category is called exception
+
+82
+00:02:52,870 --> 00:02:53,750
+which is 异常, that is, exceptions
+
+83
+00:02:53,750 --> 00:02:56,310
+The other category is called interrupt
+
+84
+00:02:56,310 --> 00:02:57,090
+which is 中断, that is, interrupts
+
+85
+00:02:57,090 --> 00:02:58,490
+Now, going forward,
+
+86
+00:02:58,490 --> 00:03:00,890
+we're going to learn together
+
+87
+00:03:00,890 --> 00:03:02,430
+exactly what an exception is,
+
+88
+00:03:02,430 --> 00:03:03,390
+and what an interrupt is.
+
+89
+00:03:03,390 --> 00:03:04,450
+Now, in this chapter,
+
+90
+00:03:04,450 --> 00:03:05,350
+we'll mainly focus on
+
+91
+00:03:05,350 --> 00:03:07,070
+exceptions, that's what we'll mostly talk about.
+
+92
+00:03:07,070 --> 00:03:08,750
+Later on, I'll introduce to you
+
+93
+00:03:08,750 --> 00:03:09,810
+the concepts related to interrupts.
+
+94
+00:03:09,810 --> 00:03:12,410
+Now, in our
+
+95
+00:03:12,410 --> 00:03:14,570
+RISC-V architecture,
+
+96
+00:03:14,570 --> 00:03:17,070
+this notion of exceptional control flow,
+
+97
+00:03:17,070 --> 00:03:19,590
+this term from the computing world,
+
+98
+00:03:19,590 --> 00:03:22,110
+it has its own name, called trap.
+
+99
+00:03:22,110 --> 00:03:24,330
+Now, as for trap,
+
+100
+00:03:24,330 --> 00:03:26,790
+if you just take the word literally,
+
+101
+00:03:26,790 --> 00:03:28,530
+That is to say, it is a concept of a trap.
+
+102
+00:03:28,530 --> 00:03:30,390
+The idea of falling down.
+
+103
+00:03:30,390 --> 00:03:32,810
+As for why it's called falling down,
+
+104
+00:03:32,810 --> 00:03:33,470
+and not flying up,
+
+105
+00:03:33,470 --> 00:03:35,670
+or going upward,
+
+106
+00:03:35,670 --> 00:03:37,430
+once we learn the concepts that come later,
+
+107
+00:03:37,430 --> 00:03:38,270
+you will all understand.
+
+108
+00:03:38,270 --> 00:03:41,850
+Let me first introduce a few of these terms to you.
+
+109
+00:03:41,850 --> 00:03:47,080
+So in this RISC-V,
+
+110
+00:03:47,080 --> 00:03:48,220
+regarding the trap,
+
+111
+00:03:48,220 --> 00:03:51,840
+we now know that a trap covers both exceptions and interrupts.
+
+112
+00:03:51,840 --> 00:03:52,640
+They are all called traps.
+
+113
+00:03:52,640 --> 00:03:53,440
+Collectively called a trap.
+
+114
+00:03:53,440 --> 00:03:54,940
+Now, for this trap,
+
+115
+00:03:54,940 --> 00:03:59,300
+how does it operate the related interface?
+
+116
+00:03:59,300 --> 00:04:01,020
+That is, which registers does it involve?
+
+117
+00:04:01,020 --> 00:04:03,040
+Let's take a look at that first.
+
+118
+00:04:03,040 --> 00:04:05,780
+Now this here,
+
+119
+00:04:05,780 --> 00:04:07,340
+is a table.
+
+120
+00:04:07,340 --> 00:04:08,240
+And over here as well,
+
+121
+00:04:08,240 --> 00:04:09,580
+I also mentioned to you along the way,
+
+122
+00:04:09,580 --> 00:04:12,220
+that is, we are in Machine mode.
+
+123
+00:04:12,220 --> 00:04:13,600
+Think back for a moment.
+
+124
+00:04:13,600 --> 00:04:15,100
+Earlier, when we were covering
+
+125
+00:04:15,100 --> 00:04:18,300
+the RISC-V instruction set architecture,
+
+126
+00:04:18,300 --> 00:04:19,320
+we also learned about this.
+
+127
+00:04:19,320 --> 00:04:23,760
+RISC-V has several operating modes,
+
+128
+00:04:23,760 --> 00:04:24,060
+right?
+
+129
+00:04:24,060 --> 00:04:24,840
+You still remember, right?
+
+130
+00:04:24,840 --> 00:04:25,520
+How many are there?
+
+131
+00:04:25,520 --> 00:04:27,620
+There are three, right?
+
+132
+00:04:27,620 --> 00:04:27,840
+Isn't that so?
+
+133
+00:04:27,840 --> 00:04:29,980
+User mode,
+
+134
+00:04:29,980 --> 00:04:31,380
+supervisor mode,
+
+135
+00:04:31,380 --> 00:04:32,460
+and machine mode.
+
+136
+00:04:32,460 --> 00:04:35,640
+Now, in this course,
+
+137
+00:04:35,640 --> 00:04:37,320
+that is, our work,
+
+138
+00:04:37,320 --> 00:04:39,220
+is mainly focused on machine mode.
+
+139
+00:04:39,220 --> 00:04:41,320
+So in each of these modes,
+
+140
+00:04:41,320 --> 00:04:43,840
+it has its own set of CSRs.
+
+141
+00:04:43,840 --> 00:04:45,480
+Do you still remember what CSRs are?
+
+142
+00:04:45,480 --> 00:04:46,680
+Let's recall that for a moment.
+
+143
+00:04:46,680 --> 00:04:48,240
+Let's review it.
+
+144
+00:04:48,240 --> 00:04:51,120
+CSR stands for Control and Status Register.
+
+145
+00:04:51,120 --> 00:04:51,420
+Right?
+
+146
+00:04:51,420 --> 00:04:53,980
+As opposed to the general-purpose registers,
+
+147
+00:04:53,980 --> 00:04:54,780
+the general-purpose registers,
+
+148
+00:04:54,780 --> 00:04:56,360
+meaning x0 to x31,
+
+149
+00:04:56,360 --> 00:04:59,100
+those 32 registers.
+
+150
+00:04:59,100 --> 00:05:00,920
+So beyond those,
+
+151
+00:05:00,920 --> 00:05:02,260
+in some privilege modes,
+
+152
+00:05:02,260 --> 00:05:03,540
+that is, machine mode,
+
+153
+00:05:03,540 --> 00:05:04,500
+Supervisor mode,
+
+154
+00:05:04,500 --> 00:05:05,420
+modes like these,
+
+155
+00:05:05,420 --> 00:05:06,580
+each one has its own set of
+
+156
+00:05:06,580 --> 00:05:09,620
+special control registers.
+
+157
+00:05:09,620 --> 00:05:10,940
+Those are the CSRs.
+
+158
+00:05:10,940 --> 00:05:12,520
+And mainly,
+
+159
+00:05:12,520 --> 00:05:14,820
+since we're introducing machine mode,
+
+160
+00:05:14,820 --> 00:05:16,180
+let's focus on understanding them.
+
+161
+00:05:16,180 --> 00:05:18,340
+the related registers in the machine mode
+
+162
+00:05:18,340 --> 00:05:19,640
+Now, these registers
+
+163
+00:05:19,640 --> 00:05:22,680
+are related to our trap handling in the CHAP,
+
+164
+00:05:22,680 --> 00:05:25,880
+and this table simply lists them.
+
+165
+00:05:25,880 --> 00:05:27,640
+For more details, you can refer
+
+166
+00:05:27,640 --> 00:05:30,220
+to the privileged instruction set
+
+167
+00:05:30,220 --> 00:05:33,780
+manual, specifically Table 2.4,
+
+168
+00:05:33,780 --> 00:05:36,360
+for the specific registers inside it.
+
+169
+00:05:36,360 --> 00:05:38,160
+Later on, we will
+
+170
+00:05:38,160 --> 00:05:40,020
+introduce them to you separately.
+
+171
+00:05:40,020 --> 00:05:44,380
+So among these,
+
+172
+00:05:44,380 --> 00:05:45,520
+in the earlier calculator example,
+
+173
+00:05:45,520 --> 00:05:46,400
+there are actually quite a few registers,
+
+174
+00:05:46,400 --> 00:05:47,000
+but,
+
+175
+00:05:47,000 --> 00:05:48,520
+the ones related to trap handling,
+
+176
+00:05:48,520 --> 00:05:50,260
+we have gathered and listed them out
+
+177
+00:05:50,260 --> 00:05:51,620
+right here.
+
+178
+00:05:51,620 --> 00:05:53,440
+For example, mtvec,
+
+179
+00:05:53,440 --> 00:05:54,480
+mepc,
+
+180
+00:05:54,480 --> 00:05:55,280
+and so on and so forth.
+
+181
+00:05:55,280 --> 00:05:57,140
+So this is actually a summary table
+
+182
+00:05:57,140 --> 00:05:58,580
+Now, you guys
+
+183
+00:05:58,580 --> 00:05:59,880
+may take a look at it right now
+
+184
+00:05:59,880 --> 00:06:01,200
+and it might not be immediately clear
+
+185
+00:06:01,200 --> 00:06:02,240
+what exactly it is for
+
+186
+00:06:02,240 --> 00:06:04,100
+After we finish the later content,
+
+187
+00:06:04,100 --> 00:06:05,020
+we'll come back to it
+
+188
+00:06:05,020 --> 00:06:07,420
+This is actually more or less a summary table
+
+189
+00:06:07,420 --> 00:06:10,540
+so I won't belabor it here
+
+190
+00:06:10,540 --> 00:06:12,560
+Let me just say that
+
+191
+00:06:12,560 --> 00:06:15,000
+the registers we covered today
+
+192
+00:06:15,000 --> 00:06:16,060
+those registers
+
+193
+00:06:16,060 --> 00:06:18,140
+are mainly the ones listed above
+
+194
+00:06:18,140 --> 00:06:20,160
+These last two
+
+195
+00:06:20,160 --> 00:06:22,080
+when we get to interrupts
+
+196
+00:06:22,080 --> 00:06:23,020
+like MIE,
+
+197
+00:06:23,020 --> 00:06:25,100
+MIP and the like
+
+198
+00:06:25,100 --> 00:06:26,380
+when it comes to interrupt handling,
+
+199
+00:06:26,380 --> 00:06:27,440
+we will cover them in the next lecture
+
+200
+00:06:27,440 --> 00:06:28,220
+and introduce them to you then
+
+201
+00:06:28,220 --> 00:06:29,780
+So let's first look at
+
+202
+00:06:29,780 --> 00:06:31,080
+the registers we covered earlier.
+
+203
+00:06:31,080 --> 00:06:32,000
+Among them,
+
+204
+00:06:32,000 --> 00:06:35,260
+we introduced to you
+
+205
+00:06:35,260 --> 00:06:36,820
+the first register related to TRAP,
+
+206
+00:06:36,820 --> 00:06:38,040
+the register related to traps,
+
+207
+00:06:38,040 --> 00:06:40,180
+called MTVC.
+
+208
+00:06:40,180 --> 00:06:42,180
+Now all these registers have a leading
+
+209
+00:06:42,180 --> 00:06:44,680
+letter M in their names,
+
+210
+00:06:44,680 --> 00:06:47,780
+and this M means it belongs to Machine mode.
+
+211
+00:06:47,780 --> 00:06:49,140
+If it were in another mode,
+
+212
+00:06:49,140 --> 00:06:50,400
+it might be replaced,
+
+213
+00:06:50,400 --> 00:06:51,700
+with an S, for example, or something else.
+
+214
+00:06:51,700 --> 00:06:53,980
+So here we see this M,
+
+215
+00:06:53,980 --> 00:06:55,880
+and it stands for Machine mode.
+
+216
+00:06:55,880 --> 00:06:58,660
+Now the TVEC that follows,
+
+217
+00:06:58,660 --> 00:07:01,080
+is actually an abbreviation of English words as well.
+
+218
+00:07:01,080 --> 00:07:02,620
+The T,
+
+219
+00:07:02,620 --> 00:07:05,100
+is short for Trap, as we call it.
+
+220
+00:07:05,100 --> 00:07:06,660
+And VEC,
+
+221
+00:07:06,660 --> 00:07:07,900
+It's actually Vector.
+
+222
+00:07:07,900 --> 00:07:12,580
+Vector expresses the idea of a vector or an array.
+
+223
+00:07:12,580 --> 00:07:14,820
+We'll come back to that in detail later.
+
+224
+00:07:14,820 --> 00:07:19,300
+So what is this register used to hold?
+
+225
+00:07:19,300 --> 00:07:23,420
+As we can see here, it's mainly used to hold some base values.
+
+226
+00:07:23,420 --> 00:07:28,280
+So this is the description of the register from the specification.
+
+227
+00:07:28,280 --> 00:07:31,400
+Now, as we mentioned earlier, things like this MXLEN
+
+228
+00:07:31,400 --> 00:07:35,500
+are related to the CPU's word length.
+
+229
+00:07:35,500 --> 00:07:37,520
+It could be 32, or it could be 64.
+
+230
+00:07:37,520 --> 00:07:40,260
+So they use a single red symbol to represent it.
+
+231
+00:07:40,260 --> 00:07:43,900
+And what this is saying is that
+
+232
+00:07:43,900 --> 00:07:46,380
+the front part of this register is divided into two parts.
+
+233
+00:07:46,380 --> 00:07:50,720
+The latter part has two bits,
+
+234
+00:07:50,720 --> 00:07:54,980
+01, two bits, used to hold something called MODE.
+
+235
+00:07:54,980 --> 00:07:59,580
+And the remaining part at the front is used to hold this BASE.
+
+236
+00:07:59,580 --> 00:08:01,660
+What exactly that means, I'll explain to you later.
+
+237
+00:08:01,660 --> 00:08:04,840
+Also, there's one more thing mentioned here, which is that
+
+238
+00:08:04,840 --> 00:08:07,680
+there's also a special term that appears here,
+
+239
+00:08:07,680 --> 00:08:11,040
+called WARL.
+
+240
+00:08:11,040 --> 00:08:13,600
+This is also one of the special things in the specification.
+
+241
+00:08:13,600 --> 00:08:16,160
+this term in the spec
+
+242
+00:08:16,160 --> 00:08:17,580
+there are a few more later on
+
+243
+00:08:17,580 --> 00:08:20,420
+Now let's briefly talk about WAR
+
+244
+00:08:20,420 --> 00:08:22,140
+What it actually expresses is this
+
+245
+00:08:22,140 --> 00:08:23,540
+It is actually an abbreviation called
+
+246
+00:08:23,540 --> 00:08:26,680
+Write Any Value Reads Legal Value
+
+247
+00:08:26,680 --> 00:08:31,380
+So what it specifically means is
+
+248
+00:08:31,380 --> 00:08:33,620
+this field,
+
+249
+00:08:33,620 --> 00:08:35,140
+this base field,
+
+250
+00:08:35,140 --> 00:08:37,520
+you can write any value to it
+
+251
+00:08:37,520 --> 00:08:39,980
+but the value you read back
+
+252
+00:08:39,980 --> 00:08:40,840
+is always legal
+
+253
+00:08:40,840 --> 00:08:41,780
+That's what it expresses
+
+254
+00:08:41,780 --> 00:08:42,660
+As for the specific meaning,
+
+255
+00:08:42,660 --> 00:08:45,560
+I won't go into it further here
+
+256
+00:08:45,560 --> 00:08:46,980
+Those of you who are interested
+
+257
+00:08:46,980 --> 00:08:48,320
+can go take a look
+
+258
+00:08:48,320 --> 00:08:51,160
+at section 2.3 of the privileged spec
+
+259
+00:08:51,160 --> 00:08:52,380
+for the related content
+
+260
+00:08:52,380 --> 00:08:53,520
+about this CS,
+
+261
+00:08:53,520 --> 00:08:57,120
+Now, this is a standard description,
+
+262
+00:08:57,120 --> 00:08:58,440
+and from its wording,
+
+263
+00:08:58,440 --> 00:08:59,540
+it's actually pretty easy to understand.
+
+264
+00:08:59,540 --> 00:09:01,320
+It's basically about this part here.
+
+265
+00:09:01,320 --> 00:09:02,500
+Because this register,
+
+266
+00:09:02,500 --> 00:09:03,900
+it can be both readable and writable,
+
+267
+00:09:03,900 --> 00:09:04,420
+which means that
+
+268
+00:09:04,420 --> 00:09:05,900
+for the content in this part,
+
+269
+00:09:05,900 --> 00:09:08,460
+you can write to it however you like.
+
+270
+00:09:08,460 --> 00:09:09,220
+And then,
+
+271
+00:09:09,220 --> 00:09:10,500
+to make sure that,
+
+272
+00:09:10,500 --> 00:09:11,560
+it guarantees that what you read out
+
+273
+00:09:11,560 --> 00:09:13,060
+is always legal content.
+
+274
+00:09:13,060 --> 00:09:16,860
+So,
+
+275
+00:09:16,860 --> 00:09:18,160
+sorry about that,
+
+276
+00:09:18,160 --> 00:09:19,420
+I accidentally turned it off earlier.
+
+277
+00:09:19,420 --> 00:09:21,320
+So let's now mainly look at,
+
+278
+00:09:21,320 --> 00:09:22,720
+that is to say, this,
+
+279
+00:09:22,720 --> 00:09:24,920
+the parts of this register,
+
+280
+00:09:24,920 --> 00:09:25,720
+these two parts respectively,
+
+281
+00:09:25,720 --> 00:09:26,780
+what is it used for
+
+282
+00:09:26,780 --> 00:09:28,200
+So let's first look at
+
+283
+00:09:28,200 --> 00:09:28,920
+this base on the left
+
+284
+00:09:28,920 --> 00:09:29,420
+As for base,
+
+285
+00:09:29,420 --> 00:09:30,460
+it is actually used to hold
+
+286
+00:09:30,460 --> 00:09:31,440
+what it says on it is
+
+287
+00:09:31,440 --> 00:09:32,300
+called
+
+288
+00:09:32,300 --> 00:09:35,940
+the base value of the trap entry function
+
+289
+00:09:35,940 --> 00:09:37,900
+What does this mean?
+
+290
+00:09:37,900 --> 00:09:38,720
+Well, you can imagine
+
+291
+00:09:38,720 --> 00:09:40,100
+that when an exception occurs,
+
+292
+00:09:40,100 --> 00:09:41,540
+or an interrupt,
+
+293
+00:09:41,540 --> 00:09:43,980
+its main purpose is
+
+294
+00:09:43,980 --> 00:09:46,120
+to make the whole machine,
+
+295
+00:09:46,120 --> 00:09:47,720
+the entire execution flow of the machine,
+
+296
+00:09:47,720 --> 00:09:50,380
+jump to a special handler function,
+
+297
+00:09:50,380 --> 00:09:53,220
+to execute this special trap handler function.
+
+298
+00:09:53,220 --> 00:09:54,820
+Now, where this trap handler function
+
+299
+00:09:54,820 --> 00:09:55,960
+is placed,
+
+300
+00:09:55,960 --> 00:09:58,720
+this location can actually be customized yourself.
+
+301
+00:09:58,720 --> 00:10:00,400
+So how do we tell the
+
+302
+00:10:00,400 --> 00:10:01,460
+CPU about our
+
+303
+00:10:01,460 --> 00:10:03,800
+base address of this function? Where is it?
+
+304
+00:10:03,800 --> 00:10:05,960
+In fact, we just need to fill it in here.
+
+305
+00:10:05,960 --> 00:10:07,040
+Then,
+
+306
+00:10:07,040 --> 00:10:07,440
+it says
+
+307
+00:10:07,440 --> 00:10:10,020
+it also says we must ensure 4-byte alignment.
+
+308
+00:10:10,020 --> 00:10:10,640
+That's mainly because
+
+309
+00:10:10,640 --> 00:10:11,980
+as you can see,
+
+310
+00:10:11,980 --> 00:10:14,140
+this register,
+
+311
+00:10:14,140 --> 00:10:14,860
+it actually
+
+312
+00:10:14,860 --> 00:10:17,260
+in total it's
+
+313
+00:10:17,260 --> 00:10:18,920
+let's say if ours is 32-bit,
+
+314
+00:10:18,920 --> 00:10:22,380
+then in total it only has 30 bits of length,
+
+315
+00:10:22,380 --> 00:10:24,800
+because the last two bits are used for other content,
+
+316
+00:10:24,800 --> 00:10:25,420
+right?
+
+317
+00:10:25,420 --> 00:10:27,140
+So what that actually means is,
+
+318
+00:10:27,140 --> 00:10:28,540
+since it's
+
+319
+00:10:28,540 --> 00:10:30,500
+in other words,
+
+320
+00:10:30,500 --> 00:10:31,900
+if a complete address
+
+321
+00:10:31,900 --> 00:10:32,860
+It should be 32 bits
+
+322
+00:10:32,860 --> 00:10:33,880
+on a 32-bit machine,
+
+323
+00:10:33,880 --> 00:10:34,700
+its full address
+
+324
+00:10:34,700 --> 00:10:36,640
+length should be 32 bits.
+
+325
+00:10:36,640 --> 00:10:38,100
+So if the last two bits
+
+326
+00:10:38,100 --> 00:10:39,180
+are not used,
+
+327
+00:10:39,180 --> 00:10:40,160
+or are used to hold something else,
+
+328
+00:10:40,160 --> 00:10:40,880
+then by default,
+
+329
+00:10:40,880 --> 00:10:41,720
+the last two bits
+
+330
+00:10:41,720 --> 00:10:42,420
+are both 0.
+
+331
+00:10:42,420 --> 00:10:43,820
+So by default, if the last two bits
+
+332
+00:10:43,820 --> 00:10:44,380
+are 0,
+
+333
+00:10:44,380 --> 00:10:46,000
+then according to binary representation,
+
+334
+00:10:46,000 --> 00:10:48,280
+if the lowest two bits are 0,
+
+335
+00:10:48,280 --> 00:10:49,800
+that means the whole address
+
+336
+00:10:49,800 --> 00:10:52,540
+must be a multiple of 4.
+
+337
+00:10:52,540 --> 00:10:55,900
+In other words, if what is stored in front is 5,
+
+338
+00:10:55,900 --> 00:10:57,000
+then its actual address
+
+339
+00:10:57,000 --> 00:11:00,060
+is 20,
+
+340
+00:11:00,060 --> 00:11:02,180
+because the way it is expressed here
+
+341
+00:11:02,180 --> 00:11:04,500
+So he expressed it this way.
+
+342
+00:11:04,500 --> 00:11:05,760
+What's stored here is
+
+343
+00:11:05,760 --> 00:11:08,580
+the upper 30 bits of a 32-bit number,
+
+344
+00:11:08,580 --> 00:11:09,600
+the high 30 bits,
+
+345
+00:11:09,600 --> 00:11:11,360
+and the last two bits are actually 0 by default,
+
+346
+00:11:11,360 --> 00:11:15,520
+so he used them to hold other content.
+
+347
+00:11:15,520 --> 00:11:17,840
+Pay attention to this.
+
+348
+00:11:17,840 --> 00:11:21,640
+This way we can, so to speak,
+
+349
+00:11:21,640 --> 00:11:23,580
+express an address using just 30 bits,
+
+350
+00:11:23,580 --> 00:11:24,580
+and the last two bits,
+
+351
+00:11:24,580 --> 00:11:27,020
+being left empty, can hold other content.
+
+352
+00:11:27,020 --> 00:11:30,460
+That's where this four-byte alignment comes from.
+
+353
+00:11:30,460 --> 00:11:31,600
+And then,
+
+354
+00:11:31,600 --> 00:11:34,840
+the two bits after that,
+
+355
+00:11:34,840 --> 00:11:35,680
+they're called mode.
+
+356
+00:11:35,680 --> 00:11:36,460
+As for mode,
+
+357
+00:11:36,460 --> 00:11:39,500
+it's defined as follows:
+
+358
+00:11:39,500 --> 00:11:42,820
+it can be used to control how the entry function's address is configured,
+
+359
+00:11:42,820 --> 00:11:45,860
+that is, the address of this entry function,
+
+360
+00:11:45,860 --> 00:11:47,540
+the way it's stored.
+
+361
+00:11:47,540 --> 00:11:48,560
+It has two modes.
+
+362
+00:11:48,560 --> 00:11:49,420
+One of them
+
+363
+00:11:49,420 --> 00:11:51,540
+uses what's called direct mode,
+
+364
+00:11:51,540 --> 00:11:53,020
+and the other is called vectored mode.
+
+365
+00:11:53,020 --> 00:11:53,660
+Now, as for the values,
+
+366
+00:11:53,660 --> 00:11:54,540
+they're also on this table.
+
+367
+00:11:54,540 --> 00:11:55,760
+If it's direct mode,
+
+368
+00:11:55,760 --> 00:11:57,020
+then the last two bits are 0.
+
+369
+00:11:57,020 --> 00:11:59,700
+If it's vectored mode,
+
+370
+00:11:59,700 --> 00:12:02,140
+then that means it's just 1.
+
+371
+00:12:02,140 --> 00:12:03,320
+And 1 means this side here
+
+372
+00:12:03,320 --> 00:12:04,740
+holds 01 in binary,
+
+373
+00:12:04,740 --> 00:12:05,180
+right?
+
+374
+00:12:05,180 --> 00:12:08,740
+So specifically, what is direct mode,
+
+375
+00:12:08,740 --> 00:12:09,700
+and what is vectored mode?
+
+376
+00:12:09,700 --> 00:12:11,760
+Let me explain that to you.
+
+377
+00:12:11,760 --> 00:12:13,880
+So, direct mode
+
+378
+00:12:13,880 --> 00:12:15,320
+is described in the text like this:
+
+379
+00:12:15,320 --> 00:12:18,200
+after all exceptions and interrupts occur,
+
+380
+00:12:18,200 --> 00:12:21,660
+the PC jumps to the address specified by base.
+
+381
+00:12:21,660 --> 00:12:23,600
+So let's draw a diagram to illustrate it.
+
+382
+00:12:23,600 --> 00:12:24,660
+It's actually in this form.
+
+383
+00:12:24,660 --> 00:12:26,160
+That is, you can imagine
+
+384
+00:12:26,160 --> 00:12:27,040
+in memory,
+
+385
+00:12:27,040 --> 00:12:29,720
+we take this exception handler,
+
+386
+00:12:29,720 --> 00:12:31,460
+which we call the interrupt handler here,
+
+387
+00:12:31,460 --> 00:12:32,720
+strictly speaking,
+
+388
+00:12:32,720 --> 00:12:34,340
+it should be a trap handler.
+
+389
+00:12:34,340 --> 00:12:36,320
+So this trap handler,
+
+390
+00:12:36,320 --> 00:12:38,680
+this function is placed
+
+391
+00:12:38,680 --> 00:12:39,780
+in the memory region starting at the ebase address.
+
+392
+00:12:39,780 --> 00:12:42,360
+And then we tell this address
+
+393
+00:12:42,360 --> 00:12:44,540
+through this register to our CPU,
+
+394
+00:12:44,540 --> 00:12:47,840
+and at the same time fill in this mode value as 0.
+
+395
+00:12:47,840 --> 00:12:50,480
+Then when a trap occurs on the CPU,
+
+396
+00:12:50,480 --> 00:12:54,220
+it will jump to the location at the base address,
+
+397
+00:12:54,220 --> 00:12:57,280
+and start executing this trap handler.
+
+398
+00:12:57,280 --> 00:13:00,300
+So as you know,
+
+399
+00:13:00,300 --> 00:13:03,000
+this base direct method,
+
+400
+00:13:03,000 --> 00:13:05,320
+this base direct method
+
+401
+00:13:05,320 --> 00:13:07,280
+It means this handler function is only one.
+
+402
+00:13:07,280 --> 00:13:09,720
+We just need to give it an address, and that's it.
+
+403
+00:13:09,720 --> 00:13:11,260
+So as we all know,
+
+404
+00:13:11,260 --> 00:13:13,060
+there are many kinds of exceptions and interrupts.
+
+405
+00:13:13,060 --> 00:13:14,780
+For different exception handlers,
+
+406
+00:13:14,780 --> 00:13:16,520
+we might need to provide different handler functions.
+
+407
+00:13:16,520 --> 00:13:20,160
+So how can we, within a single handler function,
+
+408
+00:13:20,160 --> 00:13:23,960
+handle multiple exceptions and interrupts?
+
+409
+00:13:23,960 --> 00:13:25,380
+Well, you can imagine,
+
+410
+00:13:25,380 --> 00:13:27,300
+that inside this interrupt handler function,
+
+411
+00:13:27,300 --> 00:13:28,580
+if we were to write it in C,
+
+412
+00:13:28,580 --> 00:13:29,860
+then there must be a
+
+413
+00:13:29,860 --> 00:13:31,880
+switch-case type of logic in here,
+
+414
+00:13:31,880 --> 00:13:32,320
+right?
+
+415
+00:13:32,320 --> 00:13:33,680
+And then, based on
+
+416
+00:13:33,680 --> 00:13:35,820
+the different exceptions and interrupts,
+
+417
+00:13:35,820 --> 00:13:37,680
+which we'll talk about later,
+
+418
+00:13:37,680 --> 00:13:39,980
+the CPU will use other means
+
+419
+00:13:39,980 --> 00:13:40,780
+to tell us,
+
+420
+00:13:40,780 --> 00:13:42,380
+when this interrupt occurs.
+
+421
+00:13:42,380 --> 00:13:43,860
+When this trap occurs,
+
+422
+00:13:43,860 --> 00:13:45,800
+what interrupt it is,
+
+423
+00:13:45,800 --> 00:13:47,360
+and/or what exception it is,
+
+424
+00:13:47,360 --> 00:13:49,440
+then we can go through
+
+425
+00:13:49,440 --> 00:13:50,760
+this kind of switch-case to determine,
+
+426
+00:13:50,760 --> 00:13:52,360
+and then in this handler function,
+
+427
+00:13:52,360 --> 00:13:53,700
+take the branch.
+
+428
+00:13:53,700 --> 00:13:57,220
+This is what's called the direct method.
+
+429
+00:13:57,220 --> 00:13:59,060
+Now, corresponding to it,
+
+430
+00:13:59,060 --> 00:14:00,600
+there's what's called the vector method.
+
+431
+00:14:00,600 --> 00:14:01,960
+What do we mean by the vector method?
+
+432
+00:14:01,960 --> 00:14:04,100
+Actually, it's very simple.
+
+433
+00:14:04,100 --> 00:14:05,460
+That is, it doesn't provide
+
+434
+00:14:05,460 --> 00:14:06,520
+just a single function;
+
+435
+00:14:06,520 --> 00:14:08,000
+it provides multiple functions.
+
+436
+00:14:08,000 --> 00:14:10,180
+And at this base address,
+
+437
+00:14:10,180 --> 00:14:11,480
+what's actually stored is an array.
+
+438
+00:14:11,480 --> 00:14:12,620
+You can also understand it this way:
+
+439
+00:14:12,620 --> 00:14:14,080
+that is, I can have in memory
+
+440
+00:14:14,080 --> 00:14:14,820
+an array defined
+
+441
+00:14:14,820 --> 00:14:15,780
+This array,
+
+442
+00:14:15,780 --> 00:14:16,780
+each entry is 4 bytes,
+
+443
+00:14:16,780 --> 00:14:18,020
+and each one actually holds an address.
+
+444
+00:14:18,020 --> 00:14:19,120
+So it's a pointer array.
+
+445
+00:14:19,120 --> 00:14:21,500
+We take the base address of this pointer array,
+
+446
+00:14:21,500 --> 00:14:22,600
+as the base,
+
+447
+00:14:22,600 --> 00:14:24,880
+and fill it into this register,
+
+448
+00:14:24,880 --> 00:14:27,200
+and then tell the CPU.
+
+449
+00:14:27,200 --> 00:14:29,640
+When a trap happens, the CPU,
+
+450
+00:14:29,640 --> 00:14:31,920
+it will jump to this base location,
+
+451
+00:14:31,920 --> 00:14:33,500
+jump to this base location.
+
+452
+00:14:33,500 --> 00:14:34,980
+And then, based on this,
+
+453
+00:14:34,980 --> 00:14:37,500
+the specific kind of trap,
+
+454
+00:14:37,500 --> 00:14:38,860
+exactly what it is,
+
+455
+00:14:38,860 --> 00:14:40,740
+we'll talk about this later,
+
+456
+00:14:40,740 --> 00:14:43,400
+that is, for different exceptions and interrupts,
+
+457
+00:14:43,400 --> 00:14:44,420
+there is actually a code,
+
+458
+00:14:44,420 --> 00:14:45,440
+which is really just an index value.
+
+459
+00:14:45,440 --> 00:14:46,720
+Based on this index value,
+
+460
+00:14:46,720 --> 00:14:48,540
+it is then used as an index into this array.
+
+461
+00:14:48,540 --> 00:14:49,840
+And then based on this,
+
+462
+00:14:49,840 --> 00:14:51,480
+you can find the corresponding
+
+463
+00:14:51,480 --> 00:14:54,720
+entry in the vector table where this exception lives.
+
+464
+00:14:54,720 --> 00:14:55,520
+So this
+
+465
+00:14:55,520 --> 00:14:56,980
+is exactly the idea of a vector.
+
+466
+00:14:56,980 --> 00:14:58,260
+Now, each entry in here
+
+467
+00:14:58,260 --> 00:14:59,260
+is really just an address.
+
+468
+00:14:59,260 --> 00:15:01,180
+Suppose I get this
+
+469
+00:15:01,180 --> 00:15:03,380
+exception number,
+
+470
+00:15:03,380 --> 00:15:05,740
+say it is 2,
+
+471
+00:15:05,740 --> 00:15:07,300
+then based on this base address,
+
+472
+00:15:07,300 --> 00:15:08,320
+it offsets by one,
+
+473
+00:15:08,320 --> 00:15:08,980
+offsets by two,
+
+474
+00:15:08,980 --> 00:15:11,120
+2 times 4 bytes, right?
+
+475
+00:15:11,120 --> 00:15:12,380
+If it is 3,
+
+476
+00:15:12,380 --> 00:15:13,640
+then it offsets by 3 times 4 bytes.
+
+477
+00:15:13,640 --> 00:15:14,780
+So say it is 2,
+
+478
+00:15:14,780 --> 00:15:16,300
+then for 2 it offsets by this much,
+
+479
+00:15:16,300 --> 00:15:17,420
+and after offsetting this much,
+
+480
+00:15:17,420 --> 00:15:18,740
+it arrives at this position.
+
+481
+00:15:18,740 --> 00:15:19,000
+right?...
+
+482
+00:15:19,000 --> 00:15:20,220
+So after we get to this location,
+
+483
+00:15:20,220 --> 00:15:21,740
+what's stored there is another address.
+
+484
+00:15:21,740 --> 00:15:22,460
+And this address,
+
+485
+00:15:22,460 --> 00:15:23,500
+in fact, points to a
+
+486
+00:15:23,500 --> 00:15:25,380
+handler function that actually corresponds to it.
+
+487
+00:15:25,380 --> 00:15:26,640
+In other words, it actually means
+
+488
+00:15:26,640 --> 00:15:28,540
+it replaces the approach where, in our code,
+
+489
+00:15:28,540 --> 00:15:29,880
+we write switch-case statements ourselves
+
+490
+00:15:29,880 --> 00:15:31,980
+and implements it as a
+
+491
+00:15:31,980 --> 00:15:33,860
+pointer table style.
+
+492
+00:15:33,860 --> 00:15:36,120
+Now think about it,
+
+493
+00:15:36,120 --> 00:15:37,320
+these two approaches
+
+494
+00:15:37,320 --> 00:15:38,340
+definitely have
+
+495
+00:15:38,340 --> 00:15:40,160
+definitely have a purpose.
+
+496
+00:15:40,160 --> 00:15:42,220
+Why is one called the
+
+497
+00:15:42,220 --> 00:15:43,700
+direct mode,
+
+498
+00:15:43,700 --> 00:15:44,960
+and the other called the vector mode?
+
+499
+00:15:44,960 --> 00:15:46,880
+Think about why.
+
+500
+00:15:46,880 --> 00:15:50,650
+Well, it's actually pretty easy to see,
+
+501
+00:15:50,650 --> 00:15:52,630
+That is to say, if we use the vector method,
+
+502
+00:15:52,630 --> 00:15:54,570
+if we use the approach I'm using now,
+
+503
+00:15:54,570 --> 00:15:57,710
+compared to the earlier version where we formally write a switch case,
+
+504
+00:15:57,710 --> 00:15:59,970
+its handling efficiency is definitely a bit higher.
+
+505
+00:15:59,970 --> 00:16:02,750
+So when, if in our system,
+
+506
+00:16:02,750 --> 00:16:05,450
+the interrupt or exception frequency is relatively high,
+
+507
+00:16:05,450 --> 00:16:07,910
+and we frequently jump into this kind of
+
+508
+00:16:07,910 --> 00:16:10,410
+interrupt and exception handler to execute,
+
+509
+00:16:10,410 --> 00:16:13,090
+we actually recommend that you use this vector method
+
+510
+00:16:13,090 --> 00:16:15,310
+to configure its entry address.
+
+511
+00:16:15,310 --> 00:16:16,830
+In normal situations,
+
+512
+00:16:16,830 --> 00:16:18,310
+we just use
+
+513
+00:16:18,310 --> 00:16:20,370
+the simple base method,
+
+514
+00:16:20,370 --> 00:16:21,550
+and that's actually enough.
+
+515
+00:16:21,550 --> 00:16:24,030
+So the vector method
+
+516
+00:16:24,030 --> 00:16:26,410
+is more suited to this kind of
+
+517
+00:16:26,410 --> 00:16:27,570
+interrupt handling
+
+518
+00:16:27,570 --> 00:16:28,550
+where faster response is required,
+
+519
+00:16:28,550 --> 00:16:30,170
+and where interrupts occur frequently,
+
+520
+00:16:30,170 --> 00:16:31,570
+and when higher efficiency is needed.
+
+521
+00:16:31,570 --> 00:16:32,690
+We configure it this way,
+
+522
+00:16:32,690 --> 00:16:33,870
+and that's it.
+
+523
+00:16:33,870 --> 00:16:36,170
+The effect is actually the same.
+
+524
+00:16:36,170 --> 00:16:36,770
+Now this one,
+
+525
+00:16:36,770 --> 00:16:39,030
+is a register called MTVEC,
+
+526
+00:16:39,030 --> 00:16:40,410
+which stands for Machine Trap Vector
+
+527
+00:16:40,410 --> 00:16:41,810
+Base Address.
+
+528
+00:16:41,810 --> 00:16:43,510
+That's what this register is.
+
+529
+00:16:43,510 --> 00:16:44,670
+Very simple,
+
+530
+00:16:44,670 --> 00:16:45,810
+it's used to configure
+
+531
+00:16:45,810 --> 00:16:47,210
+the entry address of the trap handler.
+
+532
+00:16:47,210 --> 00:16:49,430
+That's the first register.
+
+533
+00:16:49,430 --> 00:16:52,630
+Now the second register,
+
+534
+00:16:52,630 --> 00:16:54,770
+is called MEPC.
+
+535
+00:16:54,770 --> 00:16:56,610
+What it means,
+
+536
+00:16:56,610 --> 00:16:58,630
+is a kind of exception program counter
+
+537
+00:16:58,630 --> 00:17:01,490
+in machine mode.
+
+538
+00:17:01,490 --> 00:17:02,810
+Program counter,
+
+539
+00:17:02,810 --> 00:17:04,170
+we've mentioned it many times before,
+
+540
+00:17:04,170 --> 00:17:05,170
+it actually represents
+
+541
+00:17:05,170 --> 00:17:06,190
+The execution of this program,
+
+542
+00:17:06,190 --> 00:17:07,850
+the concept of the current position
+
+543
+00:17:07,850 --> 00:17:08,170
+— right?
+
+544
+00:17:08,170 --> 00:17:09,750
+So it is actually also used
+
+545
+00:17:09,750 --> 00:17:13,670
+to hold this kind of information
+
+546
+00:17:13,670 --> 00:17:15,090
+about the program's execution position.
+
+547
+00:17:15,090 --> 00:17:17,910
+So its length is,
+
+548
+00:17:17,910 --> 00:17:20,070
+for example, right now we are only using 32-bit,
+
+549
+00:17:20,070 --> 00:17:21,510
+so it is 32 bits long.
+
+550
+00:17:21,510 --> 00:17:23,290
+So when exactly
+
+551
+00:17:23,290 --> 00:17:24,430
+is this register used?
+
+552
+00:17:24,430 --> 00:17:26,070
+It is described very clearly here:
+
+553
+00:17:26,070 --> 00:17:28,750
+that is, when a trap occurs,
+
+554
+00:17:28,750 --> 00:17:30,730
+we know
+
+555
+00:17:30,730 --> 00:17:34,820
+our program will definitely jump to
+
+556
+00:17:34,820 --> 00:17:36,860
+that mtvec,
+
+557
+00:17:36,860 --> 00:17:37,880
+the register we just mentioned,
+
+558
+00:17:37,880 --> 00:17:39,300
+and execute at the address it holds.
+
+559
+00:17:39,300 --> 00:17:41,360
+Now, as for jumping to that address to execute,
+
+560
+00:17:41,360 --> 00:17:42,640
+well, everyone can imagine,
+
+561
+00:17:42,640 --> 00:17:44,960
+So what actually happens is that our normal PC
+
+562
+00:17:44,960 --> 00:17:47,780
+the PC we keep mentioning earlier
+
+563
+00:17:47,780 --> 00:17:49,980
+the value inside it actually gets replaced
+
+564
+00:17:49,980 --> 00:17:53,040
+So this is what the so-called jump refers to
+
+565
+00:17:53,040 --> 00:17:54,400
+that's really what this sentence means
+
+566
+00:17:54,400 --> 00:17:57,900
+Now, since this PC has been replaced
+
+567
+00:17:57,900 --> 00:18:01,600
+we know that exceptions and interrupts
+
+568
+00:18:01,600 --> 00:18:04,360
+actually express a very fundamental concept
+
+569
+00:18:04,360 --> 00:18:06,580
+We may have gone a bit too fast just now
+
+570
+00:18:06,580 --> 00:18:07,300
+and skipped over it in passing
+
+571
+00:18:07,300 --> 00:18:09,160
+It's this figure from earlier
+
+572
+00:18:09,160 --> 00:18:10,880
+this figure right here
+
+573
+00:18:10,880 --> 00:18:13,860
+that is to say, whether it's an exception or an interrupt
+
+574
+00:18:13,860 --> 00:18:17,200
+it actually follows this same basic idea right here
+
+575
+00:18:17,200 --> 00:18:18,860
+meaning that when our normal
+
+576
+00:18:18,860 --> 00:18:23,720
+these two lines actually represent our normal control flow
+
+577
+00:18:23,720 --> 00:18:28,200
+and this is our trap handler
+
+578
+00:18:28,200 --> 00:18:29,260
+this is the exception control flow
+
+579
+00:18:29,260 --> 00:18:32,120
+So what this dotted line expresses is
+
+580
+00:18:32,120 --> 00:18:35,740
+that when, say, an interrupt or an exception occurs
+
+581
+00:18:35,740 --> 00:18:40,780
+our execution flow will jump from the normal control flow to
+
+582
+00:18:40,780 --> 00:18:42,860
+this exception control flow
+
+583
+00:18:42,860 --> 00:18:44,540
+to execute a special handler function
+
+584
+00:18:44,540 --> 00:18:46,160
+but after the handling is done,
+
+585
+00:18:46,160 --> 00:18:47,780
+it's actually not finished
+
+586
+00:18:47,780 --> 00:18:49,020
+it still has to come back
+
+587
+00:18:49,020 --> 00:18:49,660
+see what I mean?
+
+588
+00:18:49,660 --> 00:18:50,880
+it still has to come back
+
+589
+00:18:50,880 --> 00:18:53,040
+so this jumping out and coming back,
+
+590
+00:18:53,040 --> 00:18:54,880
+this process is a bit like our
+
+591
+00:18:54,880 --> 00:18:57,720
+function call execution
+
+592
+00:18:57,720 --> 00:18:58,500
+but,
+
+593
+00:18:58,500 --> 00:19:00,240
+as you know, this call and execution
+
+594
+00:19:00,240 --> 00:19:00,980
+is not something that happens
+
+595
+00:19:00,980 --> 00:19:02,760
+under our control
+
+596
+00:19:02,760 --> 00:19:06,180
+it's a hardware handling behavior of the CPU
+
+597
+00:19:06,180 --> 00:19:09,080
+so since it has to jump out,
+
+598
+00:19:09,080 --> 00:19:09,940
+when it jumps out,
+
+599
+00:19:09,940 --> 00:19:10,860
+as we just said,
+
+600
+00:19:10,860 --> 00:19:11,700
+when it jumps out,
+
+601
+00:19:11,700 --> 00:19:13,820
+Our PC value will actually be replaced
+
+602
+00:19:13,820 --> 00:19:15,200
+Then, when we come back,
+
+603
+00:19:15,200 --> 00:19:16,200
+for it to continue executing,
+
+604
+00:19:16,200 --> 00:19:18,580
+this PC value must be restored
+
+605
+00:19:18,580 --> 00:19:19,400
+Think about it, right?
+
+606
+00:19:19,400 --> 00:19:20,520
+It must be restored
+
+607
+00:19:20,520 --> 00:19:23,540
+And since it needs to be restored,
+
+608
+00:19:23,540 --> 00:19:25,100
+that means at the time of the jump,
+
+609
+00:19:25,100 --> 00:19:26,940
+this original PC value
+
+610
+00:19:26,940 --> 00:19:27,900
+because we've already jumped to here,
+
+611
+00:19:27,900 --> 00:19:31,000
+the PC value gets replaced with the value at this location
+
+612
+00:19:31,000 --> 00:19:31,320
+Right?
+
+613
+00:19:31,320 --> 00:19:33,400
+So this PC value has to be saved
+
+614
+00:19:33,400 --> 00:19:34,660
+And saved where?
+
+615
+00:19:34,660 --> 00:19:36,320
+Actually, it's saved into what we just mentioned,
+
+616
+00:19:36,320 --> 00:19:37,740
+this thing called EPC
+
+617
+00:19:37,740 --> 00:19:39,420
+which is specifically used for exceptions,
+
+618
+00:19:39,420 --> 00:19:41,600
+used to save, when an exception occurs,
+
+619
+00:19:41,600 --> 00:19:43,200
+at the moment it occurs,
+
+620
+00:19:43,200 --> 00:19:45,220
+the PC value of that exception
+
+621
+00:19:45,220 --> 00:19:46,680
+So when it comes back,
+
+622
+00:19:46,680 --> 00:19:49,320
+we restore the values that were in here,
+
+623
+00:19:49,320 --> 00:19:51,220
+and then it can continue executing downward.
+
+624
+00:19:51,220 --> 00:19:52,640
+There is actually a game like this,
+
+625
+00:19:52,640 --> 00:19:53,660
+which maybe just now,
+
+626
+00:19:53,660 --> 00:19:55,320
+when we were talking about this register,
+
+627
+00:19:55,320 --> 00:19:57,060
+was mentioned briefly in passing.
+
+628
+00:19:57,060 --> 00:19:58,260
+Let me go over it for you again.
+
+629
+00:19:58,260 --> 00:20:00,360
+Okay.
+
+630
+00:20:00,360 --> 00:20:03,840
+So let's go back to this MEPC we were just talking about.
+
+631
+00:20:03,840 --> 00:20:04,900
+So now everyone knows,
+
+632
+00:20:04,900 --> 00:20:06,980
+this MEPC, this register,
+
+633
+00:20:06,980 --> 00:20:09,060
+is actually used to save
+
+634
+00:20:09,060 --> 00:20:10,920
+when a trap occurs,
+
+635
+00:20:10,920 --> 00:20:13,660
+since this PC gets replaced,
+
+636
+00:20:13,660 --> 00:20:15,180
+we have to take that
+
+637
+00:20:15,180 --> 00:20:18,760
+original PC value and save it.
+
+638
+00:20:18,760 --> 00:20:19,700
+Where do we save it?
+
+639
+00:20:19,700 --> 00:20:22,260
+It gets saved into this MEPC register.
+
+640
+00:20:22,260 --> 00:20:24,880
+So what we just mentioned
+
+641
+00:20:24,880 --> 00:20:26,180
+That is, exiting this CHAP.
+
+642
+00:20:26,180 --> 00:20:27,800
+So after the CHAP processing is done,
+
+643
+00:20:27,800 --> 00:20:28,320
+we have to come back.
+
+644
+00:20:28,320 --> 00:20:28,840
+When we come back,
+
+645
+00:20:28,840 --> 00:20:30,680
+how do we make that PC value
+
+646
+00:20:30,680 --> 00:20:34,120
+get restored back to the MEPC value we saved?
+
+647
+00:20:34,120 --> 00:20:35,160
+Well, we'll talk about that later.
+
+648
+00:20:35,160 --> 00:20:36,320
+It uses a special instruction,
+
+649
+00:20:36,320 --> 00:20:38,600
+called Mret here.
+
+650
+00:20:38,600 --> 00:20:40,600
+Ret just means return.
+
+651
+00:20:40,600 --> 00:20:41,820
+This one,
+
+652
+00:20:41,820 --> 00:20:44,220
+we'll talk about it again later.
+
+653
+00:20:44,220 --> 00:20:46,300
+It's not quite the same as the return instruction
+
+654
+00:20:46,300 --> 00:20:46,940
+that we normally call.
+
+655
+00:20:46,940 --> 00:20:49,640
+It's a special instruction
+
+656
+00:20:49,640 --> 00:20:52,420
+used when returning from an exception
+
+657
+00:20:52,420 --> 00:20:53,780
+back to normal execution.
+
+658
+00:20:53,780 --> 00:20:55,160
+So when this instruction is called,
+
+659
+00:20:55,160 --> 00:20:57,240
+it actually makes use of the MEPC
+
+660
+00:20:57,240 --> 00:20:58,580
+that we just talked about.
+
+661
+00:20:58,580 --> 00:21:00,880
+So it will take that original
+
+662
+00:21:00,880 --> 00:21:02,800
+value and restore it into PC,
+
+663
+00:21:02,800 --> 00:21:04,200
+which achieves the effect of returning.
+
+664
+00:21:04,200 --> 00:21:05,240
+Combine this with that diagram from earlier
+
+665
+00:21:05,240 --> 00:21:07,680
+and take a moment to understand it again.
+
+666
+00:21:07,680 --> 00:21:12,480
+This is the effect of mepc,
+
+667
+00:21:12,480 --> 00:21:14,240
+the effect that mepc is meant to achieve.
+
+668
+00:21:14,240 --> 00:21:16,840
+Now, on this point,
+
+669
+00:21:16,840 --> 00:21:17,620
+I should also mention here on my end,
+
+670
+00:21:17,620 --> 00:21:18,580
+namely that
+
+671
+00:21:18,580 --> 00:21:19,720
+this restoration,
+
+672
+00:21:19,720 --> 00:21:20,600
+that is, at the time of saving,
+
+673
+00:21:20,600 --> 00:21:22,380
+what mepc saves
+
+674
+00:21:22,380 --> 00:21:23,320
+might be the current instruction,
+
+675
+00:21:23,320 --> 00:21:24,780
+or it might be the address of the next instruction.
+
+676
+00:21:24,780 --> 00:21:27,020
+As for when the current address gets saved,
+
+677
+00:21:27,020 --> 00:21:28,400
+and when the next address gets saved,
+
+678
+00:21:28,400 --> 00:21:30,340
+we will cover that with you later on.
+
+679
+00:21:30,340 --> 00:21:31,280
+But in any case, to sum up,
+
+680
+00:21:31,280 --> 00:21:33,140
+it is always used to save
+
+681
+00:21:33,140 --> 00:21:34,660
+a value related to the PC
+
+682
+00:21:34,660 --> 00:21:36,500
+Now, what happens next?
+
+683
+00:21:36,500 --> 00:21:38,040
+When we return,
+
+684
+00:21:38,040 --> 00:21:39,180
+the value is restored into the PC,
+
+685
+00:21:39,180 --> 00:21:40,700
+achieving the effect of a return.
+
+686
+00:21:40,700 --> 00:21:45,880
+So in the normal handling process,
+
+687
+00:21:45,880 --> 00:21:46,600
+it's mentioned here
+
+688
+00:21:46,600 --> 00:21:47,700
+that its value can also be modified
+
+689
+00:21:47,700 --> 00:21:49,900
+to change its return address.
+
+690
+00:21:49,900 --> 00:21:51,820
+In our later examples,
+
+691
+00:21:51,820 --> 00:21:54,600
+we'll also cover this kind of usage.
+
+692
+00:21:54,600 --> 00:21:55,800
+So when we get to it,
+
+693
+00:21:55,800 --> 00:21:56,620
+we'll look at it then.
+
+694
+00:21:56,620 --> 00:21:57,460
+For now, here,
+
+695
+00:21:57,460 --> 00:21:59,620
+just knowing that this exists is enough.
+
+696
+00:21:59,620 --> 00:22:02,860
+This is what we need to understand,
+
+697
+00:22:02,860 --> 00:22:04,020
+that is, the second register
+
+698
+00:22:04,020 --> 00:22:07,080
+related to exception handling,
+
+699
+00:22:07,080 --> 00:22:08,800
+called MEPC.
+
+700
+00:22:08,800 --> 00:22:15,440
+Now, the third one we need to understand
+
+701
+00:22:15,440 --> 00:22:17,020
+It's called Machine Cause.
+
+702
+00:22:17,020 --> 00:22:18,680
+Cause means the reason.
+
+703
+00:22:18,680 --> 00:22:20,000
+Because, because, right?
+
+704
+00:22:20,000 --> 00:22:20,940
+It means the reason.
+
+705
+00:22:20,940 --> 00:22:22,300
+Now, as we mentioned earlier,
+
+706
+00:22:22,300 --> 00:22:24,060
+when a trap occurs,
+
+707
+00:22:24,060 --> 00:22:25,660
+just like that one earlier,
+
+708
+00:22:25,660 --> 00:22:28,600
+when we were talking about mtvec,
+
+709
+00:22:28,600 --> 00:22:29,180
+we also mentioned that
+
+710
+00:22:29,180 --> 00:22:31,580
+the CPU
+
+711
+00:22:31,580 --> 00:22:33,760
+will record the cause of this exception
+
+712
+00:22:33,760 --> 00:22:35,140
+— specifically, what kind of exception it is,
+
+713
+00:22:35,140 --> 00:22:36,820
+what kind of interrupt it is —
+
+714
+00:22:36,820 --> 00:22:39,160
+and tell us through this register.
+
+715
+00:22:39,160 --> 00:22:41,180
+So we can read the value in this register
+
+716
+00:22:41,180 --> 00:22:42,540
+and just do a switch case,
+
+717
+00:22:42,540 --> 00:22:42,840
+right?
+
+718
+00:22:42,840 --> 00:22:44,180
+Taking different branches.
+
+719
+00:22:44,180 --> 00:22:46,640
+So this is used to tell us
+
+720
+00:22:46,640 --> 00:22:48,780
+and store the exception code.
+
+721
+00:22:48,780 --> 00:22:49,780
+The so-called exception code,
+
+722
+00:22:49,780 --> 00:22:53,920
+that is, the register holding the cause value.
+
+723
+00:22:53,920 --> 00:22:55,460
+Now, one thing mentioned here is that
+
+724
+00:22:55,460 --> 00:22:56,640
+on this side they have written another one,
+
+725
+00:22:56,640 --> 00:22:58,140
+the spec says that
+
+726
+00:22:58,140 --> 00:22:59,280
+this field,
+
+727
+00:22:59,280 --> 00:23:01,960
+its attribute is called WRL.
+
+728
+00:23:01,960 --> 00:23:03,560
+Now, as for WRL,
+
+729
+00:23:03,560 --> 00:23:05,040
+what they write here is
+
+730
+00:23:05,040 --> 00:23:08,500
+it stands for write read only legal values.
+
+731
+00:23:08,500 --> 00:23:10,620
+So what it really means is that
+
+732
+00:23:10,620 --> 00:23:14,160
+when we read or write this field,
+
+733
+00:23:14,160 --> 00:23:17,320
+it must ensure that its value
+
+734
+00:23:17,320 --> 00:23:18,580
+for example, when you write to it,
+
+735
+00:23:18,580 --> 00:23:20,180
+its value must be legal.
+
+736
+00:23:20,180 --> 00:23:22,180
+If it is an illegal value,
+
+737
+00:23:22,180 --> 00:23:24,560
+meaning one not defined in our spec,
+
+738
+00:23:24,560 --> 00:23:26,360
+or some value it does not recognize,
+
+739
+00:23:26,360 --> 00:23:28,220
+it may trigger a further exception.
+
+740
+00:23:28,220 --> 00:23:29,660
+Please keep this in mind.
+
+741
+00:23:29,660 --> 00:23:33,740
+This is the meaning of WRL.
+
+742
+00:23:33,740 --> 00:23:34,780
+Let's talk about it briefly.
+
+743
+00:23:34,780 --> 00:23:36,060
+So this
+
+744
+00:23:36,060 --> 00:23:38,680
+this register,
+
+745
+00:23:38,680 --> 00:23:40,440
+that is, when an exception occurs,
+
+746
+00:23:40,440 --> 00:23:41,860
+this Hart, that is, the CPU,
+
+747
+00:23:41,860 --> 00:23:43,360
+it will set this register,
+
+748
+00:23:43,360 --> 00:23:44,540
+to tell us about this trap,
+
+749
+00:23:44,540 --> 00:23:45,840
+the specific reason it happened.
+
+750
+00:23:45,840 --> 00:23:47,400
+The specific reason is actually a value,
+
+751
+00:23:47,400 --> 00:23:49,000
+this value.
+
+752
+00:23:49,000 --> 00:23:51,480
+And then when it encodes it,
+
+753
+00:23:51,480 --> 00:23:52,340
+that is, the whole thing,
+
+754
+00:23:52,340 --> 00:23:53,280
+for example, if it's 32 bits,
+
+755
+00:23:53,280 --> 00:23:54,020
+its most significant bit,
+
+756
+00:23:54,020 --> 00:23:56,120
+the most significant bit is used to tell us
+
+757
+00:23:56,120 --> 00:23:58,400
+whether it is an exception
+
+758
+00:23:58,400 --> 00:24:00,260
+or an interrupt,
+
+759
+00:24:00,260 --> 00:24:01,180
+because as we mentioned earlier,
+
+760
+00:24:01,180 --> 00:24:02,200
+traps fall into two categories.
+
+761
+00:24:02,200 --> 00:24:03,780
+It's either an interrupt or an exception.
+
+762
+00:24:03,780 --> 00:24:06,060
+So here,
+
+763
+00:24:06,060 --> 00:24:07,400
+if this highest bit
+
+764
+00:24:07,400 --> 00:24:10,060
+that is, the highest bit of this 32-bit field
+
+765
+00:24:10,060 --> 00:24:12,000
+is 1,
+
+766
+00:24:12,000 --> 00:24:15,460
+it means the trap that just occurred is an interrupt.
+
+767
+00:24:15,460 --> 00:24:16,720
+Otherwise,
+
+768
+00:24:16,720 --> 00:24:17,900
+if it is 0,
+
+769
+00:24:17,900 --> 00:24:18,680
+otherwise it's 0,
+
+770
+00:24:18,680 --> 00:24:20,060
+and 0 means it's an exception.
+
+771
+00:24:20,060 --> 00:24:25,700
+So by looking at this highest field, we can quickly tell apart
+
+772
+00:24:25,700 --> 00:24:27,540
+whether what just happened is an interrupt or an exception.
+
+773
+00:24:27,540 --> 00:24:31,060
+Now, what about the remaining part?
+
+774
+00:24:31,060 --> 00:24:33,280
+As we just said, it's the specific
+
+775
+00:24:33,280 --> 00:24:35,620
+which interrupt it actually is,
+
+776
+00:24:35,620 --> 00:24:37,340
+or which exception it actually is,
+
+777
+00:24:37,340 --> 00:24:38,160
+the specific value.
+
+778
+00:24:38,160 --> 00:24:39,000
+For this value,
+
+779
+00:24:39,000 --> 00:24:41,280
+the specification also has a table
+
+780
+00:24:41,280 --> 00:24:42,200
+that defines
+
+781
+00:24:42,200 --> 00:24:42,980
+You can take a look
+
+782
+00:24:42,980 --> 00:24:46,100
+at this table in the privileged spec, section 3.6,
+
+783
+00:24:46,100 --> 00:24:47,280
+Table 3.6.
+
+784
+00:24:47,280 --> 00:24:49,580
+Now, as you can see from this table,
+
+785
+00:24:49,580 --> 00:24:50,740
+what it actually means is that
+
+786
+00:24:50,740 --> 00:24:51,920
+this highest bit here,
+
+787
+00:24:51,920 --> 00:24:53,360
+meaning that this side is all ones,
+
+788
+00:24:53,360 --> 00:24:53,640
+right?
+
+789
+00:24:53,640 --> 00:24:54,520
+If it's all ones,
+
+790
+00:24:54,520 --> 00:24:55,440
+then that means this side is
+
+791
+00:24:55,440 --> 00:24:56,440
+this category is interrupts.
+
+792
+00:24:56,440 --> 00:24:58,520
+And if the highest bit of this category is 0,
+
+793
+00:24:58,520 --> 00:24:59,600
+then they are all exceptions.
+
+794
+00:24:59,600 --> 00:25:01,160
+And it also defines,
+
+795
+00:25:01,160 --> 00:25:04,040
+for instance, these 0, 1, 2, 3, 4, 5 respectively.
+
+796
+00:25:04,040 --> 00:25:06,240
+When the front part is an interrupt,
+
+797
+00:25:06,240 --> 00:25:08,400
+what do 0, 1, 2, 3, 4, 5 each mean?
+
+798
+00:25:08,400 --> 00:25:11,260
+And when it's an exception,
+
+799
+00:25:11,260 --> 00:25:14,940
+what exactly do the exception values 0, 1, 2, 3, 4, 5, 6, 7 mean?
+
+800
+00:25:14,940 --> 00:25:19,220
+Now, for us,
+
+801
+00:25:19,220 --> 00:25:20,920
+Today we're mainly going to talk about exceptions.
+
+802
+00:25:20,920 --> 00:25:24,740
+So for interrupts,
+
+803
+00:25:24,740 --> 00:25:26,400
+we'll leave them aside for now.
+
+804
+00:25:26,400 --> 00:25:28,560
+As we can see, exceptions are divided into many kinds.
+
+805
+00:25:28,560 --> 00:25:31,280
+For example, instruction address misaligned,
+
+806
+00:25:31,280 --> 00:25:33,380
+instruction access fault,
+
+807
+00:25:33,380 --> 00:25:36,220
+that is, the access failed,
+
+808
+00:25:36,220 --> 00:25:38,240
+and illegal instruction, and so on.
+
+809
+00:25:38,240 --> 00:25:41,080
+In other words, when the CPU detects that our program
+
+810
+00:25:41,080 --> 00:25:43,980
+has triggered one of these problems,
+
+811
+00:25:43,980 --> 00:25:45,780
+it will raise an exception,
+
+812
+00:25:45,780 --> 00:25:46,700
+and notify us.
+
+813
+00:25:46,700 --> 00:25:50,340
+It then jumps to the specific exception handler
+
+814
+00:25:50,340 --> 00:25:51,760
+logic to execute.
+
+815
+00:25:51,760 --> 00:25:53,040
+That's roughly what it means.
+
+816
+00:25:53,040 --> 00:25:55,660
+This is the third register,
+
+817
+00:25:55,660 --> 00:25:57,380
+which is mcause.
+
+818
+00:25:57,380 --> 00:26:01,840
+Then there is also one called mtval.
+
+819
+00:26:01,840 --> 00:26:03,520
+What this actually means is that
+
+820
+00:26:03,520 --> 00:26:05,100
+it assists that mcause register.
+
+821
+00:26:05,100 --> 00:26:07,160
+Because mcause is just a single value that tells us specifically about this exception—
+
+822
+00:26:07,160 --> 00:26:09,820
+for instance, what kind of exception it is.
+
+823
+00:26:09,820 --> 00:26:11,620
+For example, what kind of exception it is.
+
+824
+00:26:11,620 --> 00:26:14,880
+Now, when certain exceptions occur,
+
+825
+00:26:14,880 --> 00:26:17,900
+it may also need to give us more detailed information.
+
+826
+00:26:17,900 --> 00:26:20,040
+So that single register from earlier might not be enough.
+
+827
+00:26:20,040 --> 00:26:21,920
+So this mtval register,
+
+828
+00:26:21,920 --> 00:26:23,160
+together with mcause,
+
+829
+00:26:23,160 --> 00:26:26,160
+acts as a supplementary use of mcause—
+
+830
+00:26:26,160 --> 00:26:26,940
+an additional description.
+
+831
+00:26:26,940 --> 00:26:28,800
+Through it, the CPU can
+
+832
+00:26:28,800 --> 00:26:31,800
+that is, the CPU can use this register,
+
+833
+00:26:31,800 --> 00:26:33,520
+along with the mcause from before,
+
+834
+00:26:33,520 --> 00:26:35,700
+to give us more detailed
+
+835
+00:26:35,700 --> 00:26:37,400
+information about the exception.
+
+836
+00:26:37,400 --> 00:26:41,000
+Just get a rough idea of this,
+
+837
+00:26:41,000 --> 00:26:42,060
+and I won't say more about it.
+
+838
+00:26:42,060 --> 00:26:46,240
+Now there is another register,
+
+839
+00:26:46,240 --> 00:26:47,340
+which is also quite important,
+
+840
+00:26:47,340 --> 00:26:48,520
+called mstatus.
+
+841
+00:26:48,520 --> 00:26:53,720
+It is used to describe some status information.
+
+842
+00:26:53,720 --> 00:26:58,960
+It describes some status information.
+
+843
+00:26:58,960 --> 00:27:00,820
+So let's look at it,
+
+844
+00:27:00,820 --> 00:27:04,650
+let's take a look.
+
+845
+00:27:04,650 --> 00:27:06,330
+That is to say, the whole thing is 32 bits,
+
+846
+00:27:06,330 --> 00:27:08,790
+and it is divided very finely.
+
+847
+00:27:08,790 --> 00:27:10,630
+Every bit has a specific meaning.
+
+848
+00:27:10,630 --> 00:27:11,510
+Among them,
+
+849
+00:27:11,510 --> 00:27:13,010
+here another special one appears.
+
+850
+00:27:13,010 --> 00:27:16,950
+This term is called WPRI.
+
+851
+00:27:16,950 --> 00:27:18,150
+So what is written here is,
+
+852
+00:27:18,150 --> 00:27:20,030
+WPRI means,
+
+853
+00:27:20,030 --> 00:27:21,190
+Write Positive,
+
+854
+00:27:21,190 --> 00:27:23,570
+that is, on writes it keeps the reserved value.
+
+855
+00:27:23,570 --> 00:27:24,970
+When reading, it is ignored.
+
+856
+00:27:24,970 --> 00:27:25,750
+So in fact, that is to say,
+
+857
+00:27:25,750 --> 00:27:26,370
+for this part,
+
+858
+00:27:26,370 --> 00:27:27,910
+it actually does not,
+
+859
+00:27:27,910 --> 00:27:29,510
+the specification does not actually use it.
+
+860
+00:27:29,510 --> 00:27:30,270
+That is to say,
+
+861
+00:27:30,270 --> 00:27:32,410
+when it comes to writing
+
+862
+00:27:32,410 --> 00:27:36,010
+for us programmers, actually,
+
+863
+00:27:36,010 --> 00:27:36,570
+what it really means is
+
+864
+00:27:36,570 --> 00:27:39,250
+when we operate on this timer,
+
+865
+00:27:39,250 --> 00:27:40,730
+then this part,
+
+866
+00:27:40,730 --> 00:27:42,570
+as much as possible,
+
+867
+00:27:42,570 --> 00:27:44,350
+don't write to it
+
+868
+00:27:44,350 --> 00:27:45,230
+and if there is a write operation,
+
+869
+00:27:45,230 --> 00:27:46,770
+try not to touch it
+
+870
+00:27:46,770 --> 00:27:47,510
+whatever value was there originally,
+
+871
+00:27:47,510 --> 00:27:48,830
+preserve it
+
+872
+00:27:48,830 --> 00:27:49,630
+so the real idea is this:
+
+873
+00:27:49,630 --> 00:27:51,010
+when we write to this timer,
+
+874
+00:27:51,010 --> 00:27:52,750
+first read out the timer value,
+
+875
+00:27:52,750 --> 00:27:54,870
+then modify just the bits you need,
+
+876
+00:27:54,870 --> 00:27:57,190
+and then write it back, and that's it
+
+877
+00:27:57,190 --> 00:27:58,130
+so this
+
+878
+00:27:58,130 --> 00:28:02,390
+means when you write, you must ensure the values inside stay unchanged,
+
+879
+00:28:02,390 --> 00:28:04,130
+don't disturb the original values in there
+
+880
+00:28:04,130 --> 00:28:05,330
+and when reading,
+
+881
+00:28:05,330 --> 00:28:05,990
+The values read out of here
+
+882
+00:28:05,990 --> 00:28:07,410
+are meaningless to you right now,
+
+883
+00:28:07,410 --> 00:28:08,690
+so you can just ignore them for the moment.
+
+884
+00:28:08,690 --> 00:28:10,810
+This part is actually reserved by the specification,
+
+885
+00:28:10,810 --> 00:28:12,010
+so let's just leave it alone.
+
+886
+00:28:12,010 --> 00:28:13,070
+As for the rest,
+
+887
+00:28:13,070 --> 00:28:14,690
+the parts that are already defined,
+
+888
+00:28:14,690 --> 00:28:17,310
+those are what we can read and write.
+
+889
+00:28:17,310 --> 00:28:19,510
+Now, among them,
+
+890
+00:28:19,510 --> 00:28:23,590
+it splits this into many fields.
+
+891
+00:28:23,590 --> 00:28:24,610
+We'll just pick out
+
+892
+00:28:24,610 --> 00:28:26,510
+the ones we're dealing with
+
+893
+00:28:26,510 --> 00:28:27,270
+and walk through them for you.
+
+894
+00:28:27,270 --> 00:28:30,630
+The parts that aren't highlighted in that color
+
+895
+00:28:30,630 --> 00:28:31,970
+also have specific meanings,
+
+896
+00:28:31,970 --> 00:28:32,710
+but since we're not using them,
+
+897
+00:28:32,710 --> 00:28:34,310
+we won't talk about them here.
+
+898
+00:28:34,310 --> 00:28:36,930
+Now this one, for instance, let's first look at the red part.
+
+899
+00:28:36,930 --> 00:28:40,050
+That is, these lowest bits,
+
+900
+00:28:40,050 --> 00:28:42,330
+namely bit 0, bit 1, and bit 3.
+
+901
+00:28:42,330 --> 00:28:44,230
+So it actually follows a very regular pattern.
+
+902
+00:28:44,230 --> 00:28:44,830
+Take a look, everyone.
+
+903
+00:28:44,830 --> 00:28:47,070
+That is, if you look at the naming, it's all like this:
+
+904
+00:28:47,070 --> 00:28:50,990
+You see, they all come in these groups.
+
+905
+00:28:50,990 --> 00:28:52,150
+Group by group.
+
+906
+00:28:52,150 --> 00:28:54,350
+For example, over here they are all IEI.
+
+907
+00:28:54,350 --> 00:28:55,590
+Things like IEIE.
+
+908
+00:28:55,590 --> 00:28:57,510
+And it's only the front part
+
+909
+00:28:57,510 --> 00:29:00,010
+where they swap in a USM.
+
+910
+00:29:00,010 --> 00:29:01,850
+Now, you can probably guess what USM stands for.
+
+911
+00:29:01,850 --> 00:29:03,290
+It's actually what we've been talking about —
+
+912
+00:29:03,290 --> 00:29:05,090
+these privilege modes:
+
+913
+00:29:05,090 --> 00:29:06,030
+the user mode,
+
+914
+00:29:06,030 --> 00:29:07,570
+the super mode, and
+
+915
+00:29:07,570 --> 00:29:09,390
+the machine mode.
+
+916
+00:29:09,390 --> 00:29:10,750
+They all follow this pattern.
+
+917
+00:29:10,750 --> 00:29:13,190
+MSU.
+
+918
+00:29:13,190 --> 00:29:14,810
+So when we discuss them here,
+
+919
+00:29:14,810 --> 00:29:16,810
+we just use an X in front as a placeholder.
+
+920
+00:29:16,810 --> 00:29:18,090
+Just keep that in mind.
+
+921
+00:29:18,090 --> 00:29:20,730
+It's divided into xIE, xPIE, and xPP
+
+922
+00:29:20,730 --> 00:29:21,810
+That's what it means
+
+923
+00:29:21,810 --> 00:29:24,990
+So these specific three fields are split into three categories
+
+924
+00:29:24,990 --> 00:29:26,610
+What do these three categories actually represent?
+
+925
+00:29:26,610 --> 00:29:28,090
+Let's look at IE first
+
+926
+00:29:28,090 --> 00:29:29,270
+As for IE,
+
+927
+00:29:29,270 --> 00:29:30,850
+it's actually an English abbreviation
+
+928
+00:29:30,850 --> 00:29:33,510
+which stands for interrupt enable
+
+929
+00:29:33,510 --> 00:29:35,450
+that is, the interrupt enable bit
+
+930
+00:29:35,450 --> 00:29:37,570
+meaning that this
+
+931
+00:29:37,570 --> 00:29:39,590
+these three bits
+
+932
+00:29:39,590 --> 00:29:41,390
+actually control our
+
+933
+00:29:41,390 --> 00:29:43,490
+under different modes,
+
+934
+00:29:43,490 --> 00:29:44,470
+whether the global interrupt
+
+935
+00:29:44,470 --> 00:29:47,490
+should be enabled or disabled
+
+936
+00:29:47,490 --> 00:29:49,370
+So when we want to
+
+937
+00:29:49,370 --> 00:29:50,850
+for example, when we want to
+
+938
+00:29:50,850 --> 00:29:52,270
+take the interrupts in
+
+939
+00:29:52,270 --> 00:29:54,250
+machine mode and enable them,
+
+940
+00:29:54,250 --> 00:29:55,510
+we set this bit
+
+941
+00:29:55,510 --> 00:29:57,750
+That is, at this MRE field,
+
+942
+00:29:57,750 --> 00:29:58,950
+just set it to 1,
+
+943
+00:29:58,950 --> 00:29:59,870
+and that expresses this meaning.
+
+944
+00:29:59,870 --> 00:30:00,890
+If you want to disable it,
+
+945
+00:30:00,890 --> 00:30:02,910
+just set it to 0.
+
+946
+00:30:02,910 --> 00:30:06,180
+At the same time,
+
+947
+00:30:06,180 --> 00:30:07,900
+we can also, by reading
+
+948
+00:30:07,900 --> 00:30:09,460
+one of these fields,
+
+949
+00:30:09,460 --> 00:30:10,380
+know whether the current interrupt
+
+950
+00:30:10,380 --> 00:30:12,220
+is enabled or disabled.
+
+951
+00:30:12,220 --> 00:30:12,800
+That is to say, when writing,
+
+952
+00:30:12,800 --> 00:30:14,960
+you are setting the interrupt,
+
+953
+00:30:14,960 --> 00:30:15,860
+disabling or enabling it.
+
+954
+00:30:15,860 --> 00:30:16,760
+And when reading,
+
+955
+00:30:16,760 --> 00:30:17,720
+you can find out whether this interrupt
+
+956
+00:30:17,720 --> 00:30:19,340
+is currently enabled or disabled.
+
+957
+00:30:19,340 --> 00:30:20,580
+This is XRE.
+
+958
+00:30:20,580 --> 00:30:22,660
+Now, what about XPRE?
+
+959
+00:30:22,660 --> 00:30:23,560
+This P here,
+
+960
+00:30:23,560 --> 00:30:24,820
+it is connected with this RE that follows it.
+
+961
+00:30:24,820 --> 00:30:26,260
+Also the concept of interrupt enable,
+
+962
+00:30:26,260 --> 00:30:28,760
+and this P actually stands for 'previous'.
+
+963
+00:30:28,760 --> 00:30:31,380
+It means previous,
+
+964
+00:30:31,380 --> 00:30:37,800
+as in the state of the previous interrupt enable bit.
+
+965
+00:30:37,800 --> 00:30:39,900
+What it's saying here is essentially that
+
+966
+00:30:39,900 --> 00:30:44,240
+when a trap occurs, it is used to save the
+
+967
+00:30:44,240 --> 00:30:46,480
+xRE value from before the trap occurred.
+
+968
+00:30:46,480 --> 00:30:48,280
+In other words, suppose this,
+
+969
+00:30:48,280 --> 00:30:49,880
+for instance, at the very beginning,
+
+970
+00:30:49,880 --> 00:30:53,480
+the interrupt is enabled.
+
+971
+00:30:53,480 --> 00:30:55,480
+Say the value here was originally enabled,
+
+972
+00:30:55,480 --> 00:30:56,720
+say it was 1.
+
+973
+00:30:56,720 --> 00:30:58,980
+Then, when we are in machine mode and
+
+974
+00:30:58,980 --> 00:31:00,200
+an interrupt
+
+975
+00:31:00,200 --> 00:31:01,980
+or an exception occurs,
+
+976
+00:31:01,980 --> 00:31:04,320
+it will take the value in here
+
+977
+00:31:04,320 --> 00:31:06,560
+and first save it into this one,
+
+978
+00:31:06,560 --> 00:31:08,620
+save it into this one.
+
+979
+00:31:08,620 --> 00:31:10,640
+Then, once the exception has been handled,
+
+980
+00:31:10,640 --> 00:31:11,820
+it will use the value in this one
+
+981
+00:31:11,820 --> 00:31:13,080
+and then perform the corresponding restoration.
+
+982
+00:31:13,080 --> 00:31:15,680
+It has this kind of use built into it.
+
+983
+00:31:15,680 --> 00:31:19,780
+This is XPI.
+
+984
+00:31:19,780 --> 00:31:21,480
+Then XPP,
+
+985
+00:31:21,480 --> 00:31:22,680
+as for the P,
+
+986
+00:31:22,680 --> 00:31:24,600
+this P actually,
+
+987
+00:31:24,600 --> 00:31:26,920
+in English it should be,
+
+988
+00:31:26,920 --> 00:31:28,960
+the first P is still previous,
+
+989
+00:31:28,960 --> 00:31:29,800
+meaning the previous one.
+
+990
+00:31:29,800 --> 00:31:31,160
+As for the second P,
+
+991
+00:31:31,160 --> 00:31:31,920
+it's privilege,
+
+992
+00:31:31,920 --> 00:31:33,280
+which means access rights.
+
+993
+00:31:33,280 --> 00:31:35,480
+So it's previous privilege.
+
+994
+00:31:35,480 --> 00:31:37,000
+Now, for this one,
+
+995
+00:31:37,000 --> 00:31:37,800
+it's also written right here,
+
+996
+00:31:37,800 --> 00:31:38,800
+it is used to store
+
+997
+00:31:38,800 --> 00:31:42,740
+the privilege level from before this trap occurred,
+
+998
+00:31:42,740 --> 00:31:44,880
+the previous privilege level from before,
+
+999
+00:31:44,880 --> 00:31:46,320
+this privilege value.
+
+1000
+00:31:46,320 --> 00:31:48,180
+In other words,
+
+1001
+00:31:48,180 --> 00:31:49,400
+So, for example,
+
+1002
+00:31:49,400 --> 00:31:52,020
+when a trap occurs,
+
+1003
+00:31:52,020 --> 00:31:52,660
+then we know
+
+1004
+00:31:52,660 --> 00:31:56,220
+we need to bring this up here,
+
+1005
+00:31:56,220 --> 00:31:57,900
+and that is, when a trap occurs,
+
+1006
+00:31:57,900 --> 00:31:58,420
+what happens on this side is,
+
+1007
+00:31:58,420 --> 00:31:59,760
+let me explain this to everyone,
+
+1008
+00:31:59,760 --> 00:32:01,680
+the question is, why is there no UPP?
+
+1009
+00:32:01,680 --> 00:32:02,360
+Because, as you can see,
+
+1010
+00:32:02,360 --> 00:32:05,560
+there are only SPP and MPP here,
+
+1011
+00:32:05,560 --> 00:32:07,680
+meaning there is only the
+
+1012
+00:32:07,680 --> 00:32:09,900
+previous privilege in machine mode
+
+1013
+00:32:09,900 --> 00:32:11,520
+and the
+
+1014
+00:32:11,520 --> 00:32:13,060
+previous privilege in supervisor mode,
+
+1015
+00:32:13,060 --> 00:32:15,400
+but no UPP.
+
+1016
+00:32:15,400 --> 00:32:17,140
+Now, let me explain this to everyone,
+
+1017
+00:32:17,140 --> 00:32:18,340
+that is, we say that
+
+1018
+00:32:18,340 --> 00:32:20,140
+when an exception occurs,
+
+1019
+00:32:20,140 --> 00:32:22,480
+there is actually a concept behind it,
+
+1020
+00:32:22,480 --> 00:32:24,620
+namely, it always goes from this
+
+1021
+00:32:24,620 --> 00:32:29,060
+That is to say, when an exception occurs,
+
+1022
+00:32:29,060 --> 00:32:30,760
+its overall privilege,
+
+1023
+00:32:30,760 --> 00:32:31,940
+this level,
+
+1024
+00:32:31,940 --> 00:32:33,700
+it always goes from a higher,
+
+1025
+00:32:33,700 --> 00:32:36,720
+from a lower privilege level to a higher privilege level,
+
+1026
+00:32:36,720 --> 00:32:38,520
+and never the other way around.
+
+1027
+00:32:38,520 --> 00:32:39,820
+To give you an example,
+
+1028
+00:32:39,820 --> 00:32:40,800
+let's say,
+
+1029
+00:32:40,800 --> 00:32:42,780
+you are currently working in user mode,
+
+1030
+00:32:42,780 --> 00:32:46,000
+then while in this user mode,
+
+1031
+00:32:46,000 --> 00:32:47,340
+say an exception is triggered,
+
+1032
+00:32:47,340 --> 00:32:49,800
+for instance, you execute an illegal instruction,
+
+1033
+00:32:49,800 --> 00:32:51,160
+or an interrupt comes in,
+
+1034
+00:32:51,160 --> 00:32:52,180
+then at that moment,
+
+1035
+00:32:52,180 --> 00:32:53,180
+the CPU,
+
+1036
+00:32:53,180 --> 00:32:54,380
+it will jump from user mode
+
+1037
+00:32:54,380 --> 00:32:56,660
+into M mode.
+
+1038
+00:32:56,660 --> 00:32:58,580
+We'll cover this later on,
+
+1039
+00:32:58,580 --> 00:33:00,960
+it always jumps into M mode,
+
+1040
+00:33:00,960 --> 00:33:02,440
+but it won't just
+
+1041
+00:33:02,440 --> 00:33:04,160
+When an interrupt occurs in M-mode,
+
+1042
+00:33:04,160 --> 00:33:04,920
+it jumps back.
+
+1043
+00:33:04,920 --> 00:33:05,860
+That is impossible.
+
+1044
+00:33:05,860 --> 00:33:07,140
+That's impossible.
+
+1045
+00:33:07,140 --> 00:33:07,800
+So think about it,
+
+1046
+00:33:07,800 --> 00:33:09,100
+since it is
+
+1047
+00:33:09,100 --> 00:33:11,720
+this kind of
+
+1048
+00:33:11,720 --> 00:33:13,140
+since it has this kind of effect,
+
+1049
+00:33:13,140 --> 00:33:14,180
+then it's a downward
+
+1050
+00:33:14,180 --> 00:33:16,740
+you can think of it as
+
+1051
+00:33:16,740 --> 00:33:17,860
+the top is
+
+1052
+00:33:17,860 --> 00:33:19,740
+the one above is below
+
+1053
+00:33:19,740 --> 00:33:21,180
+so since this goes downward,
+
+1054
+00:33:21,180 --> 00:33:22,400
+it's the concept of falling into a trap.
+
+1055
+00:33:22,400 --> 00:33:24,200
+So this is what a trap means here.
+
+1056
+00:33:24,200 --> 00:33:25,900
+That's where this meaning comes from.
+
+1057
+00:33:25,900 --> 00:33:27,140
+trap literally means a pitfall.
+
+1058
+00:33:27,140 --> 00:33:28,460
+It means falling down.
+
+1059
+00:33:28,460 --> 00:33:29,540
+So this
+
+1060
+00:33:29,540 --> 00:33:33,400
+always goes from a lower privilege level
+
+1061
+00:33:33,400 --> 00:33:34,800
+to a higher privilege level.
+
+1062
+00:33:34,800 --> 00:33:36,600
+Because usually when we draw diagrams,
+
+1063
+00:33:36,600 --> 00:33:37,040
+we always put
+
+1064
+00:33:37,040 --> 00:33:37,920
+say, kernel mode
+
+1065
+00:33:37,920 --> 00:33:38,720
+always at the bottom,
+
+1066
+00:33:38,720 --> 00:33:40,220
+and user mode at the top.
+
+1067
+00:33:40,220 --> 00:33:41,220
+So it is always a
+
+1068
+00:33:41,220 --> 00:33:44,500
+switch from top to bottom,
+
+1069
+00:33:44,500 --> 00:33:45,140
+a process like that.
+
+1070
+00:33:45,140 --> 00:33:46,680
+That is why this is called a trap.
+
+1071
+00:33:46,680 --> 00:33:48,460
+Now, maybe
+
+1072
+00:33:48,460 --> 00:33:48,940
+having reached this point,
+
+1073
+00:33:48,940 --> 00:33:49,720
+you may wonder why
+
+1074
+00:33:49,720 --> 00:33:50,840
+it is called a trap,
+
+1075
+00:33:50,840 --> 00:33:51,640
+and that is exactly where the name comes from.
+
+1076
+00:33:51,640 --> 00:33:55,020
+So this way,
+
+1077
+00:33:55,020 --> 00:33:57,580
+we can go a step further to understand.
+
+1078
+00:33:57,580 --> 00:33:58,980
+That is to say, as we just mentioned,
+
+1079
+00:33:58,980 --> 00:33:59,980
+it can only be from U to M,
+
+1080
+00:33:59,980 --> 00:34:04,710
+so trapping into this M mode
+
+1081
+00:34:04,710 --> 00:34:05,770
+How many possibilities are there?
+
+1082
+00:34:05,770 --> 00:34:07,410
+One is U to M.
+
+1083
+00:34:07,410 --> 00:34:09,390
+It can also be S to M.
+
+1084
+00:34:09,390 --> 00:34:11,610
+And then there's another one, M to M.
+
+1085
+00:34:11,610 --> 00:34:13,730
+That means it was already running in M mode,
+
+1086
+00:34:13,730 --> 00:34:16,230
+and then an interrupt occurs,
+
+1087
+00:34:16,230 --> 00:34:18,350
+so it still enters M mode.
+
+1088
+00:34:18,350 --> 00:34:20,810
+So for this M
+
+1089
+00:34:20,810 --> 00:34:22,230
+MPP,
+
+1090
+00:34:22,230 --> 00:34:23,530
+there are three possibilities.
+
+1091
+00:34:23,530 --> 00:34:25,070
+And since there are three possibilities,
+
+1092
+00:34:25,070 --> 00:34:27,970
+we need at least two bits to represent them,
+
+1093
+00:34:27,970 --> 00:34:28,590
+right?
+
+1094
+00:34:28,590 --> 00:34:31,370
+Because two bits can represent up to four cases.
+
+1095
+00:34:31,370 --> 00:34:33,230
+Since we have three cases to represent,
+
+1096
+00:34:33,230 --> 00:34:35,810
+that's why this field needs two bits.
+
+1097
+00:34:35,810 --> 00:34:38,030
+Why do we use two bits to represent it?
+
+1098
+00:34:38,030 --> 00:34:38,730
+That's exactly the reason.
+
+1099
+00:34:38,730 --> 00:34:40,690
+Now, for S mode,
+
+1100
+00:34:40,690 --> 00:34:43,450
+does anyone know when we would trap into S mode?
+
+1101
+00:34:43,450 --> 00:34:45,810
+So there are only two possibilities.
+
+1102
+00:34:45,810 --> 00:34:48,690
+Either it switched over from U,
+
+1103
+00:34:48,690 --> 00:34:50,510
+or S switched over by itself.
+
+1104
+00:34:50,510 --> 00:34:50,950
+Right?
+
+1105
+00:34:50,950 --> 00:34:52,650
+We say it can't have come from M,
+
+1106
+00:34:52,650 --> 00:34:55,150
+because you can't go from high to low.
+
+1107
+00:34:55,150 --> 00:34:57,870
+So, since there are only two possibilities,
+
+1108
+00:34:57,870 --> 00:35:00,350
+we only need a single bit to represent them here.
+
+1109
+00:35:00,350 --> 00:35:01,830
+0 and 1 can represent them, right?
+
+1110
+00:35:01,830 --> 00:35:04,050
+Because look here, U is 0,
+
+1111
+00:35:04,050 --> 00:35:06,610
+and S is 1.
+
+1112
+00:35:06,610 --> 00:35:09,170
+So for S, there are only
+
+1113
+00:35:09,170 --> 00:35:10,490
+its previous mode,
+
+1114
+00:35:10,490 --> 00:35:13,430
+the type of the previous mode before the switch,
+
+1115
+00:35:13,430 --> 00:35:14,710
+there can only be two.
+
+1116
+00:35:14,710 --> 00:35:15,270
+It's either U,
+
+1117
+00:35:15,270 --> 00:35:16,250
+or it's S, right?
+
+1118
+00:35:16,250 --> 00:35:17,610
+It can't be M.
+
+1119
+00:35:17,610 --> 00:35:19,390
+Now as for U,
+
+1120
+00:35:19,390 --> 00:35:20,470
+since we said
+
+1121
+00:35:20,470 --> 00:35:21,610
+As for its trap,
+
+1122
+00:35:21,610 --> 00:35:24,370
+it can only trap into itself.
+
+1123
+00:35:24,370 --> 00:35:26,330
+So since that's the case,
+
+1124
+00:35:26,330 --> 00:35:27,170
+there's actually no need for us to
+
+1125
+00:35:27,170 --> 00:35:29,730
+use a dedicated bit to represent
+
+1126
+00:35:29,730 --> 00:35:30,430
+its previous one,
+
+1127
+00:35:30,430 --> 00:35:31,950
+because the one before it can only be itself.
+
+1128
+00:35:31,950 --> 00:35:32,610
+Think about it — isn't that right?
+
+1129
+00:35:32,610 --> 00:35:35,070
+So we save where we can.
+
+1130
+00:35:35,070 --> 00:35:39,010
+When designing this register, we have to be frugal,
+
+1131
+00:35:39,010 --> 00:35:41,110
+because every bit is very precious.
+
+1132
+00:35:41,110 --> 00:35:42,310
+So as you can see,
+
+1133
+00:35:42,310 --> 00:35:44,910
+this UPP is not needed,
+
+1134
+00:35:44,910 --> 00:35:45,810
+and that's the reason why.
+
+1135
+00:35:45,810 --> 00:35:46,750
+Moving on to here,
+
+1136
+00:35:46,750 --> 00:35:49,050
+it actually also involves this TRAP —
+
+1137
+00:35:49,050 --> 00:35:50,970
+what kind of process it really is.
+
+1138
+00:35:50,970 --> 00:35:53,370
+In that case,
+
+1139
+00:35:53,370 --> 00:35:54,510
+as we know,
+
+1140
+00:35:54,510 --> 00:35:56,170
+this mstatus register,
+
+1141
+00:35:56,170 --> 00:35:58,170
+It actually contains a lot of information.
+
+1142
+00:35:58,170 --> 00:36:00,190
+It can be used to control whether interrupts are enabled.
+
+1143
+00:36:00,190 --> 00:36:03,110
+It can also indicate some status of the interrupt.
+
+1144
+00:36:03,110 --> 00:36:05,370
+As well as the interrupt status before the interrupt occurred.
+
+1145
+00:36:05,370 --> 00:36:08,070
+As well as, before the interrupt or exception occurred,
+
+1146
+00:36:08,070 --> 00:36:10,550
+the privilege level information.
+
+1147
+00:36:10,550 --> 00:36:13,050
+We will use these later on.
+
+1148
+00:36:13,050 --> 00:36:13,930
+So,
+
+1149
+00:36:13,930 --> 00:36:15,290
+this register is also very important.
+
+1150
+00:36:15,290 --> 00:36:19,190
+This is mstatus.
+
+1151
+00:36:19,190 --> 00:36:23,150
+So, for the design of the registers,
+
+1152
+00:36:23,150 --> 00:36:24,890
+we'll just stop our brief introduction here.
+
+1153
+00:36:24,890 --> 00:36:26,390
+Next,
+
+1154
+00:36:26,390 --> 00:36:29,810
+let's take a look at the trap handling flow.
+
+1155
+00:36:29,810 --> 00:36:31,450
+The trap handling flow.
+
+1156
+00:36:31,450 --> 00:36:37,710
+As for the trap handling flow,
+
+1157
+00:36:37,710 --> 00:36:38,330
+it's actually quite simple.
+
+1158
+00:36:38,330 --> 00:36:39,650
+That is, first of all,
+
+1159
+00:36:39,650 --> 00:36:41,070
+we need to initialize it.
+
+1160
+00:36:41,070 --> 00:36:43,070
+Initialize
+
+1161
+00:36:43,070 --> 00:36:44,770
+The initialization process
+
+1162
+00:36:44,770 --> 00:36:45,570
+actually includes
+
+1163
+00:36:45,570 --> 00:36:48,190
+for example, setting up its entry address
+
+1164
+00:36:48,190 --> 00:36:49,410
+and other related concepts.
+
+1165
+00:36:49,410 --> 00:36:50,730
+Then,
+
+1166
+00:36:50,730 --> 00:36:52,930
+the second stage
+
+1167
+00:36:52,930 --> 00:36:55,650
+is what we call the top half,
+
+1168
+00:36:55,650 --> 00:36:58,510
+the upper part of the trap.
+
+1169
+00:36:58,510 --> 00:37:00,130
+Now, the top half of the trap
+
+1170
+00:37:00,130 --> 00:37:00,910
+is essentially saying that,
+
+1171
+00:37:00,910 --> 00:37:02,910
+the actual process of it happening
+
+1172
+00:37:02,910 --> 00:37:07,010
+takes place inside the hardware.
+
+1173
+00:37:07,010 --> 00:37:09,590
+It is a processing flow inside the hardware.
+
+1174
+00:37:09,590 --> 00:37:11,390
+It is not something we control.
+
+1175
+00:37:11,390 --> 00:37:12,610
+It is a hardware processing flow.
+
+1176
+00:37:12,610 --> 00:37:14,450
+So after this hardware processing flow
+
+1177
+00:37:14,450 --> 00:37:15,470
+is completed,
+
+1178
+00:37:15,470 --> 00:37:18,070
+only then does it jump to our
+
+1179
+00:37:18,070 --> 00:37:20,210
+software part.
+
+1180
+00:37:20,210 --> 00:37:22,710
+This is what we call
+
+1181
+00:37:22,710 --> 00:37:24,370
+The bottom half of this trap,
+
+1182
+00:37:24,370 --> 00:37:26,690
+so the bottom half of this trap,
+
+1183
+00:37:26,690 --> 00:37:27,430
+this part in blue,
+
+1184
+00:37:27,430 --> 00:37:29,130
+you can think of it as a piece of
+
+1185
+00:37:29,130 --> 00:37:30,150
+program logic that we wrote.
+
+1186
+00:37:30,150 --> 00:37:34,030
+Whereas the top half just now,
+
+1187
+00:37:34,030 --> 00:37:35,790
+actually happens inside the hardware CPU,
+
+1188
+00:37:35,790 --> 00:37:37,310
+so it is not under our control.
+
+1189
+00:37:37,310 --> 00:37:39,990
+Then this bottom half part,
+
+1190
+00:37:39,990 --> 00:37:41,050
+that is the logic we execute.
+
+1191
+00:37:41,050 --> 00:37:42,470
+After that execution is done,
+
+1192
+00:37:42,470 --> 00:37:43,510
+please note that,
+
+1193
+00:37:43,510 --> 00:37:44,750
+there is one last thing, that is,
+
+1194
+00:37:44,750 --> 00:37:45,430
+there must be a return.
+
+1195
+00:37:45,430 --> 00:37:47,330
+Because as we have emphasized many times before,
+
+1196
+00:37:47,330 --> 00:37:49,110
+in the execution process of this TRAP,
+
+1197
+00:37:49,110 --> 00:37:51,910
+it has a return step,
+
+1198
+00:37:51,910 --> 00:37:55,230
+that is, it returns to the original normal control flow.
+
+1199
+00:37:55,230 --> 00:37:58,070
+So its whole processing flow,
+
+1200
+00:37:58,070 --> 00:37:59,870
+we can simply summarize it as
+
+1201
+00:37:59,870 --> 00:38:00,970
+These four major steps
+
+1202
+00:38:00,970 --> 00:38:02,930
+So next, let's take a look
+
+1203
+00:38:02,930 --> 00:38:03,510
+and look in detail
+
+1204
+00:38:03,510 --> 00:38:04,830
+at what happens in the process of these four major steps
+
+1205
+00:38:04,830 --> 00:38:07,810
+what exactly we need to do
+
+1206
+00:38:07,810 --> 00:38:10,550
+or, in other words, what actually happens
+
+1207
+00:38:10,550 --> 00:38:12,110
+Let's start with the first one
+
+1208
+00:38:12,110 --> 00:38:13,770
+which is trap initialization
+
+1209
+00:38:13,770 --> 00:38:15,550
+Now, as for the trap initialization,
+
+1210
+00:38:15,550 --> 00:38:16,710
+it's actually very simple
+
+1211
+00:38:16,710 --> 00:38:18,690
+Combined with what we just covered
+
+1212
+00:38:18,690 --> 00:38:22,050
+about these registers,
+
+1213
+00:38:22,050 --> 00:38:23,470
+the first step is actually
+
+1214
+00:38:23,470 --> 00:38:25,970
+to set the entry function
+
+1215
+00:38:25,970 --> 00:38:27,350
+which is our
+
+1216
+00:38:27,350 --> 00:38:29,550
+bottom half code,
+
+1217
+00:38:29,550 --> 00:38:30,950
+its starting address
+
+1218
+00:38:30,950 --> 00:38:31,910
+because this address
+
+1219
+00:38:31,910 --> 00:38:33,450
+needs to be told to our CPU,
+
+1220
+00:38:33,450 --> 00:38:35,830
+so that when a trap occurs on this chip,
+
+1221
+00:38:35,830 --> 00:38:37,190
+it will only then jump to this address
+
+1222
+00:38:37,190 --> 00:38:38,530
+to execute the second half of our handler.
+
+1223
+00:38:38,530 --> 00:38:39,850
+Does everyone understand that?
+
+1224
+00:38:39,850 --> 00:38:41,930
+So we need to tell it
+
+1225
+00:38:41,930 --> 00:38:42,510
+this address,
+
+1226
+00:38:42,510 --> 00:38:44,110
+and this address is what we call the base
+
+1227
+00:38:44,110 --> 00:38:44,750
+address.
+
+1228
+00:38:44,750 --> 00:38:45,850
+So this base address,
+
+1229
+00:38:45,850 --> 00:38:46,890
+how do we tell it to the hardware?
+
+1230
+00:38:46,890 --> 00:38:49,750
+We actually need to set
+
+1231
+00:38:49,750 --> 00:38:51,250
+the register I just introduced to you,
+
+1232
+00:38:51,250 --> 00:38:53,770
+the mtvec register.
+
+1233
+00:38:53,770 --> 00:38:55,090
+Now this
+
+1234
+00:38:55,090 --> 00:38:56,990
+is something I extracted from the code.
+
+1235
+00:38:56,990 --> 00:38:58,050
+This is actually a
+
+1236
+00:38:58,050 --> 00:38:59,650
+it's a function,
+
+1237
+00:38:59,650 --> 00:39:00,690
+it's a function.
+
+1238
+00:39:00,690 --> 00:39:02,370
+How exactly it is
+
+1239
+00:39:02,370 --> 00:39:03,610
+operated inside this function,
+
+1240
+00:39:03,610 --> 00:39:04,470
+we'll go look at it ourselves.
+
+1241
+00:39:04,470 --> 00:39:05,570
+I won't go into that again.
+
+1242
+00:39:05,570 --> 00:39:06,950
+That is to say,
+
+1243
+00:39:06,950 --> 00:39:09,190
+what this actually means is
+
+1244
+00:39:09,190 --> 00:39:10,350
+we need to write this,
+
+1245
+00:39:10,350 --> 00:39:14,270
+write the MTVC register,
+
+1246
+00:39:14,270 --> 00:39:17,550
+and set inside this register our
+
+1247
+00:39:17,550 --> 00:39:20,410
+base address of this entry address,
+
+1248
+00:39:20,410 --> 00:39:21,590
+that is, the base address.
+
+1249
+00:39:21,590 --> 00:39:22,710
+Now, here you can see
+
+1250
+00:39:22,710 --> 00:39:23,730
+this entry address,
+
+1251
+00:39:23,730 --> 00:39:25,850
+this function is actually a piece of assembly logic
+
+1252
+00:39:25,850 --> 00:39:28,730
+that we wrote in entry.s, the assembly file.
+
+1253
+00:39:28,730 --> 00:39:30,190
+Now, this assembly logic,
+
+1254
+00:39:30,190 --> 00:39:31,090
+as we mentioned before,
+
+1255
+00:39:31,090 --> 00:39:32,710
+in the syntax of this assembly,
+
+1256
+00:39:32,710 --> 00:39:34,170
+this label is actually this,
+
+1257
+00:39:34,170 --> 00:39:35,570
+it's actually just an address.
+
+1258
+00:39:35,570 --> 00:39:36,130
+Think about it, isn't that right?
+
+1259
+00:39:36,130 --> 00:39:37,570
+This label, in fact, in terms of
+
+1260
+00:39:37,570 --> 00:39:39,150
+the concept of relocatable linking,
+
+1261
+00:39:39,150 --> 00:39:40,050
+It is actually just an address.
+
+1262
+00:39:40,050 --> 00:39:41,130
+So we take this label,
+
+1263
+00:39:41,130 --> 00:39:42,650
+fill the label into this place,
+
+1264
+00:39:42,650 --> 00:39:44,850
+which is essentially putting the address of this function
+
+1265
+00:39:44,850 --> 00:39:47,370
+into this calculator.
+
+1266
+00:39:47,370 --> 00:39:48,670
+That's its initialization.
+
+1267
+00:39:48,670 --> 00:39:49,290
+Very simple.
+
+1268
+00:39:49,290 --> 00:39:53,230
+Now for the second part,
+
+1269
+00:39:53,230 --> 00:39:54,450
+we say it's the top half.
+
+1270
+00:39:54,450 --> 00:39:55,090
+The top half,
+
+1271
+00:39:55,090 --> 00:39:57,910
+this part is actually done by the hardware.
+
+1272
+00:39:57,910 --> 00:40:00,550
+Our software part is not involved here.
+
+1273
+00:40:00,550 --> 00:40:02,870
+But we need to understand what this part is doing,
+
+1274
+00:40:02,870 --> 00:40:05,050
+so that we can better understand
+
+1275
+00:40:05,050 --> 00:40:07,230
+what our bottom half should do.
+
+1276
+00:40:07,230 --> 00:40:09,010
+So let's first take a look
+
+1277
+00:40:09,010 --> 00:40:10,450
+at what this top half does.
+
+1278
+00:40:10,450 --> 00:40:12,030
+So for the top half,
+
+1279
+00:40:12,030 --> 00:40:16,130
+we say the hardware automatically performs the following state transitions,
+
+1280
+00:40:16,130 --> 00:40:17,850
+meaning this is what the CPU does.
+
+1281
+00:40:17,850 --> 00:40:20,130
+So let's look at what it does.
+
+1282
+00:40:20,130 --> 00:40:21,450
+Its first step
+
+1283
+00:40:21,450 --> 00:40:26,790
+is that it copies the MIE value of mstatus into MPIE.
+
+1284
+00:40:26,790 --> 00:40:27,670
+Now, what does that mean?
+
+1285
+00:40:27,670 --> 00:40:31,810
+We mentioned earlier that the concept of MIE is that
+
+1286
+00:40:31,810 --> 00:40:36,210
+when this trap occurs,
+
+1287
+00:40:36,210 --> 00:40:39,690
+the state of our interrupt enable bit
+
+1288
+00:40:39,690 --> 00:40:41,330
+tells us whether interrupts are currently on or off.
+
+1289
+00:40:41,330 --> 00:40:44,410
+It copies that value into here.
+
+1290
+00:40:44,410 --> 00:40:47,630
+Copying it must be because it will be used later.
+
+1291
+00:40:47,630 --> 00:40:48,510
+Let's set that aside for now.
+
+1292
+00:40:48,510 --> 00:40:51,930
+Then it clears its MIE flag.
+
+1293
+00:40:51,930 --> 00:40:52,730
+Now, as you know,
+
+1294
+00:40:52,730 --> 00:40:54,670
+we know that this MIE flag,
+
+1295
+00:40:54,670 --> 00:40:56,790
+if you just write a 0 into it,
+
+1296
+00:40:56,790 --> 00:40:58,930
+that actually means interrupts are disabled.
+
+1297
+00:40:58,930 --> 00:41:00,310
+So this action,
+
+1298
+00:41:00,310 --> 00:41:01,890
+this first action of the CPU,
+
+1299
+00:41:01,890 --> 00:41:02,990
+is actually quite clear.
+
+1300
+00:41:02,990 --> 00:41:03,850
+It is telling us what?
+
+1301
+00:41:03,850 --> 00:41:06,090
+That is to say, when we go and execute
+
+1302
+00:41:06,090 --> 00:41:07,290
+the second half of its work,
+
+1303
+00:41:07,290 --> 00:41:08,670
+our CPU is actually in a state where
+
+1304
+00:41:08,670 --> 00:41:10,670
+interrupts have been disabled.
+
+1305
+00:41:10,670 --> 00:41:12,770
+Because at this point, even if an interrupt occurs,
+
+1306
+00:41:12,770 --> 00:41:15,010
+it won't come and interrupt us.
+
+1307
+00:41:15,010 --> 00:41:17,030
+This concept is very important.
+
+1308
+00:41:17,030 --> 00:41:21,650
+So what this step achieves is that interrupts are disabled.
+
+1309
+00:41:21,650 --> 00:41:23,650
+That's the first action.
+
+1310
+00:41:23,650 --> 00:41:25,670
+Now, what does the CPU do as the second action?
+
+1311
+00:41:25,670 --> 00:41:27,830
+It will set MEPC,
+
+1312
+00:41:27,830 --> 00:41:32,790
+and at the same time, PC will be set to this value here.
+
+1313
+00:41:32,790 --> 00:41:36,390
+Now, this setting of MEPC,
+
+1314
+00:41:36,390 --> 00:41:39,970
+is actually also for use when we return later.
+
+1315
+00:41:39,970 --> 00:41:42,030
+Because we know that this MEPC is essentially
+
+1316
+00:41:42,030 --> 00:41:43,170
+where, when we return,
+
+1317
+00:41:43,170 --> 00:41:44,490
+when we execute mret,
+
+1318
+00:41:44,490 --> 00:41:46,650
+it will read out the corresponding value from here,
+
+1319
+00:41:46,650 --> 00:41:48,230
+and then jump back.
+
+1320
+00:41:48,230 --> 00:41:50,010
+Now, as for the setting,
+
+1321
+00:41:50,010 --> 00:41:51,750
+So, as for the specific setting,
+
+1322
+00:41:51,750 --> 00:41:53,050
+the specific setting,
+
+1323
+00:41:53,050 --> 00:41:54,930
+does it set the PC value
+
+1324
+00:41:54,930 --> 00:41:56,290
+or the value of the next instruction? Well,
+
+1325
+00:41:56,290 --> 00:41:57,610
+it will depend on this:
+
+1326
+00:41:57,610 --> 00:41:59,330
+whether what we currently have is
+
+1327
+00:41:59,330 --> 00:42:02,450
+an exception or an interrupt, and handle them differently.
+
+1328
+00:42:02,450 --> 00:42:03,730
+We've written this out for you as well,
+
+1329
+00:42:03,730 --> 00:42:05,330
+meaning that if it is an exception,
+
+1330
+00:42:05,330 --> 00:42:08,630
+then the MPC points to the instruction that caused the exception,
+
+1331
+00:42:08,630 --> 00:42:10,430
+whereas if it is an interrupt,
+
+1332
+00:42:10,430 --> 00:42:12,250
+it points to the instruction after the interrupt.
+
+1333
+00:42:12,250 --> 00:42:13,750
+What does this mean? Well,
+
+1334
+00:42:13,750 --> 00:42:15,290
+we've drawn the two figures below for you,
+
+1335
+00:42:15,290 --> 00:42:15,990
+so let's work through them.
+
+1336
+00:42:15,990 --> 00:42:19,970
+The meaning expressed by the figure on the left
+
+1337
+00:42:19,970 --> 00:42:21,550
+is that when an exception occurs,
+
+1338
+00:42:21,550 --> 00:42:25,790
+for example, while it is executing this instruction,
+
+1339
+00:42:25,790 --> 00:42:28,130
+this instruction instruction2,
+
+1340
+00:42:28,130 --> 00:42:31,670
+say this instruction is an exception instruction,
+
+1341
+00:42:31,670 --> 00:42:33,290
+You made a mistake when you compiled it
+
+1342
+00:42:33,290 --> 00:42:34,950
+You wrote an exception instruction
+
+1343
+00:42:34,950 --> 00:42:36,610
+An instruction we don't recognize got written in there
+
+1344
+00:42:36,610 --> 00:42:37,670
+But if it's assembled at compile time,
+
+1345
+00:42:37,670 --> 00:42:38,490
+it will definitely tell you
+
+1346
+00:42:38,490 --> 00:42:39,730
+Suppose we hard-code it,
+
+1347
+00:42:39,730 --> 00:42:41,310
+and we just write an exception instruction,
+
+1348
+00:42:41,310 --> 00:42:42,310
+or say we write something that
+
+1349
+00:42:42,310 --> 00:42:44,410
+accesses something it shouldn't access,
+
+1350
+00:42:44,410 --> 00:42:46,130
+all of these are possible,
+
+1351
+00:42:46,130 --> 00:42:47,610
+triggering an exception.
+
+1352
+00:42:47,610 --> 00:42:49,150
+Now, when this instruction is executed,
+
+1353
+00:42:49,150 --> 00:42:50,030
+assume this PC,
+
+1354
+00:42:50,030 --> 00:42:51,770
+the PC is currently pointing here.
+
+1355
+00:42:51,770 --> 00:42:53,730
+So the PC is likely the address of this instruction.
+
+1356
+00:42:53,730 --> 00:42:56,690
+Now, when an exception is triggered,
+
+1357
+00:42:56,690 --> 00:42:59,810
+it will save the value of this PC
+
+1358
+00:42:59,810 --> 00:43:01,410
+into mepc.
+
+1359
+00:43:01,410 --> 00:43:04,750
+And once it's saved there,
+
+1360
+00:43:04,750 --> 00:43:06,170
+as you know, when it triggers an exception,
+
+1361
+00:43:06,170 --> 00:43:07,770
+it goes off to execute an exception handler.
+
+1362
+00:43:07,770 --> 00:43:08,930
+After the exception is handled,
+
+1363
+00:43:08,930 --> 00:43:10,310
+it will come back.
+
+1364
+00:43:10,310 --> 00:43:11,390
+Now, when it comes back,
+
+1365
+00:43:11,390 --> 00:43:12,570
+it actually returns based on this,
+
+1366
+00:43:12,570 --> 00:43:15,150
+based on the MEPC you saved.
+
+1367
+00:43:15,150 --> 00:43:17,490
+So, since when you jumped away,
+
+1368
+00:43:17,490 --> 00:43:20,070
+what you saved was the value of this instruction,
+
+1369
+00:43:20,070 --> 00:43:21,290
+then think about it — when it comes back,
+
+1370
+00:43:21,290 --> 00:43:22,530
+it actually returns to this same instruction,
+
+1371
+00:43:22,530 --> 00:43:24,230
+and starts executing this instruction again.
+
+1372
+00:43:24,230 --> 00:43:26,450
+So that is actually the effect an exception has.
+
+1373
+00:43:26,450 --> 00:43:28,590
+Now, there is definitely a reason for doing it this way.
+
+1374
+00:43:28,590 --> 00:43:30,470
+Because if you think about it,
+
+1375
+00:43:30,470 --> 00:43:31,830
+for example, we...
+
+1376
+00:43:31,830 --> 00:43:35,110
+what is it actually trying to achieve here?
+
+1377
+00:43:35,110 --> 00:43:37,710
+That is to say, right when this exception occurs,
+
+1378
+00:43:37,710 --> 00:43:39,390
+it gives us an opportunity —
+
+1379
+00:43:39,390 --> 00:43:40,150
+from the programmer's,
+
+1380
+00:43:40,150 --> 00:43:41,530
+from the CPU's perspective —
+
+1381
+00:43:41,530 --> 00:43:42,310
+You can actually understand it this way:
+
+1382
+00:43:42,310 --> 00:43:42,610
+that is to say,
+
+1383
+00:43:42,610 --> 00:43:44,750
+when it executes this instruction,
+
+1384
+00:43:44,750 --> 00:43:46,090
+it decides that this instruction
+
+1385
+00:43:46,090 --> 00:43:48,210
+has triggered some abnormal behavior,
+
+1386
+00:43:48,210 --> 00:43:49,410
+and so it goes
+
+1387
+00:43:49,410 --> 00:43:50,970
+and gives us a chance.
+
+1388
+00:43:50,970 --> 00:43:51,590
+This chance
+
+1389
+00:43:51,590 --> 00:43:52,430
+is the programmer's.
+
+1390
+00:43:52,430 --> 00:43:53,870
+When the programmer gets this chance,
+
+1391
+00:43:53,870 --> 00:43:54,490
+they go and write an
+
+1392
+00:43:54,490 --> 00:43:55,770
+exception handler function.
+
+1393
+00:43:55,770 --> 00:43:56,290
+This,
+
+1394
+00:43:56,290 --> 00:43:57,910
+it expects you to, within this
+
+1395
+00:43:57,910 --> 00:43:59,110
+exception handler function,
+
+1396
+00:43:59,110 --> 00:44:00,490
+take this exception,
+
+1397
+00:44:00,490 --> 00:44:01,430
+this problem that was triggered,
+
+1398
+00:44:01,430 --> 00:44:02,210
+and solve it.
+
+1399
+00:44:02,210 --> 00:44:03,490
+After it's solved,
+
+1400
+00:44:03,490 --> 00:44:04,370
+then it comes back,
+
+1401
+00:44:04,370 --> 00:44:05,070
+So it's like saying,
+
+1402
+00:44:05,070 --> 00:44:06,170
+it gives you one more
+
+1403
+00:44:06,170 --> 00:44:08,110
+chance to retry
+
+1404
+00:44:08,110 --> 00:44:09,310
+and execute it once again.
+
+1405
+00:44:09,310 --> 00:44:10,190
+Then it's possible that
+
+1406
+00:44:10,190 --> 00:44:11,450
+when handling this exception,
+
+1407
+00:44:11,450 --> 00:44:12,570
+it will actually fix
+
+1408
+00:44:12,570 --> 00:44:14,510
+the problem that caused
+
+1409
+00:44:14,510 --> 00:44:16,350
+the exception in the first place.
+
+1410
+00:44:16,350 --> 00:44:17,170
+So,
+
+1411
+00:44:17,170 --> 00:44:18,630
+this is what we call an exception.
+
+1412
+00:44:18,630 --> 00:44:20,330
+So an exception,
+
+1413
+00:44:20,330 --> 00:44:21,250
+what it actually interrupts is
+
+1414
+00:44:21,250 --> 00:44:22,670
+the current instruction.
+
+1415
+00:44:22,670 --> 00:44:25,250
+After it's done,
+
+1416
+00:44:25,250 --> 00:44:26,270
+it will come back,
+
+1417
+00:44:26,270 --> 00:44:27,810
+and re-execute the instruction
+
+1418
+00:44:27,810 --> 00:44:28,870
+that triggered the exception.
+
+1419
+00:44:28,870 --> 00:44:31,670
+If we go a bit deeper,
+
+1420
+00:44:31,670 --> 00:44:32,570
+for example, you might
+
+1421
+00:44:32,570 --> 00:44:33,430
+If you've also learned about
+
+1422
+00:44:33,430 --> 00:44:34,890
+for example, a page fault exception,
+
+1423
+00:44:34,890 --> 00:44:37,610
+which gets triggered all the time in Linux
+
+1424
+00:44:37,610 --> 00:44:39,230
+this page fault exception,
+
+1425
+00:44:39,230 --> 00:44:40,450
+actually, think about it,
+
+1426
+00:44:40,450 --> 00:44:41,170
+a page fault means
+
+1427
+00:44:41,170 --> 00:44:43,190
+you find that the current instruction
+
+1428
+00:44:43,190 --> 00:44:44,470
+is not in your memory,
+
+1429
+00:44:44,470 --> 00:44:45,210
+then it might
+
+1430
+00:44:45,210 --> 00:44:46,090
+this is the exception being triggered,
+
+1431
+00:44:46,090 --> 00:44:47,670
+and it will make you do what? Go
+
+1432
+00:44:47,670 --> 00:44:48,210
+fetch the page,
+
+1433
+00:44:48,210 --> 00:44:49,010
+swap the page in.
+
+1434
+00:44:49,010 --> 00:44:49,870
+After the page has been swapped in,
+
+1435
+00:44:49,870 --> 00:44:51,230
+this instruction is simply re
+
+1436
+00:44:51,230 --> 00:44:53,010
+if it gets re-executed,
+
+1437
+00:44:53,010 --> 00:44:54,530
+doesn't that solve the problem?
+
+1438
+00:44:54,530 --> 00:44:55,170
+Think about it, isn't that the case?
+
+1439
+00:44:55,170 --> 00:44:56,670
+So this kind of thing is an exception.
+
+1440
+00:44:56,670 --> 00:44:58,310
+An interrupt, on the other hand,
+
+1441
+00:44:58,310 --> 00:44:59,710
+That is not the idea here.
+
+1442
+00:44:59,710 --> 00:45:00,790
+Because with an interrupt,
+
+1443
+00:45:00,790 --> 00:45:02,010
+the actual intent is,
+
+1444
+00:45:02,010 --> 00:45:03,630
+what it wants to achieve is this kind of effect:
+
+1445
+00:45:03,630 --> 00:45:03,970
+that is,
+
+1446
+00:45:03,970 --> 00:45:06,030
+say it is executing this instruction,
+
+1447
+00:45:06,030 --> 00:45:08,350
+and an interrupt is triggered.
+
+1448
+00:45:08,350 --> 00:45:09,830
+Now, an interrupt,
+
+1449
+00:45:09,830 --> 00:45:12,650
+in fact, is generated by an external peripheral.
+
+1450
+00:45:12,650 --> 00:45:15,530
+So it has to go and run a piece of logic for that peripheral,
+
+1451
+00:45:15,530 --> 00:45:19,010
+maybe to read a piece of data from an external device,
+
+1452
+00:45:19,010 --> 00:45:20,110
+or something like that.
+
+1453
+00:45:20,110 --> 00:45:20,310
+So,
+
+1454
+00:45:20,310 --> 00:45:24,370
+when it is handling the interrupt,
+
+1455
+00:45:24,370 --> 00:45:26,510
+and it saves this MEPC,
+
+1456
+00:45:26,510 --> 00:45:29,710
+what it actually saves is the address of the next instruction.
+
+1457
+00:45:29,710 --> 00:45:31,450
+So this way,
+
+1458
+00:45:31,450 --> 00:45:32,610
+after it finishes this one,
+
+1459
+00:45:32,610 --> 00:45:35,070
+of course it will finish executing this instruction first,
+
+1460
+00:45:35,070 --> 00:45:36,190
+and after it finishes,
+
+1461
+00:45:36,190 --> 00:45:38,110
+It goes off to execute an interrupt handler
+
+1462
+00:45:38,110 --> 00:45:40,250
+and once that's done, once the handling is finished,
+
+1463
+00:45:40,250 --> 00:45:41,710
+it comes back.
+
+1464
+00:45:41,710 --> 00:45:42,390
+And when it comes back,
+
+1465
+00:45:42,390 --> 00:45:43,810
+it actually returns to the next instruction.
+
+1466
+00:45:43,810 --> 00:45:44,650
+So in this way,
+
+1467
+00:45:44,650 --> 00:45:46,490
+the effect it achieves is that,
+
+1468
+00:45:46,490 --> 00:45:49,150
+from the point of view of our normal execution flow,
+
+1469
+00:45:49,150 --> 00:45:50,170
+it's basically as if
+
+1470
+00:45:50,170 --> 00:45:52,250
+nothing ever happened in between.
+
+1471
+00:45:52,250 --> 00:45:53,630
+Because it's actually an interrupt,
+
+1472
+00:45:53,630 --> 00:45:54,470
+not an exception.
+
+1473
+00:45:54,470 --> 00:45:55,730
+Does everyone get this?
+
+1474
+00:45:55,730 --> 00:45:56,730
+So this interrupt
+
+1475
+00:45:56,730 --> 00:45:57,590
+actually went and did something else,
+
+1476
+00:45:57,590 --> 00:45:59,110
+but while it was doing that,
+
+1477
+00:45:59,110 --> 00:46:00,350
+it didn't want us —
+
+1478
+00:46:00,350 --> 00:46:02,810
+from the programmer's point of view,
+
+1479
+00:46:02,810 --> 00:46:03,690
+that is, you should feel
+
+1480
+00:46:03,690 --> 00:46:04,290
+like this whole thing
+
+1481
+00:46:04,290 --> 00:46:05,950
+as if nothing ever happened
+
+1482
+00:46:05,950 --> 00:46:07,370
+So it actually
+
+1483
+00:46:07,370 --> 00:46:08,910
+when it comes back, it executes
+
+1484
+00:46:08,910 --> 00:46:10,930
+directly executes the next instruction
+
+1485
+00:46:10,930 --> 00:46:11,650
+at this point
+
+1486
+00:46:11,650 --> 00:46:14,630
+So this setup of MEPC
+
+1487
+00:46:14,630 --> 00:46:16,750
+could be a different value
+
+1488
+00:46:16,750 --> 00:46:19,970
+Later, when we talk about interrupts,
+
+1489
+00:46:19,970 --> 00:46:20,890
+I'll explain to you again
+
+1490
+00:46:20,890 --> 00:46:21,610
+this related concept
+
+1491
+00:46:21,610 --> 00:46:23,450
+just mentioning this to you here
+
+1492
+00:46:23,450 --> 00:46:26,190
+So this automatic step
+
+1493
+00:46:26,190 --> 00:46:27,690
+the second step is setting MEPC,
+
+1494
+00:46:27,690 --> 00:46:30,010
+and at the same time, PC is set to this
+
+1495
+00:46:30,010 --> 00:46:30,770
+Now, knowing this,
+
+1496
+00:46:30,770 --> 00:46:32,910
+once you know that PC is set to this,
+
+1497
+00:46:32,910 --> 00:46:35,590
+it actually achieves this jump
+
+1498
+00:46:35,590 --> 00:46:36,990
+it actually performs the jump
+
+1499
+00:46:36,990 --> 00:46:41,240
+jumping to the exception handler to execute
+
+1500
+00:46:41,240 --> 00:46:44,750
+And then this
+
+1501
+00:46:44,750 --> 00:46:50,100
+The next step,
+
+1502
+00:46:50,100 --> 00:46:52,340
+it sets mcause according to the type of this trap.
+
+1503
+00:46:52,340 --> 00:46:53,380
+There's nothing much to say about this.
+
+1504
+00:46:53,380 --> 00:46:55,080
+It just tells us this:
+
+1505
+00:46:55,080 --> 00:46:57,900
+the specific exception or interrupt that occurred,
+
+1506
+00:46:57,900 --> 00:46:59,020
+exactly what kind of exception it is,
+
+1507
+00:46:59,020 --> 00:47:00,320
+or what kind of interrupt it is.
+
+1508
+00:47:00,320 --> 00:47:03,340
+Then later, when we go to the bottom half,
+
+1509
+00:47:03,340 --> 00:47:05,820
+we'll know how to handle it.
+
+1510
+00:47:05,820 --> 00:47:07,680
+And the last one,
+
+1511
+00:47:07,680 --> 00:47:09,480
+it saves the privilege mode from before the trap occurred
+
+1512
+00:47:09,480 --> 00:47:11,820
+in its MPP field.
+
+1513
+00:47:11,820 --> 00:47:15,500
+This is also used for restoring it later.
+
+1514
+00:47:15,500 --> 00:47:16,720
+Then,
+
+1515
+00:47:16,720 --> 00:47:21,760
+it changes the privilege mode to Machine mode.
+
+1516
+00:47:21,760 --> 00:47:23,680
+What this actually means is that
+
+1517
+00:47:23,680 --> 00:47:28,280
+no matter which privilege level a trap is triggered at,
+
+1518
+00:47:28,280 --> 00:47:32,500
+the hart first switches to M-mode to handle it.
+
+1519
+00:47:32,500 --> 00:47:33,680
+Now, some of you might say,
+
+1520
+00:47:33,680 --> 00:47:35,300
+doesn't it sometimes also enter
+
+1521
+00:47:35,300 --> 00:47:37,180
+What about supervisor mode? This one,
+
+1522
+00:47:37,180 --> 00:47:37,760
+as you can see,
+
+1523
+00:47:37,760 --> 00:47:38,640
+it is actually implemented through
+
+1524
+00:47:38,640 --> 00:47:40,820
+a so-called delegation mechanism.
+
+1525
+00:47:40,820 --> 00:47:41,320
+This is
+
+1526
+00:47:41,320 --> 00:47:43,060
+not something we use in our course,
+
+1527
+00:47:43,060 --> 00:47:44,060
+so I will just mention it briefly here.
+
+1528
+00:47:44,060 --> 00:47:45,960
+But at the very least, we need to know
+
+1529
+00:47:45,960 --> 00:47:46,920
+that no matter what mode you are in
+
+1530
+00:47:46,920 --> 00:47:49,460
+at the moment,
+
+1531
+00:47:49,460 --> 00:47:51,300
+once a trap occurs,
+
+1532
+00:47:51,300 --> 00:47:54,000
+it will first definitely enter machine mode.
+
+1533
+00:47:54,000 --> 00:47:55,780
+It enters machine mode first.
+
+1534
+00:47:55,780 --> 00:47:56,920
+You all need to keep this in mind.
+
+1535
+00:47:56,920 --> 00:47:58,820
+Alright.
+
+1536
+00:47:58,820 --> 00:48:00,980
+This is what we call the
+
+1537
+00:48:00,980 --> 00:48:03,800
+first part of the trap handling process.
+
+1538
+00:48:03,800 --> 00:48:05,800
+As for this part of the process,
+
+1539
+00:48:05,800 --> 00:48:09,120
+it is all done automatically by the hardware.
+
+1540
+00:48:09,120 --> 00:48:11,520
+Then, once the final
+
+1541
+00:48:11,520 --> 00:48:13,720
+So what's the final, final result?
+
+1542
+00:48:13,720 --> 00:48:14,920
+Well, it will jump
+
+1543
+00:48:14,920 --> 00:48:17,460
+— it starts jumping to our
+
+1544
+00:48:17,460 --> 00:48:19,960
+trap entry function,
+
+1545
+00:48:19,960 --> 00:48:21,320
+to execute our program.
+
+1546
+00:48:21,320 --> 00:48:24,420
+So then we enter this second half.
+
+1547
+00:48:24,420 --> 00:48:25,620
+The second half, as we said,
+
+1548
+00:48:25,620 --> 00:48:27,080
+is about executing a piece of our program.
+
+1549
+00:48:27,080 --> 00:48:28,160
+Next,
+
+1550
+00:48:28,160 --> 00:48:29,020
+let's take a look at
+
+1551
+00:48:29,020 --> 00:48:31,120
+the third part of trap,
+
+1552
+00:48:31,120 --> 00:48:32,400
+which is the bottom half.
+
+1553
+00:48:32,400 --> 00:48:33,140
+The bottom half,
+
+1554
+00:48:33,140 --> 00:48:33,720
+as the name implies,
+
+1555
+00:48:33,720 --> 00:48:34,580
+means that this part
+
+1556
+00:48:34,580 --> 00:48:35,660
+needs to be written
+
+1557
+00:48:35,660 --> 00:48:37,840
+by us software programmers,
+
+1558
+00:48:37,840 --> 00:48:38,720
+a trap handler function
+
+1559
+00:48:38,720 --> 00:48:40,780
+that we write ourselves.
+
+1560
+00:48:40,780 --> 00:48:42,800
+So today,
+
+1561
+00:48:42,800 --> 00:48:43,660
+We're mainly talking about exceptions,
+
+1562
+00:48:43,660 --> 00:48:44,180
+so we
+
+1563
+00:48:44,180 --> 00:48:44,980
+actually have a piece of
+
+1564
+00:48:44,980 --> 00:48:45,940
+exception handler code.
+
+1565
+00:48:45,940 --> 00:48:47,040
+Now,
+
+1566
+00:48:47,040 --> 00:48:48,900
+we say that whether it's an interrupt
+
+1567
+00:48:48,900 --> 00:48:50,200
+or an exception,
+
+1568
+00:48:50,200 --> 00:48:50,900
+as a
+
+1569
+00:48:50,900 --> 00:48:52,500
+unified trap,
+
+1570
+00:48:52,500 --> 00:48:54,060
+what should it actually do?
+
+1571
+00:48:54,060 --> 00:48:54,720
+Well,
+
+1572
+00:48:54,720 --> 00:48:56,560
+we can actually
+
+1573
+00:48:56,560 --> 00:48:57,300
+take the entire process
+
+1574
+00:48:57,300 --> 00:48:58,020
+and summarize it
+
+1575
+00:48:58,020 --> 00:48:59,400
+roughly into the following five steps.
+
+1576
+00:48:59,400 --> 00:49:01,140
+So the first step,
+
+1577
+00:49:01,140 --> 00:49:03,440
+we say, is to save
+
+1578
+00:49:03,440 --> 00:49:05,820
+the control flow
+
+1579
+00:49:05,820 --> 00:49:07,340
+context information.
+
+1580
+00:49:07,340 --> 00:49:10,700
+Now this concept of context
+
+1581
+00:49:10,700 --> 00:49:12,240
+In the last class, when we were talking about
+
+1582
+00:49:12,240 --> 00:49:13,760
+context switching,
+
+1583
+00:49:13,760 --> 00:49:14,860
+we already covered this, right?
+
+1584
+00:49:14,860 --> 00:49:15,540
+That context,
+
+1585
+00:49:15,540 --> 00:49:16,100
+in fact, is just
+
+1586
+00:49:16,100 --> 00:49:19,280
+when this exception occurs,
+
+1587
+00:49:19,280 --> 00:49:21,640
+on its processor,
+
+1588
+00:49:21,640 --> 00:49:22,620
+what's in the hardware --
+
+1589
+00:49:22,620 --> 00:49:23,920
+you can think of it as
+
+1590
+00:49:23,920 --> 00:49:25,800
+the values of those general-purpose registers.
+
+1591
+00:49:25,800 --> 00:49:27,480
+So in fact,
+
+1592
+00:49:27,480 --> 00:49:30,940
+x0, we don't need to save,
+
+1593
+00:49:30,940 --> 00:49:31,220
+right?
+
+1594
+00:49:31,220 --> 00:49:33,540
+So x1 through x31 --
+
+1595
+00:49:33,540 --> 00:49:35,180
+the values of these registers,
+
+1596
+00:49:35,180 --> 00:49:36,200
+we save them.
+
+1597
+00:49:36,200 --> 00:49:37,600
+That's what we call saving
+
+1598
+00:49:37,600 --> 00:49:38,700
+the context information.
+
+1599
+00:49:38,700 --> 00:49:42,140
+As for mscratch,
+
+1600
+00:49:42,140 --> 00:49:42,940
+we also mentioned it earlier.
+
+1601
+00:49:42,940 --> 00:49:43,940
+That is to say, we use this
+
+1602
+00:49:43,940 --> 00:49:45,320
+this register,
+
+1603
+00:49:45,320 --> 00:49:46,000
+we actually use it
+
+1604
+00:49:46,000 --> 00:49:48,140
+to save this.
+
+1605
+00:49:48,140 --> 00:49:49,180
+This is actually also
+
+1606
+00:49:49,180 --> 00:49:50,980
+in mode mode, this
+
+1607
+00:49:50,980 --> 00:49:52,280
+Trap-related register.
+
+1608
+00:49:52,280 --> 00:49:53,260
+We use this register
+
+1609
+00:49:53,260 --> 00:49:54,280
+to save this,
+
+1610
+00:49:54,280 --> 00:49:55,600
+the current
+
+1611
+00:49:55,600 --> 00:49:59,520
+memory pointing to the current context,
+
+1612
+00:49:59,520 --> 00:50:03,940
+so we use it to save its information.
+
+1613
+00:50:03,940 --> 00:50:05,340
+And correspondingly, on our side here,
+
+1614
+00:50:05,340 --> 00:50:07,220
+correspondingly, our
+
+1615
+00:50:07,220 --> 00:50:09,660
+right side is actually some sample code.
+
+1616
+00:50:09,660 --> 00:50:11,260
+You can take a look at this code yourselves.
+
+1617
+00:50:11,260 --> 00:50:13,280
+And actually it's reflected right here,
+
+1618
+00:50:13,280 --> 00:50:15,380
+it's this piece of logic.
+
+1619
+00:50:15,380 --> 00:50:17,840
+Now, this piece of logic,
+
+1620
+00:50:17,840 --> 00:50:21,700
+what we actually do at its core is call a
+
+1621
+00:50:21,700 --> 00:50:24,140
+REG underline Save
+
+1622
+00:50:24,140 --> 00:50:28,020
+This is a macro for register save
+
+1623
+00:50:28,020 --> 00:50:31,200
+This macro is defined in the assembly like this
+
+1624
+00:50:31,200 --> 00:50:32,020
+Now, this macro we're writing here
+
+1625
+00:50:32,020 --> 00:50:33,340
+we introduced to you earlier
+
+1626
+00:50:33,340 --> 00:50:35,100
+Now, this is actually a parameter
+
+1627
+00:50:35,100 --> 00:50:36,760
+In other words, the macro takes a parameter
+
+1628
+00:50:36,760 --> 00:50:38,640
+You can understand this parameter as
+
+1629
+00:50:38,640 --> 00:50:41,240
+it is actually the value
+
+1630
+00:50:41,240 --> 00:50:42,440
+swapped out of mscratch
+
+1631
+00:50:42,440 --> 00:50:43,260
+So what it actually is
+
+1632
+00:50:43,260 --> 00:50:45,820
+is a pointer to the base address of a piece of memory
+
+1633
+00:50:45,820 --> 00:50:47,120
+the base address of the memory
+
+1634
+00:50:47,120 --> 00:50:48,420
+and inside this piece of memory
+
+1635
+00:50:48,420 --> 00:50:49,860
+is where the context is stored
+
+1636
+00:50:49,860 --> 00:50:51,140
+Now, within the context
+
+1637
+00:50:51,140 --> 00:50:53,160
+starting from x1
+
+1638
+00:50:53,160 --> 00:50:54,920
+all the way to x31
+
+1639
+00:50:54,920 --> 00:50:56,200
+these registers
+
+1640
+00:50:56,200 --> 00:50:57,480
+are placed in this context
+
+1641
+00:50:57,480 --> 00:50:59,040
+So we just take from the CPU
+
+1642
+00:50:59,040 --> 00:51:00,180
+these data
+
+1643
+00:51:00,180 --> 00:51:02,080
+and by saving,
+
+1644
+00:51:02,080 --> 00:51:04,180
+what we mean is taking the values on the CPU,
+
+1645
+00:51:04,180 --> 00:51:05,260
+the values in the CPU registers,
+
+1646
+00:51:05,260 --> 00:51:06,960
+and saving them into here
+
+1647
+00:51:06,960 --> 00:51:09,980
+so that's the save
+
+1648
+00:51:09,980 --> 00:51:11,020
+And naturally, corresponding to the save,
+
+1649
+00:51:11,020 --> 00:51:12,400
+what that means is that
+
+1650
+00:51:12,400 --> 00:51:13,540
+once the processing is done,
+
+1651
+00:51:13,540 --> 00:51:14,460
+there has to be a restore, right?
+
+1652
+00:51:14,460 --> 00:51:15,640
+So let me mention this in advance,
+
+1653
+00:51:15,640 --> 00:51:16,680
+the restore
+
+1654
+00:51:16,680 --> 00:51:17,640
+is done right here,
+
+1655
+00:51:17,640 --> 00:51:19,060
+also using a corresponding macro
+
+1656
+00:51:19,060 --> 00:51:20,060
+to carry it out
+
+1657
+00:51:20,060 --> 00:51:20,760
+That is the restore
+
+1658
+00:51:20,760 --> 00:51:25,820
+Now, between these two,
+
+1659
+00:51:25,820 --> 00:51:26,580
+what we say is
+
+1660
+00:51:26,580 --> 00:51:29,900
+the main core here is that
+
+1661
+00:51:29,900 --> 00:51:32,120
+It's going to call our handler function.
+
+1662
+00:51:32,120 --> 00:51:33,640
+Now, because the handler
+
+1663
+00:51:33,640 --> 00:51:35,880
+is generally already fairly complex,
+
+1664
+00:51:35,880 --> 00:51:36,460
+this part
+
+1665
+00:51:36,460 --> 00:51:38,160
+is usually written in the C language.
+
+1666
+00:51:38,160 --> 00:51:41,180
+So we actually call a C-language function to implement it.
+
+1667
+00:51:41,180 --> 00:51:43,580
+Now, this calling process
+
+1668
+00:51:43,580 --> 00:51:45,160
+is actually what we covered earlier when we talked about assembly,
+
+1669
+00:51:45,160 --> 00:51:46,160
+which I introduced to you back then.
+
+1670
+00:51:46,160 --> 00:51:49,520
+That is, how to call a C-language function from assembly,
+
+1671
+00:51:49,520 --> 00:51:49,840
+right?
+
+1672
+00:51:49,840 --> 00:51:51,100
+Now, a0, a1,
+
+1673
+00:51:51,100 --> 00:51:52,960
+you still remember these, right?
+
+1674
+00:51:52,960 --> 00:51:53,600
+They must be what?
+
+1675
+00:51:53,600 --> 00:51:54,620
+What are they used for?
+
+1676
+00:51:54,620 --> 00:51:56,120
+They're actually for passing parameters.
+
+1677
+00:51:56,120 --> 00:51:57,480
+This trap handler,
+
+1678
+00:51:57,480 --> 00:51:58,940
+we'll see in a moment,
+
+1679
+00:51:58,940 --> 00:52:00,140
+actually takes two parameters.
+
+1680
+00:52:00,140 --> 00:52:02,020
+One is used for
+
+1681
+00:52:02,020 --> 00:52:03,660
+We actually just take
+
+1682
+00:52:03,660 --> 00:52:05,240
+the values of mepc and mcause,
+
+1683
+00:52:05,240 --> 00:52:06,240
+and pass them in.
+
+1684
+00:52:06,240 --> 00:52:08,460
+Now, as for mcause,
+
+1685
+00:52:08,460 --> 00:52:09,400
+we know it is actually used to
+
+1686
+00:52:09,400 --> 00:52:10,820
+hold
+
+1687
+00:52:10,820 --> 00:52:12,340
+the specific type of
+
+1688
+00:52:12,340 --> 00:52:13,580
+the exception
+
+1689
+00:52:13,580 --> 00:52:15,280
+or interrupt.
+
+1690
+00:52:15,280 --> 00:52:17,080
+Once we pass it in,
+
+1691
+00:52:17,080 --> 00:52:18,340
+inside that function there will definitely be
+
+1692
+00:52:18,340 --> 00:52:20,420
+a switch-case.
+
+1693
+00:52:20,420 --> 00:52:25,520
+As for mepc,
+
+1694
+00:52:25,520 --> 00:52:26,340
+when we pass it in,
+
+1695
+00:52:26,340 --> 00:52:27,880
+later on I will show you
+
+1696
+00:52:27,880 --> 00:52:29,020
+that actually inside this function,
+
+1697
+00:52:29,020 --> 00:52:30,420
+we may modify this value.
+
+1698
+00:52:30,420 --> 00:52:33,240
+And the return value of this function,
+
+1699
+00:52:33,240 --> 00:52:34,160
+is actually mepc,
+
+1700
+00:52:34,160 --> 00:52:36,400
+so after it returns,
+
+1701
+00:52:36,400 --> 00:52:38,100
+We will take this return value
+
+1702
+00:52:38,100 --> 00:52:39,520
+We return it through a0.
+
+1703
+00:52:39,520 --> 00:52:41,560
+This is all stuff I've introduced to you before.
+
+1704
+00:52:41,560 --> 00:52:45,520
+These are the function calling conventions of RISC-V,
+
+1705
+00:52:45,520 --> 00:52:46,960
+the function calling convention, right?
+
+1706
+00:52:46,960 --> 00:52:49,240
+If you're not familiar with it,
+
+1707
+00:52:49,240 --> 00:52:50,980
+go back and take another look.
+
+1708
+00:52:50,980 --> 00:52:52,840
+In other words, why do we put it in a0?
+
+1709
+00:52:52,840 --> 00:52:54,100
+Why do we put it in a1?
+
+1710
+00:52:54,100 --> 00:52:56,480
+All of this was covered earlier.
+
+1711
+00:52:56,480 --> 00:52:58,160
+So what's actually going on here is
+
+1712
+00:52:58,160 --> 00:53:01,680
+this part corresponds to calling a trap function
+
+1713
+00:53:01,680 --> 00:53:02,940
+and handling its return value.
+
+1714
+00:53:02,940 --> 00:53:05,260
+Then the final step
+
+1715
+00:53:05,260 --> 00:53:09,580
+is returning by executing the mret instruction.
+
+1716
+00:53:09,580 --> 00:53:12,040
+What exactly mret means,
+
+1717
+00:53:12,040 --> 00:53:13,140
+we'll cover that later.
+
+1718
+00:53:13,140 --> 00:53:14,720
+In short,
+
+1719
+00:53:14,720 --> 00:53:17,640
+our entire trap handler,
+
+1720
+00:53:17,640 --> 00:53:18,640
+no matter how it's written
+
+1721
+00:53:18,640 --> 00:53:19,460
+So the overall framework
+
+1722
+00:53:19,460 --> 00:53:20,520
+is really just these few steps.
+
+1723
+00:53:20,520 --> 00:53:21,600
+The change,
+
+1724
+00:53:21,600 --> 00:53:22,840
+the change is in this
+
+1725
+00:53:22,840 --> 00:53:25,200
+trap handler function.
+
+1726
+00:53:25,200 --> 00:53:26,380
+As for our function,
+
+1727
+00:53:26,380 --> 00:53:27,640
+we'll take a look at it later.
+
+1728
+00:53:27,640 --> 00:53:30,820
+This is the second half,
+
+1729
+00:53:30,820 --> 00:53:31,980
+what our software needs to do.
+
+1730
+00:53:31,980 --> 00:53:33,500
+It's really about writing a
+
+1731
+00:53:33,500 --> 00:53:35,460
+handling function,
+
+1732
+00:53:35,460 --> 00:53:36,340
+this vector,
+
+1733
+00:53:36,340 --> 00:53:37,820
+and then taking this vector,
+
+1734
+00:53:37,820 --> 00:53:39,300
+which is a vector,
+
+1735
+00:53:39,300 --> 00:53:40,040
+and taking this function,
+
+1736
+00:53:40,040 --> 00:53:41,360
+putting it up front,
+
+1737
+00:53:41,360 --> 00:53:42,180
+during initialization,
+
+1738
+00:53:42,180 --> 00:53:43,260
+saving it into
+
+1739
+00:53:43,260 --> 00:53:45,400
+that mtvec
+
+1740
+00:53:45,400 --> 00:53:46,520
+register.
+
+1741
+00:53:46,520 --> 00:53:50,220
+Of course, right now we're using that direct mode,
+
+1742
+00:53:50,220 --> 00:53:51,860
+not the vector mode.
+
+1743
+00:53:51,860 --> 00:53:53,880
+Because ours is relatively simple.
+
+1744
+00:53:53,880 --> 00:54:00,300
+That's the third step.
+
+1745
+00:54:00,300 --> 00:54:01,840
+So the final step is returning.
+
+1746
+00:54:01,840 --> 00:54:03,940
+Returning is actually reflected in the code we just saw,
+
+1747
+00:54:03,940 --> 00:54:06,600
+the call of that mret instruction.
+
+1748
+00:54:06,600 --> 00:54:08,060
+So this instruction,
+
+1749
+00:54:08,060 --> 00:54:09,180
+it's very important for us,
+
+1750
+00:54:09,180 --> 00:54:10,380
+and we should understand it.
+
+1751
+00:54:10,380 --> 00:54:12,260
+That is to say, this instruction,
+
+1752
+00:54:12,260 --> 00:54:16,020
+it belongs to the privileged instructions.
+
+1753
+00:54:16,020 --> 00:54:16,960
+This privileged instruction,
+
+1754
+00:54:16,960 --> 00:54:20,080
+it's specifically used to help us return from this,
+
+1755
+00:54:20,080 --> 00:54:23,060
+this exception,
+
+1756
+00:54:23,060 --> 00:54:25,700
+or rather, return from an interrupt trap.
+
+1757
+00:54:25,700 --> 00:54:27,260
+So this instruction,
+
+1758
+00:54:27,260 --> 00:54:27,860
+there are several kinds.
+
+1759
+00:54:27,860 --> 00:54:29,200
+As we can also see here,
+
+1760
+00:54:29,200 --> 00:54:31,120
+there's mret and sret.
+
+1761
+00:54:31,120 --> 00:54:32,120
+There is 'rewritten'
+
+1762
+00:54:32,120 --> 00:54:33,220
+So what it really means is
+
+1763
+00:54:33,220 --> 00:54:34,480
+it corresponds to
+
+1764
+00:54:34,480 --> 00:54:36,900
+which privilege
+
+1765
+00:54:36,900 --> 00:54:39,000
+mode you are returning from
+
+1766
+00:54:39,000 --> 00:54:41,200
+If you are returning from machine mode,
+
+1767
+00:54:41,200 --> 00:54:41,860
+you use this one.
+
+1768
+00:54:41,860 --> 00:54:44,420
+If you are returning from supervisor mode,
+
+1769
+00:54:44,420 --> 00:54:45,000
+you use this one.
+
+1770
+00:54:45,000 --> 00:54:45,760
+That's what it means.
+
+1771
+00:54:45,760 --> 00:54:46,840
+But in what we are doing here,
+
+1772
+00:54:46,840 --> 00:54:48,560
+all the demos I show you use mret,
+
+1773
+00:54:48,560 --> 00:54:51,620
+so for different privilege levels,
+
+1774
+00:54:51,620 --> 00:54:52,420
+how they exit,
+
+1775
+00:54:52,420 --> 00:54:53,540
+each has its own return instruction.
+
+1776
+00:54:53,540 --> 00:54:54,700
+Please keep that in mind.
+
+1777
+00:54:54,700 --> 00:54:56,480
+Now, if it is,
+
+1778
+00:54:56,480 --> 00:54:57,860
+what we are talking about now is mret,
+
+1779
+00:54:57,860 --> 00:54:59,240
+then when mret executes,
+
+1780
+00:54:59,240 --> 00:55:00,320
+what happens?
+
+1781
+00:55:00,320 --> 00:55:02,280
+This is what we need to focus on understanding.
+
+1782
+00:55:02,280 --> 00:55:05,240
+We simply called an M return.
+
+1783
+00:55:05,240 --> 00:55:07,340
+So what does the CPU do?
+
+1784
+00:55:07,340 --> 00:55:09,040
+It does a few things.
+
+1785
+00:55:09,040 --> 00:55:10,300
+The first thing,
+
+1786
+00:55:10,300 --> 00:55:12,780
+it will take the privilege level that was held,
+
+1787
+00:55:12,780 --> 00:55:14,460
+as you remember,
+
+1788
+00:55:14,460 --> 00:55:17,920
+before we entered the handler function,
+
+1789
+00:55:17,920 --> 00:55:23,620
+the CPU would save its privilege level into this field.
+
+1790
+00:55:23,620 --> 00:55:28,080
+So now, putting it back at this point,
+
+1791
+00:55:28,080 --> 00:55:29,220
+is actually restoring it.
+
+1792
+00:55:29,220 --> 00:55:31,760
+It restores the original mode.
+
+1793
+00:55:31,760 --> 00:55:35,320
+Because whenever an exception or an interrupt occurs,
+
+1794
+00:55:35,320 --> 00:55:38,260
+it always wants that, after exiting the trap,
+
+1795
+00:55:38,260 --> 00:55:40,140
+the original state is restored.
+
+1796
+00:55:40,140 --> 00:55:43,900
+So it also restores the privilege level.
+
+1797
+00:55:43,900 --> 00:55:47,220
+And then, after this value
+
+1798
+00:55:47,220 --> 00:55:48,440
+has been used up,
+
+1799
+00:55:48,440 --> 00:55:50,600
+it will set it to a value,
+
+1800
+00:55:50,600 --> 00:55:52,440
+setting it to user mode.
+
+1801
+00:55:52,440 --> 00:55:54,200
+If user mode is not supported,
+
+1802
+00:55:54,200 --> 00:55:55,060
+it will just fall back
+
+1803
+00:55:55,060 --> 00:55:57,740
+and write it as M-mode, and that's fine.
+
+1804
+00:55:57,740 --> 00:56:00,160
+So that's the first thing.
+
+1805
+00:56:00,160 --> 00:56:01,040
+The second one is,
+
+1806
+00:56:01,040 --> 00:56:03,020
+the first thing is to restore the privilege level.
+
+1807
+00:56:03,020 --> 00:56:04,220
+The second thing,
+
+1808
+00:56:04,220 --> 00:56:06,920
+actually, is to restore the interrupt status.
+
+1809
+00:56:06,920 --> 00:56:10,300
+It saves this in mpp,
+
+1810
+00:56:10,300 --> 00:56:13,180
+and restores this value back into mpp.
+
+1811
+00:56:13,180 --> 00:56:14,640
+Now, as you know,
+
+1812
+00:56:14,640 --> 00:56:16,660
+if from the very beginning,
+
+1813
+00:56:16,660 --> 00:56:17,620
+under normal circumstances,
+
+1814
+00:56:17,620 --> 00:56:19,440
+we generally have interrupts enabled,
+
+1815
+00:56:19,440 --> 00:56:20,740
+and then an interrupt occurs.
+
+1816
+00:56:20,740 --> 00:56:21,680
+Once an interrupt occurs,
+
+1817
+00:56:21,680 --> 00:56:22,580
+as we discussed earlier,
+
+1818
+00:56:22,580 --> 00:56:23,840
+it will disable the interrupts.
+
+1819
+00:56:23,840 --> 00:56:25,540
+So this is what this sentence means:
+
+1820
+00:56:25,540 --> 00:56:26,940
+when it returns,
+
+1821
+00:56:26,940 --> 00:56:27,880
+Actually, it's just
+
+1822
+00:56:27,880 --> 00:56:29,080
+it was originally enabling interrupts
+
+1823
+00:56:29,080 --> 00:56:31,220
+so it's basically saying the interrupt gets enabled again
+
+1824
+00:56:31,220 --> 00:56:33,060
+So this instruction
+
+1825
+00:56:33,060 --> 00:56:34,580
+in most cases achieves
+
+1826
+00:56:34,580 --> 00:56:36,020
+the effect of enabling interrupts
+
+1827
+00:56:36,020 --> 00:56:36,920
+Of course, you have to look at
+
+1828
+00:56:36,920 --> 00:56:38,700
+before entering the interrupt
+
+1829
+00:56:38,700 --> 00:56:40,420
+before entering this trap
+
+1830
+00:56:40,420 --> 00:56:41,860
+the original state of the interrupt
+
+1831
+00:56:41,860 --> 00:56:43,780
+it is restored based on the original value
+
+1832
+00:56:43,780 --> 00:56:45,660
+And after the restore is done
+
+1833
+00:56:45,660 --> 00:56:47,560
+it will also set the MPIE back to 1
+
+1834
+00:56:47,560 --> 00:56:51,820
+If you're interested, you can debug it yourself
+
+1835
+00:56:51,820 --> 00:56:53,740
+and take a look while stepping through
+
+1836
+00:56:53,740 --> 00:56:55,440
+at the values in these registers
+
+1837
+00:56:55,440 --> 00:56:59,100
+and compare them with the spec and what we covered in class
+
+1838
+00:56:59,100 --> 00:57:00,300
+to cross-check
+
+1839
+00:57:00,300 --> 00:57:01,500
+and deepen your understanding of it
+
+1840
+00:57:01,500 --> 00:57:03,760
+This is the second step
+
+1841
+00:57:03,760 --> 00:57:07,600
+So after restoring the privilege level and the interrupt, right,
+
+1842
+00:57:07,600 --> 00:57:08,220
+the last step,
+
+1843
+00:57:08,220 --> 00:57:10,120
+it takes mepc,
+
+1844
+00:57:10,120 --> 00:57:12,560
+which we know was also saved
+
+1845
+00:57:12,560 --> 00:57:13,680
+before entering the interrupt,
+
+1846
+00:57:13,680 --> 00:57:14,020
+right?
+
+1847
+00:57:14,020 --> 00:57:15,880
+So it takes that saved value
+
+1848
+00:57:15,880 --> 00:57:17,500
+and restores it back into the PC.
+
+1849
+00:57:17,500 --> 00:57:19,680
+You can imagine what effect that has, right?
+
+1850
+00:57:19,680 --> 00:57:21,040
+It jumps back.
+
+1851
+00:57:21,040 --> 00:57:24,580
+It returns to the state before the interrupt occurred.
+
+1852
+00:57:24,580 --> 00:57:25,860
+Now for an exception,
+
+1853
+00:57:25,860 --> 00:57:26,540
+as we mentioned earlier,
+
+1854
+00:57:26,540 --> 00:57:30,140
+it returns to the position of the instruction that triggered the exception.
+
+1855
+00:57:30,140 --> 00:57:33,300
+So that instruction which triggered the exception
+
+1856
+00:57:33,300 --> 00:57:34,620
+will be executed again.
+
+1857
+00:57:34,620 --> 00:57:38,080
+That is where exceptions differ from interrupts.
+
+1858
+00:57:38,080 --> 00:57:39,380
+What we're covering today,
+
+1859
+00:57:39,380 --> 00:57:40,860
+mainly starting with exception handling,
+
+1860
+00:57:40,860 --> 00:57:45,480
+this is our trap,
+
+1861
+00:57:45,480 --> 00:57:46,960
+The fourth step of this handling,
+
+1862
+00:57:46,960 --> 00:57:48,620
+the last step, is calling mret.
+
+1863
+00:57:48,620 --> 00:57:49,300
+That is what happens.
+
+1864
+00:57:49,300 --> 00:57:51,240
+So once the whole process is done,
+
+1865
+00:57:51,240 --> 00:57:52,440
+we say that this
+
+1866
+00:57:52,440 --> 00:57:55,420
+entire trap handling process
+
+1867
+00:57:55,420 --> 00:57:56,520
+is actually complete.
+
+1868
+00:57:56,520 --> 00:57:59,440
+So that is the whole process
+
+1869
+00:57:59,440 --> 00:58:00,620
+—it's just this one process.
+
+1870
+00:58:00,620 --> 00:58:02,680
+Take this diagram,
+
+1871
+00:58:02,680 --> 00:58:03,960
+when we go back ourselves
+
+1872
+00:58:03,960 --> 00:58:04,860
+combine it with what we covered in class,
+
+1873
+00:58:04,860 --> 00:58:05,460
+and go through it yourself.
+
+1874
+00:58:05,460 --> 00:58:06,580
+Now next,
+
+1875
+00:58:06,580 --> 00:58:07,540
+we will take
+
+1876
+00:58:07,540 --> 00:58:09,840
+the corresponding code
+
+1877
+00:58:09,840 --> 00:58:10,900
+and walk through it briefly.
+
+1878
+00:58:10,900 --> 00:58:13,000
+As for the related
+
+1879
+00:58:13,000 --> 00:58:14,240
+initialization code,
+
+1880
+00:58:14,240 --> 00:58:15,740
+we have already covered it.
+
+1881
+00:58:15,740 --> 00:58:17,220
+Today we're covering this one.
+
+1882
+00:58:17,220 --> 00:58:19,700
+The fifth one, 05-traps.
+
+1883
+00:58:19,700 --> 00:58:21,080
+It's this example.
+
+1884
+00:58:21,080 --> 00:58:22,020
+This example.
+
+1885
+00:58:22,020 --> 00:58:24,660
+corresponds to what we're covering in today's lecture.
+
+1886
+00:58:24,660 --> 00:58:26,020
+In here, 01, 2, 3, 4,
+
+1887
+00:58:26,020 --> 00:58:27,720
+don't map exactly to our chapters.
+
+1888
+00:58:27,720 --> 00:58:29,680
+This side matches our steps.
+
+1889
+00:58:29,680 --> 00:58:31,040
+As for the chapters,
+
+1890
+00:58:31,040 --> 00:58:31,840
+for today's material,
+
+1891
+00:58:31,840 --> 00:58:32,800
+it should be Chapter 10.
+
+1892
+00:58:32,800 --> 00:58:35,580
+Now, for traps,
+
+1893
+00:58:35,580 --> 00:58:39,940
+we won't go into the initialization part here.
+
+1894
+00:58:39,940 --> 00:58:43,220
+For this code,
+
+1895
+00:58:43,220 --> 00:58:45,160
+the main difference from the previous step,
+
+1896
+00:58:45,160 --> 00:58:46,640
+is that we've introduced a trap.c.
+
+1897
+00:58:46,640 --> 00:58:50,380
+This contains the trap-related logic,
+
+1898
+00:58:50,380 --> 00:58:51,700
+including initialization and so on.
+
+1899
+00:58:51,700 --> 00:58:52,840
+Initialization is very simple.
+
+1900
+00:58:52,840 --> 00:58:56,260
+So the main thing here is the trap handler.
+
+1901
+00:58:56,260 --> 00:58:59,520
+This is the C code inside the trap handler function.
+
+1902
+00:58:59,520 --> 00:59:00,320
+As we know, in the middle,
+
+1903
+00:59:00,320 --> 00:59:01,560
+it will jump to this function to execute.
+
+1904
+00:59:01,560 --> 00:59:02,120
+Let's take a look.
+
+1905
+00:59:02,120 --> 00:59:03,700
+What does it actually do in here?
+
+1906
+00:59:03,700 --> 00:59:05,860
+The example we're giving you now
+
+1907
+00:59:05,860 --> 00:59:06,960
+is very simple.
+
+1908
+00:59:06,960 --> 00:59:08,580
+It actually takes two parameters.
+
+1909
+00:59:08,580 --> 00:59:10,620
+One is the EPC passed in,
+
+1910
+00:59:10,620 --> 00:59:12,160
+and the other is CAUSE, right?
+
+1911
+00:59:12,160 --> 00:59:14,480
+So what this really is,
+
+1912
+00:59:14,480 --> 00:59:15,880
+well, the most core part,
+
+1913
+00:59:15,880 --> 00:59:17,740
+is that it makes a judgment based on this CAUSE.
+
+1914
+00:59:17,740 --> 00:59:19,820
+Now, as we mentioned earlier, this CAUSE,
+
+1915
+00:59:19,820 --> 00:59:20,980
+which is MCAUSE,
+
+1916
+00:59:20,980 --> 00:59:22,240
+with MCAUSE, the highest bit,
+
+1917
+00:59:22,240 --> 00:59:24,760
+if it is 1, it means it came in as a
+
+1918
+00:59:24,760 --> 00:59:26,240
+that is, what happened this time is an interrupt.
+
+1919
+00:59:26,240 --> 00:59:27,800
+If it is 0, it means it's an exception.
+
+1920
+00:59:27,800 --> 00:59:30,800
+So it will take this CAUSE and 0X8000
+
+1921
+00:59:30,800 --> 00:59:32,860
+We do a bitwise operation on this value
+
+1922
+00:59:32,860 --> 00:59:35,620
+So this process actually figures out
+
+1923
+00:59:35,620 --> 00:59:37,480
+If it is true
+
+1924
+00:59:37,480 --> 00:59:40,480
+Then what just came in is actually an interrupt
+
+1925
+00:59:40,480 --> 00:59:41,940
+Otherwise, it is an exception
+
+1926
+00:59:41,940 --> 00:59:42,940
+Otherwise, it is an exception
+
+1927
+00:59:42,940 --> 00:59:44,280
+So I just wrote here
+
+1928
+00:59:44,280 --> 00:59:46,900
+That is, this part of the logic is actually interrupt handling
+
+1929
+00:59:46,900 --> 00:59:48,760
+Now, here
+
+1930
+00:59:48,760 --> 00:59:51,640
+In this lecture, we'll leave it aside for now
+
+1931
+00:59:51,640 --> 00:59:53,940
+We'll focus below on exceptions
+
+1932
+00:59:53,940 --> 00:59:56,140
+So if it is an exception
+
+1933
+00:59:56,140 --> 00:59:59,140
+We call it
+
+1934
+00:59:59,140 --> 01:00:02,600
+Generally, we have a term for it called a synchronous trap
+
+1935
+01:00:02,600 --> 01:00:04,620
+Because we know an exception is actually triggered
+
+1936
+01:00:04,620 --> 01:00:07,780
+when you execute this instruction
+
+1937
+01:00:07,780 --> 01:00:08,100
+Right
+
+1938
+01:00:08,100 --> 01:00:11,460
+An interrupt, on the other hand, can be asynchronous
+
+1939
+01:00:11,460 --> 01:00:13,620
+It can happen at any time
+
+1940
+01:00:13,620 --> 01:00:15,280
+So this exception
+
+1941
+01:00:15,280 --> 01:00:17,440
+We also call it a synchronous trap,
+
+1942
+01:00:17,440 --> 01:00:18,800
+and that is exactly the reason.
+
+1943
+01:00:18,800 --> 01:00:21,220
+Now, for this part,
+
+1944
+01:00:21,220 --> 01:00:22,820
+as we mentioned earlier,
+
+1945
+01:00:22,820 --> 01:00:24,220
+if on this side,
+
+1946
+01:00:24,220 --> 01:00:25,780
+I actually added a panic here.
+
+1947
+01:00:25,780 --> 01:00:26,900
+The panic here,
+
+1948
+01:00:26,900 --> 01:00:27,600
+you can take a look at the code,
+
+1949
+01:00:27,600 --> 01:00:28,560
+is actually an infinite loop.
+
+1950
+01:00:28,560 --> 01:00:31,360
+Let me give you a quick demonstration.
+
+1951
+01:00:31,360 --> 01:00:32,240
+That is to say,
+
+1952
+01:00:32,240 --> 01:00:33,620
+once an exception is triggered,
+
+1953
+01:00:33,620 --> 01:00:35,180
+it will come into this logic.
+
+1954
+01:00:35,180 --> 01:00:37,240
+The reason I added an infinite loop here,
+
+1955
+01:00:37,240 --> 01:00:38,760
+is actually to make sure that
+
+1956
+01:00:38,760 --> 01:00:41,620
+it won't be executed repeatedly,
+
+1957
+01:00:41,620 --> 01:00:42,780
+because as we mentioned earlier,
+
+1958
+01:00:42,780 --> 01:00:44,740
+once an exception occurs and is handled,
+
+1959
+01:00:44,740 --> 01:00:45,620
+when it returns,
+
+1960
+01:00:45,620 --> 01:00:47,980
+it will go back to the very instruction that triggered the exception.
+
+1961
+01:00:47,980 --> 01:00:50,000
+We can first take this panic
+
+1962
+01:00:50,000 --> 01:00:51,760
+that is, remove this infinite loop,
+
+1963
+01:00:51,760 --> 01:00:52,520
+and see what happens.
+
+1964
+01:00:52,520 --> 01:00:54,360
+We'll just get a feel for it.
+
+1965
+01:00:54,360 --> 01:00:55,360
+So this,
+
+1966
+01:00:55,360 --> 01:00:58,720
+this test program,
+
+1967
+01:00:58,720 --> 01:00:59,620
+is this function.
+
+1968
+01:00:59,620 --> 01:01:00,400
+This function,
+
+1969
+01:01:00,400 --> 01:01:01,520
+it's trap_test.
+
+1970
+01:01:01,520 --> 01:01:04,100
+This function is actually in user.c.
+
+1971
+01:01:04,100 --> 01:01:05,000
+It will be removed here.
+
+1972
+01:01:05,000 --> 01:01:07,000
+That is, we're in
+
+1973
+01:01:07,000 --> 01:01:09,220
+this example, since it's based on the previous
+
+1974
+01:01:09,220 --> 01:01:11,500
+cooperative multitasking example, modified from it,
+
+1975
+01:01:11,500 --> 01:01:13,060
+so we're actually inside
+
+1976
+01:01:13,060 --> 01:01:16,120
+the user_task0 task,
+
+1977
+01:01:16,120 --> 01:01:17,340
+after we come in,
+
+1978
+01:01:17,340 --> 01:01:18,440
+as soon as we come in,
+
+1979
+01:01:18,440 --> 01:01:19,040
+we do nothing at all,
+
+1980
+01:01:19,040 --> 01:01:20,720
+and just call trap_test directly.
+
+1981
+01:01:20,720 --> 01:01:23,220
+and then it will trigger this exception of ours
+
+1982
+01:01:23,220 --> 01:01:24,860
+As for triggering an exception,
+
+1983
+01:01:24,860 --> 01:01:26,280
+there are many ways to do it.
+
+1984
+01:01:26,280 --> 01:01:27,300
+One way is,
+
+1985
+01:01:27,300 --> 01:01:28,980
+what is this line doing?
+
+1986
+01:01:28,980 --> 01:01:29,500
+Take a look, everyone.
+
+1987
+01:01:29,500 --> 01:01:31,380
+This line is essentially saying,
+
+1988
+01:01:31,380 --> 01:01:34,380
+I write a value to the address 0x00,
+
+1989
+01:01:34,380 --> 01:01:35,620
+right?
+
+1990
+01:01:35,620 --> 01:01:37,240
+But as you all know,
+
+1991
+01:01:37,240 --> 01:01:38,620
+this address is actually
+
+1992
+01:01:38,620 --> 01:01:41,080
+not within our legitimate memory
+
+1993
+01:01:41,080 --> 01:01:42,620
+map table,
+
+1994
+01:01:42,620 --> 01:01:44,080
+the Memory Map table,
+
+1995
+01:01:44,080 --> 01:01:45,880
+it's actually an illegal address.
+
+1996
+01:01:45,880 --> 01:01:49,440
+In fact, it will trigger an access exception,
+
+1997
+01:01:49,440 --> 01:01:50,900
+an access failure.
+
+1998
+01:01:50,900 --> 01:01:51,960
+So,
+
+1999
+01:01:51,960 --> 01:01:54,800
+once this exception occurs,
+
+2000
+01:01:54,800 --> 01:01:55,780
+as we know, once the program
+
+2001
+01:01:55,780 --> 01:01:56,940
+As soon as this instruction executes
+
+2002
+01:01:56,940 --> 01:01:58,100
+based on our understanding,
+
+2003
+01:01:58,100 --> 01:01:59,260
+this exception should get triggered.
+
+2004
+01:01:59,260 --> 01:02:00,600
+Once it is triggered,
+
+2005
+01:02:00,600 --> 01:02:02,900
+it should go into our trap
+
+2006
+01:02:02,900 --> 01:02:04,660
+handle function.
+
+2007
+01:02:04,660 --> 01:02:05,820
+Inside the trap function,
+
+2008
+01:02:05,820 --> 01:02:07,340
+we will see it go and print
+
+2009
+01:02:07,340 --> 01:02:08,220
+this message,
+
+2010
+01:02:08,220 --> 01:02:10,160
+print it out.
+
+2011
+01:02:10,160 --> 01:02:11,340
+Of course, after we print it out,
+
+2012
+01:02:11,340 --> 01:02:12,340
+since we didn't do anything here,
+
+2013
+01:02:12,340 --> 01:02:13,300
+it will return.
+
+2014
+01:02:13,300 --> 01:02:14,240
+After it returns,
+
+2015
+01:02:14,240 --> 01:02:15,220
+as you know, when it returns,
+
+2016
+01:02:15,220 --> 01:02:16,540
+as we just explained,
+
+2017
+01:02:16,540 --> 01:02:18,540
+it will return to this instruction of ours,
+
+2018
+01:02:18,540 --> 01:02:19,060
+and continue with the instruction.
+
+2019
+01:02:19,060 --> 01:02:19,500
+So,
+
+2020
+01:02:19,500 --> 01:02:21,100
+if we were to...
+
+2021
+01:02:21,100 --> 01:02:23,140
+Without this special handling,
+
+2022
+01:02:23,140 --> 01:02:25,900
+we would see this print statement
+
+2023
+01:02:25,900 --> 01:02:28,100
+being printed over and over again.
+
+2024
+01:02:28,100 --> 01:02:29,900
+If you see this happening,
+
+2025
+01:02:29,900 --> 01:02:31,900
+think it through based on our explanation:
+
+2026
+01:02:31,900 --> 01:02:32,900
+this is an exception.
+
+2027
+01:02:32,900 --> 01:02:35,760
+After the jump returns,
+
+2028
+01:02:35,760 --> 01:02:37,280
+it comes back to this instruction,
+
+2029
+01:02:37,280 --> 01:02:38,400
+and continues to re-execute it.
+
+2030
+01:02:38,400 --> 01:02:40,740
+Let's see if that's really the case.
+
+2031
+01:02:40,740 --> 01:02:52,370
+Let's recompile it.
+
+2032
+01:02:52,370 --> 01:02:57,060
+Let's run it.
+
+2033
+01:02:57,060 --> 01:03:03,310
+It just keeps printing like crazy.
+
+2034
+01:03:03,310 --> 01:03:04,730
+It almost won't stop.
+
+2035
+01:03:04,730 --> 01:03:12,670
+I had to force it to stop.
+
+2036
+01:03:12,670 --> 01:03:13,230
+As you can see,
+
+2037
+01:03:13,230 --> 01:03:15,830
+it just keeps printing this one line over and over again.
+
+2038
+01:03:15,830 --> 01:03:16,110
+Right?
+
+2039
+01:03:16,110 --> 01:03:17,650
+So why does it print this one line?
+
+2040
+01:03:17,650 --> 01:03:18,650
+I just explained it to you.
+
+2041
+01:03:18,650 --> 01:03:19,390
+That's exactly the reason.
+
+2042
+01:03:19,390 --> 01:03:21,230
+Now, of course,
+
+2043
+01:03:21,230 --> 01:03:23,150
+in the code we gave you,
+
+2044
+01:03:23,150 --> 01:03:24,350
+we actually added a panic.
+
+2045
+01:03:24,350 --> 01:03:25,330
+With the panic added,
+
+2046
+01:03:25,330 --> 01:03:27,430
+it's actually an infinite loop inside.
+
+2047
+01:03:27,430 --> 01:03:29,330
+It just stops printing.
+
+2048
+01:03:29,330 --> 01:03:31,930
+So if we restore it to this state,
+
+2049
+01:03:31,930 --> 01:03:37,480
+let's run it again.
+
+2050
+01:03:37,480 --> 01:03:41,660
+You can see it actually stops right here.
+
+2051
+01:03:41,660 --> 01:03:42,500
+And stopping here,
+
+2052
+01:03:42,500 --> 01:03:47,280
+well, it basically prevents the exception from continuing.
+
+2053
+01:03:47,280 --> 01:03:49,740
+Actually, the exception never returns at all.
+
+2054
+01:03:49,740 --> 01:03:52,000
+So through this example,
+
+2055
+01:03:52,000 --> 01:03:53,680
+we got a sense of how exceptions work.
+
+2056
+01:03:53,680 --> 01:03:55,140
+Now, of course, suppose
+
+2057
+01:03:55,140 --> 01:03:57,540
+you still want to come back,
+
+2058
+01:03:57,540 --> 01:03:58,540
+there's actually another way.
+
+2059
+01:03:58,540 --> 01:04:00,140
+That is, you force a change to
+
+2060
+01:04:00,140 --> 01:04:01,600
+the return address yourself.
+
+2061
+01:04:01,600 --> 01:04:03,740
+Because, for example, on your side, didn't we
+
+2062
+01:04:03,740 --> 01:04:06,480
+already pass this return value back
+
+2063
+01:04:06,480 --> 01:04:08,560
+through the sret?
+
+2064
+01:04:08,560 --> 01:04:10,180
+So what we can do here
+
+2065
+01:04:10,180 --> 01:04:12,860
+is forcibly add 4 to this value.
+
+2066
+01:04:12,860 --> 01:04:14,560
+In effect, what that means is it won't jump back to
+
+2067
+01:04:14,560 --> 01:04:15,620
+when it returns,
+
+2068
+01:04:15,620 --> 01:04:17,420
+it won't go back to that original instruction,
+
+2069
+01:04:17,420 --> 01:04:18,640
+but instead to the instruction right after it.
+
+2070
+01:04:18,640 --> 01:04:20,380
+And as for the instruction right after it,
+
+2071
+01:04:20,380 --> 01:04:23,380
+that's essentially equivalent to this being commented out.
+
+2072
+01:04:23,380 --> 01:04:24,520
+So it will actually go and print a
+
+2073
+01:04:24,520 --> 01:04:25,740
+"Yeah I'm written back".
+
+2074
+01:04:25,740 --> 01:04:27,040
+Let's see the effect.
+
+2075
+01:04:27,040 --> 01:04:30,940
+We remove this infinite loop,
+
+2076
+01:04:30,940 --> 01:04:34,280
+and then we forcibly add 4 to the return value.
+
+2077
+01:04:34,280 --> 01:04:35,520
+Adding 4 actually means you know,
+
+2078
+01:04:35,520 --> 01:04:37,860
+because on 32-bit, the way we're compiling it now,
+
+2079
+01:04:37,860 --> 01:04:39,500
+one instruction takes up 4 bytes.
+
+2080
+01:04:39,500 --> 01:04:42,600
+Adding 4 actually jumps to the next instruction.
+
+2081
+01:04:42,600 --> 01:04:44,020
+The next instruction.
+
+2082
+01:04:44,020 --> 01:04:46,780
+Then, as we discussed earlier,
+
+2083
+01:04:46,780 --> 01:04:47,940
+that is, for this Entries,
+
+2084
+01:04:47,940 --> 01:04:52,660
+when it returns,
+
+2085
+01:04:52,660 --> 01:04:54,780
+we know that there is a
+
+2086
+01:04:54,780 --> 01:04:58,280
+it will, based on this,
+
+2087
+01:04:58,280 --> 01:05:01,500
+based on the returned a0,
+
+2088
+01:05:01,500 --> 01:05:04,140
+rewrite the return value to overwrite mepc.
+
+2089
+01:05:04,140 --> 01:05:06,160
+We know that overwriting mepc,
+
+2090
+01:05:06,160 --> 01:05:07,160
+in effect, will cause
+
+2091
+01:05:07,160 --> 01:05:08,420
+that when it does mret,
+
+2092
+01:05:08,420 --> 01:05:10,520
+it returns based on this value.
+
+2093
+01:05:10,520 --> 01:05:12,480
+So once we take its return value,
+
+2094
+01:05:12,480 --> 01:05:13,680
+and add 4 to it,
+
+2095
+01:05:13,680 --> 01:05:15,580
+it will actually jump to the next instruction.
+
+2096
+01:05:15,580 --> 01:05:17,100
+Let's take a look at this,
+
+2097
+01:05:17,100 --> 01:05:19,020
+and see if that's the case.
+
+2098
+01:05:19,020 --> 01:05:33,540
+This is the modified version.
+
+2099
+01:05:33,540 --> 01:05:34,420
+Let's run it.
+
+2100
+01:05:34,420 --> 01:05:38,020
+As you can see,
+
+2101
+01:05:38,020 --> 01:05:42,650
+Now you can see here
+
+2102
+01:05:42,650 --> 01:05:45,030
+the exception did indeed occur
+
+2103
+01:05:45,030 --> 01:05:46,890
+But after this exception happened,
+
+2104
+01:05:46,890 --> 01:05:48,290
+it did not enter an infinite loop.
+
+2105
+01:05:48,290 --> 01:05:50,810
+It does not repeatedly execute this instruction again,
+
+2106
+01:05:50,810 --> 01:05:53,210
+but instead prints out this line:
+
+2107
+01:05:53,210 --> 01:05:55,150
+I'm returned from trap
+
+2108
+01:05:55,150 --> 01:05:57,130
+So at least it can come back,
+
+2109
+01:05:57,130 --> 01:05:58,750
+as I just introduced to you.
+
+2110
+01:05:58,750 --> 01:05:59,130
+That is to say,
+
+2111
+01:05:59,130 --> 01:06:01,650
+it is precisely because of this instruction,
+
+2112
+01:06:01,650 --> 01:06:03,470
+once the exception is triggered,
+
+2113
+01:06:03,470 --> 01:06:04,570
+when it returns,
+
+2114
+01:06:04,570 --> 01:06:05,650
+when it jumps back,
+
+2115
+01:06:05,650 --> 01:06:07,070
+it actually comes back to here,
+
+2116
+01:06:07,070 --> 01:06:07,630
+comes back here,
+
+2117
+01:06:07,630 --> 01:06:08,850
+and so it returns.
+
+2118
+01:06:08,850 --> 01:06:10,530
+Now over here,
+
+2119
+01:06:10,530 --> 01:06:11,050
+what comes next,
+
+2120
+01:06:11,050 --> 01:06:13,010
+is this task:
+
+2121
+01:06:13,010 --> 01:06:14,030
+and it just keeps running.
+
+2122
+01:06:14,030 --> 01:06:14,430
+Of course,
+
+2123
+01:06:14,430 --> 01:06:17,330
+here, because of this trap test,
+
+2124
+01:06:17,330 --> 01:06:20,210
+it should be executed repeatedly here.
+
+2125
+01:06:20,210 --> 01:06:24,050
+The main point is that it will continue executing on this side,
+
+2126
+01:06:24,050 --> 01:06:24,990
+so this exception
+
+2127
+01:06:24,990 --> 01:06:27,130
+will be inside this while loop here,
+
+2128
+01:06:27,130 --> 01:06:28,410
+and will be triggered repeatedly.
+
+2129
+01:06:28,410 --> 01:06:30,450
+But anyway,
+
+2130
+01:06:30,450 --> 01:06:34,270
+let me demonstrate this for everyone here.
+
+2131
+01:06:34,270 --> 01:06:36,850
+That is, we can actually modify
+
+2132
+01:06:36,850 --> 01:06:40,010
+its return value,
+
+2133
+01:06:40,010 --> 01:06:43,670
+so that it doesn't necessarily mean
+
+2134
+01:06:43,670 --> 01:06:44,370
+skipping this,
+
+2135
+01:06:44,370 --> 01:06:47,030
+so that it won't repeatedly execute
+
+2136
+01:06:47,030 --> 01:06:48,290
+the exception handler,
+
+2137
+01:06:48,290 --> 01:06:50,990
+it will not re-execute
+
+2138
+01:06:50,990 --> 01:06:52,630
+the instruction that triggered the exception.
+
+2139
+01:06:52,630 --> 01:06:54,730
+Through this example,
+
+2140
+01:06:54,730 --> 01:06:56,890
+you can go back and take a look at it yourselves.
+
+2141
+01:06:56,890 --> 01:07:00,350
+Now, regarding this trap
+
+2142
+01:07:00,350 --> 01:07:02,470
+and the concept behind it,
+
+2143
+01:07:02,470 --> 01:07:04,070
+as well as what's involved with exceptions,
+
+2144
+01:07:04,070 --> 01:07:07,250
+and this kind of basic handling,
+
+2145
+01:07:07,250 --> 01:07:08,430
+we'll wrap up our introduction here.

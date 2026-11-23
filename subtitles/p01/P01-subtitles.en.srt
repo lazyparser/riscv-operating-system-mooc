@@ -1,0 +1,2755 @@
+1
+00:00:00,000 --> 00:00:13,120
+Good afternoon, everyone. Let me first introduce myself. My name is Zhao Wangcheng, and I am an engineer from the Nanjing Institute of Software Technology at the Institute of Software, Chinese Academy of Sciences.
+
+2
+00:00:14,800 --> 00:00:24,740
+The course we are bringing to you today is called Learning to Develop an Operating System on RISC-V, Step by Step. That is our course.
+
+3
+00:00:24,740 --> 00:00:28,840
+So first, let me give you a brief introduction to this course.
+
+4
+00:00:28,840 --> 00:00:34,140
+It mainly covers a few parts.
+
+5
+00:00:34,140 --> 00:00:39,080
+First, I will talk about the purpose of taking this course.
+
+6
+00:00:39,080 --> 00:00:41,940
+Then, second, the overall syllabus of the course.
+
+7
+00:00:41,940 --> 00:00:45,880
+Then some prerequisites for this course.
+
+8
+00:00:45,880 --> 00:00:47,600
+As well as an introduction to the online learning materials.
+
+9
+00:00:47,600 --> 00:00:49,180
+And some reference materials.
+
+10
+00:00:49,180 --> 00:00:50,220
+So that you can get a general idea.
+
+11
+00:00:50,220 --> 00:00:55,060
+Before talking about the purpose of taking this course,
+
+12
+00:00:55,060 --> 00:00:59,360
+let me first quote our Premier Li Keqiang,
+
+13
+00:00:59,360 --> 00:01:01,020
+who, just recently,
+
+14
+00:01:01,020 --> 00:01:03,300
+at the Fourth Session of the 13th National People's Congress,
+
+15
+00:01:03,300 --> 00:01:05,740
+just said this.
+
+16
+00:01:05,740 --> 00:01:06,020
+Right?
+
+17
+00:01:06,020 --> 00:01:07,500
+You can take a quick look at it.
+
+18
+00:01:07,500 --> 00:01:08,340
+This quote is very short,
+
+19
+00:01:08,340 --> 00:01:10,800
+and it happens to be addressed to us,
+
+20
+00:01:10,800 --> 00:01:12,340
+young students.
+
+21
+00:01:12,340 --> 00:01:13,980
+I think it's quite interesting,
+
+22
+00:01:13,980 --> 00:01:15,540
+and also very meaningful.
+
+23
+00:01:15,540 --> 00:01:17,140
+So, borrowing this quote,
+
+24
+00:01:17,140 --> 00:01:17,860
+I'd like to pass it on to all of you.
+
+25
+00:01:17,860 --> 00:01:19,620
+Among other things,
+
+26
+00:01:19,620 --> 00:01:22,380
+the main point here is that,
+
+27
+00:01:22,380 --> 00:01:24,340
+we need to strengthen what?
+
+28
+00:01:24,340 --> 00:01:27,220
+The learning of foundational knowledge.
+
+29
+00:01:27,220 --> 00:01:28,280
+Right?
+
+30
+00:01:28,280 --> 00:01:33,380
+Building a solid foundation and fostering innovative ability go hand in hand.
+
+31
+00:01:33,380 --> 00:01:34,640
+So, that is to say, everyone,
+
+32
+00:01:34,640 --> 00:01:37,380
+even though we're talking a big game about innovation these days,
+
+33
+00:01:37,380 --> 00:01:38,200
+very loud and strong,
+
+34
+00:01:38,200 --> 00:01:40,800
+if you don't build a solid foundation,
+
+35
+00:01:40,800 --> 00:01:41,600
+then innovation
+
+36
+00:01:41,600 --> 00:01:43,680
+is like a tree without roots.
+
+37
+00:01:43,680 --> 00:01:44,720
+Right?
+
+38
+00:01:44,720 --> 00:01:47,220
+Now, for this course of ours,
+
+39
+00:01:47,220 --> 00:01:48,240
+the overall content
+
+40
+00:01:48,240 --> 00:01:50,100
+is actually more oriented towards, that is to say,
+
+41
+00:01:50,100 --> 00:01:52,680
+to strengthen everyone's grasp of the fundamentals
+
+42
+00:01:52,680 --> 00:01:54,680
+especially for those of us in computer science,
+
+43
+00:01:54,680 --> 00:01:57,640
+these fundamentals mainly relate to programming,
+
+44
+00:01:57,640 --> 00:01:59,540
+this kind of foundational knowledge.
+
+45
+00:01:59,540 --> 00:02:01,580
+So, that brings us to
+
+46
+00:02:01,580 --> 00:02:02,740
+what comes next,
+
+47
+00:02:02,740 --> 00:02:07,320
+which is the specific goal of this course.
+
+48
+00:02:07,320 --> 00:02:09,520
+For this specific course,
+
+49
+00:02:09,520 --> 00:02:10,980
+we have
+
+50
+00:02:10,980 --> 00:02:12,820
+a few areas we'd like to cover,
+
+51
+00:02:12,820 --> 00:02:15,000
+and we hope that through this course
+
+52
+00:02:15,000 --> 00:02:16,000
+you'll be able to master them.
+
+53
+00:02:16,000 --> 00:02:17,820
+The first part is
+
+54
+00:02:17,820 --> 00:02:21,080
+getting to know RISC-V.
+
+55
+00:02:21,080 --> 00:02:22,860
+As for RISC-V,
+
+56
+00:02:22,860 --> 00:02:25,500
+we'll go into it in detail later on.
+
+57
+00:02:25,500 --> 00:02:27,460
+Basically, it's
+
+58
+00:02:27,460 --> 00:02:31,280
+you can think of it as a kind of CPU,
+
+59
+00:02:31,280 --> 00:02:33,180
+a processor instruction set architecture,
+
+60
+00:02:33,180 --> 00:02:36,460
+just like ARM and x86.
+
+61
+00:02:36,460 --> 00:02:38,260
+is a new instruction set architecture
+
+62
+00:02:38,260 --> 00:02:39,420
+Now, this instruction set architecture
+
+63
+00:02:39,420 --> 00:02:42,340
+is currently developing very well
+
+64
+00:02:42,340 --> 00:02:44,940
+and in China we are also promoting it vigorously
+
+65
+00:02:44,940 --> 00:02:48,280
+So we will use this instruction set architecture as the core
+
+66
+00:02:48,280 --> 00:02:49,200
+to introduce to you
+
+67
+00:02:49,200 --> 00:02:51,440
+and together develop such a small operating system
+
+68
+00:02:51,440 --> 00:02:54,440
+First, to understand its related knowledge
+
+69
+00:02:54,440 --> 00:02:59,240
+Second, in the learning process
+
+70
+00:02:59,240 --> 00:03:02,400
+I will take you through some related technical manuals
+
+71
+00:03:02,400 --> 00:03:06,560
+Because RISC-V is actually a standard
+
+72
+00:03:06,560 --> 00:03:08,880
+it has related technical manuals
+
+73
+00:03:08,880 --> 00:03:13,740
+And all of our learning content is developed based on this technical manual
+
+74
+00:03:13,740 --> 00:03:16,060
+And the third thing is
+
+75
+00:03:16,060 --> 00:03:19,100
+because we want to develop an operating system
+
+76
+00:03:19,100 --> 00:03:21,740
+besides basic C
+
+77
+00:03:21,740 --> 00:03:23,700
+we also need to master some
+
+78
+00:03:23,700 --> 00:03:28,500
+related things about the RISC-V instruction set
+
+79
+00:03:28,500 --> 00:03:29,820
+mainly some assembly
+
+80
+00:03:29,820 --> 00:03:32,060
+and I hope everyone can get to know it
+
+81
+00:03:32,060 --> 00:03:33,940
+So the fourth part
+
+82
+00:03:33,940 --> 00:03:36,460
+is because OS development
+
+83
+00:03:36,460 --> 00:03:38,980
+is actually closely tied to embedded development.
+
+84
+00:03:38,980 --> 00:03:40,860
+So some embedded development skills
+
+85
+00:03:40,860 --> 00:03:43,440
+through this course and the hands-on training
+
+86
+00:03:43,440 --> 00:03:45,340
+we'll also be able to strengthen.
+
+87
+00:03:45,340 --> 00:03:47,140
+And then finally,
+
+88
+00:03:47,140 --> 00:03:48,900
+on top of all that,
+
+89
+00:03:48,900 --> 00:03:50,800
+once we've got it all down,
+
+90
+00:03:50,800 --> 00:03:52,300
+we'll take you through
+
+91
+00:03:52,300 --> 00:03:53,880
+step by step,
+
+92
+00:03:53,880 --> 00:03:55,060
+from scratch,
+
+93
+00:03:55,060 --> 00:03:56,220
+and we'll write a simple
+
+94
+00:03:56,220 --> 00:03:57,520
+operating system.
+
+95
+00:03:57,520 --> 00:03:59,080
+That's pretty much it.
+
+96
+00:03:59,080 --> 00:04:02,280
+This is the
+
+97
+00:04:02,280 --> 00:04:03,380
+learning goal of this course,
+
+98
+00:04:03,380 --> 00:04:05,940
+what I hope everyone will be able to take away
+
+99
+00:04:05,940 --> 00:04:07,820
+after finishing this course.
+
+100
+00:04:07,820 --> 00:04:13,590
+So next,
+
+101
+00:04:13,590 --> 00:04:14,330
+Let's take a look
+
+102
+00:04:14,330 --> 00:04:17,190
+at the content of our whole course.
+
+103
+00:04:17,190 --> 00:04:19,170
+In terms of the total time,
+
+104
+00:04:19,170 --> 00:04:21,450
+right now we've scheduled about seven sessions.
+
+105
+00:04:21,450 --> 00:04:24,310
+As for the overall content,
+
+106
+00:04:24,310 --> 00:04:26,970
+we currently have it written up as 16 chapters.
+
+107
+00:04:26,970 --> 00:04:31,290
+Give me a moment to bring up the one on the screen,
+
+108
+00:04:31,290 --> 00:04:51,930
+so there are 16 chapters in total.
+
+109
+00:04:51,930 --> 00:04:53,530
+As you can see here, 16 chapters in all.
+
+110
+00:04:53,530 --> 00:04:54,870
+Now the overall content,
+
+111
+00:04:54,870 --> 00:04:56,410
+we've divided into two major parts.
+
+112
+00:04:56,410 --> 00:04:58,970
+One is the prerequisite knowledge,
+
+113
+00:04:58,970 --> 00:04:59,890
+and the second part
+
+114
+00:04:59,890 --> 00:05:01,750
+is our main topic of study,
+
+115
+00:05:01,750 --> 00:05:02,750
+which is operating system implementation.
+
+116
+00:05:02,750 --> 00:05:04,350
+As for the prerequisite knowledge,
+
+117
+00:05:04,350 --> 00:05:06,050
+actually, from the content above,
+
+118
+00:05:06,050 --> 00:05:07,230
+the names should give you a good idea.
+
+119
+00:05:07,230 --> 00:05:09,830
+That is, before we write an operating system,
+
+120
+00:05:09,830 --> 00:05:12,790
+there's still some material
+
+121
+00:05:12,790 --> 00:05:14,530
+these are things you need to master first
+
+122
+00:05:14,530 --> 00:05:15,430
+Now, this content
+
+123
+00:05:15,430 --> 00:05:18,130
+for example, Chapter 1,
+
+124
+00:05:18,130 --> 00:05:20,290
+A Tour of Computer Systems,
+
+125
+00:05:20,290 --> 00:05:21,110
+is actually something that
+
+126
+00:05:21,110 --> 00:05:23,310
+basically corresponds to the
+
+127
+00:05:23,310 --> 00:05:25,690
+computer organization part of our
+
+128
+00:05:25,690 --> 00:05:28,030
+computer science curriculum
+
+129
+00:05:28,030 --> 00:05:29,090
+I'm not sure
+
+130
+00:05:29,090 --> 00:05:31,250
+if you've taken related courses before
+
+131
+00:05:31,250 --> 00:05:32,670
+Let me get a rough idea.
+
+132
+00:05:32,670 --> 00:05:33,850
+So, for everyone here,
+
+133
+00:05:33,850 --> 00:05:37,110
+you have covered related content before, right?
+
+134
+00:05:37,110 --> 00:05:38,430
+What did the "group-level organization members" study? Let me find out.
+
+135
+00:05:38,430 --> 00:05:39,730
+Let me find out.
+
+136
+00:05:39,730 --> 00:05:43,090
+The students sitting in the front,
+
+137
+00:05:43,090 --> 00:05:45,010
+you're all in the same class, right?
+
+138
+00:05:45,010 --> 00:05:46,990
+You, the earlier group members,
+
+139
+00:05:46,990 --> 00:05:47,670
+what did you study?
+
+140
+00:05:47,670 --> 00:05:49,390
+You probably still remember, right?
+
+141
+00:05:49,390 --> 00:05:58,480
+What architecture did you cover?
+
+142
+00:05:58,480 --> 00:06:02,680
+Which instruction set architecture was it?
+
+143
+00:06:02,680 --> 00:06:03,060
+Do you still remember?
+
+144
+00:06:03,060 --> 00:06:04,460
+x86, ARM, or something else?
+
+145
+00:06:04,460 --> 00:06:06,640
+x86, right?
+
+146
+00:06:06,640 --> 00:06:09,700
+Now on our side,
+
+147
+00:06:09,700 --> 00:06:12,340
+from here on,
+
+148
+00:06:12,340 --> 00:06:14,080
+we'll mainly focus on RISC-V.
+
+149
+00:06:14,080 --> 00:06:15,840
+This is also a new
+
+150
+00:06:15,840 --> 00:06:18,040
+architecture.
+
+151
+00:06:18,040 --> 00:06:19,720
+So we'll go over its
+
+152
+00:06:19,720 --> 00:06:23,140
+ISA — that is, the instruction set
+
+153
+00:06:23,140 --> 00:06:24,540
+architecture —
+
+154
+00:06:24,540 --> 00:06:25,440
+and give you an introduction to it.
+
+155
+00:06:25,440 --> 00:06:28,480
+Chapter 3,
+
+156
+00:06:28,480 --> 00:06:29,840
+actually, is to introduce to you
+
+157
+00:06:29,840 --> 00:06:31,840
+the content on compiling and linking.
+
+158
+00:06:31,840 --> 00:06:34,760
+Chapter 4,
+
+159
+00:06:34,760 --> 00:06:36,340
+mainly, is because as we just said,
+
+160
+00:06:36,340 --> 00:06:38,460
+when you develop an operating system,
+
+161
+00:06:38,460 --> 00:06:39,640
+It involves quite a lot of
+
+162
+00:06:39,640 --> 00:06:40,900
+knowledge about embedded development.
+
+163
+00:06:40,900 --> 00:06:41,380
+So
+
+164
+00:06:41,380 --> 00:06:42,960
+when it comes to embedded development,
+
+165
+00:06:42,960 --> 00:06:44,360
+I'll cover some of that for you too.
+
+166
+00:06:44,360 --> 00:06:45,680
+Now, Chapter 5
+
+167
+00:06:45,680 --> 00:06:46,520
+is also
+
+168
+00:06:46,520 --> 00:06:48,040
+part of the first stage,
+
+169
+00:06:48,040 --> 00:06:49,040
+the foundational knowledge,
+
+170
+00:06:49,040 --> 00:06:50,440
+and it's one of the more important parts,
+
+171
+00:06:50,440 --> 00:06:52,520
+namely RISC-V assembly language.
+
+172
+00:06:52,520 --> 00:06:54,180
+Since you've studied x86 before,
+
+173
+00:06:54,180 --> 00:06:55,940
+you should have
+
+174
+00:06:55,940 --> 00:06:57,120
+grasped x86 assembly, right?
+
+175
+00:06:57,120 --> 00:06:58,680
+It's actually pretty similar.
+
+176
+00:06:58,680 --> 00:06:59,340
+I mean,
+
+177
+00:06:59,340 --> 00:07:01,400
+it's really just a different processor,
+
+178
+00:07:01,400 --> 00:07:03,180
+and so
+
+179
+00:07:03,180 --> 00:07:04,660
+its assembly instructions,
+
+180
+00:07:04,660 --> 00:07:05,180
+we need to master them.
+
+181
+00:07:05,180 --> 00:07:06,760
+Because when you write an operating system,
+
+182
+00:07:06,760 --> 00:07:08,100
+it involves some low-level handling,
+
+183
+00:07:08,100 --> 00:07:10,360
+and that has to be written in assembly.
+
+184
+00:07:10,360 --> 00:07:11,060
+So it's the fastest,
+
+185
+00:07:11,060 --> 00:07:13,320
+and I hope everyone gets familiar with it too.
+
+186
+00:07:13,320 --> 00:07:14,960
+So,
+
+187
+00:07:14,960 --> 00:07:17,720
+chapter 6
+
+188
+00:07:17,720 --> 00:07:19,340
+starting from chapter 6,
+
+189
+00:07:19,340 --> 00:07:21,980
+we'll begin writing our operating system.
+
+190
+00:07:21,980 --> 00:07:23,060
+Before that,
+
+191
+00:07:23,060 --> 00:07:25,600
+you've probably used some operating systems,
+
+192
+00:07:25,600 --> 00:07:25,860
+right?
+
+193
+00:07:25,860 --> 00:07:28,580
+But actually writing an operating system from scratch,
+
+194
+00:07:28,580 --> 00:07:30,500
+you probably haven't really done that yet.
+
+195
+00:07:30,500 --> 00:07:31,400
+So what we'll do
+
+196
+00:07:31,400 --> 00:07:33,920
+is take you step by step,
+
+197
+00:07:33,920 --> 00:07:35,100
+writing one from scratch,
+
+198
+00:07:35,100 --> 00:07:36,920
+a relatively simple operating system.
+
+199
+00:07:36,920 --> 00:07:37,580
+Not very complex.
+
+200
+00:07:37,580 --> 00:07:39,800
+It definitely won't come close to a system like Linux.
+
+201
+00:07:39,800 --> 00:07:41,180
+Now that is still very far away
+
+202
+00:07:41,180 --> 00:07:42,160
+But then,
+
+203
+00:07:42,160 --> 00:07:43,240
+by going through this course,
+
+204
+00:07:43,240 --> 00:07:43,880
+we can also see that
+
+205
+00:07:43,880 --> 00:07:44,720
+writing an operating system is
+
+206
+00:07:44,720 --> 00:07:48,000
+not some unreachable thing,
+
+207
+00:07:48,000 --> 00:07:49,360
+remember back in the day, Linux
+
+208
+00:07:49,360 --> 00:07:52,280
+wasn't it written while he was in college,
+
+209
+00:07:52,280 --> 00:07:52,560
+right?
+
+210
+00:07:52,560 --> 00:07:55,300
+He just used his vacation time at home
+
+211
+00:07:55,300 --> 00:07:58,840
+and put together the very first version of Linux
+
+212
+00:07:58,840 --> 00:07:59,700
+just like that.
+
+213
+00:07:59,700 --> 00:07:59,900
+Right?
+
+214
+00:07:59,900 --> 00:08:03,060
+Now, for this part,
+
+215
+00:08:03,060 --> 00:08:05,540
+the content we've designed,
+
+216
+00:08:05,540 --> 00:08:07,380
+mostly at the beginning,
+
+217
+00:08:07,380 --> 00:08:09,280
+is just a brief introduction,
+
+218
+00:08:09,280 --> 00:08:10,680
+about RBOS and some other things.
+
+219
+00:08:10,680 --> 00:08:13,080
+This RBOS is what I named the operating system
+
+220
+00:08:13,080 --> 00:08:14,300
+that we built for ourselves
+
+221
+00:08:14,300 --> 00:08:15,400
+I gave it a simple name.
+
+222
+00:08:15,400 --> 00:08:16,300
+And the RB?
+
+223
+00:08:16,300 --> 00:08:17,100
+That has something to do with RISC-V
+
+224
+00:08:17,100 --> 00:08:18,320
+well, a little bit.
+
+225
+00:08:18,320 --> 00:08:20,020
+OS, as everyone knows, is just an operating system,
+
+226
+00:08:20,020 --> 00:08:20,580
+right?
+
+227
+00:08:20,580 --> 00:08:22,340
+I picked a code name,
+
+228
+00:08:22,340 --> 00:08:24,200
+so it might feel a bit more familiar and friendly when you say it.
+
+229
+00:08:24,200 --> 00:08:27,300
+Now, the first part, Hello RBOS,
+
+230
+00:08:27,300 --> 00:08:29,240
+basically means we're starting from scratch.
+
+231
+00:08:29,240 --> 00:08:30,760
+So at the very least, we need to get a Hello
+
+232
+00:08:30,760 --> 00:08:31,380
+printed on the screen,
+
+233
+00:08:31,380 --> 00:08:32,400
+right?
+
+234
+00:08:32,400 --> 00:08:33,920
+And then, gradually,
+
+235
+00:08:33,920 --> 00:08:36,020
+in Chapter 8,
+
+236
+00:08:36,020 --> 00:08:37,420
+we'll start talking about some
+
+237
+00:08:37,420 --> 00:08:39,040
+memory management,
+
+238
+00:08:39,040 --> 00:08:43,000
+because, as we know, when a program runs,
+
+239
+00:08:43,000 --> 00:08:44,580
+you absolutely cannot do without memory.
+
+240
+00:08:44,580 --> 00:08:45,520
+So memory management,
+
+241
+00:08:45,520 --> 00:08:47,180
+is a very important part.
+
+242
+00:08:47,180 --> 00:08:49,820
+So, Chapter 9,
+
+243
+00:08:49,820 --> 00:08:51,900
+actually, starting from Chapter 9
+
+244
+00:08:51,900 --> 00:08:54,960
+all the way to Chapter 13,
+
+245
+00:08:54,960 --> 00:08:57,040
+it's really all revolving around one thing,
+
+246
+00:08:57,040 --> 00:08:59,120
+one of the most core
+
+247
+00:08:59,120 --> 00:09:02,220
+components of writing an operating system, which is task scheduling,
+
+248
+00:09:02,220 --> 00:09:03,060
+right?
+
+249
+00:09:03,060 --> 00:09:03,780
+As you all know,
+
+250
+00:09:03,780 --> 00:09:04,900
+this process thing,
+
+251
+00:09:04,900 --> 00:09:05,780
+even though we...
+
+252
+00:09:05,780 --> 00:09:06,920
+what we cover later on,
+
+253
+00:09:06,920 --> 00:09:07,760
+actually we don't get into
+
+254
+00:09:07,760 --> 00:09:09,140
+such complex process concepts,
+
+255
+00:09:09,140 --> 00:09:10,660
+but the concept of task scheduling
+
+256
+00:09:10,660 --> 00:09:12,120
+still has to be implemented.
+
+257
+00:09:12,120 --> 00:09:13,420
+Now, task scheduling,
+
+258
+00:09:13,420 --> 00:09:15,200
+there are many ways to implement it,
+
+259
+00:09:15,200 --> 00:09:16,320
+including cooperative scheduling,
+
+260
+00:09:16,320 --> 00:09:17,260
+preemptive scheduling,
+
+261
+00:09:17,260 --> 00:09:19,460
+We'll give you a
+
+262
+00:09:19,460 --> 00:09:20,320
+detailed introduction to this later on.
+
+263
+00:09:20,320 --> 00:09:22,260
+Now, in the process of implementing
+
+264
+00:09:22,260 --> 00:09:24,400
+this task scheduling,
+
+265
+00:09:24,400 --> 00:09:25,580
+we'll actually run into some
+
+266
+00:09:25,580 --> 00:09:27,120
+things that are very important to us,
+
+267
+00:09:27,120 --> 00:09:29,120
+such as the logic of interrupts and exceptions.
+
+268
+00:09:29,120 --> 00:09:31,660
+If you've studied some of the earlier material,
+
+269
+00:09:31,660 --> 00:09:32,980
+or if you've had some exposure
+
+270
+00:09:32,980 --> 00:09:33,940
+to Linux,
+
+271
+00:09:33,940 --> 00:09:35,740
+you should have heard about
+
+272
+00:09:35,740 --> 00:09:36,800
+interrupts and exceptions,
+
+273
+00:09:36,800 --> 00:09:37,500
+right?
+
+274
+00:09:37,500 --> 00:09:39,480
+As long as you're working on kernel stuff,
+
+275
+00:09:39,480 --> 00:09:40,480
+these things are all very important.
+
+276
+00:09:40,480 --> 00:09:44,040
+And then going further,
+
+277
+00:09:44,040 --> 00:09:45,460
+we'll also bring you
+
+278
+00:09:45,460 --> 00:09:47,560
+that is, after we finish talking about task scheduling,
+
+279
+00:09:47,560 --> 00:09:49,000
+if we have time,
+
+280
+00:09:49,000 --> 00:09:50,180
+we'll also cover some
+
+281
+00:09:50,180 --> 00:09:53,440
+synchronization between tasks,
+
+282
+00:09:53,440 --> 00:09:55,160
+and some software conventions,
+
+283
+00:09:55,160 --> 00:09:56,840
+and some concepts related to system calls.
+
+284
+00:09:56,840 --> 00:09:58,440
+Well, actually,
+
+285
+00:09:58,440 --> 00:10:00,800
+for a course like Operating Systems,
+
+286
+00:10:00,800 --> 00:10:02,860
+its content goes far beyond all this.
+
+287
+00:10:02,860 --> 00:10:04,420
+But our time is limited,
+
+288
+00:10:04,420 --> 00:10:06,740
+because we have a total of
+
+289
+00:10:06,740 --> 00:10:09,560
+26 class hours,
+
+290
+00:10:09,560 --> 00:10:09,840
+right?
+
+291
+00:10:09,840 --> 00:10:12,660
+If we were to take you from absolute zero,
+
+292
+00:10:12,660 --> 00:10:13,680
+and build all of this from scratch,
+
+293
+00:10:13,680 --> 00:10:15,940
+including some of the prerequisite knowledge beforehand,
+
+294
+00:10:15,940 --> 00:10:18,720
+then 26 class hours is definitely nowhere near enough.
+
+295
+00:10:18,720 --> 00:10:21,060
+So we did trim down the content.
+
+296
+00:10:21,060 --> 00:10:21,640
+So,
+
+297
+00:10:21,640 --> 00:10:24,980
+a lot of things were really still left
+
+298
+00:10:24,980 --> 00:10:26,220
+uncovered.
+
+299
+00:10:26,220 --> 00:10:28,260
+You can probably imagine —
+
+300
+00:10:28,260 --> 00:10:30,680
+that is, if you've been exposed to operating systems
+
+301
+00:10:30,680 --> 00:10:32,820
+What other things do you think
+
+302
+00:10:32,860 --> 00:10:33,600
+we haven't covered yet?
+
+303
+00:10:33,600 --> 00:10:35,320
+Feel free to just chat about it.
+
+304
+00:10:35,320 --> 00:10:36,920
+If you find it interesting,
+
+305
+00:10:36,920 --> 00:10:38,720
+we might add some more for you later on.
+
+306
+00:10:38,720 --> 00:10:41,180
+What do you think about the super system?
+
+307
+00:10:41,180 --> 00:10:43,300
+Beyond these super system topics I've listed here,
+
+308
+00:10:43,300 --> 00:10:45,040
+beyond what's related to the super system,
+
+309
+00:10:45,040 --> 00:10:47,500
+don't you think there are still some super system things missing?
+
+310
+00:10:47,500 --> 00:10:48,200
+There definitely are.
+
+311
+00:10:48,200 --> 00:10:49,040
+Right?
+
+312
+00:10:49,040 --> 00:10:51,520
+There are a lot of things in this super system.
+
+313
+00:10:51,520 --> 00:10:54,890
+Can you think of any?
+
+314
+00:10:54,890 --> 00:10:57,650
+For example, the simplest one,
+
+315
+00:10:57,650 --> 00:10:58,290
+say, the file system.
+
+316
+00:10:58,290 --> 00:10:58,570
+Right?
+
+317
+00:10:58,570 --> 00:11:01,590
+You've dealt with file systems, haven't you?
+
+318
+00:11:01,590 --> 00:11:02,310
+All these things,
+
+319
+00:11:02,310 --> 00:11:04,050
+they're actually already quite complex.
+
+320
+00:11:04,050 --> 00:11:07,810
+And since our time is limited, we'll probably wrap up here.
+
+321
+00:11:07,810 --> 00:11:10,070
+But I think if you follow along with me,
+
+322
+00:11:10,070 --> 00:11:12,450
+that is, if you work through this step by step and finish it,
+
+323
+00:11:12,450 --> 00:11:13,510
+then later on,
+
+324
+00:11:13,510 --> 00:11:16,170
+you can actually try a lot of things on your own.
+
+325
+00:11:16,170 --> 00:11:19,930
+Because as we say, the master leads you to the door, but cultivation is up to you, right?
+
+326
+00:11:19,930 --> 00:11:21,510
+So this thing,
+
+327
+00:11:21,510 --> 00:11:23,930
+once you've finished all these things,
+
+328
+00:11:23,930 --> 00:11:28,250
+the operating system will no longer be some mysterious, unfathomable thing to you.
+
+329
+00:11:28,250 --> 00:11:31,170
+And then slowly building things on your own on the internet,
+
+330
+00:11:31,170 --> 00:11:34,970
+I think that will actually be a better start.
+
+331
+00:11:34,970 --> 00:11:40,790
+So that's the end of my introduction to the course outline.
+
+332
+00:11:40,790 --> 00:11:48,180
+Today's time will mainly cover Chapter 1 and Chapter 2.
+
+333
+00:11:48,180 --> 00:11:55,450
+Now some students say, isn't an operating system too hard to write?
+
+334
+00:11:55,450 --> 00:11:58,630
+Do we need to master a huge amount of stuff before we can write one?
+
+335
+00:11:58,630 --> 00:12:01,690
+Actually, looking at what I've listed here,
+
+336
+00:12:01,690 --> 00:12:04,070
+you'll see that to master an operating system,
+
+337
+00:12:04,070 --> 00:12:08,250
+you don't really need an especially large amount of knowledge.
+
+338
+00:12:08,250 --> 00:12:10,790
+Look, there are just a few items listed above.
+
+339
+00:12:10,790 --> 00:12:12,570
+The first one is,
+
+340
+00:12:12,570 --> 00:12:15,310
+a reasonably solid command of the C language.
+
+341
+00:12:15,310 --> 00:12:17,630
+Seems like a small case, right?
+
+342
+00:12:17,630 --> 00:12:18,750
+I think this...
+
+343
+00:12:18,750 --> 00:12:22,350
+And you're all computer science majors anyway.
+
+344
+00:12:22,350 --> 00:12:23,470
+Even if you're not a CS major,
+
+345
+00:12:23,470 --> 00:12:24,930
+many students learn C on their own.
+
+346
+00:12:24,930 --> 00:12:25,270
+Right?
+
+347
+00:12:25,270 --> 00:12:28,550
+So if you can really master C,
+
+348
+00:12:28,550 --> 00:12:31,750
+I'd say that gets you more than halfway to success.
+
+349
+00:12:31,750 --> 00:12:32,950
+Then what else is there?
+
+350
+00:12:32,950 --> 00:12:35,290
+Well, some data structures.
+
+351
+00:12:35,290 --> 00:12:39,170
+And in our development process,
+
+352
+00:12:39,170 --> 00:12:40,750
+for this kind of bare-metal code,
+
+353
+00:12:40,750 --> 00:12:42,070
+we try to avoid
+
+354
+00:12:42,070 --> 00:12:43,510
+using overly complex data structures.
+
+355
+00:12:43,510 --> 00:12:44,310
+So,
+
+356
+00:12:44,310 --> 00:12:45,750
+for us, linked lists,
+
+357
+00:12:45,750 --> 00:12:46,910
+if you can master them well,
+
+358
+00:12:46,910 --> 00:12:49,070
+I think that's really all you need.
+
+359
+00:12:49,070 --> 00:12:50,750
+And one more thing:
+
+360
+00:12:50,750 --> 00:12:52,230
+our development environment.
+
+361
+00:12:52,230 --> 00:12:55,970
+It's still done on a Linux development environment.
+
+362
+00:12:55,970 --> 00:12:56,510
+So,
+
+363
+00:12:56,510 --> 00:13:00,290
+I hope everyone can have some understanding of Linux's
+
+364
+00:13:00,290 --> 00:13:03,310
+commonly used commands and such.
+
+365
+00:13:03,310 --> 00:13:04,230
+Now,
+
+366
+00:13:04,230 --> 00:13:06,510
+beyond that,
+
+367
+00:13:06,510 --> 00:13:08,650
+if you haven't learned some of these things before,
+
+368
+00:13:08,650 --> 00:13:09,750
+we'll guide you through them.
+
+369
+00:13:09,750 --> 00:13:11,530
+You all understand what I mean, right?
+
+370
+00:13:11,530 --> 00:13:14,150
+As for other things,
+
+371
+00:13:14,150 --> 00:13:16,230
+there aren't too many requirements.
+
+372
+00:13:16,230 --> 00:13:17,770
+That's about it.
+
+373
+00:13:17,770 --> 00:13:18,570
+So it's still
+
+374
+00:13:18,570 --> 00:13:22,570
+not particularly complicated.
+
+375
+00:13:22,570 --> 00:13:25,670
+Anyway, through this course,
+
+376
+00:13:25,670 --> 00:13:27,990
+what I hope is to let everyone
+
+377
+00:13:27,990 --> 00:13:31,110
+reduce some of that...
+
+378
+00:13:31,110 --> 00:13:32,210
+like the kernel, you all feel
+
+379
+00:13:32,210 --> 00:13:33,630
+it's really complicated, right?
+
+380
+00:13:33,630 --> 00:13:35,210
+to reduce that sense of
+
+381
+00:13:35,210 --> 00:13:37,110
+you could say it reduces that kind of fear a bit
+
+382
+00:13:37,110 --> 00:13:38,450
+because when people first learn the kernel,
+
+383
+00:13:38,450 --> 00:13:39,750
+you might think it's just too complicated
+
+384
+00:13:39,750 --> 00:13:42,450
+but it's really not that complicated.
+
+385
+00:13:42,450 --> 00:13:44,130
+So this...
+
+386
+00:13:44,130 --> 00:13:45,750
+we...
+
+387
+00:13:45,750 --> 00:13:48,350
+our...
+
+388
+00:13:48,350 --> 00:13:52,050
+Besides covering this in class for everyone,
+
+389
+00:13:52,050 --> 00:13:53,230
+we have a...
+
+390
+00:13:53,230 --> 00:13:54,650
+a lot of
+
+391
+00:13:54,650 --> 00:13:56,310
+online materials
+
+392
+00:13:56,310 --> 00:13:58,250
+that have already been put online.
+
+393
+00:13:58,250 --> 00:14:00,130
+As for these materials,
+
+394
+00:14:00,130 --> 00:14:01,190
+after class,
+
+395
+00:14:01,190 --> 00:14:02,890
+you can go and download them.
+
+396
+00:14:02,890 --> 00:14:05,370
+And our main mirror,
+
+397
+00:14:05,370 --> 00:14:06,190
+is right here,
+
+398
+00:14:06,190 --> 00:14:07,290
+on GitHub.
+
+399
+00:14:07,290 --> 00:14:09,610
+PLCT Lab—
+
+400
+00:14:09,610 --> 00:14:11,230
+that's the name of our lab,
+
+401
+00:14:11,230 --> 00:14:15,780
+This is the name of our lab,
+
+402
+00:14:15,780 --> 00:14:16,300
+PLCT.
+
+403
+00:14:16,300 --> 00:14:17,760
+So our course...
+
+404
+00:14:17,760 --> 00:14:19,980
+This is the GitHub
+
+405
+00:14:19,980 --> 00:14:21,540
+site.
+
+406
+00:14:21,540 --> 00:14:23,920
+So this...
+
+407
+00:14:23,920 --> 00:14:25,300
+If GitHub is
+
+408
+00:14:25,300 --> 00:14:26,980
+a bit slow for you,
+
+409
+00:14:26,980 --> 00:14:27,520
+then
+
+410
+00:14:27,520 --> 00:14:30,520
+within China, this
+
+411
+00:14:30,520 --> 00:14:31,580
+Git,
+
+412
+00:14:31,580 --> 00:14:33,080
+it's Gitee, I guess,
+
+413
+00:14:33,080 --> 00:14:33,400
+right?
+
+414
+00:14:33,400 --> 00:14:34,480
+This Gitee page
+
+415
+00:14:34,480 --> 00:14:35,860
+also has a mirror copy.
+
+416
+00:14:35,860 --> 00:14:37,080
+So you can
+
+417
+00:14:37,080 --> 00:14:39,540
+just download from there.
+
+418
+00:14:39,540 --> 00:14:40,980
+The Git operations
+
+419
+00:14:40,980 --> 00:14:42,140
+are not covered
+
+420
+00:14:42,140 --> 00:14:43,180
+in this course.
+
+421
+00:14:43,180 --> 00:14:44,480
+So it's assumed that everyone
+
+422
+00:14:44,480 --> 00:14:46,440
+still needs to know how to use it.
+
+423
+00:14:46,440 --> 00:14:47,560
+That shouldn't be a problem, right?
+
+424
+00:14:47,560 --> 00:14:49,260
+You should have
+
+425
+00:14:49,260 --> 00:14:50,100
+Git operations
+
+426
+00:14:50,100 --> 00:14:50,900
+all covered, right?
+
+427
+00:14:50,900 --> 00:14:51,080
+Haven't you?
+
+428
+00:14:51,080 --> 00:14:52,180
+If not,
+
+429
+00:14:52,180 --> 00:14:53,720
+if you're still not familiar with it,
+
+430
+00:14:53,720 --> 00:14:55,280
+this command is very simple.
+
+431
+00:14:55,280 --> 00:14:56,140
+Just search online yourself,
+
+432
+00:14:56,140 --> 00:14:57,940
+and that should be fine.
+
+433
+00:14:57,940 --> 00:15:01,500
+So once the code is downloaded,
+
+434
+00:15:01,500 --> 00:15:02,940
+let me briefly walk you through
+
+435
+00:15:02,940 --> 00:15:05,560
+roughly what it looks like.
+
+436
+00:15:05,560 --> 00:15:17,280
+In here,
+
+437
+00:15:17,280 --> 00:15:19,900
+is it a bit small?
+
+438
+00:15:19,900 --> 00:15:24,540
+Once it's downloaded,
+
+439
+00:15:24,540 --> 00:15:26,360
+once this code is downloaded,
+
+440
+00:15:26,360 --> 00:15:28,320
+you'll see a few directories here.
+
+441
+00:15:28,320 --> 00:15:32,560
+That code directory
+
+442
+00:15:32,560 --> 00:15:36,920
+is where some of the demo code we'll cover in the course lives
+
+443
+00:15:36,920 --> 00:15:37,820
+all under this.
+
+444
+00:15:37,820 --> 00:15:41,380
+Inside, there are two directories
+
+445
+00:15:41,380 --> 00:15:43,900
+one is the ASM directory
+
+446
+00:15:43,900 --> 00:15:45,120
+and one is the OS directory.
+
+447
+00:15:45,120 --> 00:15:46,920
+So the ASM directory
+
+448
+00:15:46,920 --> 00:15:49,240
+is really just some
+
+449
+00:15:49,240 --> 00:15:52,720
+since we have a part on assembly language to learn earlier on,
+
+450
+00:15:52,720 --> 00:15:53,040
+right?
+
+451
+00:15:53,040 --> 00:15:55,460
+So ASM is short for Assembly,
+
+452
+00:15:55,460 --> 00:15:58,520
+and the reference examples for assembly
+
+453
+00:15:58,520 --> 00:15:59,820
+are all in this directory.
+
+454
+00:15:59,820 --> 00:16:01,660
+Now the OS directory
+
+455
+00:16:01,660 --> 00:16:06,700
+is where we build an operating system from scratch, step by step.
+
+456
+00:16:06,700 --> 00:16:07,940
+When you click into it,
+
+457
+00:16:07,940 --> 00:16:11,800
+you see 0123456,
+
+458
+00:16:11,800 --> 00:16:15,660
+roughly from step one up to about 11 steps so far.
+
+459
+00:16:15,660 --> 00:16:19,800
+We develop it step by step following these.
+
+460
+00:16:19,800 --> 00:16:22,480
+As for the specific content,
+
+461
+00:16:22,480 --> 00:16:25,740
+When we get to a specific chapter,
+
+462
+00:16:25,740 --> 00:16:28,240
+we'll go in and take a closer look then.
+
+463
+00:16:28,240 --> 00:16:32,120
+This is the code.
+
+464
+00:16:32,120 --> 00:16:34,260
+Then there's the refs directory,
+
+465
+00:16:34,260 --> 00:16:35,160
+this directory,
+
+466
+00:16:35,160 --> 00:16:37,800
+which contains reference documents.
+
+467
+00:16:37,800 --> 00:16:39,420
+Reference documents.
+
+468
+00:16:39,420 --> 00:16:41,100
+These are some important references,
+
+469
+00:16:41,100 --> 00:16:42,860
+including some specifications,
+
+470
+00:16:42,860 --> 00:16:44,940
+and other materials related to those specifications and so on.
+
+471
+00:16:44,940 --> 00:16:46,320
+They're all in this directory.
+
+472
+00:16:46,320 --> 00:16:52,920
+And then there's also slides.
+
+473
+00:16:52,920 --> 00:16:54,500
+The slides are our course slides.
+
+474
+00:16:54,500 --> 00:16:57,440
+The course slides over here,
+
+475
+00:16:57,440 --> 00:16:59,500
+have been converted to PDF,
+
+476
+00:16:59,500 --> 00:17:00,540
+to make it convenient for everyone to view.
+
+477
+00:17:00,540 --> 00:17:05,280
+And there's nothing much else.
+
+478
+00:17:05,280 --> 00:17:08,040
+The rest is just some readme files
+
+479
+00:17:08,040 --> 00:17:08,760
+and things like that.
+
+480
+00:17:08,760 --> 00:17:12,720
+This, this, this, this file is not there.
+
+481
+00:17:12,720 --> 00:17:17,380
+So, uh...
+
+482
+00:17:17,380 --> 00:17:22,640
+This is the course material
+
+483
+00:17:22,640 --> 00:17:23,460
+right here.
+
+484
+00:17:23,460 --> 00:17:24,720
+And then there's also the
+
+485
+00:17:24,720 --> 00:17:27,960
+development environment we'll be dealing with,
+
+486
+00:17:27,960 --> 00:17:28,680
+the development environment.
+
+487
+00:17:28,680 --> 00:17:29,360
+Right?
+
+488
+00:17:29,360 --> 00:17:30,820
+The development environment,
+
+489
+00:17:30,820 --> 00:17:32,620
+here's the deal.
+
+490
+00:17:32,620 --> 00:17:33,380
+The development environment works like this.
+
+491
+00:17:33,380 --> 00:17:36,120
+You open this,
+
+492
+00:17:36,120 --> 00:17:40,040
+that is, after you clone this git repository,
+
+493
+00:17:40,040 --> 00:17:42,600
+you can open the readme at the bottom to take a look.
+
+494
+00:17:42,600 --> 00:17:44,020
+This readme,
+
+495
+00:17:44,020 --> 00:17:45,940
+there's an English version,
+
+496
+00:17:45,940 --> 00:17:47,300
+and a Chinese version.
+
+497
+00:17:47,300 --> 00:17:49,220
+Let's just use the Chinese version to show you.
+
+498
+00:17:49,220 --> 00:17:50,200
+Um.
+
+499
+00:17:50,200 --> 00:17:55,710
+I'll quickly walk you through it,
+
+500
+00:17:55,710 --> 00:17:57,510
+that is, how to
+
+501
+00:17:57,510 --> 00:18:00,970
+How to, how to install some things.
+
+502
+00:18:00,970 --> 00:18:03,150
+For this, I'll just use...
+
+503
+00:18:03,150 --> 00:18:09,660
+Can I get online here?
+
+504
+00:18:09,660 --> 00:18:12,560
+Let me get on the, get on the internet.
+
+505
+00:18:12,560 --> 00:18:14,100
+And then just take a look.
+
+506
+00:18:14,100 --> 00:18:17,080
+It might be easier to read the readme online.
+
+507
+00:18:17,080 --> 00:18:20,960
+Just a moment.
+
+508
+00:18:20,960 --> 00:18:22,120
+The network here seems a bit slow.
+
+509
+00:18:22,120 --> 00:18:47,940
+Let's use the directory on Ma Yun.
+
+510
+00:18:47,940 --> 00:18:52,340
+If your computers can get online right now,
+
+511
+00:18:52,340 --> 00:19:02,800
+you can open it up and take a look too.
+
+512
+00:19:02,800 --> 00:19:04,700
+On this, look at this Ma Yun page.
+
+513
+00:19:04,700 --> 00:19:10,130
+Down below here is basically a short introduction for us.
+
+514
+00:19:10,130 --> 00:19:13,550
+He's already put it up so you can read it on the web page.
+
+515
+00:19:13,550 --> 00:19:19,160
+So this mainly walks you through these parts.
+
+516
+00:19:19,160 --> 00:19:21,900
+One is the introduction.
+
+517
+00:19:21,900 --> 00:19:28,940
+Now for all the examples here,
+
+518
+00:19:28,940 --> 00:19:30,260
+as for my own verification,
+
+519
+00:19:30,260 --> 00:19:32,760
+I verified them on Ubuntu.
+
+520
+00:19:32,760 --> 00:19:36,060
+If you want to make things easier,
+
+521
+00:19:36,060 --> 00:19:36,800
+Actually, ideally
+
+522
+00:19:36,800 --> 00:19:39,720
+you should keep the same environment as ours
+
+523
+00:19:39,720 --> 00:19:41,640
+I'm using Ubuntu
+
+524
+00:19:41,640 --> 00:19:44,080
+20.04
+
+525
+00:19:44,080 --> 00:19:46,160
+20.04
+
+526
+00:19:46,160 --> 00:19:47,900
+that version
+
+527
+00:19:47,900 --> 00:19:49,640
+As for the kernel,
+
+528
+00:19:49,640 --> 00:19:51,040
+5.8
+
+529
+00:19:51,040 --> 00:19:52,620
+that's what we use
+
+530
+00:19:52,620 --> 00:19:54,620
+So if you want to
+
+531
+00:19:54,620 --> 00:19:56,740
+install it manually,
+
+532
+00:19:56,740 --> 00:19:59,460
+once you have this and want to install it,
+
+533
+00:19:59,460 --> 00:20:01,740
+you may need to install some dependency packages first
+
+534
+00:20:01,740 --> 00:20:02,700
+I won't go into that,
+
+535
+00:20:02,700 --> 00:20:03,600
+you can look it up yourselves
+
+536
+00:20:03,600 --> 00:20:05,240
+So the main thing is
+
+537
+00:20:05,240 --> 00:20:07,000
+to download this thing
+
+538
+00:20:07,000 --> 00:20:08,600
+download an archive
+
+539
+00:20:08,600 --> 00:20:10,900
+This archive contains
+
+540
+00:20:10,900 --> 00:20:15,120
+the toolchain we need to compile things in our environment
+
+541
+00:20:15,120 --> 00:20:18,140
+You've used things like compilers,
+
+542
+00:20:18,140 --> 00:20:18,600
+those kinds of tools,
+
+543
+00:20:18,600 --> 00:20:19,240
+right?
+
+544
+00:20:19,240 --> 00:20:20,440
+You've used GCC, right?
+
+545
+00:20:20,440 --> 00:20:21,080
+Yeah.
+
+546
+00:20:21,080 --> 00:20:23,900
+So we've set all of this up for you here.
+
+547
+00:20:23,900 --> 00:20:24,680
+Inside this,
+
+548
+00:20:24,680 --> 00:20:27,620
+there's a compiled GCC,
+
+549
+00:20:27,620 --> 00:20:32,520
+plus the simulator environments we need when we run things, all under here.
+
+550
+00:20:32,520 --> 00:20:34,220
+Now, this archive,
+
+551
+00:20:34,220 --> 00:20:35,340
+it's a few hundred megabytes.
+
+552
+00:20:35,340 --> 00:20:38,100
+I've temporarily put it on Weiyun,
+
+553
+00:20:38,100 --> 00:20:40,100
+which is Tencent's cloud.
+
+554
+00:20:40,100 --> 00:20:40,860
+Go ahead and download it,
+
+555
+00:20:40,860 --> 00:20:42,380
+and see if you can get it.
+
+556
+00:20:42,380 --> 00:20:44,980
+Can you access it?
+
+557
+00:20:44,980 --> 00:20:46,640
+If you're online, give it a click,
+
+558
+00:20:46,640 --> 00:20:47,520
+and see if it's still accessible.
+
+559
+00:20:47,520 --> 00:20:49,200
+I clicked it myself,
+
+560
+00:20:49,200 --> 00:20:50,420
+and it should definitely be accessible.
+
+561
+00:20:50,420 --> 00:20:55,390
+You can still access it.
+
+562
+00:20:55,390 --> 00:20:56,770
+It can still get online here.
+
+563
+00:20:56,770 --> 00:20:57,610
+You can still go and access it.
+
+564
+00:20:57,610 --> 00:20:57,890
+and take a look.
+
+565
+00:20:57,890 --> 00:21:09,890
+After it comes down,
+
+566
+00:21:09,890 --> 00:21:10,790
+it's very simple.
+
+567
+00:21:10,790 --> 00:21:12,070
+You just need to extract it.
+
+568
+00:21:12,070 --> 00:21:14,130
+Everyone can just follow these steps.
+
+569
+00:21:14,130 --> 00:21:15,430
+So this thing,
+
+570
+00:21:15,430 --> 00:21:17,490
+you really have to download it.
+
+571
+00:21:17,490 --> 00:21:20,430
+Because all of our development tools
+
+572
+00:21:20,430 --> 00:21:22,370
+and runtime tools are inside it.
+
+573
+00:21:22,370 --> 00:21:25,660
+So once that's done,
+
+574
+00:21:25,660 --> 00:21:27,580
+if you want to verify
+
+575
+00:21:27,580 --> 00:21:29,800
+whether everything is installed correctly,
+
+576
+00:21:29,800 --> 00:21:33,420
+just go to our repository directory
+
+577
+00:21:33,420 --> 00:21:34,200
+and run make.
+
+578
+00:21:34,200 --> 00:21:37,860
+If you see that it compiles successfully,
+
+579
+00:21:37,860 --> 00:21:39,520
+then basically there shouldn't be any major problems.
+
+580
+00:21:39,520 --> 00:21:45,210
+Just wanted to mention that to everyone.
+
+581
+00:21:45,210 --> 00:21:47,890
+I'm worried some of you might run into problems setting up the environment
+
+582
+00:21:47,890 --> 00:21:50,190
+Now, if you set it up yourself
+
+583
+00:21:50,190 --> 00:21:51,450
+and it still doesn't work,
+
+584
+00:21:51,450 --> 00:21:53,470
+we've also put together a foolproof
+
+585
+00:21:53,470 --> 00:21:55,570
+foolproof runtime environment for you.
+
+586
+00:21:55,570 --> 00:21:57,010
+Of course, if you need it,
+
+587
+00:21:57,010 --> 00:21:57,690
+you can come ask me for it.
+
+588
+00:21:57,690 --> 00:21:58,710
+Basically I packed it
+
+589
+00:21:58,710 --> 00:22:00,190
+into a virtual machine,
+
+590
+00:22:00,190 --> 00:22:01,250
+and you can just use
+
+591
+00:22:01,250 --> 00:22:01,930
+what...
+
+592
+00:22:01,930 --> 00:22:03,110
+which one are you using?
+
+593
+00:22:03,110 --> 00:22:04,050
+VMware or...
+
+594
+00:22:04,050 --> 00:22:06,250
+VirtualBox and things like that?
+
+595
+00:22:06,250 --> 00:22:09,290
+VirtualBox, right?
+
+596
+00:22:09,290 --> 00:22:10,250
+What I made is also a
+
+597
+00:22:10,250 --> 00:22:11,130
+VirtualBox one,
+
+598
+00:22:11,130 --> 00:22:12,170
+fully set up and ready to go.
+
+599
+00:22:12,170 --> 00:22:13,350
+So this environment is available,
+
+600
+00:22:13,350 --> 00:22:14,030
+but it's pretty large.
+
+601
+00:22:14,030 --> 00:22:14,730
+It's about
+
+602
+00:22:14,730 --> 00:22:16,330
+once extracted, it's about
+
+603
+00:22:16,330 --> 00:22:17,130
+several gigabytes
+
+604
+00:22:17,130 --> 00:22:17,990
+so it's a bit big
+
+605
+00:22:17,990 --> 00:22:18,550
+so I just
+
+606
+00:22:18,550 --> 00:22:19,750
+I have it with me,
+
+607
+00:22:19,750 --> 00:22:20,390
+if any of you need it later,
+
+608
+00:22:20,390 --> 00:22:21,330
+I can bring it over and set it up for you.
+
+609
+00:22:21,330 --> 00:22:22,390
+If you
+
+610
+00:22:22,390 --> 00:22:24,170
+install it yourself, that works too,
+
+611
+00:22:24,170 --> 00:22:25,110
+following my setup here.
+
+612
+00:22:25,110 --> 00:22:26,210
+This one is pretty small,
+
+613
+00:22:26,210 --> 00:22:27,550
+just a few hundred megabytes, and you just extract it and you're good to go.
+
+614
+00:22:27,550 --> 00:22:29,270
+Alright,
+
+615
+00:22:29,270 --> 00:22:33,350
+so that's basically it for this environment and the code,
+
+616
+00:22:33,350 --> 00:22:34,850
+so I'll wrap up the introduction here.
+
+617
+00:22:34,850 --> 00:22:36,850
+Later, if there's time during the break,
+
+618
+00:22:36,850 --> 00:22:38,290
+you can go ahead and try it, or after you get back home,
+
+619
+00:22:38,290 --> 00:22:39,810
+you can also set it up yourself.
+
+620
+00:22:39,810 --> 00:22:44,620
+Alright.
+
+621
+00:22:44,620 --> 00:22:47,040
+That's basically all the online resources there are.
+
+622
+00:22:47,040 --> 00:22:49,220
+So, uh,
+
+623
+00:22:49,220 --> 00:22:50,360
+finally,
+
+624
+00:22:50,360 --> 00:22:52,460
+well,
+
+625
+00:22:52,460 --> 00:22:54,620
+during the design of this course,
+
+626
+00:22:54,620 --> 00:22:57,600
+we also referenced some pretty good resources online,
+
+627
+00:22:57,600 --> 00:22:59,260
+and I've listed them here for you.
+
+628
+00:22:59,260 --> 00:22:59,460
+Um,
+
+629
+00:22:59,460 --> 00:22:59,960
+actually,
+
+630
+00:22:59,960 --> 00:23:03,100
+that is to say, after you finish this course,
+
+631
+00:23:03,100 --> 00:23:05,700
+if you still have energy left,
+
+632
+00:23:05,700 --> 00:23:09,720
+you can also go further and keep learning.
+
+633
+00:23:09,720 --> 00:23:13,320
+So the first one is 'Adventure of OS'.
+
+634
+00:23:13,320 --> 00:23:15,020
+This is from a foreign, a...
+
+635
+00:23:15,020 --> 00:23:17,700
+I forgot which university it was.
+
+636
+00:23:17,700 --> 00:23:20,640
+Some university in Europe or Australia, I think.
+
+637
+00:23:20,640 --> 00:23:22,280
+Written by a professor there, also.
+
+638
+00:23:22,280 --> 00:23:23,860
+But it's not written in C.
+
+639
+00:23:23,860 --> 00:23:24,620
+It's written in Rust.
+
+640
+00:23:24,620 --> 00:23:26,740
+Have you all heard of the Rust language?
+
+641
+00:23:26,740 --> 00:23:28,100
+It's getting a bit of attention now.
+
+642
+00:23:28,100 --> 00:23:30,660
+But overseas, it's actually already developed quite well.
+
+643
+00:23:30,660 --> 00:23:31,940
+They wrote it in Rust.
+
+644
+00:23:31,940 --> 00:23:33,820
+But on our side, considering that
+
+645
+00:23:33,820 --> 00:23:35,920
+you probably don't need to
+
+646
+00:23:35,920 --> 00:23:36,820
+learn yet another new language for this.
+
+647
+00:23:36,820 --> 00:23:40,060
+So we'll stick with C and assembly
+
+648
+00:23:40,060 --> 00:23:40,920
+to do this.
+
+649
+00:23:40,920 --> 00:23:43,120
+Now, there are some other materials.
+
+650
+00:23:43,120 --> 00:23:43,980
+And there's another one,
+
+651
+00:23:43,980 --> 00:23:46,320
+the second reference,
+
+652
+00:23:46,320 --> 00:23:49,500
+it's by a university teacher in Taiwan
+
+653
+00:23:49,500 --> 00:23:52,340
+who made a RISC-V operating system.
+
+654
+00:23:52,340 --> 00:23:53,320
+We've also worked with it,
+
+655
+00:23:53,320 --> 00:23:54,800
+and also, based on it,
+
+656
+00:23:54,800 --> 00:23:57,360
+we studied it.
+
+657
+00:23:57,360 --> 00:23:59,020
+We made our own improvements on it.
+
+658
+00:23:59,020 --> 00:24:01,320
+Now, the third part
+
+659
+00:24:01,320 --> 00:24:04,460
+is from MIT,
+
+660
+00:24:04,460 --> 00:24:06,260
+a course.
+
+661
+00:24:06,260 --> 00:24:07,000
+It's actually a course.
+
+662
+00:24:07,000 --> 00:24:07,860
+If you're interested,
+
+663
+00:24:07,860 --> 00:24:09,500
+and if you have time later on,
+
+664
+00:24:09,500 --> 00:24:11,260
+you can actually go and take a look at it.
+
+665
+00:24:11,260 --> 00:24:12,280
+The one up here,
+
+666
+00:24:12,280 --> 00:24:13,600
+the operating system developed in it,
+
+667
+00:24:13,600 --> 00:24:15,800
+goes a step further than ours.
+
+668
+00:24:15,800 --> 00:24:17,100
+It's actually
+
+669
+00:24:17,100 --> 00:24:20,380
+basically getting very close to
+
+670
+00:24:20,380 --> 00:24:21,700
+a system like UNIX.
+
+671
+00:24:21,700 --> 00:24:24,600
+Now, for us,
+
+672
+00:24:24,600 --> 00:24:25,640
+considering the time constraints,
+
+673
+00:24:25,640 --> 00:24:27,140
+we didn't cover it completely
+
+674
+00:24:27,140 --> 00:24:29,480
+and go through it all for you.
+
+675
+00:24:29,480 --> 00:24:31,180
+But we did use it as a reference.
+
+676
+00:24:31,180 --> 00:24:33,180
+So if you feel that later on
+
+677
+00:24:33,180 --> 00:24:35,040
+you have energy to spare, you can go take a look.
+
+678
+00:24:35,040 --> 00:24:37,420
+It also includes some course materials,
+
+679
+00:24:37,420 --> 00:24:39,680
+and the source code is provided in full as well.
+
+680
+00:24:39,680 --> 00:24:49,480
+That...
+
+681
+00:24:49,480 --> 00:24:52,160
+Now, for other, more detailed
+
+682
+00:24:52,160 --> 00:24:54,020
+reference materials, we've listed them separately in
+
+683
+00:24:54,020 --> 00:24:55,700
+each chapter, so we've put together some
+
+684
+00:24:55,700 --> 00:24:57,940
+lists for you, and you can
+
+685
+00:24:57,940 --> 00:24:59,300
+go and look through them on your own
+
+686
+00:24:59,300 --> 00:25:01,220
+Alright, so that's it for
+
+687
+00:25:01,220 --> 00:25:04,260
+the first part, which is the course introduction
+
+688
+00:25:04,260 --> 00:25:05,480
+I'll just
+
+689
+00:25:05,480 --> 00:25:06,520
+briefly stop here for you

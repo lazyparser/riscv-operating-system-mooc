@@ -1,0 +1,3199 @@
+1
+00:00:05,330 --> 00:00:11,890
+We still have some time this morning, let's refresh our memory. We've only covered the first category of instructions so far.
+
+2
+00:00:12,170 --> 00:00:15,330
+Now, the second commonly used category is logic operation instructions.
+
+3
+00:00:16,210 --> 00:00:20,570
+As for logic operations, they actually show up in C as well — that's AND, OR, NOT, essentially AND, OR, NOT.
+
+4
+00:00:21,550 --> 00:00:30,790
+Because in practice we've found that, apart from operations like addition and subtraction, these AND, OR, NOT operations are actually quite useful when programming.
+
+5
+00:00:30,790 --> 00:00:31,530
+I'm not sure if any of you,
+
+6
+00:00:31,530 --> 00:00:37,230
+in your programming experience so far,
+
+7
+00:00:37,230 --> 00:00:39,350
+these AND, OR, NOT operations,
+
+8
+00:00:39,350 --> 00:00:41,490
+in what scenarios have you used them?
+
+9
+00:00:41,490 --> 00:00:42,930
+Does anything come to mind?
+
+10
+00:00:42,930 --> 00:00:47,110
+Probably in high-level languages,
+
+11
+00:00:47,110 --> 00:00:49,130
+these scenarios don't come up very often.
+
+12
+00:00:49,130 --> 00:00:51,590
+But we can't rule out that languages like Java
+
+13
+00:00:51,590 --> 00:00:55,110
+do provide these operations.
+
+14
+00:00:55,110 --> 00:00:57,530
+However, in the exercises that follow,
+
+15
+00:00:57,530 --> 00:00:59,290
+including low-level development,
+
+16
+00:00:59,290 --> 00:01:00,130
+for this kind of work,
+
+17
+00:01:00,130 --> 00:01:02,910
+since we often operate on binary data,
+
+18
+00:01:02,910 --> 00:01:04,470
+when we manipulate binary data
+
+19
+00:01:04,470 --> 00:01:05,810
+directly,
+
+20
+00:01:05,810 --> 00:01:07,430
+then these AND, OR, NOT operations
+
+21
+00:01:07,430 --> 00:01:08,710
+they are still used very frequently
+
+22
+00:01:08,710 --> 00:01:10,770
+so you should still understand them
+
+23
+00:01:10,770 --> 00:01:13,290
+so what about AND, OR, and NOT?
+
+24
+00:01:13,290 --> 00:01:15,970
+we should note that in RISC-V
+
+25
+00:01:15,970 --> 00:01:17,710
+please pay attention here
+
+26
+00:01:17,710 --> 00:01:19,850
+in the RISC-V instruction set
+
+27
+00:01:19,850 --> 00:01:22,790
+it provides AND, which is the AND operation
+
+28
+00:01:22,790 --> 00:01:24,610
+and OR, the OR operation
+
+29
+00:01:24,610 --> 00:01:27,170
+but it does not directly provide
+
+30
+00:01:27,170 --> 00:01:29,890
+the NOT operation
+
+31
+00:01:29,890 --> 00:01:31,130
+that is, in C-like terms
+
+32
+00:01:31,130 --> 00:01:32,210
+the exclamation mark operation
+
+33
+00:01:32,210 --> 00:01:33,270
+bitwise negation
+
+34
+00:01:33,270 --> 00:01:35,090
+it does not directly provide that operation
+
+35
+00:01:35,090 --> 00:01:37,270
+but it provides another operation instead
+
+36
+00:01:37,270 --> 00:01:37,890
+namely XOR
+
+37
+00:01:37,890 --> 00:01:38,890
+XOR
+
+38
+00:01:38,890 --> 00:01:39,910
+that is, XOR
+
+39
+00:01:39,910 --> 00:01:41,430
+please note this
+
+40
+00:01:41,430 --> 00:01:43,890
+the point is, this XOR operation
+
+41
+00:01:43,890 --> 00:01:46,850
+We actually translate it into Chinese as 'load-reserved', or LR.
+
+42
+00:01:46,850 --> 00:01:48,430
+As for LR,
+
+43
+00:01:48,430 --> 00:01:50,750
+do you still remember which symbol we use for it in C?
+
+44
+00:01:50,750 --> 00:01:53,350
+It's that arrow pointing up, right?
+
+45
+00:01:53,350 --> 00:01:53,810
+I think so.
+
+46
+00:01:53,810 --> 00:01:54,770
+Isn't it?
+
+47
+00:01:54,770 --> 00:01:58,330
+That is to say,
+
+48
+00:01:58,330 --> 00:02:01,750
+LR is directly provided
+
+49
+00:02:01,750 --> 00:02:03,570
+by the base instructions.
+
+50
+00:02:03,570 --> 00:02:05,390
+Now, as for the concept of SC,
+
+51
+00:02:05,390 --> 00:02:07,210
+let's take a quick look at it here.
+
+52
+00:02:07,210 --> 00:02:07,970
+What does it mean?
+
+53
+00:02:07,970 --> 00:02:09,750
+SC in English,
+
+54
+00:02:09,750 --> 00:02:11,190
+it's actually 'exclusive'.
+
+55
+00:02:11,190 --> 00:02:13,070
+'OR' means 'or'.
+
+56
+00:02:13,070 --> 00:02:13,770
+It means 'or', which is the store operation.
+
+57
+00:02:13,770 --> 00:02:16,910
+What 'exclusive' actually expresses,
+
+58
+00:02:16,910 --> 00:02:18,670
+is an exclusive store.
+
+59
+00:02:18,670 --> 00:02:20,570
+It's also a kind of store operation,
+
+60
+00:02:20,570 --> 00:02:22,070
+but it's an exclusive store.
+
+61
+00:02:22,070 --> 00:02:24,370
+So what do we mean by an exclusive operation?
+
+62
+00:02:24,370 --> 00:02:26,810
+Let me explain that for you later.
+
+63
+00:02:26,810 --> 00:02:28,750
+That is, when two
+
+64
+00:02:28,750 --> 00:02:29,870
+Because all of these
+
+65
+00:02:29,870 --> 00:02:31,910
+logic operations
+
+66
+00:02:31,910 --> 00:02:33,450
+work bit by bit.
+
+67
+00:02:33,450 --> 00:02:33,870
+In other words,
+
+68
+00:02:33,870 --> 00:02:35,590
+if the two bit values
+
+69
+00:02:35,590 --> 00:02:37,210
+are different,
+
+70
+00:02:37,210 --> 00:02:38,870
+that is 1, right?
+
+71
+00:02:38,870 --> 00:02:40,070
+Different.
+
+72
+00:02:40,070 --> 00:02:41,630
+Then the result is 0.
+
+73
+00:02:41,630 --> 00:02:42,470
+So what you get is
+
+74
+00:02:42,470 --> 00:02:43,710
+the effect of OR.
+
+75
+00:02:43,710 --> 00:02:44,110
+As we know,
+
+76
+00:02:44,110 --> 00:02:45,170
+OR means that
+
+77
+00:02:45,170 --> 00:02:46,050
+when the two are the same,
+
+78
+00:02:46,050 --> 00:02:46,810
+the result becomes 1.
+
+79
+00:02:46,810 --> 00:02:47,070
+Isn't that right?
+
+80
+00:02:47,070 --> 00:02:49,310
+So this one works the other way around.
+
+81
+00:02:49,310 --> 00:02:50,390
+It takes two bit values,
+
+82
+00:02:50,390 --> 00:02:51,190
+and if they are different,
+
+83
+00:02:51,190 --> 00:02:53,490
+it sets the result to 1.
+
+84
+00:02:53,490 --> 00:02:56,490
+If the two bit values
+
+85
+00:02:56,490 --> 00:02:57,230
+are the same,
+
+86
+00:02:57,230 --> 00:02:58,210
+the result is 0.
+
+87
+00:02:58,210 --> 00:02:59,310
+That's the concept of XOR.
+
+88
+00:02:59,310 --> 00:03:02,490
+This is something you need to understand first.
+
+89
+00:03:02,490 --> 00:03:05,450
+Now, some of you might ask,
+
+90
+00:03:05,450 --> 00:03:06,650
+that is to say,
+
+91
+00:03:06,650 --> 00:03:08,430
+for the NOT operation,
+
+92
+00:03:08,430 --> 00:03:09,530
+how do we implement it?
+
+93
+00:03:09,530 --> 00:03:12,650
+Well, in RISC-V,
+
+94
+00:03:12,650 --> 00:03:13,670
+the NOT operation
+
+95
+00:03:13,670 --> 00:03:15,090
+is actually implemented through XOR.
+
+96
+00:03:15,090 --> 00:03:18,150
+This is its instruction format.
+
+97
+00:03:18,150 --> 00:03:21,150
+It doesn't provide a new instruction format.
+
+98
+00:03:21,150 --> 00:03:24,950
+As for this NOT operation,
+
+99
+00:03:24,950 --> 00:03:27,690
+RISC-V actually provides a
+
+100
+00:03:27,690 --> 00:03:28,790
+pseudo-instruction called NOT.
+
+101
+00:03:28,790 --> 00:03:30,650
+This NOT instruction
+
+102
+00:03:30,650 --> 00:03:31,530
+as an instruction,
+
+103
+00:03:31,530 --> 00:03:32,870
+is actually equivalent to what?
+
+104
+00:03:32,870 --> 00:03:33,830
+It's equivalent to this operation
+
+105
+00:03:33,830 --> 00:03:35,130
+equivalent to this
+
+106
+00:03:35,130 --> 00:03:36,810
+Think about it,
+
+107
+00:03:36,810 --> 00:03:40,000
+why does it achieve this effect?
+
+108
+00:03:40,000 --> 00:03:40,980
+Its actual effect
+
+109
+00:03:40,980 --> 00:03:42,240
+what it actually means is,
+
+110
+00:03:42,240 --> 00:03:43,120
+take a number
+
+111
+00:03:43,120 --> 00:03:43,900
+take a
+
+112
+00:03:43,900 --> 00:03:44,460
+take a
+
+113
+00:03:44,460 --> 00:03:46,140
+take the number in a register,
+
+114
+00:03:46,140 --> 00:03:48,920
+XOR it with -1,
+
+115
+00:03:48,920 --> 00:03:50,600
+and put the result into rd
+
+116
+00:03:50,600 --> 00:03:51,420
+— that is, negate it.
+
+117
+00:03:51,420 --> 00:03:52,940
+Now think about why.
+
+118
+00:03:52,940 --> 00:03:55,280
+Let's take a look.
+
+119
+00:03:55,280 --> 00:03:56,260
+Let's give an example.
+
+120
+00:03:56,260 --> 00:03:57,680
+For instance,
+
+121
+00:03:57,680 --> 00:04:02,640
+Let me give a simple example.
+
+122
+00:04:02,640 --> 00:04:03,460
+Say we have
+
+123
+00:04:03,460 --> 00:04:06,860
+an original number that is
+
+124
+00:04:06,860 --> 00:04:09,820
+10101010.
+
+125
+00:04:09,820 --> 00:04:11,960
+Suppose we originally have a number like this.
+
+126
+00:04:11,960 --> 00:04:13,080
+This number,
+
+127
+00:04:13,080 --> 00:04:14,740
+we might initially put it in
+
+128
+00:04:14,740 --> 00:04:16,380
+rs here.
+
+129
+00:04:16,380 --> 00:04:19,100
+Now, what is this -1 actually?
+
+130
+00:04:19,100 --> 00:04:20,920
+How is -1 represented in a computer?
+
+131
+00:04:20,920 --> 00:04:23,020
+It's all ones.
+
+132
+00:04:23,020 --> 00:04:23,620
+Right?
+
+133
+00:04:23,620 --> 00:04:24,680
+It's all ones.
+
+134
+00:04:24,680 --> 00:04:25,460
+So,
+
+135
+00:04:25,460 --> 00:04:27,060
+so what this thing does,
+
+136
+00:04:27,060 --> 00:04:29,020
+is it takes these two numbers,
+
+137
+00:04:29,020 --> 00:04:32,030
+this is -1,
+
+138
+00:04:32,030 --> 00:04:34,310
+this is negative one,
+
+139
+00:04:34,310 --> 00:04:37,850
+and performs an XOR operation on the two numbers.
+
+140
+00:04:37,850 --> 00:04:41,530
+Now, what result do we get from this XOR operation?
+
+141
+00:04:41,530 --> 00:04:43,470
+So what did our definition just say?
+
+142
+00:04:43,470 --> 00:04:47,280
+XOR means that
+
+143
+00:04:47,280 --> 00:04:50,000
+if the two bit values are different, you get 1,
+
+144
+00:04:50,000 --> 00:04:52,300
+and if they're the same, you get 0.
+
+145
+00:04:52,300 --> 00:04:52,860
+Right?
+
+146
+00:04:52,860 --> 00:04:55,140
+Now look at what happens here.
+
+147
+00:04:55,140 --> 00:05:01,990
+0 and 1 — we know that 1 has this property:
+
+148
+00:05:01,990 --> 00:05:04,730
+that is, what's the characteristic of 1?
+
+149
+00:05:04,730 --> 00:05:06,930
+Well, for any number, if it's 0,
+
+150
+00:05:06,930 --> 00:05:08,390
+0 and 1 are definitely not the same.
+
+151
+00:05:08,390 --> 00:05:09,090
+Since they're not the same,
+
+152
+00:05:09,090 --> 00:05:09,950
+you take 1.
+
+153
+00:05:09,950 --> 00:05:14,050
+If they were the same, you'd take 0.
+
+154
+00:05:14,050 --> 00:05:17,350
+So you see, this is basically flipped, right?
+
+155
+00:05:17,350 --> 00:05:18,690
+Right?
+
+156
+00:05:18,690 --> 00:05:20,890
+This one, I'm not going to do it one by one.
+
+157
+00:05:20,890 --> 00:05:22,430
+Basically, it has to do with this:
+
+158
+00:05:22,430 --> 00:05:24,650
+all of these 0 and 1 bits,
+
+159
+00:05:24,650 --> 00:05:26,050
+when XORed with 1,
+
+160
+00:05:26,050 --> 00:05:27,090
+actually produce an effect where
+
+161
+00:05:27,090 --> 00:05:28,650
+It just gives you the inverted result.
+
+162
+00:05:28,650 --> 00:05:30,470
+So we actually don't need
+
+163
+00:05:30,470 --> 00:05:32,290
+a dedicated instruction just to do negation.
+
+164
+00:05:32,290 --> 00:05:33,950
+We only need to use the XOR instruction
+
+165
+00:05:33,950 --> 00:05:36,170
+to replace it, and that's it.
+
+166
+00:05:36,170 --> 00:05:37,490
+This once again shows
+
+167
+00:05:37,490 --> 00:05:38,170
+how RISC-V
+
+168
+00:05:38,170 --> 00:05:39,470
+is all about saving wherever it can.
+
+169
+00:05:39,470 --> 00:05:40,510
+When designing instructions,
+
+170
+00:05:40,510 --> 00:05:42,670
+it won't add a whole instruction
+
+171
+00:05:42,670 --> 00:05:43,710
+just for one function.
+
+172
+00:05:43,710 --> 00:05:45,630
+If an existing instruction can do the job,
+
+173
+00:05:45,630 --> 00:05:47,270
+it just uses the existing instruction instead.
+
+174
+00:05:47,270 --> 00:05:49,150
+And the benefit for us
+
+175
+00:05:49,150 --> 00:05:50,110
+is that
+
+176
+00:05:50,110 --> 00:05:52,290
+a lot of the time, we only have to master
+
+177
+00:05:52,290 --> 00:05:54,410
+a very small set of instructions.
+
+178
+00:05:54,410 --> 00:05:55,650
+But on the other hand,
+
+179
+00:05:55,650 --> 00:05:57,410
+it may ask more of you,
+
+180
+00:05:57,410 --> 00:05:58,230
+and that is this:
+
+181
+00:05:58,230 --> 00:05:59,170
+That is to say, at the very least,
+
+182
+00:05:59,170 --> 00:06:01,330
+you need to have some understanding of this instruction,
+
+183
+00:06:01,330 --> 00:06:02,510
+otherwise you won't know
+
+184
+00:06:02,510 --> 00:06:03,570
+that you should use this instruction to replace it.
+
+185
+00:06:03,570 --> 00:06:04,150
+Right, everyone?
+
+186
+00:06:04,150 --> 00:06:05,670
+So this
+
+187
+00:06:05,670 --> 00:06:07,950
+reflects
+
+188
+00:06:07,950 --> 00:06:09,190
+a certain philosophy in the RISC-V design.
+
+189
+00:06:09,190 --> 00:06:12,270
+These are what we call logical instructions.
+
+190
+00:06:12,270 --> 00:06:13,710
+This is XORI here,
+
+191
+00:06:13,710 --> 00:06:15,310
+and of course, over here it's ORI.
+
+192
+00:06:15,310 --> 00:06:16,230
+Just so you're aware of these.
+
+193
+00:06:16,230 --> 00:06:19,450
+As for the related exercises,
+
+194
+00:06:19,450 --> 00:06:21,210
+you can take a look at them after class.
+
+195
+00:06:21,210 --> 00:06:24,550
+These two exercises,
+
+196
+00:06:24,550 --> 00:06:27,310
+we won't go over them in class either.
+
+197
+00:06:27,310 --> 00:06:35,370
+So what we just covered was logical operations.
+
+198
+00:06:35,370 --> 00:06:38,890
+Now, when we're processing binary data,
+
+199
+00:06:38,890 --> 00:06:40,970
+another thing we use very often is the shift operation,
+
+200
+00:06:40,970 --> 00:06:42,130
+shifting left and shifting right.
+
+201
+00:06:42,130 --> 00:06:43,930
+This kind of thing is also used a lot in C, right? Let's all pay attention here. That is to say, in RISC-V, its machine instructions — the shift operations it provides fall into two major categories.
+
+202
+00:06:43,930 --> 00:06:46,870
+One category is called logical shift.
+
+203
+00:06:46,870 --> 00:06:48,530
+The other is called arithmetic shift.
+
+204
+00:06:48,530 --> 00:06:49,770
+Let's first take a look at what a logical shift is.
+
+205
+00:06:49,770 --> 00:06:51,870
+So for logical shifts, we can see they're divided into two groups.
+
+206
+00:06:51,870 --> 00:06:52,790
+The way I've written it here, it's actually split into two groups.
+
+207
+00:06:52,790 --> 00:06:54,710
+One group has an 'i' appended to it, which means that instruction will actually carry an immediate value.
+
+208
+00:06:54,710 --> 00:06:56,110
+The other one has no immediate value, and operates using three registers — that is, the value to be shifted
+
+209
+00:06:56,110 --> 00:06:57,330
+Let's take a look first at
+
+210
+00:06:57,330 --> 00:06:58,930
+what logical shift means.
+
+211
+00:06:58,930 --> 00:07:01,050
+So for logical shifts,
+
+212
+00:07:01,050 --> 00:07:04,010
+you can see they're divided into two groups.
+
+213
+00:07:04,010 --> 00:07:05,630
+The way I've written it here
+
+214
+00:07:05,630 --> 00:07:06,450
+splits them into two groups.
+
+215
+00:07:06,450 --> 00:07:11,170
+One group has an "i" attached,
+
+216
+00:07:11,170 --> 00:07:12,910
+which means that in these instructions
+
+217
+00:07:12,910 --> 00:07:15,070
+there is actually an immediate value
+
+218
+00:07:15,070 --> 00:07:16,650
+while the other group has no immediate value.
+
+219
+00:07:16,650 --> 00:07:19,430
+It operates with three registers.
+
+220
+00:07:19,430 --> 00:07:20,950
+That is, the shift amount
+
+221
+00:07:20,950 --> 00:07:24,890
+is expressed by putting it into this register.
+
+222
+00:07:24,890 --> 00:07:25,750
+And this one,
+
+223
+00:07:25,750 --> 00:07:28,870
+actually specifies the number of bits directly through the immediate.
+
+224
+00:07:28,870 --> 00:07:33,470
+Now, it's divided into left shift and right shift.
+
+225
+00:07:33,470 --> 00:07:34,670
+So, logically speaking,
+
+226
+00:07:34,670 --> 00:07:36,230
+it's divided into two types: left shift and right shift.
+
+227
+00:07:36,230 --> 00:07:37,490
+The left shift is 'left'
+
+228
+00:07:37,490 --> 00:07:38,510
+and this side is 'right'
+
+229
+00:07:38,510 --> 00:07:39,410
+which is the right shift.
+
+230
+00:07:39,410 --> 00:07:43,070
+Actually, these are just abbreviations of these letters,
+
+231
+00:07:43,070 --> 00:07:44,690
+like 'shift left logical'
+
+232
+00:07:44,690 --> 00:07:46,330
+which means logical left shift.
+
+233
+00:07:46,330 --> 00:07:48,550
+It's completely reversed compared to how we Chinese say it.
+
+234
+00:07:48,550 --> 00:07:52,490
+Foreigners' word order is totally different from ours.
+
+235
+00:07:52,490 --> 00:07:53,930
+Foreigners' word order,
+
+236
+00:07:53,930 --> 00:07:55,710
+our word order is completely different from theirs.
+
+237
+00:07:55,710 --> 00:08:00,010
+We Chinese flip it and say 'logical left shift'.
+
+238
+00:08:00,010 --> 00:08:02,290
+Foreigners say 'shift left logical'.
+
+239
+00:08:02,290 --> 00:08:03,610
+It's completely reversed.
+
+240
+00:08:03,610 --> 00:08:04,510
+So, this one
+
+241
+00:08:04,510 --> 00:08:06,890
+But we still need to get used to how it's used,
+
+242
+00:08:06,890 --> 00:08:08,350
+otherwise you won't remember this command.
+
+243
+00:08:08,350 --> 00:08:10,950
+SLL is a bit of a tongue twister,
+
+244
+00:08:10,950 --> 00:08:12,890
+this SLL command.
+
+245
+00:08:12,890 --> 00:08:14,110
+Why is it called a logical left shift?
+
+246
+00:08:14,110 --> 00:08:15,490
+That's where the name comes from.
+
+247
+00:08:15,490 --> 00:08:17,070
+Now the principle is very simple.
+
+248
+00:08:17,070 --> 00:08:19,030
+It's just left shift and right shift,
+
+249
+00:08:19,030 --> 00:08:20,650
+taking that data
+
+250
+00:08:20,650 --> 00:08:23,530
+and shifting it left or right bit by bit.
+
+251
+00:08:23,530 --> 00:08:24,990
+But here's something to pay attention to.
+
+252
+00:08:24,990 --> 00:08:25,870
+A logical shift
+
+253
+00:08:25,870 --> 00:08:27,250
+has one characteristic,
+
+254
+00:08:27,250 --> 00:08:28,870
+and that is, as you know,
+
+255
+00:08:28,870 --> 00:08:31,090
+whether you're shifting left or shifting right,
+
+256
+00:08:31,090 --> 00:08:32,450
+when you shift a piece of data over,
+
+257
+00:08:32,450 --> 00:08:33,290
+say, to the left,
+
+258
+00:08:33,290 --> 00:08:34,750
+the position on the right becomes empty,
+
+259
+00:08:34,750 --> 00:08:36,890
+and new data has to be filled in.
+
+260
+00:08:36,890 --> 00:08:37,530
+Think about it — isn't that right?
+
+261
+00:08:37,530 --> 00:08:38,750
+If we shift to the right,
+
+262
+00:08:38,750 --> 00:08:39,990
+the high bits become empty,
+
+263
+00:08:39,990 --> 00:08:41,790
+so we have to fill in data for those high bits.
+
+264
+00:08:41,790 --> 00:08:43,830
+Now, for a logical shift,
+
+265
+00:08:43,830 --> 00:08:44,610
+the rule is
+
+266
+00:08:44,610 --> 00:08:47,230
+that the filling is always done with 0s.
+
+267
+00:08:47,230 --> 00:08:48,850
+What does that mean?
+
+268
+00:08:48,850 --> 00:08:50,510
+Let's take a simple example.
+
+269
+00:08:50,510 --> 00:08:51,510
+That is,
+
+270
+00:08:51,510 --> 00:08:53,970
+suppose we now have...
+
+271
+00:08:53,970 --> 00:08:54,790
+let's say we have 8 bits.
+
+272
+00:08:54,790 --> 00:08:55,730
+Because the number is too long,
+
+273
+00:08:55,730 --> 00:08:57,310
+it might look a bit messy.
+
+274
+00:08:57,310 --> 00:09:00,390
+Suppose we have this data now,
+
+275
+00:09:00,390 --> 00:09:02,890
+000100.
+
+276
+00:09:02,890 --> 00:09:05,990
+Suppose we now want to shift it to the right.
+
+277
+00:09:05,990 --> 00:09:08,530
+Let's say I now take this 1
+
+278
+00:09:08,530 --> 00:09:09,910
+and shift it to the right.
+
+279
+00:09:09,910 --> 00:09:11,250
+So shifting it to the right,
+
+280
+00:09:11,250 --> 00:09:11,950
+because as we know,
+
+281
+00:09:11,950 --> 00:09:13,570
+So where does this 1 go? It ends up right here.
+
+282
+00:09:13,570 --> 00:09:16,010
+Think about it — right? Right here.
+
+283
+00:09:16,010 --> 00:09:16,470
+So what about the 0s on the right here?
+
+284
+00:09:16,470 --> 00:09:19,230
+They get pushed out.
+
+285
+00:09:19,230 --> 00:09:19,830
+Nothing much to say about that.
+
+286
+00:09:19,830 --> 00:09:21,150
+So what's left here?
+
+287
+00:09:21,150 --> 00:09:22,430
+There were originally 4 zeros,
+
+288
+00:09:22,430 --> 00:09:24,070
+and now there are only 3 zeros.
+
+289
+00:09:24,070 --> 00:09:25,150
+Now over here,
+
+290
+00:09:25,150 --> 00:09:27,010
+these 3 zeros over here,
+
+291
+00:09:27,010 --> 00:09:28,290
+naturally follow this 1,
+
+292
+00:09:28,290 --> 00:09:29,490
+and shift to the right.
+
+293
+00:09:29,490 --> 00:09:30,450
+So over here,
+
+294
+00:09:30,450 --> 00:09:31,390
+it's of course 3 zeros.
+
+295
+00:09:31,390 --> 00:09:34,980
+And here,
+
+296
+00:09:34,980 --> 00:09:36,200
+one bit gets freed up,
+
+297
+00:09:36,200 --> 00:09:37,820
+because after it shifts right,
+
+298
+00:09:37,820 --> 00:09:39,580
+what we're talking about right now is a right shift,
+
+299
+00:09:39,580 --> 00:09:41,120
+a shift to the right.
+
+300
+00:09:41,120 --> 00:09:42,940
+Shifting to the right.
+
+301
+00:09:42,940 --> 00:09:43,900
+So with a right shift,
+
+302
+00:09:43,900 --> 00:09:44,900
+this side needs to be filled in.
+
+303
+00:09:44,900 --> 00:09:45,980
+That filling in is exactly this concept.
+
+304
+00:09:45,980 --> 00:09:47,360
+So with a logical shift,
+
+305
+00:09:47,360 --> 00:09:47,880
+note that
+
+306
+00:09:47,880 --> 00:09:48,920
+when filling in,
+
+307
+00:09:48,920 --> 00:09:51,020
+everything is filled with 0.
+
+308
+00:09:51,020 --> 00:09:51,860
+That's what it means.
+
+309
+00:09:51,860 --> 00:09:53,080
+This is called a logical shift.
+
+310
+00:09:53,080 --> 00:09:55,340
+And shifting left works the same way.
+
+311
+00:09:55,340 --> 00:09:58,860
+This is called a logical shift.
+
+312
+00:09:58,860 --> 00:10:00,240
+We use logical shifts all the time.
+
+313
+00:10:00,240 --> 00:10:03,300
+I wonder if any of you
+
+314
+00:10:03,300 --> 00:10:04,860
+have used, say, C to program,
+
+315
+00:10:04,860 --> 00:10:06,140
+you'll actually still use this kind of thing.
+
+316
+00:10:06,140 --> 00:10:08,140
+So what do we often use these shifts for?
+
+317
+00:10:08,140 --> 00:10:10,140
+Have you thought about some scenarios?
+
+318
+00:10:10,140 --> 00:10:17,990
+For example, we often need to
+
+319
+00:10:17,990 --> 00:10:20,690
+let's take a simple example.
+
+320
+00:10:20,690 --> 00:10:23,470
+Say I have two 8-bit numbers now.
+
+321
+00:10:23,470 --> 00:10:25,350
+Now I want to piece it together into a 16-bit number
+
+322
+00:10:25,350 --> 00:10:26,050
+What do we do? Well, maybe we take the high part of that,
+
+323
+00:10:26,050 --> 00:10:28,930
+well, maybe we take the high part of that,
+
+324
+00:10:28,930 --> 00:10:31,550
+Since we need to build that high-order number,
+
+325
+00:10:31,550 --> 00:10:33,710
+we have to shift the low-order number to the left,
+
+326
+00:10:33,710 --> 00:10:36,430
+shift it left by 8 bits, and it becomes the 8 bits of the high part, right?
+
+327
+00:10:36,430 --> 00:10:37,010
+Think about it, isn't that right?
+
+328
+00:10:37,010 --> 00:10:41,470
+This kind of thing is a left shift.
+
+329
+00:10:41,470 --> 00:10:42,630
+We often right shift,
+
+330
+00:10:42,630 --> 00:10:44,190
+and we use it in this kind of scenario.
+
+331
+00:10:44,190 --> 00:10:45,710
+This is logical shift.
+
+332
+00:10:45,710 --> 00:10:49,130
+Now, opposite to that,
+
+333
+00:10:49,130 --> 00:10:51,790
+there is something called arithmetic shift.
+
+334
+00:10:51,790 --> 00:10:53,930
+Arithmetic shift and logical shift
+
+335
+00:10:53,930 --> 00:10:54,630
+are somewhat different.
+
+336
+00:10:54,630 --> 00:10:56,210
+First of all, arithmetic shift
+
+337
+00:10:56,210 --> 00:10:57,550
+only has arithmetic right shift,
+
+338
+00:10:57,550 --> 00:10:58,690
+there is no arithmetic left shift.
+
+339
+00:10:58,690 --> 00:11:00,310
+Please note that.
+
+340
+00:11:00,310 --> 00:11:02,170
+Also, what exactly is arithmetic shift?
+
+341
+00:11:02,170 --> 00:11:03,630
+Arithmetic shift means that
+
+342
+00:11:03,630 --> 00:11:06,210
+unlike a logical shift,
+
+343
+00:11:06,210 --> 00:11:08,030
+which just fills everything with 0 regardless,
+
+344
+00:11:08,030 --> 00:11:11,310
+it operates based on your sign bit.
+
+345
+00:11:11,310 --> 00:11:12,250
+Let me give you an example.
+
+346
+00:11:12,250 --> 00:11:16,190
+Say, for instance, at this position from just now,
+
+347
+00:11:16,190 --> 00:11:18,010
+this 1,
+
+348
+00:11:18,010 --> 00:11:19,190
+for this number,
+
+349
+00:11:19,190 --> 00:11:21,370
+we know where its sign bit is.
+
+350
+00:11:21,370 --> 00:11:22,970
+The sign bit is usually just
+
+351
+00:11:22,970 --> 00:11:25,650
+the most significant bit.
+
+352
+00:11:25,650 --> 00:11:26,670
+Suppose it is 0.
+
+353
+00:11:26,670 --> 00:11:27,310
+OK.
+
+354
+00:11:27,310 --> 00:11:28,270
+Then if it's a,
+
+355
+00:11:28,270 --> 00:11:32,190
+just like the arithmetic right shift we saw earlier,
+
+356
+00:11:32,190 --> 00:11:35,230
+if the most significant bit is 0,
+
+357
+00:11:35,230 --> 00:11:36,690
+then it will pad with 0.
+
+358
+00:11:36,690 --> 00:11:38,770
+But suppose what we have here is not,
+
+359
+00:11:38,770 --> 00:11:40,150
+not 0,
+
+360
+00:11:40,150 --> 00:11:41,530
+and suppose there is a 1 here instead.
+
+361
+00:11:41,530 --> 00:11:43,010
+So think about what effect that produces.
+
+362
+00:11:43,010 --> 00:11:45,430
+What gets filled in here is
+
+363
+00:11:45,430 --> 00:11:46,470
+no longer 0,
+
+364
+00:11:46,470 --> 00:11:46,910
+but what?
+
+365
+00:11:46,910 --> 00:11:48,570
+It's 1.
+
+366
+00:11:48,570 --> 00:11:50,010
+So actually, after the right shift,
+
+367
+00:11:50,010 --> 00:11:51,150
+you end up with something like this.
+
+368
+00:11:51,150 --> 00:11:52,670
+This 1,
+
+369
+00:11:52,670 --> 00:11:54,790
+this 1,
+
+370
+00:11:54,790 --> 00:11:57,350
+this 1 actually got shifted over from this side.
+
+371
+00:11:57,350 --> 00:11:59,070
+Everyone with me?
+
+372
+00:11:59,070 --> 00:12:00,930
+But how did this 1 get in here?
+
+373
+00:12:00,930 --> 00:12:03,610
+This is exactly what arithmetic right shift shifts in.
+
+374
+00:12:03,610 --> 00:12:04,810
+Because during an arithmetic right shift,
+
+375
+00:12:04,810 --> 00:12:06,750
+it sees that you originally had a 1 over here,
+
+376
+00:12:06,750 --> 00:12:08,190
+so what I shift in is a 1.
+
+377
+00:12:08,190 --> 00:12:09,570
+Follow what I mean?
+
+378
+00:12:09,570 --> 00:12:10,810
+If this side were 0,
+
+379
+00:12:10,810 --> 00:12:12,230
+then this side would become 0.
+
+380
+00:12:12,230 --> 00:12:13,950
+That is arithmetic right shift.
+
+381
+00:12:13,950 --> 00:12:16,810
+It actually comes down to the idea of a sign bit.
+
+382
+00:12:16,810 --> 00:12:17,730
+That is to say, with arithmetic right shift,
+
+383
+00:12:17,730 --> 00:12:20,090
+it fills in the bits based on your sign bit.
+
+384
+00:12:20,090 --> 00:12:22,870
+Now, some of you might ask,
+
+385
+00:12:22,870 --> 00:12:23,950
+why do we say
+
+386
+00:12:23,950 --> 00:12:26,870
+here there is only arithmetic...
+
+387
+00:12:26,870 --> 00:12:29,570
+with arithmetic, why is there only right shift
+
+388
+00:12:29,570 --> 00:12:30,510
+and no left shift?
+
+389
+00:12:30,510 --> 00:12:32,270
+Just now, that logical shift,
+
+390
+00:12:32,270 --> 00:12:33,370
+as you can see, had
+
+391
+00:12:33,370 --> 00:12:35,290
+both left shift and right shift.
+
+392
+00:12:35,290 --> 00:12:36,530
+Logical shift.
+
+393
+00:12:36,530 --> 00:12:38,930
+Arithmetic right shift.
+
+394
+00:12:38,930 --> 00:12:42,030
+Why is there no left shift?
+
+395
+00:12:42,030 --> 00:12:43,810
+Think it through.
+
+396
+00:12:43,810 --> 00:12:45,430
+These things are all very simple.
+
+397
+00:12:45,430 --> 00:12:46,610
+It's really not that hard.
+
+398
+00:12:46,610 --> 00:12:47,150
+Think about it.
+
+399
+00:12:47,150 --> 00:12:49,670
+What effect would a left shift have?
+
+400
+00:12:49,670 --> 00:12:53,360
+It would shift your most significant bit right out.
+
+401
+00:12:53,360 --> 00:12:54,660
+Get what I mean?
+
+402
+00:12:54,660 --> 00:12:57,100
+If the highest bit gets shifted away,
+
+403
+00:12:57,100 --> 00:12:58,060
+then as far as it's concerned,
+
+404
+00:12:58,060 --> 00:13:00,260
+it loses that meaning.
+
+405
+00:13:00,260 --> 00:13:01,740
+The sign bit is gone.
+
+406
+00:13:01,740 --> 00:13:02,600
+Get what I mean?
+
+407
+00:13:02,600 --> 00:13:05,160
+So for arithmetic operations,
+
+408
+00:13:05,160 --> 00:13:08,080
+we would never do a right shift or a left shift,
+
+409
+00:13:08,080 --> 00:13:09,020
+Pay attention here.
+
+410
+00:13:09,020 --> 00:13:13,740
+This is the difference between arithmetic shift and logical shift.
+
+411
+00:13:13,740 --> 00:13:14,560
+Pay attention here.
+
+412
+00:13:14,560 --> 00:13:17,440
+So what can arithmetic shift be used for?
+
+413
+00:13:17,440 --> 00:13:20,320
+Well, with arithmetic shift,
+
+414
+00:13:20,320 --> 00:13:21,260
+for example, let me give you an example.
+
+415
+00:13:21,260 --> 00:13:23,140
+Say I have a number called negative 4,
+
+416
+00:13:23,140 --> 00:13:23,900
+and I want to divide it by 2.
+
+417
+00:13:23,900 --> 00:13:27,380
+What method can we use to do that?
+
+418
+00:13:27,380 --> 00:13:31,840
+Actually, we could use the dumbest way,
+
+419
+00:13:31,840 --> 00:13:32,920
+which is to use the division instruction.
+
+420
+00:13:32,920 --> 00:13:34,700
+Because we haven't covered the multiplication instruction here.
+
+421
+00:13:34,700 --> 00:13:35,940
+We do have the trigger instruction
+
+422
+00:13:35,940 --> 00:13:36,580
+See what I mean?
+
+423
+00:13:36,580 --> 00:13:38,100
+There's the DIV trigger instruction
+
+424
+00:13:38,100 --> 00:13:39,920
+We could use the trigger instruction to implement it, of course
+
+425
+00:13:39,920 --> 00:13:42,740
+But we can actually implement it with arithmetic shift
+
+426
+00:13:42,740 --> 00:13:44,260
+Because as we said, shifting to the right
+
+427
+00:13:44,260 --> 00:13:46,280
+is actually equivalent to division
+
+428
+00:13:46,280 --> 00:13:48,100
+Why?
+
+429
+00:13:48,100 --> 00:13:49,280
+Let me give you an example
+
+430
+00:13:49,280 --> 00:13:51,300
+Like we just said,
+
+431
+00:13:51,300 --> 00:13:57,850
+let's keep it short,
+
+432
+00:13:57,850 --> 00:13:59,670
+suppose this is a number,
+
+433
+00:13:59,670 --> 00:14:01,510
+4, let's say,
+
+434
+00:14:01,510 --> 00:14:04,880
+the number 4,
+
+435
+00:14:04,880 --> 00:14:06,100
+if we shift it right by one bit,
+
+436
+00:14:06,100 --> 00:14:06,800
+what does it become?
+
+437
+00:14:06,800 --> 00:14:07,400
+It becomes 2.
+
+438
+00:14:07,400 --> 00:14:08,780
+See that?
+
+439
+00:14:08,780 --> 00:14:10,220
+Hasn't it just been divided by 2?
+
+440
+00:14:10,220 --> 00:14:11,580
+Now, similarly,
+
+441
+00:14:11,580 --> 00:14:12,460
+If there's a sign bit,
+
+442
+00:14:12,460 --> 00:14:13,200
+it will still reach the same
+
+443
+00:14:13,200 --> 00:14:14,300
+so for negative four,
+
+444
+00:14:14,300 --> 00:14:14,960
+it becomes negative two.
+
+445
+00:14:14,960 --> 00:14:18,160
+Now, logical left shift,
+
+446
+00:14:18,160 --> 00:14:19,440
+logical left shift,
+
+447
+00:14:19,440 --> 00:14:20,240
+actually, I forgot to mention this earlier,
+
+448
+00:14:20,240 --> 00:14:21,700
+logical left shift,
+
+449
+00:14:21,700 --> 00:14:23,300
+can actually also be used
+
+450
+00:14:23,300 --> 00:14:24,060
+as a kind of multiplication.
+
+451
+00:14:24,060 --> 00:14:25,540
+Left shift is actually equivalent to multiplication.
+
+452
+00:14:25,540 --> 00:14:26,740
+However,
+
+453
+00:14:26,740 --> 00:14:27,780
+with this logical left shift,
+
+454
+00:14:27,780 --> 00:14:28,620
+when doing multiplication,
+
+455
+00:14:28,620 --> 00:14:29,180
+everyone should note that
+
+456
+00:14:29,180 --> 00:14:30,400
+it can actually only support
+
+457
+00:14:30,400 --> 00:14:32,300
+multiplication of positive numbers.
+
+458
+00:14:32,300 --> 00:14:34,120
+After left shifting a negative number,
+
+459
+00:14:34,120 --> 00:14:35,060
+its sign bit gets shifted out,
+
+460
+00:14:35,060 --> 00:14:35,580
+and it's lost.
+
+461
+00:14:35,580 --> 00:14:36,180
+Think about it, right?
+
+462
+00:14:36,180 --> 00:14:41,000
+So actually, when implementing this complex multiplication,
+
+463
+00:14:41,000 --> 00:14:43,260
+you can't do it purely through logic operations.
+
+464
+00:14:43,260 --> 00:14:44,200
+Keep that in mind.
+
+465
+00:14:44,200 --> 00:14:46,500
+And also,
+
+466
+00:14:46,500 --> 00:14:49,440
+using this shifting approach,
+
+467
+00:14:49,440 --> 00:14:53,780
+compared to using dedicated multiply and divide instructions,
+
+468
+00:14:53,780 --> 00:14:55,760
+it's actually more efficient.
+
+469
+00:14:55,760 --> 00:14:57,680
+If you have a lot of these shifting operations,
+
+470
+00:14:57,680 --> 00:14:59,840
+using shifts is actually better.
+
+471
+00:14:59,840 --> 00:15:03,540
+You can write your own C code for multiplication and division,
+
+472
+00:15:03,540 --> 00:15:08,960
+then use GCC to generate the machine instructions,
+
+473
+00:15:08,960 --> 00:15:10,200
+and you'll see that the compiler
+
+474
+00:15:10,200 --> 00:15:12,220
+actually performs optimizations.
+
+475
+00:15:12,220 --> 00:15:13,360
+It will use
+
+476
+00:15:13,360 --> 00:15:16,860
+it will try to use shift instructions instead of these
+
+477
+00:15:16,860 --> 00:15:19,140
+multiply and divide instructions.
+
+478
+00:15:19,140 --> 00:15:21,140
+Keep that in mind.
+
+479
+00:15:21,140 --> 00:15:26,400
+So that's the shift instructions.
+
+480
+00:15:26,400 --> 00:15:27,900
+They're used quite a lot.
+
+481
+00:15:27,900 --> 00:15:30,960
+Now, for the related exercises for this,
+
+482
+00:15:30,960 --> 00:15:32,160
+I'll just list them here.
+
+483
+00:15:32,160 --> 00:15:34,300
+You can work through them on your own when you get back.
+
+484
+00:15:34,300 --> 00:15:36,400
+In class,
+
+485
+00:15:36,400 --> 00:15:37,620
+if we did it this way,
+
+486
+00:15:37,620 --> 00:15:38,320
+doing one and writing one,
+
+487
+00:15:38,320 --> 00:15:39,000
+if we did one and wrote one up,
+
+488
+00:15:39,000 --> 00:15:40,240
+I reckon it would probably,
+
+489
+00:15:40,240 --> 00:15:43,340
+take a lot of class sessions
+
+490
+00:15:43,340 --> 00:15:44,640
+just to get through this part.
+
+491
+00:15:44,640 --> 00:15:46,600
+Because assembly is actually,
+
+492
+00:15:46,600 --> 00:15:48,480
+a course in its own right,
+
+493
+00:15:48,480 --> 00:15:49,300
+offered as a dedicated class.
+
+494
+00:15:49,300 --> 00:15:50,840
+What we're really doing here is,
+
+495
+00:15:50,840 --> 00:15:51,740
+as part of RISC-V,
+
+496
+00:15:51,740 --> 00:15:53,360
+giving you a quick run-through.
+
+497
+00:15:53,360 --> 00:15:58,060
+So time is still pretty tight.
+
+498
+00:15:58,060 --> 00:16:01,920
+Now, this exercise 5.4,
+
+499
+00:16:01,920 --> 00:16:03,740
+is also meant as homework practice.
+
+500
+00:16:03,740 --> 00:16:05,400
+It's the one I've highlighted here.
+
+501
+00:16:05,400 --> 00:16:06,260
+If it's the practice exercises,
+
+502
+00:16:06,260 --> 00:16:07,600
+the practice part,
+
+503
+00:16:07,600 --> 00:16:09,500
+we actually don't provide the source code.
+
+504
+00:16:09,500 --> 00:16:11,600
+So treat those as exercises to do at home.
+
+505
+00:16:11,600 --> 00:16:14,240
+Basically, after we finish a chapter,
+
+506
+00:16:14,240 --> 00:16:15,300
+the related exercises,
+
+507
+00:16:15,300 --> 00:16:16,520
+you can all go back and work on them.
+
+508
+00:16:16,520 --> 00:16:20,270
+Now let me see how much time is left.
+
+509
+00:16:20,270 --> 00:16:23,650
+I'll probably finish the load and store instructions.
+
+510
+00:16:23,650 --> 00:16:25,250
+That's about all we can cover today.
+
+511
+00:16:25,250 --> 00:16:28,330
+So besides what we just talked about,
+
+512
+00:16:28,330 --> 00:16:30,550
+this addition, subtraction, addition, subtraction,
+
+513
+00:16:30,550 --> 00:16:32,730
+and then logical operations,
+
+514
+00:16:32,730 --> 00:16:36,310
+AND, OR, NOT, left shift, right shift, arithmetic and logical,
+
+515
+00:16:36,310 --> 00:16:38,350
+besides these shift operations,
+
+516
+00:16:38,350 --> 00:16:41,250
+we also have another operation that's performed frequently,
+
+517
+00:16:41,250 --> 00:16:43,790
+and that's reading and writing to memory.
+
+518
+00:16:43,790 --> 00:16:45,090
+As we mentioned earlier,
+
+519
+00:16:45,090 --> 00:16:47,130
+all the ones like addition, subtraction, multiplication, division,
+
+520
+00:16:47,130 --> 00:16:47,850
+the shift instructions
+
+521
+00:16:47,850 --> 00:16:49,790
+It can only operate on registers directly.
+
+522
+00:16:49,790 --> 00:16:51,230
+But what's in the registers,
+
+523
+00:16:51,230 --> 00:16:51,950
+in general,
+
+524
+00:16:51,950 --> 00:16:53,670
+we always need to read it in from memory.
+
+525
+00:16:53,670 --> 00:16:55,070
+Now, the concept of reading,
+
+526
+00:16:55,070 --> 00:16:55,610
+is called a load.
+
+527
+00:16:55,610 --> 00:16:57,050
+Note this carefully,
+
+528
+00:16:57,050 --> 00:16:58,530
+this English terminology,
+
+529
+00:16:58,530 --> 00:16:59,470
+load and store.
+
+530
+00:16:59,470 --> 00:17:01,670
+Load actually means bringing something in.
+
+531
+00:17:01,670 --> 00:17:02,870
+It's loading something in.
+
+532
+00:17:02,870 --> 00:17:04,250
+From your perspective,
+
+533
+00:17:04,250 --> 00:17:05,870
+you're looking at it from the CPU's point of view.
+
+534
+00:17:05,870 --> 00:17:06,630
+Do you understand what I mean?
+
+535
+00:17:06,630 --> 00:17:08,410
+Store, on the other hand, means storing something out.
+
+536
+00:17:08,410 --> 00:17:09,570
+It's the concept of sending something out.
+
+537
+00:17:09,570 --> 00:17:11,070
+So it's a concept of writing.
+
+538
+00:17:11,070 --> 00:17:13,430
+I've marked this with colors here.
+
+539
+00:17:13,430 --> 00:17:14,910
+When you look at this diagram,
+
+540
+00:17:14,910 --> 00:17:16,350
+try to understand these concepts.
+
+541
+00:17:16,350 --> 00:17:19,130
+To make it easier for everyone to remember this instruction,
+
+542
+00:17:19,130 --> 00:17:20,290
+the abbreviation,
+
+543
+00:17:20,290 --> 00:17:21,310
+is L and store.
+
+544
+00:17:21,310 --> 00:17:22,330
+L and S.
+
+545
+00:17:22,330 --> 00:17:26,440
+Now, one thing to note,
+
+546
+00:17:26,440 --> 00:17:27,220
+that is,
+
+547
+00:17:27,220 --> 00:17:29,400
+taking load as an example,
+
+548
+00:17:29,400 --> 00:17:30,660
+for reading,
+
+549
+00:17:30,660 --> 00:17:32,240
+and writing is the same,
+
+550
+00:17:32,240 --> 00:17:34,740
+there are actually some variations.
+
+551
+00:17:34,740 --> 00:17:35,640
+As you can see,
+
+552
+00:17:35,640 --> 00:17:36,760
+it can
+
+553
+00:17:36,760 --> 00:17:40,700
+it can
+
+554
+00:17:40,700 --> 00:17:44,180
+read byte by byte,
+
+555
+00:17:44,180 --> 00:17:45,800
+or it can
+
+556
+00:17:45,800 --> 00:17:48,320
+read two bytes at a time.
+
+557
+00:17:48,320 --> 00:17:49,520
+That is, the meaning of
+
+558
+00:17:49,520 --> 00:17:52,700
+B, H, and W here,
+
+559
+00:17:52,700 --> 00:17:54,200
+which stand for byte,
+
+560
+00:17:54,200 --> 00:17:56,420
+half word, and word.
+
+561
+00:17:56,420 --> 00:17:58,700
+We need to have this concept.
+
+562
+00:17:58,700 --> 00:18:00,260
+byte is a byte
+
+563
+00:18:00,260 --> 00:18:03,020
+and word is
+
+564
+00:18:03,020 --> 00:18:04,480
+four bytes
+
+565
+00:18:04,480 --> 00:18:06,600
+half word is
+
+566
+00:18:06,600 --> 00:18:08,160
+half of four bytes
+
+567
+00:18:08,160 --> 00:18:08,780
+right?
+
+568
+00:18:08,780 --> 00:18:10,080
+So that's two bytes.
+
+569
+00:18:10,080 --> 00:18:11,420
+And the abbreviations
+
+570
+00:18:11,420 --> 00:18:12,800
+are B, H, and W.
+
+571
+00:18:12,800 --> 00:18:14,380
+Just understand it this way.
+
+572
+00:18:14,380 --> 00:18:15,940
+This is L.
+
+573
+00:18:15,940 --> 00:18:17,460
+This is divided into three groups.
+
+574
+00:18:17,460 --> 00:18:18,580
+At the same time,
+
+575
+00:18:18,580 --> 00:18:20,120
+for these three groups,
+
+576
+00:18:20,120 --> 00:18:21,800
+there's also something else, that is,
+
+577
+00:18:21,800 --> 00:18:22,420
+look here,
+
+578
+00:18:22,420 --> 00:18:24,100
+there are some variations.
+
+579
+00:18:24,100 --> 00:18:25,200
+For example, there's a U here.
+
+580
+00:18:25,200 --> 00:18:29,080
+So let's take this one as an example.
+
+581
+00:18:29,080 --> 00:18:29,980
+Let's distinguish this.
+
+582
+00:18:29,980 --> 00:18:31,700
+What's the idea behind this U versus not having a U?
+
+583
+00:18:31,700 --> 00:18:34,140
+I mean, if it's...
+
+584
+00:18:34,140 --> 00:18:37,140
+What's the concept here?
+
+585
+00:18:37,140 --> 00:18:38,860
+What issue comes up when you want to read the value in?
+
+586
+00:18:38,860 --> 00:18:42,420
+So we know how wide our internal registers are, right?
+
+587
+00:18:42,420 --> 00:18:45,420
+Our internal registers are 32 bits.
+
+588
+00:18:45,420 --> 00:18:46,520
+Right?
+
+589
+00:18:46,520 --> 00:18:49,780
+But now, take LB for example.
+
+590
+00:18:49,780 --> 00:18:52,960
+When you do the read at this point, how much data are you reading?
+
+591
+00:18:52,960 --> 00:18:54,640
+You're reading one byte.
+
+592
+00:18:54,640 --> 00:18:57,000
+That is to say, your register is four bytes wide.
+
+593
+00:18:57,000 --> 00:18:58,880
+But what you read is just one byte.
+
+594
+00:18:58,880 --> 00:19:00,300
+So here's the issue.
+
+595
+00:19:00,300 --> 00:19:02,220
+Once you read that one byte in,
+
+596
+00:19:02,220 --> 00:19:03,440
+in that register of yours,
+
+597
+00:19:03,440 --> 00:19:05,620
+what do you put in the remaining three bytes?
+
+598
+00:19:05,620 --> 00:19:07,500
+You see what I mean?
+
+599
+00:19:07,500 --> 00:19:09,540
+For example, this register here,
+
+600
+00:19:09,540 --> 00:19:11,280
+it's four bytes wide.
+
+601
+00:19:11,280 --> 00:19:14,760
+What we read in is only one byte.
+
+602
+00:19:14,760 --> 00:19:16,280
+Now, that byte,
+
+603
+00:19:16,280 --> 00:19:17,760
+we generally put it in the low bits,
+
+604
+00:19:17,760 --> 00:19:19,020
+and that's pretty much it.
+
+605
+00:19:19,020 --> 00:19:20,280
+But now there's one issue,
+
+606
+00:19:20,280 --> 00:19:23,360
+which is what to put in the upper three bytes of the register,
+
+607
+00:19:23,360 --> 00:19:24,360
+the question of what goes there.
+
+608
+00:19:24,360 --> 00:19:26,620
+See what I mean?
+
+609
+00:19:26,620 --> 00:19:28,560
+There are two cases here.
+
+610
+00:19:28,560 --> 00:19:30,660
+One is called sign extension,
+
+611
+00:19:30,660 --> 00:19:31,860
+and the other is called zero extension.
+
+612
+00:19:31,860 --> 00:19:33,160
+We covered these concepts earlier.
+
+613
+00:19:33,160 --> 00:19:33,900
+What is sign extension?
+
+614
+00:19:33,900 --> 00:19:37,320
+It means that if the byte you read in here,
+
+615
+00:19:37,320 --> 00:19:38,820
+this byte,
+
+616
+00:19:38,820 --> 00:19:39,800
+has a most significant bit of 1,
+
+617
+00:19:39,800 --> 00:19:42,520
+then what does sign extension mean?
+
+618
+00:19:42,520 --> 00:19:44,500
+All the upper bits become 1s, right?
+
+619
+00:19:44,500 --> 00:19:45,600
+Still following me?
+
+620
+00:19:45,600 --> 00:19:47,040
+Extend according to the sign bit.
+
+621
+00:19:47,040 --> 00:19:50,440
+If it's 0, then everything is 0.
+
+622
+00:19:50,440 --> 00:19:51,900
+This is called sign extension.
+
+623
+00:19:51,900 --> 00:19:54,700
+But if you add a 'u' here,
+
+624
+00:19:54,700 --> 00:19:55,960
+then it becomes
+
+625
+00:19:55,960 --> 00:19:57,480
+actually unsigned extension.
+
+626
+00:19:57,480 --> 00:19:59,060
+Unsigned extension means zero extension.
+
+627
+00:19:59,060 --> 00:19:59,760
+Zero extension means that
+
+628
+00:19:59,760 --> 00:20:01,280
+no matter what the preceding byte's
+
+629
+00:20:01,280 --> 00:20:02,900
+most significant bit is, 1 or 0,
+
+630
+00:20:02,900 --> 00:20:05,100
+the upper bits are all cleared to zero.
+
+631
+00:20:05,100 --> 00:20:06,660
+That's the effect we achieve.
+
+632
+00:20:06,660 --> 00:20:09,000
+This actually maps to our C language
+
+633
+00:20:09,000 --> 00:20:10,420
+in a way that is basically like
+
+634
+00:20:10,420 --> 00:20:11,380
+somewhat similar to
+
+635
+00:20:11,380 --> 00:20:13,660
+the concept of unsigned and signed numbers.
+
+636
+00:20:13,660 --> 00:20:15,380
+Take a moment to let that sink in.
+
+637
+00:20:15,380 --> 00:20:18,490
+And then,
+
+638
+00:20:18,490 --> 00:20:19,870
+when it performs the operation,
+
+639
+00:20:19,870 --> 00:20:20,910
+note that it works like this:
+
+640
+00:20:20,910 --> 00:20:21,350
+that is to say,
+
+641
+00:20:21,350 --> 00:20:23,250
+It goes by this rs1
+
+642
+00:20:23,250 --> 00:20:25,010
+the value in this register
+
+643
+00:20:25,010 --> 00:20:26,930
+its value
+
+644
+00:20:26,930 --> 00:20:31,040
+that is to say, since you are going to memory to read
+
+645
+00:20:31,040 --> 00:20:32,200
+then this memory of yours,
+
+646
+00:20:32,200 --> 00:20:33,240
+this address in memory,
+
+647
+00:20:33,240 --> 00:20:34,940
+you definitely have to tell the computer.
+
+648
+00:20:34,940 --> 00:20:37,820
+So how is this memory address computed?
+
+649
+00:20:37,820 --> 00:20:42,860
+It is obtained by rs1 plus an immediate value.
+
+650
+00:20:42,860 --> 00:20:44,620
+Because it uses the I-type format.
+
+651
+00:20:44,620 --> 00:20:46,380
+You can imagine that since it is I-type,
+
+652
+00:20:46,380 --> 00:20:47,980
+in this instruction,
+
+653
+00:20:47,980 --> 00:20:52,600
+one part holds a 12-bit immediate value.
+
+654
+00:20:52,600 --> 00:20:54,620
+This immediate value represents this offset here.
+
+655
+00:20:54,620 --> 00:20:57,140
+So it actually takes the value in this register,
+
+656
+00:20:57,140 --> 00:20:58,100
+adds this immediate value,
+
+657
+00:20:58,100 --> 00:20:59,520
+and finally gets an address.
+
+658
+00:20:59,520 --> 00:21:01,080
+Then, based on this address,
+
+659
+00:21:01,080 --> 00:21:03,180
+it goes to memory to fetch that byte.
+
+660
+00:21:03,180 --> 00:21:04,520
+That is actually how the process works.
+
+661
+00:21:04,520 --> 00:21:05,780
+So, everyone,
+
+662
+00:21:05,780 --> 00:21:08,480
+this shouldn't give you too much trouble.
+
+663
+00:21:08,480 --> 00:21:09,680
+Now, when we talk about offset addressing,
+
+664
+00:21:09,680 --> 00:21:10,660
+I've listed a few examples here.
+
+665
+00:21:10,660 --> 00:21:11,500
+Take a moment to get familiar with them.
+
+666
+00:21:11,500 --> 00:21:13,460
+And at the same time,
+
+667
+00:21:13,460 --> 00:21:14,960
+also,
+
+668
+00:21:14,960 --> 00:21:16,620
+notice this address range.
+
+669
+00:21:16,620 --> 00:21:17,260
+Why is it this one?
+
+670
+00:21:17,260 --> 00:21:18,320
+It's also because of this immediate value,
+
+671
+00:21:18,320 --> 00:21:19,140
+which is 12 bits wide.
+
+672
+00:21:19,140 --> 00:21:21,980
+There's one more thing
+
+673
+00:21:21,980 --> 00:21:22,680
+I want you to pay attention to,
+
+674
+00:21:22,680 --> 00:21:23,160
+and that is,
+
+675
+00:21:23,160 --> 00:21:26,090
+there's a question here,
+
+676
+00:21:26,090 --> 00:21:26,890
+let me ask you,
+
+677
+00:21:26,890 --> 00:21:27,690
+I want to ask everyone,
+
+678
+00:21:27,690 --> 00:21:28,430
+just look at this,
+
+679
+00:21:28,430 --> 00:21:31,890
+LBU, LBU,
+
+680
+00:21:31,890 --> 00:21:34,350
+LHU, LHU.
+
+681
+00:21:34,350 --> 00:21:35,170
+But then,
+
+682
+00:21:35,170 --> 00:21:39,050
+why isn't there something like an LWU?
+
+683
+00:21:39,050 --> 00:21:42,840
+Think about why.
+
+684
+00:21:42,840 --> 00:21:50,130
+This is actually something we covered earlier,
+
+685
+00:21:50,130 --> 00:21:52,190
+based on what we explained to you before,
+
+686
+00:21:52,190 --> 00:21:55,110
+about why we do sign extension and zero extension.
+
+687
+00:21:55,110 --> 00:21:57,250
+I think everyone should get what I mean.
+
+688
+00:21:57,250 --> 00:22:00,790
+A register is four bytes,
+
+689
+00:22:00,790 --> 00:22:04,330
+and if you load a word,
+
+690
+00:22:04,330 --> 00:22:05,470
+what does that mean?
+
+691
+00:22:05,570 --> 00:22:08,290
+A word is also four bytes,
+
+692
+00:22:08,290 --> 00:22:10,910
+so the data in memory,
+
+693
+00:22:10,910 --> 00:22:11,390
+when loaded in,
+
+694
+00:22:11,390 --> 00:22:12,850
+exactly fills up one register, right?
+
+695
+00:22:12,850 --> 00:22:13,330
+Think about it, isn't that the case?
+
+696
+00:22:13,330 --> 00:22:14,610
+Do we still need to extend?
+
+697
+00:22:14,610 --> 00:22:16,070
+No extension needed,
+
+698
+00:22:16,070 --> 00:22:17,510
+naturally.
+
+699
+00:22:17,510 --> 00:22:18,110
+Right?
+
+700
+00:22:18,110 --> 00:22:19,170
+So these
+
+701
+00:22:19,170 --> 00:22:20,490
+As you study,
+
+702
+00:22:20,490 --> 00:22:21,350
+ask yourself these questions
+
+703
+00:22:21,350 --> 00:22:22,470
+— a few whys.
+
+704
+00:22:22,470 --> 00:22:24,670
+It may give us a deeper understanding
+
+705
+00:22:24,670 --> 00:22:26,470
+of the design of this instruction set.
+
+706
+00:22:26,470 --> 00:22:27,030
+That is to say,
+
+707
+00:22:27,030 --> 00:22:30,590
+for LW, there is no LWU,
+
+708
+00:22:30,590 --> 00:22:35,620
+and the reason is that sign extension isn't needed.
+
+709
+00:22:35,620 --> 00:22:36,640
+So this example,
+
+710
+00:22:36,640 --> 00:22:37,960
+you can go back and match it up yourselves,
+
+711
+00:22:37,960 --> 00:22:39,680
+and see the effect of this sign extension.
+
+712
+00:22:39,680 --> 00:22:42,960
+Now for writes,
+
+713
+00:22:42,960 --> 00:22:44,840
+it's relatively simple.
+
+714
+00:22:44,840 --> 00:22:48,080
+For writes, there are only B, H, and W,
+
+715
+00:22:48,080 --> 00:22:49,860
+with no sign extension.
+
+716
+00:22:49,860 --> 00:22:55,140
+There's no distinction between unsigned writes and signed writes —
+
+717
+00:22:55,140 --> 00:22:58,950
+store instructions don't distinguish them.
+
+718
+00:22:58,950 --> 00:23:00,670
+Now think about why that is.
+
+719
+00:23:00,670 --> 00:23:03,690
+This is also something worth understanding — why.
+
+720
+00:23:03,690 --> 00:23:06,680
+Everyone think about why.
+
+721
+00:23:06,680 --> 00:23:12,910
+Because this is actually the reverse of the process we just talked about.
+
+722
+00:23:12,910 --> 00:23:13,650
+You know this.
+
+723
+00:23:13,650 --> 00:23:16,970
+For example, take a byte — one byte.
+
+724
+00:23:16,970 --> 00:23:17,930
+Think about it.
+
+725
+00:23:17,930 --> 00:23:20,050
+Inside the register there are 4 bytes.
+
+726
+00:23:20,050 --> 00:23:21,890
+Outside there is only 1 byte.
+
+727
+00:23:21,890 --> 00:23:24,350
+Now you want to put this thing out.
+
+728
+00:23:24,350 --> 00:23:25,630
+This is not reading it in.
+
+729
+00:23:25,630 --> 00:23:26,650
+Do you understand what I mean?
+
+730
+00:23:26,650 --> 00:23:27,950
+Since you're putting it out,
+
+731
+00:23:27,950 --> 00:23:32,250
+the CPU will naturally just fill in its low-order byte
+
+732
+00:23:32,250 --> 00:23:34,570
+and that's it.
+
+733
+00:23:34,570 --> 00:23:36,690
+There's no such thing as a concept of extension here at all.
+
+734
+00:23:36,690 --> 00:23:37,570
+Do you understand what I mean?
+
+735
+00:23:37,570 --> 00:23:39,930
+So naturally, there is no extension issue.
+
+736
+00:23:39,930 --> 00:23:43,070
+So when writing out,
+
+737
+00:23:43,070 --> 00:23:46,110
+you don't need to worry about this sign extension issue.
+
+738
+00:23:46,110 --> 00:23:48,370
+So when you write instructions,
+
+739
+00:23:48,370 --> 00:23:50,790
+if you know the reason behind this,
+
+740
+00:23:50,790 --> 00:23:52,190
+it may help you understand it better.
+
+741
+00:23:52,190 --> 00:23:56,030
+Now, its instruction format
+
+742
+00:23:56,030 --> 00:23:57,250
+is a new instruction format
+
+743
+00:23:57,250 --> 00:23:57,990
+called S-type.
+
+744
+00:23:57,990 --> 00:24:00,050
+The S here stands for store
+
+745
+00:24:00,050 --> 00:24:01,330
+— it just means store.
+
+746
+00:24:01,330 --> 00:24:06,900
+That's where the name comes from.
+
+747
+00:24:06,900 --> 00:24:08,060
+Now, some of you might wonder,
+
+748
+00:24:08,060 --> 00:24:11,620
+why does this immediate look so odd?
+
+749
+00:24:11,620 --> 00:24:12,780
+Look at this immediate —
+
+750
+00:24:12,780 --> 00:24:15,100
+when it's actually stored in the instruction,
+
+751
+00:24:15,100 --> 00:24:16,380
+it's split apart, as you can see.
+
+752
+00:24:16,380 --> 00:24:18,800
+5 bits are placed here,
+
+753
+00:24:18,800 --> 00:24:21,120
+and here you have bits 5 to 11,
+
+754
+00:24:21,120 --> 00:24:21,980
+which is 7 bits.
+
+755
+00:24:21,980 --> 00:24:24,600
+Why not just put these two parts together?
+
+756
+00:24:24,600 --> 00:24:27,480
+Well, honestly,
+
+757
+00:24:27,480 --> 00:24:29,060
+when they designed the spec,
+
+758
+00:24:29,060 --> 00:24:29,940
+there must have been a reason.
+
+759
+00:24:29,940 --> 00:24:33,100
+And that reason probably has little to do with software.
+
+760
+00:24:33,100 --> 00:24:35,280
+It's entirely because, possibly, at the lower level...
+
+761
+00:24:35,280 --> 00:24:37,420
+From a hardware design perspective,
+
+762
+00:24:37,420 --> 00:24:39,180
+it comes down to a decoding efficiency issue.
+
+763
+00:24:39,180 --> 00:24:40,960
+As for the reason, we don't need to worry about it.
+
+764
+00:24:40,960 --> 00:24:42,740
+When we write, when we write assembly,
+
+765
+00:24:42,740 --> 00:24:45,020
+we actually don't pay attention to the specific
+
+766
+00:24:45,020 --> 00:24:46,680
+arrangement inside this.
+
+767
+00:24:46,680 --> 00:24:47,860
+But when decoding,
+
+768
+00:24:47,860 --> 00:24:49,160
+when you disassemble,
+
+769
+00:24:49,160 --> 00:24:50,240
+you might need to consider this issue.
+
+770
+00:24:50,240 --> 00:24:54,720
+So, as for memory reads and writes,
+
+771
+00:24:54,720 --> 00:24:57,680
+we'll stop here for today.
+
+772
+00:24:57,680 --> 00:25:03,490
+Then there are still some conditional branches
+
+773
+00:25:03,490 --> 00:25:04,050
+and jump instructions.
+
+774
+00:25:04,050 --> 00:25:05,630
+We probably won't have time to cover those today.
+
+775
+00:25:05,630 --> 00:25:07,850
+We'll cover them in the next class.
+
+776
+00:25:07,850 --> 00:25:10,230
+As for the assembly instruction part of the content,
+
+777
+00:25:10,230 --> 00:25:12,090
+you'll notice that
+
+778
+00:25:12,090 --> 00:25:14,450
+compared to the earlier material,
+
+779
+00:25:14,450 --> 00:25:15,530
+it's definitely a bit more dry.
+
+780
+00:25:15,530 --> 00:25:18,290
+Because especially when doing the exercises,
+
+781
+00:25:18,290 --> 00:25:21,090
+It's also a bit different from writing in a high-level language.
+
+782
+00:25:21,090 --> 00:25:23,310
+But because in this course of ours,
+
+783
+00:25:23,310 --> 00:25:24,470
+in this course,
+
+784
+00:25:24,470 --> 00:25:26,670
+in the end we'll be writing some cutting-edge stuff,
+
+785
+00:25:26,670 --> 00:25:27,510
+low-level development.
+
+786
+00:25:27,510 --> 00:25:30,550
+That means at the very least you need to be able to read it.
+
+787
+00:25:30,550 --> 00:25:32,150
+You get what I mean, right?
+
+788
+00:25:32,150 --> 00:25:33,450
+If I give you a piece of assembly,
+
+789
+00:25:33,450 --> 00:25:35,190
+you should at least be able to roughly understand it,
+
+790
+00:25:35,190 --> 00:25:36,790
+and then make some small modifications.
+
+791
+00:25:36,790 --> 00:25:39,690
+That's probably about all we'll ask of you.
+
+792
+00:25:39,690 --> 00:25:41,090
+Writing large blocks of it,
+
+793
+00:25:41,090 --> 00:25:42,430
+you won't need to do.
+
+794
+00:25:42,430 --> 00:25:43,530
+But,
+
+795
+00:25:43,530 --> 00:25:44,650
+as long as you have the basic concepts down,
+
+796
+00:25:44,650 --> 00:25:46,330
+and can read it, that's fine.
+
+797
+00:25:46,330 --> 00:25:47,230
+OK.
+
+798
+00:25:47,230 --> 00:25:48,410
+So that's it for today's class.
+
+799
+00:25:48,410 --> 00:25:48,790
+All right?
+
+800
+00:25:48,790 --> 00:25:49,550
+Thank you, everyone.

@@ -1,0 +1,3926 @@
+[
+ {
+  "id": 0,
+  "text": "Chapter 4, embedded development. Because when we go on to develop an operating system, honestly, it involves a lot of techniques related to embedded development. So here, as one chapter, I'll cover some preliminary content for you: I'll introduce the concept of embedded development, the concept of cross-compilation, and some tools and software commonly used in embedded development, including GDB, the QEMU emulator, and MIC."
+ },
+ {
+  "id": 1,
+  "text": "So first, let's take a look at"
+ },
+ {
+  "id": 2,
+  "text": "what embedded development is."
+ },
+ {
+  "id": 3,
+  "text": "So, embedded development,"
+ },
+ {
+  "id": 4,
+  "text": "you can look at this diagram."
+ },
+ {
+  "id": 5,
+  "text": "This diagram is actually a"
+ },
+ {
+  "id": 6,
+  "text": "if later on you go out and do this kind of"
+ },
+ {
+  "id": 7,
+  "text": "say, developing drivers,"
+ },
+ {
+  "id": 8,
+  "text": "developing operating systems,"
+ },
+ {
+  "id": 9,
+  "text": "that kind of work,"
+ },
+ {
+  "id": 10,
+  "text": "then this is actually the kind of work environment you'll have."
+ },
+ {
+  "id": 11,
+  "text": "It's a bit different from our"
+ },
+ {
+  "id": 12,
+  "text": "non-embedded development,"
+ },
+ {
+  "id": 13,
+  "text": "that is, the common local development environment."
+ },
+ {
+  "id": 14,
+  "text": "It's a little different,"
+ },
+ {
+  "id": 15,
+  "text": "because if it's local development,"
+ },
+ {
+  "id": 16,
+  "text": "basically just having one computer like this is enough."
+ },
+ {
+  "id": 17,
+  "text": "Right?"
+ },
+ {
+  "id": 18,
+  "text": "For example, you just grab a computer here,"
+ },
+ {
+  "id": 19,
+  "text": "and as long as it can connect to the internet,"
+ },
+ {
+  "id": 20,
+  "text": "Basically, your environment is pretty much all set up."
+ },
+ {
+  "id": 21,
+  "text": "But if you're doing embedded development,"
+ },
+ {
+  "id": 22,
+  "text": "that is far from enough."
+ },
+ {
+  "id": 23,
+  "text": "In particular, we..."
+ },
+ {
+  "id": 24,
+  "text": "because the programs we need to run"
+ },
+ {
+  "id": 25,
+  "text": "often have to run on"
+ },
+ {
+  "id": 26,
+  "text": "a separate"
+ },
+ {
+  "id": 27,
+  "text": "what we call a target board."
+ },
+ {
+  "id": 28,
+  "text": "That is, on"
+ },
+ {
+  "id": 29,
+  "text": "say, a development board,"
+ },
+ {
+  "id": 30,
+  "text": "or on another machine."
+ },
+ {
+  "id": 31,
+  "text": "In that case,"
+ },
+ {
+  "id": 32,
+  "text": "we at least need to set up a small development environment,"
+ },
+ {
+  "id": 33,
+  "text": "maybe through a router,"
+ },
+ {
+  "id": 34,
+  "text": "connecting those two machines together."
+ },
+ {
+  "id": 35,
+  "text": "Now, this machine here,"
+ },
+ {
+  "id": 36,
+  "text": "is called the target board,"
+ },
+ {
+  "id": 37,
+  "text": "and this machine here is called the host,"
+ },
+ {
+  "id": 38,
+  "text": "meaning the main machine,"
+ },
+ {
+  "id": 39,
+  "text": "and this one is called the target machine."
+ },
+ {
+  "id": 40,
+  "text": "on the host machine, generally,"
+ },
+ {
+  "id": 41,
+  "text": "we do things like compiling, editing, and debugging."
+ },
+ {
+  "id": 42,
+  "text": "And this target board,"
+ },
+ {
+  "id": 43,
+  "text": "what mainly runs on it"
+ },
+ {
+  "id": 44,
+  "text": "might be running on another machine,"
+ },
+ {
+  "id": 45,
+  "text": "right?"
+ },
+ {
+  "id": 46,
+  "text": "Just get familiar with this setup."
+ },
+ {
+  "id": 47,
+  "text": "Now, embedded development,"
+ },
+ {
+  "id": 48,
+  "text": "it happens in a specific hardware environment,"
+ },
+ {
+  "id": 49,
+  "text": "developing for a particular piece of hardware."
+ },
+ {
+  "id": 50,
+  "text": "So the connection with the hardware"
+ },
+ {
+  "id": 51,
+  "text": "is quite tight."
+ },
+ {
+  "id": 52,
+  "text": "Very often you need to"
+ },
+ {
+  "id": 53,
+  "text": "keep in mind that your program"
+ },
+ {
+  "id": 54,
+  "text": "is not running locally,"
+ },
+ {
+  "id": 55,
+  "text": "but on some special hardware."
+ },
+ {
+  "id": 56,
+  "text": "What exactly is on that hardware,"
+ },
+ {
+  "id": 57,
+  "text": "you need to be quite familiar with it,"
+ },
+ {
+  "id": 58,
+  "text": "and only then can you do the development."
+ },
+ {
+  "id": 59,
+  "text": "Well, with an operating system, that's even more true."
+ },
+ {
+  "id": 60,
+  "text": "Because when you develop an operating system,"
+ },
+ {
+  "id": 61,
+  "text": "you definitely need to know"
+ },
+ {
+  "id": 62,
+  "text": "the machine your operating system runs on"
+ },
+ {
+  "id": 63,
+  "text": "is"
+ },
+ {
+  "id": 64,
+  "text": "for example,"
+ },
+ {
+  "id": 65,
+  "text": "whether the CPU is x86,"
+ },
+ {
+  "id": 66,
+  "text": "or RISC-V,"
+ },
+ {
+  "id": 67,
+  "text": "right?"
+ },
+ {
+  "id": 68,
+  "text": "So at the very least, that's what you need to know."
+ },
+ {
+  "id": 69,
+  "text": "And you can't really develop it locally,"
+ },
+ {
+  "id": 70,
+  "text": "because with local development,"
+ },
+ {
+  "id": 71,
+  "text": "there's already an operating system on your local machine."
+ },
+ {
+  "id": 72,
+  "text": "So of course there's no need for you to develop another operating system."
+ },
+ {
+  "id": 73,
+  "text": "Your operating system is definitely going to run on a"
+ },
+ {
+  "id": 74,
+  "text": "machine that has no system on it,"
+ },
+ {
+  "id": 75,
+  "text": "right?"
+ },
+ {
+  "id": 76,
+  "text": "So,"
+ },
+ {
+  "id": 77,
+  "text": "if you want to build an operating system,"
+ },
+ {
+  "id": 78,
+  "text": "it actually falls under a kind of lightweight agile development,"
+ },
+ {
+  "id": 79,
+  "text": "and so"
+ },
+ {
+  "id": 80,
+  "text": "So, since this is embedded development,"
+ },
+ {
+  "id": 81,
+  "text": "meaning the target machine and the host are two separate machines,"
+ },
+ {
+  "id": 82,
+  "text": "we came up with a concept,"
+ },
+ {
+  "id": 83,
+  "text": "called the concept of cross-compilation."
+ },
+ {
+  "id": 84,
+  "text": "Now, what exactly is this concept?"
+ },
+ {
+  "id": 85,
+  "text": "If you haven't done embedded development before,"
+ },
+ {
+  "id": 86,
+  "text": "you probably know very little about it."
+ },
+ {
+  "id": 87,
+  "text": "So I'll go ahead and explain it to everyone here."
+ },
+ {
+  "id": 88,
+  "text": "First, let's say"
+ },
+ {
+  "id": 89,
+  "text": "we can define a few concepts:"
+ },
+ {
+  "id": 90,
+  "text": "the build system,"
+ },
+ {
+  "id": 91,
+  "text": "the host system, and the target system."
+ },
+ {
+  "id": 92,
+  "text": "I've already circled the important parts here"
+ },
+ {
+  "id": 93,
+  "text": "in black text,"
+ },
+ {
+  "id": 94,
+  "text": "so feel free to follow along with me."
+ },
+ {
+  "id": 95,
+  "text": "What is the build system?"
+ },
+ {
+  "id": 96,
+  "text": "The build system."
+ },
+ {
+  "id": 97,
+  "text": "What is it used for?"
+ },
+ {
+  "id": 98,
+  "text": "It's used to generate the compiler and other auxiliary programs that let you control compilation."
+ },
+ {
+  "id": 99,
+  "text": "That is to say, the GCC you normally use."
+ },
+ {
+  "id": 100,
+  "text": "This kind of compiler"
+ },
+ {
+  "id": 101,
+  "text": "actually has to be built as well"
+ },
+ {
+  "id": 102,
+  "text": "think about it, right?"
+ },
+ {
+  "id": 103,
+  "text": "It's not just there by nature"
+ },
+ {
+  "id": 104,
+  "text": "It has to be built too"
+ },
+ {
+  "id": 105,
+  "text": "So how do we build it?"
+ },
+ {
+  "id": 106,
+  "text": "On which machine do we build it?"
+ },
+ {
+  "id": 107,
+  "text": "That machine is called the build system"
+ },
+ {
+  "id": 108,
+  "text": "And once it's built, what do we do with it?"
+ },
+ {
+  "id": 109,
+  "text": "We run it, right?"
+ },
+ {
+  "id": 110,
+  "text": "Exactly"
+ },
+ {
+  "id": 111,
+  "text": "So on which machine do we run this compiler?"
+ },
+ {
+  "id": 112,
+  "text": "The system where this compiler runs"
+ },
+ {
+  "id": 113,
+  "text": "is called the host system"
+ },
+ {
+  "id": 114,
+  "text": "So what is the compiler for?"
+ },
+ {
+  "id": 115,
+  "text": "The compiler is used to generate another program"
+ },
+ {
+  "id": 116,
+  "text": "think about it, right?"
+ },
+ {
+  "id": 117,
+  "text": "It is itself a program"
+ },
+ {
+  "id": 118,
+  "text": "and it's used to generate another program"
+ },
+ {
+  "id": 119,
+  "text": "And the application program it generates"
+ },
+ {
+  "id": 120,
+  "text": "Where does it run? It runs on the target machine."
+ },
+ {
+  "id": 121,
+  "text": "So the machine that runs this program is called the target system."
+ },
+ {
+  "id": 122,
+  "text": "So we have three concepts:"
+ },
+ {
+  "id": 123,
+  "text": "the build system, the host system, and the target system."
+ },
+ {
+  "id": 124,
+  "text": "With these three concepts,"
+ },
+ {
+  "id": 125,
+  "text": "we can define what native compilation is,"
+ },
+ {
+  "id": 126,
+  "text": "and what cross-compilation is."
+ },
+ {
+  "id": 127,
+  "text": "The formula is very simple."
+ },
+ {
+  "id": 128,
+  "text": "You should be able to read it yourselves."
+ },
+ {
+  "id": 129,
+  "text": "What does build equals host equals target mean?"
+ },
+ {
+  "id": 130,
+  "text": "Let me translate it into plain language."
+ },
+ {
+  "id": 131,
+  "text": "What does it mean?"
+ },
+ {
+  "id": 132,
+  "text": "It means that,"
+ },
+ {
+  "id": 133,
+  "text": "for example, on this computer of mine,"
+ },
+ {
+  "id": 134,
+  "text": "I built my compiler on this computer,"
+ },
+ {
+  "id": 135,
+  "text": "right?"
+ },
+ {
+  "id": 136,
+  "text": "And at the same time,"
+ },
+ {
+  "id": 137,
+  "text": "the compiler itself also runs on this computer,"
+ },
+ {
+  "id": 138,
+  "text": "and the programs it produces also run on this computer."
+ },
+ {
+  "id": 139,
+  "text": "In that case, this is called native compilation."
+ },
+ {
+  "id": 140,
+  "text": "I'm also running my compiler on my computer,"
+ },
+ {
+  "id": 141,
+  "text": "and at the same time,"
+ },
+ {
+  "id": 142,
+  "text": "what I generate —"
+ },
+ {
+  "id": 143,
+  "text": "the application programs I build with my compiler —"
+ },
+ {
+  "id": 144,
+  "text": "also run on the same computer I'm on."
+ },
+ {
+  "id": 145,
+  "text": "So what do we call this way of working?"
+ },
+ {
+  "id": 146,
+  "text": "It's called native compilation."
+ },
+ {
+  "id": 147,
+  "text": "If you're not involved in embedded development,"
+ },
+ {
+  "id": 148,
+  "text": "most of the work you do is actually native compilation."
+ },
+ {
+  "id": 149,
+  "text": "It's just that you probably don't build the compiler yourselves —"
+ },
+ {
+  "id": 150,
+  "text": "you probably just grab a compiler,"
+ },
+ {
+  "id": 151,
+  "text": "right?"
+ },
+ {
+  "id": 152,
+  "text": "But your computer —"
+ },
+ {
+  "id": 153,
+  "text": "say your computer is x86 —"
+ },
+ {
+  "id": 154,
+  "text": "then that compiler you grabbed,"
+ },
+ {
+  "id": 155,
+  "text": "it was probably also built on a machine that —"
+ },
+ {
+  "id": 156,
+  "text": "most likely, it was also compiled on an X86 machine."
+ },
+ {
+  "id": 157,
+  "text": "So your build system and your host system,"
+ },
+ {
+  "id": 158,
+  "text": "they're the same system."
+ },
+ {
+  "id": 159,
+  "text": "And at the same time,"
+ },
+ {
+  "id": 160,
+  "text": "The executable program you generate with this compiler,"
+ },
+ {
+  "id": 161,
+  "text": "doesn't it also run on x86?"
+ },
+ {
+  "id": 162,
+  "text": "So naturally,"
+ },
+ {
+  "id": 163,
+  "text": "this way of working,"
+ },
+ {
+  "id": 164,
+  "text": "is what we call native compilation."
+ },
+ {
+  "id": 165,
+  "text": "As for cross-compilation,"
+ },
+ {
+  "id": 166,
+  "text": "in general,"
+ },
+ {
+  "id": 167,
+  "text": "the way we define cross-compilation,"
+ },
+ {
+  "id": 168,
+  "text": "is that the first two are the same,"
+ },
+ {
+  "id": 169,
+  "text": "but mainly, the executable you generate,"
+ },
+ {
+  "id": 170,
+  "text": "does not run on your host machine."
+ },
+ {
+  "id": 171,
+  "text": "Just like in that diagram earlier,"
+ },
+ {
+  "id": 172,
+  "text": "you generate an executable here,"
+ },
+ {
+  "id": 173,
+  "text": "let's say it's called A.out,"
+ },
+ {
+  "id": 174,
+  "text": "but this A.out,"
+ },
+ {
+  "id": 175,
+  "text": "does it run on this computer?"
+ },
+ {
+  "id": 176,
+  "text": "No, it doesn't."
+ },
+ {
+  "id": 177,
+  "text": "You have to use a network or some other method,"
+ },
+ {
+  "id": 178,
+  "text": "to take this A.out application and do what with it?"
+ },
+ {
+  "id": 179,
+  "text": "You have to download it onto this board to run it."
+ },
+ {
+  "id": 180,
+  "text": "You also understand what I'm saying"
+ },
+ {
+  "id": 181,
+  "text": "the processor on this board"
+ },
+ {
+  "id": 182,
+  "text": "and the processor in your computer"
+ },
+ {
+  "id": 183,
+  "text": "might not even be the same instruction set at all"
+ },
+ {
+  "id": 184,
+  "text": "Your machine might be X86"
+ },
+ {
+  "id": 185,
+  "text": "while this one on top might be RISC 5"
+ },
+ {
+  "id": 186,
+  "text": "In that kind of situation, you get that cross"
+ },
+ {
+  "id": 187,
+  "text": "compilation working environment"
+ },
+ {
+  "id": 188,
+  "text": "Everyone can follow, right?"
+ },
+ {
+  "id": 189,
+  "text": "We also have a diagram here"
+ },
+ {
+  "id": 190,
+  "text": "that everyone can take a look at"
+ },
+ {
+  "id": 191,
+  "text": "Let's take another look"
+ },
+ {
+  "id": 192,
+  "text": "This diagram is actually also talking about this same thing"
+ },
+ {
+  "id": 193,
+  "text": "That is, combining the formula we just talked about"
+ },
+ {
+  "id": 194,
+  "text": "If, for example, look at this"
+ },
+ {
+  "id": 195,
+  "text": "This tool of ours is called..."
+ },
+ {
+  "id": 196,
+  "text": "We normally type GCC"
+ },
+ {
+  "id": 197,
+  "text": "But actually, when we type GCC"
+ },
+ {
+  "id": 198,
+  "text": "this GCC is really just a soft link"
+ },
+ {
+  "id": 199,
+  "text": "I don't know if any of you have ever looked into it"
+ },
+ {
+  "id": 200,
+  "text": "So where is this GCC of yours?"
+ },
+ {
+  "id": 201,
+  "text": "For example, when we type gcc,"
+ },
+ {
+  "id": 202,
+  "text": "what exactly is this gcc?"
+ },
+ {
+  "id": 203,
+  "text": "We can type \"whereis gcc\","
+ },
+ {
+  "id": 204,
+  "text": "and as you can see, after we run whereis gcc,"
+ },
+ {
+  "id": 205,
+  "text": "it tells us"
+ },
+ {
+  "id": 206,
+  "text": "that your gcc is actually at this full path right here."
+ },
+ {
+  "id": 207,
+  "text": "Right?"
+ },
+ {
+  "id": 208,
+  "text": "So what exactly is this thing?"
+ },
+ {
+  "id": 209,
+  "text": "Let's dig a little deeper."
+ },
+ {
+  "id": 210,
+  "text": "You can see that the gcc you're running"
+ },
+ {
+  "id": 211,
+  "text": "is actually this thing."
+ },
+ {
+  "id": 212,
+  "text": "Now, is this thing"
+ },
+ {
+  "id": 213,
+  "text": "actually an application program?"
+ },
+ {
+  "id": 214,
+  "text": "Not quite."
+ },
+ {
+  "id": 215,
+  "text": "What is it actually?"
+ },
+ {
+  "id": 216,
+  "text": "It's a symbolic link."
+ },
+ {
+  "id": 217,
+  "text": "Do you all see that?"
+ },
+ {
+  "id": 218,
+  "text": "The concept of a symbolic link."
+ },
+ {
+  "id": 219,
+  "text": "If you're not familiar with it,"
+ },
+ {
+  "id": 220,
+  "text": "Read this one yourself."
+ },
+ {
+  "id": 221,
+  "text": "So this"
+ },
+ {
+  "id": 222,
+  "text": "it points to that again."
+ },
+ {
+  "id": 223,
+  "text": "Now what is this thing again?"
+ },
+ {
+  "id": 224,
+  "text": "Let's keep tracing."
+ },
+ {
+  "id": 225,
+  "text": "This one is still a symbolic link."
+ },
+ {
+  "id": 226,
+  "text": "Layer after layer of wrapping."
+ },
+ {
+  "id": 227,
+  "text": "It actually wraps it up."
+ },
+ {
+  "id": 228,
+  "text": "This is for everyone's convenience."
+ },
+ {
+  "id": 229,
+  "text": "It actually points to this."
+ },
+ {
+  "id": 230,
+  "text": "Now this thing,"
+ },
+ {
+  "id": 231,
+  "text": "if we trace it further,"
+ },
+ {
+  "id": 232,
+  "text": "I didn't type that wrong, did I?"
+ },
+ {
+  "id": 233,
+  "text": "OK"
+ },
+ {
+  "id": 234,
+  "text": "At this point we've already..."
+ },
+ {
+  "id": 235,
+  "text": "ZR8 is no longer a symbolic link."
+ },
+ {
+  "id": 236,
+  "text": "This is the thing we actually run."
+ },
+ {
+  "id": 237,
+  "text": "In other words, when you type,"
+ },
+ {
+  "id": 238,
+  "text": "when you type GCC,"
+ },
+ {
+  "id": 239,
+  "text": "what you're actually running is this thing."
+ },
+ {
+  "id": 240,
+  "text": "This actually tells us"
+ },
+ {
+  "id": 241,
+  "text": "it's actually a build tool that runs"
+ },
+ {
+  "id": 242,
+  "text": "on an x86 64-bit machine"
+ },
+ {
+  "id": 243,
+  "text": "a compiler"
+ },
+ {
+  "id": 244,
+  "text": "So that means,"
+ },
+ {
+  "id": 245,
+  "text": "your compiler actually"
+ },
+ {
+  "id": 246,
+  "text": "runs on x86"
+ },
+ {
+  "id": 247,
+  "text": "At the same time,"
+ },
+ {
+  "id": 248,
+  "text": "we"
+ },
+ {
+  "id": 249,
+  "text": "but in order to"
+ },
+ {
+  "id": 250,
+  "text": "in order to compile our program,"
+ },
+ {
+  "id": 251,
+  "text": "what do we need to do first?"
+ },
+ {
+  "id": 252,
+  "text": "We need to build a compiler ourselves,"
+ },
+ {
+  "id": 253,
+  "text": "because with this program,"
+ },
+ {
+  "id": 254,
+  "text": "when we normally type GCC,"
+ },
+ {
+  "id": 255,
+  "text": "the a.out you compile"
+ },
+ {
+  "id": 256,
+  "text": "can only run on the x86 machine"
+ },
+ {
+  "id": 257,
+  "text": "You can't run it on"
+ },
+ {
+  "id": 258,
+  "text": "a RISC-V machine"
+ },
+ {
+  "id": 259,
+  "text": "You all know that, right?"
+ },
+ {
+  "id": 260,
+  "text": "So if we just use GCC directly,"
+ },
+ {
+  "id": 261,
+  "text": "it won't work."
+ },
+ {
+  "id": 262,
+  "text": "We have to build a compiler ourselves."
+ },
+ {
+  "id": 263,
+  "text": "Of course, the process of building that compiler"
+ },
+ {
+  "id": 264,
+  "text": "is something I won't go into here."
+ },
+ {
+  "id": 265,
+  "text": "This compiler,"
+ },
+ {
+  "id": 266,
+  "text": "we've already built it for you,"
+ },
+ {
+  "id": 267,
+  "text": "and placed it up front,"
+ },
+ {
+  "id": 268,
+  "text": "in that tools directory"
+ },
+ {
+  "id": 269,
+  "text": "that I introduced to you earlier."
+ },
+ {
+  "id": 270,
+  "text": "So this tool"
+ },
+ {
+  "id": 271,
+  "text": "is made using that compiler,"
+ },
+ {
+  "id": 272,
+  "text": "because once we have the source code,"
+ },
+ {
+  "id": 273,
+  "text": "we can use that compiler"
+ },
+ {
+  "id": 274,
+  "text": "to produce"
+ },
+ {
+  "id": 275,
+  "text": "a compiler for RISC-V 64-bit machines."
+ },
+ {
+  "id": 276,
+  "text": "Then when we do our daily work,"
+ },
+ {
+  "id": 277,
+  "text": "we use this compiler for development."
+ },
+ {
+  "id": 278,
+  "text": "So we generate a newlib,"
+ },
+ {
+  "id": 279,
+  "text": "and this newlib"
+ },
+ {
+  "id": 280,
+  "text": "Because we're using a 64-bit machine"
+ },
+ {
+  "id": 281,
+  "text": "and compiling this with the RISC-V 64 toolchain, cross-compiling it"
+ },
+ {
+  "id": 282,
+  "text": "so this program"
+ },
+ {
+  "id": 283,
+  "text": "can it run on your local x86 machine?"
+ },
+ {
+  "id": 284,
+  "text": "No, it can't."
+ },
+ {
+  "id": 285,
+  "text": "You can try running it"
+ },
+ {
+  "id": 286,
+  "text": "and it will throw an error."
+ },
+ {
+  "id": 287,
+  "text": "So we have to take this program"
+ },
+ {
+  "id": 288,
+  "text": "and put it on a RISC-V 64"
+ },
+ {
+  "id": 289,
+  "text": "target machine to run it."
+ },
+ {
+  "id": 290,
+  "text": "Now, this machine,"
+ },
+ {
+  "id": 291,
+  "text": "when we do the experiments,"
+ },
+ {
+  "id": 292,
+  "text": "is actually emulated with an emulator."
+ },
+ {
+  "id": 293,
+  "text": "Of course, you can also"
+ },
+ {
+  "id": 294,
+  "text": "actually go out and get a real RISC-V board."
+ },
+ {
+  "id": 295,
+  "text": "You can buy those on the market now."
+ },
+ {
+  "id": 296,
+  "text": "So through this process,"
+ },
+ {
+  "id": 297,
+  "text": "everyone should get a feel for it."
+ },
+ {
+  "id": 298,
+  "text": "This is what we call cross-compilation."
+ },
+ {
+  "id": 299,
+  "text": "Cross-compilation."
+ },
+ {
+  "id": 300,
+  "text": "not done entirely on the local machine"
+ },
+ {
+  "id": 301,
+  "text": "it involves two machines"
+ },
+ {
+  "id": 302,
+  "text": "the host and the target"
+ },
+ {
+  "id": 303,
+  "text": "Now, for these kinds of tools,"
+ },
+ {
+  "id": 304,
+  "text": "we also have some naming conventions,"
+ },
+ {
+  "id": 305,
+  "text": "but I won't go into detail about them."
+ },
+ {
+  "id": 306,
+  "text": "From the earlier examples,"
+ },
+ {
+  "id": 307,
+  "text": "you can get a feel for"
+ },
+ {
+  "id": 308,
+  "text": "what those names represent,"
+ },
+ {
+  "id": 309,
+  "text": "right?"
+ },
+ {
+  "id": 310,
+  "text": "As for the rest,"
+ },
+ {
+  "id": 311,
+  "text": "these names,"
+ },
+ {
+  "id": 312,
+  "text": "I won't elaborate on them."
+ },
+ {
+  "id": 313,
+  "text": "So, these,"
+ },
+ {
+  "id": 314,
+  "text": "so the GCC we run,"
+ },
+ {
+  "id": 315,
+  "text": "is actually"
+ },
+ {
+  "id": 316,
+  "text": "the GCC we normally run,"
+ },
+ {
+  "id": 317,
+  "text": "is actually a wrapper,"
+ },
+ {
+  "id": 318,
+  "text": "it's actually this thing,"
+ },
+ {
+  "id": 319,
+  "text": "it's this thing."
+ },
+ {
+  "id": 320,
+  "text": "Its full name is this thing."
+ },
+ {
+  "id": 321,
+  "text": "If you're interested,"
+ },
+ {
+  "id": 322,
+  "text": "you can look it up yourselves after class."
+ },
+ {
+  "id": 323,
+  "text": "That's the concept of cross-compilation."
+ },
+ {
+  "id": 324,
+  "text": "Alright then,"
+ },
+ {
+  "id": 325,
+  "text": "next let's talk about debuggers."
+ },
+ {
+  "id": 326,
+  "text": "Because we often —"
+ },
+ {
+  "id": 327,
+  "text": "especially in assembly programming —"
+ },
+ {
+  "id": 328,
+  "text": "when it comes to debugging, later on we'll"
+ },
+ {
+  "id": 329,
+  "text": "when we talk about assembly programming,"
+ },
+ {
+  "id": 330,
+  "text": "we'll be using a debugger."
+ },
+ {
+  "id": 331,
+  "text": "So let's also get to know debuggers a bit."
+ },
+ {
+  "id": 332,
+  "text": "Now, in the GNU development environment,"
+ },
+ {
+  "id": 333,
+  "text": "there is a GNU debugger called"
+ },
+ {
+  "id": 334,
+  "text": "GDB."
+ },
+ {
+  "id": 335,
+  "text": "Actually, its full name is GNU's debug —"
+ },
+ {
+  "id": 336,
+  "text": "that is,"
+ },
+ {
+  "id": 337,
+  "text": "an abbreviation of GNU's debug."
+ },
+ {
+  "id": 338,
+  "text": "Now, as for this debugger,"
+ },
+ {
+  "id": 339,
+  "text": "I wonder if any of you have used it before."
+ },
+ {
+  "id": 340,
+  "text": "Have you used it?"
+ },
+ {
+  "id": 341,
+  "text": "Have you used it in your regular development?"
+ },
+ {
+  "id": 342,
+  "text": "A debugger."
+ },
+ {
+  "id": 343,
+  "text": "If you all use graphical interfaces,"
+ },
+ {
+  "id": 344,
+  "text": "what you see may just be a graphical interface."
+ },
+ {
+  "id": 345,
+  "text": "But behind it, it's really this thing."
+ },
+ {
+  "id": 346,
+  "text": "It's just that many graphical interfaces,"
+ },
+ {
+  "id": 347,
+  "text": "well, on the front end, they just wrap it with a GUI."
+ },
+ {
+  "id": 348,
+  "text": "So this GDB,"
+ },
+ {
+  "id": 349,
+  "text": "well, it's exactly this kind of thing."
+ },
+ {
+  "id": 350,
+  "text": "So when debugging,"
+ },
+ {
+  "id": 351,
+  "text": "you can,"
+ },
+ {
+  "id": 352,
+  "text": "that is, when we debug normally,"
+ },
+ {
+  "id": 353,
+  "text": "it's actually a process like this."
+ },
+ {
+  "id": 354,
+  "text": "Debugging is divided into two types."
+ },
+ {
+  "id": 355,
+  "text": "One is called local debugging,"
+ },
+ {
+  "id": 356,
+  "text": "and the other is called remote debugging."
+ },
+ {
+  "id": 357,
+  "text": "So for local debugging,"
+ },
+ {
+  "id": 358,
+  "text": "it's similar to local development."
+ },
+ {
+  "id": 359,
+  "text": "That is, the program you're running"
+ },
+ {
+  "id": 360,
+  "text": "It runs locally."
+ },
+ {
+  "id": 361,
+  "text": "And that remote debugging,"
+ },
+ {
+  "id": 362,
+  "text": "is really used in those cross-environment scenarios."
+ },
+ {
+  "id": 363,
+  "text": "Let's talk about local debugging first."
+ },
+ {
+  "id": 364,
+  "text": "Local debugging is probably more familiar to you."
+ },
+ {
+  "id": 365,
+  "text": "It's very simple."
+ },
+ {
+  "id": 366,
+  "text": "After you generate an executable program,"
+ },
+ {
+  "id": 367,
+  "text": "what do you just type?"
+ },
+ {
+  "id": 368,
+  "text": "For example, you generate an a.out,"
+ },
+ {
+  "id": 369,
+  "text": "and then how do you debug it?"
+ },
+ {
+  "id": 370,
+  "text": "You just use GDB, right?"
+ },
+ {
+  "id": 371,
+  "text": "Just follow it with a.out, and that's it."
+ },
+ {
+  "id": 372,
+  "text": "Isn't that right?"
+ },
+ {
+  "id": 373,
+  "text": "So what actually happens behind the scenes?"
+ },
+ {
+  "id": 374,
+  "text": "In fact, when you run this,"
+ },
+ {
+  "id": 375,
+  "text": "say you typed GDB,"
+ },
+ {
+  "id": 376,
+  "text": "followed by a.out,"
+ },
+ {
+  "id": 377,
+  "text": "and then hit Enter — what happens?"
+ },
+ {
+  "id": 378,
+  "text": "Have you ever thought about that?"
+ },
+ {
+  "id": 379,
+  "text": "Well, this may involve some"
+ },
+ {
+  "id": 380,
+  "text": "some stuff under Linux"
+ },
+ {
+  "id": 381,
+  "text": "that is, it will"
+ },
+ {
+  "id": 382,
+  "text": "once this GDB is up and running,"
+ },
+ {
+  "id": 383,
+  "text": "it will first fork out a child process."
+ },
+ {
+  "id": 384,
+  "text": "Inside this child process,"
+ },
+ {
+  "id": 385,
+  "text": "it will go and run"
+ },
+ {
+  "id": 386,
+  "text": "run the program you're debugging,"
+ },
+ {
+  "id": 387,
+  "text": "the target program being debugged."
+ },
+ {
+  "id": 388,
+  "text": "It runs in a separate process,"
+ },
+ {
+  "id": 389,
+  "text": "and then this GDB program of yours,"
+ },
+ {
+  "id": 390,
+  "text": "also runs in its own independent process."
+ },
+ {
+  "id": 391,
+  "text": "Then the two processes,"
+ },
+ {
+  "id": 392,
+  "text": "through the special ptrace system call,"
+ },
+ {
+  "id": 393,
+  "text": "establish a connection."
+ },
+ {
+  "id": 394,
+  "text": "It actually makes that program being debugged,"
+ },
+ {
+  "id": 395,
+  "text": "that process,"
+ },
+ {
+  "id": 396,
+  "text": "you set breakpoints, right?"
+ },
+ {
+  "id": 397,
+  "text": "Remember?"
+ },
+ {
+  "id": 398,
+  "text": "When debugging, you have to set breakpoints."
+ },
+ {
+  "id": 399,
+  "text": "The breakpoint you set"
+ },
+ {
+  "id": 400,
+  "text": "Once it runs to this point,"
+ },
+ {
+  "id": 401,
+  "text": "it will actually suspend this process,"
+ },
+ {
+  "id": 402,
+  "text": "putting it into what's called"
+ },
+ {
+  "id": 403,
+  "text": "a suspended state."
+ },
+ {
+  "id": 404,
+  "text": "You've probably learned about this before,"
+ },
+ {
+  "id": 405,
+  "text": "if you've studied process debugging,"
+ },
+ {
+  "id": 406,
+  "text": "that state,"
+ },
+ {
+  "id": 407,
+  "text": "the several states of a process."
+ },
+ {
+  "id": 408,
+  "text": "Can you still recall,"
+ },
+ {
+  "id": 409,
+  "text": "how many states are there?"
+ },
+ {
+  "id": 410,
+  "text": "Running state,"
+ },
+ {
+  "id": 411,
+  "text": "what else?"
+ },
+ {
+  "id": 412,
+  "text": "From running state,"
+ },
+ {
+  "id": 413,
+  "text": "there's something called sleeping state,"
+ },
+ {
+  "id": 414,
+  "text": "right?"
+ },
+ {
+  "id": 415,
+  "text": "And then some kind of stopped state,"
+ },
+ {
+  "id": 416,
+  "text": "and finally it has to enter some kind of zombie state,"
+ },
+ {
+  "id": 417,
+  "text": "right? You still remember?"
+ },
+ {
+  "id": 418,
+  "text": "These concepts actually all come into play here."
+ },
+ {
+  "id": 419,
+  "text": "If you want to go look"
+ },
+ {
+  "id": 420,
+  "text": "It will suspend this process"
+ },
+ {
+  "id": 421,
+  "text": "and then we can look at the process"
+ },
+ {
+  "id": 422,
+  "text": "some context information when it is stopped at this point,"
+ },
+ {
+  "id": 423,
+  "text": "like the information of all the registers, becomes visible."
+ },
+ {
+  "id": 424,
+  "text": "So this is actually called"
+ },
+ {
+  "id": 425,
+  "text": "local debugging."
+ },
+ {
+  "id": 426,
+  "text": "Local debugging is this kind of process."
+ },
+ {
+  "id": 427,
+  "text": "Now, if you want to debug a program"
+ },
+ {
+  "id": 428,
+  "text": "that is not local, like when we debug an operating system,"
+ },
+ {
+  "id": 429,
+  "text": "or when we debug some cross environments,"
+ },
+ {
+  "id": 430,
+  "text": "then it actually needs to"
+ },
+ {
+  "id": 431,
+  "text": "start a remote service called this GDB Server on the target machine."
+ },
+ {
+  "id": 432,
+  "text": "So actually my GDB application"
+ },
+ {
+  "id": 433,
+  "text": "interacts with this service,"
+ },
+ {
+  "id": 434,
+  "text": "and this service proxies our debugging process."
+ },
+ {
+  "id": 435,
+  "text": "And then the program being debugged"
+ },
+ {
+  "id": 436,
+  "text": "is running on another target machine,"
+ },
+ {
+  "id": 437,
+  "text": "while your debugging machine is the local machine."
+ },
+ {
+  "id": 438,
+  "text": "The two machines have to be connected through the network."
+ },
+ {
+  "id": 439,
+  "text": "So this is called remote debugging."
+ },
+ {
+  "id": 440,
+  "text": "So later, when we give you exercises,"
+ },
+ {
+  "id": 441,
+  "text": "for example, when we do our demonstrations,"
+ },
+ {
+  "id": 442,
+  "text": "it's actually a form of remote debugging."
+ },
+ {
+  "id": 443,
+  "text": "And for us,"
+ },
+ {
+  "id": 444,
+  "text": "this target machine,"
+ },
+ {
+  "id": 445,
+  "text": "we also use an emulator to simulate it."
+ },
+ {
+  "id": 446,
+  "text": "We use an emulator to stand in for a real one."
+ },
+ {
+  "id": 447,
+  "text": "As for GDB,"
+ },
+ {
+  "id": 448,
+  "text": "it supports various languages."
+ },
+ {
+  "id": 449,
+  "text": "We won't go into that."
+ },
+ {
+  "id": 450,
+  "text": "Now, as we mentioned earlier,"
+ },
+ {
+  "id": 451,
+  "text": "we will use an emulator to simulate the target machine many times later on."
+ },
+ {
+  "id": 452,
+  "text": "Of course, we could also get a real machine,"
+ },
+ {
+  "id": 453,
+  "text": "but that's too much hassle."
+ },
+ {
+  "id": 454,
+  "text": "So what is an emulator?"
+ },
+ {
+  "id": 455,
+  "text": "I won't go into the GDB debugging workflow here."
+ },
+ {
+  "id": 456,
+  "text": "It's very simple."
+ },
+ {
+  "id": 457,
+  "text": "You all surely know the basic workflow."
+ },
+ {
+  "id": 458,
+  "text": "So let's take a look at the emulator."
+ },
+ {
+  "id": 459,
+  "text": "The emulator we'll mainly use later is called QML."
+ },
+ {
+  "id": 460,
+  "text": "I don't know if you've heard of this one."
+ },
+ {
+  "id": 461,
+  "text": "It's used quite a lot nowadays."
+ },
+ {
+  "id": 462,
+  "text": "QMU actually stands for"
+ },
+ {
+  "id": 463,
+  "text": "Quick Emulator."
+ },
+ {
+  "id": 464,
+  "text": "Emulator means simulation,"
+ },
+ {
+  "id": 465,
+  "text": "right?"
+ },
+ {
+  "id": 466,
+  "text": "So QMU is Quick"
+ },
+ {
+  "id": 467,
+  "text": "— basically a fast emulator."
+ },
+ {
+  "id": 468,
+  "text": "It was written by a French engineer"
+ },
+ {
+  "id": 469,
+  "text": "named Fabrice Ballard."
+ },
+ {
+  "id": 470,
+  "text": "What is written"
+ },
+ {
+  "id": 471,
+  "text": "You could say this guy is"
+ },
+ {
+  "id": 472,
+  "text": "fairly well known in the computer world."
+ },
+ {
+  "id": 473,
+  "text": "He's a bit of a prodigy."
+ },
+ {
+  "id": 474,
+  "text": "He's developed a lot of interesting things,"
+ },
+ {
+  "id": 475,
+  "text": "and QMU is one of them."
+ },
+ {
+  "id": 476,
+  "text": "It's quite popular now,"
+ },
+ {
+  "id": 477,
+  "text": "and it's often used for system emulation."
+ },
+ {
+  "id": 478,
+  "text": "Now, this software"
+ },
+ {
+  "id": 479,
+  "text": "mainly runs on things like Linux."
+ },
+ {
+  "id": 480,
+  "text": "On this kind of system,"
+ },
+ {
+  "id": 481,
+  "text": "it can support multiple architectures,"
+ },
+ {
+  "id": 482,
+  "text": "emulating a real machine."
+ },
+ {
+  "id": 483,
+  "text": "Now, as for this software, QEMU,"
+ },
+ {
+  "id": 484,
+  "text": "it has two main modes."
+ },
+ {
+  "id": 485,
+  "text": "One is called user mode,"
+ },
+ {
+  "id": 486,
+  "text": "and the other is called system mode."
+ },
+ {
+  "id": 487,
+  "text": "Just so you all get the idea,"
+ },
+ {
+  "id": 488,
+  "text": "user mode means"
+ },
+ {
+  "id": 489,
+  "text": "it runs an application directly."
+ },
+ {
+  "id": 490,
+  "text": "What does that mean? Well,"
+ },
+ {
+  "id": 491,
+  "text": "for example, suppose I've just run"
+ },
+ {
+  "id": 492,
+  "text": "and produced an A.out"
+ },
+ {
+  "id": 493,
+  "text": "executable program."
+ },
+ {
+  "id": 494,
+  "text": "Let me give you a quick demo."
+ },
+ {
+  "id": 495,
+  "text": "Let me see if I have..."
+ },
+ {
+  "id": 496,
+  "text": "if we have time,"
+ },
+ {
+  "id": 497,
+  "text": "we still have a little time,"
+ },
+ {
+  "id": 498,
+  "text": "so let me give you a quick demo of"
+ },
+ {
+  "id": 499,
+  "text": "the basic use of this emulator."
+ },
+ {
+  "id": 500,
+  "text": "That is to say,"
+ },
+ {
+  "id": 501,
+  "text": "after you go back,"
+ },
+ {
+  "id": 502,
+  "text": "you can all try it out yourselves."
+ },
+ {
+  "id": 503,
+  "text": "Actually, this"
+ },
+ {
+  "id": 504,
+  "text": "example I gave you,"
+ },
+ {
+  "id": 505,
+  "text": "it corresponds to"
+ },
+ {
+  "id": 506,
+  "text": "the one in our"
+ },
+ {
+  "id": 507,
+  "text": "exercise, this one"
+ },
+ {
+  "id": 508,
+  "text": "in the exercise,"
+ },
+ {
+  "id": 509,
+  "text": "4.4-2,"
+ },
+ {
+  "id": 510,
+  "text": "4-1 we actually kind of did along the way as well."
+ },
+ {
+  "id": 511,
+  "text": "4-2,"
+ },
+ {
+  "id": 512,
+  "text": "that is to say, now,"
+ },
+ {
+  "id": 513,
+  "text": "first we need to cross-compile,"
+ },
+ {
+  "id": 514,
+  "text": "we're not doing native compilation here."
+ },
+ {
+  "id": 515,
+  "text": "So suppose we still have"
+ },
+ {
+  "id": 516,
+  "text": "that application program from before,"
+ },
+ {
+  "id": 517,
+  "text": "suppose we still have this program,"
+ },
+ {
+  "id": 518,
+  "text": "but for this kind of program,"
+ },
+ {
+  "id": 519,
+  "text": "now we want to turn it into a runnable executable,"
+ },
+ {
+  "id": 520,
+  "text": "It's not running on x86."
+ },
+ {
+  "id": 521,
+  "text": "We're running it on the RISC-V platform."
+ },
+ {
+  "id": 522,
+  "text": "Of course, we run it using an emulator."
+ },
+ {
+  "id": 523,
+  "text": "So how do we do this?"
+ },
+ {
+  "id": 524,
+  "text": "Well, actually,"
+ },
+ {
+  "id": 525,
+  "text": "first of all, we know we need to compile it."
+ },
+ {
+  "id": 526,
+  "text": "Now, for compilation, can we still use GCC at this point?"
+ },
+ {
+  "id": 527,
+  "text": "As we discussed earlier,"
+ },
+ {
+  "id": 528,
+  "text": "you can't use GCC."
+ },
+ {
+  "id": 529,
+  "text": "We need to use a cross-compilation environment."
+ },
+ {
+  "id": 530,
+  "text": "And we've already provided that environment for you up here."
+ },
+ {
+  "id": 531,
+  "text": "So it's called RISC-V,"
+ },
+ {
+  "id": 532,
+  "text": "a GCC that starts with that prefix."
+ },
+ {
+  "id": 533,
+  "text": "The full name is this."
+ },
+ {
+  "id": 534,
+  "text": "So we use this GCC,"
+ },
+ {
+  "id": 535,
+  "text": "and first generate the build."
+ },
+ {
+  "id": 536,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 537,
+  "text": "Now, when compiling,"
+ },
+ {
+  "id": 538,
+  "text": "you need"
+ },
+ {
+  "id": 539,
+  "text": "to add some parameters."
+ },
+ {
+  "id": 540,
+  "text": "for example, it's called"
+ },
+ {
+  "id": 541,
+  "text": "you can probably still read this"
+ },
+ {
+  "id": 542,
+  "text": "RV32 RMA"
+ },
+ {
+  "id": 543,
+  "text": "if you listened carefully in the last lecture"
+ },
+ {
+  "id": 544,
+  "text": "you should know what this means"
+ },
+ {
+  "id": 545,
+  "text": "what does it mean?"
+ },
+ {
+  "id": 546,
+  "text": "it means the program we want to generate is a"
+ },
+ {
+  "id": 547,
+  "text": "RISC-V"
+ },
+ {
+  "id": 548,
+  "text": "32-bit system"
+ },
+ {
+  "id": 549,
+  "text": "supporting"
+ },
+ {
+  "id": 550,
+  "text": "which instruction sets does this CPU support?"
+ },
+ {
+  "id": 551,
+  "text": "the integer instruction set"
+ },
+ {
+  "id": 552,
+  "text": "M is multiply"
+ },
+ {
+  "id": 553,
+  "text": "that's the multiply and divide instruction set"
+ },
+ {
+  "id": 554,
+  "text": "and what about A?"
+ },
+ {
+  "id": 555,
+  "text": "that's the atomic operation instruction set"
+ },
+ {
+  "id": 556,
+  "text": "you understand, right?"
+ },
+ {
+  "id": 557,
+  "text": "it's these things"
+ },
+ {
+  "id": 558,
+  "text": "that is to say, the program we compile and generate"
+ },
+ {
+  "id": 559,
+  "text": "can run on a CPU that supports these instruction sets"
+ },
+ {
+  "id": 560,
+  "text": "And then"
+ },
+ {
+  "id": 561,
+  "text": "we specify it again"
+ },
+ {
+  "id": 562,
+  "text": "not this one"
+ },
+ {
+  "id": 563,
+  "text": "I'll just put it right here"
+ },
+ {
+  "id": 564,
+  "text": "I won't explain too much for now"
+ },
+ {
+  "id": 565,
+  "text": "it's mainly specified through this"
+ },
+ {
+  "id": 566,
+  "text": "for example, how many bits an integer is"
+ },
+ {
+  "id": 567,
+  "text": "how many bits a long integer is"
+ },
+ {
+  "id": 568,
+  "text": "I won't explain this part"
+ },
+ {
+  "id": 569,
+  "text": "and then"
+ },
+ {
+  "id": 570,
+  "text": "after that, we can just directly"
+ },
+ {
+  "id": 571,
+  "text": "the syntax afterward is the same"
+ },
+ {
+  "id": 572,
+  "text": "why is it running so slowly"
+ },
+ {
+  "id": 573,
+  "text": "okay"
+ },
+ {
+  "id": 574,
+  "text": "that is to say"
+ },
+ {
+  "id": 575,
+  "text": "the main difference from our usual GCC"
+ },
+ {
+  "id": 576,
+  "text": "is actually just that this part is different"
+ },
+ {
+  "id": 577,
+  "text": "we need to use a cross-"
+ },
+ {
+  "id": 578,
+  "text": "compiler for RISC-V to do the compilation"
+ },
+ {
+  "id": 579,
+  "text": "so this way"
+ },
+ {
+  "id": 580,
+  "text": "And it generated an a.out file."
+ },
+ {
+  "id": 581,
+  "text": "This a.out,"
+ },
+ {
+  "id": 582,
+  "text": "everyone, pay attention here."
+ },
+ {
+  "id": 583,
+  "text": "This a.out, well,"
+ },
+ {
+  "id": 584,
+  "text": "it's actually not for x86."
+ },
+ {
+  "id": 585,
+  "text": "You can use the"
+ },
+ {
+  "id": 586,
+  "text": "file command to take a look."
+ },
+ {
+  "id": 587,
+  "text": "It will tell you"
+ },
+ {
+  "id": 588,
+  "text": "what kind of machine this is."
+ },
+ {
+  "id": 589,
+  "text": "It's a RISC-V one."
+ },
+ {
+  "id": 590,
+  "text": "If you try to run"
+ },
+ {
+  "id": 591,
+  "text": "this a.out directly on our machine,"
+ },
+ {
+  "id": 592,
+  "text": "this a.out,"
+ },
+ {
+  "id": 593,
+  "text": "it will throw an error."
+ },
+ {
+  "id": 594,
+  "text": "Sorry, I mistyped."
+ },
+ {
+  "id": 595,
+  "text": "See that?"
+ },
+ {
+  "id": 596,
+  "text": "It says it cannot be executed."
+ },
+ {
+  "id": 597,
+  "text": "Why?"
+ },
+ {
+  "id": 598,
+  "text": "Of course it can't be executed,"
+ },
+ {
+  "id": 599,
+  "text": "because inside it,"
+ },
+ {
+  "id": 600,
+  "text": "these are RISC-V instructions"
+ },
+ {
+  "id": 601,
+  "text": "right?"
+ },
+ {
+  "id": 602,
+  "text": "So how do we execute them?"
+ },
+ {
+  "id": 603,
+  "text": "One approach"
+ },
+ {
+  "id": 604,
+  "text": "is to take this A.out"
+ },
+ {
+  "id": 605,
+  "text": "and put it on"
+ },
+ {
+  "id": 606,
+  "text": "say you have a RISC-V board"
+ },
+ {
+  "id": 607,
+  "text": "you just take this adenaut"
+ },
+ {
+  "id": 608,
+  "text": "via a USB drive or whatever method"
+ },
+ {
+  "id": 609,
+  "text": "or the network, and burn it onto the board"
+ },
+ {
+  "id": 610,
+  "text": "then just run it on the board"
+ },
+ {
+  "id": 611,
+  "text": "Of course, we don't have that board right now"
+ },
+ {
+  "id": 612,
+  "text": "so we'll use an emulator to run it"
+ },
+ {
+  "id": 613,
+  "text": "That's the idea of an emulator"
+ },
+ {
+  "id": 614,
+  "text": "So how do we run it?"
+ },
+ {
+  "id": 615,
+  "text": "We run our QML application"
+ },
+ {
+  "id": 616,
+  "text": "As I just said"
+ },
+ {
+  "id": 617,
+  "text": "what we're demoing now is called user mode"
+ },
+ {
+  "id": 618,
+  "text": "which means we just run adenaut directly on top of it"
+ },
+ {
+  "id": 619,
+  "text": "so it's basically like"
+ },
+ {
+  "id": 620,
+  "text": "Your program,"
+ },
+ {
+  "id": 621,
+  "text": "it just runs"
+ },
+ {
+  "id": 622,
+  "text": "as if it were running"
+ },
+ {
+  "id": 623,
+  "text": "on a Linux system,"
+ },
+ {
+  "id": 624,
+  "text": "and it can run this program,"
+ },
+ {
+  "id": 625,
+  "text": "and then print out hello world."
+ },
+ {
+  "id": 626,
+  "text": "You all understand what I mean?"
+ },
+ {
+  "id": 627,
+  "text": "So this is one way,"
+ },
+ {
+  "id": 628,
+  "text": "it actually just simulates"
+ },
+ {
+  "id": 629,
+  "text": "being able to execute a process,"
+ },
+ {
+  "id": 630,
+  "text": "open a process,"
+ },
+ {
+  "id": 631,
+  "text": "and just run your program."
+ },
+ {
+  "id": 632,
+  "text": "So that's one way of working."
+ },
+ {
+  "id": 633,
+  "text": "And then there's another way,"
+ },
+ {
+  "id": 634,
+  "text": "which is when we develop"
+ },
+ {
+  "id": 635,
+  "text": "this operating system later on,"
+ },
+ {
+  "id": 636,
+  "text": "because as we know,"
+ },
+ {
+  "id": 637,
+  "text": "when developing an operating system,"
+ },
+ {
+  "id": 638,
+  "text": "the thing is,"
+ },
+ {
+  "id": 639,
+  "text": "you can, how should I put it,"
+ },
+ {
+  "id": 640,
+  "text": "That is to say,"
+ },
+ {
+  "id": 641,
+  "text": "when I run it this way,"
+ },
+ {
+  "id": 642,
+  "text": "you can think of this"
+ },
+ {
+  "id": 643,
+  "text": "this emulator as actually"
+ },
+ {
+  "id": 644,
+  "text": "simulating"
+ },
+ {
+  "id": 645,
+  "text": "down to which layer does it simulate?"
+ },
+ {
+  "id": 646,
+  "text": "Let's combine this with"
+ },
+ {
+  "id": 647,
+  "text": "the diagram from earlier,"
+ },
+ {
+  "id": 648,
+  "text": "let's pull up that diagram and take another look."
+ },
+ {
+  "id": 649,
+  "text": "Think about it."
+ },
+ {
+  "id": 650,
+  "text": "That is, if"
+ },
+ {
+  "id": 651,
+  "text": "when I use this approach to"
+ },
+ {
+  "id": 652,
+  "text": "run an application,"
+ },
+ {
+  "id": 653,
+  "text": "this emulator,"
+ },
+ {
+  "id": 654,
+  "text": "which level does it simulate down to?"
+ },
+ {
+  "id": 655,
+  "text": "which level does it simulate down to?"
+ },
+ {
+  "id": 656,
+  "text": "which level does it simulate down to?"
+ },
+ {
+  "id": 657,
+  "text": "It simulates this level here."
+ },
+ {
+  "id": 658,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 659,
+  "text": "Because this application"
+ },
+ {
+  "id": 660,
+  "text": "Isn't it an a.out?"
+ },
+ {
+  "id": 661,
+  "text": "Think about it, isn't it?"
+ },
+ {
+  "id": 662,
+  "text": "Isn't it?"
+ },
+ {
+  "id": 663,
+  "text": "It's actually simulating at this level."
+ },
+ {
+  "id": 664,
+  "text": "That's why it's called the user layer."
+ },
+ {
+  "id": 665,
+  "text": "User mode."
+ },
+ {
+  "id": 666,
+  "text": "Because this program..."
+ },
+ {
+  "id": 667,
+  "text": "This program is a program running in user mode."
+ },
+ {
+  "id": 668,
+  "text": "a.out."
+ },
+ {
+  "id": 669,
+  "text": "But later on, when we develop"
+ },
+ {
+  "id": 670,
+  "text": "an operating system,"
+ },
+ {
+  "id": 671,
+  "text": "can you still run it this way?"
+ },
+ {
+  "id": 672,
+  "text": "That definitely won't work."
+ },
+ {
+  "id": 673,
+  "text": "Because in this mode,"
+ },
+ {
+  "id": 674,
+  "text": "our simulator actually has to simulate at this layer."
+ },
+ {
+  "id": 675,
+  "text": "Think about it, doesn't it?"
+ },
+ {
+  "id": 676,
+  "text": "It has to sink down one layer."
+ },
+ {
+  "id": 677,
+  "text": "Go down one layer."
+ },
+ {
+  "id": 678,
+  "text": "And a simulator of this kind"
+ },
+ {
+  "id": 679,
+  "text": "is what's called system-level emulation."
+ },
+ {
+  "id": 680,
+  "text": "So this QEMU of ours"
+ },
+ {
+  "id": 681,
+  "text": "has two main modes of operation."
+ },
+ {
+  "id": 682,
+  "text": "This user mode is the one I just demonstrated for you."
+ },
+ {
+  "id": 683,
+  "text": "Now, if you want to use an emulator to develop an operating system,"
+ },
+ {
+  "id": 684,
+  "text": "then what you need to simulate is a system-level layer."
+ },
+ {
+  "id": 685,
+  "text": "You have to simulate the entire computer system,"
+ },
+ {
+  "id": 686,
+  "text": "essentially as a whole"
+ },
+ {
+  "id": 687,
+  "text": "starting the simulation from the logical level."
+ },
+ {
+  "id": 688,
+  "text": "This approach is called system mode."
+ },
+ {
+  "id": 689,
+  "text": "Our later development will mainly focus on system mode."
+ },
+ {
+  "id": 690,
+  "text": "We'll demonstrate that to you when we get there."
+ },
+ {
+  "id": 691,
+  "text": "Here, we're mainly using user mode"
+ },
+ {
+  "id": 692,
+  "text": "to give you a sense of"
+ },
+ {
+  "id": 693,
+  "text": "how this QEMU is used."
+ },
+ {
+  "id": 694,
+  "text": "It can emulate a different architecture."
+ },
+ {
+  "id": 695,
+  "text": "I won't go into that now."
+ },
+ {
+  "id": 696,
+  "text": "Later, when we get to system mode,"
+ },
+ {
+  "id": 697,
+  "text": "we'll take a look then."
+ },
+ {
+  "id": 698,
+  "text": "So as for emulators,"
+ },
+ {
+  "id": 699,
+  "text": "that's all for now."
+ },
+ {
+  "id": 700,
+  "text": "Everything has been covered fairly quickly."
+ },
+ {
+  "id": 701,
+  "text": "Later on, when you go through the exercises,"
+ },
+ {
+  "id": 702,
+  "text": "we can take our time and get a feel for it."
+ },
+ {
+  "id": 703,
+  "text": "So, the last one,"
+ },
+ {
+  "id": 704,
+  "text": "is the make tool."
+ },
+ {
+  "id": 705,
+  "text": "I think most of you have probably used this tool before."
+ },
+ {
+  "id": 706,
+  "text": "So I'll just talk about it briefly myself."
+ },
+ {
+  "id": 707,
+  "text": "That is,"
+ },
+ {
+  "id": 708,
+  "text": "we know what the make tool is mainly used for."
+ },
+ {
+  "id": 709,
+  "text": "So, what's your own understanding of it now?"
+ },
+ {
+  "id": 710,
+  "text": "You must have used it, right?"
+ },
+ {
+  "id": 711,
+  "text": "You must have used it."
+ },
+ {
+  "id": 712,
+  "text": "Right?"
+ },
+ {
+  "id": 713,
+  "text": "That is, when your project gets big,"
+ },
+ {
+  "id": 714,
+  "text": "if you only have one file,"
+ },
+ {
+  "id": 715,
+  "text": "you don't really need make."
+ },
+ {
+  "id": 716,
+  "text": "Right?"
+ },
+ {
+  "id": 717,
+  "text": "But if you have quite a few programs,"
+ },
+ {
+  "id": 718,
+  "text": "quite a few files,"
+ },
+ {
+  "id": 719,
+  "text": "then you need an automated way"
+ },
+ {
+  "id": 720,
+  "text": "to help you compile and build this system,"
+ },
+ {
+  "id": 721,
+  "text": "you'll use make."
+ },
+ {
+  "id": 722,
+  "text": "So, make,"
+ },
+ {
+  "id": 723,
+  "text": "it's an automated management tool."
+ },
+ {
+  "id": 724,
+  "text": "Specifically,"
+ },
+ {
+  "id": 725,
+  "text": "it only knows"
+ },
+ {
+  "id": 726,
+  "text": "how to... that is to say,"
+ },
+ {
+  "id": 727,
+  "text": "how do you tell it to build the system?"
+ },
+ {
+  "id": 728,
+  "text": "Actually, it's through a makefile."
+ },
+ {
+  "id": 729,
+  "text": "You can think of the makefile as"
+ },
+ {
+  "id": 730,
+  "text": "basically"
+ },
+ {
+  "id": 731,
+  "text": "we write some statements in the makefile"
+ },
+ {
+  "id": 732,
+  "text": "to tell make"
+ },
+ {
+  "id": 733,
+  "text": "how to carry out this automated build process."
+ },
+ {
+  "id": 734,
+  "text": "Right?"
+ },
+ {
+  "id": 735,
+  "text": "So how does make"
+ },
+ {
+  "id": 736,
+  "text": "find this makefile?"
+ },
+ {
+  "id": 737,
+  "text": "Very simple."
+ },
+ {
+  "id": 738,
+  "text": "By default,"
+ },
+ {
+  "id": 739,
+  "text": "it will look in the current working directory,"
+ },
+ {
+  "id": 740,
+  "text": "to look for that file with the same name"
+ },
+ {
+  "id": 741,
+  "text": "Now, if you want to specify a particular makefile,"
+ },
+ {
+  "id": 742,
+  "text": "you just add the -f parameter."
+ },
+ {
+  "id": 743,
+  "text": "I won't go into that."
+ },
+ {
+  "id": 744,
+  "text": "So the most essential point about a Makefile,"
+ },
+ {
+  "id": 745,
+  "text": "the syntax inside it,"
+ },
+ {
+  "id": 746,
+  "text": "is actually made up of one rule after another,"
+ },
+ {
+  "id": 747,
+  "text": "right?"
+ },
+ {
+  "id": 748,
+  "text": "You all still remember this format, right?"
+ },
+ {
+  "id": 749,
+  "text": "Now, the thing to pay special attention to is that"
+ },
+ {
+  "id": 750,
+  "text": "each rule,"
+ },
+ {
+  "id": 751,
+  "text": "consists of several parts."
+ },
+ {
+  "id": 752,
+  "text": "The first part,"
+ },
+ {
+  "id": 753,
+  "text": "is a target,"
+ },
+ {
+  "id": 754,
+  "text": "followed by a dependency."
+ },
+ {
+  "id": 755,
+  "text": "And then,"
+ },
+ {
+  "id": 756,
+  "text": "what comes below,"
+ },
+ {
+  "id": 757,
+  "text": "are commands, one after another,"
+ },
+ {
+  "id": 758,
+  "text": "right?"
+ },
+ {
+  "id": 759,
+  "text": "The part in front..."
+ },
+ {
+  "id": 760,
+  "text": "Over here, this must be a tab."
+ },
+ {
+  "id": 761,
+  "text": "When you write this, make sure you never"
+ },
+ {
+  "id": 762,
+  "text": "get it wrong."
+ },
+ {
+  "id": 763,
+  "text": "There are also some explicit syntax rules."
+ },
+ {
+  "id": 764,
+  "text": "What do I mean by explicit syntax rules?"
+ },
+ {
+  "id": 765,
+  "text": "Let me mention that briefly."
+ },
+ {
+  "id": 766,
+  "text": "A single file can contain multiple rules."
+ },
+ {
+  "id": 767,
+  "text": "Right?"
+ },
+ {
+  "id": 768,
+  "text": "You might write several rules, quite a few rules."
+ },
+ {
+  "id": 769,
+  "text": "So one MAC file might have several rules in it."
+ },
+ {
+  "id": 770,
+  "text": "Then when I run MAC,"
+ },
+ {
+  "id": 771,
+  "text": "how does it know which rule to execute?"
+ },
+ {
+  "id": 772,
+  "text": "Which rule does it execute first?"
+ },
+ {
+  "id": 773,
+  "text": "If you don't specify one,"
+ },
+ {
+  "id": 774,
+  "text": "how does it behave by default?"
+ },
+ {
+  "id": 775,
+  "text": "As you probably know,"
+ },
+ {
+  "id": 776,
+  "text": "if you don't explicitly specify it,"
+ },
+ {
+  "id": 777,
+  "text": "by default it takes the first rule"
+ },
+ {
+  "id": 778,
+  "text": "as its default rule and runs that."
+ },
+ {
+  "id": 779,
+  "text": "Right?"
+ },
+ {
+  "id": 780,
+  "text": "If you want to write it further down,"
+ },
+ {
+  "id": 781,
+  "text": "you need to add one at the front,"
+ },
+ {
+  "id": 782,
+  "text": ".PHONY or .DEFAULT_GOAL,"
+ },
+ {
+  "id": 783,
+  "text": "which is the default rule,"
+ },
+ {
+  "id": 784,
+  "text": "the default target,"
+ },
+ {
+  "id": 785,
+  "text": "to specify it,"
+ },
+ {
+  "id": 786,
+  "text": "to make it clear"
+ },
+ {
+  "id": 787,
+  "text": "that this is the default one,"
+ },
+ {
+  "id": 788,
+  "text": "and that's it."
+ },
+ {
+  "id": 789,
+  "text": "If you use this method,"
+ },
+ {
+  "id": 790,
+  "text": "it's fine to put your default rule at the end,"
+ },
+ {
+  "id": 791,
+  "text": "it doesn't matter,"
+ },
+ {
+  "id": 792,
+  "text": "it doesn't have to be the first one."
+ },
+ {
+  "id": 793,
+  "text": "Now, there are also some phony rules."
+ },
+ {
+  "id": 794,
+  "text": "Phony rules, in fact, mean"
+ },
+ {
+  "id": 795,
+  "text": "they specify certain actions,"
+ },
+ {
+  "id": 796,
+  "text": "but they don't participate in the rule derivation."
+ },
+ {
+  "id": 797,
+  "text": "Right?"
+ },
+ {
+  "id": 798,
+  "text": "Let me just quickly walk you through these."
+ },
+ {
+  "id": 799,
+  "text": "And then this part after it,"
+ },
+ {
+  "id": 800,
+  "text": "I think I'll skip those"
+ },
+ {
+  "id": 801,
+  "text": "that is, the derivation process of this rule"
+ },
+ {
+  "id": 802,
+  "text": "I won't go over that with you either"
+ },
+ {
+  "id": 803,
+  "text": "So over here,"
+ },
+ {
+  "id": 804,
+  "text": "I still have a bit of time"
+ },
+ {
+  "id": 805,
+  "text": "so I'll use it to, that is, tie it right into this makefile"
+ },
+ {
+  "id": 806,
+  "text": "and walk you through it"
+ },
+ {
+  "id": 807,
+  "text": "That is, some of the makefile stuff in our code,"
+ },
+ {
+  "id": 808,
+  "text": "it's a good chance to get everyone familiar with it again."
+ },
+ {
+  "id": 809,
+  "text": "So,"
+ },
+ {
+  "id": 810,
+  "text": "okay, let's take a look here."
+ },
+ {
+  "id": 811,
+  "text": "Of course, if you're up to it,"
+ },
+ {
+  "id": 812,
+  "text": "you should be able to read it on your own after you go back."
+ },
+ {
+  "id": 813,
+  "text": "I'm just walking through it with you here."
+ },
+ {
+  "id": 814,
+  "text": "The makefile in this project of ours."
+ },
+ {
+  "id": 815,
+  "text": "Ah."
+ },
+ {
+  "id": 816,
+  "text": "Once you've finished downloading this directory,"
+ },
+ {
+  "id": 817,
+  "text": "open it up."
+ },
+ {
+  "id": 818,
+  "text": "Uh."
+ },
+ {
+  "id": 819,
+  "text": "All of our code is placed under this directory."
+ },
+ {
+  "id": 820,
+  "text": "Uh,"
+ },
+ {
+  "id": 821,
+  "text": "we covered this above."
+ },
+ {
+  "id": 822,
+  "text": "This is ASM, some assembly code."
+ },
+ {
+  "id": 823,
+  "text": "And the operating system is this code."
+ },
+ {
+  "id": 824,
+  "text": "Now, if we take one of the examples,"
+ },
+ {
+  "id": 825,
+  "text": "we know that in here,"
+ },
+ {
+  "id": 826,
+  "text": "there's a makefile, right?"
+ },
+ {
+  "id": 827,
+  "text": "Let's take a quick look at this makefile."
+ },
+ {
+  "id": 828,
+  "text": "As for this makefile,"
+ },
+ {
+  "id": 829,
+  "text": "it's a good chance to review things with everyone."
+ },
+ {
+  "id": 830,
+  "text": "For instance, this one here,"
+ },
+ {
+  "id": 831,
+  "text": "what is this called?"
+ },
+ {
+  "id": 832,
+  "text": "What is this doing?"
+ },
+ {
+  "id": 833,
+  "text": "This is defining a variable in the makefile, right?"
+ },
+ {
+  "id": 834,
+  "text": "This is a variable name."
+ },
+ {
+  "id": 835,
+  "text": "The equals sign after it."
+ },
+ {
+  "id": 836,
+  "text": "After that is really just a string substitution."
+ },
+ {
+  "id": 837,
+  "text": "Right?"
+ },
+ {
+  "id": 838,
+  "text": "We won't go into the specifics."
+ },
+ {
+  "id": 839,
+  "text": "Here on the left, it's defining some variables."
+ },
+ {
+  "id": 840,
+  "text": "And then, this is also defining a variable."
+ },
+ {
+  "id": 841,
+  "text": "Now this one,"
+ },
+ {
+  "id": 842,
+  "text": "can everyone still follow"
+ },
+ {
+  "id": 843,
+  "text": "what this is doing?"
+ },
+ {
+  "id": 844,
+  "text": "This is a special syntax in makefile."
+ },
+ {
+  "id": 845,
+  "text": "What can it do?"
+ },
+ {
+  "id": 846,
+  "text": "It can take the contents of this variable"
+ },
+ {
+  "id": 847,
+  "text": "and substitute them according to a pattern,"
+ },
+ {
+  "id": 848,
+  "text": "replacing everything with the .s suffix"
+ },
+ {
+  "id": 849,
+  "text": "with .o."
+ },
+ {
+  "id": 850,
+  "text": "So what is this thing?"
+ },
+ {
+  "id": 851,
+  "text": "This thing, we just"
+ },
+ {
+  "id": 852,
+  "text": "expand this thing."
+ },
+ {
+  "id": 853,
+  "text": "So after this line is executed,"
+ },
+ {
+  "id": 854,
+  "text": "what does this objs variable actually become?"
+ },
+ {
+  "id": 855,
+  "text": "It just becomes start.o, right?"
+ },
+ {
+  "id": 856,
+  "text": "Everyone gets that, right?"
+ },
+ {
+  "id": 857,
+  "text": "Let me walk you through it again."
+ },
+ {
+  "id": 858,
+  "text": "Since we're not"
+ },
+ {
+  "id": 859,
+  "text": "doing a dedicated makefile course,"
+ },
+ {
+  "id": 860,
+  "text": "So, to avoid people"
+ },
+ {
+  "id": 861,
+  "text": "not understanding this file,"
+ },
+ {
+  "id": 862,
+  "text": "I'll go ahead and explain it."
+ },
+ {
+  "id": 863,
+  "text": "And then,"
+ },
+ {
+  "id": 864,
+  "text": "what does this plus-equals mean?"
+ },
+ {
+  "id": 865,
+  "text": "It means append,"
+ },
+ {
+  "id": 866,
+  "text": "right?"
+ },
+ {
+  "id": 867,
+  "text": "Append."
+ },
+ {
+  "id": 868,
+  "text": "So this likewise takes"
+ },
+ {
+  "id": 869,
+  "text": "what's in this variable"
+ },
+ {
+  "id": 870,
+  "text": "and does pattern substitution."
+ },
+ {
+  "id": 871,
+  "text": "Then after this substitution,"
+ },
+ {
+  "id": 872,
+  "text": "this"
+ },
+ {
+  "id": 873,
+  "text": "becomes kernel.o,"
+ },
+ {
+  "id": 874,
+  "text": "right?"
+ },
+ {
+  "id": 875,
+  "text": "So what does this obj end up becoming?"
+ },
+ {
+  "id": 876,
+  "text": "Doesn't it become start.o"
+ },
+ {
+  "id": 877,
+  "text": "space"
+ },
+ {
+  "id": 878,
+  "text": "kernel.o,"
+ },
+ {
+  "id": 879,
+  "text": "right?"
+ },
+ {
+  "id": 880,
+  "text": "So these two .o files are exactly the two object files we're ultimately trying to generate."
+ },
+ {
+  "id": 881,
+  "text": "That's really all there is to it, right?"
+ },
+ {
+  "id": 882,
+  "text": "OK."
+ },
+ {
+  "id": 883,
+  "text": "Now, look at this os.elf — what is it?"
+ },
+ {
+  "id": 884,
+  "text": "This is our real goal."
+ },
+ {
+  "id": 885,
+  "text": "The thing we want to end up building is this target."
+ },
+ {
+  "id": 886,
+  "text": "What does this target actually depend on?"
+ },
+ {
+  "id": 887,
+  "text": "It's os.elf."
+ },
+ {
+  "id": 888,
+  "text": "This is the kernel file we want to produce."
+ },
+ {
+  "id": 889,
+  "text": "Does everyone follow?"
+ },
+ {
+  "id": 890,
+  "text": "So we keep recursively tracing this file's dependency chain layer by layer."
+ },
+ {
+  "id": 891,
+  "text": "So what does the elf file depend on?"
+ },
+ {
+  "id": 892,
+  "text": "It depends on OBJS."
+ },
+ {
+  "id": 893,
+  "text": "This OBJS, as we said, is what we just computed over here."
+ },
+ {
+  "id": 894,
+  "text": "It's that kernel.o and that start.o, right?"
+ },
+ {
+  "id": 895,
+  "text": "What does that tell us?"
+ },
+ {
+  "id": 896,
+  "text": "It tells us that for our kernel's executable program to be built,"
+ },
+ {
+  "id": 897,
+  "text": "those two .o files have to be built first."
+ },
+ {
+  "id": 898,
+  "text": "I want everyone to understand what I mean here."
+ },
+ {
+  "id": 899,
+  "text": "So how are those two .o files built?"
+ },
+ {
+  "id": 900,
+  "text": "It's accomplished through this command down here."
+ },
+ {
+  "id": 901,
+  "text": "Okay."
+ },
+ {
+  "id": 902,
+  "text": "So basically, this rule is"
+ },
+ {
+  "id": 903,
+  "text": "derived this way."
+ },
+ {
+  "id": 904,
+  "text": "And then down here,"
+ },
+ {
+  "id": 905,
+  "text": "it's also this kind of syntax in the makefile."
+ },
+ {
+  "id": 906,
+  "text": "It actually tells us explicitly"
+ },
+ {
+  "id": 907,
+  "text": "when we want to build a .o file,"
+ },
+ {
+  "id": 908,
+  "text": "what kind of"
+ },
+ {
+  "id": 909,
+  "text": "command should be used to do it."
+ },
+ {
+  "id": 910,
+  "text": "Now, this cc here,"
+ },
+ {
+  "id": 911,
+  "text": "actually just means using that compiler."
+ },
+ {
+  "id": 912,
+  "text": "Alright."
+ },
+ {
+  "id": 913,
+  "text": "The rest are just phony rules."
+ },
+ {
+  "id": 914,
+  "text": "These,"
+ },
+ {
+  "id": 915,
+  "text": "for example, when you want to run it,"
+ },
+ {
+  "id": 916,
+  "text": "you just type make run."
+ },
+ {
+  "id": 917,
+  "text": "If you want to debug,"
+ },
+ {
+  "id": 918,
+  "text": "you type make debug."
+ },
+ {
+  "id": 919,
+  "text": "Right?"
+ },
+ {
+  "id": 920,
+  "text": "This make debug"
+ },
+ {
+  "id": 921,
+  "text": "you can see what it runs"
+ },
+ {
+  "id": 922,
+  "text": "when debugging,"
+ },
+ {
+  "id": 923,
+  "text": "it runs QEMU"
+ },
+ {
+  "id": 924,
+  "text": "and the run target also runs QEMU"
+ },
+ {
+  "id": 925,
+  "text": "which is the emulator."
+ },
+ {
+  "id": 926,
+  "text": "So it starts up that emulator,"
+ },
+ {
+  "id": 927,
+  "text": "and then takes the kernel image we built"
+ },
+ {
+  "id": 928,
+  "text": "and loads it into the emulator to run."
+ },
+ {
+  "id": 929,
+  "text": "This is the concept of cross development."
+ },
+ {
+  "id": 930,
+  "text": "Even though we're using an emulator,"
+ },
+ {
+  "id": 931,
+  "text": "it's really the same idea as debugging on a"
+ },
+ {
+  "id": 932,
+  "text": "real board."
+ },
+ {
+  "id": 933,
+  "text": "Alright,"
+ },
+ {
+  "id": 934,
+  "text": "basically the Makefile,"
+ },
+ {
+  "id": 935,
+  "text": "I'll just briefly cover it up to here."
+ },
+ {
+  "id": 936,
+  "text": "After all, we're not specifically here to teach the Makefile."
+ },
+ {
+  "id": 937,
+  "text": "If any of you have any questions about the Makefile,"
+ },
+ {
+  "id": 938,
+  "text": "since it can actually get quite complicated to use,"
+ },
+ {
+  "id": 939,
+  "text": "if you have any questions"
+ },
+ {
+  "id": 940,
+  "text": "You might need to go take a look at it yourself."
+ },
+ {
+  "id": 941,
+  "text": "Or if there's a chance, maybe we'll do a Makefile course later."
+ },
+ {
+  "id": 942,
+  "text": "Because that's not the focus of these courses."
+ },
+ {
+  "id": 943,
+  "text": "So we just skim over it,"
+ },
+ {
+  "id": 944,
+  "text": "giving you a quick pass."
+ },
+ {
+  "id": 945,
+  "text": "So the main point is,"
+ },
+ {
+  "id": 946,
+  "text": "I hope everyone gets a sense of one thing:"
+ },
+ {
+  "id": 947,
+  "text": "through studying these courses,"
+ },
+ {
+  "id": 948,
+  "text": "the idea is really,"
+ },
+ {
+  "id": 949,
+  "text": "what should we let you understand?"
+ },
+ {
+  "id": 950,
+  "text": "That is, to develop a kernel,"
+ },
+ {
+  "id": 951,
+  "text": "what knowledge do we need to master?"
+ },
+ {
+  "id": 952,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 953,
+  "text": "This is basically the idea of a knowledge map."
+ },
+ {
+  "id": 954,
+  "text": "That is, through studying these courses,"
+ },
+ {
+  "id": 955,
+  "text": "we need to..."
+ },
+ {
+  "id": 956,
+  "text": "if in the future you want to go into"
+ },
+ {
+  "id": 957,
+  "text": "work in this area,"
+ },
+ {
+  "id": 958,
+  "text": "which pieces of knowledge do you need to master one by one,"
+ },
+ {
+  "id": 959,
+  "text": "and then stack them together?"
+ },
+ {
+  "id": 960,
+  "text": "Then finally you can go develop a kernel."
+ },
+ {
+  "id": 961,
+  "text": "So these related dependencies,"
+ },
+ {
+  "id": 962,
+  "text": "we'll just cover them in"
+ },
+ {
+  "id": 963,
+  "text": "actually, the preliminary part."
+ },
+ {
+  "id": 964,
+  "text": "Basically, next class"
+ },
+ {
+  "id": 965,
+  "text": "we'll start talking about assembly."
+ },
+ {
+  "id": 966,
+  "text": "This is also a key part of our course,"
+ },
+ {
+  "id": 967,
+  "text": "because for low-level development,"
+ },
+ {
+  "id": 968,
+  "text": "you can't get away from some assembly language stuff."
+ },
+ {
+  "id": 969,
+  "text": "So at least before we talk about assembly,"
+ },
+ {
+  "id": 970,
+  "text": "all of our preliminary material"
+ },
+ {
+  "id": 971,
+  "text": "is pretty much all we have."
+ },
+ {
+  "id": 972,
+  "text": "The related techniques,"
+ },
+ {
+  "id": 973,
+  "text": "how to use these tools,"
+ },
+ {
+  "id": 974,
+  "text": "you may need to"
+ },
+ {
+  "id": 975,
+  "text": "take your time later on and"
+ },
+ {
+  "id": 976,
+  "text": "gradually get a feel for them yourselves."
+ },
+ {
+  "id": 977,
+  "text": "Okay, today's class"
+ },
+ {
+  "id": 978,
+  "text": "will end here."
+ },
+ {
+  "id": 979,
+  "text": "Alright."
+ },
+ {
+  "id": 980,
+  "text": "Thank you, everyone."
+ }
+]

@@ -1,0 +1,7154 @@
+[
+ {
+  "id": 0,
+  "text": "Now let's move on to the next chapter, Chapter 8."
+ },
+ {
+  "id": 1,
+  "text": "In Chapter 7, through introducing the boot of our system and printing a basic HelloRV OS on top of it,"
+ },
+ {
+  "id": 2,
+  "text": "we learned how to get a RISC-V board up and running,"
+ },
+ {
+  "id": 3,
+  "text": "on top of it,"
+ },
+ {
+  "id": 4,
+  "text": "and then used its most basic peripheral,"
+ },
+ {
+  "id": 5,
+  "text": "the serial port device."
+ },
+ {
+  "id": 6,
+  "text": "Next,"
+ },
+ {
+  "id": 7,
+  "text": "let's turn to Chapter 8,"
+ },
+ {
+  "id": 8,
+  "text": "which mainly introduces,"
+ },
+ {
+  "id": 9,
+  "text": "building on the previous foundation,"
+ },
+ {
+  "id": 10,
+  "text": "how we can further"
+ },
+ {
+  "id": 11,
+  "text": "manage the memory of our system,"
+ },
+ {
+  "id": 12,
+  "text": "taking that management a step further."
+ },
+ {
+  "id": 13,
+  "text": "This part of the content"
+ },
+ {
+  "id": 14,
+  "text": "is mainly divided into two parts."
+ },
+ {
+  "id": 15,
+  "text": "One part"
+ },
+ {
+  "id": 16,
+  "text": "is an introduction to"
+ },
+ {
+  "id": 17,
+  "text": "how to implement dynamic memory allocation,"
+ },
+ {
+  "id": 18,
+  "text": "and then,"
+ },
+ {
+  "id": 19,
+  "text": "based on this first part,"
+ },
+ {
+  "id": 20,
+  "text": "in terms of implementing the concepts we introduced,"
+ },
+ {
+  "id": 21,
+  "text": "we can implement, at the page level,"
+ },
+ {
+  "id": 22,
+  "text": "at the configuration level,"
+ },
+ {
+  "id": 23,
+  "text": "some calling interfaces for memory allocation and management."
+ },
+ {
+  "id": 24,
+  "text": "I'll mainly cover this in two steps."
+ },
+ {
+  "id": 25,
+  "text": "As for the relevant reference materials,"
+ },
+ {
+  "id": 26,
+  "text": "I've listed some of them here as well."
+ },
+ {
+  "id": 27,
+  "text": "In our slides, they'll actually be listed too."
+ },
+ {
+  "id": 28,
+  "text": "When we get to some important concepts,"
+ },
+ {
+  "id": 29,
+  "text": "I'll show some of the figures and tables,"
+ },
+ {
+  "id": 30,
+  "text": "and where they come from in the references."
+ },
+ {
+  "id": 31,
+  "text": "You can go back and take a look."
+ },
+ {
+  "id": 32,
+  "text": "So let's start with the first part."
+ },
+ {
+  "id": 33,
+  "text": "That is, further management of memory."
+ },
+ {
+  "id": 34,
+  "text": "So here,"
+ },
+ {
+  "id": 35,
+  "text": "before we continue further development,"
+ },
+ {
+  "id": 36,
+  "text": "we need to take the memory"
+ },
+ {
+  "id": 37,
+  "text": "and manage it further."
+ },
+ {
+  "id": 38,
+  "text": "Why is that?"
+ },
+ {
+  "id": 39,
+  "text": "It's because from what we saw earlier,"
+ },
+ {
+  "id": 40,
+  "text": "What we've been learning is that"
+ },
+ {
+  "id": 41,
+  "text": "when it comes to memory management,"
+ },
+ {
+  "id": 42,
+  "text": "up to this point,"
+ },
+ {
+  "id": 43,
+  "text": "we've actually already encountered"
+ },
+ {
+  "id": 44,
+  "text": "two kinds of memory management approaches,"
+ },
+ {
+  "id": 45,
+  "text": "right?"
+ },
+ {
+  "id": 46,
+  "text": "The first one is called automatic memory management."
+ },
+ {
+  "id": 47,
+  "text": "Now, this way of managing memory,"
+ },
+ {
+  "id": 48,
+  "text": "we actually implement through the stack,"
+ },
+ {
+  "id": 49,
+  "text": "through this mechanism."
+ },
+ {
+  "id": 50,
+  "text": "This actually corresponds in our C language,"
+ },
+ {
+  "id": 51,
+  "text": "to what is essentially used,"
+ },
+ {
+  "id": 52,
+  "text": "namely the automatic variables defined inside functions."
+ },
+ {
+  "id": 53,
+  "text": "Now, we know that these automatic variables,"
+ },
+ {
+  "id": 54,
+  "text": "this kind of memory,"
+ },
+ {
+  "id": 55,
+  "text": "when you enter a function,"
+ },
+ {
+  "id": 56,
+  "text": "it gets allocated inside the function stack,"
+ },
+ {
+  "id": 57,
+  "text": "and when the function exits,"
+ },
+ {
+  "id": 58,
+  "text": "it is actually released,"
+ },
+ {
+  "id": 59,
+  "text": "right?"
+ },
+ {
+  "id": 60,
+  "text": "Once it goes out of scope, it's released."
+ },
+ {
+  "id": 61,
+  "text": "You can think of it as a kind of automatic management."
+ },
+ {
+  "id": 62,
+  "text": "Now, there's another kind."
+ },
+ {
+  "id": 63,
+  "text": "What we're studying is static memory."
+ },
+ {
+  "id": 64,
+  "text": "In our code, this corresponds to,"
+ },
+ {
+  "id": 65,
+  "text": "basically, defining some global variables,"
+ },
+ {
+  "id": 66,
+  "text": "or static variables."
+ },
+ {
+  "id": 67,
+  "text": "Now, for these variables,"
+ },
+ {
+  "id": 68,
+  "text": "we're actually using them in a static way."
+ },
+ {
+  "id": 69,
+  "text": "We know where this static memory is placed."
+ },
+ {
+  "id": 70,
+  "text": "It's actually placed after we compile,"
+ },
+ {
+  "id": 71,
+  "text": "in some special data segments."
+ },
+ {
+  "id": 72,
+  "text": "Right?"
+ },
+ {
+  "id": 73,
+  "text": "In the data sections."
+ },
+ {
+  "id": 74,
+  "text": "Then they get loaded into memory,"
+ },
+ {
+  "id": 75,
+  "text": "placed in these data segments."
+ },
+ {
+  "id": 76,
+  "text": "Okay."
+ },
+ {
+  "id": 77,
+  "text": "So, for these things,"
+ },
+ {
+  "id": 78,
+  "text": "what we can see is that,"
+ },
+ {
+  "id": 79,
+  "text": "beyond this way of using memory,"
+ },
+ {
+  "id": 80,
+  "text": "Actually, there's another kind of"
+ },
+ {
+  "id": 81,
+  "text": "demand for memory"
+ },
+ {
+  "id": 82,
+  "text": "which is that we might need to"
+ },
+ {
+  "id": 83,
+  "text": "at runtime"
+ },
+ {
+  "id": 84,
+  "text": "dynamically allocate some memory."
+ },
+ {
+  "id": 85,
+  "text": "Because in real-world programming,"
+ },
+ {
+  "id": 86,
+  "text": "we know there are some data structures"
+ },
+ {
+  "id": 87,
+  "text": "whose memory size"
+ },
+ {
+  "id": 88,
+  "text": "actually, at the point when the program starts running,"
+ },
+ {
+  "id": 89,
+  "text": "cannot simply be placed"
+ },
+ {
+  "id": 90,
+  "text": "entirely into static memory,"
+ },
+ {
+  "id": 91,
+  "text": "or stored on the stack."
+ },
+ {
+  "id": 92,
+  "text": "So in C, for example,"
+ },
+ {
+  "id": 93,
+  "text": "what we have inside is, say,"
+ },
+ {
+  "id": 94,
+  "text": "we use malloc,"
+ },
+ {
+  "id": 95,
+  "text": "or free, that kind of"
+ },
+ {
+  "id": 96,
+  "text": "dynamic approach."
+ },
+ {
+  "id": 97,
+  "text": "Now, this dynamic approach"
+ },
+ {
+  "id": 98,
+  "text": "brings in the concept of a heap."
+ },
+ {
+  "id": 99,
+  "text": "And this heap,"
+ },
+ {
+  "id": 100,
+  "text": "under the hood, exactly where"
+ },
+ {
+  "id": 101,
+  "text": "So, for example, when we"
+ },
+ {
+  "id": 102,
+  "text": "normally call malloc"
+ },
+ {
+  "id": 103,
+  "text": "and free,"
+ },
+ {
+  "id": 104,
+  "text": "behind that, exactly where"
+ },
+ {
+  "id": 105,
+  "text": "is that heap located in memory?"
+ },
+ {
+  "id": 106,
+  "text": "Well, in fact, in our"
+ },
+ {
+  "id": 107,
+  "text": "at the very lowest level,"
+ },
+ {
+  "id": 108,
+  "text": "it's actually maintained for you"
+ },
+ {
+  "id": 109,
+  "text": "by our operating system."
+ },
+ {
+  "id": 110,
+  "text": "So how do we"
+ },
+ {
+  "id": 111,
+  "text": "build that heap?"
+ },
+ {
+  "id": 112,
+  "text": "Today,"
+ },
+ {
+  "id": 113,
+  "text": "we'll mainly focus on that topic."
+ },
+ {
+  "id": 114,
+  "text": "Alright, let's first look at this table."
+ },
+ {
+  "id": 115,
+  "text": "We've seen this table several times before,"
+ },
+ {
+  "id": 116,
+  "text": "the memory map."
+ },
+ {
+  "id": 117,
+  "text": "From what we learned earlier,"
+ },
+ {
+  "id": 118,
+  "text": "we know that on this table,"
+ },
+ {
+  "id": 119,
+  "text": "the Bootloader ROM region"
+ },
+ {
+  "id": 120,
+  "text": "We actually can't touch it."
+ },
+ {
+  "id": 121,
+  "text": "Because you can think of it as"
+ },
+ {
+  "id": 122,
+  "text": "a block of read-only memory that's baked in there."
+ },
+ {
+  "id": 123,
+  "text": "What we actually work with more is the DRAM."
+ },
+ {
+  "id": 124,
+  "text": "That is, this block up here."
+ },
+ {
+  "id": 125,
+  "text": "This block up here."
+ },
+ {
+  "id": 126,
+  "text": "Now for this block up here,"
+ },
+ {
+  "id": 127,
+  "text": "we know that after going through the mapping,"
+ },
+ {
+  "id": 128,
+  "text": "it gets mapped to our physical memory,"
+ },
+ {
+  "id": 129,
+  "text": "from 0x8000 up to 0x88000000,"
+ },
+ {
+  "id": 130,
+  "text": "over this range of addresses."
+ },
+ {
+  "id": 131,
+  "text": "Now for the memory in this address range,"
+ },
+ {
+  "id": 132,
+  "text": "actually, how it's used internally,"
+ },
+ {
+  "id": 133,
+  "text": "we haven't done any deeper management of it."
+ },
+ {
+  "id": 134,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 135,
+  "text": "Because as you know, let's look at this diagram down here."
+ },
+ {
+  "id": 136,
+  "text": "Actually, for this whole area on this side,"
+ },
+ {
+  "id": 137,
+  "text": "like on this Virtual board we're currently using,"
+ },
+ {
+  "id": 138,
+  "text": "for this memory in this 128-megabyte range,"
+ },
+ {
+  "id": 139,
+  "text": "we haven't actually done any further or deeper management."
+ },
+ {
+  "id": 140,
+  "text": "Why do I say that?"
+ },
+ {
+  "id": 141,
+  "text": "Well, as you know,"
+ },
+ {
+  "id": 142,
+  "text": "after we compile a program,"
+ },
+ {
+  "id": 143,
+  "text": "and those of you who did the earlier ones,"
+ },
+ {
+  "id": 144,
+  "text": "you know that what we compile here is actually an OS.ELF,"
+ },
+ {
+  "id": 145,
+  "text": "an executable file like that."
+ },
+ {
+  "id": 146,
+  "text": "Now, this file, as we know,"
+ },
+ {
+  "id": 147,
+  "text": "based on what we covered earlier,"
+ },
+ {
+  "id": 148,
+  "text": "is actually in ELF format,"
+ },
+ {
+  "id": 149,
+  "text": "right?"
+ },
+ {
+  "id": 150,
+  "text": "And in this ELF format,"
+ },
+ {
+  "id": 151,
+  "text": "there are corresponding sections."
+ },
+ {
+  "id": 152,
+  "text": "Then during loading,"
+ },
+ {
+  "id": 153,
+  "text": "it is loaded segment by segment."
+ },
+ {
+  "id": 154,
+  "text": "When this data,"
+ },
+ {
+  "id": 155,
+  "text": "is loaded into memory,"
+ },
+ {
+  "id": 156,
+  "text": "it will actually only take up"
+ },
+ {
+  "id": 157,
+  "text": "a portion of our 128 megabytes,"
+ },
+ {
+  "id": 158,
+  "text": "part of the space,"
+ },
+ {
+  "id": 159,
+  "text": "and the rest"
+ },
+ {
+  "id": 160,
+  "text": "There is actually a large chunk of space"
+ },
+ {
+  "id": 161,
+  "text": "This chunk of space"
+ },
+ {
+  "id": 162,
+  "text": "we actually have not"
+ },
+ {
+  "id": 163,
+  "text": "made use of it"
+ },
+ {
+  "id": 164,
+  "text": "So later on,"
+ },
+ {
+  "id": 165,
+  "text": "for the dynamic allocation we want to do,"
+ },
+ {
+  "id": 166,
+  "text": "the idea is basically to find a way"
+ },
+ {
+  "id": 167,
+  "text": "to use this memory at the back,"
+ },
+ {
+  "id": 168,
+  "text": "which is what we call the heap,"
+ },
+ {
+  "id": 169,
+  "text": "this memory heap,"
+ },
+ {
+  "id": 170,
+  "text": "and put it to use."
+ },
+ {
+  "id": 171,
+  "text": "And by using a dynamic approach,"
+ },
+ {
+  "id": 172,
+  "text": "we can, in our programs,"
+ },
+ {
+  "id": 173,
+  "text": "allocate when we need it,"
+ },
+ {
+  "id": 174,
+  "text": "and return it when we no longer need it."
+ },
+ {
+  "id": 175,
+  "text": "For the sections below, as we know,"
+ },
+ {
+  "id": 176,
+  "text": "once they are loaded into memory,"
+ },
+ {
+  "id": 177,
+  "text": "their size cannot be changed."
+ },
+ {
+  "id": 178,
+  "text": "So if we want to make use of this part,"
+ },
+ {
+  "id": 179,
+  "text": "then the next question arises"
+ },
+ {
+  "id": 180,
+  "text": "So if we want to make use of this region,"
+ },
+ {
+  "id": 181,
+  "text": "what do we need to do first?"
+ },
+ {
+  "id": 182,
+  "text": "As you all know,"
+ },
+ {
+  "id": 183,
+  "text": "first you have to know"
+ },
+ {
+  "id": 184,
+  "text": "where this region"
+ },
+ {
+  "id": 185,
+  "text": "actually starts,"
+ },
+ {
+  "id": 186,
+  "text": "and how much space is actually left."
+ },
+ {
+  "id": 187,
+  "text": "These are all things we need to know,"
+ },
+ {
+  "id": 188,
+  "text": "because only after knowing this information"
+ },
+ {
+  "id": 189,
+  "text": "can we take this chunk of memory"
+ },
+ {
+  "id": 190,
+  "text": "and manage it in a finer-grained way."
+ },
+ {
+  "id": 191,
+  "text": "Now, some of you might say,"
+ },
+ {
+  "id": 192,
+  "text": "can't we just calculate it ourselves?"
+ },
+ {
+  "id": 193,
+  "text": "Well, of course you can."
+ },
+ {
+  "id": 194,
+  "text": "Because in our..."
+ },
+ {
+  "id": 195,
+  "text": "But of course, that's really cumbersome,"
+ },
+ {
+  "id": 196,
+  "text": "because basically you'd have to know"
+ },
+ {
+  "id": 197,
+  "text": "the sizes of all the variables"
+ },
+ {
+  "id": 198,
+  "text": "that were allocated in there,"
+ },
+ {
+  "id": 199,
+  "text": "and then compute it yourself based on that."
+ },
+ {
+  "id": 200,
+  "text": "But in fact, there's really no need to do that."
+ },
+ {
+  "id": 201,
+  "text": "Because as everyone knows, once you have a compiler and a linker,"
+ },
+ {
+  "id": 202,
+  "text": "during the compilation and linking process,"
+ },
+ {
+  "id": 203,
+  "text": "the compiler and linker can actually figure out these sizes for you automatically."
+ },
+ {
+  "id": 204,
+  "text": "We don't need to calculate them by hand."
+ },
+ {
+  "id": 205,
+  "text": "So what we'll do next is look at"
+ },
+ {
+  "id": 206,
+  "text": "how to get the size of this region and its starting address."
+ },
+ {
+  "id": 207,
+  "text": "At the same time, we actually make full use of"
+ },
+ {
+  "id": 208,
+  "text": "some features of the compiler and linker to help us do this."
+ },
+ {
+  "id": 209,
+  "text": "So let's now"
+ },
+ {
+  "id": 210,
+  "text": "briefly review"
+ },
+ {
+  "id": 211,
+  "text": "the compilation and linking process,"
+ },
+ {
+  "id": 212,
+  "text": "as well as some related concepts."
+ },
+ {
+  "id": 213,
+  "text": "Let's see how to get this done."
+ },
+ {
+  "id": 214,
+  "text": "That is to say,"
+ },
+ {
+  "id": 215,
+  "text": "this diagram should be quite familiar to all of you."
+ },
+ {
+  "id": 216,
+  "text": "Basically, we"
+ },
+ {
+  "id": 217,
+  "text": "no matter how complex your project is,"
+ },
+ {
+  "id": 218,
+  "text": "actually the whole"
+ },
+ {
+  "id": 219,
+  "text": "compilation and linking process"
+ },
+ {
+  "id": 220,
+  "text": "It's all pretty much like this"
+ },
+ {
+  "id": 221,
+  "text": "a diagram like this one"
+ },
+ {
+  "id": 222,
+  "text": "That is to say,"
+ },
+ {
+  "id": 223,
+  "text": "you might have multiple source files,"
+ },
+ {
+  "id": 224,
+  "text": "and each source file,"
+ },
+ {
+  "id": 225,
+  "text": "you turn it into one"
+ },
+ {
+  "id": 226,
+  "text": "they each become a .o file."
+ },
+ {
+  "id": 227,
+  "text": "And then in the end,"
+ },
+ {
+  "id": 228,
+  "text": "these multiple dot-o files"
+ },
+ {
+  "id": 229,
+  "text": "get linked together,"
+ },
+ {
+  "id": 230,
+  "text": "and become one executable file,"
+ },
+ {
+  "id": 231,
+  "text": "right?"
+ },
+ {
+  "id": 232,
+  "text": "This is the basic process."
+ },
+ {
+  "id": 233,
+  "text": "Now, in this process, as we know,"
+ },
+ {
+  "id": 234,
+  "text": "if we show it with a diagram,"
+ },
+ {
+  "id": 235,
+  "text": "we know that every dot-o file"
+ },
+ {
+  "id": 236,
+  "text": "is essentially something like this,"
+ },
+ {
+  "id": 237,
+  "text": "because we said each dot-o file"
+ },
+ {
+  "id": 238,
+  "text": "is in the ELF file format."
+ },
+ {
+  "id": 239,
+  "text": "So this diagram,"
+ },
+ {
+  "id": 240,
+  "text": "As you can see,"
+ },
+ {
+  "id": 241,
+  "text": "compared with the complete ELF format we had earlier,"
+ },
+ {
+  "id": 242,
+  "text": "what's the difference?"
+ },
+ {
+  "id": 243,
+  "text": "In this one,"
+ },
+ {
+  "id": 244,
+  "text": "there is no program head table,"
+ },
+ {
+  "id": 245,
+  "text": "right?"
+ },
+ {
+  "id": 246,
+  "text": "What does it have?"
+ },
+ {
+  "id": 247,
+  "text": "It only has the section table."
+ },
+ {
+  "id": 248,
+  "text": "This,"
+ },
+ {
+  "id": 249,
+  "text": "mainly because of what we covered earlier,"
+ },
+ {
+  "id": 250,
+  "text": "that is, a .o file,"
+ },
+ {
+  "id": 251,
+  "text": "since it's not the final executable program,"
+ },
+ {
+  "id": 252,
+  "text": "that program table,"
+ },
+ {
+  "id": 253,
+  "text": "it's used for loading."
+ },
+ {
+  "id": 254,
+  "text": "So only when it's an executable program,"
+ },
+ {
+  "id": 255,
+  "text": "will there be that program head table,"
+ },
+ {
+  "id": 256,
+  "text": "right?"
+ },
+ {
+  "id": 257,
+  "text": "Just a brief mention of that."
+ },
+ {
+  "id": 258,
+  "text": "With multiple .o files,"
+ },
+ {
+  "id": 259,
+  "text": "naturally there will be multiple of these"
+ },
+ {
+  "id": 260,
+  "text": "the file of that ELF"
+ },
+ {
+  "id": 261,
+  "text": "Now, in the end,"
+ },
+ {
+  "id": 262,
+  "text": "we want to turn it into"
+ },
+ {
+  "id": 263,
+  "text": "an executable file,"
+ },
+ {
+  "id": 264,
+  "text": "and inside this executable file,"
+ },
+ {
+  "id": 265,
+  "text": "there are these program headers."
+ },
+ {
+  "id": 266,
+  "text": "See? Am I right?"
+ },
+ {
+  "id": 267,
+  "text": "So now here is a question:"
+ },
+ {
+  "id": 268,
+  "text": "when we actually need to construct"
+ },
+ {
+  "id": 269,
+  "text": "such a final"
+ },
+ {
+  "id": 270,
+  "text": "executable file like this,"
+ },
+ {
+  "id": 271,
+  "text": "what exactly do we need to do?"
+ },
+ {
+  "id": 272,
+  "text": "Think about it — as a linker,"
+ },
+ {
+  "id": 273,
+  "text": "what do you have to do?"
+ },
+ {
+  "id": 274,
+  "text": "You actually need to take"
+ },
+ {
+  "id": 275,
+  "text": "each one of these,"
+ },
+ {
+  "id": 276,
+  "text": "which in fact has its .text section,"
+ },
+ {
+  "id": 277,
+  "text": "and has some .data sections,"
+ },
+ {
+  "id": 278,
+  "text": "and .bss sections, right?"
+ },
+ {
+  "id": 279,
+  "text": "Then it needs to take what is in here and"
+ },
+ {
+  "id": 280,
+  "text": "Gather up all of the .text sections"
+ },
+ {
+  "id": 281,
+  "text": "and merge them together."
+ },
+ {
+  "id": 282,
+  "text": "In fact, in the final"
+ },
+ {
+  "id": 283,
+  "text": "executable file we produce,"
+ },
+ {
+  "id": 284,
+  "text": "there is only one .text section."
+ },
+ {
+  "id": 285,
+  "text": "So in reality, the linker takes it"
+ },
+ {
+  "id": 286,
+  "text": "and merges it all together,"
+ },
+ {
+  "id": 287,
+  "text": "merging it all together."
+ },
+ {
+  "id": 288,
+  "text": "And accordingly, for the other sections,"
+ },
+ {
+  "id": 289,
+  "text": "there are similar operations as well."
+ },
+ {
+  "id": 290,
+  "text": "So what we actually need to do"
+ },
+ {
+  "id": 291,
+  "text": "during the linking process"
+ },
+ {
+  "id": 292,
+  "text": "is the following."
+ },
+ {
+  "id": 293,
+  "text": "That is, we need to take"
+ },
+ {
+  "id": 294,
+  "text": "the sections with the same name"
+ },
+ {
+  "id": 295,
+  "text": "that are scattered across different .o files,"
+ },
+ {
+  "id": 296,
+  "text": "and bring them all together."
+ },
+ {
+  "id": 297,
+  "text": "At the same time,"
+ },
+ {
+  "id": 298,
+  "text": "we also need to"
+ },
+ {
+  "id": 299,
+  "text": "during this linking process"
+ },
+ {
+  "id": 300,
+  "text": "Actually, we also need to tell"
+ },
+ {
+  "id": 301,
+  "text": "our linker"
+ },
+ {
+  "id": 302,
+  "text": "where these sections"
+ },
+ {
+  "id": 303,
+  "text": "should be placed."
+ },
+ {
+  "id": 304,
+  "text": "Think about it — isn't that right?"
+ },
+ {
+  "id": 305,
+  "text": "Because ultimately we know"
+ },
+ {
+  "id": 306,
+  "text": "this thing has to be loaded"
+ },
+ {
+  "id": 307,
+  "text": "through the program header table,"
+ },
+ {
+  "id": 308,
+  "text": "and we need to load this thing"
+ },
+ {
+  "id": 309,
+  "text": "into memory to run it."
+ },
+ {
+  "id": 310,
+  "text": "So then, this loading —"
+ },
+ {
+  "id": 311,
+  "text": "loading it to where?"
+ },
+ {
+  "id": 312,
+  "text": "Loading it to what location?"
+ },
+ {
+  "id": 313,
+  "text": "All of these details"
+ },
+ {
+  "id": 314,
+  "text": "actually need to be reflected"
+ },
+ {
+  "id": 315,
+  "text": "in this file."
+ },
+ {
+  "id": 316,
+  "text": "So how does the linker"
+ },
+ {
+  "id": 317,
+  "text": "know all of this information?"
+ },
+ {
+  "id": 318,
+  "text": "Well, our linker knows it through"
+ },
+ {
+  "id": 319,
+  "text": "something called a linker script."
+ },
+ {
+  "id": 320,
+  "text": "to describe this information,"
+ },
+ {
+  "id": 321,
+  "text": "all of the files up here"
+ },
+ {
+  "id": 322,
+  "text": "are what we call input files,"
+ },
+ {
+  "id": 323,
+  "text": "input files."
+ },
+ {
+  "id": 324,
+  "text": "And the final executable file we generate,"
+ },
+ {
+  "id": 325,
+  "text": "we call that output files."
+ },
+ {
+  "id": 326,
+  "text": "These related concepts"
+ },
+ {
+  "id": 327,
+  "text": "are all covered in the GNU linker documentation."
+ },
+ {
+  "id": 328,
+  "text": "The reason I bring them up here,"
+ },
+ {
+  "id": 329,
+  "text": "is to make it easier for you to go read"
+ },
+ {
+  "id": 330,
+  "text": "the terminology in the relevant documentation later."
+ },
+ {
+  "id": 331,
+  "text": "So describing these input files—"
+ },
+ {
+  "id": 332,
+  "text": "what sections they have,"
+ },
+ {
+  "id": 333,
+  "text": "where in the output file they should be placed,"
+ },
+ {
+  "id": 334,
+  "text": "and when they are loaded,"
+ },
+ {
+  "id": 335,
+  "text": "what information they get loaded to in memory—"
+ },
+ {
+  "id": 336,
+  "text": "all of this information"
+ },
+ {
+  "id": 337,
+  "text": "is described through something called a link script,"
+ },
+ {
+  "id": 338,
+  "text": "a so-called linker script,"
+ },
+ {
+  "id": 339,
+  "text": "which is how it's described to you."
+ },
+ {
+  "id": 340,
+  "text": "As for this linker script,"
+ },
+ {
+  "id": 341,
+  "text": "you can actually write it yourself."
+ },
+ {
+  "id": 342,
+  "text": "When we normally type GCC,"
+ },
+ {
+  "id": 343,
+  "text": "why don't we write this thing?"
+ },
+ {
+  "id": 344,
+  "text": "It's because GCC actually provides a default linker script."
+ },
+ {
+  "id": 345,
+  "text": "If any of you are interested,"
+ },
+ {
+  "id": 346,
+  "text": "you can actually, that is to say,"
+ },
+ {
+  "id": 347,
+  "text": "when you normally type GCC,"
+ },
+ {
+  "id": 348,
+  "text": "if you add an argument after GCC,"
+ },
+ {
+  "id": 349,
+  "text": "for example, something called Verbos,"
+ },
+ {
+  "id": 350,
+  "text": "with this Verbos argument,"
+ },
+ {
+  "id": 351,
+  "text": "when you hit enter,"
+ },
+ {
+  "id": 352,
+  "text": "let me see,"
+ },
+ {
+  "id": 353,
+  "text": "this should be the linker script, right?"
+ },
+ {
+  "id": 354,
+  "text": "Normally, if you type L,"
+ },
+ {
+  "id": 355,
+  "text": "that is, we know that this,"
+ },
+ {
+  "id": 356,
+  "text": "this GCC,"
+ },
+ {
+  "id": 357,
+  "text": "when we type GCC,"
+ },
+ {
+  "id": 358,
+  "text": "actually, in the final linking step,"
+ },
+ {
+  "id": 359,
+  "text": "it will actually go and call a..."
+ },
+ {
+  "id": 360,
+  "text": "is implemented by a program called ld."
+ },
+ {
+  "id": 361,
+  "text": "Now, with this ld program,"
+ },
+ {
+  "id": 362,
+  "text": "look — if at this ld step,"
+ },
+ {
+  "id": 363,
+  "text": "if I print out,"
+ },
+ {
+  "id": 364,
+  "text": "adding a verbose flag,"
+ },
+ {
+  "id": 365,
+  "text": "that is, printing out"
+ },
+ {
+  "id": 366,
+  "text": "all the detailed information,"
+ },
+ {
+  "id": 367,
+  "text": "you can see that at this ld stage,"
+ },
+ {
+  "id": 368,
+  "text": "it prints out some very interesting information."
+ },
+ {
+  "id": 369,
+  "text": "This information,"
+ },
+ {
+  "id": 370,
+  "text": "in fact, comes from its default"
+ },
+ {
+  "id": 371,
+  "text": "linker script —"
+ },
+ {
+  "id": 372,
+  "text": "it is the information pulled out of it."
+ },
+ {
+  "id": 373,
+  "text": "That is to say, we actually"
+ },
+ {
+  "id": 374,
+  "text": "don't have to write this linker script ourselves."
+ },
+ {
+  "id": 375,
+  "text": "But,"
+ },
+ {
+  "id": 376,
+  "text": "for us,"
+ },
+ {
+  "id": 377,
+  "text": "since we are now writing a kernel,"
+ },
+ {
+  "id": 378,
+  "text": "this kernel,"
+ },
+ {
+  "id": 379,
+  "text": "it's actually not like when we write applications."
+ },
+ {
+  "id": 380,
+  "text": "Just now I demonstrated to everyone,"
+ },
+ {
+  "id": 381,
+  "text": "that is, when we compile an application program,"
+ },
+ {
+  "id": 382,
+  "text": "there is a default linker script."
+ },
+ {
+  "id": 383,
+  "text": "We can just use it directly."
+ },
+ {
+  "id": 384,
+  "text": "But since we are now writing a kernel,"
+ },
+ {
+  "id": 385,
+  "text": "then this kernel's"
+ },
+ {
+  "id": 386,
+  "text": "the final file of this kernel,"
+ },
+ {
+  "id": 387,
+  "text": "it is also an ELF file."
+ },
+ {
+  "id": 388,
+  "text": "How should this ELF file be organized?"
+ },
+ {
+  "id": 389,
+  "text": "Where in memory should it be placed?"
+ },
+ {
+  "id": 390,
+  "text": "This is something that"
+ },
+ {
+  "id": 391,
+  "text": "we generally need to"
+ },
+ {
+  "id": 392,
+  "text": "write ourselves at the low level."
+ },
+ {
+  "id": 393,
+  "text": "There is no default one."
+ },
+ {
+  "id": 394,
+  "text": "It varies depending on different boards,"
+ },
+ {
+  "id": 395,
+  "text": "it varies depending on different hardware."
+ },
+ {
+  "id": 396,
+  "text": "This is the concept of the linker script."
+ },
+ {
+  "id": 397,
+  "text": "So later on,"
+ },
+ {
+  "id": 398,
+  "text": "we will actually use the linker script"
+ },
+ {
+  "id": 399,
+  "text": "to obtain our"
+ },
+ {
+  "id": 400,
+  "text": "Like we mentioned earlier,"
+ },
+ {
+  "id": 401,
+  "text": "take the heap, for example,"
+ },
+ {
+  "id": 402,
+  "text": "the memory location and size information of where it lives,"
+ },
+ {
+  "id": 403,
+  "text": "we don't have to"
+ },
+ {
+  "id": 404,
+  "text": "As long as it's all clearly described in here,"
+ },
+ {
+  "id": 405,
+  "text": "we don't have to in our code"
+ },
+ {
+  "id": 406,
+  "text": "compute any of that ourselves."
+ },
+ {
+  "id": 407,
+  "text": "So how is it actually done?"
+ },
+ {
+  "id": 408,
+  "text": "We'll look at that later."
+ },
+ {
+  "id": 409,
+  "text": "So for this linker script,"
+ },
+ {
+  "id": 410,
+  "text": "when we compile,"
+ },
+ {
+  "id": 411,
+  "text": "how do we tell the linker about it?"
+ },
+ {
+  "id": 412,
+  "text": "Say we've written this script,"
+ },
+ {
+  "id": 413,
+  "text": "this script we wrote is a text file,"
+ },
+ {
+  "id": 414,
+  "text": "how do we tell the linker about it?"
+ },
+ {
+  "id": 415,
+  "text": "Well, we can actually use a"
+ },
+ {
+  "id": 416,
+  "text": "-T argument,"
+ },
+ {
+  "id": 417,
+  "text": "that is, GCC's -T argument,"
+ },
+ {
+  "id": 418,
+  "text": "which we actually touched on earlier,"
+ },
+ {
+  "id": 419,
+  "text": "so you can go back and review that."
+ },
+ {
+  "id": 420,
+  "text": "So, earlier on,"
+ },
+ {
+  "id": 421,
+  "text": "in those hello rbos exercises,"
+ },
+ {
+  "id": 422,
+  "text": "if you actually take a look,"
+ },
+ {
+  "id": 423,
+  "text": "including that earlier one,"
+ },
+ {
+  "id": 424,
+  "text": "when we were writing assembly,"
+ },
+ {
+  "id": 425,
+  "text": "in those test examples,"
+ },
+ {
+  "id": 426,
+  "text": "they all had a"
+ },
+ {
+  "id": 427,
+  "text": "-Ttext thing, right?"
+ },
+ {
+  "id": 428,
+  "text": "Why is that value 0x8000?"
+ },
+ {
+  "id": 429,
+  "text": "Now everyone should understand it, right?"
+ },
+ {
+  "id": 430,
+  "text": "So there is this -T parameter,"
+ },
+ {
+  "id": 431,
+  "text": "but when we used this -T parameter back then,"
+ },
+ {
+  "id": 432,
+  "text": "we used it in a very simple way."
+ },
+ {
+  "id": 433,
+  "text": "It really just simply specified,"
+ },
+ {
+  "id": 434,
+  "text": "that is, for the executable file we were compiling,"
+ },
+ {
+  "id": 435,
+  "text": "its starting position,"
+ },
+ {
+  "id": 436,
+  "text": "we just told it a starting position of 800,"
+ },
+ {
+  "id": 437,
+  "text": "and actually nothing else was specifically specified for it."
+ },
+ {
+  "id": 438,
+  "text": "But now,"
+ },
+ {
+  "id": 439,
+  "text": "since we need to build a kernel,"
+ },
+ {
+  "id": 440,
+  "text": "we need to tell the linker more information"
+ },
+ {
+  "id": 441,
+  "text": "it's not enough to just give it a starting address"
+ },
+ {
+  "id": 442,
+  "text": "so"
+ },
+ {
+  "id": 443,
+  "text": "we need to write all of that information into a special file to describe it"
+ },
+ {
+  "id": 444,
+  "text": "and once we have this file"
+ },
+ {
+  "id": 445,
+  "text": "our original -T parameter"
+ },
+ {
+  "id": 446,
+  "text": "will become a bit more complex"
+ },
+ {
+  "id": 447,
+  "text": "what we actually need to change it to is"
+ },
+ {
+  "id": 448,
+  "text": "a -T followed by"
+ },
+ {
+  "id": 449,
+  "text": "that OSLD file"
+ },
+ {
+  "id": 450,
+  "text": "this file is our"
+ },
+ {
+  "id": 451,
+  "text": "the linker script file for the OS we've been building here"
+ },
+ {
+  "id": 452,
+  "text": "change it to this form"
+ },
+ {
+  "id": 453,
+  "text": "and that's it"
+ },
+ {
+  "id": 454,
+  "text": "so if any of you are interested"
+ },
+ {
+  "id": 455,
+  "text": "you can go and take a look at our example"
+ },
+ {
+  "id": 456,
+  "text": "that is, starting from the third step"
+ },
+ {
+  "id": 457,
+  "text": "our"
+ },
+ {
+  "id": 458,
+  "text": "starting from our example today"
+ },
+ {
+  "id": 459,
+  "text": "in our Makefile"
+ },
+ {
+  "id": 460,
+  "text": "Now the -T parameter changes"
+ },
+ {
+  "id": 461,
+  "text": "to point to an OSLD,"
+ },
+ {
+  "id": 462,
+  "text": "a linker script file."
+ },
+ {
+  "id": 463,
+  "text": "This is what we want to show you now."
+ },
+ {
+  "id": 464,
+  "text": "So next,"
+ },
+ {
+  "id": 465,
+  "text": "let me introduce to you"
+ },
+ {
+  "id": 466,
+  "text": "this linker script file,"
+ },
+ {
+  "id": 467,
+  "text": "roughly how to write it."
+ },
+ {
+  "id": 468,
+  "text": "Now, for the linker script,"
+ },
+ {
+  "id": 469,
+  "text": "the detailed usage instructions for this file"
+ },
+ {
+  "id": 470,
+  "text": "you can refer to"
+ },
+ {
+  "id": 471,
+  "text": "the reference 1 we listed for you earlier,"
+ },
+ {
+  "id": 472,
+  "text": "in that GNU binutils manual,"
+ },
+ {
+  "id": 473,
+  "text": "there is a whole chapter dedicated to this topic."
+ },
+ {
+  "id": 474,
+  "text": "Now, since the tools we use here"
+ },
+ {
+  "id": 475,
+  "text": "are mainly GNU tools,"
+ },
+ {
+  "id": 476,
+  "text": "I'll introduce GNU's LD,"
+ },
+ {
+  "id": 477,
+  "text": "the syntax of its link script."
+ },
+ {
+  "id": 478,
+  "text": "Now, this link script,"
+ },
+ {
+  "id": 479,
+  "text": "it's just a simple plain text file."
+ },
+ {
+  "id": 480,
+  "text": "Actually, you can use whatever editor you like,"
+ },
+ {
+  "id": 481,
+  "text": "and you'll be able to write this thing."
+ },
+ {
+  "id": 482,
+  "text": "But inside it,"
+ },
+ {
+  "id": 483,
+  "text": "it has a certain,"
+ },
+ {
+  "id": 484,
+  "text": "it defines its own special"
+ },
+ {
+  "id": 485,
+  "text": "special syntax,"
+ },
+ {
+  "id": 486,
+  "text": "a special syntax."
+ },
+ {
+  "id": 487,
+  "text": "Now, its syntax"
+ },
+ {
+  "id": 488,
+  "text": "is also fairly simple."
+ },
+ {
+  "id": 489,
+  "text": "We can think of it this way:"
+ },
+ {
+  "id": 490,
+  "text": "a complete link script,"
+ },
+ {
+  "id": 491,
+  "text": "this script,"
+ },
+ {
+  "id": 492,
+  "text": "is actually made up of multiple commands."
+ },
+ {
+  "id": 493,
+  "text": "And each command"
+ },
+ {
+  "id": 494,
+  "text": "has its own keyword,"
+ },
+ {
+  "id": 495,
+  "text": "along with some of its parameters,"
+ },
+ {
+  "id": 496,
+  "text": "just one command after another."
+ },
+ {
+  "id": 497,
+  "text": "Then, apart from these commands,"
+ },
+ {
+  "id": 498,
+  "text": "there are just some comments."
+ },
+ {
+  "id": 499,
+  "text": "And the comments,"
+ },
+ {
+  "id": 500,
+  "text": "It supports the same thing as C"
+ },
+ {
+  "id": 501,
+  "text": "using that pair of slashes to comment it out"
+ },
+ {
+  "id": 502,
+  "text": "and just wrapping it up like that will work"
+ },
+ {
+  "id": 503,
+  "text": "Now, when it comes to using it"
+ },
+ {
+  "id": 504,
+  "text": "as I mentioned just now"
+ },
+ {
+  "id": 505,
+  "text": "you just follow GCC with that -T parameter"
+ },
+ {
+  "id": 506,
+  "text": "to tell it the path of that linker script file"
+ },
+ {
+  "id": 507,
+  "text": "and that's it"
+ },
+ {
+  "id": 508,
+  "text": "So, here"
+ },
+ {
+  "id": 509,
+  "text": "let me show you a simple example"
+ },
+ {
+  "id": 510,
+  "text": "For instance, this SECTIONS"
+ },
+ {
+  "id": 511,
+  "text": "you can think of this thing as just a single command"
+ },
+ {
+  "id": 512,
+  "text": "This is the simplest linker script"
+ },
+ {
+  "id": 513,
+  "text": "In this linker script there is only one command"
+ },
+ {
+  "id": 514,
+  "text": "and that command is the SECTIONS command"
+ },
+ {
+  "id": 515,
+  "text": "Inside it"
+ },
+ {
+  "id": 516,
+  "text": "these can be considered as some parameters of this command"
+ },
+ {
+  "id": 517,
+  "text": "As for the specific meaning inside this"
+ },
+ {
+  "id": 518,
+  "text": "when we get to the examples later"
+ },
+ {
+  "id": 519,
+  "text": "we'll introduce them to you then"
+ },
+ {
+  "id": 520,
+  "text": "So this is the simplest lab script."
+ },
+ {
+  "id": 521,
+  "text": "Now, before we go through this lab script in detail,"
+ },
+ {
+  "id": 522,
+  "text": "what we mainly want to tell you is this."
+ },
+ {
+  "id": 523,
+  "text": "Because if you go look at the Tiger documentation,"
+ },
+ {
+  "id": 524,
+  "text": "the commands in it"
+ },
+ {
+  "id": 525,
+  "text": "are quite a few,"
+ },
+ {
+  "id": 526,
+  "text": "there are a lot of them,"
+ },
+ {
+  "id": 527,
+  "text": "but we don't use all of them."
+ },
+ {
+  "id": 528,
+  "text": "We only pick the ones we care about,"
+ },
+ {
+  "id": 529,
+  "text": "that is, some of the ones used in this lab,"
+ },
+ {
+  "id": 530,
+  "text": "and we pick a few to explain to you."
+ },
+ {
+  "id": 531,
+  "text": "Now where is this OS"
+ },
+ {
+  "id": 532,
+  "text": "lab file located?"
+ },
+ {
+  "id": 533,
+  "text": "Right here in this spot."
+ },
+ {
+  "id": 534,
+  "text": "Starting from the second one,"
+ },
+ {
+  "id": 535,
+  "text": "which is the memory management project,"
+ },
+ {
+  "id": 536,
+  "text": "we brought in this OSLD,"
+ },
+ {
+  "id": 537,
+  "text": "which is this file."
+ },
+ {
+  "id": 538,
+  "text": "So let's follow this example"
+ },
+ {
+  "id": 539,
+  "text": "and go through some of the things inside it for you."
+ },
+ {
+  "id": 540,
+  "text": "So this is the comment"
+ },
+ {
+  "id": 541,
+  "text": "Its comment syntax"
+ },
+ {
+  "id": 542,
+  "text": "is basically the same as C syntax"
+ },
+ {
+  "id": 543,
+  "text": "We'll just"
+ },
+ {
+  "id": 544,
+  "text": "just mention this briefly here"
+ },
+ {
+  "id": 545,
+  "text": "Here I've listed different commands"
+ },
+ {
+  "id": 546,
+  "text": "This is one command"
+ },
+ {
+  "id": 547,
+  "text": "This is one command"
+ },
+ {
+  "id": 548,
+  "text": "This is one command"
+ },
+ {
+  "id": 549,
+  "text": "Now for each command"
+ },
+ {
+  "id": 550,
+  "text": "I've given some of its origins"
+ },
+ {
+  "id": 551,
+  "text": "and a brief description"
+ },
+ {
+  "id": 552,
+  "text": "You can also look at this"
+ },
+ {
+  "id": 553,
+  "text": "Of course, in our class"
+ },
+ {
+  "id": 554,
+  "text": "I will also go over them briefly for everyone"
+ },
+ {
+  "id": 555,
+  "text": "Next, let's take a look at"
+ },
+ {
+  "id": 556,
+  "text": "which commands are commonly used"
+ },
+ {
+  "id": 557,
+  "text": "So the first one I want to introduce to you is"
+ },
+ {
+  "id": 558,
+  "text": "a commonly used linker script command called entry"
+ },
+ {
+  "id": 559,
+  "text": "entry, as we know, in English means"
+ },
+ {
+  "id": 560,
+  "text": "which means entry point"
+ },
+ {
+  "id": 561,
+  "text": "Now, since it's the entry point"
+ },
+ {
+  "id": 562,
+  "text": "it's actually through this command"
+ },
+ {
+  "id": 563,
+  "text": "that we're setting, telling the linker"
+ },
+ {
+  "id": 564,
+  "text": "the first instruction of our program to run"
+ },
+ {
+  "id": 565,
+  "text": "should be placed at which position in memory"
+ },
+ {
+  "id": 566,
+  "text": "That's actually what it expresses"
+ },
+ {
+  "id": 567,
+  "text": "Its syntax is very simple"
+ },
+ {
+  "id": 568,
+  "text": "It's just ENTRY followed by a symbol"
+ },
+ {
+  "id": 569,
+  "text": "symbol means a symbol"
+ },
+ {
+  "id": 570,
+  "text": "It doesn't write a value directly"
+ },
+ {
+  "id": 571,
+  "text": "That is, because we know"
+ },
+ {
+  "id": 572,
+  "text": "as programmers"
+ },
+ {
+  "id": 573,
+  "text": "we actually can't determine right away"
+ },
+ {
+  "id": 574,
+  "text": "at what position this value is"
+ },
+ {
+  "id": 575,
+  "text": "So here we actually use a symbol"
+ },
+ {
+  "id": 576,
+  "text": "to tell this linker"
+ },
+ {
+  "id": 577,
+  "text": "Now let's take a look"
+ },
+ {
+  "id": 578,
+  "text": "where this place of ours is"
+ },
+ {
+  "id": 579,
+  "text": "Well, it's right here"
+ },
+ {
+  "id": 580,
+  "text": "Now, as you can see, this is our"
+ },
+ {
+  "id": 581,
+  "text": "in here, it's"
+ },
+ {
+  "id": 582,
+  "text": "written as start"
+ },
+ {
+  "id": 583,
+  "text": "And as soon as we see start"
+ },
+ {
+  "id": 584,
+  "text": "it should be quite familiar to everyone"
+ },
+ {
+  "id": 585,
+  "text": "because we know"
+ },
+ {
+  "id": 586,
+  "text": "that this symbol, start,"
+ },
+ {
+  "id": 587,
+  "text": "where did we define it?"
+ },
+ {
+  "id": 588,
+  "text": "Actually, it's defined in our"
+ },
+ {
+  "id": 589,
+  "text": "first assembly file"
+ },
+ {
+  "id": 590,
+  "text": "for instance, this one of ours,"
+ },
+ {
+  "id": 591,
+  "text": "the .S file in here,"
+ },
+ {
+  "id": 592,
+  "text": "right?"
+ },
+ {
+  "id": 593,
+  "text": "Back when we were talking about"
+ },
+ {
+  "id": 594,
+  "text": "the first example,"
+ },
+ {
+  "id": 595,
+  "text": "we already covered this"
+ },
+ {
+  "id": 596,
+  "text": "that is to say, right here,"
+ },
+ {
+  "id": 597,
+  "text": "this is actually where our"
+ },
+ {
+  "id": 598,
+  "text": "program runs,"
+ },
+ {
+  "id": 599,
+  "text": "where our kernel runs"
+ },
+ {
+  "id": 600,
+  "text": "the first one specifies the location"
+ },
+ {
+  "id": 601,
+  "text": "we just take this identifier"
+ },
+ {
+  "id": 602,
+  "text": "and fill it in here,"
+ },
+ {
+  "id": 603,
+  "text": "and then the linker will know"
+ },
+ {
+  "id": 604,
+  "text": "where our program"
+ },
+ {
+  "id": 605,
+  "text": "starts running."
+ },
+ {
+  "id": 606,
+  "text": "Alright,"
+ },
+ {
+  "id": 607,
+  "text": "this part is relatively simple."
+ },
+ {
+  "id": 608,
+  "text": "Now there's another one,"
+ },
+ {
+  "id": 609,
+  "text": "called OUTPUT_ARCH,"
+ },
+ {
+  "id": 610,
+  "text": "which is basically telling us"
+ },
+ {
+  "id": 611,
+  "text": "that the output file,"
+ },
+ {
+  "id": 612,
+  "text": "the output file, as we know,"
+ },
+ {
+  "id": 613,
+  "text": "is the os.erf that we generate,"
+ },
+ {
+  "id": 614,
+  "text": "this ELF file,"
+ },
+ {
+  "id": 615,
+  "text": "this output file,"
+ },
+ {
+  "id": 616,
+  "text": "the computer architecture it is intended for,"
+ },
+ {
+  "id": 617,
+  "text": "because it needs to know"
+ },
+ {
+  "id": 618,
+  "text": "whether this final thing we generate is,"
+ },
+ {
+  "id": 619,
+  "text": "say, for x86,"
+ },
+ {
+  "id": 620,
+  "text": "or ARM's,"
+ },
+ {
+  "id": 621,
+  "text": "or this RISC-V,"
+ },
+ {
+  "id": 622,
+  "text": "so what we need here,"
+ },
+ {
+  "id": 623,
+  "text": "in our case,"
+ },
+ {
+  "id": 624,
+  "text": "since this targets RISC-V,"
+ },
+ {
+  "id": 625,
+  "text": "so at this place,"
+ },
+ {
+  "id": 626,
+  "text": "we just fill in a string it defines itself,"
+ },
+ {
+  "id": 627,
+  "text": "called Risk5, and that's it."
+ },
+ {
+  "id": 628,
+  "text": "Now, note one thing:"
+ },
+ {
+  "id": 629,
+  "text": "it doesn't specify here whether it's Risk5,"
+ },
+ {
+  "id": 630,
+  "text": "32 or 64, right?"
+ },
+ {
+  "id": 631,
+  "text": "So when we compile,"
+ },
+ {
+  "id": 632,
+  "text": "how do we tell it whether we're generating 32 or 64?"
+ },
+ {
+  "id": 633,
+  "text": "Actually, it's through a further specification"
+ },
+ {
+  "id": 634,
+  "text": "in the GCC options."
+ },
+ {
+  "id": 635,
+  "text": "Let me mention this as well."
+ },
+ {
+  "id": 636,
+  "text": "That is, in our Makefile,"
+ },
+ {
+  "id": 637,
+  "text": "when we compile at this point,"
+ },
+ {
+  "id": 638,
+  "text": "didn't we add some of these parameters?"
+ },
+ {
+  "id": 639,
+  "text": "You can take a look."
+ },
+ {
+  "id": 640,
+  "text": "If any of you later"
+ },
+ {
+  "id": 641,
+  "text": "want to ask about this,"
+ },
+ {
+  "id": 642,
+  "text": "let's just explain it right here."
+ },
+ {
+  "id": 643,
+  "text": "Because I saw some of you asking in the group chat as well,"
+ },
+ {
+  "id": 644,
+  "text": "basically why we're using this RISC-V GCC."
+ },
+ {
+  "id": 645,
+  "text": "What did we fill in here?"
+ },
+ {
+  "id": 646,
+  "text": "Let me take a look."
+ },
+ {
+  "id": 647,
+  "text": "Here we have"
+ },
+ {
+  "id": 648,
+  "text": "it says 64 here."
+ },
+ {
+  "id": 649,
+  "text": "So why does it compile to 32-bit?"
+ },
+ {
+  "id": 650,
+  "text": "Well, the 64 here"
+ },
+ {
+  "id": 651,
+  "text": "only indicates that we"
+ },
+ {
+  "id": 652,
+  "text": "our toolchain that we're running"
+ },
+ {
+  "id": 653,
+  "text": "is running on a 64-bit host machine."
+ },
+ {
+  "id": 654,
+  "text": "This concept of cross-compilation,"
+ },
+ {
+  "id": 655,
+  "text": "we talked about it earlier, right?"
+ },
+ {
+  "id": 656,
+  "text": "Our toolchain runs on a 64-bit machine,"
+ },
+ {
+  "id": 657,
+  "text": "but the target program we generate is 32-bit."
+ },
+ {
+  "id": 658,
+  "text": "Don't get confused about this concept."
+ },
+ {
+  "id": 659,
+  "text": "So how do we tell a machine running 64-bit,"
+ },
+ {
+  "id": 660,
+  "text": "If it wants to generate a 32-bit target,"
+ },
+ {
+  "id": 661,
+  "text": "it's actually conveyed through these parameters."
+ },
+ {
+  "id": 662,
+  "text": "What these 32s mean,"
+ },
+ {
+  "id": 663,
+  "text": "I think everyone should be clear about by now,"
+ },
+ {
+  "id": 664,
+  "text": "so I won't go over it again."
+ },
+ {
+  "id": 665,
+  "text": "You can look up the concept of ABI yourself,"
+ },
+ {
+  "id": 666,
+  "text": "it's in the manuals, you'll find it."
+ },
+ {
+  "id": 667,
+  "text": "Well, since it's mentioned here, let me just say it."
+ },
+ {
+  "id": 668,
+  "text": "Now, here,"
+ },
+ {
+  "id": 669,
+  "text": "we only specify RISC-V,"
+ },
+ {
+  "id": 670,
+  "text": "but we don't say 32 or 64."
+ },
+ {
+  "id": 671,
+  "text": "The specific 32 or 64 is specified through GCC's compiler options."
+ },
+ {
+  "id": 672,
+  "text": "Just want to point that out to everyone."
+ },
+ {
+  "id": 673,
+  "text": "Alright."
+ },
+ {
+  "id": 674,
+  "text": "So that was the second point,"
+ },
+ {
+  "id": 675,
+  "text": "specifying the generated architecture."
+ },
+ {
+  "id": 676,
+  "text": "Third,"
+ },
+ {
+  "id": 677,
+  "text": "the memory command."
+ },
+ {
+  "id": 678,
+  "text": "This command is very important."
+ },
+ {
+  "id": 679,
+  "text": "It's actually telling"
+ },
+ {
+  "id": 680,
+  "text": "Because, as you know, a linker"
+ },
+ {
+  "id": 681,
+  "text": "has no idea about the actual target machine we run on"
+ },
+ {
+  "id": 682,
+  "text": "and what its memory really looks like."
+ },
+ {
+  "id": 683,
+  "text": "So how do we let the linker know?"
+ },
+ {
+  "id": 684,
+  "text": "We need to tell it through the MEMORY command."
+ },
+ {
+  "id": 685,
+  "text": "Now, the syntax of MEMORY"
+ },
+ {
+  "id": 686,
+  "text": "is very simple."
+ },
+ {
+  "id": 687,
+  "text": "First comes a name."
+ },
+ {
+  "id": 688,
+  "text": "Talking about this directly might be a bit dry,"
+ },
+ {
+  "id": 689,
+  "text": "so let's just look at an example."
+ },
+ {
+  "id": 690,
+  "text": "Let's look at the meaning of this example below."
+ },
+ {
+  "id": 691,
+  "text": "Each line of this thing can actually be thought of as"
+ },
+ {
+  "id": 692,
+  "text": "defining one memory region."
+ },
+ {
+  "id": 693,
+  "text": "So the two lines below it,"
+ },
+ {
+  "id": 694,
+  "text": "effectively define two pieces of memory:"
+ },
+ {
+  "id": 695,
+  "text": "one is ROM,"
+ },
+ {
+  "id": 696,
+  "text": "and the other is RAM."
+ },
+ {
+  "id": 697,
+  "text": "You can tell just from the names."
+ },
+ {
+  "id": 698,
+  "text": "What it defines is, let's say,"
+ },
+ {
+  "id": 699,
+  "text": "the first block of memory is"
+ },
+ {
+  "id": 700,
+  "text": "is a read-only memory"
+ },
+ {
+  "id": 701,
+  "text": "The second block of memory,"
+ },
+ {
+  "id": 702,
+  "text": "is a read-write memory."
+ },
+ {
+  "id": 703,
+  "text": "RAM, that is."
+ },
+ {
+  "id": 704,
+  "text": "ROM."
+ },
+ {
+  "id": 705,
+  "text": "So, origin,"
+ },
+ {
+  "id": 706,
+  "text": "length,"
+ },
+ {
+  "id": 707,
+  "text": "if you just know some English,"
+ },
+ {
+  "id": 708,
+  "text": "you should be able to read this."
+ },
+ {
+  "id": 709,
+  "text": "Right?"
+ },
+ {
+  "id": 710,
+  "text": "What is it actually telling us?"
+ },
+ {
+  "id": 711,
+  "text": "It's saying that this block of memory,"
+ },
+ {
+  "id": 712,
+  "text": "its starting address,"
+ },
+ {
+  "id": 713,
+  "text": "origin is the starting address,"
+ },
+ {
+  "id": 714,
+  "text": "is 0."
+ },
+ {
+  "id": 715,
+  "text": "And the length is 256K."
+ },
+ {
+  "id": 716,
+  "text": "Of course, this address"
+ },
+ {
+  "id": 717,
+  "text": "definitely refers to a physical address."
+ },
+ {
+  "id": 718,
+  "text": "Basically, in our course,"
+ },
+ {
+  "id": 719,
+  "text": "we don't really want to introduce the notion of virtual addresses."
+ },
+ {
+  "id": 720,
+  "text": "Because that would drag in a lot more stuff."
+ },
+ {
+  "id": 721,
+  "text": "Here we only talk about physical addresses."
+ },
+ {
+  "id": 722,
+  "text": "That keeps things simpler."
+ },
+ {
+  "id": 723,
+  "text": "And easier for everyone to pick up."
+ },
+ {
+  "id": 724,
+  "text": "So then,"
+ },
+ {
+  "id": 725,
+  "text": "the first block of memory,"
+ },
+ {
+  "id": 726,
+  "text": "you can think of it as,"
+ },
+ {
+  "id": 727,
+  "text": "in our address space,"
+ },
+ {
+  "id": 728,
+  "text": "at the very beginning,"
+ },
+ {
+  "id": 729,
+  "text": "this is ROM,"
+ },
+ {
+  "id": 730,
+  "text": "and its actual address is 0."
+ },
+ {
+  "id": 731,
+  "text": "And then,"
+ },
+ {
+  "id": 732,
+  "text": "it is 256K in total."
+ },
+ {
+  "id": 733,
+  "text": "And then,"
+ },
+ {
+  "id": 734,
+  "text": "the second block is RAM,"
+ },
+ {
+  "id": 735,
+  "text": "and its address is,"
+ },
+ {
+  "id": 736,
+  "text": "let's say it starts from here."
+ },
+ {
+  "id": 737,
+  "text": "This range of memory."
+ },
+ {
+  "id": 738,
+  "text": "Its starting address is,"
+ },
+ {
+  "id": 739,
+  "text": "simply,"
+ },
+ {
+  "id": 740,
+  "text": "That's this thing."
+ },
+ {
+  "id": 741,
+  "text": "And the range"
+ },
+ {
+  "id": 742,
+  "text": "is four megabytes."
+ },
+ {
+  "id": 743,
+  "text": "So it's really just describing this information,"
+ },
+ {
+  "id": 744,
+  "text": "that is,"
+ },
+ {
+  "id": 745,
+  "text": "this way,"
+ },
+ {
+  "id": 746,
+  "text": "we pass this information to our linker,"
+ },
+ {
+  "id": 747,
+  "text": "and then our linker knows"
+ },
+ {
+  "id": 748,
+  "text": "our memory layout."
+ },
+ {
+  "id": 749,
+  "text": "Then,"
+ },
+ {
+  "id": 750,
+  "text": "at the final loading stage,"
+ },
+ {
+  "id": 751,
+  "text": "the loading has to"
+ },
+ {
+  "id": 752,
+  "text": "rely on this information"
+ },
+ {
+  "id": 753,
+  "text": "to perform the loading."
+ },
+ {
+  "id": 754,
+  "text": "Now, this one,"
+ },
+ {
+  "id": 755,
+  "text": "this thing here,"
+ },
+ {
+  "id": 756,
+  "text": "this RX thing,"
+ },
+ {
+  "id": 757,
+  "text": "what is it actually telling us?"
+ },
+ {
+  "id": 758,
+  "text": "Well,"
+ },
+ {
+  "id": 759,
+  "text": "this is a bit complicated to explain."
+ },
+ {
+  "id": 760,
+  "text": "That is to say,"
+ },
+ {
+  "id": 761,
+  "text": "its"
+ },
+ {
+  "id": 762,
+  "text": "let me briefly describe it."
+ },
+ {
+  "id": 763,
+  "text": "If you feel it's not explained clearly,"
+ },
+ {
+  "id": 764,
+  "text": "take a careful look at the manual,"
+ },
+ {
+  "id": 765,
+  "text": "which has a detailed description of this parameter."
+ },
+ {
+  "id": 766,
+  "text": "It actually,"
+ },
+ {
+  "id": 767,
+  "text": "for example, let's take this as an example,"
+ },
+ {
+  "id": 768,
+  "text": "take this as an example."
+ },
+ {
+  "id": 769,
+  "text": "It's actually saying that"
+ },
+ {
+  "id": 770,
+  "text": "we know that"
+ },
+ {
+  "id": 771,
+  "text": "all of our"
+ },
+ {
+  "id": 772,
+  "text": "this linker script concept,"
+ },
+ {
+  "id": 773,
+  "text": "it's nothing more than saying,"
+ },
+ {
+  "id": 774,
+  "text": "take some input sections,"
+ },
+ {
+  "id": 775,
+  "text": "and finally, put them"
+ },
+ {
+  "id": 776,
+  "text": "into an output section,"
+ },
+ {
+  "id": 777,
+  "text": "right?"
+ },
+ {
+  "id": 778,
+  "text": "So in here,"
+ },
+ {
+  "id": 779,
+  "text": "aren't there a lot of sections?"
+ },
+ {
+  "id": 780,
+  "text": "right?"
+ },
+ {
+  "id": 781,
+  "text": "There's also this in there,"
+ },
+ {
+  "id": 782,
+  "text": "the final target we want to generate."
+ },
+ {
+  "id": 783,
+  "text": "Now,"
+ },
+ {
+  "id": 784,
+  "text": "later on we actually have"
+ },
+ {
+  "id": 785,
+  "text": "a section command"
+ },
+ {
+  "id": 786,
+  "text": "that is meant to describe"
+ },
+ {
+  "id": 787,
+  "text": "which of these in here"
+ },
+ {
+  "id": 788,
+  "text": "go into which of those in there."
+ },
+ {
+  "id": 789,
+  "text": "We'll definitely need to talk about that."
+ },
+ {
+  "id": 790,
+  "text": "We haven't covered that command yet."
+ },
+ {
+  "id": 791,
+  "text": "Now there could be a situation"
+ },
+ {
+  "id": 792,
+  "text": "where,"
+ },
+ {
+  "id": 793,
+  "text": "you might not have described it."
+ },
+ {
+  "id": 794,
+  "text": "Say we, in this"
+ },
+ {
+  "id": 795,
+  "text": "in this linker script,"
+ },
+ {
+  "id": 796,
+  "text": "we didn't describe"
+ },
+ {
+  "id": 797,
+  "text": "for example, this chunk of memory"
+ },
+ {
+  "id": 798,
+  "text": "I got this"
+ },
+ {
+  "id": 799,
+  "text": "we might not have described it."
+ },
+ {
+  "id": 800,
+  "text": "put it into this one here"
+ },
+ {
+  "id": 801,
+  "text": "which section does it go into?"
+ },
+ {
+  "id": 802,
+  "text": "you didn't specify that"
+ },
+ {
+  "id": 803,
+  "text": "Right."
+ },
+ {
+  "id": 804,
+  "text": "So if our linker"
+ },
+ {
+  "id": 805,
+  "text": "finds that you didn't specify it,"
+ },
+ {
+  "id": 806,
+  "text": "it will go by what's in here,"
+ },
+ {
+  "id": 807,
+  "text": "that is to say, if this section of yours"
+ },
+ {
+  "id": 808,
+  "text": "is not specified by you,"
+ },
+ {
+  "id": 809,
+  "text": "if it finds that this spot"
+ },
+ {
+  "id": 810,
+  "text": "is a section with read-only attributes,"
+ },
+ {
+  "id": 811,
+  "text": "then by default it will just put it"
+ },
+ {
+  "id": 812,
+  "text": "into the ROM area to be loaded."
+ },
+ {
+  "id": 813,
+  "text": "That's actually what it means to express."
+ },
+ {
+  "id": 814,
+  "text": "It's used to handle some default ranges."
+ },
+ {
+  "id": 815,
+  "text": "So under default conditions,"
+ },
+ {
+  "id": 816,
+  "text": "in the default case,"
+ },
+ {
+  "id": 817,
+  "text": "normally,"
+ },
+ {
+  "id": 818,
+  "text": "we will override the information in here,"
+ },
+ {
+  "id": 819,
+  "text": "so this may not have a particularly obvious effect."
+ },
+ {
+  "id": 820,
+  "text": "Some of them are mainly used to handle certain default cases."
+ },
+ {
+  "id": 821,
+  "text": "I'll just briefly go over this."
+ },
+ {
+  "id": 822,
+  "text": "If any of you are interested,"
+ },
+ {
+  "id": 823,
+  "text": "you can go and look at it yourselves later."
+ },
+ {
+  "id": 824,
+  "text": "The key thing is to understand this origin and length,"
+ },
+ {
+  "id": 825,
+  "text": "and what information each line is expressing."
+ },
+ {
+  "id": 826,
+  "text": "That's the memory command."
+ },
+ {
+  "id": 827,
+  "text": "Now correspondingly, our"
+ },
+ {
+  "id": 828,
+  "text": "linker script,"
+ },
+ {
+  "id": 829,
+  "text": "we also have a memory command."
+ },
+ {
+  "id": 830,
+  "text": "Where can you see it? Here it is."
+ },
+ {
+  "id": 831,
+  "text": "Right here."
+ },
+ {
+  "id": 832,
+  "text": "Now here,"
+ },
+ {
+  "id": 833,
+  "text": "we actually only defined one RAM block,"
+ },
+ {
+  "id": 834,
+  "text": "right?"
+ },
+ {
+  "id": 835,
+  "text": "This RAM block,"
+ },
+ {
+  "id": 836,
+  "text": "its address is 0x80000000."
+ },
+ {
+  "id": 837,
+  "text": "We've mentioned this value multiple times already."
+ },
+ {
+  "id": 838,
+  "text": "Its range,"
+ },
+ {
+  "id": 839,
+  "text": "is 128 megabytes."
+ },
+ {
+  "id": 840,
+  "text": "So on this virtual board of ours,"
+ },
+ {
+  "id": 841,
+  "text": "this memory region has exactly this size."
+ },
+ {
+  "id": 842,
+  "text": "Now, the name here,"
+ },
+ {
+  "id": 843,
+  "text": "we'll use it later on."
+ },
+ {
+  "id": 844,
+  "text": "Just to mention it here,"
+ },
+ {
+  "id": 845,
+  "text": "when we talk about sections later,"
+ },
+ {
+  "id": 846,
+  "text": "we will actually use this."
+ },
+ {
+  "id": 847,
+  "text": "Keep that in mind as you read through it."
+ },
+ {
+  "id": 848,
+  "text": "It gets used right here."
+ },
+ {
+  "id": 849,
+  "text": "So what's used here,"
+ },
+ {
+  "id": 850,
+  "text": "is basically telling us,"
+ },
+ {
+  "id": 851,
+  "text": "for this text section,"
+ },
+ {
+  "id": 852,
+  "text": "it will actually be placed into RAM,"
+ },
+ {
+  "id": 853,
+  "text": "into this memory region."
+ },
+ {
+  "id": 854,
+  "text": "That's really all it does."
+ },
+ {
+  "id": 855,
+  "text": "Just to clarify that."
+ },
+ {
+  "id": 856,
+  "text": "All right."
+ },
+ {
+  "id": 857,
+  "text": "So that's the memory command."
+ },
+ {
+  "id": 858,
+  "text": "And this one here,"
+ },
+ {
+  "id": 859,
+  "text": "is the section command."
+ },
+ {
+  "id": 860,
+  "text": "This command is the one in our"
+ },
+ {
+  "id": 861,
+  "text": "general linker script that is"
+ },
+ {
+  "id": 862,
+  "text": "also the most important,"
+ },
+ {
+  "id": 863,
+  "text": "and takes up the most space"
+ },
+ {
+  "id": 864,
+  "text": "as a command."
+ },
+ {
+  "id": 865,
+  "text": "It is essentially"
+ },
+ {
+  "id": 866,
+  "text": "telling our linker"
+ },
+ {
+  "id": 867,
+  "text": "how to take the sections"
+ },
+ {
+  "id": 868,
+  "text": "in the input file,"
+ },
+ {
+  "id": 869,
+  "text": "these sections,"
+ },
+ {
+  "id": 870,
+  "text": "and map them into"
+ },
+ {
+  "id": 871,
+  "text": "the sections"
+ },
+ {
+  "id": 872,
+  "text": "of the output file,"
+ },
+ {
+  "id": 873,
+  "text": "and how to place these sections"
+ },
+ {
+  "id": 874,
+  "text": "in memory,"
+ },
+ {
+  "id": 875,
+  "text": "that is, load them"
+ },
+ {
+  "id": 876,
+  "text": "at what position in memory."
+ },
+ {
+  "id": 877,
+  "text": "It is really just specifying this information."
+ },
+ {
+  "id": 878,
+  "text": "Now it says that besides being able to"
+ },
+ {
+  "id": 879,
+  "text": "describe the output sections"
+ },
+ {
+  "id": 880,
+  "text": "It can also be a symbol copy command,"
+ },
+ {
+  "id": 881,
+  "text": "or other forms."
+ },
+ {
+  "id": 882,
+  "text": "We'll cover that in a moment."
+ },
+ {
+  "id": 883,
+  "text": "Let's take this example."
+ },
+ {
+  "id": 884,
+  "text": "Let me briefly walk through it."
+ },
+ {
+  "id": 885,
+  "text": "For instance, taking this example,"
+ },
+ {
+  "id": 886,
+  "text": "let's look at"
+ },
+ {
+  "id": 887,
+  "text": "what this is actually saying."
+ },
+ {
+  "id": 888,
+  "text": "So this basically means that"
+ },
+ {
+  "id": 889,
+  "text": "this section command begins here,"
+ },
+ {
+  "id": 890,
+  "text": "and it wraps a bunch of braces around it."
+ },
+ {
+  "id": 891,
+  "text": "We just explained this part,"
+ },
+ {
+  "id": 892,
+  "text": "which is that it essentially means that"
+ },
+ {
+  "id": 893,
+  "text": "the contents in here"
+ },
+ {
+  "id": 894,
+  "text": "will ultimately be placed into rem,"
+ },
+ {
+  "id": 895,
+  "text": "this block of memory."
+ },
+ {
+  "id": 896,
+  "text": "Now, as you can see here,"
+ },
+ {
+  "id": 897,
+  "text": "there are many things starting with a dot."
+ },
+ {
+  "id": 898,
+  "text": "This thing,"
+ },
+ {
+  "id": 899,
+  "text": "you can understand it as meaning"
+ },
+ {
+  "id": 900,
+  "text": "It's describing"
+ },
+ {
+  "id": 901,
+  "text": "because what it's actually describing is"
+ },
+ {
+  "id": 902,
+  "text": "in our final memory"
+ },
+ {
+  "id": 903,
+  "text": "how things are laid out there"
+ },
+ {
+  "id": 904,
+  "text": "how these sections are laid out in memory"
+ },
+ {
+  "id": 905,
+  "text": "So you can think of it this way:"
+ },
+ {
+  "id": 906,
+  "text": "during the layout process"
+ },
+ {
+  "id": 907,
+  "text": "we always have a"
+ },
+ {
+  "id": 908,
+  "text": "we have a current position"
+ },
+ {
+  "id": 909,
+  "text": "current position"
+ },
+ {
+  "id": 910,
+  "text": "current position,"
+ },
+ {
+  "id": 911,
+  "text": "or the concept of a counter"
+ },
+ {
+  "id": 912,
+  "text": "a counter,"
+ },
+ {
+  "id": 913,
+  "text": "or you could say a pointer"
+ },
+ {
+  "id": 914,
+  "text": "and this pointer points to"
+ },
+ {
+  "id": 915,
+  "text": "during the layout process,"
+ },
+ {
+  "id": 916,
+  "text": "that current position"
+ },
+ {
+  "id": 917,
+  "text": "So when this dot equals 0x100,"
+ },
+ {
+  "id": 918,
+  "text": "that just means"
+ },
+ {
+  "id": 919,
+  "text": "as I'm laying things out right now"
+ },
+ {
+  "id": 920,
+  "text": "I'm going to start placing things at 0x1000."
+ },
+ {
+  "id": 921,
+  "text": "So let's say down here is the low address,"
+ },
+ {
+  "id": 922,
+  "text": "and up here is the high address."
+ },
+ {
+  "id": 923,
+  "text": "Then this pointer"
+ },
+ {
+  "id": 924,
+  "text": "moves from the bottom upward."
+ },
+ {
+  "id": 925,
+  "text": "So say it reaches this position,"
+ },
+ {
+  "id": 926,
+  "text": "and let's assume this position is 0x1000,"
+ },
+ {
+  "id": 927,
+  "text": "a value like that."
+ },
+ {
+  "id": 928,
+  "text": "So what do we do starting from this position?"
+ },
+ {
+  "id": 929,
+  "text": "I'm going to start placing my text section."
+ },
+ {
+  "id": 930,
+  "text": "We're going to start placing our text section."
+ },
+ {
+  "id": 931,
+  "text": "So this text section,"
+ },
+ {
+  "id": 932,
+  "text": "it goes right here,"
+ },
+ {
+  "id": 933,
+  "text": "this dot,"
+ },
+ {
+  "id": 934,
+  "text": "this place is the .txt text section."
+ },
+ {
+  "id": 935,
+  "text": "So here,"
+ },
+ {
+  "id": 936,
+  "text": "it actually describes our"
+ },
+ {
+  "id": 937,
+  "text": "section name in the output file,"
+ },
+ {
+  "id": 938,
+  "text": "for example, called .txt,"
+ },
+ {
+  "id": 939,
+  "text": "and then followed by a colon."
+ },
+ {
+  "id": 940,
+  "text": "After the colon,"
+ },
+ {
+  "id": 941,
+  "text": "there's a pattern."
+ },
+ {
+  "id": 942,
+  "text": "What is this?"
+ },
+ {
+  "id": 943,
+  "text": "The content in here,"
+ },
+ {
+  "id": 944,
+  "text": "you can actually think of it as describing,"
+ },
+ {
+  "id": 945,
+  "text": "because as we know,"
+ },
+ {
+  "id": 946,
+  "text": "all the sections in the output file"
+ },
+ {
+  "id": 947,
+  "text": "come from"
+ },
+ {
+  "id": 948,
+  "text": "the sections in the input files,"
+ },
+ {
+  "id": 949,
+  "text": "right?"
+ },
+ {
+  "id": 950,
+  "text": "Now this * is a wildcard,"
+ },
+ {
+  "id": 951,
+  "text": "meaning all the text sections from the input files"
+ },
+ {
+  "id": 952,
+  "text": "get placed into the text section of the output file."
+ },
+ {
+  "id": 953,
+  "text": "And the location where it's placed,"
+ },
+ {
+  "id": 954,
+  "text": "at load time,"
+ },
+ {
+  "id": 955,
+  "text": "will be put at the memory location 0x001000."
+ },
+ {
+  "id": 956,
+  "text": "Actually, it's describing this information."
+ },
+ {
+  "id": 957,
+  "text": "It's really describing this information."
+ },
+ {
+  "id": 958,
+  "text": "Okay."
+ },
+ {
+  "id": 959,
+  "text": "So after that's described,"
+ },
+ {
+  "id": 960,
+  "text": "Now look at the next line, it's a dot again."
+ },
+ {
+  "id": 961,
+  "text": "In other words, this takes the pointer"
+ },
+ {
+  "id": 962,
+  "text": "and moves it up again,"
+ },
+ {
+  "id": 963,
+  "text": "moved to what position?"
+ },
+ {
+  "id": 964,
+  "text": "It's moved to 0x8000."
+ },
+ {
+  "id": 965,
+  "text": "Assume this position is 0x8000."
+ },
+ {
+  "id": 966,
+  "text": "Assume this position is 0x8000."
+ },
+ {
+  "id": 967,
+  "text": "Then, starting from this position,"
+ },
+ {
+  "id": 968,
+  "text": "what do we place further up?"
+ },
+ {
+  "id": 969,
+  "text": "We place the .data section and the .bss section."
+ },
+ {
+  "id": 970,
+  "text": "So this is where the data section is,"
+ },
+ {
+  "id": 971,
+  "text": "this is where the data section is."
+ },
+ {
+  "id": 972,
+  "text": "Then further up,"
+ },
+ {
+  "id": 973,
+  "text": "what goes here is the .bss section."
+ },
+ {
+  "id": 974,
+  "text": "Now, where does the content of the data section"
+ },
+ {
+  "id": 975,
+  "text": "come from?"
+ },
+ {
+  "id": 976,
+  "text": "It's described right here:"
+ },
+ {
+  "id": 977,
+  "text": "it's the Data sections of all the input sections."
+ },
+ {
+  "id": 978,
+  "text": "And the BSS section?"
+ },
+ {
+  "id": 979,
+  "text": "It's the BSS sections of all the input sections."
+ },
+ {
+  "id": 980,
+  "text": "Actually, through this description,"
+ },
+ {
+  "id": 981,
+  "text": "we can actually see"
+ },
+ {
+  "id": 982,
+  "text": "how, in memory,"
+ },
+ {
+  "id": 983,
+  "text": "our program is laid out,"
+ },
+ {
+  "id": 984,
+  "text": "and it is through this method"
+ },
+ {
+  "id": 985,
+  "text": "that it gets described."
+ },
+ {
+  "id": 986,
+  "text": "This is what the linker script"
+ },
+ {
+  "id": 987,
+  "text": "achieves."
+ },
+ {
+  "id": 988,
+  "text": "Now,"
+ },
+ {
+  "id": 989,
+  "text": "in our actual code,"
+ },
+ {
+  "id": 990,
+  "text": "our content"
+ },
+ {
+  "id": 991,
+  "text": "is a bit richer than that."
+ },
+ {
+  "id": 992,
+  "text": "As you can see,"
+ },
+ {
+  "id": 993,
+  "text": "here we start defining our sections,"
+ },
+ {
+  "id": 994,
+  "text": "and right here,"
+ },
+ {
+  "id": 995,
+  "text": "quite a few are defined,"
+ },
+ {
+  "id": 996,
+  "text": "including the text section,"
+ },
+ {
+  "id": 997,
+  "text": "our rodata section,"
+ },
+ {
+  "id": 998,
+  "text": "and so on and so forth."
+ },
+ {
+  "id": 999,
+  "text": "It is through this single line"
+ },
+ {
+  "id": 1000,
+  "text": "to describe it,"
+ },
+ {
+  "id": 1001,
+  "text": "and so,"
+ },
+ {
+  "id": 1002,
+  "text": "as you can see,"
+ },
+ {
+  "id": 1003,
+  "text": "apart from the earlier"
+ },
+ {
+  "id": 1004,
+  "text": "things I just mentioned,"
+ },
+ {
+  "id": 1005,
+  "text": "we also see that in here"
+ },
+ {
+  "id": 1006,
+  "text": "statements like this are defined:"
+ },
+ {
+  "id": 1007,
+  "text": "provide,"
+ },
+ {
+  "id": 1008,
+  "text": "which is also a command."
+ },
+ {
+  "id": 1009,
+  "text": "This command is really the"
+ },
+ {
+  "id": 1010,
+  "text": "one we talked about here."
+ },
+ {
+  "id": 1011,
+  "text": "Besides the autosign description,"
+ },
+ {
+  "id": 1012,
+  "text": "there can also be symbol assignment commands."
+ },
+ {
+  "id": 1013,
+  "text": "For symbol assignment commands,"
+ },
+ {
+  "id": 1014,
+  "text": "we use a new command here,"
+ },
+ {
+  "id": 1015,
+  "text": "called the provide command."
+ },
+ {
+  "id": 1016,
+  "text": "The meaning of this provide command"
+ },
+ {
+  "id": 1017,
+  "text": "is very simple."
+ },
+ {
+  "id": 1018,
+  "text": "It is actually equivalent to"
+ },
+ {
+  "id": 1019,
+  "text": "what we do in the C language"
+ },
+ {
+  "id": 1020,
+  "text": "to assign a variable"
+ },
+ {
+  "id": 1021,
+  "text": "for it"
+ },
+ {
+  "id": 1022,
+  "text": "And later,"
+ },
+ {
+  "id": 1023,
+  "text": "its syntax is simply"
+ },
+ {
+  "id": 1024,
+  "text": "an equals sign"
+ },
+ {
+  "id": 1025,
+  "text": "taking the content of this expression"
+ },
+ {
+  "id": 1026,
+  "text": "and assigning it to such a symbol"
+ },
+ {
+  "id": 1027,
+  "text": "a variable name."
+ },
+ {
+  "id": 1028,
+  "text": "So for example, right here"
+ },
+ {
+  "id": 1029,
+  "text": "we gave an example like this."
+ },
+ {
+  "id": 1030,
+  "text": "So it assigns this thing to it."
+ },
+ {
+  "id": 1031,
+  "text": "Now we know that this dot"
+ },
+ {
+  "id": 1032,
+  "text": "actually represents"
+ },
+ {
+  "id": 1033,
+  "text": "the concept of the current location."
+ },
+ {
+  "id": 1034,
+  "text": "This location may be"
+ },
+ {
+  "id": 1035,
+  "text": "changing during the description"
+ },
+ {
+  "id": 1036,
+  "text": "of this section."
+ },
+ {
+  "id": 1037,
+  "text": "So this is definitely also a value,"
+ },
+ {
+  "id": 1038,
+  "text": "and this value"
+ },
+ {
+  "id": 1039,
+  "text": "is assigned to such a symbol."
+ },
+ {
+  "id": 1040,
+  "text": "So this symbol,"
+ },
+ {
+  "id": 1041,
+  "text": "when we program later on,"
+ },
+ {
+  "id": 1042,
+  "text": "we can use it."
+ },
+ {
+  "id": 1043,
+  "text": "That's because to the linker,"
+ },
+ {
+  "id": 1044,
+  "text": "it puts this thing into the final symbol table."
+ },
+ {
+  "id": 1045,
+  "text": "And in the symbol table,"
+ },
+ {
+  "id": 1046,
+  "text": "we can use it like a variable."
+ },
+ {
+  "id": 1047,
+  "text": "Now as for our related code example,"
+ },
+ {
+  "id": 1048,
+  "text": "we can see it right here."
+ },
+ {
+  "id": 1049,
+  "text": "Look, here actually,"
+ },
+ {
+  "id": 1050,
+  "text": "if we take this as an example,"
+ },
+ {
+  "id": 1051,
+  "text": "we can see"
+ },
+ {
+  "id": 1052,
+  "text": "that it's essentially saying,"
+ },
+ {
+  "id": 1053,
+  "text": "it's defining a variable name,"
+ },
+ {
+  "id": 1054,
+  "text": "defining a variable, defining a symbol."
+ },
+ {
+  "id": 1055,
+  "text": "This symbol,"
+ },
+ {
+  "id": 1056,
+  "text": "starts from this location,"
+ },
+ {
+  "id": 1057,
+  "text": "and then,"
+ },
+ {
+  "id": 1058,
+  "text": "here,"
+ },
+ {
+  "id": 1059,
+  "text": "it defines another one."
+ },
+ {
+  "id": 1060,
+  "text": "So basically, as you can see,"
+ },
+ {
+  "id": 1061,
+  "text": "these two lines actually express something."
+ },
+ {
+  "id": 1062,
+  "text": "We now know"
+ },
+ {
+  "id": 1063,
+  "text": "the start position of this BSS section"
+ },
+ {
+  "id": 1064,
+  "text": "and its end position."
+ },
+ {
+  "id": 1065,
+  "text": "We take the start position"
+ },
+ {
+  "id": 1066,
+  "text": "and put it into this symbol,"
+ },
+ {
+  "id": 1067,
+  "text": "and the end position goes into this symbol."
+ },
+ {
+  "id": 1068,
+  "text": "So we've essentially obtained this information."
+ },
+ {
+  "id": 1069,
+  "text": "Now, with this information,"
+ },
+ {
+  "id": 1070,
+  "text": "we can go further and compute"
+ },
+ {
+  "id": 1071,
+  "text": "the starting position of the entire memory,"
+ },
+ {
+  "id": 1072,
+  "text": "right?"
+ },
+ {
+  "id": 1073,
+  "text": "Origin —"
+ },
+ {
+  "id": 1074,
+  "text": "this RAM —"
+ },
+ {
+  "id": 1075,
+  "text": "we know where the starting position of this RAM is."
+ },
+ {
+  "id": 1076,
+  "text": "This value,"
+ },
+ {
+  "id": 1077,
+  "text": "what is"
+ },
+ {
+  "id": 1078,
+  "text": "the value of this expression?"
+ },
+ {
+  "id": 1079,
+  "text": "The value of this expression is actually"
+ },
+ {
+  "id": 1080,
+  "text": "We just defined the origin earlier in the memory section"
+ },
+ {
+  "id": 1081,
+  "text": "which is 0x8000"
+ },
+ {
+  "id": 1082,
+  "text": "right?"
+ },
+ {
+  "id": 1083,
+  "text": "And at the same time"
+ },
+ {
+  "id": 1084,
+  "text": "we can also get"
+ },
+ {
+  "id": 1085,
+  "text": "at the same time we also get the heap start"
+ },
+ {
+  "id": 1086,
+  "text": "we know because our"
+ },
+ {
+  "id": 1087,
+  "text": "our heap memory"
+ },
+ {
+  "id": 1088,
+  "text": "is actually placed right after the BSS"
+ },
+ {
+  "id": 1089,
+  "text": "so once we have the BSS end"
+ },
+ {
+  "id": 1090,
+  "text": "after we get its end position"
+ },
+ {
+  "id": 1091,
+  "text": "we can take that end position"
+ },
+ {
+  "id": 1092,
+  "text": "and actually use it as the starting position of the heap"
+ },
+ {
+  "id": 1093,
+  "text": "this way we get the correct address"
+ },
+ {
+  "id": 1094,
+  "text": "as for what this value actually is"
+ },
+ {
+  "id": 1095,
+  "text": "we don't really need to calculate it ourselves"
+ },
+ {
+  "id": 1096,
+  "text": "the linker, based on this linker script"
+ },
+ {
+  "id": 1097,
+  "text": "during the linking process"
+ },
+ {
+  "id": 1098,
+  "text": "it will automatically compute this value for us"
+ },
+ {
+  "id": 1099,
+  "text": "and store it into these symbols"
+ },
+ {
+  "id": 1100,
+  "text": "So that achieves our goal"
+ },
+ {
+  "id": 1101,
+  "text": "Right?"
+ },
+ {
+  "id": 1102,
+  "text": "So these are just some"
+ },
+ {
+  "id": 1103,
+  "text": "introductions to using linker scripts"
+ },
+ {
+  "id": 1104,
+  "text": "Of course, right now"
+ },
+ {
+  "id": 1105,
+  "text": "the main focus is to show you"
+ },
+ {
+  "id": 1106,
+  "text": "how we use this linker script"
+ },
+ {
+  "id": 1107,
+  "text": "to compute these memory layouts"
+ },
+ {
+  "id": 1108,
+  "text": "and ultimately,"
+ },
+ {
+  "id": 1109,
+  "text": "achieve our goal,"
+ },
+ {
+  "id": 1110,
+  "text": "which is to get the starting position and size of the heap"
+ },
+ {
+  "id": 1111,
+  "text": "So,"
+ },
+ {
+  "id": 1112,
+  "text": "let's take a look at"
+ },
+ {
+  "id": 1113,
+  "text": "how we can get this information"
+ },
+ {
+  "id": 1114,
+  "text": "in the code."
+ },
+ {
+  "id": 1115,
+  "text": "Now, this diagram of ours,"
+ },
+ {
+  "id": 1116,
+  "text": "we should always keep it"
+ },
+ {
+  "id": 1117,
+  "text": "in our minds."
+ },
+ {
+  "id": 1118,
+  "text": "So now,"
+ },
+ {
+  "id": 1119,
+  "text": "through the linker script,"
+ },
+ {
+  "id": 1120,
+  "text": "So what did we actually do?"
+ },
+ {
+  "id": 1121,
+  "text": "First of all, as we know,"
+ },
+ {
+  "id": 1122,
+  "text": "based on what we just described,"
+ },
+ {
+  "id": 1123,
+  "text": "in the linker script,"
+ },
+ {
+  "id": 1124,
+  "text": "we defined the size of the memory,"
+ },
+ {
+  "id": 1125,
+  "text": "starting at 0x8000,"
+ },
+ {
+  "id": 1126,
+  "text": "with a length of 128 megabytes."
+ },
+ {
+  "id": 1127,
+  "text": "So through this,"
+ },
+ {
+  "id": 1128,
+  "text": "and then further down below,"
+ },
+ {
+  "id": 1129,
+  "text": "combined with these two provide commands below,"
+ },
+ {
+  "id": 1130,
+  "text": "we can get two symbols."
+ },
+ {
+  "id": 1131,
+  "text": "One is the symbol start,"
+ },
+ {
+  "id": 1132,
+  "text": "and the other is the symbol end."
+ },
+ {
+  "id": 1133,
+  "text": "This symbol,"
+ },
+ {
+  "id": 1134,
+  "text": "with these two symbols,"
+ },
+ {
+  "id": 1135,
+  "text": "we can actually obtain"
+ },
+ {
+  "id": 1136,
+  "text": "the entire memory,"
+ },
+ {
+  "id": 1137,
+  "text": "our entire memory space."
+ },
+ {
+  "id": 1138,
+  "text": "This seems to be written wrong."
+ },
+ {
+  "id": 1139,
+  "text": "The diagram here is drawn wrong."
+ },
+ {
+  "id": 1140,
+  "text": "It should be this, it should be this place"
+ },
+ {
+  "id": 1141,
+  "text": "Sorry about that."
+ },
+ {
+  "id": 1142,
+  "text": "This should be this position."
+ },
+ {
+  "id": 1143,
+  "text": "No, that's not it."
+ },
+ {
+  "id": 1144,
+  "text": "We then get the entire"
+ },
+ {
+  "id": 1145,
+  "text": "size of this."
+ },
+ {
+  "id": 1146,
+  "text": "Right, we get this size,"
+ },
+ {
+  "id": 1147,
+  "text": "and the end position of the entire memory, the 70 position,"
+ },
+ {
+  "id": 1148,
+  "text": "the ending position."
+ },
+ {
+  "id": 1149,
+  "text": "This is the first step."
+ },
+ {
+  "id": 1150,
+  "text": "Then, at the same time,"
+ },
+ {
+  "id": 1151,
+  "text": "based on what we defined over here,"
+ },
+ {
+  "id": 1152,
+  "text": "these section positions we set up,"
+ },
+ {
+  "id": 1153,
+  "text": "what else can we naturally get?"
+ },
+ {
+  "id": 1154,
+  "text": "We can get these text sections,"
+ },
+ {
+  "id": 1155,
+  "text": "data sections,"
+ },
+ {
+  "id": 1156,
+  "text": "and the starting and ending positions of these bss sections,"
+ },
+ {
+  "id": 1157,
+  "text": "right?"
+ },
+ {
+  "id": 1158,
+  "text": "We just introduced these to you earlier."
+ },
+ {
+  "id": 1159,
+  "text": "So once we have this information,"
+ },
+ {
+  "id": 1160,
+  "text": "So naturally, we can use this approach"
+ },
+ {
+  "id": 1161,
+  "text": "to further calculate the size of this heap"
+ },
+ {
+  "id": 1162,
+  "text": "its size,"
+ },
+ {
+  "id": 1163,
+  "text": "as well as its starting location."
+ },
+ {
+  "id": 1164,
+  "text": "So in this way,"
+ },
+ {
+  "id": 1165,
+  "text": "through the linker script,"
+ },
+ {
+  "id": 1166,
+  "text": "we have obtained"
+ },
+ {
+  "id": 1167,
+  "text": "the specific locations of these regions that we care about."
+ },
+ {
+  "id": 1168,
+  "text": "We don't have to compute them ourselves."
+ },
+ {
+  "id": 1169,
+  "text": "But just having this is not enough,"
+ },
+ {
+  "id": 1170,
+  "text": "because what we ultimately need"
+ },
+ {
+  "id": 1171,
+  "text": "is to be able to get these values in our code."
+ },
+ {
+  "id": 1172,
+  "text": "So how do we get these values?"
+ },
+ {
+  "id": 1173,
+  "text": "It's actually quite simple."
+ },
+ {
+  "id": 1174,
+  "text": "Once we are in the linker script,"
+ },
+ {
+  "id": 1175,
+  "text": "you can see this diagram here,"
+ },
+ {
+  "id": 1176,
+  "text": "which is really just the"
+ },
+ {
+  "id": 1177,
+  "text": "information described in a linker script."
+ },
+ {
+  "id": 1178,
+  "text": "So this diagram is actually just,"
+ },
+ {
+  "id": 1179,
+  "text": "you can think of it as the descriptive information of the linker script."
+ },
+ {
+  "id": 1180,
+  "text": "So once we have this linker script information,"
+ },
+ {
+  "id": 1181,
+  "text": "we can actually"
+ },
+ {
+  "id": 1182,
+  "text": "do one thing:"
+ },
+ {
+  "id": 1183,
+  "text": "in our code,"
+ },
+ {
+  "id": 1184,
+  "text": "and this code,"
+ },
+ {
+  "id": 1185,
+  "text": "is actually written in assembly,"
+ },
+ {
+  "id": 1186,
+  "text": "we can actually define these corresponding variables."
+ },
+ {
+  "id": 1187,
+  "text": "We know that this .word is actually"
+ },
+ {
+  "id": 1188,
+  "text": "allocating a space,"
+ },
+ {
+  "id": 1189,
+  "text": "you can think of it as defining a variable,"
+ },
+ {
+  "id": 1190,
+  "text": "and this variable is actually 32 bits,"
+ },
+ {
+  "id": 1191,
+  "text": "4 bytes."
+ },
+ {
+  "id": 1192,
+  "text": "For these bytes,"
+ },
+ {
+  "id": 1193,
+  "text": "we can actually take this symbol,"
+ },
+ {
+  "id": 1194,
+  "text": "we now know"
+ },
+ {
+  "id": 1195,
+  "text": "the linker knows the value of this symbol,"
+ },
+ {
+  "id": 1196,
+  "text": "and we take the value of this symbol"
+ },
+ {
+  "id": 1197,
+  "text": "and assign it to this variable,"
+ },
+ {
+  "id": 1198,
+  "text": "right?"
+ },
+ {
+  "id": 1199,
+  "text": "So basically what we're doing is"
+ },
+ {
+  "id": 1200,
+  "text": "Now, this piece of code,"
+ },
+ {
+  "id": 1201,
+  "text": "where is it?"
+ },
+ {
+  "id": 1202,
+  "text": "Let me walk you through this code."
+ },
+ {
+  "id": 1203,
+  "text": "It's in this new project of ours,"
+ },
+ {
+  "id": 1204,
+  "text": "in memory.s."
+ },
+ {
+  "id": 1205,
+  "text": "It's in this file."
+ },
+ {
+  "id": 1206,
+  "text": "In this file,"
+ },
+ {
+  "id": 1207,
+  "text": "we're actually defining some variables,"
+ },
+ {
+  "id": 1208,
+  "text": "some global variables."
+ },
+ {
+  "id": 1209,
+  "text": "You can think of these global variables as"
+ },
+ {
+  "id": 1210,
+  "text": "whose values are essentially obtained"
+ },
+ {
+  "id": 1211,
+  "text": "through this method,"
+ },
+ {
+  "id": 1212,
+  "text": "so we don't have to compute them ourselves."
+ },
+ {
+  "id": 1213,
+  "text": "Now, the actual values,"
+ },
+ {
+  "id": 1214,
+  "text": "they're actually calculated by the linker,"
+ },
+ {
+  "id": 1215,
+  "text": "during the linking process,"
+ },
+ {
+  "id": 1216,
+  "text": "computed for us."
+ },
+ {
+  "id": 1217,
+  "text": "So once we have these global variables,"
+ },
+ {
+  "id": 1218,
+  "text": "we can then"
+ },
+ {
+  "id": 1219,
+  "text": "go ahead and use them further."
+ },
+ {
+  "id": 1220,
+  "text": "We actually just"
+ },
+ {
+  "id": 1221,
+  "text": "you can think of it as"
+ },
+ {
+  "id": 1222,
+  "text": "we just said"
+ },
+ {
+  "id": 1223,
+  "text": "this is assembly code"
+ },
+ {
+  "id": 1224,
+  "text": "so in our C language code,"
+ },
+ {
+  "id": 1225,
+  "text": "how do we use these variables?"
+ },
+ {
+  "id": 1226,
+  "text": "Actually, you can just think of them"
+ },
+ {
+  "id": 1227,
+  "text": "as global variables"
+ },
+ {
+  "id": 1228,
+  "text": "right?"
+ },
+ {
+  "id": 1229,
+  "text": "Just declare them"
+ },
+ {
+  "id": 1230,
+  "text": "as global 32-bit variables."
+ },
+ {
+  "id": 1231,
+  "text": "Then in"
+ },
+ {
+  "id": 1232,
+  "text": "our C language code,"
+ },
+ {
+  "id": 1233,
+  "text": "we can use these variables directly."
+ },
+ {
+  "id": 1234,
+  "text": "As you can see,"
+ },
+ {
+  "id": 1235,
+  "text": "why are we able to use these variables"
+ },
+ {
+  "id": 1236,
+  "text": "to compute these values,"
+ },
+ {
+  "id": 1237,
+  "text": "getting the starting address of the heap?"
+ },
+ {
+  "id": 1238,
+  "text": "Actually, it comes from here,"
+ },
+ {
+  "id": 1239,
+  "text": "from these heap values above."
+ },
+ {
+  "id": 1240,
+  "text": "So where do these things come from?"
+ },
+ {
+  "id": 1241,
+  "text": "They come from here."
+ },
+ {
+  "id": 1242,
+  "text": "So ultimately, where do these things come from?"
+ },
+ {
+  "id": 1243,
+  "text": "They're actually calculated from the linker script."
+ },
+ {
+  "id": 1244,
+  "text": "Our entire logic here,"
+ },
+ {
+  "id": 1245,
+  "text": "is really just this process."
+ },
+ {
+  "id": 1246,
+  "text": "Once you understand this,"
+ },
+ {
+  "id": 1247,
+  "text": "reading this code becomes pretty straightforward."
+ },
+ {
+  "id": 1248,
+  "text": "So this is using the linker"
+ },
+ {
+  "id": 1249,
+  "text": "to obtain all this relevant information."
+ },
+ {
+  "id": 1250,
+  "text": "But this is only"
+ },
+ {
+  "id": 1251,
+  "text": "Actually, this only implements"
+ },
+ {
+  "id": 1252,
+  "text": "the first step of our dynamic memory allocation."
+ },
+ {
+  "id": 1253,
+  "text": "This is the first step."
+ },
+ {
+  "id": 1254,
+  "text": "Because right now we've only obtained"
+ },
+ {
+  "id": 1255,
+  "text": "the size of this memory,"
+ },
+ {
+  "id": 1256,
+  "text": "that is, the size of this heap,"
+ },
+ {
+  "id": 1257,
+  "text": "and its starting position."
+ },
+ {
+  "id": 1258,
+  "text": "So how do we actually implement it?"
+ },
+ {
+  "id": 1259,
+  "text": "Well, next"
+ },
+ {
+  "id": 1260,
+  "text": "So let me walk you through"
+ },
+ {
+  "id": 1261,
+  "text": "how to implement"
+ },
+ {
+  "id": 1262,
+  "text": "the related interface."
+ },
+ {
+  "id": 1263,
+  "text": "Now, at the configurable granularity level,"
+ },
+ {
+  "id": 1264,
+  "text": "let's take a look"
+ },
+ {
+  "id": 1265,
+  "text": "at how we implement"
+ },
+ {
+  "id": 1266,
+  "text": "so-called configurable-level"
+ },
+ {
+  "id": 1267,
+  "text": "memory allocation and deallocation."
+ },
+ {
+  "id": 1268,
+  "text": "This,"
+ },
+ {
+  "id": 1269,
+  "text": "let me first explain to everyone,"
+ },
+ {
+  "id": 1270,
+  "text": "namely, when we normally call"
+ },
+ {
+  "id": 1271,
+  "text": "malloc and free,"
+ },
+ {
+  "id": 1272,
+  "text": "this kind of allocation,"
+ },
+ {
+  "id": 1273,
+  "text": "at what granularity level do we actually allocate?"
+ },
+ {
+  "id": 1274,
+  "text": "We actually allocate at the granularity"
+ },
+ {
+  "id": 1275,
+  "text": "of our own units,"
+ },
+ {
+  "id": 1276,
+  "text": "right?"
+ },
+ {
+  "id": 1277,
+  "text": "That's a very fine-grained"
+ },
+ {
+  "id": 1278,
+  "text": "allocation."
+ },
+ {
+  "id": 1279,
+  "text": "But if we look at it from the lower level,"
+ },
+ {
+  "id": 1280,
+  "text": "So in our operating system,"
+ },
+ {
+  "id": 1281,
+  "text": "allocation actually happens first at the page level."
+ },
+ {
+  "id": 1282,
+  "text": "And page allocation"
+ },
+ {
+  "id": 1283,
+  "text": "is usually done with a size of 4K,"
+ },
+ {
+  "id": 1284,
+  "text": "that is, 4K bytes as the allocation unit."
+ },
+ {
+  "id": 1285,
+  "text": "Then,"
+ },
+ {
+  "id": 1286,
+  "text": "actually, malloc and free"
+ },
+ {
+  "id": 1287,
+  "text": "are built on top of this 4K page-level allocation,"
+ },
+ {
+  "id": 1288,
+  "text": "going one step further"
+ },
+ {
+  "id": 1289,
+  "text": "with what is essentially a second round of allocation,"
+ },
+ {
+  "id": 1290,
+  "text": "a finer-grained allocation on top of it."
+ },
+ {
+  "id": 1291,
+  "text": "Here,"
+ },
+ {
+  "id": 1292,
+  "text": "first let me walk you through page-level allocation."
+ },
+ {
+  "id": 1293,
+  "text": "As for byte-level malloc,"
+ },
+ {
+  "id": 1294,
+  "text": "we actually leave that"
+ },
+ {
+  "id": 1295,
+  "text": "as an exercise for you to do on your own."
+ },
+ {
+  "id": 1296,
+  "text": "So let's first look at the page level,"
+ },
+ {
+  "id": 1297,
+  "text": "that is, coarse-grained allocation,"
+ },
+ {
+  "id": 1298,
+  "text": "and how it is done."
+ },
+ {
+  "id": 1299,
+  "text": "The idea is"
+ },
+ {
+  "id": 1300,
+  "text": "It's actually pretty simple."
+ },
+ {
+  "id": 1301,
+  "text": "Let's take a look at it together."
+ },
+ {
+  "id": 1302,
+  "text": "So once we have this,"
+ },
+ {
+  "id": 1303,
+  "text": "now that we know the HIP,"
+ },
+ {
+  "id": 1304,
+  "text": "its size and starting position,"
+ },
+ {
+  "id": 1305,
+  "text": "in that situation,"
+ },
+ {
+  "id": 1306,
+  "text": "we can actually take this HIP region,"
+ },
+ {
+  "id": 1307,
+  "text": "the area shown in blue,"
+ },
+ {
+  "id": 1308,
+  "text": "and build"
+ },
+ {
+  "id": 1309,
+  "text": "our own dynamic allocation management on top of it."
+ },
+ {
+  "id": 1310,
+  "text": "In terms of how we implemented it,"
+ },
+ {
+  "id": 1311,
+  "text": "we wrapped it up and"
+ },
+ {
+  "id": 1312,
+  "text": "provided two interfaces."
+ },
+ {
+  "id": 1313,
+  "text": "One is,"
+ },
+ {
+  "id": 1314,
+  "text": "PageElect, which is the allocation interface,"
+ },
+ {
+  "id": 1315,
+  "text": "and the other one is free,"
+ },
+ {
+  "id": 1316,
+  "text": "which is the deallocation interface."
+ },
+ {
+  "id": 1317,
+  "text": "Now for this allocation function,"
+ },
+ {
+  "id": 1318,
+  "text": "its parameter"
+ },
+ {
+  "id": 1319,
+  "text": "is an int value."
+ },
+ {
+  "id": 1320,
+  "text": "Actually, what this means is"
+ },
+ {
+  "id": 1321,
+  "text": "we can"
+ },
+ {
+  "id": 1322,
+  "text": "since we are allocating"
+ },
+ {
+  "id": 1323,
+  "text": "in units of pages, right"
+ },
+ {
+  "id": 1324,
+  "text": "we essentially tell our"
+ },
+ {
+  "id": 1325,
+  "text": "upper-level users, that is,"
+ },
+ {
+  "id": 1326,
+  "text": "when you call this interface,"
+ },
+ {
+  "id": 1327,
+  "text": "it's basically like saying"
+ },
+ {
+  "id": 1328,
+  "text": "you're telling us"
+ },
+ {
+  "id": 1329,
+  "text": "how many pages we should allocate,"
+ },
+ {
+  "id": 1330,
+  "text": "for example,"
+ },
+ {
+  "id": 1331,
+  "text": "whether you want one 4K"
+ },
+ {
+  "id": 1332,
+  "text": "or two 4Ks like that."
+ },
+ {
+  "id": 1333,
+  "text": "Now, the return value,"
+ },
+ {
+  "id": 1334,
+  "text": "it's a pointer"
+ },
+ {
+  "id": 1335,
+  "text": "that essentially points to the allocated"
+ },
+ {
+  "id": 1336,
+  "text": "region,"
+ },
+ {
+  "id": 1337,
+  "text": "which can be a single page"
+ },
+ {
+  "id": 1338,
+  "text": "or multiple pages."
+ },
+ {
+  "id": 1339,
+  "text": "So please pay attention to this."
+ },
+ {
+  "id": 1340,
+  "text": "this region"
+ },
+ {
+  "id": 1341,
+  "text": "its start address"
+ },
+ {
+  "id": 1342,
+  "text": "Then when it comes to freeing,"
+ },
+ {
+  "id": 1343,
+  "text": "that is, we take the one from just now"
+ },
+ {
+  "id": 1344,
+  "text": "the address that was returned,"
+ },
+ {
+  "id": 1345,
+  "text": "and pass it back in,"
+ },
+ {
+  "id": 1346,
+  "text": "and then our kernel"
+ },
+ {
+  "id": 1347,
+  "text": "takes this region,"
+ },
+ {
+  "id": 1348,
+  "text": "essentially, so to speak,"
+ },
+ {
+  "id": 1349,
+  "text": "and recycles it."
+ },
+ {
+  "id": 1350,
+  "text": "Then next time we can"
+ },
+ {
+  "id": 1351,
+  "text": "keep using it again."
+ },
+ {
+  "id": 1352,
+  "text": "That is actually the effect we achieve,"
+ },
+ {
+  "id": 1353,
+  "text": "and that's all it takes."
+ },
+ {
+  "id": 1354,
+  "text": "These are the two interfaces"
+ },
+ {
+  "id": 1355,
+  "text": "we need to implement in the lab."
+ },
+ {
+  "id": 1356,
+  "text": "Now, as for the actual implementation,"
+ },
+ {
+  "id": 1357,
+  "text": "there are actually many different approaches."
+ },
+ {
+  "id": 1358,
+  "text": "We will briefly introduce one approach to you,"
+ },
+ {
+  "id": 1359,
+  "text": "and we'll explain everything using the simplest possible way."
+ },
+ {
+  "id": 1360,
+  "text": "So one approach is through a linked list"
+ },
+ {
+  "id": 1361,
+  "text": "right"
+ },
+ {
+  "id": 1362,
+  "text": "We've all studied this data structure"
+ },
+ {
+  "id": 1363,
+  "text": "haven't we"
+ },
+ {
+  "id": 1364,
+  "text": "So with the linked list,"
+ },
+ {
+  "id": 1365,
+  "text": "the ones in red represent"
+ },
+ {
+  "id": 1366,
+  "text": "the memory that has been allocated,"
+ },
+ {
+  "id": 1367,
+  "text": "and we just link the blocks together one by one."
+ },
+ {
+  "id": 1368,
+  "text": "Then,"
+ },
+ {
+  "id": 1369,
+  "text": "the ones in blue"
+ },
+ {
+  "id": 1370,
+  "text": "are essentially another linked list,"
+ },
+ {
+  "id": 1371,
+  "text": "which maintains the blocks that have not been allocated."
+ },
+ {
+  "id": 1372,
+  "text": "So we can"
+ },
+ {
+  "id": 1373,
+  "text": "— this is one way of doing it,"
+ },
+ {
+  "id": 1374,
+  "text": "right?"
+ },
+ {
+  "id": 1375,
+  "text": "But actually, we can also use a"
+ },
+ {
+  "id": 1376,
+  "text": "bit-map based approach,"
+ },
+ {
+  "id": 1377,
+  "text": "a simpler approach,"
+ },
+ {
+  "id": 1378,
+  "text": "which is that we can actually take"
+ },
+ {
+  "id": 1379,
+  "text": "the chunk of memory to be allocated"
+ },
+ {
+  "id": 1380,
+  "text": "We can think of it this way."
+ },
+ {
+  "id": 1381,
+  "text": "Up front, we use some"
+ },
+ {
+  "id": 1382,
+  "text": "a region like this,"
+ },
+ {
+  "id": 1383,
+  "text": "which can actually be considered"
+ },
+ {
+  "id": 1384,
+  "text": "to be a piece of description information,"
+ },
+ {
+  "id": 1385,
+  "text": "that is, it describes what comes after it —"
+ },
+ {
+  "id": 1386,
+  "text": "the real configuration is placed at this position."
+ },
+ {
+  "id": 1387,
+  "text": "These are the individual 4K configurations."
+ },
+ {
+  "id": 1388,
+  "text": "So this red part"
+ },
+ {
+  "id": 1389,
+  "text": "is describing which ones we have,"
+ },
+ {
+  "id": 1390,
+  "text": "through indexing,"
+ },
+ {
+  "id": 1391,
+  "text": "through indexing,"
+ },
+ {
+  "id": 1392,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1393,
+  "text": "if, let's say,"
+ },
+ {
+  "id": 1394,
+  "text": "this is configuration 0,"
+ },
+ {
+  "id": 1395,
+  "text": "then over here"
+ },
+ {
+  "id": 1396,
+  "text": "what it corresponds to is number 0,"
+ },
+ {
+  "id": 1397,
+  "text": "1, 2, 3, 4,"
+ },
+ {
+  "id": 1398,
+  "text": "like this."
+ },
+ {
+  "id": 1399,
+  "text": "They are managed through indexing."
+ },
+ {
+  "id": 1400,
+  "text": "So in here,"
+ },
+ {
+  "id": 1401,
+  "text": "it's actually just"
+ },
+ {
+  "id": 1402,
+  "text": "used to describe"
+ },
+ {
+  "id": 1403,
+  "text": "whether a particular configuration"
+ },
+ {
+  "id": 1404,
+  "text": "has been allocated"
+ },
+ {
+  "id": 1405,
+  "text": "or has not been allocated,"
+ },
+ {
+  "id": 1406,
+  "text": "and that's all you need."
+ },
+ {
+  "id": 1407,
+  "text": "This way,"
+ },
+ {
+  "id": 1408,
+  "text": "you don't need"
+ },
+ {
+  "id": 1409,
+  "text": "you don't need to use pointers"
+ },
+ {
+  "id": 1410,
+  "text": "or linked lists."
+ },
+ {
+  "id": 1411,
+  "text": "The advantage,"
+ },
+ {
+  "id": 1412,
+  "text": "is that it's relatively fast"
+ },
+ {
+  "id": 1413,
+  "text": "and quite simple to implement."
+ },
+ {
+  "id": 1414,
+  "text": "What we"
+ },
+ {
+  "id": 1415,
+  "text": "actually do later on is"
+ },
+ {
+  "id": 1416,
+  "text": "to use an array-based approach"
+ },
+ {
+  "id": 1417,
+  "text": "to implement this configuration for you —"
+ },
+ {
+  "id": 1418,
+  "text": "the allocation and release at the configuration level,"
+ },
+ {
+  "id": 1419,
+  "text": "we do it using an array-based approach."
+ },
+ {
+  "id": 1420,
+  "text": "So this,"
+ },
+ {
+  "id": 1421,
+  "text": "now we know,"
+ },
+ {
+  "id": 1422,
+  "text": "actually, all of this information,"
+ },
+ {
+  "id": 1423,
+  "text": "we actually put it in our heap,"
+ },
+ {
+  "id": 1424,
+  "text": "in the heap."
+ },
+ {
+  "id": 1425,
+  "text": "So as for KeepStart,"
+ },
+ {
+  "id": 1426,
+  "text": "from our earlier analysis,"
+ },
+ {
+  "id": 1427,
+  "text": "it actually marks"
+ },
+ {
+  "id": 1428,
+  "text": "the start of this heap,"
+ },
+ {
+  "id": 1429,
+  "text": "right?"
+ },
+ {
+  "id": 1430,
+  "text": "To that end, we also need to define a"
+ },
+ {
+  "id": 1431,
+  "text": "because our real, the actual configuration,"
+ },
+ {
+  "id": 1432,
+  "text": "is actually placed here,"
+ },
+ {
+  "id": 1433,
+  "text": "starting from here,"
+ },
+ {
+  "id": 1434,
+  "text": "the memory actually given to users"
+ },
+ {
+  "id": 1435,
+  "text": "actually starts from this area here."
+ },
+ {
+  "id": 1436,
+  "text": "The part before it, you can think of it as"
+ },
+ {
+  "id": 1437,
+  "text": "memory we use for some internal management data."
+ },
+ {
+  "id": 1438,
+  "text": "So this area,"
+ },
+ {
+  "id": 1439,
+  "text": "we actually don't expose it."
+ },
+ {
+  "id": 1440,
+  "text": "for the end users to use."
+ },
+ {
+  "id": 1441,
+  "text": "So we defined another new position here,"
+ },
+ {
+  "id": 1442,
+  "text": "which is allocated_start,"
+ },
+ {
+  "id": 1443,
+  "text": "and this region"
+ },
+ {
+  "id": 1444,
+  "text": "corresponds to the memory we actually hand out."
+ },
+ {
+  "id": 1445,
+  "text": "Then this block,"
+ },
+ {
+  "id": 1446,
+  "text": "this block is actually described by this thing here."
+ },
+ {
+  "id": 1447,
+  "text": "And this block,"
+ },
+ {
+  "id": 1448,
+  "text": "in turn, is described through this position here."
+ },
+ {
+  "id": 1449,
+  "text": "So this information,"
+ },
+ {
+  "id": 1450,
+  "text": "the thing in front here,"
+ },
+ {
+  "id": 1451,
+  "text": "we can think of"
+ },
+ {
+  "id": 1452,
+  "text": "as individual items used internally for management,"
+ },
+ {
+  "id": 1453,
+  "text": "call them descriptors, for example,"
+ },
+ {
+  "id": 1454,
+  "text": "that works too."
+ },
+ {
+  "id": 1455,
+  "text": "So we have this setup."
+ },
+ {
+  "id": 1456,
+  "text": "Now this heap_start,"
+ },
+ {
+  "id": 1457,
+  "text": "we can compute it from this,"
+ },
+ {
+  "id": 1458,
+  "text": "which we already explained to you earlier."
+ },
+ {
+  "id": 1459,
+  "text": "And this allocated_start,"
+ },
+ {
+  "id": 1460,
+  "text": "So we actually compute it in this way."
+ },
+ {
+  "id": 1461,
+  "text": "Now, this part,"
+ },
+ {
+  "id": 1462,
+  "text": "let me briefly go over the code here,"
+ },
+ {
+  "id": 1463,
+  "text": "that is, these 8 page sizes here"
+ },
+ {
+  "id": 1464,
+  "text": "means that"
+ },
+ {
+  "id": 1465,
+  "text": "we use the front part to store management information."
+ },
+ {
+  "id": 1466,
+  "text": "We reserved about 8 page sizes."
+ },
+ {
+  "id": 1467,
+  "text": "One page size is 4K."
+ },
+ {
+  "id": 1468,
+  "text": "So we used this large area here,"
+ },
+ {
+  "id": 1469,
+  "text": "to store this descriptive management information."
+ },
+ {
+  "id": 1470,
+  "text": "And since we can roughly estimate it,"
+ },
+ {
+  "id": 1471,
+  "text": "because we know the whole memory is only 128 megabytes,"
+ },
+ {
+  "id": 1472,
+  "text": "so if we put this much information up front,"
+ },
+ {
+  "id": 1473,
+  "text": "and based on each one of these,"
+ },
+ {
+  "id": 1474,
+  "text": "how much space one entry of management information roughly takes,"
+ },
+ {
+  "id": 1475,
+  "text": "we can actually roughly calculate that"
+ },
+ {
+  "id": 1476,
+  "text": "this space here is sufficient."
+ },
+ {
+  "id": 1477,
+  "text": "So we reserved this much."
+ },
+ {
+  "id": 1478,
+  "text": "Then, starting from this position,"
+ },
+ {
+  "id": 1479,
+  "text": "plus this thing."
+ },
+ {
+  "id": 1480,
+  "text": "Add that, and we get this position"
+ },
+ {
+  "id": 1481,
+  "text": "we get this position"
+ },
+ {
+  "id": 1482,
+  "text": "Now here, we"
+ },
+ {
+  "id": 1483,
+  "text": "at the same time, we also took this position"
+ },
+ {
+  "id": 1484,
+  "text": "and did an alignment operation on it"
+ },
+ {
+  "id": 1485,
+  "text": "Because on a computer,"
+ },
+ {
+  "id": 1486,
+  "text": "if it is aligned to 4K,"
+ },
+ {
+  "id": 1487,
+  "text": "the processing efficiency is higher"
+ },
+ {
+  "id": 1488,
+  "text": "So we did a little bit of alignment first"
+ },
+ {
+  "id": 1489,
+  "text": "to make sure these addresses"
+ },
+ {
+  "id": 1490,
+  "text": "are all four-byte aligned"
+ },
+ {
+  "id": 1491,
+  "text": "So we got this position"
+ },
+ {
+  "id": 1492,
+  "text": "This is related to the code"
+ },
+ {
+  "id": 1493,
+  "text": "Let me briefly explain it to you"
+ },
+ {
+  "id": 1494,
+  "text": "Next,"
+ },
+ {
+  "id": 1495,
+  "text": "we are going to"
+ },
+ {
+  "id": 1496,
+  "text": "look at how to implement"
+ },
+ {
+  "id": 1497,
+  "text": "our final allocation and deallocation"
+ },
+ {
+  "id": 1498,
+  "text": "right?"
+ },
+ {
+  "id": 1499,
+  "text": "Now, when drawing this diagram,"
+ },
+ {
+  "id": 1500,
+  "text": "Because if everyone draws it this way"
+ },
+ {
+  "id": 1501,
+  "text": "it looks rather awkward."
+ },
+ {
+  "id": 1502,
+  "text": "Because as we know, in reality"
+ },
+ {
+  "id": 1503,
+  "text": "there is a correspondence here."
+ },
+ {
+  "id": 1504,
+  "text": "As we just mentioned,"
+ },
+ {
+  "id": 1505,
+  "text": "that is to say, this thing"
+ },
+ {
+  "id": 1506,
+  "text": "this thing actually corresponds to this one here,"
+ },
+ {
+  "id": 1507,
+  "text": "this one."
+ },
+ {
+  "id": 1508,
+  "text": "And then the second one"
+ },
+ {
+  "id": 1509,
+  "text": "corresponds to this one here,"
+ },
+ {
+  "id": 1510,
+  "text": "the column group,"
+ },
+ {
+  "id": 1511,
+  "text": "the index."
+ },
+ {
+  "id": 1512,
+  "text": "So drawn this way, it looks rather awkward."
+ },
+ {
+  "id": 1513,
+  "text": "So later, when we draw our diagrams,"
+ },
+ {
+  "id": 1514,
+  "text": "we'll use a different way of drawing it."
+ },
+ {
+  "id": 1515,
+  "text": "It's just a different way of drawing it."
+ },
+ {
+  "id": 1516,
+  "text": "We'll take that memory in the front"
+ },
+ {
+  "id": 1517,
+  "text": "that's used for management,"
+ },
+ {
+  "id": 1518,
+  "text": "and draw it at the top,"
+ },
+ {
+  "id": 1519,
+  "text": "and put the actual memory at the"
+ },
+ {
+  "id": 1520,
+  "text": "The memory allocation goes down here."
+ },
+ {
+  "id": 1521,
+  "text": "Now, this one,"
+ },
+ {
+  "id": 1522,
+  "text": "it's actually not."
+ },
+ {
+  "id": 1523,
+  "text": "This doesn't mean"
+ },
+ {
+  "id": 1524,
+  "text": "there's a pointer-linked list."
+ },
+ {
+  "id": 1525,
+  "text": "What it actually means is just"
+ },
+ {
+  "id": 1526,
+  "text": "there's a correspondence."
+ },
+ {
+  "id": 1527,
+  "text": "Because we said,"
+ },
+ {
+  "id": 1528,
+  "text": "if we use the array approach,"
+ },
+ {
+  "id": 1529,
+  "text": "we're actually avoiding a linked list."
+ },
+ {
+  "id": 1530,
+  "text": "That is, no pointers at all."
+ },
+ {
+  "id": 1531,
+  "text": "For us, it's really just an"
+ },
+ {
+  "id": 1532,
+  "text": "index-based relationship."
+ },
+ {
+  "id": 1533,
+  "text": "Because its"
+ },
+ {
+  "id": 1534,
+  "text": "this region,"
+ },
+ {
+  "id": 1535,
+  "text": "its index in here is 0,"
+ },
+ {
+  "id": 1536,
+  "text": "and the index of this region is also 0,"
+ },
+ {
+  "id": 1537,
+  "text": "right?"
+ },
+ {
+  "id": 1538,
+  "text": "Through this index,"
+ },
+ {
+  "id": 1539,
+  "text": "it's actually quite easy."
+ },
+ {
+  "id": 1540,
+  "text": "work out the correspondence between them."
+ },
+ {
+  "id": 1541,
+  "text": "So that means,"
+ },
+ {
+  "id": 1542,
+  "text": "there is implicitly a pointer,"
+ },
+ {
+  "id": 1543,
+  "text": "just like it,"
+ },
+ {
+  "id": 1544,
+  "text": "but it does not mean"
+ },
+ {
+  "id": 1545,
+  "text": "there is actually a pointer there."
+ },
+ {
+  "id": 1546,
+  "text": "Let me explain this to you."
+ },
+ {
+  "id": 1547,
+  "text": "We will base ourselves on this kind of diagram"
+ },
+ {
+  "id": 1548,
+  "text": "to introduce to you the allocation and free algorithm below."
+ },
+ {
+  "id": 1549,
+  "text": "So,"
+ },
+ {
+  "id": 1550,
+  "text": "now that we have this concept,"
+ },
+ {
+  "id": 1551,
+  "text": "first of all, we need to design some related important data structures,"
+ },
+ {
+  "id": 1552,
+  "text": "right?"
+ },
+ {
+  "id": 1553,
+  "text": "When we write code,"
+ },
+ {
+  "id": 1554,
+  "text": "we generally design the data structures first."
+ },
+ {
+  "id": 1555,
+  "text": "The functions are actually relatively secondary,"
+ },
+ {
+  "id": 1556,
+  "text": "right?"
+ },
+ {
+  "id": 1557,
+  "text": "As for the data structures,"
+ },
+ {
+  "id": 1558,
+  "text": "it is really about our"
+ },
+ {
+  "id": 1559,
+  "text": "the internal management of this part here"
+ },
+ {
+  "id": 1560,
+  "text": "So how should we design it?"
+ },
+ {
+  "id": 1561,
+  "text": "How do we use it to describe this stuff?"
+ },
+ {
+  "id": 1562,
+  "text": "Now, as for this thing,"
+ },
+ {
+  "id": 1563,
+  "text": "as we all know,"
+ },
+ {
+  "id": 1564,
+  "text": "the first thing we need to express is this:"
+ },
+ {
+  "id": 1565,
+  "text": "we need to mark whether this region is in use or not,"
+ },
+ {
+  "id": 1566,
+  "text": "whether it has been allocated or not."
+ },
+ {
+  "id": 1567,
+  "text": "So therefore,"
+ },
+ {
+  "id": 1568,
+  "text": "we can define a page,"
+ },
+ {
+  "id": 1569,
+  "text": "and note carefully,"
+ },
+ {
+  "id": 1570,
+  "text": "this page is used to describe this information."
+ },
+ {
+  "id": 1571,
+  "text": "This stuff over here is what gets allocated to the user for storing data."
+ },
+ {
+  "id": 1572,
+  "text": "So this page doesn't refer to this thing."
+ },
+ {
+  "id": 1573,
+  "text": "It actually refers to this thing."
+ },
+ {
+  "id": 1574,
+  "text": "It's this thing."
+ },
+ {
+  "id": 1575,
+  "text": "So inside this page,"
+ },
+ {
+  "id": 1576,
+  "text": "we can define a flag."
+ },
+ {
+  "id": 1577,
+  "text": "For this flag,"
+ },
+ {
+  "id": 1578,
+  "text": "for now we only"
+ },
+ {
+  "id": 1579,
+  "text": "since we only need to indicate"
+ },
+ {
+  "id": 1580,
+  "text": "Whether it's allocated or not allocated"
+ },
+ {
+  "id": 1581,
+  "text": "So we can use one of the bits in here"
+ },
+ {
+  "id": 1582,
+  "text": "To save a bit of space"
+ },
+ {
+  "id": 1583,
+  "text": "Use one bit to represent it"
+ },
+ {
+  "id": 1584,
+  "text": "If it's 0, that means"
+ },
+ {
+  "id": 1585,
+  "text": "This represents its first bit"
+ },
+ {
+  "id": 1586,
+  "text": "The first bit"
+ },
+ {
+  "id": 1587,
+  "text": "That is, bit zero"
+ },
+ {
+  "id": 1588,
+  "text": "That is its bit zero"
+ },
+ {
+  "id": 1589,
+  "text": "Used to indicate whether it's allocated or not allocated"
+ },
+ {
+  "id": 1590,
+  "text": "But we say that this is actually not enough"
+ },
+ {
+  "id": 1591,
+  "text": "Why is that?"
+ },
+ {
+  "id": 1592,
+  "text": "Because sometimes, as we said,"
+ },
+ {
+  "id": 1593,
+  "text": "a region may be contiguous,"
+ },
+ {
+  "id": 1594,
+  "text": "and we need to represent whether it is or not."
+ },
+ {
+  "id": 1595,
+  "text": "We said it might be allocated as"
+ },
+ {
+  "id": 1596,
+  "text": "a contiguous block of multiple allocations,"
+ },
+ {
+  "id": 1597,
+  "text": "so how do we represent"
+ },
+ {
+  "id": 1598,
+  "text": "a contiguous allocation?"
+ },
+ {
+  "id": 1599,
+  "text": "We can actually use one more bit to represent that."
+ },
+ {
+  "id": 1600,
+  "text": "This diagram might not be drawn very well."
+ },
+ {
+  "id": 1601,
+  "text": "But just imagine it."
+ },
+ {
+  "id": 1602,
+  "text": "Suppose this one is also red."
+ },
+ {
+  "id": 1603,
+  "text": "Then this whole region might be allocated to the user as a single unit."
+ },
+ {
+  "id": 1604,
+  "text": "So besides marking it here,"
+ },
+ {
+  "id": 1605,
+  "text": "to show that it is in use,"
+ },
+ {
+  "id": 1606,
+  "text": "red meaning it has already been allocated,"
+ },
+ {
+  "id": 1607,
+  "text": "we usually need to mark it out,"
+ },
+ {
+  "id": 1608,
+  "text": "because the address 70 that we allocated to the user is right here,"
+ },
+ {
+  "id": 1609,
+  "text": "right?"
+ },
+ {
+  "id": 1610,
+  "text": "Address 70 is right here."
+ },
+ {
+  "id": 1611,
+  "text": "So how do we indicate that this entire region is one whole block?"
+ },
+ {
+  "id": 1612,
+  "text": "Then we probably need to mark it here,"
+ },
+ {
+  "id": 1613,
+  "text": "that this thing is its last block,"
+ },
+ {
+  "id": 1614,
+  "text": "right?"
+ },
+ {
+  "id": 1615,
+  "text": "It's the last block."
+ },
+ {
+  "id": 1616,
+  "text": "So since we need to represent this information,"
+ },
+ {
+  "id": 1617,
+  "text": "we need to use another bit of this flag to indicate"
+ },
+ {
+  "id": 1618,
+  "text": "whether the current descriptor"
+ },
+ {
+  "id": 1619,
+  "text": "is the last block of information for the whole region."
+ },
+ {
+  "id": 1620,
+  "text": "So, with that,"
+ },
+ {
+  "id": 1621,
+  "text": "we've basically designed the structure to look like this."
+ },
+ {
+  "id": 1622,
+  "text": "This part is fairly simple,"
+ },
+ {
+  "id": 1623,
+  "text": "so we'll go through it a bit faster."
+ },
+ {
+  "id": 1624,
+  "text": "Mainly, you can go back and read the code yourselves."
+ },
+ {
+  "id": 1625,
+  "text": "Now that we have this information,"
+ },
+ {
+  "id": 1626,
+  "text": "it comes down to the actual implementation."
+ },
+ {
+  "id": 1627,
+  "text": "For example, let's say we want to implement"
+ },
+ {
+  "id": 1628,
+  "text": "this allocate function."
+ },
+ {
+  "id": 1629,
+  "text": "The parameter it takes"
+ },
+ {
+  "id": 1630,
+  "text": "is the number of pages to allocate,"
+ },
+ {
+  "id": 1631,
+  "text": "the number of contiguous pages."
+ },
+ {
+  "id": 1632,
+  "text": "So let's assume that here"
+ },
+ {
+  "id": 1633,
+  "text": "we pass in 2."
+ },
+ {
+  "id": 1634,
+  "text": "Now, if you look at this diagram, it basically means that"
+ },
+ {
+  "id": 1635,
+  "text": "what we're really doing is"
+ },
+ {
+  "id": 1636,
+  "text": "looking for a usable region."
+ },
+ {
+  "id": 1637,
+  "text": "The red color indicates what's already been used up,"
+ },
+ {
+  "id": 1638,
+  "text": "so what's available is"
+ },
+ {
+  "id": 1639,
+  "text": "these blue parts."
+ },
+ {
+  "id": 1640,
+  "text": "So here, actually,"
+ },
+ {
+  "id": 1641,
+  "text": "this block is the part we can use."
+ },
+ {
+  "id": 1642,
+  "text": "Because here,"
+ },
+ {
+  "id": 1643,
+  "text": "there are two consecutive blue parts,"
+ },
+ {
+  "id": 1644,
+  "text": "right?"
+ },
+ {
+  "id": 1645,
+  "text": "So let's see,"
+ },
+ {
+  "id": 1646,
+  "text": "how do we find this region"
+ },
+ {
+  "id": 1647,
+  "text": "and bring it out?"
+ },
+ {
+  "id": 1648,
+  "text": "Well, it's actually quite simple."
+ },
+ {
+  "id": 1649,
+  "text": "Once we have this,"
+ },
+ {
+  "id": 1650,
+  "text": "after we have the start information and the locate start information,"
+ },
+ {
+  "id": 1651,
+  "text": "we can actually,"
+ },
+ {
+  "id": 1652,
+  "text": "and once we've defined"
+ },
+ {
+  "id": 1653,
+  "text": "this data structure,"
+ },
+ {
+  "id": 1654,
+  "text": "we can"
+ },
+ {
+  "id": 1655,
+  "text": "first set a pointer starting from this start,"
+ },
+ {
+  "id": 1656,
+  "text": "and then search backwards from there,"
+ },
+ {
+  "id": 1657,
+  "text": "looking backwards."
+ },
+ {
+  "id": 1658,
+  "text": "So we search,"
+ },
+ {
+  "id": 1659,
+  "text": "search for what?"
+ },
+ {
+  "id": 1660,
+  "text": "So we go find its"
+ },
+ {
+  "id": 1661,
+  "text": "basically in the management structure at the front,"
+ },
+ {
+  "id": 1662,
+  "text": "within this chunk of managed memory"
+ },
+ {
+  "id": 1663,
+  "text": "we go look for the parts that are blue."
+ },
+ {
+  "id": 1664,
+  "text": "In practice, it's really a check"
+ },
+ {
+  "id": 1665,
+  "text": "of whether the corresponding 'taken' bit"
+ },
+ {
+  "id": 1666,
+  "text": "is 0."
+ },
+ {
+  "id": 1667,
+  "text": "And once we find it,"
+ },
+ {
+  "id": 1668,
+  "text": "once we find the first available spot,"
+ },
+ {
+  "id": 1669,
+  "text": "we effectively get"
+ },
+ {
+  "id": 1670,
+  "text": "its actual starting position."
+ },
+ {
+  "id": 1671,
+  "text": "But at this point we can't be completely sure yet,"
+ },
+ {
+  "id": 1672,
+  "text": "because as everyone knows,"
+ },
+ {
+  "id": 1673,
+  "text": "it could be like this situation,"
+ },
+ {
+  "id": 1674,
+  "text": "where just one is not enough, right?"
+ },
+ {
+  "id": 1675,
+  "text": "So we need to use another pointer"
+ },
+ {
+  "id": 1676,
+  "text": "to check the part after it,"
+ },
+ {
+  "id": 1677,
+  "text": "whether it's still, consecutively, still blue."
+ },
+ {
+  "id": 1678,
+  "text": "So in this case,"
+ },
+ {
+  "id": 1679,
+  "text": "this way"
+ },
+ {
+  "id": 1680,
+  "text": "Only then can we finalize it."
+ },
+ {
+  "id": 1681,
+  "text": "This region then returns the pointer."
+ },
+ {
+  "id": 1682,
+  "text": "So once it's returned,"
+ },
+ {
+  "id": 1683,
+  "text": "it essentially means that"
+ },
+ {
+  "id": 1684,
+  "text": "this chunk of memory is fixed."
+ },
+ {
+  "id": 1685,
+  "text": "We hand it to the user,"
+ },
+ {
+  "id": 1686,
+  "text": "and the user can start using it."
+ },
+ {
+  "id": 1687,
+  "text": "This is allocation."
+ },
+ {
+  "id": 1688,
+  "text": "This part is quite simple."
+ },
+ {
+  "id": 1689,
+  "text": "Deallocation works in a similar way."
+ },
+ {
+  "id": 1690,
+  "text": "So if we want to take a"
+ },
+ {
+  "id": 1691,
+  "text": "take a pointer,"
+ },
+ {
+  "id": 1692,
+  "text": "and then free it,"
+ },
+ {
+  "id": 1693,
+  "text": "what we actually do is,"
+ },
+ {
+  "id": 1694,
+  "text": "combined with the structure we saw earlier,"
+ },
+ {
+  "id": 1695,
+  "text": "we have to start from this"
+ },
+ {
+  "id": 1696,
+  "text": "because we can calculate it,"
+ },
+ {
+  "id": 1697,
+  "text": "based on this position,"
+ },
+ {
+  "id": 1698,
+  "text": "we can actually figure out this position,"
+ },
+ {
+  "id": 1699,
+  "text": "right?"
+ },
+ {
+  "id": 1700,
+  "text": "Think about this position."
+ },
+ {
+  "id": 1701,
+  "text": "After we get this address,"
+ },
+ {
+  "id": 1702,
+  "text": "why can we compute this position?"
+ },
+ {
+  "id": 1703,
+  "text": "Because we can compute this offset,"
+ },
+ {
+  "id": 1704,
+  "text": "and then based on each of its configuration sizes being 4K,"
+ },
+ {
+  "id": 1705,
+  "text": "we can work out that its interval is 3."
+ },
+ {
+  "id": 1706,
+  "text": "So this 3 is the index."
+ },
+ {
+  "id": 1707,
+  "text": "And then this 3, based on this mechanism,"
+ },
+ {
+  "id": 1708,
+  "text": "we can compute this position."
+ },
+ {
+  "id": 1709,
+  "text": "Right?"
+ },
+ {
+  "id": 1710,
+  "text": "Once we have this position, it's easy."
+ },
+ {
+  "id": 1711,
+  "text": "It's essentially just saying,"
+ },
+ {
+  "id": 1712,
+  "text": "we won't do a live demo of this for you."
+ },
+ {
+  "id": 1713,
+  "text": "You can look at the code yourself."
+ },
+ {
+  "id": 1714,
+  "text": "It's about releasing."
+ },
+ {
+  "id": 1715,
+  "text": "Releasing is essentially just saying,"
+ },
+ {
+  "id": 1716,
+  "text": "you have to look backwards,"
+ },
+ {
+  "id": 1717,
+  "text": "find each of its contiguous blocks,"
+ },
+ {
+  "id": 1718,
+  "text": "and keep going until you reach the last one here."
+ },
+ {
+  "id": 1719,
+  "text": "You find it through this last flag."
+ },
+ {
+  "id": 1720,
+  "text": "until you find the part that is not a single blue color"
+ },
+ {
+  "id": 1721,
+  "text": "then turn each of them back into blue"
+ },
+ {
+  "id": 1722,
+  "text": "and just release it"
+ },
+ {
+  "id": 1723,
+  "text": "so, everyone"
+ },
+ {
+  "id": 1724,
+  "text": "we'll leave this function for you to look at on your own"
+ },
+ {
+  "id": 1725,
+  "text": "so as for this, basically"
+ },
+ {
+  "id": 1726,
+  "text": "page allocation"
+ },
+ {
+  "id": 1727,
+  "text": "that's all we'll cover for now"
+ },
+ {
+  "id": 1728,
+  "text": "so as for memory management"
+ },
+ {
+  "id": 1729,
+  "text": "on RISC-V there are actually"
+ },
+ {
+  "id": 1730,
+  "text": "some more complex operations"
+ },
+ {
+  "id": 1731,
+  "text": "for example, memory protection"
+ },
+ {
+  "id": 1732,
+  "text": "and virtual memory"
+ },
+ {
+  "id": 1733,
+  "text": "as for memory protection"
+ },
+ {
+  "id": 1734,
+  "text": "it essentially means we can set"
+ },
+ {
+  "id": 1735,
+  "text": "for our memory region"
+ },
+ {
+  "id": 1736,
+  "text": "we can configure separately"
+ },
+ {
+  "id": 1737,
+  "text": "whether it is readable or writable"
+ },
+ {
+  "id": 1738,
+  "text": "these attributes"
+ },
+ {
+  "id": 1739,
+  "text": "because we know that when we"
+ },
+ {
+  "id": 1740,
+  "text": "in a section to describe it as readable and writable,"
+ },
+ {
+  "id": 1741,
+  "text": "that doesn't actually give you real read/write control over memory."
+ },
+ {
+  "id": 1742,
+  "text": "The real control actually has to happen at the physical level."
+ },
+ {
+  "id": 1743,
+  "text": "So we actually need this,"
+ },
+ {
+  "id": 1744,
+  "text": "but this feature requires support from the underlying hardware."
+ },
+ {
+  "id": 1745,
+  "text": "That is, the question is whether this CPU"
+ },
+ {
+  "id": 1746,
+  "text": "supports this kind of PNP memory protection mechanism."
+ },
+ {
+  "id": 1747,
+  "text": "And by using this mechanism,"
+ },
+ {
+  "id": 1748,
+  "text": "we can actually achieve the effect of"
+ },
+ {
+  "id": 1749,
+  "text": "controlling the read/write attributes,"
+ },
+ {
+  "id": 1750,
+  "text": "and the executable attributes of a specified region."
+ },
+ {
+  "id": 1751,
+  "text": "We won't cover this part in the course material."
+ },
+ {
+  "id": 1752,
+  "text": "If you're interested, you can look at"
+ },
+ {
+  "id": 1753,
+  "text": "sections 3.5 and 3.6 of the RISC-V privileged instructions manual."
+ },
+ {
+  "id": 1754,
+  "text": "Another very important topic is virtual memory."
+ },
+ {
+  "id": 1755,
+  "text": "As for virtual memory,"
+ },
+ {
+  "id": 1756,
+  "text": "since time is limited in this course,"
+ },
+ {
+  "id": 1757,
+  "text": "we didn't implement the virtual memory part."
+ },
+ {
+  "id": 1758,
+  "text": "So we won't cover it in the course material either."
+ },
+ {
+  "id": 1759,
+  "text": "If you're interested,"
+ },
+ {
+  "id": 1760,
+  "text": "You can take a look at that."
+ },
+ {
+  "id": 1761,
+  "text": "Sections 4.3, 4.4 to 4.5 on privileged instructions."
+ },
+ {
+  "id": 1762,
+  "text": "Because once you introduce virtual memory,"
+ },
+ {
+  "id": 1763,
+  "text": "you can actually implement more complex things,"
+ },
+ {
+  "id": 1764,
+  "text": "such as the concept of a process."
+ },
+ {
+  "id": 1765,
+  "text": "But for this small"
+ },
+ {
+  "id": 1766,
+  "text": "operating system of ours,"
+ },
+ {
+  "id": 1767,
+  "text": "as I mentioned to you earlier,"
+ },
+ {
+  "id": 1768,
+  "text": "we only implement up to the RTOS level."
+ },
+ {
+  "id": 1769,
+  "text": "Just be aware of that."
+ },
+ {
+  "id": 1770,
+  "text": "So that's all for memory"
+ },
+ {
+  "id": 1771,
+  "text": "management for now."
+ },
+ {
+  "id": 1772,
+  "text": "After class,"
+ },
+ {
+  "id": 1773,
+  "text": "you can work on 8.1."
+ },
+ {
+  "id": 1774,
+  "text": "That is, on top of the"
+ },
+ {
+  "id": 1775,
+  "text": "configuration we have,"
+ },
+ {
+  "id": 1776,
+  "text": "we can implement one with a finer granularity."
+ },
+ {
+  "id": 1777,
+  "text": "Implement one yourselves,"
+ },
+ {
+  "id": 1778,
+  "text": "that malloc and free,"
+ },
+ {
+  "id": 1779,
+  "text": "with your own granularity."
+ },
+ {
+  "id": 1780,
+  "text": "to handle memory allocation and management"
+ },
+ {
+  "id": 1781,
+  "text": "I think this one"
+ },
+ {
+  "id": 1782,
+  "text": "doesn't really involve much"
+ },
+ {
+  "id": 1783,
+  "text": "of the actual low-level architecture"
+ },
+ {
+  "id": 1784,
+  "text": "knowledge of the architecture"
+ },
+ {
+  "id": 1785,
+  "text": "they can just do it themselves through"
+ },
+ {
+  "id": 1786,
+  "text": "purely software approaches"
+ },
+ {
+  "id": 1787,
+  "text": "so I won't go into that here"
+ }
+]

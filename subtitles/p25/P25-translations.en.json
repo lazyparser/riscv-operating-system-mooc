@@ -1,0 +1,3774 @@
+[
+ {
+  "id": 0,
+  "text": "Next, we will introduce Chapter 15. The topic of Chapter 15 is software timers. This chapter is relatively short and is mainly divided into three parts. The first part introduces the classification of software timers. The second part introduces the design and implementation of software timers,"
+ },
+ {
+  "id": 1,
+  "text": "and the third part introduces"
+ },
+ {
+  "id": 2,
+  "text": "that is, when it comes to software timers,"
+ },
+ {
+  "id": 3,
+  "text": "there are some optimization scenarios"
+ },
+ {
+  "id": 4,
+  "text": "Let's first look at the first part: classification."
+ },
+ {
+  "id": 5,
+  "text": "So, timers,"
+ },
+ {
+  "id": 6,
+  "text": "in our previous chapters"
+ },
+ {
+  "id": 7,
+  "text": "have actually been introduced to you already."
+ },
+ {
+  "id": 8,
+  "text": "There are hardware timers"
+ },
+ {
+  "id": 9,
+  "text": "and software timers."
+ },
+ {
+  "id": 10,
+  "text": "In one of our earlier chapters,"
+ },
+ {
+  "id": 11,
+  "text": "we actually talked about hardware timers."
+ },
+ {
+  "id": 12,
+  "text": "In Chapter 12,"
+ },
+ {
+  "id": 13,
+  "text": "as for hardware timers,"
+ },
+ {
+  "id": 14,
+  "text": "from our earlier study,"
+ },
+ {
+  "id": 15,
+  "text": "we know that for hardware timers,"
+ },
+ {
+  "id": 16,
+  "text": "their advantage,"
+ },
+ {
+  "id": 17,
+  "text": "which was also mentioned here,"
+ },
+ {
+  "id": 18,
+  "text": "is that because they directly use"
+ },
+ {
+  "id": 19,
+  "text": "an external interrupt to send notifications"
+ },
+ {
+  "id": 20,
+  "text": "So the advantage is high precision"
+ },
+ {
+  "id": 21,
+  "text": "Right"
+ },
+ {
+  "id": 22,
+  "text": "For example, that external timer of yours"
+ },
+ {
+  "id": 23,
+  "text": "If you set its precision to 10 nanoseconds"
+ },
+ {
+  "id": 24,
+  "text": "Then when you actually run it"
+ },
+ {
+  "id": 25,
+  "text": "It can guarantee that at 10 nanoseconds"
+ },
+ {
+  "id": 26,
+  "text": "At that fixed frequency"
+ },
+ {
+  "id": 27,
+  "text": "It can deliver interrupts to you"
+ },
+ {
+  "id": 28,
+  "text": "So we can actually use those 10 nanoseconds as our precision"
+ },
+ {
+  "id": 29,
+  "text": "To carry out some logical control"
+ },
+ {
+  "id": 30,
+  "text": "However,"
+ },
+ {
+  "id": 31,
+  "text": "Its drawback"
+ },
+ {
+  "id": 32,
+  "text": "Is of course also quite obvious"
+ },
+ {
+  "id": 33,
+  "text": "Which is that up there there's only this one"
+ },
+ {
+  "id": 34,
+  "text": "Right"
+ },
+ {
+  "id": 35,
+  "text": "A limited number"
+ },
+ {
+  "id": 36,
+  "text": "You can't just have as many as you want"
+ },
+ {
+  "id": 37,
+  "text": "Logically speaking, if"
+ },
+ {
+  "id": 38,
+  "text": "When we normally develop applications at the upper level"
+ },
+ {
+  "id": 39,
+  "text": "It's possible that if"
+ },
+ {
+  "id": 40,
+  "text": "When it comes to creating timers,"
+ },
+ {
+  "id": 41,
+  "text": "I don't know if any of you have written this kind of program,"
+ },
+ {
+  "id": 42,
+  "text": "meaning you might create them multiple times,"
+ },
+ {
+  "id": 43,
+  "text": "or you run a lot of timers."
+ },
+ {
+  "id": 44,
+  "text": "Now, if the hardware can only handle one,"
+ },
+ {
+  "id": 45,
+  "text": "and you rely entirely on the hardware timer to do the timing,"
+ },
+ {
+  "id": 46,
+  "text": "then that's simply impossible."
+ },
+ {
+  "id": 47,
+  "text": "So,"
+ },
+ {
+  "id": 48,
+  "text": "on top of the hardware timer, we need to,"
+ },
+ {
+  "id": 49,
+  "text": "essentially,"
+ },
+ {
+  "id": 50,
+  "text": "inside the operating system,"
+ },
+ {
+  "id": 51,
+  "text": "offer you a richer set of timer services,"
+ },
+ {
+  "id": 52,
+  "text": "implemented in software."
+ },
+ {
+  "id": 53,
+  "text": "And that is what we're going to introduce today:"
+ },
+ {
+  "id": 54,
+  "text": "the software timer."
+ },
+ {
+  "id": 55,
+  "text": "Now, the software timer,"
+ },
+ {
+  "id": 56,
+  "text": "as we say, it is based on,"
+ },
+ {
+  "id": 57,
+  "text": "it is actually built on the capabilities provided by the hardware timer,"
+ },
+ {
+  "id": 58,
+  "text": "wrapped up and layered on top of it,"
+ },
+ {
+  "id": 59,
+  "text": "to produce the final result."
+ },
+ {
+  "id": 60,
+  "text": "It extends the limits of this hardware timer."
+ },
+ {
+  "id": 61,
+  "text": "It can"
+ },
+ {
+  "id": 62,
+  "text": "That is to say, since it's implemented in software,"
+ },
+ {
+  "id": 63,
+  "text": "think about it — isn't it true that"
+ },
+ {
+  "id": 64,
+  "text": "then, that is to say, as long as our"
+ },
+ {
+  "id": 65,
+  "text": "in other words,"
+ },
+ {
+  "id": 66,
+  "text": "you can implement as many as you want,"
+ },
+ {
+  "id": 67,
+  "text": "as long as your code"
+ },
+ {
+  "id": 68,
+  "text": "this memory or whatever"
+ },
+ {
+  "id": 69,
+  "text": "there's no such limit,"
+ },
+ {
+  "id": 70,
+  "text": "then we can provide more timers."
+ },
+ {
+  "id": 71,
+  "text": "But the downside is that it's relatively low,"
+ },
+ {
+  "id": 72,
+  "text": "because we know"
+ },
+ {
+  "id": 73,
+  "text": "underneath it's still built on the precision of the hardware timer."
+ },
+ {
+  "id": 74,
+  "text": "So your precision cannot exceed that of the hardware timer."
+ },
+ {
+  "id": 75,
+  "text": "And on top of that, once you stack some software implementation on it,"
+ },
+ {
+  "id": 76,
+  "text": "its precision will in practice generally be lower than"
+ },
+ {
+  "id": 77,
+  "text": "the precision of the hardware timer."
+ },
+ {
+  "id": 78,
+  "text": "But,"
+ },
+ {
+  "id": 79,
+  "text": "and moreover,"
+ },
+ {
+  "id": 80,
+  "text": "As for its precision,"
+ },
+ {
+  "id": 81,
+  "text": "because this concept of TIC"
+ },
+ {
+  "id": 82,
+  "text": "we already covered when we talked about the hardware timer,"
+ },
+ {
+  "id": 83,
+  "text": "right?"
+ },
+ {
+  "id": 84,
+  "text": "So, when it comes to this,"
+ },
+ {
+  "id": 85,
+  "text": "its precision,"
+ },
+ {
+  "id": 86,
+  "text": "in general, is also an integer multiple of TIC,"
+ },
+ {
+  "id": 87,
+  "text": "since underneath, it works in units of TIC"
+ },
+ {
+  "id": 88,
+  "text": "the hardware timer triggers in units of TIC."
+ },
+ {
+  "id": 89,
+  "text": "So it's triggered in those units."
+ },
+ {
+  "id": 90,
+  "text": "So on the layer above,"
+ },
+ {
+  "id": 91,
+  "text": "in general, its precision can only be an integer multiple of TIC."
+ },
+ {
+  "id": 92,
+  "text": "That was the broad classification of timers we just mentioned."
+ },
+ {
+  "id": 93,
+  "text": "Now let's focus on software timers."
+ },
+ {
+  "id": 94,
+  "text": "As for software timers,"
+ },
+ {
+  "id": 95,
+  "text": "in theory,"
+ },
+ {
+  "id": 96,
+  "text": "we can divide them into several types."
+ },
+ {
+  "id": 97,
+  "text": "First, if we go by how the timer is set,"
+ },
+ {
+  "id": 98,
+  "text": "we have two types."
+ },
+ {
+  "id": 99,
+  "text": "One is called one-shot"
+ },
+ {
+  "id": 100,
+  "text": "One is called periodic"
+ },
+ {
+  "id": 101,
+  "text": "What do we mean by one-shot?"
+ },
+ {
+  "id": 102,
+  "text": "Well, it's basically like saying"
+ },
+ {
+  "id": 103,
+  "text": "the timer interrupt we set up earlier"
+ },
+ {
+  "id": 104,
+  "text": "is essentially one-shot in nature"
+ },
+ {
+  "id": 105,
+  "text": "Meaning, every time the timer fires"
+ },
+ {
+  "id": 106,
+  "text": "that timer naturally becomes invalid"
+ },
+ {
+  "id": 107,
+  "text": "Right?"
+ },
+ {
+  "id": 108,
+  "text": "If you still want to achieve"
+ },
+ {
+  "id": 109,
+  "text": "the periodic behavior I'll talk about later"
+ },
+ {
+  "id": 110,
+  "text": "then when we implemented this periodic triggering earlier"
+ },
+ {
+  "id": 111,
+  "text": "actually, every time the timer fired"
+ },
+ {
+  "id": 112,
+  "text": "we had to set it up again"
+ },
+ {
+  "id": 113,
+  "text": "Right?"
+ },
+ {
+  "id": 114,
+  "text": "Only by setting it up again"
+ },
+ {
+  "id": 115,
+  "text": "does it basically trigger once more"
+ },
+ {
+  "id": 116,
+  "text": "So since each time is really still one-shot"
+ },
+ {
+  "id": 117,
+  "text": "and the idea of periodic means that"
+ },
+ {
+  "id": 118,
+  "text": "it's basically like saying"
+ },
+ {
+  "id": 119,
+  "text": "you only need to set it up once"
+ },
+ {
+  "id": 120,
+  "text": "After that, it will keep triggering automatically."
+ },
+ {
+  "id": 121,
+  "text": "That is the effect we want to achieve."
+ },
+ {
+  "id": 122,
+  "text": "This is called periodic."
+ },
+ {
+  "id": 123,
+  "text": "Now, with this kind of periodic behavior,"
+ },
+ {
+  "id": 124,
+  "text": "usually we can only wrap it up through software."
+ },
+ {
+  "id": 125,
+  "text": "So a hardware timer,"
+ },
+ {
+  "id": 126,
+  "text": "in fact, can only be one-shot."
+ },
+ {
+  "id": 127,
+  "text": "But with a software timer,"
+ },
+ {
+  "id": 128,
+  "text": "we can wrap it up to be periodic."
+ },
+ {
+  "id": 129,
+  "text": "In other words, you only need to create it once,"
+ },
+ {
+  "id": 130,
+  "text": "and from then on it keeps firing periodically, infinitely."
+ },
+ {
+  "id": 131,
+  "text": "Unless you explicitly stop it,"
+ },
+ {
+  "id": 132,
+  "text": "this is periodic firing."
+ },
+ {
+  "id": 133,
+  "text": "Now, if it follows this execution model,"
+ },
+ {
+  "id": 134,
+  "text": "that is, when the timer expires,"
+ },
+ {
+  "id": 135,
+  "text": "we know it must go and execute a timer handler function,"
+ },
+ {
+  "id": 136,
+  "text": "a response handler function."
+ },
+ {
+  "id": 137,
+  "text": "Now, this handler function,"
+ },
+ {
+  "id": 138,
+  "text": "the context and environment in which it executes may vary."
+ },
+ {
+  "id": 139,
+  "text": "And depending on the different execution contexts and environments,"
+ },
+ {
+  "id": 140,
+  "text": "We divide them into two kinds."
+ },
+ {
+  "id": 141,
+  "text": "One kind is"
+ },
+ {
+  "id": 142,
+  "text": "it executes in the interrupt context environment."
+ },
+ {
+  "id": 143,
+  "text": "And the other kind"
+ },
+ {
+  "id": 144,
+  "text": "executes in the task context environment."
+ },
+ {
+  "id": 145,
+  "text": "Now, what does it mean to execute in the interrupt context environment?"
+ },
+ {
+  "id": 146,
+  "text": "Take our earlier hardware timer example,"
+ },
+ {
+  "id": 147,
+  "text": "which is definitely executing in"
+ },
+ {
+  "id": 148,
+  "text": "the hardware context—"
+ },
+ {
+  "id": 149,
+  "text": "that is, the interrupt context environment."
+ },
+ {
+  "id": 150,
+  "text": "So if it executes in"
+ },
+ {
+  "id": 151,
+  "text": "the interrupt context environment,"
+ },
+ {
+  "id": 152,
+  "text": "then this kind"
+ },
+ {
+  "id": 153,
+  "text": "is somewhat similar to the previous spinlock"
+ },
+ {
+  "id": 154,
+  "text": "in terms of its effect,"
+ },
+ {
+  "id": 155,
+  "text": "maybe a bit alike."
+ },
+ {
+  "id": 156,
+  "text": "That is to say, it's the same,"
+ },
+ {
+  "id": 157,
+  "text": "because it runs in the interrupt,"
+ },
+ {
+  "id": 158,
+  "text": "so when it executes,"
+ },
+ {
+  "id": 159,
+  "text": "the execution process"
+ },
+ {
+  "id": 160,
+  "text": "It has to be as short as possible."
+ },
+ {
+  "id": 161,
+  "text": "It can't be too long."
+ },
+ {
+  "id": 162,
+  "text": "Otherwise, it will cause the"
+ },
+ {
+  "id": 163,
+  "text": "response of the overall system"
+ },
+ {
+  "id": 164,
+  "text": "to slow down."
+ },
+ {
+  "id": 165,
+  "text": "But the right side,"
+ },
+ {
+  "id": 166,
+  "text": "is also quite clear."
+ },
+ {
+  "id": 167,
+  "text": "That is, it definitely"
+ },
+ {
+  "id": 168,
+  "text": "responds quite quickly,"
+ },
+ {
+  "id": 169,
+  "text": "right?"
+ },
+ {
+  "id": 170,
+  "text": "The real-time responsiveness is relatively high."
+ },
+ {
+  "id": 171,
+  "text": "So this,"
+ },
+ {
+  "id": 172,
+  "text": "if it is"
+ },
+ {
+  "id": 173,
+  "text": "so-called"
+ },
+ {
+  "id": 174,
+  "text": "running in a foreground environment,"
+ },
+ {
+  "id": 175,
+  "text": "actually that means"
+ },
+ {
+  "id": 176,
+  "text": "because essentially"
+ },
+ {
+  "id": 177,
+  "text": "this timer mechanism"
+ },
+ {
+  "id": 178,
+  "text": "is all triggered through interrupts."
+ },
+ {
+  "id": 179,
+  "text": "It's just that"
+ },
+ {
+  "id": 180,
+  "text": "If you want to"
+ },
+ {
+  "id": 181,
+  "text": "for example, if you have a handler"
+ },
+ {
+  "id": 182,
+  "text": "that takes a relatively long time"
+ },
+ {
+  "id": 183,
+  "text": "and might"
+ },
+ {
+  "id": 184,
+  "text": "even go to sleep"
+ },
+ {
+  "id": 185,
+  "text": "then how do you achieve this kind of"
+ },
+ {
+  "id": 186,
+  "text": "this kind of effect?"
+ },
+ {
+  "id": 187,
+  "text": "Actually, the only way"
+ },
+ {
+  "id": 188,
+  "text": "is that inside the interrupt handler"
+ },
+ {
+  "id": 189,
+  "text": "you spawn a new task"
+ },
+ {
+  "id": 190,
+  "text": "or make use of an existing task"
+ },
+ {
+  "id": 191,
+  "text": "and use that task to carry out your actual logic"
+ },
+ {
+  "id": 192,
+  "text": "So as far as this interrupt is concerned,"
+ },
+ {
+  "id": 193,
+  "text": "it itself still executes quickly and returns"
+ },
+ {
+  "id": 194,
+  "text": "but because your actual work"
+ },
+ {
+  "id": 195,
+  "text": "is deferred to a task's context,"
+ },
+ {
+  "id": 196,
+  "text": "implemented in a task's context,"
+ },
+ {
+  "id": 197,
+  "text": "then in this situation,"
+ },
+ {
+  "id": 198,
+  "text": "we consider this kind of timer handling"
+ },
+ {
+  "id": 199,
+  "text": "to be a task-context processing environment"
+ },
+ {
+  "id": 200,
+  "text": "So its advantage is that"
+ },
+ {
+  "id": 201,
+  "text": "because it is implemented inside a task,"
+ },
+ {
+  "id": 202,
+  "text": "the task can be suspended"
+ },
+ {
+  "id": 203,
+  "text": "or put to sleep."
+ },
+ {
+  "id": 204,
+  "text": "But the real-time responsiveness is definitely a bit worse,"
+ },
+ {
+  "id": 205,
+  "text": "because the code execution inside the task"
+ },
+ {
+  "id": 206,
+  "text": "depends on when the task gets scheduled."
+ },
+ {
+  "id": 207,
+  "text": "And scheduling time doesn't mean that"
+ },
+ {
+  "id": 208,
+  "text": "once your timer expires,"
+ },
+ {
+  "id": 209,
+  "text": "you will definitely be scheduled."
+ },
+ {
+  "id": 210,
+  "text": "It might only get scheduled under other conditions."
+ },
+ {
+  "id": 211,
+  "text": "So its real-time response"
+ },
+ {
+  "id": 212,
+  "text": "might be relatively a bit worse."
+ },
+ {
+  "id": 213,
+  "text": "So for everyone today,"
+ },
+ {
+  "id": 214,
+  "text": "in today's class we implement the timer,"
+ },
+ {
+  "id": 215,
+  "text": "relatively speaking, not making it that complex."
+ },
+ {
+  "id": 216,
+  "text": "Actually, the main focus is to introduce the one-shot timer,"
+ },
+ {
+  "id": 217,
+  "text": "and the function we execute"
+ },
+ {
+  "id": 218,
+  "text": "is also implemented in the interrupt context,"
+ },
+ {
+  "id": 219,
+  "text": "which is relatively simpler."
+ },
+ {
+  "id": 220,
+  "text": "Alright, so now let's look at this class,"
+ },
+ {
+  "id": 221,
+  "text": "where we implement a software timer ourselves, and some of the considerations involved."
+ },
+ {
+  "id": 222,
+  "text": "So first of all, as a piece of software,"
+ },
+ {
+  "id": 223,
+  "text": "when we build this software timer,"
+ },
+ {
+  "id": 224,
+  "text": "it's really just about"
+ },
+ {
+  "id": 225,
+  "text": "as I just said,"
+ },
+ {
+  "id": 226,
+  "text": "it's really just about providing a better,"
+ },
+ {
+  "id": 227,
+  "text": "for the application layer,"
+ },
+ {
+  "id": 228,
+  "text": "providing a better service,"
+ },
+ {
+  "id": 229,
+  "text": "right?"
+ },
+ {
+  "id": 230,
+  "text": "So externally,"
+ },
+ {
+  "id": 231,
+  "text": "the interface we provide,"
+ },
+ {
+  "id": 232,
+  "text": "we need to nail that down first."
+ },
+ {
+  "id": 233,
+  "text": "And this interface,"
+ },
+ {
+  "id": 234,
+  "text": "it's fairly simple."
+ },
+ {
+  "id": 235,
+  "text": "First of all,"
+ },
+ {
+  "id": 236,
+  "text": "on our side,"
+ },
+ {
+  "id": 237,
+  "text": "we've defined a struct,"
+ },
+ {
+  "id": 238,
+  "text": "and the relevant code,"
+ },
+ {
+  "id": 239,
+  "text": "you can go and look at that."
+ },
+ {
+  "id": 240,
+  "text": "code os10"
+ },
+ {
+  "id": 241,
+  "text": "sw is short for software"
+ },
+ {
+  "id": 242,
+  "text": "the software timer's"
+ },
+ {
+  "id": 243,
+  "text": "header file inside"
+ },
+ {
+  "id": 244,
+  "text": "the os.h header file"
+ },
+ {
+  "id": 245,
+  "text": "defines the related interfaces and functions"
+ },
+ {
+  "id": 246,
+  "text": "Now, this timer"
+ },
+ {
+  "id": 247,
+  "text": "is actually a struct for our software timer"
+ },
+ {
+  "id": 248,
+  "text": "Inside this struct,"
+ },
+ {
+  "id": 249,
+  "text": "our design is relatively simple"
+ },
+ {
+  "id": 250,
+  "text": "The first two parameters"
+ },
+ {
+  "id": 251,
+  "text": "are both related to the timer's execution function"
+ },
+ {
+  "id": 252,
+  "text": "When a timer expires,"
+ },
+ {
+  "id": 253,
+  "text": "all it does is execute a function"
+ },
+ {
+  "id": 254,
+  "text": "And that function is of course defined by the user"
+ },
+ {
+  "id": 255,
+  "text": "After defining it,"
+ },
+ {
+  "id": 256,
+  "text": "we register it"
+ },
+ {
+  "id": 257,
+  "text": "into the kernel"
+ },
+ {
+  "id": 258,
+  "text": "and the kernel saves it"
+ },
+ {
+  "id": 259,
+  "text": "When saving it,"
+ },
+ {
+  "id": 260,
+  "text": "Here, it's essentially saving the entry address of the function,"
+ },
+ {
+  "id": 261,
+  "text": "which is a function pointer."
+ },
+ {
+  "id": 262,
+  "text": "And this is a pointer to its parameter."
+ },
+ {
+  "id": 263,
+  "text": "This parameter will ultimately be passed inside,"
+ },
+ {
+  "id": 264,
+  "text": "so when this function is called back internally,"
+ },
+ {
+  "id": 265,
+  "text": "it will still be passed in."
+ },
+ {
+  "id": 266,
+  "text": "Those are the first two parameters,"
+ },
+ {
+  "id": 267,
+  "text": "the first two attributes."
+ },
+ {
+  "id": 268,
+  "text": "Now, the third attribute,"
+ },
+ {
+  "id": 269,
+  "text": "is actually related to our internal"
+ },
+ {
+  "id": 270,
+  "text": "software timer implementation,"
+ },
+ {
+  "id": 271,
+  "text": "a timeout counter."
+ },
+ {
+  "id": 272,
+  "text": "As for exactly how to use this,"
+ },
+ {
+  "id": 273,
+  "text": "we'll explain it to you later."
+ },
+ {
+  "id": 274,
+  "text": "So this is one of its"
+ },
+ {
+  "id": 275,
+  "text": "internal structs."
+ },
+ {
+  "id": 276,
+  "text": "Now, below this,"
+ },
+ {
+  "id": 277,
+  "text": "are the two interfaces provided."
+ },
+ {
+  "id": 278,
+  "text": "One is for creation,"
+ },
+ {
+  "id": 279,
+  "text": "and the other is a deletion interface."
+ },
+ {
+  "id": 280,
+  "text": "Creating one means, for example, if the user wants to"
+ },
+ {
+  "id": 281,
+  "text": "create a timer themselves,"
+ },
+ {
+  "id": 282,
+  "text": "they just call this interface."
+ },
+ {
+  "id": 283,
+  "text": "Then when it's no longer needed,"
+ },
+ {
+  "id": 284,
+  "text": "you just delete it."
+ },
+ {
+  "id": 285,
+  "text": "Now, when creating this interface,"
+ },
+ {
+  "id": 286,
+  "text": "the parameters it passes"
+ },
+ {
+  "id": 287,
+  "text": "include the two parameters you see here,"
+ },
+ {
+  "id": 288,
+  "text": "which actually correspond to this thing."
+ },
+ {
+  "id": 289,
+  "text": "That is, after the user defines a function outside,"
+ },
+ {
+  "id": 290,
+  "text": "they pass in its address and parameters,"
+ },
+ {
+  "id": 291,
+  "text": "and we'll record it."
+ },
+ {
+  "id": 292,
+  "text": "Then,"
+ },
+ {
+  "id": 293,
+  "text": "this timeout value,"
+ },
+ {
+  "id": 294,
+  "text": "basically means,"
+ },
+ {
+  "id": 295,
+  "text": "for a timer,"
+ },
+ {
+  "id": 296,
+  "text": "you want to go from,"
+ },
+ {
+  "id": 297,
+  "text": "say, the current moment,"
+ },
+ {
+  "id": 298,
+  "text": "for how long,"
+ },
+ {
+  "id": 299,
+  "text": "which is the timeout."
+ },
+ {
+  "id": 300,
+  "text": "this is when the timer fires"
+ },
+ {
+  "id": 301,
+  "text": "that is, it is specified through this"
+ },
+ {
+  "id": 302,
+  "text": "and as for this one,"
+ },
+ {
+  "id": 303,
+  "text": "its unit is the tick"
+ },
+ {
+  "id": 304,
+  "text": "let me just mention this briefly"
+ },
+ {
+  "id": 305,
+  "text": "because what we built is fairly simple,"
+ },
+ {
+  "id": 306,
+  "text": "all of our internal timing"
+ },
+ {
+  "id": 307,
+  "text": "is done in units of ticks"
+ },
+ {
+  "id": 308,
+  "text": "now, the concept of the tick"
+ },
+ {
+  "id": 309,
+  "text": "when we talked about the hardware timer"
+ },
+ {
+  "id": 310,
+  "text": "we already covered that"
+ },
+ {
+  "id": 311,
+  "text": "if you don't remember, go back and review it"
+ },
+ {
+  "id": 312,
+  "text": "and as for deletion,"
+ },
+ {
+  "id": 313,
+  "text": "after this function executes successfully,"
+ },
+ {
+  "id": 314,
+  "text": "it returns this"
+ },
+ {
+  "id": 315,
+  "text": "the pointer to the object"
+ },
+ {
+  "id": 316,
+  "text": "that created this timer"
+ },
+ {
+  "id": 317,
+  "text": "so when deleting it,"
+ },
+ {
+  "id": 318,
+  "text": "you just pass this pointer"
+ },
+ {
+  "id": 319,
+  "text": "back in again"
+ },
+ {
+  "id": 320,
+  "text": "We can then find"
+ },
+ {
+  "id": 321,
+  "text": "the corresponding struct,"
+ },
+ {
+  "id": 322,
+  "text": "and stop it."
+ },
+ {
+  "id": 323,
+  "text": "This is the set of interfaces we designed."
+ },
+ {
+  "id": 324,
+  "text": "Now, inside the kernel,"
+ },
+ {
+  "id": 325,
+  "text": "internally, we"
+ },
+ {
+  "id": 326,
+  "text": "actually use the simplest"
+ },
+ {
+  "id": 327,
+  "text": "array-based approach to implement it."
+ },
+ {
+  "id": 328,
+  "text": "For now, that's how it is."
+ },
+ {
+  "id": 329,
+  "text": "An array approach."
+ },
+ {
+  "id": 330,
+  "text": "We define a"
+ },
+ {
+  "id": 331,
+  "text": "software timer array,"
+ },
+ {
+  "id": 332,
+  "text": "and it can hold at most"
+ },
+ {
+  "id": 333,
+  "text": "10 timers."
+ },
+ {
+  "id": 334,
+  "text": "This way,"
+ },
+ {
+  "id": 335,
+  "text": "of course, that number could be larger,"
+ },
+ {
+  "id": 336,
+  "text": "but this is just for demonstration,"
+ },
+ {
+  "id": 337,
+  "text": "so we set it to 10."
+ },
+ {
+  "id": 338,
+  "text": "Actually, you could open as many as you want."
+ },
+ {
+  "id": 339,
+  "text": "And then there is also the timer's"
+ },
+ {
+  "id": 340,
+  "text": "This is the initialization function for the entire module."
+ },
+ {
+  "id": 341,
+  "text": "This one is generally not meant to be called directly by users."
+ },
+ {
+  "id": 342,
+  "text": "This is during our kernel boot process,"
+ },
+ {
+  "id": 343,
+  "text": "it goes and initializes the whole software timer"
+ },
+ {
+  "id": 344,
+  "text": "-- essentially a subsystem --"
+ },
+ {
+  "id": 345,
+  "text": "Now, internally it's very simple."
+ },
+ {
+  "id": 346,
+  "text": "It's really just a for loop,"
+ },
+ {
+  "id": 347,
+  "text": "because it's an array,"
+ },
+ {
+  "id": 348,
+  "text": "so we iterate through it once,"
+ },
+ {
+  "id": 349,
+  "text": "and then we take every member inside"
+ },
+ {
+  "id": 350,
+  "text": "and reset it to an initial"
+ },
+ {
+  "id": 351,
+  "text": "-- reset it to an initial value."
+ },
+ {
+  "id": 352,
+  "text": "So mainly, it sets its"
+ },
+ {
+  "id": 353,
+  "text": "callback function and parameters both to NULL."
+ },
+ {
+  "id": 354,
+  "text": "And then,"
+ },
+ {
+  "id": 355,
+  "text": "its create function and delete function,"
+ },
+ {
+  "id": 356,
+  "text": "let me briefly introduce each of them to you."
+ },
+ {
+  "id": 357,
+  "text": "So the create function,"
+ },
+ {
+  "id": 358,
+  "text": "it's actually also very simple."
+ },
+ {
+  "id": 359,
+  "text": "So this preceding part of the logic,"
+ },
+ {
+  "id": 360,
+  "text": "It's basically looking for an available one."
+ },
+ {
+  "id": 361,
+  "text": "Since it's an array,"
+ },
+ {
+  "id": 362,
+  "text": "it goes and looks."
+ },
+ {
+  "id": 363,
+  "text": "When it searches,"
+ },
+ {
+  "id": 364,
+  "text": "the check is done through this:"
+ },
+ {
+  "id": 365,
+  "text": "whether the pointer to its callback function"
+ },
+ {
+  "id": 366,
+  "text": "is null or not,"
+ },
+ {
+  "id": 367,
+  "text": "to determine whether this timer"
+ },
+ {
+  "id": 368,
+  "text": "has already been used."
+ },
+ {
+  "id": 369,
+  "text": "This array entry,"
+ },
+ {
+  "id": 370,
+  "text": "whether this member is being used."
+ },
+ {
+  "id": 371,
+  "text": "So as you can imagine,"
+ },
+ {
+  "id": 372,
+  "text": "when deleting,"
+ },
+ {
+  "id": 373,
+  "text": "we also need to make sure to take this"
+ },
+ {
+  "id": 374,
+  "text": "and set this field of the member"
+ },
+ {
+  "id": 375,
+  "text": "back to null, and that's it."
+ },
+ {
+  "id": 376,
+  "text": "So once we find one,"
+ },
+ {
+  "id": 377,
+  "text": "we break out of the loop."
+ },
+ {
+  "id": 378,
+  "text": "If we do find one and come out,"
+ },
+ {
+  "id": 379,
+  "text": "then after coming out of this,"
+ },
+ {
+  "id": 380,
+  "text": "Take the parameters here"
+ },
+ {
+  "id": 381,
+  "text": "Take the parameters passed in by this system call"
+ },
+ {
+  "id": 382,
+  "text": "and place them in one by one"
+ },
+ {
+  "id": 383,
+  "text": "to save them"
+ },
+ {
+  "id": 384,
+  "text": "Then"
+ },
+ {
+  "id": 385,
+  "text": "here"
+ },
+ {
+  "id": 386,
+  "text": "there is a timeout value"
+ },
+ {
+  "id": 387,
+  "text": "We will take this"
+ },
+ {
+  "id": 388,
+  "text": "take this timeout value"
+ },
+ {
+  "id": 389,
+  "text": "based on this variable"
+ },
+ {
+  "id": 390,
+  "text": "When we talked earlier about"
+ },
+ {
+  "id": 391,
+  "text": "the hardware timer"
+ },
+ {
+  "id": 392,
+  "text": "you may remember"
+ },
+ {
+  "id": 393,
+  "text": "it is actually an internal"
+ },
+ {
+  "id": 394,
+  "text": "global tick count"
+ },
+ {
+  "id": 395,
+  "text": "Every time the timer fires"
+ },
+ {
+  "id": 396,
+  "text": "that is, when the hardware timer fires"
+ },
+ {
+  "id": 397,
+  "text": "this number increments by one"
+ },
+ {
+  "id": 398,
+  "text": "So we will use this to"
+ },
+ {
+  "id": 399,
+  "text": "which is basically saying"
+ },
+ {
+  "id": 400,
+  "text": "It keeps track of the system's"
+ },
+ {
+  "id": 401,
+  "text": "current tick count."
+ },
+ {
+  "id": 402,
+  "text": "Then we take that tick count"
+ },
+ {
+  "id": 403,
+  "text": "and, based on the timeout passed in,"
+ },
+ {
+  "id": 404,
+  "text": "add it together,"
+ },
+ {
+  "id": 405,
+  "text": "and save it into this member."
+ },
+ {
+  "id": 406,
+  "text": "So basically, what this does is"
+ },
+ {
+  "id": 407,
+  "text": "record the number it will reach when it expires."
+ },
+ {
+  "id": 408,
+  "text": "Later on,"
+ },
+ {
+  "id": 409,
+  "text": "we'll keep comparing this number against the tick count."
+ },
+ {
+  "id": 410,
+  "text": "When they are equal,"
+ },
+ {
+  "id": 411,
+  "text": "that means the timer has expired."
+ },
+ {
+  "id": 412,
+  "text": "It's really that simple."
+ },
+ {
+  "id": 413,
+  "text": "So that's the logic behind creating one."
+ },
+ {
+  "id": 414,
+  "text": "Now, what about deletion?"
+ },
+ {
+  "id": 415,
+  "text": "That's also very simple."
+ },
+ {
+  "id": 416,
+  "text": "As I mentioned earlier, through the pointer to the timer we pass in,"
+ },
+ {
+  "id": 417,
+  "text": "we find the corresponding entry in the array."
+ },
+ {
+  "id": 418,
+  "text": "Once we find it,"
+ },
+ {
+  "id": 419,
+  "text": "we simply clear it out."
+ },
+ {
+  "id": 420,
+  "text": "and that's all there is to it."
+ },
+ {
+  "id": 421,
+  "text": "As for this timeout field,"
+ },
+ {
+  "id": 422,
+  "text": "we actually don't need to clear it."
+ },
+ {
+  "id": 423,
+  "text": "Because every time we create a new one,"
+ },
+ {
+  "id": 424,
+  "text": "we assign it a new value again."
+ },
+ {
+  "id": 425,
+  "text": "So we don't clear it."
+ },
+ {
+  "id": 426,
+  "text": "For the other parts,"
+ },
+ {
+  "id": 427,
+  "text": "we just make sure to clear them."
+ },
+ {
+  "id": 428,
+  "text": "Especially this one, it must be cleared."
+ },
+ {
+  "id": 429,
+  "text": "Because we use it to determine whether this timer"
+ },
+ {
+  "id": 430,
+  "text": "is, by this, this, this array member,"
+ },
+ {
+  "id": 431,
+  "text": "whether it is currently in use — that's what this flag is for."
+ },
+ {
+  "id": 432,
+  "text": "All of this is pretty simple."
+ },
+ {
+  "id": 433,
+  "text": "Now, as for the execution logic,"
+ },
+ {
+  "id": 434,
+  "text": "we use the hardware timer underneath"
+ },
+ {
+  "id": 435,
+  "text": "to actually drive the logic of this software timer."
+ },
+ {
+  "id": 436,
+  "text": "So the overall execution flow,"
+ },
+ {
+  "id": 437,
+  "text": "roughly speaking, is like this."
+ },
+ {
+  "id": 438,
+  "text": "Let me quickly walk you through it."
+ },
+ {
+  "id": 439,
+  "text": "That is to say,"
+ },
+ {
+  "id": 440,
+  "text": "For example, once an interrupt occurs, the hardware"
+ },
+ {
+  "id": 441,
+  "text": "that is, once a timer interrupt occurs,"
+ },
+ {
+  "id": 442,
+  "text": "then based on what we introduced to you earlier,"
+ },
+ {
+  "id": 443,
+  "text": "we know that this piece of logic"
+ },
+ {
+  "id": 444,
+  "text": "actually hasn't been changed much."
+ },
+ {
+  "id": 445,
+  "text": "It definitely enters our"
+ },
+ {
+  "id": 446,
+  "text": "interrupt handler,"
+ },
+ {
+  "id": 447,
+  "text": "the exception handler trap."
+ },
+ {
+  "id": 448,
+  "text": "Now, the trap,"
+ },
+ {
+  "id": 449,
+  "text": "based on our judgment,"
+ },
+ {
+  "id": 450,
+  "text": "it is actually a..."
+ },
+ {
+  "id": 451,
+  "text": "we know this one"
+ },
+ {
+  "id": 452,
+  "text": "should be classified as an interrupt,"
+ },
+ {
+  "id": 453,
+  "text": "right?"
+ },
+ {
+  "id": 454,
+  "text": "It's an interrupt."
+ },
+ {
+  "id": 455,
+  "text": "Now, for interrupts,"
+ },
+ {
+  "id": 456,
+  "text": "we say there are several kinds:"
+ },
+ {
+  "id": 457,
+  "text": "there are software interrupts,"
+ },
+ {
+  "id": 458,
+  "text": "timer interrupts,"
+ },
+ {
+  "id": 459,
+  "text": "and external interrupts."
+ },
+ {
+  "id": 460,
+  "text": "Right?"
+ },
+ {
+  "id": 461,
+  "text": "Let's recall."
+ },
+ {
+  "id": 462,
+  "text": "Then 7 is the timer interrupt."
+ },
+ {
+  "id": 463,
+  "text": "For the timer interrupt,"
+ },
+ {
+  "id": 464,
+  "text": "we enter our time handler,"
+ },
+ {
+  "id": 465,
+  "text": "that is, the timer interrupt handler function."
+ },
+ {
+  "id": 466,
+  "text": "So it goes into this function of ours."
+ },
+ {
+  "id": 467,
+  "text": "Now, in this function,"
+ },
+ {
+  "id": 468,
+  "text": "the logic at the beginning,"
+ },
+ {
+  "id": 469,
+  "text": "we actually mainly"
+ },
+ {
+  "id": 470,
+  "text": "in the logic we had at the time,"
+ },
+ {
+  "id": 471,
+  "text": "there were mainly these three steps."
+ },
+ {
+  "id": 472,
+  "text": "Right?"
+ },
+ {
+  "id": 473,
+  "text": "This one is the maintenance of the global tick count."
+ },
+ {
+  "id": 474,
+  "text": "This one,"
+ },
+ {
+  "id": 475,
+  "text": "no, sorry, that was wrong."
+ },
+ {
+  "id": 476,
+  "text": "This one,"
+ },
+ {
+  "id": 477,
+  "text": "this one loads the hardware timer for the next time."
+ },
+ {
+  "id": 478,
+  "text": "This is just a quick review."
+ },
+ {
+  "id": 479,
+  "text": "Now the third one is related to scheduling."
+ },
+ {
+  "id": 480,
+  "text": "Because this is essentially the core logic of preemption."
+ },
+ {
+  "id": 481,
+  "text": "So here, in our case,"
+ },
+ {
+  "id": 482,
+  "text": "we mainly added this function called timecheck."
+ },
+ {
+  "id": 483,
+  "text": "This is the logic we added for our software timer."
+ },
+ {
+  "id": 484,
+  "text": "When you look at it, compare the two side by side."
+ },
+ {
+  "id": 485,
+  "text": "Now, timecheck,"
+ },
+ {
+  "id": 486,
+  "text": "that is the core logic behind our software timer implementation."
+ },
+ {
+  "id": 487,
+  "text": "So inside this function,"
+ },
+ {
+  "id": 488,
+  "text": "it actually uses this to go through this array,"
+ },
+ {
+  "id": 489,
+  "text": "based on the current tick count,"
+ },
+ {
+  "id": 490,
+  "text": "the global tick count maintained by the hardware timer,"
+ },
+ {
+  "id": 491,
+  "text": "and the value stored inside each timer."
+ },
+ {
+  "id": 492,
+  "text": "We talked about this value earlier."
+ },
+ {
+  "id": 493,
+  "text": "It actually records when this timer is supposed to expire."
+ },
+ {
+  "id": 494,
+  "text": "It checks whether this tick count has become greater than or equal to it."
+ },
+ {
+  "id": 495,
+  "text": "If so, we consider the timer to have expired."
+ },
+ {
+  "id": 496,
+  "text": "Once the timer has expired,"
+ },
+ {
+  "id": 497,
+  "text": "we use the recorded function,"
+ },
+ {
+  "id": 498,
+  "text": "this pointer here,"
+ },
+ {
+  "id": 499,
+  "text": "and we go ahead and call this software timer's handler function."
+ },
+ {
+  "id": 500,
+  "text": "This one is set by the user."
+ },
+ {
+  "id": 501,
+  "text": "So inside here, we basically do a callback."
+ },
+ {
+  "id": 502,
+  "text": "We call back our timer handler function,"
+ },
+ {
+  "id": 503,
+  "text": "the software timer handler function."
+ },
+ {
+  "id": 504,
+  "text": "And after the processing is done,"
+ },
+ {
+  "id": 505,
+  "text": "we just clear out this timer."
+ },
+ {
+  "id": 506,
+  "text": "So what we've implemented is only a non-periodic, one-time, single-shot timer."
+ },
+ {
+  "id": 507,
+  "text": "Also, please note something."
+ },
+ {
+  "id": 508,
+  "text": "Since this whole process runs in interrupt context,"
+ },
+ {
+  "id": 509,
+  "text": "the execution of our function here,"
+ },
+ {
+  "id": 510,
+  "text": "in fact, belongs to this kind of interrupt context."
+ },
+ {
+  "id": 511,
+  "text": "Relate this to the concepts we covered earlier."
+ },
+ {
+  "id": 512,
+  "text": "Our current implementation uses this approach."
+ },
+ {
+  "id": 513,
+  "text": "So when you implement this,"
+ },
+ {
+  "id": 514,
+  "text": "when you use our software timer to do the software timer handling,"
+ },
+ {
+  "id": 515,
+  "text": "there are actually some issues to watch out for in this function."
+ },
+ {
+  "id": 516,
+  "text": "Because it runs in interrupt context,"
+ },
+ {
+  "id": 517,
+  "text": "you need to pay attention to what we already covered earlier."
+ },
+ {
+  "id": 518,
+  "text": "Now, after this call,"
+ },
+ {
+  "id": 519,
+  "text": "the whole process..."
+ },
+ {
+  "id": 520,
+  "text": "So this is the trigger process of our software timer."
+ },
+ {
+  "id": 521,
+  "text": "Earlier we talked about creation and deletion."
+ },
+ {
+  "id": 522,
+  "text": "As for triggering, it goes through this path here."
+ },
+ {
+  "id": 523,
+  "text": "It mainly involves the timer interrupt we mentioned earlier,"
+ },
+ {
+  "id": 524,
+  "text": "this concept."
+ },
+ {
+  "id": 525,
+  "text": "Now let's go through a few simple examples."
+ },
+ {
+  "id": 526,
+  "text": "Let's see how this timer works,"
+ },
+ {
+  "id": 527,
+  "text": "and how it meets our requirements."
+ },
+ {
+  "id": 528,
+  "text": "So this here is a diagram."
+ },
+ {
+  "id": 529,
+  "text": "The tick on this side,"
+ },
+ {
+  "id": 530,
+  "text": "that's the one we talked about earlier, maintained by the internal hardware timer,"
+ },
+ {
+  "id": 531,
+  "text": "the global tick count, the system tick count."
+ },
+ {
+  "id": 532,
+  "text": "And over here is the list that implements our software timer."
+ },
+ {
+  "id": 533,
+  "text": "Right now it's actually an array."
+ },
+ {
+  "id": 534,
+  "text": "So let's say this here is our timeline."
+ },
+ {
+  "id": 535,
+  "text": "Let's say our current time"
+ },
+ {
+  "id": 536,
+  "text": "starts from a tick count of 100."
+ },
+ {
+  "id": 537,
+  "text": "As for the tick,"
+ },
+ {
+  "id": 538,
+  "text": "let's say in our code,"
+ },
+ {
+  "id": 539,
+  "text": "the tick period is set to one second."
+ },
+ {
+  "id": 540,
+  "text": "That is, a hardware timer interrupt comes once every second"
+ },
+ {
+  "id": 541,
+  "text": "timer interrupt"
+ },
+ {
+  "id": 542,
+  "text": "hardware timer interrupt"
+ },
+ {
+  "id": 543,
+  "text": "once every second"
+ },
+ {
+  "id": 544,
+  "text": "So suppose at the moment of tick 100,"
+ },
+ {
+  "id": 545,
+  "text": "we create two"
+ },
+ {
+  "id": 546,
+  "text": "that is, we call timer_create,"
+ },
+ {
+  "id": 547,
+  "text": "creating two software timers"
+ },
+ {
+  "id": 548,
+  "text": "Now suppose what we want is"
+ },
+ {
+  "id": 549,
+  "text": "for the first software timer"
+ },
+ {
+  "id": 550,
+  "text": "to time out after one second,"
+ },
+ {
+  "id": 551,
+  "text": "and the second software timer to time out after two seconds"
+ },
+ {
+  "id": 552,
+  "text": "Now the key question is,"
+ },
+ {
+  "id": 553,
+  "text": "for our setting,"
+ },
+ {
+  "id": 554,
+  "text": "what should its timeout value be?"
+ },
+ {
+  "id": 555,
+  "text": "Well, you can imagine it like this"
+ },
+ {
+  "id": 556,
+  "text": "Suppose we're the first timer,"
+ },
+ {
+  "id": 557,
+  "text": "to time out after one second"
+ },
+ {
+  "id": 558,
+  "text": "then it times out at this point"
+ },
+ {
+  "id": 559,
+  "text": "and the second one after two seconds"
+ },
+ {
+  "id": 560,
+  "text": "It's this point that times out."
+ },
+ {
+  "id": 561,
+  "text": "So it's nothing more than a 101"
+ },
+ {
+  "id": 562,
+  "text": "and a 102, right?"
+ },
+ {
+  "id": 563,
+  "text": "Now, when we actually set it,"
+ },
+ {
+  "id": 564,
+  "text": "the parameter we actually pass in,"
+ },
+ {
+  "id": 565,
+  "text": "really just needs to be 1 and 2."
+ },
+ {
+  "id": 566,
+  "text": "But since we add 1 and 100 together,"
+ },
+ {
+  "id": 567,
+  "text": "we get 101."
+ },
+ {
+  "id": 568,
+  "text": "And for 2 and 100,"
+ },
+ {
+  "id": 569,
+  "text": "adding 100 gives us 102."
+ },
+ {
+  "id": 570,
+  "text": "So the values we actually store in the internal software timer,"
+ },
+ {
+  "id": 571,
+  "text": "the member values, are definitely a 101 and a 102."
+ },
+ {
+  "id": 572,
+  "text": "Alright, so suppose this is all set up at this point,"
+ },
+ {
+  "id": 573,
+  "text": "and we start running."
+ },
+ {
+  "id": 574,
+  "text": "Now this interrupt,"
+ },
+ {
+  "id": 575,
+  "text": "it keeps firing."
+ },
+ {
+  "id": 576,
+  "text": "And the Tick count,"
+ },
+ {
+  "id": 577,
+  "text": "every time a hardware interrupt comes in,"
+ },
+ {
+  "id": 578,
+  "text": "this value keeps changing."
+ },
+ {
+  "id": 579,
+  "text": "And when it reaches 100,"
+ },
+ {
+  "id": 580,
+  "text": "Based on the logic we talked about earlier,"
+ },
+ {
+  "id": 581,
+  "text": "every time the timer period comes around,"
+ },
+ {
+  "id": 582,
+  "text": "besides incrementing this value,"
+ },
+ {
+  "id": 583,
+  "text": "it goes and does a timer check."
+ },
+ {
+  "id": 584,
+  "text": "Now, for the timer check,"
+ },
+ {
+  "id": 585,
+  "text": "it will go and compare,"
+ },
+ {
+  "id": 586,
+  "text": "iterating through all these timers,"
+ },
+ {
+  "id": 587,
+  "text": "comparing their timer values against this tick value."
+ },
+ {
+  "id": 588,
+  "text": "Once this value is greater than or equal to it, and the condition is met,"
+ },
+ {
+  "id": 589,
+  "text": "that means it has expired."
+ },
+ {
+  "id": 590,
+  "text": "So at this point,"
+ },
+ {
+  "id": 591,
+  "text": "this Time1 on the left has expired."
+ },
+ {
+  "id": 592,
+  "text": "Once it expires,"
+ },
+ {
+  "id": 593,
+  "text": "it has timed out,"
+ },
+ {
+  "id": 594,
+  "text": "and the timeout will trigger"
+ },
+ {
+  "id": 595,
+  "text": "its handler function."
+ },
+ {
+  "id": 596,
+  "text": "So from the software level,"
+ },
+ {
+  "id": 597,
+  "text": "this timer has timed out."
+ },
+ {
+  "id": 598,
+  "text": "And after the timeout is handled,"
+ },
+ {
+  "id": 599,
+  "text": "it will be deleted."
+ },
+ {
+  "id": 600,
+  "text": "So next,"
+ },
+ {
+  "id": 601,
+  "text": "the second one."
+ },
+ {
+  "id": 602,
+  "text": "Now suppose at this point,"
+ },
+ {
+  "id": 603,
+  "text": "at this point here,"
+ },
+ {
+  "id": 604,
+  "text": "we get another timer,"
+ },
+ {
+  "id": 605,
+  "text": "timer3."
+ },
+ {
+  "id": 606,
+  "text": "So for this timer3,"
+ },
+ {
+  "id": 607,
+  "text": "let's say it's again a three-second timeout."
+ },
+ {
+  "id": 608,
+  "text": "Now think about it,"
+ },
+ {
+  "id": 609,
+  "text": "what should this value be"
+ },
+ {
+  "id": 610,
+  "text": "at this point?"
+ },
+ {
+  "id": 611,
+  "text": "Well, based on our earlier experience,"
+ },
+ {
+  "id": 612,
+  "text": "as you know,"
+ },
+ {
+  "id": 613,
+  "text": "since it's a three-second timeout,"
+ },
+ {
+  "id": 614,
+  "text": "that means,"
+ },
+ {
+  "id": 615,
+  "text": "starting from this moment,"
+ },
+ {
+  "id": 616,
+  "text": "it times out after three seconds."
+ },
+ {
+  "id": 617,
+  "text": "One second,"
+ },
+ {
+  "id": 618,
+  "text": "two seconds,"
+ },
+ {
+  "id": 619,
+  "text": "three seconds."
+ },
+ {
+  "id": 620,
+  "text": "So we definitely need to put 4"
+ },
+ {
+  "id": 621,
+  "text": "right?"
+ },
+ {
+  "id": 622,
+  "text": "But when we pass in the parameter,"
+ },
+ {
+  "id": 623,
+  "text": "we're actually still passing 3."
+ },
+ {
+  "id": 624,
+  "text": "So how do we get 104?"
+ },
+ {
+  "id": 625,
+  "text": "Very simple."
+ },
+ {
+  "id": 626,
+  "text": "Because this value,"
+ },
+ {
+  "id": 627,
+  "text": "right now we're adding this value to 3,"
+ },
+ {
+  "id": 628,
+  "text": "think about it, isn't that right?"
+ },
+ {
+  "id": 629,
+  "text": "So naturally we get 104."
+ },
+ {
+  "id": 630,
+  "text": "So the way we do it here,"
+ },
+ {
+  "id": 631,
+  "text": "what we actually put here is 104."
+ },
+ {
+  "id": 632,
+  "text": "Now,"
+ },
+ {
+  "id": 633,
+  "text": "the three of them are created."
+ },
+ {
+  "id": 634,
+  "text": "It was created at time 101,"
+ },
+ {
+  "id": 635,
+  "text": "and it expires after 3 seconds."
+ },
+ {
+  "id": 636,
+  "text": "Now suppose we reach 102 at this point,"
+ },
+ {
+  "id": 637,
+  "text": "after 102,"
+ },
+ {
+  "id": 638,
+  "text": "as you know, this timer expires again,"
+ },
+ {
+  "id": 639,
+  "text": "so the second timer times out."
+ },
+ {
+  "id": 640,
+  "text": "triggers the corresponding function."
+ },
+ {
+  "id": 641,
+  "text": "Then, next,"
+ },
+ {
+  "id": 642,
+  "text": "the tick count goes up by 103."
+ },
+ {
+  "id": 643,
+  "text": "At 103, it actually hasn't timed out yet."
+ },
+ {
+  "id": 644,
+  "text": "No timeout."
+ },
+ {
+  "id": 645,
+  "text": "Then, when it reaches 104,"
+ },
+ {
+  "id": 646,
+  "text": "as you know, time3 will also have timed out by then."
+ },
+ {
+  "id": 647,
+  "text": "So from this example,"
+ },
+ {
+  "id": 648,
+  "text": "we can see that,"
+ },
+ {
+  "id": 649,
+  "text": "even though there is only one hardware timer underneath,"
+ },
+ {
+  "id": 650,
+  "text": "on the software side, we can actually set up,"
+ },
+ {
+  "id": 651,
+  "text": "set up many timers at the same time."
+ },
+ {
+  "id": 652,
+  "text": "So how do we implement that?"
+ },
+ {
+  "id": 653,
+  "text": "It's actually done using the mechanism we covered earlier."
+ },
+ {
+  "id": 654,
+  "text": "This is what's called a software timer."
+ },
+ {
+  "id": 655,
+  "text": "Take a moment to let that sink in."
+ },
+ {
+  "id": 656,
+  "text": "Now for the third part,"
+ },
+ {
+  "id": 657,
+  "text": "basically, the software timer we implemented earlier,"
+ },
+ {
+  "id": 658,
+  "text": "is fairly simple."
+ },
+ {
+  "id": 659,
+  "text": "In fact, this software timer"
+ },
+ {
+  "id": 660,
+  "text": "There are many places where we can optimize."
+ },
+ {
+  "id": 661,
+  "text": "The main goal of optimization is this:"
+ },
+ {
+  "id": 662,
+  "text": "we want the software timer to handle things efficiently."
+ },
+ {
+  "id": 663,
+  "text": "Because as everyone knows, with timers,"
+ },
+ {
+  "id": 664,
+  "text": "if you set up a lot of timers,"
+ },
+ {
+  "id": 665,
+  "text": "and you traverse them using this kind of array-based approach,"
+ },
+ {
+  "id": 666,
+  "text": "the efficiency is really not going to be very high."
+ },
+ {
+  "id": 667,
+  "text": "Don't you all agree?"
+ },
+ {
+  "id": 668,
+  "text": "Especially since every time we have to go in here,"
+ },
+ {
+  "id": 669,
+  "text": "and if its timers are implemented using an array,"
+ },
+ {
+  "id": 670,
+  "text": "the memory has to be allocated upfront."
+ },
+ {
+  "id": 671,
+  "text": "So the memory usage is not really optimal either."
+ },
+ {
+  "id": 672,
+  "text": "So there are actually many places where it's worth optimizing the implementation of this software timer."
+ },
+ {
+  "id": 673,
+  "text": "Now, this is the current implementation of our software timer."
+ },
+ {
+  "id": 674,
+  "text": "We can see that because our core data structure is designed as an array,"
+ },
+ {
+  "id": 675,
+  "text": "a lot of the code in here relies on a for loop to traverse it."
+ },
+ {
+  "id": 676,
+  "text": "And this array also reserves a lot of space."
+ },
+ {
+  "id": 677,
+  "text": "So as you know, if you were asked to implement this kind of thing,"
+ },
+ {
+  "id": 678,
+  "text": "the first thing you'd probably think of is,"
+ },
+ {
+  "id": 679,
+  "text": "first, from the perspective of saving memory,"
+ },
+ {
+  "id": 680,
+  "text": "Or, in terms of flexibility,"
+ },
+ {
+  "id": 681,
+  "text": "we actually prefer to use a linked list."
+ },
+ {
+  "id": 682,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 683,
+  "text": "So with a linked list,"
+ },
+ {
+  "id": 684,
+  "text": "the first thing is that"
+ },
+ {
+  "id": 685,
+  "text": "the allocation of the data space in memory"
+ },
+ {
+  "id": 686,
+  "text": "becomes much more flexible."
+ },
+ {
+  "id": 687,
+  "text": "You only create as much as you need,"
+ },
+ {
+  "id": 688,
+  "text": "rather than like our array,"
+ },
+ {
+  "id": 689,
+  "text": "where we allocate a big chunk all at once."
+ },
+ {
+  "id": 690,
+  "text": "Because with software timers,"
+ },
+ {
+  "id": 691,
+  "text": "there might be cases where we need a lot of them,"
+ },
+ {
+  "id": 692,
+  "text": "and then the pressure on our array would be quite high."
+ },
+ {
+  "id": 693,
+  "text": "So that's why we use a linked list approach."
+ },
+ {
+  "id": 694,
+  "text": "Now, there is another thing,"
+ },
+ {
+  "id": 695,
+  "text": "which is that,"
+ },
+ {
+  "id": 696,
+  "text": "even if we do use an array,"
+ },
+ {
+  "id": 697,
+  "text": "as it stands right now,"
+ },
+ {
+  "id": 698,
+  "text": "when we actually go and create these objects,"
+ },
+ {
+  "id": 699,
+  "text": "we simply check whether their space is empty."
+ },
+ {
+  "id": 700,
+  "text": "Now, during the search process,"
+ },
+ {
+  "id": 701,
+  "text": "with the timers being used,"
+ },
+ {
+  "id": 702,
+  "text": "more and more, that is, once some of them are used up,"
+ },
+ {
+  "id": 703,
+  "text": "they get cleared out."
+ },
+ {
+  "id": 704,
+  "text": "So there are a lot of holes in the middle,"
+ },
+ {
+  "id": 705,
+  "text": "right?"
+ },
+ {
+  "id": 706,
+  "text": "So this is actually not very efficient."
+ },
+ {
+  "id": 707,
+  "text": "And besides,"
+ },
+ {
+  "id": 708,
+  "text": "our time ordering —"
+ },
+ {
+  "id": 709,
+  "text": "it's possible that,"
+ },
+ {
+  "id": 710,
+  "text": "for the timers in the array, with longer timeouts,"
+ },
+ {
+  "id": 711,
+  "text": "they end up being placed at the front."
+ },
+ {
+  "id": 712,
+  "text": "So actually, if we,"
+ },
+ {
+  "id": 713,
+  "text": "sort them by their timeout time,"
+ },
+ {
+  "id": 714,
+  "text": "that is, keeping this guaranteed,"
+ },
+ {
+  "id": 715,
+  "text": "inside the linked list —"
+ },
+ {
+  "id": 716,
+  "text": "whether it's a linked list or an array —"
+ },
+ {
+  "id": 717,
+  "text": "if it's this,"
+ },
+ {
+  "id": 718,
+  "text": "its timer's Timeout value —"
+ },
+ {
+  "id": 719,
+  "text": "if it's sorted by time,"
+ },
+ {
+  "id": 720,
+  "text": "So the probability of us hitting it,"
+ },
+ {
+  "id": 721,
+  "text": "actually, since timers must expire in chronological order,"
+ },
+ {
+  "id": 722,
+  "text": "that's one of its characteristics,"
+ },
+ {
+  "id": 723,
+  "text": "that is, the closer a timer is to the present,"
+ },
+ {
+  "id": 724,
+  "text": "the more certainly it will be placed at the very front of the list."
+ },
+ {
+  "id": 725,
+  "text": "That will certainly speed up the odds of hitting it,"
+ },
+ {
+  "id": 726,
+  "text": "so it may be a bit greater."
+ },
+ {
+  "id": 727,
+  "text": "So in fact, we have many kinds of optimizations."
+ },
+ {
+  "id": 728,
+  "text": "That is, the first one is,"
+ },
+ {
+  "id": 729,
+  "text": "sort the timers by their timeout time."
+ },
+ {
+  "id": 730,
+  "text": "Whether we use an array or a list,"
+ },
+ {
+  "id": 731,
+  "text": "it will certainly also optimize our search for a timer."
+ },
+ {
+  "id": 732,
+  "text": "Put the timers whose times are near,"
+ },
+ {
+  "id": 733,
+  "text": "that is, the earlier ones, at the front of the search."
+ },
+ {
+  "id": 734,
+  "text": "And then there's another one,"
+ },
+ {
+  "id": 735,
+  "text": "which is using a linked list."
+ },
+ {
+  "id": 736,
+  "text": "Naturally, on the one hand, that also saves space."
+ },
+ {
+  "id": 737,
+  "text": "And in this linked list,"
+ },
+ {
+  "id": 738,
+  "text": "it is also quite flexible."
+ },
+ {
+  "id": 739,
+  "text": "Insertion and deletion are also quite flexible."
+ },
+ {
+  "id": 740,
+  "text": "especially when you want to do sorting,"
+ },
+ {
+  "id": 741,
+  "text": "actually, if you use a linked list,"
+ },
+ {
+  "id": 742,
+  "text": "the implementation is more flexible than with an array."
+ },
+ {
+  "id": 743,
+  "text": "You can try implementing this on your own."
+ },
+ {
+  "id": 744,
+  "text": "So we have an exercise here,"
+ },
+ {
+  "id": 745,
+  "text": "exercise 15-1 of this chapter,"
+ },
+ {
+  "id": 746,
+  "text": "and what we really hope is that,"
+ },
+ {
+  "id": 747,
+  "text": "building on what you've learned so far,"
+ },
+ {
+  "id": 748,
+  "text": "you go and optimize,"
+ },
+ {
+  "id": 749,
+  "text": "and make this piece of code a bit better."
+ },
+ {
+  "id": 750,
+  "text": "This is the first part of our optimization."
+ },
+ {
+  "id": 751,
+  "text": "And actually, there's still room for optimization."
+ },
+ {
+  "id": 752,
+  "text": "For this timer,"
+ },
+ {
+  "id": 753,
+  "text": "there is in fact still room for optimization."
+ },
+ {
+  "id": 754,
+  "text": "As we know,"
+ },
+ {
+  "id": 755,
+  "text": "whether we implement it using an array,"
+ },
+ {
+  "id": 756,
+  "text": "or using a linked list,"
+ },
+ {
+  "id": 757,
+  "text": "once there are many timers,"
+ },
+ {
+  "id": 758,
+  "text": "the process of searching and locating,"
+ },
+ {
+  "id": 759,
+  "text": "is simply unavoidable."
+ },
+ {
+  "id": 760,
+  "text": "So let's assume in this example"
+ },
+ {
+  "id": 761,
+  "text": "you can see that"
+ },
+ {
+  "id": 762,
+  "text": "this 135 here"
+ },
+ {
+  "id": 763,
+  "text": "is this timers value"
+ },
+ {
+  "id": 764,
+  "text": "Assume they are still sorted"
+ },
+ {
+  "id": 765,
+  "text": "This side is still already sorted"
+ },
+ {
+  "id": 766,
+  "text": "Even if they are sorted,"
+ },
+ {
+  "id": 767,
+  "text": "we know"
+ },
+ {
+  "id": 768,
+  "text": "the search process"
+ },
+ {
+  "id": 769,
+  "text": "still cannot be avoided"
+ },
+ {
+  "id": 770,
+  "text": "And as this linked list"
+ },
+ {
+  "id": 771,
+  "text": "or this array"
+ },
+ {
+  "id": 772,
+  "text": "has more and more elements in it,"
+ },
+ {
+  "id": 773,
+  "text": "the search time will keep growing"
+ },
+ {
+  "id": 774,
+  "text": "Because everyone knows,"
+ },
+ {
+  "id": 775,
+  "text": "in this situation,"
+ },
+ {
+  "id": 776,
+  "text": "based on our data structures"
+ },
+ {
+  "id": 777,
+  "text": "algorithm complexity,"
+ },
+ {
+  "id": 778,
+  "text": "if we analyze it,"
+ },
+ {
+  "id": 779,
+  "text": "we've learned this before, right?"
+ },
+ {
+  "id": 780,
+  "text": "The complexity of this algorithm,"
+ },
+ {
+  "id": 781,
+  "text": "for something like a linked list and this kind of array,"
+ },
+ {
+  "id": 782,
+  "text": "the complexity of its search"
+ },
+ {
+  "id": 783,
+  "text": "should be what?"
+ },
+ {
+  "id": 784,
+  "text": "Just a simple linear"
+ },
+ {
+  "id": 785,
+  "text": "array or linked list,"
+ },
+ {
+  "id": 786,
+  "text": "its complexity"
+ },
+ {
+  "id": 787,
+  "text": "is definitely O(N)."
+ },
+ {
+  "id": 788,
+  "text": "The answer, right?"
+ },
+ {
+  "id": 789,
+  "text": "So what does O(N) mean?"
+ },
+ {
+  "id": 790,
+  "text": "It means that it's actually a"
+ },
+ {
+  "id": 791,
+  "text": "X equals Y,"
+ },
+ {
+  "id": 792,
+  "text": "Y equals X kind of effect."
+ },
+ {
+  "id": 793,
+  "text": "In other words, when the"
+ },
+ {
+  "id": 794,
+  "text": "number of searches"
+ },
+ {
+  "id": 795,
+  "text": "and the"
+ },
+ {
+  "id": 796,
+  "text": "number of implementation steps of this algorithm"
+ },
+ {
+  "id": 797,
+  "text": "is directly proportional to the number of elements,"
+ },
+ {
+  "id": 798,
+  "text": "the more elements you have,"
+ },
+ {
+  "id": 799,
+  "text": "the more execution steps"
+ },
+ {
+  "id": 800,
+  "text": "it's definitely growing linearly,"
+ },
+ {
+  "id": 801,
+  "text": "a linear relationship."
+ },
+ {
+  "id": 802,
+  "text": "Now, this kind of linear growth,"
+ },
+ {
+  "id": 803,
+  "text": "I should say, is not a very good"
+ },
+ {
+  "id": 804,
+  "text": "well,"
+ },
+ {
+  "id": 805,
+  "text": "the efficiency is not very high,"
+ },
+ {
+  "id": 806,
+  "text": "not very high at all."
+ },
+ {
+  "id": 807,
+  "text": "So how can we further optimize"
+ },
+ {
+  "id": 808,
+  "text": "this software timer?"
+ },
+ {
+  "id": 809,
+  "text": "Well, here's what we can actually do."
+ },
+ {
+  "id": 810,
+  "text": "On top of what we already have,"
+ },
+ {
+  "id": 811,
+  "text": "we can basically add"
+ },
+ {
+  "id": 812,
+  "text": "another layer on top of it."
+ },
+ {
+  "id": 813,
+  "text": "Adding another layer,"
+ },
+ {
+  "id": 814,
+  "text": "as you can see, if we add another layer,"
+ },
+ {
+  "id": 815,
+  "text": "what kind of effect does that give us?"
+ },
+ {
+  "id": 816,
+  "text": "It means it takes every fixed interval,"
+ },
+ {
+  "id": 817,
+  "text": "this is essentially like the bottom,"
+ },
+ {
+  "id": 818,
+  "text": "the very bottom is essentially level one,"
+ },
+ {
+  "id": 819,
+  "text": "and then we abstract level two from it."
+ },
+ {
+  "id": 820,
+  "text": "As for the second level,"
+ },
+ {
+  "id": 821,
+  "text": "as for this second level,"
+ },
+ {
+  "id": 822,
+  "text": "it basically means"
+ },
+ {
+  "id": 823,
+  "text": "taking"
+ },
+ {
+  "id": 824,
+  "text": "some of its element nodes inside,"
+ },
+ {
+  "id": 825,
+  "text": "if we extract them out,"
+ },
+ {
+  "id": 826,
+  "text": "it's somewhat like the effect of binary search,"
+ },
+ {
+  "id": 827,
+  "text": "somewhat like the effect of binary search."
+ },
+ {
+  "id": 828,
+  "text": "Now, with this binary search kind of effect,"
+ },
+ {
+  "id": 829,
+  "text": "you can"
+ },
+ {
+  "id": 830,
+  "text": "simply compare the two effects."
+ },
+ {
+  "id": 831,
+  "text": "Now, in the one below,"
+ },
+ {
+  "id": 832,
+  "text": "as you know, it's still linear,"
+ },
+ {
+  "id": 833,
+  "text": "meaning that to find this 20,"
+ },
+ {
+  "id": 834,
+  "text": "we have to traverse from left to right one by one."
+ },
+ {
+  "id": 835,
+  "text": "And traversing one by one,"
+ },
+ {
+  "id": 836,
+  "text": "inside here we have one, two, three, four, five, six, seven,"
+ },
+ {
+  "id": 837,
+  "text": "that is, it takes at least seven times,"
+ },
+ {
+  "id": 838,
+  "text": "right?"
+ },
+ {
+  "id": 839,
+  "text": "seven nodes."
+ },
+ {
+  "id": 840,
+  "text": "before we can find this node 20."
+ },
+ {
+  "id": 841,
+  "text": "Now, if we"
+ },
+ {
+  "id": 842,
+  "text": "if, on this structure,"
+ },
+ {
+  "id": 843,
+  "text": "we abstract this second layer,"
+ },
+ {
+  "id": 844,
+  "text": "then our traversal process"
+ },
+ {
+  "id": 845,
+  "text": "will actually be much faster."
+ },
+ {
+  "id": 846,
+  "text": "As you can see,"
+ },
+ {
+  "id": 847,
+  "text": "with this on top,"
+ },
+ {
+  "id": 848,
+  "text": "1, 5, 10, 1, 2, 3, 4 — four steps,"
+ },
+ {
+  "id": 849,
+  "text": "and it can reach this."
+ },
+ {
+  "id": 850,
+  "text": "Right?"
+ },
+ {
+  "id": 851,
+  "text": "Now, if we keep going with this idea,"
+ },
+ {
+  "id": 852,
+  "text": "that is, if we find that there are more nodes at the bottom,"
+ },
+ {
+  "id": 853,
+  "text": "and we build a third level,"
+ },
+ {
+  "id": 854,
+  "text": "a third level,"
+ },
+ {
+  "id": 855,
+  "text": "then the number of steps relative to this would be even smaller."
+ },
+ {
+  "id": 856,
+  "text": "In other words, if it were three levels,"
+ },
+ {
+  "id": 857,
+  "text": "that is, you first go from 1 to 11,"
+ },
+ {
+  "id": 858,
+  "text": "at 11 we see that 20 is greater than 11,"
+ },
+ {
+  "id": 859,
+  "text": "but smaller than 26."
+ },
+ {
+  "id": 860,
+  "text": "So we just retreat to its"
+ },
+ {
+  "id": 861,
+  "text": "second-to-last level."
+ },
+ {
+  "id": 862,
+  "text": "Now down there is 17."
+ },
+ {
+  "id": 863,
+  "text": "17 is bigger than it,"
+ },
+ {
+  "id": 864,
+  "text": "but if it's smaller than 26,"
+ },
+ {
+  "id": 865,
+  "text": "then going one step further, we hit it very quickly."
+ },
+ {
+  "id": 866,
+  "text": "So this blue portion, the hit"
+ },
+ {
+  "id": 867,
+  "text": "curve will actually be compared to the green one"
+ },
+ {
+  "id": 868,
+  "text": "it will actually still be more"
+ },
+ {
+  "id": 869,
+  "text": "it will be more"
+ },
+ {
+  "id": 870,
+  "text": "So this kind of thing,"
+ },
+ {
+  "id": 871,
+  "text": "according to these numbers,"
+ },
+ {
+  "id": 872,
+  "text": "this is actually like a pyramid structure going up."
+ },
+ {
+  "id": 873,
+  "text": "So if you look at it from top to bottom,"
+ },
+ {
+  "id": 874,
+  "text": "you can actually see"
+ },
+ {
+  "id": 875,
+  "text": "that it's really the concept of binary search,"
+ },
+ {
+  "id": 876,
+  "text": "right?"
+ },
+ {
+  "id": 877,
+  "text": "Doesn't it look a bit like binary search?"
+ },
+ {
+  "id": 878,
+  "text": "Now, as we know, with binary search,"
+ },
+ {
+  "id": 879,
+  "text": "like the binary search method,"
+ },
+ {
+  "id": 880,
+  "text": "Actually, it's also used quite often in data structures,"
+ },
+ {
+  "id": 881,
+  "text": "right?"
+ },
+ {
+  "id": 882,
+  "text": "Now, this kind of binary-search-like approach for linked lists,"
+ },
+ {
+  "id": 883,
+  "text": "this kind of hierarchical level-by-level method,"
+ },
+ {
+  "id": 884,
+  "text": "we actually have a term for it."
+ },
+ {
+  "id": 885,
+  "text": "That is, this method,"
+ },
+ {
+  "id": 886,
+  "text": "we call it the skip list algorithm."
+ },
+ {
+  "id": 887,
+  "text": "If you're interested,"
+ },
+ {
+  "id": 888,
+  "text": "you can look up the basic idea of the skip list algorithm."
+ },
+ {
+  "id": 889,
+  "text": "Here,"
+ },
+ {
+  "id": 890,
+  "text": "I'll just give you a brief overview."
+ },
+ {
+  "id": 891,
+  "text": "This is a way to do it."
+ },
+ {
+  "id": 892,
+  "text": "For its search-hit algorithm,"
+ },
+ {
+  "id": 893,
+  "text": "we can actually do some further optimization."
+ },
+ {
+  "id": 894,
+  "text": "That is, once we have this sorting,"
+ },
+ {
+  "id": 895,
+  "text": "we can actually do more than just sort."
+ },
+ {
+  "id": 896,
+  "text": "As long as we have sorting as a basis,"
+ },
+ {
+  "id": 897,
+  "text": "we can actually bring in binary search."
+ },
+ {
+  "id": 898,
+  "text": "Now, with this kind of skip list approach,"
+ },
+ {
+  "id": 899,
+  "text": "according to these estimates,"
+ },
+ {
+  "id": 900,
+  "text": "We know that when we talk about binary search,"
+ },
+ {
+  "id": 901,
+  "text": "it's usually the idea of log base 2,"
+ },
+ {
+  "id": 902,
+  "text": "and so its curve,"
+ },
+ {
+  "id": 903,
+  "text": "it's something like,"
+ },
+ {
+  "id": 904,
+  "text": "you know, for log n,"
+ },
+ {
+  "id": 905,
+  "text": "it looks like this,"
+ },
+ {
+  "id": 906,
+  "text": "and then log 2,"
+ },
+ {
+  "id": 907,
+  "text": "log base 2,"
+ },
+ {
+  "id": 908,
+  "text": "it's a curve like this,"
+ },
+ {
+  "id": 909,
+  "text": "which means when n grows larger this way,"
+ },
+ {
+  "id": 910,
+  "text": "the number of execution steps,"
+ },
+ {
+  "id": 911,
+  "text": "its growth trend,"
+ },
+ {
+  "id": 912,
+  "text": "is actually relatively much gentler than that one,"
+ },
+ {
+  "id": 913,
+  "text": "which is a fairly good thing,"
+ },
+ {
+  "id": 914,
+  "text": "when our element nodes,"
+ },
+ {
+  "id": 915,
+  "text": "like, say, our timers,"
+ },
+ {
+  "id": 916,
+  "text": "the number of software timers,"
+ },
+ {
+  "id": 917,
+  "text": "gets fairly large,"
+ },
+ {
+  "id": 918,
+  "text": "then its number of execution steps,"
+ },
+ {
+  "id": 919,
+  "text": "will be fewer."
+ },
+ {
+  "id": 920,
+  "text": "its growth trend becomes much smaller."
+ },
+ {
+  "id": 921,
+  "text": "This is the skip list idea."
+ },
+ {
+  "id": 922,
+  "text": "This is also one way for us to optimize software timers."
+ },
+ {
+  "id": 923,
+  "text": "So I'll give you a brief introduction to it."
+ },
+ {
+  "id": 924,
+  "text": "The hope is really that you'll use software techniques"
+ },
+ {
+  "id": 925,
+  "text": "to further optimize it."
+ },
+ {
+  "id": 926,
+  "text": "Now, our exercise 15-2"
+ },
+ {
+  "id": 927,
+  "text": "is actually implemented using this kind of skip list algorithm."
+ },
+ {
+  "id": 928,
+  "text": "You can go home and try implementing it."
+ },
+ {
+  "id": 929,
+  "text": "That is to say, as you can see,"
+ },
+ {
+  "id": 930,
+  "text": "when it comes to our operating system,"
+ },
+ {
+  "id": 931,
+  "text": "beyond some of the basic concepts of the underlying hardware,"
+ },
+ {
+  "id": 932,
+  "text": "a lot of what comes next actually involves the software side."
+ },
+ {
+  "id": 933,
+  "text": "And the more software there is,"
+ },
+ {
+  "id": 934,
+  "text": "the more data structures and algorithms"
+ },
+ {
+  "id": 935,
+  "text": "can come into play."
+ },
+ {
+  "id": 936,
+  "text": "It's said that throughout the whole operating system,"
+ },
+ {
+  "id": 937,
+  "text": "there's still quite a bit of algorithmic optimization to be done on the software side."
+ },
+ {
+  "id": 938,
+  "text": "Just something for you to be aware of."
+ },
+ {
+  "id": 939,
+  "text": "Alright, so that's the overall summary of this exercise."
+ },
+ {
+  "id": 940,
+  "text": "Go back and try doing that together yourselves."
+ },
+ {
+  "id": 941,
+  "text": "So as for this software timer,"
+ },
+ {
+  "id": 942,
+  "text": "we'll stop our introduction of it right here."
+ }
+]

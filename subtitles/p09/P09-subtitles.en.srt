@@ -1,0 +1,5287 @@
+1
+00:00:04,690 --> 00:00:09,250
+Let's start with the first part: arithmetic instructions.
+
+2
+00:00:16,750 --> 00:00:23,250
+Arithmetic instructions, in English, are called Arithmetic Instructions — that is, arithmetic operations.
+
+3
+00:00:24,870 --> 00:00:33,590
+Now, they are nothing more than addition and subtraction. Note that this does not include multiplication and division, because those instructions are not part of the base integer instructions.
+
+4
+00:00:33,590 --> 00:00:38,050
+Multiplication and division have a dedicated M module,
+
+5
+00:00:38,050 --> 00:00:40,950
+that is, the multiplication and division instruction set,
+
+6
+00:00:40,950 --> 00:00:43,130
+the extension set and extension module,
+
+7
+00:00:43,130 --> 00:00:43,890
+which we will introduce to you.
+
+8
+00:00:43,890 --> 00:00:45,910
+They are not within the scope of this part.
+
+9
+00:00:45,910 --> 00:00:48,110
+What we mainly deal with here is addition and subtraction.
+
+10
+00:00:48,110 --> 00:00:52,220
+The first instruction we are going to learn,
+
+11
+00:00:52,220 --> 00:00:53,240
+is the add instruction,
+
+12
+00:00:53,240 --> 00:00:54,580
+which is addition.
+
+13
+00:00:54,580 --> 00:00:57,040
+This is the most basic one.
+
+14
+00:00:57,040 --> 00:00:58,500
+Now, this add instruction,
+
+15
+00:00:58,500 --> 00:01:03,080
+its encoding type is R type.
+
+16
+00:01:03,080 --> 00:01:06,140
+So this R type is the register type.
+
+17
+00:01:06,140 --> 00:01:07,620
+What does register type mean?
+
+18
+00:01:07,620 --> 00:01:09,320
+It means that its operands,
+
+19
+00:01:09,320 --> 00:01:14,020
+its three operands are all registers.
+
+20
+00:01:14,020 --> 00:01:16,420
+You can see it here.
+
+21
+00:01:16,420 --> 00:01:17,240
+In terms of encoding
+
+22
+00:01:17,240 --> 00:01:19,780
+it needs to express three registers
+
+23
+00:01:19,780 --> 00:01:21,260
+RD, RSC, R2
+
+24
+00:01:21,260 --> 00:01:24,260
+Now, when translated into assembly
+
+25
+00:01:26,360 --> 00:01:28,440
+this is the syntax format
+
+26
+00:01:28,440 --> 00:01:30,200
+Note this
+
+27
+00:01:30,200 --> 00:01:31,280
+in RISC-V
+
+28
+00:01:31,280 --> 00:01:32,160
+the assembly
+
+29
+00:01:32,160 --> 00:01:35,880
+the convention is
+
+30
+00:01:35,880 --> 00:01:38,220
+to put RD
+
+31
+00:01:38,220 --> 00:01:41,520
+the register that finally holds the result
+
+32
+00:01:41,520 --> 00:01:42,460
+first
+
+33
+00:01:42,460 --> 00:01:44,000
+reversed
+
+34
+00:01:44,000 --> 00:01:45,840
+that is, the sources go at the back
+
+35
+00:01:45,840 --> 00:01:47,280
+the two sources at the back
+
+36
+00:01:47,280 --> 00:01:51,600
+there is such a relationship in there
+
+37
+00:01:51,600 --> 00:01:52,800
+within this relationship
+
+38
+00:01:52,800 --> 00:01:53,520
+when it reads
+
+39
+00:01:53,520 --> 00:01:54,840
+what it means is this
+
+40
+00:01:54,840 --> 00:01:57,460
+that is, when doing addition
+
+41
+00:01:57,460 --> 00:01:58,040
+How do we add?
+
+42
+00:01:58,040 --> 00:02:04,720
+We take out the value in this first RS — the register inside.
+
+43
+00:02:04,720 --> 00:02:08,260
+What I'm explaining right now is actually from the CPU's point of view.
+
+44
+00:02:08,260 --> 00:02:10,060
+If I were the CPU,
+
+45
+00:02:10,060 --> 00:02:11,740
+when I'm executing this instruction,
+
+46
+00:02:11,740 --> 00:02:13,120
+how would I carry it out?
+
+47
+00:02:13,120 --> 00:02:15,740
+I take a value out of RS —
+
+48
+00:02:15,740 --> 00:02:16,800
+that's one of the addends.
+
+49
+00:02:16,800 --> 00:02:18,540
+Then,
+
+50
+00:02:18,540 --> 00:02:20,740
+I take another value out of RS2,
+
+51
+00:02:20,740 --> 00:02:23,160
+and I add these two values together,
+
+52
+00:02:23,160 --> 00:02:24,720
+getting a result.
+
+53
+00:02:24,720 --> 00:02:25,840
+Now, this result —
+
+54
+00:02:25,840 --> 00:02:27,020
+where do I put it?
+
+55
+00:02:27,020 --> 00:02:29,840
+I put it into the RD register.
+
+56
+00:02:29,840 --> 00:02:31,780
+That's really all it means.
+
+57
+00:02:31,780 --> 00:02:34,240
+This is the add instruction.
+
+58
+00:02:34,240 --> 00:02:36,420
+Now, when we actually write it,
+
+59
+00:02:36,420 --> 00:02:38,100
+we usually use lowercase,
+
+60
+00:02:38,100 --> 00:02:39,100
+when we're programming.
+
+61
+00:02:39,100 --> 00:02:39,900
+Normally we use lowercase
+
+62
+00:02:39,900 --> 00:02:40,600
+when we write this syntax.
+
+63
+00:02:40,600 --> 00:02:41,440
+I deliberately used uppercase,
+
+64
+00:02:41,440 --> 00:02:42,260
+mainly because it looks nicer.
+
+65
+00:02:42,260 --> 00:02:45,160
+For example, x5, x6, x7.
+
+66
+00:02:45,160 --> 00:02:45,980
+We talked about this earlier.
+
+67
+00:02:45,980 --> 00:02:47,300
+Each register has a code name,
+
+68
+00:02:47,300 --> 00:02:47,780
+right?
+
+69
+00:02:47,780 --> 00:02:48,920
+So that's 5, 6, 7.
+
+70
+00:02:48,920 --> 00:02:49,760
+Its encoding.
+
+71
+00:02:49,760 --> 00:02:50,940
+As for the specific encoding,
+
+72
+00:02:50,940 --> 00:02:52,320
+it's actually quite simple.
+
+73
+00:02:52,320 --> 00:02:53,760
+If it's x5,
+
+74
+00:02:53,760 --> 00:02:55,420
+you can imagine
+
+75
+00:02:55,420 --> 00:02:56,360
+that the value inside
+
+76
+00:02:56,360 --> 00:02:58,440
+those 5 bits is just 5.
+
+77
+00:02:58,440 --> 00:03:00,540
+The value in x6 is 6.
+
+78
+00:03:00,540 --> 00:03:02,620
+Once you understand that,
+
+79
+00:03:02,620 --> 00:03:04,680
+you also need to be able to read it the other way around.
+
+80
+00:03:04,680 --> 00:03:09,380
+Now, this encoding format is R-type.
+
+81
+00:03:09,380 --> 00:03:10,260
+The opcode is
+
+82
+00:03:10,260 --> 00:03:12,280
+011 0011.
+
+83
+00:03:12,280 --> 00:03:13,640
+Why is it this value?
+
+84
+00:03:13,640 --> 00:03:15,080
+Just look it up in the table.
+
+85
+00:03:15,080 --> 00:03:17,260
+It's listed right there in that table.
+
+86
+00:03:17,260 --> 00:03:18,660
+I just demonstrated that briefly earlier.
+
+87
+00:03:18,660 --> 00:03:19,280
+Right?
+
+88
+00:03:19,280 --> 00:03:20,420
+And then,
+
+89
+00:03:20,420 --> 00:03:21,800
+function3 is set to 000.
+
+90
+00:03:21,800 --> 00:03:24,260
+function7 is set to seven 0s.
+
+91
+00:03:24,260 --> 00:03:25,340
+Now why is that?
+
+92
+00:03:25,340 --> 00:03:27,920
+Actually, we may have gone through this a bit quickly just now.
+
+93
+00:03:27,920 --> 00:03:29,360
+Let's go back to that table again.
+
+94
+00:03:29,360 --> 00:03:32,060
+If you look up the add instruction in this table,
+
+95
+00:03:32,060 --> 00:03:33,720
+it's written out very clearly here.
+
+96
+00:03:33,720 --> 00:03:36,160
+The add instruction
+
+97
+00:03:36,160 --> 00:03:39,490
+is exactly like this.
+
+98
+00:03:39,490 --> 00:03:41,750
+This is the opcode field.
+
+99
+00:03:41,750 --> 00:03:44,410
+This is function3 in 3 bits.
+
+100
+00:03:44,410 --> 00:03:46,590
+This is function7 in 7 bits.
+
+101
+00:03:46,590 --> 00:03:48,210
+This is the first instruction.
+
+102
+00:03:48,210 --> 00:03:50,030
+So it uses the simplest encoding.
+
+103
+00:03:50,030 --> 00:03:50,350
+All zeros.
+
+104
+00:03:50,350 --> 00:03:53,070
+That is to say, these three values
+
+105
+00:03:53,070 --> 00:03:54,690
+uniquely determine
+
+106
+00:03:54,690 --> 00:03:55,830
+that this is an add instruction.
+
+107
+00:03:55,830 --> 00:03:57,490
+Pay attention to this, everyone.
+
+108
+00:03:57,490 --> 00:03:58,410
+Uniquely determined.
+
+109
+00:03:58,410 --> 00:03:59,130
+This is an add instruction.
+
+110
+00:03:59,130 --> 00:04:03,660
+Then RS1, RS2.
+
+111
+00:04:03,660 --> 00:04:04,660
+We just covered this earlier,
+
+112
+00:04:04,660 --> 00:04:06,040
+the concept of source.
+
+113
+00:04:06,040 --> 00:04:08,160
+RD is the destination.
+
+114
+00:04:08,160 --> 00:04:09,520
+It's used to store the result.
+
+115
+00:04:09,520 --> 00:04:10,300
+Very simple.
+
+116
+00:04:10,300 --> 00:04:11,980
+This is an add instruction.
+
+117
+00:04:11,980 --> 00:04:19,060
+Now, let's briefly
+
+118
+00:04:19,060 --> 00:04:21,320
+use this instruction as an example again
+
+119
+00:04:21,320 --> 00:04:22,060
+and take a look at
+
+120
+00:04:22,060 --> 00:04:23,660
+how we
+
+121
+00:04:23,660 --> 00:04:26,340
+Once we've sorted that out,
+
+122
+00:04:26,340 --> 00:04:27,540
+what does the final encoded
+
+123
+00:04:27,540 --> 00:04:28,420
+machine instruction
+
+124
+00:04:28,420 --> 00:04:29,380
+actually look like?
+
+125
+00:04:29,380 --> 00:04:33,070
+So just now, by looking it up in the table,
+
+126
+00:04:33,070 --> 00:04:33,610
+we already know
+
+127
+00:04:33,610 --> 00:04:34,950
+the OPCODE is 0011,
+
+128
+00:04:34,950 --> 00:04:36,090
+and these
+
+129
+00:04:36,090 --> 00:04:39,550
+were found
+
+130
+00:04:39,550 --> 00:04:42,890
+from the table just now.
+
+131
+00:04:42,890 --> 00:04:45,190
+That leaves RSE2,
+
+132
+00:04:45,190 --> 00:04:47,070
+RSE, and RD — these three fields,
+
+133
+00:04:47,070 --> 00:04:48,730
+and we still don't know what to fill in, right?
+
+134
+00:04:48,730 --> 00:04:50,970
+So let's assume our command looks like this.
+
+135
+00:04:50,970 --> 00:04:52,750
+Based on the explanation we just gave,
+
+136
+00:04:52,750 --> 00:04:55,710
+we said 5 corresponds to D,
+
+137
+00:04:55,710 --> 00:04:57,330
+6 to R1, R2.
+
+138
+00:04:57,330 --> 00:04:57,990
+So what does that tell us?
+
+139
+00:04:57,990 --> 00:05:01,830
+It tells us the value placed in this RD is what number?
+
+140
+00:05:01,830 --> 00:05:03,130
+It has to be 5.
+
+141
+00:05:03,130 --> 00:05:04,470
+Think about it, right?
+
+142
+00:05:04,470 --> 00:05:06,610
+What's stored in that RSE?
+
+143
+00:05:06,610 --> 00:05:07,610
+It's definitely 6.
+
+144
+00:05:07,610 --> 00:05:09,030
+Then 7.
+
+145
+00:05:09,030 --> 00:05:11,030
+S27.
+
+146
+00:05:11,030 --> 00:05:12,270
+So,
+
+147
+00:05:12,270 --> 00:05:15,870
+but ultimately, what gets stored in the computer,
+
+148
+00:05:15,870 --> 00:05:16,910
+is definitely not an integer,
+
+149
+00:05:16,910 --> 00:05:18,010
+not a decimal number.
+
+150
+00:05:18,010 --> 00:05:19,150
+It definitely has to be turned into something — what is it?
+
+151
+00:05:19,150 --> 00:05:20,770
+Binary, right?
+
+152
+00:05:20,770 --> 00:05:22,010
+Now, binary,
+
+153
+00:05:22,010 --> 00:05:23,510
+you know, that is,
+
+154
+00:05:23,510 --> 00:05:25,630
+let's convert it ourselves.
+
+155
+00:05:25,630 --> 00:05:26,390
+Do the conversion.
+
+156
+00:05:26,390 --> 00:05:27,570
+This is very simple, right?
+
+157
+00:05:27,570 --> 00:05:30,030
+It's just 111.
+
+158
+00:05:30,030 --> 00:05:32,070
+The moment you see it, you should know it's 7.
+
+159
+00:05:32,070 --> 00:05:32,890
+Right?
+
+160
+00:05:32,890 --> 00:05:35,090
+For example, in that command line of yours,
+
+161
+00:05:35,090 --> 00:05:35,970
+Type that, what is it
+
+162
+00:05:35,970 --> 00:05:38,330
+When you change mode
+
+163
+00:05:38,330 --> 00:05:39,810
+What does that 777 mean
+
+164
+00:05:39,810 --> 00:05:40,610
+Right?
+
+165
+00:05:40,610 --> 00:05:42,010
+Isn't it just 111?
+
+166
+00:05:42,010 --> 00:05:42,630
+111, right?
+
+167
+00:05:42,630 --> 00:05:42,790
+Isn't it?
+
+168
+00:05:42,790 --> 00:05:44,830
+These numbers should be somewhat
+
+169
+00:05:44,830 --> 00:05:46,250
+familiar to everyone
+
+170
+00:05:46,250 --> 00:05:47,350
+For example, that change mode
+
+171
+00:05:47,350 --> 00:05:48,530
+What does 664 mean?
+
+172
+00:05:48,530 --> 00:05:50,110
+What does 777 mean?
+
+173
+00:05:50,110 --> 00:05:50,390
+Right?
+
+174
+00:05:50,390 --> 00:05:52,250
+Of course, I'm getting off track here
+
+175
+00:05:52,250 --> 00:05:54,510
+So once we have this string of numbers
+
+176
+00:05:54,510 --> 00:05:56,130
+We basically know
+
+177
+00:05:56,130 --> 00:05:57,350
+What's in this memory
+
+178
+00:05:57,350 --> 00:05:58,470
+is just this thing
+
+179
+00:05:58,470 --> 00:06:00,030
+But ultimately we still need to know
+
+180
+00:06:00,030 --> 00:06:00,590
+where it is in memory
+
+181
+00:06:00,590 --> 00:06:01,310
+How are they laid out?
+
+182
+00:06:01,310 --> 00:06:01,510
+Right?
+
+183
+00:06:01,510 --> 00:06:02,690
+So usually we'll also
+
+184
+00:06:02,690 --> 00:06:05,530
+take this binary, which looks pretty ugly,
+
+185
+00:06:05,530 --> 00:06:06,250
+and for most of us,
+
+186
+00:06:06,250 --> 00:06:08,670
+we like to group it in eight bits, eight bits,
+
+187
+00:06:08,670 --> 00:06:09,410
+and split it up,
+
+188
+00:06:09,410 --> 00:06:11,030
+and then finally convert it into a
+
+189
+00:06:11,030 --> 00:06:12,230
+hexadecimal number
+
+190
+00:06:12,230 --> 00:06:13,510
+so we can work with it,
+
+191
+00:06:13,510 --> 00:06:15,330
+so we can do this,
+
+192
+00:06:15,330 --> 00:06:17,290
+to read it,
+
+193
+00:06:17,290 --> 00:06:19,510
+or to manipulate it,
+
+194
+00:06:19,510 --> 00:06:19,710
+right?
+
+195
+00:06:19,710 --> 00:06:20,690
+in programming.
+
+196
+00:06:20,690 --> 00:06:22,750
+So in the end, we know that
+
+197
+00:06:22,750 --> 00:06:25,310
+this add x5 x6 x7
+
+198
+00:06:25,310 --> 00:06:26,290
+assembly instruction,
+
+199
+00:06:26,290 --> 00:06:29,170
+let's say your assembly instruction,
+
+200
+00:06:29,170 --> 00:06:32,070
+then after it's processed by the assembler,
+
+201
+00:06:32,070 --> 00:06:33,530
+It's essentially something like this:
+
+202
+00:06:33,530 --> 00:06:34,690
+a binary number.
+
+203
+00:06:34,690 --> 00:06:37,090
+Now, with these binary numbers,
+
+204
+00:06:37,090 --> 00:06:38,430
+how are they laid out in memory?
+
+205
+00:06:38,430 --> 00:06:42,110
+This brings us to another issue:
+
+206
+00:06:42,110 --> 00:06:43,850
+the issue of endianness.
+
+207
+00:06:43,850 --> 00:06:45,470
+Do you follow what I mean?
+
+208
+00:06:45,470 --> 00:06:46,770
+Now, conversely,
+
+209
+00:06:46,770 --> 00:06:48,330
+say I give you a piece of machine instructions,
+
+210
+00:06:48,330 --> 00:06:50,710
+you can basically disassemble it back.
+
+211
+00:06:50,710 --> 00:06:52,590
+There's no such thing as 'discompiling'...
+
+212
+00:06:52,590 --> 00:06:53,990
+you can still disassemble it.
+
+213
+00:06:53,990 --> 00:06:56,050
+So this is
+
+214
+00:06:56,050 --> 00:06:58,290
+the most fundamental skill of a hacker.
+
+215
+00:06:58,290 --> 00:07:03,900
+Through this, we get to understand
+
+216
+00:07:03,900 --> 00:07:04,680
+how instructions are encoded,
+
+217
+00:07:04,680 --> 00:07:07,240
+and how they are stored in memory.
+
+218
+00:07:07,240 --> 00:07:14,690
+So next,
+
+219
+00:07:14,690 --> 00:07:16,730
+we've covered this part,
+
+220
+00:07:16,730 --> 00:07:19,590
+so let's look at an exercise.
+
+221
+00:07:19,590 --> 00:07:21,710
+This is our first one for today,
+
+222
+00:07:21,710 --> 00:07:23,310
+the add exercise.
+
+223
+00:07:23,310 --> 00:07:27,920
+Let me walk you through it once now.
+
+224
+00:07:27,920 --> 00:07:32,980
+Our exercises,
+
+225
+00:07:32,980 --> 00:07:33,600
+as I mentioned earlier,
+
+226
+00:07:33,600 --> 00:07:34,660
+are all placed here.
+
+227
+00:07:34,660 --> 00:07:36,060
+Each directory,
+
+228
+00:07:36,060 --> 00:07:38,340
+basically, is the directory for that command,
+
+229
+00:07:38,340 --> 00:07:39,740
+the name of that command,
+
+230
+00:07:39,740 --> 00:07:40,180
+like add.
+
+231
+00:07:40,180 --> 00:07:41,620
+So for ours,
+
+232
+00:07:41,620 --> 00:07:43,080
+under each directory,
+
+233
+00:07:43,080 --> 00:07:45,500
+let me briefly go over
+
+234
+00:07:45,500 --> 00:07:46,840
+the file organization.
+
+235
+00:07:46,840 --> 00:07:48,100
+It's generally one source file,
+
+236
+00:07:48,100 --> 00:07:49,380
+plus a makefile.
+
+237
+00:07:49,380 --> 00:07:52,660
+This makefile,
+
+238
+00:07:52,660 --> 00:07:56,140
+actually, the makefile in this first set,
+
+239
+00:07:56,140 --> 00:07:57,980
+you can't really see its actual content.
+
+240
+00:07:57,980 --> 00:07:59,840
+It actually works through
+
+241
+00:07:59,840 --> 00:08:03,520
+It's just defining some common variable names.
+
+242
+00:08:03,520 --> 00:08:04,640
+And then,
+
+243
+00:08:04,640 --> 00:08:05,860
+the key point is here,
+
+244
+00:08:05,860 --> 00:08:07,060
+which is include.
+
+245
+00:08:07,060 --> 00:08:09,420
+This make syntax,
+
+246
+00:08:09,420 --> 00:08:10,300
+everyone is familiar with it, right?
+
+247
+00:08:10,300 --> 00:08:11,300
+What does this include mean?
+
+248
+00:08:11,300 --> 00:08:15,460
+It will actually look for this file,
+
+249
+00:08:15,460 --> 00:08:16,940
+then expand this file,
+
+250
+00:08:16,940 --> 00:08:18,140
+and substitute it here,
+
+251
+00:08:18,140 --> 00:08:19,840
+just like macro expansion,
+
+252
+00:08:19,840 --> 00:08:20,060
+right?
+
+253
+00:08:20,060 --> 00:08:21,540
+Like preprocessing.
+
+254
+00:08:21,540 --> 00:08:23,760
+Now, this root.make,
+
+255
+00:08:23,760 --> 00:08:25,140
+where is it located?
+
+256
+00:08:25,140 --> 00:08:27,100
+It's in the parent directory.
+
+257
+00:08:27,100 --> 00:08:29,240
+So to actually find
+
+258
+00:08:29,240 --> 00:08:29,960
+this root.make,
+
+259
+00:08:29,960 --> 00:08:31,200
+it's very simple—you just go
+
+260
+00:08:31,200 --> 00:08:33,940
+into this asm directory.
+
+261
+00:08:33,940 --> 00:08:35,120
+Because right now we're in
+
+262
+00:08:35,120 --> 00:08:36,040
+this add directory,
+
+263
+00:08:36,040 --> 00:08:38,360
+we need to go up one level to the asm directory.
+
+264
+00:08:38,360 --> 00:08:40,460
+Once we're in the asm directory,
+
+265
+00:08:40,460 --> 00:08:43,120
+actually right here
+
+266
+00:08:43,120 --> 00:08:44,060
+there's a root.make.
+
+267
+00:08:44,060 --> 00:08:45,800
+Inside this file is really our
+
+268
+00:08:45,800 --> 00:08:48,340
+actual make statements.
+
+269
+00:08:48,340 --> 00:08:51,580
+In the last class, when we covered
+
+270
+00:08:51,580 --> 00:08:52,360
+the makefile,
+
+271
+00:08:52,360 --> 00:08:54,680
+I think I briefly walked everyone through this file,
+
+272
+00:08:54,680 --> 00:08:55,460
+right?
+
+273
+00:08:55,460 --> 00:08:56,800
+I don't know if you see any issues with it now,
+
+274
+00:08:56,800 --> 00:08:57,740
+or if there are still questions.
+
+275
+00:08:57,740 --> 00:09:01,200
+Actually, when we do the exercises,
+
+276
+00:09:01,200 --> 00:09:03,260
+we also demonstrate them based on that QEMU emulator.
+
+277
+00:09:03,260 --> 00:09:05,720
+to demonstrate for you all
+
+278
+00:09:05,720 --> 00:09:07,060
+And since we want to
+
+279
+00:09:07,060 --> 00:09:09,540
+see how the assembly instructions are executed,
+
+280
+00:09:09,540 --> 00:09:11,680
+so don't we mostly run it directly
+
+281
+00:09:11,680 --> 00:09:13,260
+Because if you just run it, you can't really see any results.
+
+282
+00:09:13,260 --> 00:09:14,720
+In practice, what we use more often is
+
+283
+00:09:14,720 --> 00:09:17,840
+the GDB debugger to look at some state in memory.
+
+284
+00:09:17,840 --> 00:09:19,160
+So,
+
+285
+00:09:19,160 --> 00:09:21,200
+when you do the exercises later,
+
+286
+00:09:21,200 --> 00:09:22,600
+you'll probably need to use
+
+287
+00:09:22,600 --> 00:09:24,960
+the make debug command more.
+
+288
+00:09:24,960 --> 00:09:28,720
+As for the make debug command,
+
+289
+00:09:28,720 --> 00:09:30,800
+what it actually does inside,
+
+290
+00:09:30,800 --> 00:09:32,360
+basically, it starts up QEMU,
+
+291
+00:09:32,360 --> 00:09:35,040
+and then,
+
+292
+00:09:35,040 --> 00:09:37,680
+it takes the file we compiled and generated,
+
+293
+00:09:37,680 --> 00:09:39,160
+this file,
+
+294
+00:09:39,160 --> 00:09:43,360
+and through the -kernel parameter,
+
+295
+00:09:43,360 --> 00:09:44,620
+it loads it up.
+
+296
+00:09:44,620 --> 00:09:45,660
+At the same time,
+
+297
+00:09:45,660 --> 00:09:46,580
+please note,
+
+298
+00:09:46,580 --> 00:09:47,440
+there's a -S here,
+
+299
+00:09:47,440 --> 00:09:48,560
+a capital S.
+
+300
+00:09:48,560 --> 00:09:49,140
+This one,
+
+301
+00:09:49,140 --> 00:09:50,620
+Let me also briefly explain
+
+302
+00:09:50,620 --> 00:09:53,060
+what QEMU actually is over here
+
+303
+00:09:53,060 --> 00:09:53,800
+since we haven't covered it yet
+
+304
+00:09:53,800 --> 00:09:54,540
+QEMU,
+
+305
+00:09:54,540 --> 00:09:56,760
+it's actually this thing right here
+
+306
+00:09:56,760 --> 00:09:59,260
+Last time I probably went through this part a bit too fast
+
+307
+00:09:59,260 --> 00:10:00,360
+and just glossed over it in one go
+
+308
+00:10:00,360 --> 00:10:01,320
+so let me go over it again for you
+
+309
+00:10:01,320 --> 00:10:02,060
+This thing here
+
+310
+00:10:02,060 --> 00:10:03,220
+actually serves as a
+
+311
+00:10:03,220 --> 00:10:05,520
+system-level emulator for QEMU
+
+312
+00:10:05,520 --> 00:10:07,080
+Because if we look back for a moment,
+
+313
+00:10:07,080 --> 00:10:07,580
+you all remember, right?
+
+314
+00:10:07,580 --> 00:10:09,620
+QEMU has two running modes
+
+315
+00:10:09,620 --> 00:10:12,840
+One is called user mode
+
+316
+00:10:12,840 --> 00:10:15,220
+We generally use user mode to run a
+
+317
+00:10:15,220 --> 00:10:17,120
+executable program
+
+318
+00:10:17,120 --> 00:10:19,440
+The kind we're running now,
+
+319
+00:10:19,440 --> 00:10:21,120
+compiled from assembly instructions,
+
+320
+00:10:21,120 --> 00:10:22,280
+strictly speaking,
+
+321
+00:10:22,280 --> 00:10:23,340
+It's actually a piece of logic code.
+
+322
+00:10:23,340 --> 00:10:25,120
+It can't be run on an operating system
+
+323
+00:10:25,120 --> 00:10:26,080
+directly.
+
+324
+00:10:26,080 --> 00:10:27,440
+If you try to run it,
+
+325
+00:10:27,440 --> 00:10:28,860
+directly under an operating system,
+
+326
+00:10:28,860 --> 00:10:30,680
+for example, running it directly on Linux,
+
+327
+00:10:30,680 --> 00:10:32,840
+it won't execute.
+
+328
+00:10:32,840 --> 00:10:34,860
+What we're actually doing is running this code directly in a logical sense,
+
+329
+00:10:34,860 --> 00:10:37,080
+so we launch it in system mode.
+
+330
+00:10:37,080 --> 00:10:40,700
+So that's why we start it in system mode.
+
+331
+00:10:40,700 --> 00:10:44,600
+system is the 32-bit RISC-V machine simulator,
+
+332
+00:10:44,600 --> 00:10:46,740
+and then we pass in some parameters.
+
+333
+00:10:46,740 --> 00:10:50,820
+-nographic basically means,
+
+334
+00:10:50,820 --> 00:10:53,160
+graphic, as we know, means graphics or images,
+
+335
+00:10:53,160 --> 00:10:55,060
+so it means it doesn't start a graphical interface.
+
+336
+00:10:55,060 --> 00:10:59,520
+And then -smp means we only start a single core,
+
+337
+00:10:59,520 --> 00:11:00,880
+so basically just one hart.
+
+338
+00:11:00,880 --> 00:11:04,200
+And the machine we start
+
+339
+00:11:04,200 --> 00:11:08,420
+is of the machine type called virt,
+
+340
+00:11:08,420 --> 00:11:09,360
+that is, the simulator.
+
+341
+00:11:09,360 --> 00:11:13,600
+It simulates a device type called VRT.
+
+342
+00:11:13,600 --> 00:11:14,480
+What this device type is,
+
+343
+00:11:14,480 --> 00:11:16,300
+later when we talk about the operating system,
+
+344
+00:11:16,300 --> 00:11:17,060
+we'll look at it in detail.
+
+345
+00:11:17,060 --> 00:11:18,560
+For now, just having a simple understanding is enough.
+
+346
+00:11:18,560 --> 00:11:20,740
+Anyway, through this approach,
+
+347
+00:11:20,740 --> 00:11:23,000
+we get the emulator running.
+
+348
+00:11:23,000 --> 00:11:24,660
+It's essentially like a hart is up and running.
+
+349
+00:11:24,660 --> 00:11:26,220
+Then on this hart we run
+
+350
+00:11:26,220 --> 00:11:30,320
+the assembly instructions we compiled and generated,
+
+351
+00:11:30,320 --> 00:11:31,560
+the machine instructions.
+
+352
+00:11:31,560 --> 00:11:34,200
+So this is QEMU.
+
+353
+00:11:34,200 --> 00:11:37,720
+First, we launch a QEMU emulator.
+
+354
+00:11:37,720 --> 00:11:39,120
+And when we launch it,
+
+355
+00:11:39,120 --> 00:11:41,300
+after adding the -s and -S options,
+
+356
+00:11:41,300 --> 00:11:42,820
+what effect does it achieve?
+
+357
+00:11:42,820 --> 00:11:44,560
+Well, let's review for a moment.
+
+358
+00:11:44,560 --> 00:11:45,320
+We talked about this before,
+
+359
+00:11:45,320 --> 00:11:47,160
+this kind of debugging method
+
+360
+00:11:47,160 --> 00:11:49,380
+is called remote debugging.
+
+361
+00:11:49,380 --> 00:11:52,940
+Because the previous one, I'm not sure
+
+362
+00:11:52,940 --> 00:11:55,360
+Maybe let's briefly review that part again
+
+363
+00:11:55,360 --> 00:11:58,320
+That is to say, on which diagram
+
+364
+00:11:58,320 --> 00:12:04,950
+On the one with the crossing
+
+365
+00:12:04,950 --> 00:12:26,890
+On this diagram
+
+366
+00:12:26,890 --> 00:12:31,860
+Don't move it
+
+367
+00:12:31,860 --> 00:12:38,400
+On this diagram
+
+368
+00:12:38,400 --> 00:12:41,210
+Everyone still remembers, right?
+
+369
+00:12:41,210 --> 00:12:41,870
+Let's run it
+
+370
+00:12:41,870 --> 00:12:48,420
+That is, we said that QEMU and GDB work together to debug
+
+371
+00:12:48,420 --> 00:12:51,840
+So we're actually getting to today's runtime environment
+
+372
+00:12:51,840 --> 00:12:55,060
+We're actually using a remote debugging approach
+
+373
+00:12:55,060 --> 00:12:55,600
+Why?
+
+374
+00:12:55,600 --> 00:12:58,740
+Because it's a cross development and debugging environment
+
+375
+00:12:58,740 --> 00:13:05,200
+Our target machine and the machine running GDB
+
+376
+00:13:05,200 --> 00:13:07,600
+You can actually think of them as two different machines
+
+377
+00:13:07,600 --> 00:13:09,580
+It's just that our target machine
+
+378
+00:13:09,580 --> 00:13:10,700
+is currently an emulator
+
+379
+00:13:10,700 --> 00:13:11,260
+That is QEMU
+
+380
+00:13:11,260 --> 00:13:13,180
+QEMU
+
+381
+00:13:13,180 --> 00:13:18,040
+It emulates a RISC-V machine,
+
+382
+00:13:18,040 --> 00:13:22,340
+while our GDB is actually running on an x86 machine.
+
+383
+00:13:22,340 --> 00:13:22,600
+Right?
+
+384
+00:13:22,600 --> 00:13:24,280
+This is a concept you need to grasp,
+
+385
+00:13:24,280 --> 00:13:26,340
+which is the cross development and debugging environment.
+
+386
+00:13:26,340 --> 00:13:28,920
+So when we run this QEMU,
+
+387
+00:13:28,920 --> 00:13:30,520
+if we pass the -s -S flags,
+
+388
+00:13:30,520 --> 00:13:33,320
+especially the -s option,
+
+389
+00:13:33,320 --> 00:13:35,300
+it will actually automatically start a GDB server
+
+390
+00:13:35,300 --> 00:13:37,700
+for you inside QEMU.
+
+391
+00:13:37,700 --> 00:13:41,140
+This diagram is explaining exactly that.
+
+392
+00:13:41,140 --> 00:13:44,060
+Between GDB and the GDB server,
+
+393
+00:13:44,060 --> 00:13:45,980
+we need to connect over a network.
+
+394
+00:13:45,980 --> 00:13:47,040
+It's just that right now,
+
+395
+00:13:47,040 --> 00:13:49,160
+the emulator and our GDB
+
+396
+00:13:49,160 --> 00:13:51,160
+are both actually running on the same
+
+397
+00:13:51,160 --> 00:13:52,220
+Ubuntu machine, right?
+
+398
+00:13:52,220 --> 00:13:54,160
+So in practice, this network connection
+
+399
+00:13:54,160 --> 00:13:55,100
+is a local loopback,
+
+400
+00:13:55,100 --> 00:13:56,500
+not a real one.
+
+401
+00:13:56,500 --> 00:13:57,780
+Of course, you can also actually run it
+
+402
+00:13:57,780 --> 00:13:58,720
+on a different machine,
+
+403
+00:13:58,720 --> 00:13:59,300
+and that works fine too.
+
+404
+00:13:59,300 --> 00:14:00,380
+For example, you could run this emulator
+
+405
+00:14:00,380 --> 00:14:02,560
+on another machine,
+
+406
+00:14:02,560 --> 00:14:04,040
+and then establish a connection over the network.
+
+407
+00:14:04,040 --> 00:14:04,840
+That works as well.
+
+408
+00:14:04,840 --> 00:14:07,000
+So what does this -S do?
+
+409
+00:14:07,000 --> 00:14:07,840
+It will actually
+
+410
+00:14:07,840 --> 00:14:09,900
+set up a network connection,
+
+411
+00:14:09,900 --> 00:14:10,500
+and moreover,
+
+412
+00:14:10,500 --> 00:14:11,460
+as a service,
+
+413
+00:14:11,460 --> 00:14:13,040
+as we say with sockets,
+
+414
+00:14:13,040 --> 00:14:14,720
+it definitely needs a port number, right?
+
+415
+00:14:14,720 --> 00:14:15,940
+You still remember that concept, right?
+
+416
+00:14:15,940 --> 00:14:17,600
+Well, with our -S,
+
+417
+00:14:17,600 --> 00:14:18,780
+it defaults to using
+
+418
+00:14:18,780 --> 00:14:20,300
+port number 1234
+
+419
+00:14:20,300 --> 00:14:21,460
+and starts up a service.
+
+420
+00:14:21,460 --> 00:14:23,200
+You can think of this GDB
+
+421
+00:14:23,200 --> 00:14:24,860
+right on this port 1234,
+
+422
+00:14:24,860 --> 00:14:27,740
+waiting for GDB to initiate a connection to it.
+
+423
+00:14:27,740 --> 00:14:29,260
+This is basically
+
+424
+00:14:29,260 --> 00:14:31,940
+how the Socket works.
+
+425
+00:14:31,940 --> 00:14:33,680
+So after we launch GDB,
+
+426
+00:14:33,680 --> 00:14:36,720
+we connect to it through the Socket.
+
+427
+00:14:36,720 --> 00:14:38,960
+Once connected, we can debug on both sides.
+
+428
+00:14:38,960 --> 00:14:40,500
+That's the idea here,
+
+429
+00:14:40,500 --> 00:14:43,280
+which is the effect of the lowercase s.
+
+430
+00:14:43,280 --> 00:14:45,000
+Now, what about the uppercase S?
+
+431
+00:14:45,000 --> 00:14:46,260
+What effect does it actually have?
+
+432
+00:14:46,260 --> 00:14:48,260
+It makes the program, well,
+
+433
+00:14:48,260 --> 00:14:50,980
+once you run it under GDB,
+
+434
+00:14:50,980 --> 00:14:53,160
+it will actually stop there and wait for you.
+
+435
+00:14:53,160 --> 00:14:55,280
+Isn't that exactly the effect we want?
+
+436
+00:14:55,280 --> 00:14:56,040
+If it runs off on its own,
+
+437
+00:14:56,040 --> 00:14:56,980
+we'd have no way to debug it.
+
+438
+00:14:56,980 --> 00:14:57,520
+Think about it — isn't that right?
+
+439
+00:14:57,520 --> 00:15:00,300
+So if we put the whole thing together,
+
+440
+00:15:00,300 --> 00:15:02,100
+we need to include these two options.
+
+441
+00:15:02,100 --> 00:15:05,720
+Just tell QML to run in this mode, and that's it.
+
+442
+00:15:05,720 --> 00:15:06,640
+Let me explain to everyone
+
+443
+00:15:06,640 --> 00:15:09,660
+what exactly is going on in the lab we're doing right now.
+
+444
+00:15:09,660 --> 00:15:13,590
+So this is why you see it here,
+
+445
+00:15:13,590 --> 00:15:16,350
+the reason we launch it this way.
+
+446
+00:15:16,350 --> 00:15:18,790
+Now, the next symbol means that
+
+447
+00:15:18,790 --> 00:15:23,630
+we will take the QML program process
+
+448
+00:15:23,630 --> 00:15:24,190
+and do what with it?
+
+449
+00:15:24,190 --> 00:15:25,330
+Send it to the background,
+
+450
+00:15:25,330 --> 00:15:25,550
+right?
+
+451
+00:15:25,550 --> 00:15:27,170
+Once it's in the background,
+
+452
+00:15:27,170 --> 00:15:28,470
+we can then launch a
+
+453
+00:15:28,470 --> 00:15:29,430
+local client —
+
+454
+00:15:29,430 --> 00:15:30,850
+that's the left part
+
+455
+00:15:30,850 --> 00:15:31,470
+of that diagram from earlier.
+
+456
+00:15:31,470 --> 00:15:32,670
+This client
+
+457
+00:15:32,670 --> 00:15:34,150
+will be loaded on top of our
+
+458
+00:15:34,150 --> 00:15:35,850
+compiled and generated ERF file.
+
+459
+00:15:35,850 --> 00:15:36,950
+And then,
+
+460
+00:15:36,950 --> 00:15:38,130
+just a quick note for everyone.
+
+461
+00:15:38,130 --> 00:15:39,750
+Now, this -Q option,
+
+462
+00:15:39,750 --> 00:15:41,130
+actually just stands for quiet.
+
+463
+00:15:41,130 --> 00:15:42,090
+You can go check
+
+464
+00:15:42,090 --> 00:15:42,790
+the manual yourselves.
+
+465
+00:15:42,790 --> 00:15:43,650
+It's very simple:
+
+466
+00:15:43,650 --> 00:15:46,050
+it avoids this—
+
+467
+00:15:46,050 --> 00:15:47,150
+you know that when GDB
+
+468
+00:15:47,150 --> 00:15:47,670
+starts up,
+
+469
+00:15:47,670 --> 00:15:49,250
+it prints a bunch of garbage up front,
+
+470
+00:15:49,250 --> 00:15:49,990
+and this gets rid of that,
+
+471
+00:15:49,990 --> 00:15:51,630
+so it doesn't clutter our screen.
+
+472
+00:15:51,630 --> 00:15:52,690
+And then,
+
+473
+00:15:52,690 --> 00:15:53,410
+let me focus on
+
+474
+00:15:53,410 --> 00:15:54,110
+this -x.
+
+475
+00:15:54,110 --> 00:15:55,290
+With -x,
+
+476
+00:15:55,290 --> 00:15:58,310
+it actually takes an argument
+
+477
+00:15:58,310 --> 00:16:01,150
+that lets it run a configuration script.
+
+478
+00:16:01,150 --> 00:16:02,530
+This configuration script,
+
+479
+00:16:02,530 --> 00:16:03,930
+we've already written it for you,
+
+480
+00:16:03,930 --> 00:16:07,370
+and it's a file called gdb init.
+
+481
+00:16:07,370 --> 00:16:09,030
+In this file,
+
+482
+00:16:09,030 --> 00:16:10,350
+it actually runs a bunch of
+
+483
+00:16:10,350 --> 00:16:11,530
+the debug commands we use all the time.
+
+484
+00:16:11,530 --> 00:16:13,930
+Because as you know,
+
+485
+00:16:13,930 --> 00:16:16,530
+after you start up gdb,
+
+486
+00:16:16,530 --> 00:16:18,470
+you'd have to type these commands by hand
+
+487
+00:16:18,470 --> 00:16:20,470
+to connect to the server side,
+
+488
+00:16:20,470 --> 00:16:22,930
+especially this target remote 1234,
+
+489
+00:16:22,930 --> 00:16:24,630
+which basically acts as
+
+490
+00:16:24,630 --> 00:16:27,030
+a client connecting to that GDB server.
+
+491
+00:16:27,030 --> 00:16:28,050
+See what I mean?
+
+492
+00:16:28,050 --> 00:16:30,170
+Having to type them every time is kind of annoying, right?
+
+493
+00:16:30,170 --> 00:16:32,330
+So you can take these commands you use often
+
+494
+00:16:32,330 --> 00:16:33,830
+and write them into a config script,
+
+495
+00:16:33,830 --> 00:16:35,550
+and then at that spot we just saw,
+
+496
+00:16:35,550 --> 00:16:37,730
+right here,
+
+497
+00:16:37,730 --> 00:16:39,970
+tell GDB about it through this argument.
+
+498
+00:16:39,970 --> 00:16:41,190
+Then when GDB starts up,
+
+499
+00:16:41,190 --> 00:16:43,270
+it will automatically read that config script,
+
+500
+00:16:43,270 --> 00:16:45,450
+and run these commands by default for you.
+
+501
+00:16:45,450 --> 00:16:46,370
+Understand what I mean?
+
+502
+00:16:46,370 --> 00:16:47,710
+That way,
+
+503
+00:16:47,710 --> 00:16:49,590
+it's convenient for us to just...
+
+504
+00:16:49,590 --> 00:16:51,490
+not type those commands ourselves every time.
+
+505
+00:16:51,490 --> 00:16:54,870
+As for what each command means,
+
+506
+00:16:54,870 --> 00:16:57,310
+I won't say too much here.
+
+507
+00:16:57,310 --> 00:16:58,970
+Especially what B and C mean.
+
+508
+00:16:58,970 --> 00:17:01,450
+Earlier this is the most basic GDB command requirement.
+
+509
+00:17:01,450 --> 00:17:02,430
+This sets a breakpoint, right?
+
+510
+00:17:02,430 --> 00:17:03,410
+You still remember?
+
+511
+00:17:03,410 --> 00:17:05,830
+A breakpoint can be followed by a function name.
+
+512
+00:17:05,830 --> 00:17:07,490
+We just talked about what this start is.
+
+513
+00:17:07,490 --> 00:17:13,940
+This start is actually what's in our program later.
+
+514
+00:17:13,940 --> 00:17:16,300
+The first file from just now,
+
+515
+00:17:16,300 --> 00:17:17,360
+everyone has seen it, right?
+
+516
+00:17:17,360 --> 00:17:18,460
+There's a start here.
+
+517
+00:17:18,460 --> 00:17:20,540
+As I just said, this start is an address.
+
+518
+00:17:20,540 --> 00:17:23,660
+Setting a breakpoint means setting it at an address.
+
+519
+00:17:23,660 --> 00:17:23,960
+Right?
+
+520
+00:17:23,960 --> 00:17:26,040
+So this start actually tells us
+
+521
+00:17:26,040 --> 00:17:26,980
+We set the breakpoint right here,
+
+522
+00:17:26,980 --> 00:17:29,580
+which is actually the very first instruction of our program.
+
+523
+00:17:29,580 --> 00:17:31,940
+Now this one,
+
+524
+00:17:31,940 --> 00:17:34,560
+this is for setting the breakpoint,
+
+525
+00:17:34,560 --> 00:17:36,620
+and this one connects to the server side.
+
+526
+00:17:36,620 --> 00:17:37,660
+As for c, it just
+
+527
+00:17:37,660 --> 00:17:39,620
+lets the program run.
+
+528
+00:17:39,620 --> 00:17:40,060
+continue
+
+529
+00:17:40,060 --> 00:17:41,900
+But when it runs, it actually doesn't really run,
+
+530
+00:17:41,900 --> 00:17:43,140
+it just gets caught at the breakpoint.
+
+531
+00:17:43,140 --> 00:17:44,780
+Then this one is actually
+
+532
+00:17:44,780 --> 00:17:45,760
+set design,
+
+533
+00:17:45,760 --> 00:17:46,160
+design,
+
+534
+00:17:46,160 --> 00:17:47,020
+which actually means
+
+535
+00:17:47,020 --> 00:17:48,840
+setting it to single-step debugging mode,
+
+536
+00:17:48,840 --> 00:17:51,340
+and it's single-step debugging at the assembly level.
+
+537
+00:17:51,340 --> 00:17:52,340
+What this means is,
+
+538
+00:17:52,340 --> 00:17:54,480
+these few commands
+
+539
+00:17:54,480 --> 00:17:55,020
+are actually just
+
+540
+00:17:55,020 --> 00:17:57,640
+because when we debug,
+
+541
+00:17:57,640 --> 00:17:59,660
+Don't you have to keep checking the registers? Right?
+
+542
+00:17:59,660 --> 00:18:00,260
+Right?
+
+543
+00:18:00,260 --> 00:18:02,880
+If you have to look at the registers every single time,
+
+544
+00:18:02,880 --> 00:18:03,600
+that can be a bit of a hassle.
+
+545
+00:18:03,600 --> 00:18:04,280
+So what we do is
+
+546
+00:18:04,280 --> 00:18:06,880
+use the display command every time,
+
+547
+00:18:06,880 --> 00:18:08,240
+so that during execution,
+
+548
+00:18:08,240 --> 00:18:09,620
+every time you single-step,
+
+549
+00:18:09,620 --> 00:18:11,040
+it will automatically print out the values of these registers for you.
+
+550
+00:18:11,040 --> 00:18:12,060
+It'll print them out for you automatically.
+
+551
+00:18:12,060 --> 00:18:14,820
+Because the setup we're demoing to you
+
+552
+00:18:14,820 --> 00:18:15,840
+is not that kind of graphical interface.
+
+553
+00:18:15,840 --> 00:18:16,760
+If it were a graphical interface,
+
+554
+00:18:16,760 --> 00:18:17,980
+you'd probably find it pretty nice to use,
+
+555
+00:18:17,980 --> 00:18:19,220
+you know, the kind where
+
+556
+00:18:19,220 --> 00:18:21,460
+one window shows the registers,
+
+557
+00:18:21,460 --> 00:18:21,860
+which you can watch,
+
+558
+00:18:21,860 --> 00:18:23,720
+and another window shows something else, right?
+
+559
+00:18:23,720 --> 00:18:24,880
+Right now we just have one shell,
+
+560
+00:18:24,880 --> 00:18:27,260
+so this is the way we handle it.
+
+561
+00:18:27,260 --> 00:18:28,560
+You see, this is also
+
+562
+00:18:28,560 --> 00:18:31,920
+Of course, if you want to do it a bit nicer,
+
+563
+00:18:31,920 --> 00:18:34,580
+you could set up a graphical interface to debug it,
+
+564
+00:18:34,580 --> 00:18:36,280
+but on our side,
+
+565
+00:18:36,280 --> 00:18:38,100
+we won't demonstrate that here.
+
+566
+00:18:38,100 --> 00:18:40,880
+If any of you are interested, feel free to try it out on your own,
+
+567
+00:18:40,880 --> 00:18:41,660
+and if you manage to get it working,
+
+568
+00:18:41,660 --> 00:18:44,920
+you can share that graphical debugging method with everyone.
+
+569
+00:18:44,920 --> 00:18:45,580
+Here we'll just
+
+570
+00:18:45,580 --> 00:18:48,340
+use the simplest, most straightforward way
+
+571
+00:18:48,340 --> 00:18:49,160
+to demonstrate it for you.
+
+572
+00:18:49,160 --> 00:18:51,060
+So, regarding this
+
+573
+00:18:51,060 --> 00:18:54,040
+makefile run,
+
+574
+00:18:54,040 --> 00:18:55,160
+that's all we'll cover.
+
+575
+00:18:55,160 --> 00:18:56,560
+So, with that said,
+
+576
+00:18:56,560 --> 00:18:58,360
+let's get back to the main topic.
+
+577
+00:18:58,360 --> 00:18:59,780
+Let's return to our add
+
+578
+00:18:59,780 --> 00:19:00,780
+example.
+
+579
+00:19:00,780 --> 00:19:02,100
+This add example is very simple.
+
+580
+00:19:02,100 --> 00:19:04,480
+Let's read through it now.
+
+581
+00:19:04,480 --> 00:19:05,400
+This piece of code,
+
+582
+00:19:05,400 --> 00:19:06,620
+can you follow it?
+
+583
+00:19:06,620 --> 00:19:08,780
+Combined with what we covered in the previous class,
+
+584
+00:19:08,780 --> 00:19:10,220
+some of the basic assembly syntax.
+
+585
+00:19:10,220 --> 00:19:11,960
+What are all these things up front?
+
+586
+00:19:11,960 --> 00:19:14,930
+They're all comments.
+
+587
+00:19:14,930 --> 00:19:16,450
+Nothing much to say about them.
+
+588
+00:19:16,450 --> 00:19:17,630
+Then,
+
+589
+00:19:17,630 --> 00:19:18,270
+over here,
+
+590
+00:19:18,270 --> 00:19:18,750
+what's this called?
+
+591
+00:19:18,750 --> 00:19:21,350
+Try to recall it yourself.
+
+592
+00:19:21,350 --> 00:19:21,870
+What's this called?
+
+593
+00:19:21,870 --> 00:19:23,010
+The ones starting with a dot.
+
+594
+00:19:23,010 --> 00:19:24,070
+What are they called?
+
+595
+00:19:24,070 --> 00:19:25,290
+A directive,
+
+596
+00:19:25,290 --> 00:19:25,930
+right?
+
+597
+00:19:25,930 --> 00:19:27,570
+Is this an instruction?
+
+598
+00:19:27,570 --> 00:19:29,430
+No, it's not an instruction.
+
+599
+00:19:29,430 --> 00:19:30,970
+This is just telling the assembler,
+
+600
+00:19:30,970 --> 00:19:33,050
+from here on out
+
+601
+00:19:33,050 --> 00:19:34,810
+the part below
+
+602
+00:19:34,810 --> 00:19:38,450
+during the assembly process
+
+603
+00:19:38,450 --> 00:19:40,270
+where does it go
+
+604
+00:19:40,270 --> 00:19:42,970
+it goes into the text section
+
+605
+00:19:42,970 --> 00:19:44,670
+what is a section
+
+606
+00:19:44,670 --> 00:19:47,710
+remember that diagram from our last class
+
+607
+00:19:47,710 --> 00:19:50,250
+what an ELF file looks like
+
+608
+00:19:50,250 --> 00:19:50,490
+right
+
+609
+00:19:50,490 --> 00:19:55,220
+we can
+
+610
+00:19:55,220 --> 00:19:57,900
+briefly review that for everyone
+
+611
+00:19:57,900 --> 00:20:00,580
+so that you don't suddenly lose your train of thought
+
+612
+00:20:00,580 --> 00:20:02,000
+so this might be
+
+613
+00:20:02,000 --> 00:20:04,520
+this is content we've covered before
+
+614
+00:20:04,520 --> 00:20:06,280
+and it will come up again and again here
+
+615
+00:20:06,280 --> 00:20:10,700
+remember this diagram
+
+616
+00:20:10,700 --> 00:20:13,240
+that is, because in the end we
+
+617
+00:20:13,240 --> 00:20:15,180
+what do we use
+
+618
+00:20:15,180 --> 00:20:16,960
+we use this GNU
+
+619
+00:20:16,960 --> 00:20:20,660
+we use the GNU toolchain
+
+620
+00:20:20,660 --> 00:20:22,820
+it generates all of this
+
+621
+00:20:22,820 --> 00:20:24,580
+What gets compiled and generated,
+
+622
+00:20:24,580 --> 00:20:26,420
+this kind of executable file,
+
+623
+00:20:26,420 --> 00:20:28,280
+or in other words, the binary file,
+
+624
+00:20:28,280 --> 00:20:29,760
+is all in ELF format.
+
+625
+00:20:29,760 --> 00:20:31,440
+So as for where we put these instructions,
+
+626
+00:20:31,440 --> 00:20:32,840
+which section we put them into,
+
+627
+00:20:32,840 --> 00:20:33,800
+we can specify that in here.
+
+628
+00:20:33,800 --> 00:20:34,740
+It is configurable.
+
+629
+00:20:34,740 --> 00:20:37,080
+So what this piece of code does,
+
+630
+00:20:37,080 --> 00:20:38,180
+is essentially telling,
+
+631
+00:20:38,180 --> 00:20:41,400
+telling our assembler,
+
+632
+00:20:41,400 --> 00:20:42,700
+and the final,
+
+633
+00:20:42,700 --> 00:20:44,920
+the linker,
+
+634
+00:20:44,920 --> 00:20:46,320
+that for all the instructions below,
+
+635
+00:20:46,320 --> 00:20:47,880
+everything under this,
+
+636
+00:20:47,880 --> 00:20:49,520
+should be placed into that section,
+
+637
+00:20:49,520 --> 00:20:51,280
+the section called the text section.
+
+638
+00:20:51,280 --> 00:20:52,900
+And then over here,
+
+639
+00:20:52,900 --> 00:20:54,440
+we declare a global function,
+
+640
+00:20:54,440 --> 00:20:55,580
+called _start.
+
+641
+00:20:55,580 --> 00:20:58,020
+It is also the entry point of this entire program.
+
+642
+00:20:58,020 --> 00:21:01,200
+Now this program
+
+643
+00:21:01,200 --> 00:21:03,660
+is actually made up of just a few statements.
+
+644
+00:21:03,660 --> 00:21:06,600
+This is a label
+
+645
+00:21:06,600 --> 00:21:08,940
+marking the start of our program.
+
+646
+00:21:08,940 --> 00:21:11,160
+Here are two statements.
+
+647
+00:21:11,160 --> 00:21:12,640
+What is this li instruction?
+
+648
+00:21:12,640 --> 00:21:13,500
+We'll talk about it later.
+
+649
+00:21:13,500 --> 00:21:14,320
+Let's ignore it for now.
+
+650
+00:21:14,320 --> 00:21:16,160
+For now, just understand it as
+
+651
+00:21:16,160 --> 00:21:17,640
+basically performing an assignment on
+
+652
+00:21:17,640 --> 00:21:19,280
+the register x6.
+
+653
+00:21:19,280 --> 00:21:22,020
+So li x6, 1
+
+654
+00:21:22,020 --> 00:21:24,400
+is essentially equivalent to x6 = 1.
+
+655
+00:21:24,400 --> 00:21:26,980
+We'll use this later.
+
+656
+00:21:26,980 --> 00:21:28,080
+I will explain this to you in more detail.
+
+657
+00:21:28,080 --> 00:21:29,760
+But since we need to use it here,
+
+658
+00:21:29,760 --> 00:21:30,940
+I've written it down for now.
+
+659
+00:21:30,940 --> 00:21:32,720
+So these two statements
+
+660
+00:21:32,720 --> 00:21:35,180
+are simply assigning values to two registers.
+
+661
+00:21:35,180 --> 00:21:36,660
+After restoring the values,
+
+662
+00:21:36,660 --> 00:21:37,240
+what do we do?
+
+663
+00:21:37,240 --> 00:21:38,440
+We do addition.
+
+664
+00:21:38,440 --> 00:21:41,620
+Add x6 and x7 together.
+
+665
+00:21:41,620 --> 00:21:44,100
+Connecting this with the concept we just talked about,
+
+666
+00:21:44,100 --> 00:21:45,900
+these two are registers,
+
+667
+00:21:45,900 --> 00:21:47,020
+after adding them together,
+
+668
+00:21:47,020 --> 00:21:48,300
+put the result into x5.
+
+669
+00:21:48,300 --> 00:21:49,000
+That's all this does.
+
+670
+00:21:49,000 --> 00:21:50,700
+And then,
+
+671
+00:21:50,700 --> 00:21:53,120
+actually, the main part of our program is finished right here.
+
+672
+00:21:53,120 --> 00:21:55,360
+What is this thing down here doing?
+
+673
+00:21:55,360 --> 00:21:57,160
+Next,
+
+674
+00:21:57,160 --> 00:21:58,900
+you can think of it as just a jump instruction.
+
+675
+00:21:58,900 --> 00:22:03,500
+stop is the address of this instruction.
+
+676
+00:22:03,500 --> 00:22:06,980
+Jump to this instruction itself — what effect does that achieve?
+
+677
+00:22:06,980 --> 00:22:11,440
+An infinite loop.
+
+678
+00:22:11,440 --> 00:22:11,880
+Actually, this instruction doesn't do anything.
+
+679
+00:22:11,880 --> 00:22:13,400
+It just loops forever.
+
+680
+00:22:13,400 --> 00:22:14,280
+It's just an infinite loop.
+
+681
+00:22:14,280 --> 00:22:17,040
+The main purpose is to keep our program
+
+682
+00:22:17,040 --> 00:22:17,980
+from running off and crashing,
+
+683
+00:22:17,980 --> 00:22:19,320
+because the QEMU simulator
+
+684
+00:22:19,320 --> 00:22:20,920
+may report some weird exceptions.
+
+685
+00:22:20,920 --> 00:22:22,600
+Once our program runs,
+
+686
+00:22:22,600 --> 00:22:23,620
+it just keeps looping at this point,
+
+687
+00:22:23,620 --> 00:22:24,500
+and never exits.
+
+688
+00:22:24,500 --> 00:22:25,280
+Since it doesn't exit,
+
+689
+00:22:25,280 --> 00:22:26,380
+naturally there won't be any problems.
+
+690
+00:22:26,380 --> 00:22:26,880
+Think about it — isn't that the case?
+
+691
+00:22:26,880 --> 00:22:28,100
+In fact, that is exactly it.
+
+692
+00:22:28,100 --> 00:22:29,160
+In all the later examples,
+
+693
+00:22:29,160 --> 00:22:30,660
+we'll add this line at the end.
+
+694
+00:22:30,660 --> 00:22:31,880
+It's really just to achieve that purpose.
+
+695
+00:22:31,880 --> 00:22:33,100
+There isn't much more meaning to it.
+
+696
+00:22:33,100 --> 00:22:34,180
+The real content
+
+697
+00:22:34,180 --> 00:22:36,560
+comes before this loop.
+
+698
+00:22:36,560 --> 00:22:39,040
+When we write our code,
+
+699
+00:22:39,040 --> 00:22:40,300
+including later when you do the exercises,
+
+700
+00:22:40,300 --> 00:22:41,040
+keep that in mind.
+
+701
+00:22:41,040 --> 00:22:43,040
+And then the last dot directive,
+
+702
+00:22:43,040 --> 00:22:43,920
+which is also a direction,
+
+703
+00:22:43,920 --> 00:22:44,620
+a directive,
+
+704
+00:22:44,620 --> 00:22:45,840
+just tells us
+
+705
+00:22:45,840 --> 00:22:46,880
+that this file is finished.
+
+706
+00:22:46,880 --> 00:22:48,560
+It's that simple.
+
+707
+00:22:48,560 --> 00:22:49,760
+This is one of our
+
+708
+00:22:49,760 --> 00:22:51,320
+simplest
+
+709
+00:22:51,320 --> 00:22:52,920
+assembly programs.
+
+710
+00:22:52,920 --> 00:22:55,640
+Now let's compile it.
+
+711
+00:22:55,640 --> 00:22:57,220
+When compiling,
+
+712
+00:22:57,220 --> 00:23:00,940
+the command we run
+
+713
+00:23:00,940 --> 00:23:01,780
+is right here,
+
+714
+00:23:01,780 --> 00:23:04,520
+which is make.
+
+715
+00:23:04,520 --> 00:23:12,180
+When it runs,
+
+716
+00:23:12,180 --> 00:23:13,360
+let me see,
+
+717
+00:23:13,360 --> 00:23:14,020
+when it runs,
+
+718
+00:23:14,020 --> 00:23:16,980
+it's through this gcc command,
+
+719
+00:23:16,980 --> 00:23:18,180
+that it gets compiled.
+
+720
+00:23:18,180 --> 00:23:20,520
+What exactly do these things at the end mean?
+
+721
+00:23:20,520 --> 00:23:22,460
+We'll talk about that when we get to designing it later.
+
+722
+00:23:22,460 --> 00:23:25,520
+So what does OBJ do?
+
+723
+00:23:25,520 --> 00:23:27,840
+We covered OBJ copy earlier.
+
+724
+00:23:27,840 --> 00:23:28,420
+It's actually this:
+
+725
+00:23:28,420 --> 00:23:30,720
+because after we compile this instruction,
+
+726
+00:23:30,720 --> 00:23:32,960
+after this GCC command finishes compiling,
+
+727
+00:23:32,960 --> 00:23:35,140
+it actually produces a -O,
+
+728
+00:23:35,140 --> 00:23:37,480
+it produces an ERF file.
+
+729
+00:23:37,480 --> 00:23:38,700
+This file is actually a
+
+730
+00:23:38,700 --> 00:23:41,420
+standard ERF format file.
+
+731
+00:23:41,420 --> 00:23:42,580
+It contains many sections
+
+732
+00:23:42,580 --> 00:23:45,180
+that may be used for debugging,
+
+733
+00:23:45,180 --> 00:23:46,420
+or for other purposes.
+
+734
+00:23:46,420 --> 00:23:49,300
+Because in our compilation options,
+
+735
+00:23:49,300 --> 00:23:50,400
+we added -G,
+
+736
+00:23:50,400 --> 00:23:53,460
+so the executable file that gets generated
+
+737
+00:23:53,460 --> 00:23:56,040
+actually contains a lot of other sections
+
+738
+00:23:56,040 --> 00:23:58,500
+that aren't really used at runtime.
+
+739
+00:23:58,500 --> 00:24:01,260
+Now, the objcopy command,
+
+740
+00:24:01,260 --> 00:24:03,440
+can actually take these unused section contents
+
+741
+00:24:03,440 --> 00:24:04,120
+Strip it away.
+
+742
+00:24:04,120 --> 00:24:05,820
+In the end, it generates a single
+
+743
+00:24:05,820 --> 00:24:09,840
+In the end, it generates a file with the same name, and that file
+
+744
+00:24:09,840 --> 00:24:12,760
+Inside, it contains
+
+745
+00:24:12,760 --> 00:24:15,420
+It only contains the executable machine instructions.
+
+746
+00:24:15,420 --> 00:24:17,100
+So that's essentially the effect we achieve.
+
+747
+00:24:17,100 --> 00:24:17,840
+Let's run it.
+
+748
+00:24:17,840 --> 00:24:18,740
+I've been talking for quite a while,
+
+749
+00:24:18,740 --> 00:24:21,380
+and it might all feel pretty abstract to you.
+
+750
+00:24:21,380 --> 00:24:34,010
+Let's take a look at the actual result.
+
+751
+00:24:34,010 --> 00:24:34,610
+This is it.
+
+752
+00:24:34,610 --> 00:24:37,310
+Down here are those two files, right?
+
+753
+00:24:37,310 --> 00:24:40,870
+As for this test.c.s,
+
+754
+00:24:40,870 --> 00:24:42,570
+it's exactly what we just talked about.
+
+755
+00:24:42,570 --> 00:24:44,830
+Let's compile it.
+
+756
+00:24:44,830 --> 00:24:45,990
+When you do the exercises later,
+
+757
+00:24:45,990 --> 00:24:47,610
+the environment is already set up for you.
+
+758
+00:24:47,610 --> 00:24:49,610
+Don't type out complicated commands yourselves;
+
+759
+00:24:49,610 --> 00:24:51,810
+just type make, and that's it.
+
+760
+00:24:51,810 --> 00:24:52,870
+As long as there are no errors,
+
+761
+00:24:52,870 --> 00:24:55,290
+which means that program has been compiled
+
+762
+00:24:55,290 --> 00:24:56,050
+After it's compiled,
+
+763
+00:24:56,050 --> 00:24:57,970
+take a look — there are actually two more files in there.
+
+764
+00:24:57,970 --> 00:24:59,710
+One is called test.bin,
+
+765
+00:24:59,710 --> 00:25:01,170
+and one is called test.erf.
+
+766
+00:25:01,170 --> 00:25:03,390
+This corresponds to
+
+767
+00:25:03,390 --> 00:25:05,310
+our...
+
+768
+00:25:05,310 --> 00:25:09,860
+it corresponds to what we just had here —
+
+769
+00:25:09,860 --> 00:25:14,220
+these two files, the erf and the bin.
+
+770
+00:25:14,220 --> 00:25:15,440
+This is variable substitution.
+
+771
+00:25:15,440 --> 00:25:16,780
+It's actually just the string "test".
+
+772
+00:25:16,780 --> 00:25:21,980
+Now let's take a look at these two things.
+
+773
+00:25:21,980 --> 00:25:23,280
+How big is this erf?
+
+774
+00:25:23,280 --> 00:25:25,300
+5316.
+
+775
+00:25:25,300 --> 00:25:27,220
+How big is the bin?
+
+776
+00:25:27,220 --> 00:25:28,440
+Only 16 bytes.
+
+777
+00:25:28,440 --> 00:25:29,300
+Why is it 16 bytes?
+
+778
+00:25:29,300 --> 00:25:29,900
+Think about it, everyone.
+
+779
+00:25:29,900 --> 00:25:32,080
+I just mentioned it —
+
+780
+00:25:32,080 --> 00:25:32,320
+this
+
+781
+00:25:32,320 --> 00:25:36,590
+This objcopy,
+
+782
+00:25:36,590 --> 00:25:38,030
+what effect does it achieve?
+
+783
+00:25:38,030 --> 00:25:40,670
+It strips out the extra sections
+
+784
+00:25:40,670 --> 00:25:41,950
+from the ELF file,
+
+785
+00:25:41,950 --> 00:25:44,510
+keeping only the final executable instructions.
+
+786
+00:25:44,510 --> 00:25:45,590
+See what I mean?
+
+787
+00:25:45,590 --> 00:25:47,330
+So how many instructions
+
+788
+00:25:47,330 --> 00:25:48,430
+do we actually end up with?
+
+789
+00:25:48,430 --> 00:25:49,610
+You can count them.
+
+790
+00:25:49,610 --> 00:25:51,150
+Now here's the code for you.
+
+791
+00:25:51,150 --> 00:25:52,090
+Take a look — how many instructions are there?
+
+792
+00:25:52,090 --> 00:25:56,450
+This generates one instruction.
+
+793
+00:25:56,450 --> 00:25:58,130
+Even though it's a pseudo-instruction,
+
+794
+00:25:58,130 --> 00:25:59,490
+it actually corresponds to just one —
+
+795
+00:25:59,490 --> 00:26:00,290
+two.
+
+796
+00:26:00,290 --> 00:26:01,790
+Not this one.
+
+797
+00:26:01,790 --> 00:26:03,250
+It's that one.
+
+798
+00:26:03,250 --> 00:26:06,050
+What we're looking at right now is the add.
+
+799
+00:26:06,050 --> 00:26:09,440
+The add is this one.
+
+800
+00:26:09,440 --> 00:26:12,220
+One.
+
+801
+00:26:12,220 --> 00:26:13,920
+Two of them
+
+802
+00:26:13,920 --> 00:26:15,680
+Three of them
+
+803
+00:26:15,680 --> 00:26:17,680
+And there's one more, right?
+
+804
+00:26:17,680 --> 00:26:18,940
+It's this one
+
+805
+00:26:18,940 --> 00:26:19,420
+Isn't it?
+
+806
+00:26:19,420 --> 00:26:21,400
+So the actual instructions
+
+807
+00:26:21,400 --> 00:26:22,460
+are just four machine instructions
+
+808
+00:26:22,460 --> 00:26:23,900
+As we just mentioned,
+
+809
+00:26:23,900 --> 00:26:24,940
+one machine instruction is
+
+810
+00:26:24,940 --> 00:26:26,860
+on RISC-V 32,
+
+811
+00:26:26,860 --> 00:26:27,760
+one instruction
+
+812
+00:26:27,760 --> 00:26:28,840
+is how many bytes?
+
+813
+00:26:28,840 --> 00:26:30,160
+Four bytes
+
+814
+00:26:30,160 --> 00:26:31,380
+Four times four is sixteen,
+
+815
+00:26:31,380 --> 00:26:33,220
+so this last part,
+
+816
+00:26:33,220 --> 00:26:35,240
+after it's loaded,
+
+817
+00:26:35,240 --> 00:26:36,140
+is actually
+
+818
+00:26:36,140 --> 00:26:38,600
+just 16 bytes
+
+819
+00:26:38,600 --> 00:26:41,220
+This program is just 16 bytes
+
+820
+00:26:41,220 --> 00:26:43,520
+Now, if you want to look at this content,
+
+821
+00:26:43,520 --> 00:26:44,100
+You can also take a look.
+
+822
+00:26:44,100 --> 00:26:47,760
+We can actually run that makehex.
+
+823
+00:26:47,760 --> 00:26:50,100
+You can take a look at this.
+
+824
+00:26:50,100 --> 00:26:51,340
+As for makehex,
+
+825
+00:26:51,340 --> 00:26:52,540
+go back and look at that one yourselves.
+
+826
+00:26:52,540 --> 00:26:53,500
+It actually just calls a
+
+827
+00:26:53,500 --> 00:26:55,060
+hexdump program
+
+828
+00:26:55,060 --> 00:26:57,100
+to print out that binary data.
+
+829
+00:26:57,100 --> 00:26:58,620
+So these are our instructions.
+
+830
+00:26:58,620 --> 00:27:01,120
+Now, if,
+
+831
+00:27:01,120 --> 00:27:02,540
+suppose I gave you this instruction,
+
+832
+00:27:02,540 --> 00:27:03,600
+could you reverse-assemble it and figure out
+
+833
+00:27:03,600 --> 00:27:04,160
+what it's doing?
+
+834
+00:27:04,160 --> 00:27:07,120
+I'll leave this for you to try at home.
+
+835
+00:27:07,120 --> 00:27:08,580
+Actually, I've already taught you how to do it.
+
+836
+00:27:08,580 --> 00:27:09,600
+Among them, we know,
+
+837
+00:27:09,600 --> 00:27:11,840
+granted, there are some instructions you haven't learned yet,
+
+838
+00:27:11,840 --> 00:27:13,060
+but there's one instruction
+
+839
+00:27:13,060 --> 00:27:14,220
+you definitely should be able to do, right?
+
+840
+00:27:14,220 --> 00:27:15,280
+That's the add instruction.
+
+841
+00:27:15,280 --> 00:27:16,620
+Where is the add instruction?
+
+842
+00:27:16,620 --> 00:27:17,980
+As we mentioned earlier,
+
+843
+00:27:17,980 --> 00:27:19,500
+it's aligned on four-byte boundaries.
+
+844
+00:27:19,500 --> 00:27:21,100
+So basically, here we have
+
+845
+00:27:21,100 --> 00:27:22,260
+this is one instruction,
+
+846
+00:27:22,260 --> 00:27:24,380
+let me mark it with a red pen,
+
+847
+00:27:24,380 --> 00:27:27,660
+this is one instruction,
+
+848
+00:27:27,660 --> 00:27:30,800
+this is one instruction,
+
+849
+00:27:30,800 --> 00:27:33,800
+this is one instruction,
+
+850
+00:27:33,800 --> 00:27:36,780
+this is one instruction.
+
+851
+00:27:36,780 --> 00:27:39,540
+Where is our add instruction?
+
+852
+00:27:39,540 --> 00:27:41,000
+It should be right here,
+
+853
+00:27:41,000 --> 00:27:42,980
+because if you go look at the source code,
+
+854
+00:27:42,980 --> 00:27:44,100
+this is the third instruction,
+
+855
+00:27:44,100 --> 00:27:44,420
+right?
+
+856
+00:27:44,420 --> 00:27:46,180
+Now, this instruction,
+
+857
+00:27:46,180 --> 00:27:47,920
+why is it B3027300?
+
+858
+00:27:47,920 --> 00:27:50,100
+Well, as we just discussed,
+
+859
+00:27:50,100 --> 00:27:51,680
+suppose I give you this data,
+
+860
+00:27:51,680 --> 00:27:52,980
+can you figure out...
+
+861
+00:27:52,980 --> 00:27:54,620
+you do the return byte
+
+862
+00:27:54,620 --> 00:27:56,040
+why does it correspond to
+
+863
+00:27:56,040 --> 00:27:57,380
+what is the add
+
+864
+00:27:57,380 --> 00:27:58,100
+x what
+
+865
+00:27:58,100 --> 00:28:00,220
+x what, I forget
+
+866
+00:28:00,220 --> 00:28:04,900
+you can return it as bytes later
+
+867
+00:28:04,900 --> 00:28:06,280
+now, when you return the byte
+
+868
+00:28:06,280 --> 00:28:07,060
+everyone should pay attention
+
+869
+00:28:07,060 --> 00:28:08,740
+to the endianness issue in here
+
+870
+00:28:08,740 --> 00:28:10,520
+that is, what you see is this
+
+871
+00:28:10,520 --> 00:28:14,560
+this is a byte
+
+872
+00:28:14,560 --> 00:28:16,700
+so if it's a word
+
+873
+00:28:16,700 --> 00:28:17,920
+think about it, what kind of number
+
+874
+00:28:17,920 --> 00:28:20,560
+do these bytes actually represent
+
+875
+00:28:20,560 --> 00:28:26,640
+it's actually 007302B3
+
+876
+00:28:26,640 --> 00:28:28,880
+and what I mean is
+
+877
+00:28:28,880 --> 00:28:30,120
+it actually represents 0X
+
+878
+00:28:30,120 --> 00:28:32,620
+00, read backwards
+
+879
+00:28:32,620 --> 00:28:33,680
+just read it backwards
+
+880
+00:28:33,680 --> 00:28:36,120
+and why is the high-order part 0
+
+881
+00:28:36,120 --> 00:28:37,260
+So, like we covered last time,
+
+882
+00:28:37,260 --> 00:28:39,160
+your function7 is just 7 zeros,
+
+883
+00:28:39,160 --> 00:28:40,660
+remember that?
+
+884
+00:28:40,660 --> 00:28:42,280
+You can probably guess this one too,
+
+885
+00:28:42,280 --> 00:28:43,240
+it's just like that.
+
+886
+00:28:43,240 --> 00:28:45,180
+And which of these correspond to which counters,
+
+887
+00:28:45,180 --> 00:28:46,100
+you can go back and check that yourself.
+
+888
+00:28:46,100 --> 00:28:47,180
+Work it out on your own.
+
+889
+00:28:47,180 --> 00:28:48,240
+I won't do that here.
+
+890
+00:28:48,240 --> 00:28:50,380
+I think everyone, based on what we covered earlier,
+
+891
+00:28:50,380 --> 00:28:52,500
+should be able to reverse-engineer it yourself.
+
+892
+00:28:52,500 --> 00:28:54,400
+Of course, there's no need.
+
+893
+00:28:54,400 --> 00:28:56,140
+Normally, if you have the source code,
+
+894
+00:28:56,140 --> 00:28:57,760
+we can just look at it directly.
+
+895
+00:28:57,760 --> 00:29:00,700
+We can use the code command,
+
+896
+00:29:00,700 --> 00:29:01,800
+and this disassembly
+
+897
+00:29:01,800 --> 00:29:04,600
+is actually why we compile with -g,
+
+898
+00:29:04,600 --> 00:29:07,380
+because we include debugging information.
+
+899
+00:29:07,380 --> 00:29:09,360
+make code will actually use
+
+900
+00:29:09,360 --> 00:29:11,840
+the objdump command we talked about earlier.
+
+901
+00:29:11,840 --> 00:29:13,640
+and make a back edge for it.
+
+902
+00:29:13,640 --> 00:29:15,860
+If you're interested, you can go look at the Makefile yourselves.
+
+903
+00:29:15,860 --> 00:29:17,300
+So this command...
+
+904
+00:29:17,300 --> 00:29:20,080
+that's the corresponding command.
+
+905
+00:29:20,080 --> 00:29:21,300
+This command...
+
+906
+00:29:21,300 --> 00:29:24,020
+you see what it wrote here is 0073.
+
+907
+00:29:24,020 --> 00:29:25,040
+It's already converted over.
+
+908
+00:29:25,040 --> 00:29:26,100
+Did everyone see that?
+
+909
+00:29:26,100 --> 00:29:28,400
+This tool has already done the corresponding conversion for us.
+
+910
+00:29:28,400 --> 00:29:30,200
+Now, as for exactly why it is...
+
+911
+00:29:30,200 --> 00:29:32,280
+why it's x5, x6...
+
+912
+00:29:32,280 --> 00:29:33,500
+actually, these 5, 6, 7...
+
+913
+00:29:33,500 --> 00:29:34,320
+these three numbers...
+
+914
+00:29:34,320 --> 00:29:35,640
+how they get extracted out of here...
+
+915
+00:29:35,640 --> 00:29:37,460
+you can go back and work it out yourselves.
+
+916
+00:29:37,460 --> 00:29:38,340
+I won't go into it here.
+
+917
+00:29:38,340 --> 00:29:43,620
+This program does static analysis.
+
+918
+00:29:43,620 --> 00:29:44,080
+We'll just...
+
+919
+00:29:44,080 --> 00:29:45,040
+so let's run it.
+
+920
+00:29:45,040 --> 00:29:46,360
+Let's see how it gets to...
+
+921
+00:29:46,360 --> 00:29:49,060
+the effect of the addition we just added,
+
+922
+00:29:49,060 --> 00:29:51,020
+our code just now was
+
+923
+00:29:51,020 --> 00:29:54,520
+looking at 1 plus 2.
+
+924
+00:29:54,520 --> 00:29:56,720
+So we know that during the run,
+
+925
+00:29:56,720 --> 00:29:57,660
+we should first see
+
+926
+00:29:57,660 --> 00:29:59,660
+register x6 being assigned the value 1,
+
+927
+00:29:59,660 --> 00:30:01,740
+and then, second step,
+
+928
+00:30:01,740 --> 00:30:05,140
+the value of register x7 should become 2.
+
+929
+00:30:05,140 --> 00:30:06,080
+Right?
+
+930
+00:30:06,080 --> 00:30:09,020
+And then, what should happen as the third step?
+
+931
+00:30:09,020 --> 00:30:11,220
+We said the value of register x5 should become what?
+
+932
+00:30:11,220 --> 00:30:12,000
+It should become 3.
+
+933
+00:30:12,000 --> 00:30:15,440
+That verifies the result of our program run.
+
+934
+00:30:15,440 --> 00:30:18,180
+Now, when we run it,
+
+935
+00:30:18,180 --> 00:30:19,560
+we just
+
+936
+00:30:19,560 --> 00:30:23,400
+do make run, and that's it.
+
+937
+00:30:23,400 --> 00:30:25,180
+As for what actually runs behind the scenes,
+
+938
+00:30:25,180 --> 00:30:29,980
+we've already explained that to you.
+
+939
+00:30:29,980 --> 00:30:30,880
+Oh, sorry,
+
+940
+00:30:30,880 --> 00:30:32,580
+not run — it should be debug.
+
+941
+00:30:32,580 --> 00:30:40,840
+If, while it's running,
+
+942
+00:30:40,840 --> 00:30:42,100
+if you run into that QEMU,
+
+943
+00:30:42,100 --> 00:30:43,660
+and it's not behaving properly,
+
+944
+00:30:43,660 --> 00:30:45,040
+and you can't exit,
+
+945
+00:30:45,040 --> 00:30:49,420
+how did I force that QEMU to stop just now?
+
+946
+00:30:49,420 --> 00:30:52,900
+Just press the Ctrl key,
+
+947
+00:30:52,900 --> 00:30:55,000
+hold the Ctrl key down,
+
+948
+00:30:55,000 --> 00:30:58,880
+and at the same time press A and X one after another.
+
+949
+00:30:58,880 --> 00:31:01,340
+That will force QEMU to stop.
+
+950
+00:31:01,340 --> 00:31:05,340
+You can go back and try it yourselves.
+
+951
+00:31:05,340 --> 00:31:08,360
+That's how you stop the emulator.
+
+952
+00:31:08,360 --> 00:31:10,620
+Now, back to the main topic.
+
+953
+00:31:10,620 --> 00:31:11,840
+Let's run the debug.
+
+954
+00:31:11,840 --> 00:31:13,420
+Let's see the effect of Make Debug.
+
+955
+00:31:13,420 --> 00:31:17,350
+As you can see,
+
+956
+00:31:17,350 --> 00:31:20,390
+our program has already started running.
+
+957
+00:31:20,390 --> 00:31:22,750
+Now, this thing at the front is something I typed in.
+
+958
+00:31:22,750 --> 00:31:26,510
+That is, after you enter this GDB,
+
+959
+00:31:26,510 --> 00:31:28,030
+if you want to exit, how do you exit?
+
+960
+00:31:28,030 --> 00:31:31,550
+And also, you can just press one
+
+961
+00:31:31,550 --> 00:31:32,890
+First, press Ctrl C.
+
+962
+00:31:32,890 --> 00:31:34,870
+For example, I press Ctrl C here.
+
+963
+00:31:34,870 --> 00:31:38,830
+After pressing Ctrl C,
+
+964
+00:31:38,830 --> 00:31:42,090
+type a Quit command.
+
+965
+00:31:42,090 --> 00:31:44,830
+And then type
+
+966
+00:31:44,830 --> 00:31:45,650
+it asks you Yes or No.
+
+967
+00:31:45,650 --> 00:31:46,590
+You say Yes to exit,
+
+968
+00:31:46,590 --> 00:31:49,470
+and then it will exit fairly normally.
+
+969
+00:31:49,470 --> 00:31:50,870
+Because sometimes some of you
+
+970
+00:31:50,870 --> 00:31:51,790
+may find that you,
+
+971
+00:31:51,790 --> 00:31:54,570
+using some less graceful,
+
+972
+00:31:54,570 --> 00:31:55,750
+rather forceful methods,
+
+973
+00:31:55,750 --> 00:31:57,010
+after killing this program,
+
+974
+00:31:57,010 --> 00:31:58,630
+it may cause that QML,
+
+975
+00:31:58,630 --> 00:31:59,950
+since we are running it in the background,
+
+976
+00:31:59,950 --> 00:32:01,430
+that process may not get killed.
+
+977
+00:32:01,430 --> 00:32:02,990
+If that background
+
+978
+00:32:02,990 --> 00:32:03,990
+service can't be killed,
+
+979
+00:32:03,990 --> 00:32:04,810
+then next time you run it,
+
+980
+00:32:04,810 --> 00:32:06,310
+it may fail.
+
+981
+00:32:06,310 --> 00:32:07,390
+I hope you all understand what I mean by this.
+
+982
+00:32:07,390 --> 00:32:09,570
+So when you come out later on,
+
+983
+00:32:09,570 --> 00:32:11,690
+just come out using this approach of ours,
+
+984
+00:32:11,690 --> 00:32:13,990
+and don't jump out carelessly.
+
+985
+00:32:13,990 --> 00:32:17,150
+Let's do a quick demonstration of this.
+
+986
+00:32:17,150 --> 00:32:18,090
+Then we'll take a break.
+
+987
+00:32:18,090 --> 00:32:20,630
+Let's demonstrate it.
+
+988
+00:32:20,630 --> 00:32:22,170
+Still make a debug.
+
+989
+00:32:22,170 --> 00:32:25,650
+Now you can see the program has started running.
+
+990
+00:32:25,650 --> 00:32:27,950
+This 'read symbols from' thing,
+
+991
+00:32:27,950 --> 00:32:31,490
+because our test.ef was cross-compiled with -g,
+
+992
+00:32:31,490 --> 00:32:32,570
+it comes with debug information.
+
+993
+00:32:32,570 --> 00:32:35,390
+And as we discussed earlier,
+
+994
+00:32:35,390 --> 00:32:38,510
+our config file sets the breakpoint right at
+
+995
+00:32:38,510 --> 00:32:40,550
+the start position from the beginning.
+
+996
+00:32:40,550 --> 00:32:41,930
+So as soon as it starts up,
+
+997
+00:32:41,930 --> 00:32:44,090
+it actually stops at a special Linux 8000.
+
+998
+00:32:44,090 --> 00:32:46,510
+Why is this value Linux 8000?
+
+999
+00:32:46,510 --> 00:32:48,150
+We'll cover that later.
+
+1000
+00:32:48,150 --> 00:32:49,070
+When we get to that part.
+
+1001
+00:32:49,070 --> 00:32:50,630
+We'll get to that later
+
+1002
+00:32:50,630 --> 00:32:51,690
+For now, let's not worry about it
+
+1003
+00:32:51,690 --> 00:32:52,810
+Because what we're focused on right now
+
+1004
+00:32:52,810 --> 00:32:54,730
+is just this assembly syntax
+
+1005
+00:32:54,730 --> 00:32:57,370
+So you can see, at the very beginning,
+
+1006
+00:32:57,370 --> 00:32:58,950
+our three registers
+
+1007
+00:32:58,950 --> 00:33:02,390
+5, 6, 7 have values 0, 0, 0 respectively
+
+1008
+00:33:02,390 --> 00:33:04,370
+This is what we just set up in
+
+1009
+00:33:04,370 --> 00:33:05,930
+that config file to make it
+
+1010
+00:33:05,930 --> 00:33:06,710
+so that with every step we execute,
+
+1011
+00:33:06,710 --> 00:33:07,570
+we print these values
+
+1012
+00:33:07,570 --> 00:33:08,390
+to make it easier for us to see
+
+1013
+00:33:08,390 --> 00:33:10,370
+Now, this breakpoint here,
+
+1014
+00:33:10,370 --> 00:33:11,450
+is at the 'start' position,
+
+1015
+00:33:11,450 --> 00:33:12,890
+and that actually corresponds to
+
+1016
+00:33:12,890 --> 00:33:14,670
+line 12 of our code,
+
+1017
+00:33:14,670 --> 00:33:16,310
+which is really just the first instruction.
+
+1018
+00:33:16,310 --> 00:33:20,970
+The goal of the first instruction,
+
+1019
+00:33:20,970 --> 00:33:22,290
+is to be able to take 1
+
+1020
+00:33:22,290 --> 00:33:23,730
+and load it into x6.
+
+1021
+00:33:23,730 --> 00:33:25,310
+So right now the value of x6
+
+1022
+00:33:25,310 --> 00:33:25,830
+is still 0
+
+1023
+00:33:25,830 --> 00:33:26,950
+So it hasn't executed yet
+
+1024
+00:33:26,950 --> 00:33:27,990
+Because that command hasn't been executed yet
+
+1025
+00:33:27,990 --> 00:33:29,330
+Now we want to step
+
+1026
+00:33:29,330 --> 00:33:30,250
+this instruction
+
+1027
+00:33:30,250 --> 00:33:33,050
+How do you step in GDB? Well,
+
+1028
+00:33:33,050 --> 00:33:34,670
+the command is called si
+
+1029
+00:33:34,670 --> 00:33:36,670
+si stands for
+
+1030
+00:33:36,670 --> 00:33:38,410
+Single Instruction
+
+1031
+00:33:38,410 --> 00:33:39,670
+Remember this,
+
+1032
+00:33:39,670 --> 00:33:40,710
+and these commands become easy to remember
+
+1033
+00:33:40,710 --> 00:33:42,550
+Otherwise you just can't memorize them
+
+1034
+00:33:42,550 --> 00:33:45,010
+But if you remember the English, you understand what it means
+
+1035
+00:33:45,010 --> 00:33:46,370
+What does single instruction mean?
+
+1036
+00:33:46,370 --> 00:33:49,430
+It runs at the level of a single instruction
+
+1037
+00:33:49,430 --> 00:33:51,650
+Not a single high-level language statement
+
+1038
+00:33:51,650 --> 00:33:52,830
+We're talking about assembly instructions here
+
+1039
+00:33:52,830 --> 00:33:53,770
+instruction
+
+1040
+00:33:53,770 --> 00:33:56,310
+So after single instruction
+
+1041
+00:33:56,310 --> 00:33:58,530
+As you can see
+
+1042
+00:33:58,530 --> 00:34:01,630
+our x6 value has already changed to what
+
+1043
+00:34:01,630 --> 00:34:03,790
+Exactly because there's no highlight
+
+1044
+00:34:03,790 --> 00:34:05,130
+it might look a bit unfamiliar to you
+
+1045
+00:34:05,130 --> 00:34:08,550
+It was still 0 just now
+
+1046
+00:34:08,550 --> 00:34:10,350
+and now it has become 1
+
+1047
+00:34:10,350 --> 00:34:15,410
+This is the effect our instruction just now achieved
+
+1048
+00:34:15,410 --> 00:34:15,670
+Alright
+
+1049
+00:34:15,670 --> 00:34:17,450
+Just get used to reading it this way
+
+1050
+00:34:17,450 --> 00:34:19,830
+So this is si
+
+1051
+00:34:19,830 --> 00:34:20,710
+Now for the next step,
+
+1052
+00:34:20,710 --> 00:34:21,790
+let's change x7 to 2
+
+1053
+00:34:21,790 --> 00:34:26,470
+Actually, you don't have to type si every time
+
+1054
+00:34:26,470 --> 00:34:28,710
+I mean, once you've typed that command,
+
+1055
+00:34:28,710 --> 00:34:29,610
+just press Enter
+
+1056
+00:34:29,610 --> 00:34:31,090
+and it will repeat the last command
+
+1057
+00:34:31,090 --> 00:34:32,970
+So all you need to do is press Enter
+
+1058
+00:34:32,970 --> 00:34:35,770
+You can see this 7 has already become 2
+
+1059
+00:34:35,770 --> 00:34:35,930
+Right?
+
+1060
+00:34:35,930 --> 00:34:38,210
+So what are we going to do next?
+
+1061
+00:34:38,210 --> 00:34:39,710
+The next step is to do the addition.
+
+1062
+00:34:39,710 --> 00:34:43,070
+The addition takes the value in x7 and the value in x6,
+
+1063
+00:34:43,070 --> 00:34:45,070
+adds them together and puts the result into x5.
+
+1064
+00:34:45,070 --> 00:34:47,070
+Right now x5 contains a
+
+1065
+00:34:47,070 --> 00:34:49,490
+some other messy value.
+
+1066
+00:34:49,490 --> 00:34:51,170
+So let's execute it once more.
+
+1067
+00:34:51,170 --> 00:34:55,030
+You can see the value of x5 has already changed.
+
+1068
+00:34:55,030 --> 00:34:55,910
+It's now become 3.
+
+1069
+00:34:55,910 --> 00:34:56,890
+See that, right?
+
+1070
+00:34:56,890 --> 00:35:02,850
+Then what follows is
+
+1071
+00:35:02,850 --> 00:35:05,710
+starting to execute this infinite loop.
+
+1072
+00:35:05,710 --> 00:35:06,350
+With the infinite loop,
+
+1073
+00:35:06,350 --> 00:35:09,230
+if you press enter again, it will keep executing on this same instruction forever,
+
+1074
+00:35:09,230 --> 00:35:11,010
+so our program won't exit.
+
+1075
+00:35:11,010 --> 00:35:11,990
+Otherwise it might run off somewhere.
+
+1076
+00:35:11,990 --> 00:35:15,630
+This instruction mainly serves that purpose.
+
+1077
+00:35:15,630 --> 00:35:17,870
+So that's a simple example like this.
+
+1078
+00:35:17,870 --> 00:35:19,510
+Everyone, go take a break.
+
+1079
+00:35:19,510 --> 00:35:21,670
+Try running it yourselves.
+
+1080
+00:35:21,670 --> 00:35:26,560
+To quit, just use what I mentioned earlier.
+
+1081
+00:35:26,560 --> 00:35:27,060
+Ctrl C,
+
+1082
+00:35:27,060 --> 00:35:30,860
+then pick quit to exit.
+
+1083
+00:35:30,860 --> 00:35:37,080
+Let's continue.
+
+1084
+00:35:37,080 --> 00:35:40,880
+So what we just saw was
+
+1085
+00:35:40,880 --> 00:35:42,260
+the first add instruction.
+
+1086
+00:35:42,260 --> 00:35:43,780
+Now, through this add instruction,
+
+1087
+00:35:43,780 --> 00:35:45,320
+simple as it is,
+
+1088
+00:35:45,320 --> 00:35:46,820
+I'd like you to get a feel for
+
+1089
+00:35:46,820 --> 00:35:49,220
+some basic concepts of assembly,
+
+1090
+00:35:49,220 --> 00:35:51,480
+and through the exercise just now,
+
+1091
+00:35:51,480 --> 00:35:53,440
+I also walked you through the operating environment.
+
+1092
+00:35:53,440 --> 00:35:54,680
+So,
+
+1093
+00:35:54,680 --> 00:35:56,560
+next,
+
+1094
+00:35:56,560 --> 00:35:58,780
+let's go over some related concepts.
+
+1095
+00:35:58,780 --> 00:35:59,240
+That is,
+
+1096
+00:35:59,240 --> 00:36:00,840
+as we know,
+
+1097
+00:36:00,840 --> 00:36:03,840
+when doing addition,
+
+1098
+00:36:03,840 --> 00:36:06,180
+when we perform operations on numbers,
+
+1099
+00:36:06,180 --> 00:36:07,320
+these numbers,
+
+1100
+00:36:07,320 --> 00:36:07,960
+they definitely have
+
+1101
+00:36:07,960 --> 00:36:11,700
+So to be able to support these positive numbers,
+
+1102
+00:36:11,700 --> 00:36:12,180
+negative numbers,
+
+1103
+00:36:12,180 --> 00:36:12,740
+these concepts,
+
+1104
+00:36:12,740 --> 00:36:13,080
+right?
+
+1105
+00:36:13,080 --> 00:36:14,500
+So in our computer,
+
+1106
+00:36:14,500 --> 00:36:15,620
+the related concepts
+
+1107
+00:36:15,620 --> 00:36:16,020
+involve
+
+1108
+00:36:16,020 --> 00:36:17,080
+involve some...
+
+1109
+00:36:17,080 --> 00:36:18,020
+Let's take a look.
+
+1110
+00:36:18,020 --> 00:36:22,980
+First, we need to understand the concepts of unsigned numbers and signed numbers.
+
+1111
+00:36:22,980 --> 00:36:25,240
+So, the concepts of unsigned numbers and signed numbers,
+
+1112
+00:36:25,240 --> 00:36:28,560
+I think everyone should be fairly familiar with them.
+
+1113
+00:36:28,560 --> 00:36:32,820
+We have these unsigned and signed concepts in high-level languages too.
+
+1114
+00:36:32,820 --> 00:36:34,780
+And it's the same in computers.
+
+1115
+00:36:34,780 --> 00:36:37,760
+So if we have a 32-bit piece of data,
+
+1116
+00:36:37,760 --> 00:36:40,900
+if it's used to represent an unsigned number,
+
+1117
+00:36:40,900 --> 00:36:43,760
+let's say, for instance, to keep it simple,
+
+1118
+00:36:43,760 --> 00:36:46,280
+an 8-bit, if an 8-bit piece of data can represent unsigned numbers,
+
+1119
+00:36:46,280 --> 00:36:49,580
+then the top bit is definitely not needed as a sign bit,
+
+1120
+00:36:49,580 --> 00:36:51,700
+so its representable range is larger.
+
+1121
+00:36:51,700 --> 00:36:53,180
+And for signed numbers,
+
+1122
+00:36:53,180 --> 00:36:54,260
+we generally use the highest bit,
+
+1123
+00:36:54,260 --> 00:36:55,720
+0 meaning positive,
+
+1124
+00:36:55,720 --> 00:36:57,020
+1 meaning negative.
+
+1125
+00:36:57,020 --> 00:36:59,520
+That's the basic idea behind it.
+
+1126
+00:36:59,520 --> 00:37:02,040
+Now, to be more specific,
+
+1127
+00:37:02,040 --> 00:37:05,320
+how exactly are signed numbers represented in a computer?
+
+1128
+00:37:05,320 --> 00:37:07,720
+This is also some very fundamental stuff,
+
+1129
+00:37:07,720 --> 00:37:11,120
+because you'll probably need to look at values in memory,
+
+1130
+00:37:11,120 --> 00:37:14,260
+or specific values in registers.
+
+1131
+00:37:14,260 --> 00:37:17,320
+So when we're dealing with signed numbers,
+
+1132
+00:37:17,320 --> 00:37:18,980
+their representation
+
+1133
+00:37:18,980 --> 00:37:20,720
+uses two's complement in binary.
+
+1134
+00:37:20,720 --> 00:37:21,540
+Right?
+
+1135
+00:37:21,540 --> 00:37:25,780
+Now, I don't know if you still remember the concept of two's complement.
+
+1136
+00:37:25,780 --> 00:37:29,200
+That is, if I give you a decimal number,
+
+1137
+00:37:29,200 --> 00:37:32,680
+and ask you to express it in two's complement form,
+
+1138
+00:37:32,680 --> 00:37:34,160
+how would you do it?
+
+1139
+00:37:34,160 --> 00:37:35,520
+I wonder if you still remember.
+
+1140
+00:37:35,520 --> 00:37:39,340
+Do you remember which course you learned this concept in?
+
+1141
+00:37:39,340 --> 00:37:40,700
+Have you learned this concept before?
+
+1142
+00:37:40,700 --> 00:37:42,200
+You've learned it, right?
+
+1143
+00:37:42,200 --> 00:37:44,420
+As computer science majors,
+
+1144
+00:37:44,420 --> 00:37:46,740
+these most basic concepts,
+
+1145
+00:37:46,740 --> 00:37:49,980
+we still need to go over them here,
+
+1146
+00:37:49,980 --> 00:37:50,940
+and try them out once more.
+
+1147
+00:37:50,940 --> 00:37:53,680
+So when we talk about this,
+
+1148
+00:37:53,680 --> 00:37:55,980
+when we get to two's complement,
+
+1149
+00:37:55,980 --> 00:37:57,480
+we're actually, here,
+
+1150
+00:37:57,480 --> 00:37:58,920
+not going to dig into all these concepts.
+
+1151
+00:37:58,920 --> 00:38:00,300
+What we at least need to master is,
+
+1152
+00:38:00,300 --> 00:38:01,840
+if you're given an integer,
+
+1153
+00:38:01,840 --> 00:38:04,320
+how do you convert it into two's complement?
+
+1154
+00:38:04,320 --> 00:38:05,480
+Well, it's very simple.
+
+1155
+00:38:05,480 --> 00:38:07,920
+We say that if this number,
+
+1156
+00:38:07,920 --> 00:38:09,080
+if it's a positive number,
+
+1157
+00:38:09,080 --> 00:38:10,340
+how is it represented in two's complement?
+
+1158
+00:38:10,340 --> 00:38:13,060
+It's just the number itself, right?
+
+1159
+00:38:13,060 --> 00:38:15,180
+The highest bit is simply 0,
+
+1160
+00:38:15,180 --> 00:38:17,180
+and the rest is just whatever the value is.
+
+1161
+00:38:17,180 --> 00:38:18,640
+Now, what about negative numbers?
+
+1162
+00:38:18,640 --> 00:38:19,380
+It's a bit more complicated.
+
+1163
+00:38:19,380 --> 00:38:21,420
+We say a negative number has to be converted into
+
+1164
+00:38:21,420 --> 00:38:22,220
+a binary two's complement.
+
+1165
+00:38:22,220 --> 00:38:24,280
+There's a little formula for this, what is it?
+
+1166
+00:38:24,280 --> 00:38:24,960
+You still remember, right?
+
+1167
+00:38:24,960 --> 00:38:28,580
+Take its absolute value, right?
+
+1168
+00:38:28,580 --> 00:38:30,380
+Then after converting it to binary,
+
+1169
+00:38:30,380 --> 00:38:32,000
+invert it, and then do what?
+
+1170
+00:38:32,000 --> 00:38:33,180
+Add 1.
+
+1171
+00:38:33,180 --> 00:38:35,960
+Still remember this concept, right?
+
+1172
+00:38:35,960 --> 00:38:39,620
+Let's use a simple example.
+
+1173
+00:38:39,620 --> 00:38:41,340
+For example,
+
+1174
+00:38:41,340 --> 00:38:44,980
+take this binary number,
+
+1175
+00:38:44,980 --> 00:38:47,520
+let's say it's 4.
+
+1176
+00:38:47,520 --> 00:38:49,760
+So for 4,
+
+1177
+00:38:49,760 --> 00:38:53,060
+if it's a positive number,
+
+1178
+00:38:53,060 --> 00:38:55,860
+its representation in the computer is 100,
+
+1179
+00:38:55,860 --> 00:38:58,800
+right?
+
+1180
+00:38:58,800 --> 00:39:01,840
+Now, if I use an 8-bit
+
+1181
+00:39:01,840 --> 00:39:04,580
+To store this 4 in an 8-bit byte,
+
+1182
+00:39:04,580 --> 00:39:05,640
+for the positive number 4,
+
+1183
+00:39:05,640 --> 00:39:07,620
+you just need to pad five 0s in front,
+
+1184
+00:39:07,620 --> 00:39:09,700
+this doesn't work for me,
+
+1185
+00:39:09,700 --> 00:39:10,420
+and that's it.
+
+1186
+00:39:10,420 --> 00:39:10,920
+Right?
+
+1187
+00:39:10,920 --> 00:39:12,040
+This is a positive number.
+
+1188
+00:39:12,040 --> 00:39:14,080
+Now, what do we do if it's a negative 4?
+
+1189
+00:39:14,080 --> 00:39:16,700
+How do we calculate negative 4?
+
+1190
+00:39:16,700 --> 00:39:21,200
+First we take its absolute value,
+
+1191
+00:39:21,200 --> 00:39:23,260
+which gives the original binary of 4,
+
+1192
+00:39:23,260 --> 00:39:24,100
+which is 100.
+
+1193
+00:39:24,100 --> 00:39:25,840
+Then what do we do?
+
+1194
+00:39:25,840 --> 00:39:27,120
+Invert the bits.
+
+1195
+00:39:27,120 --> 00:39:28,740
+What does inverting the bits mean?
+
+1196
+00:39:28,740 --> 00:39:29,700
+It becomes how much?
+
+1197
+00:39:29,700 --> 00:39:30,880
+It becomes 011.
+
+1198
+00:39:30,880 --> 00:39:32,640
+Right?
+
+1199
+00:39:32,640 --> 00:39:34,100
+Then what do we do?
+
+1200
+00:39:34,100 --> 00:39:36,140
+After inverting, add 1.
+
+1201
+00:39:36,140 --> 00:39:37,820
+So if we add 1,
+
+1202
+00:39:37,820 --> 00:39:41,100
+as we know, the result is 001.
+
+1203
+00:39:41,100 --> 00:39:42,580
+And then,
+
+1204
+00:39:42,580 --> 00:39:45,860
+because we need to compare an 11-digit 8-bit number,
+
+1205
+00:39:45,860 --> 00:39:46,720
+the leading bits are
+
+1206
+00:39:46,720 --> 00:39:47,780
+since it's a negative number,
+
+1207
+00:39:47,780 --> 00:39:48,840
+what do we do with the leading bits?
+
+1208
+00:39:48,840 --> 00:39:50,200
+Pad them all with 1s.
+
+1209
+00:39:50,200 --> 00:39:51,760
+Pad with eight 1s.
+
+1210
+00:39:51,760 --> 00:39:54,760
+Not just five 1s and that's it.
+
+1211
+00:39:54,760 --> 00:39:55,040
+Right?
+
+1212
+00:39:55,040 --> 00:39:57,020
+So in the end, it becomes this
+
+1213
+00:39:57,020 --> 00:39:58,700
+weird number,
+
+1214
+00:39:58,700 --> 00:40:00,920
+1 2 3 4 5 6 7, plus one more.
+
+1215
+00:40:00,920 --> 00:40:04,520
+This is how negative 4 is represented in a computer.
+
+1216
+00:40:04,520 --> 00:40:05,540
+Now the other way around,
+
+1217
+00:40:05,540 --> 00:40:06,560
+if I give you a two's complement number,
+
+1218
+00:40:06,560 --> 00:40:10,280
+can you work out the original number it represents?
+
+1219
+00:40:10,280 --> 00:40:16,300
+Do you remember how to do this?
+
+1220
+00:40:16,300 --> 00:40:19,480
+I think it's done by keeping this
+
+1221
+00:40:19,480 --> 00:40:21,680
+For example, suppose I give you a number like this,
+
+1222
+00:40:21,680 --> 00:40:24,040
+and you need to figure out what it is and how to do it.
+
+1223
+00:40:24,040 --> 00:40:31,310
+We just keep the first 1 from the right that is not 0,
+
+1224
+00:40:31,310 --> 00:40:34,290
+and then flip everything before it.
+
+1225
+00:40:34,290 --> 00:40:37,010
+Isn't that 4?
+
+1226
+00:40:37,010 --> 00:40:37,190
+Right?
+
+1227
+00:40:37,190 --> 00:40:40,450
+We won't go into this in more detail.
+
+1228
+00:40:40,450 --> 00:40:42,290
+Because this thing,
+
+1229
+00:40:42,290 --> 00:40:44,290
+you can just look it up yourself.
+
+1230
+00:40:44,290 --> 00:40:45,050
+It should all be in there.
+
+1231
+00:40:45,050 --> 00:40:46,550
+So we won't say more about it here.
+
+1232
+00:40:46,550 --> 00:40:47,730
+But we do need to understand these concepts.
+
+1233
+00:40:47,730 --> 00:40:48,910
+So I'm just mentioning it here.
+
+1234
+00:40:48,910 --> 00:40:50,950
+Now there is another important concept,
+
+1235
+00:40:50,950 --> 00:40:53,290
+which is the concept of sign extension and zero extension.
+
+1236
+00:40:53,290 --> 00:40:55,230
+This probably wasn't covered much earlier on.
+
+1237
+00:40:55,230 --> 00:40:57,010
+But when it comes to assembly,
+
+1238
+00:40:57,010 --> 00:40:57,910
+we need to mention it.
+
+1239
+00:40:57,910 --> 00:40:59,530
+What we call sign extension,
+
+1240
+00:40:59,530 --> 00:41:01,050
+that is, just like the example before,
+
+1241
+00:41:01,050 --> 00:41:04,150
+That is to say, if this 0011,
+
+1242
+00:41:04,150 --> 00:41:05,690
+which we just computed a moment ago,
+
+1243
+00:41:05,690 --> 00:41:08,010
+is 100, here it only takes up 3 bits,
+
+1244
+00:41:08,010 --> 00:41:09,430
+but if we want to,
+
+1245
+00:41:09,430 --> 00:41:10,810
+there are still 5 bits missing in front,
+
+1246
+00:41:10,810 --> 00:41:11,510
+and if they haven't been filled in,
+
+1247
+00:41:11,510 --> 00:41:13,370
+then, because it's a negative number,
+
+1248
+00:41:13,370 --> 00:41:15,170
+we do sign extension.
+
+1249
+00:41:15,170 --> 00:41:16,610
+That is, we fill in 1s,
+
+1250
+00:41:16,610 --> 00:41:20,660
+depending on whether its sign bit is 1 or 0.
+
+1251
+00:41:20,660 --> 00:41:22,700
+If it's 1, we fill everything with 1s;
+
+1252
+00:41:22,700 --> 00:41:24,200
+if it's 0, we fill everything with 0s.
+
+1253
+00:41:24,200 --> 00:41:25,740
+This is called sign extension.
+
+1254
+00:41:25,740 --> 00:41:27,440
+And if it's zero extension,
+
+1255
+00:41:27,440 --> 00:41:27,960
+what does that mean?
+
+1256
+00:41:27,960 --> 00:41:29,280
+It means that regardless of whether
+
+1257
+00:41:29,280 --> 00:41:32,840
+this number starts with a 0 or a 1 in front,
+
+1258
+00:41:32,840 --> 00:41:35,900
+everything on the left is extended with 0s.
+
+1259
+00:41:35,900 --> 00:41:36,920
+That's actually what it means.
+
+1260
+00:41:36,920 --> 00:41:39,500
+These are called zero extension and sign extension.
+
+1261
+00:41:39,500 --> 00:41:40,840
+And zero extension, sometimes,
+
+1262
+00:41:40,840 --> 00:41:42,160
+we also call it unsigned extension.
+
+1263
+00:41:42,160 --> 00:41:46,400
+So these are the concepts of sign extension and zero extension.
+
+1264
+00:41:46,400 --> 00:41:48,360
+We'll come back to these later,
+
+1265
+00:41:48,360 --> 00:41:49,840
+so I'm just mentioning them here.
+
+1266
+00:41:49,840 --> 00:41:50,760
+Now in English,
+
+1267
+00:41:50,760 --> 00:41:52,580
+sign extension is called sign extension,
+
+1268
+00:41:52,580 --> 00:41:53,960
+and zero extension is called zero extension.
+
+1269
+00:41:53,960 --> 00:41:59,440
+Now this example,
+
+1270
+00:41:59,440 --> 00:42:00,500
+as for this example,
+
+1271
+00:42:00,500 --> 00:42:03,380
+this example, everyone,
+
+1272
+00:42:03,380 --> 00:42:04,640
+let me see, in today's class,
+
+1273
+00:42:04,640 --> 00:42:06,020
+we might be running a bit short on time,
+
+1274
+00:42:06,020 --> 00:42:08,900
+so we won't have you
+
+1275
+00:42:08,900 --> 00:42:10,200
+do it right here in class.
+
+1276
+00:42:10,200 --> 00:42:12,140
+This add2, actually this example,
+
+1277
+00:42:12,140 --> 00:42:13,920
+let's take a look at what the code does.
+
+1278
+00:42:13,920 --> 00:42:15,180
+It's really just to let you see
+
+1279
+00:42:15,180 --> 00:42:19,220
+how a negative number is represented in memory and in registers.
+
+1280
+00:42:19,220 --> 00:42:26,650
+It's very similar to the example from just now.
+
+1281
+00:42:26,650 --> 00:42:28,410
+It's just that here
+
+1282
+00:42:28,410 --> 00:42:30,270
+we put a minus 2 in x7.
+
+1283
+00:42:30,270 --> 00:42:32,370
+So in this x7 register,
+
+1284
+00:42:32,370 --> 00:42:33,350
+what exactly is the value in it?
+
+1285
+00:42:33,350 --> 00:42:34,530
+You can go and check.
+
+1286
+00:42:34,530 --> 00:42:36,930
+Then after the calculation,
+
+1287
+00:42:36,930 --> 00:42:38,810
+since we know that 1 plus minus 2
+
+1288
+00:42:38,810 --> 00:42:40,190
+gives minus 1 in the end.
+
+1289
+00:42:40,190 --> 00:42:43,050
+So what does minus 1 look like when stored in x5?
+
+1290
+00:42:43,050 --> 00:42:44,510
+Minus 1 is a bit special.
+
+1291
+00:42:44,510 --> 00:42:46,530
+From now on, whenever you see all f's, that's -1.
+
+1292
+00:42:46,530 --> 00:42:47,510
+Right?
+
+1293
+00:42:47,510 --> 00:42:50,910
+You need to get used to this.
+
+1294
+00:42:50,910 --> 00:42:52,390
+I won't have you
+
+1295
+00:42:52,390 --> 00:42:53,530
+do it right here on the spot.
+
+1296
+00:42:53,530 --> 00:42:54,810
+When you do it yourselves,
+
+1297
+00:42:54,810 --> 00:42:56,310
+the main purpose is to let you review
+
+1298
+00:42:56,310 --> 00:42:57,350
+the concept of two's complement.
+
+1299
+00:42:57,350 --> 00:43:04,060
+That's the second concept.
+
+1300
+00:43:04,060 --> 00:43:07,180
+Next, let's look at subtraction.
+
+1301
+00:43:07,180 --> 00:43:09,060
+Subtraction is also fairly simple.
+
+1302
+00:43:09,060 --> 00:43:10,720
+Subtraction is pretty simple.
+
+1303
+00:43:10,720 --> 00:43:13,380
+As for subtraction,
+
+1304
+00:43:13,380 --> 00:43:13,660
+this
+
+1305
+00:43:13,660 --> 00:43:17,840
+I won't say too much about it.
+
+1306
+00:43:17,840 --> 00:43:18,560
+For subtraction,
+
+1307
+00:43:18,560 --> 00:43:19,660
+it still uses
+
+1308
+00:43:19,660 --> 00:43:21,220
+its type is still R-type.
+
+1309
+00:43:21,220 --> 00:43:22,700
+And then,
+
+1310
+00:43:22,700 --> 00:43:25,560
+the specific format
+
+1311
+00:43:25,560 --> 00:43:30,600
+is to subtract RS2 from RS1.
+
+1312
+00:43:30,600 --> 00:43:32,680
+Here we use a minus sign.
+
+1313
+00:43:32,680 --> 00:43:36,390
+RS1 minus RS2,
+
+1314
+00:43:36,390 --> 00:43:37,630
+and the resulting value
+
+1315
+00:43:37,630 --> 00:43:40,050
+is saved into RD.
+
+1316
+00:43:40,050 --> 00:43:41,970
+That's subtraction.
+
+1317
+00:43:41,970 --> 00:43:44,890
+Now, as for the specific example,
+
+1318
+00:43:44,890 --> 00:43:46,290
+here's an example using sub.
+
+1319
+00:43:46,290 --> 00:43:47,510
+You can also go back
+
+1320
+00:43:47,510 --> 00:43:52,690
+and practice it yourself outside of class.
+
+1321
+00:43:52,690 --> 00:43:54,530
+These are all provided in complete form.
+
+1322
+00:43:54,530 --> 00:43:56,010
+Everyone, don't just use them as exercises and sit there.

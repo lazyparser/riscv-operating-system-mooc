@@ -1,0 +1,4507 @@
+1
+00:00:06,960 --> 00:00:11,300
+Let's do this exercise together in class, take a look at it.
+
+2
+00:00:17,400 --> 00:00:29,660
+In our latest repository, all the exercises have been — the exercise document has been moved to the root directory, because some students said they couldn't find it.
+
+3
+00:00:30,080 --> 00:00:38,220
+It was originally in the slides directory, now I've pulled it out, directly in the root directory, you can open this exercise.pdf.
+
+4
+00:00:38,220 --> 00:00:42,420
+Let's take a look at 5-1.
+
+5
+00:00:42,420 --> 00:00:56,120
+This one
+
+6
+00:00:56,120 --> 00:00:58,340
+is also about the sub command
+
+7
+00:00:58,340 --> 00:01:00,680
+through this exercise we can also see
+
+8
+00:01:00,680 --> 00:01:01,620
+that is,
+
+9
+00:01:01,620 --> 00:01:04,140
+disassemble the execution of this sub command
+
+10
+00:01:04,140 --> 00:01:06,000
+look at the assembly instructions
+
+11
+00:01:06,000 --> 00:01:07,320
+and the encoding of the corresponding machine instructions
+
+12
+00:01:07,320 --> 00:01:11,140
+and match them against the RISC-V specification yourself
+
+13
+00:01:11,140 --> 00:01:11,880
+that is, just now
+
+14
+00:01:11,880 --> 00:01:15,560
+in fact, matching against the things we just introduced to you
+
+15
+00:01:15,560 --> 00:01:19,920
+be able to match them up with the disassembly yourself
+
+16
+00:01:19,920 --> 00:01:20,540
+that is,
+
+17
+00:01:20,540 --> 00:01:23,870
+that is,
+
+18
+00:01:23,870 --> 00:01:25,290
+for example, we
+
+19
+00:01:25,290 --> 00:01:35,840
+for example, this command
+
+20
+00:01:35,840 --> 00:01:37,180
+after we run make
+
+21
+00:01:37,180 --> 00:01:39,680
+We use that return edge to debug this instruction
+
+22
+00:01:39,680 --> 00:01:40,700
+After running it
+
+23
+00:01:40,700 --> 00:01:41,040
+That's not right
+
+24
+00:01:41,040 --> 00:01:43,810
+That's wrong
+
+25
+00:01:43,810 --> 00:01:48,680
+Use that make code
+
+26
+00:01:48,680 --> 00:01:51,160
+Which actually calls obj dump
+
+27
+00:01:51,160 --> 00:01:53,180
+So this sub instruction
+
+28
+00:01:53,180 --> 00:01:54,180
+Why is it this one
+
+29
+00:01:54,180 --> 00:01:56,120
+Try it yourself
+
+30
+00:01:56,120 --> 00:01:58,140
+Combined with the concepts we covered in class
+
+31
+00:01:58,140 --> 00:02:00,240
+See if you can match it up
+
+32
+00:02:00,240 --> 00:02:04,080
+Basically, you need to turn this thing
+
+33
+00:02:04,080 --> 00:02:05,960
+Into its binary form
+
+34
+00:02:05,960 --> 00:02:08,060
+You know, that 010101
+
+35
+00:02:08,060 --> 00:02:09,620
+And then look it up in the table
+
+36
+00:02:09,620 --> 00:02:11,760
+Look up our
+
+37
+00:02:11,760 --> 00:02:13,880
+This table
+
+38
+00:02:13,880 --> 00:02:15,640
+The sub instruction is right here
+
+39
+00:02:15,640 --> 00:02:20,090
+See if it matches
+
+40
+00:02:20,090 --> 00:02:22,690
+Including matching up these registers
+
+41
+00:02:22,690 --> 00:02:23,470
+replace it.
+
+42
+00:02:23,470 --> 00:02:26,570
+That's the first requirement.
+
+43
+00:02:26,570 --> 00:02:27,170
+And then,
+
+44
+00:02:27,170 --> 00:02:29,970
+these exercises are all pretty simple.
+
+45
+00:02:29,970 --> 00:02:32,330
+And then, conversely,
+
+46
+00:02:32,330 --> 00:02:34,410
+if we...
+
+47
+00:02:34,410 --> 00:02:37,110
+whenever I give you an instruction,
+
+48
+00:02:37,110 --> 00:02:38,190
+say it's B305,
+
+49
+00:02:38,190 --> 00:02:42,820
+can you, on your own,
+
+50
+00:02:42,820 --> 00:02:44,500
+using the knowledge we've learned so far,
+
+51
+00:02:44,500 --> 00:02:46,340
+disassemble it back into a
+
+52
+00:02:46,340 --> 00:02:47,360
+assembly instruction?
+
+53
+00:02:47,360 --> 00:02:50,480
+This exercise is very simple.
+
+54
+00:02:50,480 --> 00:02:51,660
+Please try it yourselves.
+
+55
+00:02:51,660 --> 00:02:52,820
+I'll give you a little bit of time.
+
+56
+00:02:52,820 --> 00:03:51,390
+Everyone, focus up.
+
+57
+00:03:51,390 --> 00:03:53,630
+Let's go through it quickly together.
+
+58
+00:03:53,630 --> 00:03:55,550
+This exercise is relatively simple.
+
+59
+00:03:55,550 --> 00:03:58,670
+The first part of Exercise 5-1,
+
+60
+00:03:58,670 --> 00:04:00,170
+we won't cover the first one.
+
+61
+00:04:00,170 --> 00:04:02,010
+I'll leave that for you to look up on your own.
+
+62
+00:04:02,010 --> 00:04:04,030
+Conversely, that means
+
+63
+00:04:04,030 --> 00:04:05,390
+if it's this,
+
+64
+00:04:05,390 --> 00:04:08,470
+given this,
+
+65
+00:04:08,470 --> 00:04:11,270
+when you look for it,
+
+66
+00:04:11,270 --> 00:04:13,430
+let's take a look at what it says.
+
+67
+00:04:13,430 --> 00:04:14,710
+It says that
+
+68
+00:04:14,710 --> 00:04:17,230
+the value in memory is B3059500,
+
+69
+00:04:17,230 --> 00:04:20,070
+from left to right, going from low address to high address,
+
+70
+00:04:20,070 --> 00:04:21,570
+in units of bytes.
+
+71
+00:04:21,570 --> 00:04:23,150
+Now, we know that
+
+72
+00:04:23,150 --> 00:04:24,750
+since it's in RISC-V,
+
+73
+00:04:24,750 --> 00:04:27,510
+the machine stores data in little-endian order,
+
+74
+00:04:27,510 --> 00:04:30,870
+so if it's B3059500,
+
+75
+00:04:30,870 --> 00:04:33,170
+then from low address to high address,
+
+76
+00:04:33,170 --> 00:04:34,530
+what is the actual value?
+
+77
+00:04:34,530 --> 00:04:35,750
+It's actually reversed,
+
+78
+00:04:35,750 --> 00:04:35,930
+right?
+
+79
+00:04:35,930 --> 00:04:38,050
+So first we need to take this value
+
+80
+00:04:38,050 --> 00:04:43,000
+and reverse it.
+
+81
+00:04:43,000 --> 00:04:43,700
+And the other way around,
+
+82
+00:04:43,700 --> 00:04:44,320
+it's 00
+
+83
+00:04:44,320 --> 00:04:46,720
+95
+
+84
+00:04:46,720 --> 00:04:48,620
+05
+
+85
+00:04:48,620 --> 00:04:50,540
+B3
+
+86
+00:04:50,540 --> 00:04:53,280
+from low bits to high bits.
+
+87
+00:04:53,280 --> 00:04:54,440
+That's actually what this number should be.
+
+88
+00:04:54,440 --> 00:04:55,680
+Now, for this number,
+
+89
+00:04:55,680 --> 00:04:57,720
+first we need to convert it to binary.
+
+90
+00:04:57,720 --> 00:04:58,700
+For this,
+
+91
+00:04:58,700 --> 00:05:01,660
+we'll just use the calculator to convert it quickly.
+
+92
+00:05:01,660 --> 00:05:02,000
+This one,
+
+93
+00:05:02,000 --> 00:05:03,700
+of course, if you want to
+
+94
+00:05:03,700 --> 00:05:05,760
+convert it by hand,
+
+95
+00:05:05,760 --> 00:05:07,760
+that's also very convenient.
+
+96
+00:05:07,760 --> 00:05:11,600
+So it's actually 00
+
+97
+00:05:11,600 --> 00:05:18,510
+90505
+
+98
+00:05:18,510 --> 00:05:21,760
+B3
+
+99
+00:05:21,760 --> 00:05:25,360
+and once converted to binary,
+
+100
+00:05:25,360 --> 00:05:31,200
+it's really just the string of digits below.
+
+101
+00:05:31,200 --> 00:05:32,180
+Take this string of binary digits.
+
+102
+00:05:32,180 --> 00:05:35,020
+It's actually one value every four bits.
+
+103
+00:05:35,020 --> 00:05:38,310
+Let's split it up.
+
+104
+00:05:38,310 --> 00:05:41,070
+34
+
+105
+00:05:41,070 --> 00:05:43,450
+It might be a bit small.
+
+106
+00:05:43,450 --> 00:05:44,250
+Let me make it bigger.
+
+107
+00:05:44,250 --> 00:05:53,280
+How do I enlarge this?
+
+108
+00:05:53,280 --> 00:05:55,540
+Looks like it's enlarged now.
+
+109
+00:05:55,540 --> 00:06:04,020
+Basically, split it into 8-bit groups.
+
+110
+00:06:04,020 --> 00:06:09,810
+I think I split it wrong here.
+
+111
+00:06:09,810 --> 00:06:10,950
+1 2 3 4
+
+112
+00:06:10,950 --> 00:06:20,760
+Wrong.
+
+113
+00:06:20,760 --> 00:06:21,640
+The front is 0.
+
+114
+00:06:21,640 --> 00:06:23,420
+So it's actually eight 0s.
+
+115
+00:06:23,420 --> 00:06:40,850
+So the whole thing is this number.
+
+116
+00:06:40,850 --> 00:06:41,870
+I'll leave this one as is.
+
+117
+00:06:41,870 --> 00:06:43,010
+And then,
+
+118
+00:06:43,010 --> 00:06:44,550
+after we get to this point,
+
+119
+00:06:44,550 --> 00:06:47,470
+we need to go look up the spec.
+
+120
+00:06:47,470 --> 00:06:49,150
+Now, as for this spec,
+
+121
+00:06:49,150 --> 00:06:50,430
+We just looked at, that is to say,
+
+122
+00:06:50,430 --> 00:06:53,810
+we need to start reading from the low bits,
+
+123
+00:06:53,810 --> 00:06:56,150
+and this CPU works the same way.
+
+124
+00:06:56,150 --> 00:06:57,250
+After it fetches the instruction,
+
+125
+00:06:57,250 --> 00:06:59,390
+after that fetch,
+
+126
+00:06:59,390 --> 00:07:00,170
+comes decoding.
+
+127
+00:07:00,170 --> 00:07:00,770
+For decoding,
+
+128
+00:07:00,770 --> 00:07:03,030
+it actually looks at the low bits first.
+
+129
+00:07:03,030 --> 00:07:03,870
+So,
+
+130
+00:07:03,870 --> 00:07:06,430
+the advantage of starting with the low bits,
+
+131
+00:07:06,430 --> 00:07:07,610
+is that since it's,
+
+132
+00:07:07,610 --> 00:07:10,370
+it's little-endian code,
+
+133
+00:07:10,370 --> 00:07:11,130
+think about it,
+
+134
+00:07:11,130 --> 00:07:12,150
+the first byte it fetches,
+
+135
+00:07:12,150 --> 00:07:14,090
+is its low bits.
+
+136
+00:07:14,090 --> 00:07:15,370
+And as for those low bits,
+
+137
+00:07:15,370 --> 00:07:16,870
+11001,
+
+138
+00:07:16,870 --> 00:07:17,930
+then we have to look at,
+
+139
+00:07:17,930 --> 00:07:18,590
+we know its,
+
+140
+00:07:18,590 --> 00:07:21,190
+all of these RISC-V instructions,
+
+141
+00:07:21,190 --> 00:07:22,850
+The lower 7 bits
+
+142
+00:07:22,850 --> 00:07:24,110
+are all OPCODE.
+
+143
+00:07:24,110 --> 00:07:26,390
+So let's pick out those 7 bits.
+
+144
+00:07:26,390 --> 00:07:28,190
+This is actually 8 bits.
+
+145
+00:07:28,190 --> 00:07:29,610
+It's actually this string of digits:
+
+146
+00:07:29,610 --> 00:07:32,230
+011 0011.
+
+147
+00:07:32,230 --> 00:07:33,930
+Now, we know the last two bits are both 11.
+
+148
+00:07:33,930 --> 00:07:36,150
+So really we just need to see what 011 00 is.
+
+149
+00:07:36,150 --> 00:07:36,690
+Right?
+
+150
+00:07:36,690 --> 00:07:38,370
+What is 011 00?
+
+151
+00:07:38,370 --> 00:07:41,130
+Let's look up what 011 00 is.
+
+152
+00:07:41,130 --> 00:07:45,500
+011 00 01 01 01.
+
+153
+00:07:45,500 --> 00:07:50,110
+Even though they're all 011 00 01,
+
+154
+00:07:50,110 --> 00:07:52,650
+which one has 0000?
+
+155
+00:07:52,650 --> 00:07:53,810
+That's the add instruction, right?
+
+156
+00:07:53,810 --> 00:07:55,550
+It seems to be the add instruction.
+
+157
+00:07:55,550 --> 00:07:57,230
+Let's take a look.
+
+158
+00:07:57,230 --> 00:08:00,580
+It should be the add instruction.
+
+159
+00:08:00,580 --> 00:08:07,370
+Because its first 7 bits are 0.
+
+160
+00:08:07,370 --> 00:08:10,070
+The first 7 bits are 0.
+
+161
+00:08:10,070 --> 00:08:11,250
+1234567
+
+162
+00:08:11,250 --> 00:08:12,530
+the first 7 bits are 0
+
+163
+00:08:12,530 --> 00:08:14,210
+so this part should line up with this
+
+164
+00:08:14,210 --> 00:08:16,210
+then it's 000
+
+165
+00:08:16,210 --> 00:08:17,370
+this side is 3 bits
+
+166
+00:08:17,370 --> 00:08:19,430
+1234
+
+167
+00:08:19,430 --> 00:08:21,390
+12345
+
+168
+00:08:21,390 --> 00:08:27,340
+so this way it matches up
+
+169
+00:08:27,340 --> 00:08:27,860
+in that case
+
+170
+00:08:27,860 --> 00:08:29,800
+12345
+
+171
+00:08:29,800 --> 00:08:32,440
+12345
+
+172
+00:08:32,440 --> 00:08:33,540
+3 bits
+
+173
+00:08:33,540 --> 00:08:34,860
+12345
+
+174
+00:08:34,860 --> 00:08:36,720
+so this matches up
+
+175
+00:08:36,720 --> 00:08:39,020
+up front it's add 01100
+
+176
+00:08:39,020 --> 00:08:40,640
+01100, right
+
+177
+00:08:40,640 --> 00:08:42,200
+that is to say, if you only look at
+
+178
+00:08:42,200 --> 00:08:42,900
+as we mentioned earlier
+
+179
+00:08:42,900 --> 00:08:43,940
+if you only look at the OPCODE
+
+180
+00:08:43,940 --> 00:08:45,520
+it actually can't uniquely determine
+
+181
+00:08:45,520 --> 00:08:47,000
+Which instruction is this?
+
+182
+00:08:47,000 --> 00:08:47,580
+Right?
+
+183
+00:08:47,580 --> 00:08:49,400
+It's actually assembled from these.
+
+184
+00:08:49,400 --> 00:08:51,080
+So you need to take this into account too.
+
+185
+00:08:51,080 --> 00:08:52,780
+So all three of these need to be included.
+
+186
+00:08:52,780 --> 00:08:54,380
+Now, from these three numbers
+
+187
+00:08:54,380 --> 00:08:55,580
+once they're determined,
+
+188
+00:08:55,580 --> 00:08:57,160
+it's actually the add instruction.
+
+189
+00:08:57,160 --> 00:09:01,990
+Alright, once that's settled, it's easy.
+
+190
+00:09:01,990 --> 00:09:02,570
+Easy to handle.
+
+191
+00:09:02,570 --> 00:09:03,370
+So here,
+
+192
+00:09:03,370 --> 00:09:05,190
+in what we're doing for add, this is rd.
+
+193
+00:09:05,190 --> 00:09:08,770
+Over here is rs.
+
+194
+00:09:08,770 --> 00:09:11,730
+rs1.
+
+195
+00:09:11,730 --> 00:09:12,790
+And then rs2.
+
+196
+00:09:12,790 --> 00:09:15,850
+So for this one,
+
+197
+00:09:15,850 --> 00:09:16,730
+we say we convert it
+
+198
+00:09:16,730 --> 00:09:18,350
+into a decimal number,
+
+199
+00:09:18,350 --> 00:09:19,570
+what is 1001?
+
+200
+00:09:19,570 --> 00:09:21,290
+It's 4 plus 1, which is 5, right?
+
+201
+00:09:21,290 --> 00:09:22,870
+So this one here,
+
+202
+00:09:22,870 --> 00:09:26,910
+1010 is 4 plus 2, that's 6.
+
+203
+00:09:26,910 --> 00:09:28,630
+And over here,
+
+204
+00:09:28,630 --> 00:09:37,980
+this one is 4, and this is 6, right?
+
+205
+00:09:37,980 --> 00:09:44,380
+No, that's wrong. I read it wrong.
+
+206
+00:09:44,380 --> 00:09:45,060
+I'm getting a bit confused here.
+
+207
+00:09:45,060 --> 00:09:46,280
+2 to the power of 1.
+
+208
+00:09:46,280 --> 00:09:54,760
+2 to the... 2 to the...
+
+209
+00:09:54,760 --> 00:09:56,440
+Where did this slide go?
+
+210
+00:09:56,440 --> 00:09:57,060
+It should be right here.
+
+211
+00:09:57,060 --> 00:10:01,540
+This is 2 to the power of 0, 2 to the power of 1, 2...
+
+212
+00:10:01,540 --> 00:10:05,060
+This is 8 plus 2.
+
+213
+00:10:05,060 --> 00:10:07,840
+8 plus 2 is...
+
+214
+00:10:07,840 --> 00:10:10,000
+8 plus 2 is...
+
+215
+00:10:10,000 --> 00:10:11,440
+10.
+
+216
+00:10:11,440 --> 00:10:13,340
+Is it 11?
+
+217
+00:10:13,340 --> 00:10:16,490
+01011.
+
+218
+00:10:16,490 --> 00:10:20,010
+So in that case, it should be 5011, right?
+
+219
+00:10:20,010 --> 00:10:21,690
+I didn't calculate it wrong.
+
+220
+00:10:21,690 --> 00:10:24,990
+This is 8 plus 1, so it's 9.
+
+221
+00:10:24,990 --> 00:10:26,110
+9011, right?
+
+222
+00:10:26,110 --> 00:10:28,730
+Then it should be
+
+223
+00:10:28,730 --> 00:10:30,670
+add
+
+224
+00:10:30,670 --> 00:10:33,310
+and then it's
+
+225
+00:10:33,310 --> 00:10:35,270
+x11
+
+226
+00:10:35,270 --> 00:10:37,510
+and then x
+
+227
+00:10:37,510 --> 00:10:42,690
+10 and X9
+
+228
+00:10:42,690 --> 00:10:43,850
+Is that right?
+
+229
+00:10:43,850 --> 00:10:45,190
+Did I calculate it wrong anywhere?
+
+230
+00:10:45,190 --> 00:10:48,330
+What did you get?
+
+231
+00:10:48,330 --> 00:10:55,060
+Anyway, the rough calculation method is something like that.
+
+232
+00:10:55,060 --> 00:10:56,020
+I mainly wanted to show you
+
+233
+00:10:56,020 --> 00:10:57,780
+how to look things up in this table,
+
+234
+00:10:57,780 --> 00:10:59,340
+looking it up in reverse.
+
+235
+00:10:59,340 --> 00:11:00,660
+Of course, in many cases,
+
+236
+00:11:00,660 --> 00:11:01,840
+in fact, in most cases,
+
+237
+00:11:01,840 --> 00:11:02,700
+if you have the object code,
+
+238
+00:11:02,700 --> 00:11:05,220
+you can just use a debugger to step back.
+
+239
+00:11:05,220 --> 00:11:05,820
+But,
+
+240
+00:11:05,820 --> 00:11:06,580
+I mean, sometimes
+
+241
+00:11:06,580 --> 00:11:08,460
+there might be times when you don't have machine code
+
+242
+00:11:08,460 --> 00:11:10,260
+it could happen occasionally
+
+243
+00:11:10,260 --> 00:11:11,460
+so it's still worth understanding
+
+244
+00:11:11,460 --> 00:11:12,140
+but this one
+
+245
+00:11:12,140 --> 00:11:12,960
+involves
+
+246
+00:11:12,960 --> 00:11:14,880
+some basic concepts of encoding formats
+
+247
+00:11:14,880 --> 00:11:18,240
+and we're just going to
+
+248
+00:11:18,240 --> 00:11:21,260
+skip going through it again here
+
+249
+00:11:21,260 --> 00:11:22,220
+so please review it on your own when you get back
+
+250
+00:11:22,220 --> 00:11:24,360
+okay, let's continue with the exercises that follow
+
+251
+00:11:24,360 --> 00:11:25,520
+and the rest of the course
+
+252
+00:11:25,520 --> 00:11:27,700
+so next up
+
+253
+00:11:27,700 --> 00:11:28,640
+let's look at
+
+254
+00:11:28,640 --> 00:11:31,020
+now that we've covered the add instruction
+
+255
+00:11:31,020 --> 00:11:32,620
+the second one we'll cover is addi
+
+256
+00:11:32,620 --> 00:11:35,160
+the immediate addition instruction
+
+257
+00:11:35,160 --> 00:11:36,700
+and this instruction
+
+258
+00:11:36,700 --> 00:11:39,040
+uses the I-type format
+
+259
+00:11:39,040 --> 00:11:40,900
+the immediate format
+
+260
+00:11:40,900 --> 00:11:45,000
+and the main difference from the R-type format is that
+
+261
+00:11:45,000 --> 00:11:46,760
+It removes one register.
+
+262
+00:11:46,760 --> 00:11:50,040
+And by expanding the space of one of the registers,
+
+263
+00:11:50,040 --> 00:11:51,500
+it can be used to hold an immediate value.
+
+264
+00:11:51,500 --> 00:11:53,100
+The advantage of this is
+
+265
+00:11:53,100 --> 00:11:54,760
+that it can carry an immediate value
+
+266
+00:11:54,760 --> 00:11:58,000
+right within a single instruction,
+
+267
+00:11:58,000 --> 00:12:03,120
+so you don't have to go through a register to find that immediate.
+
+268
+00:12:03,120 --> 00:12:03,940
+However,
+
+269
+00:12:03,940 --> 00:12:05,020
+there is a potential issue here.
+
+270
+00:12:05,020 --> 00:12:05,820
+That is,
+
+271
+00:12:05,820 --> 00:12:06,480
+as you know,
+
+272
+00:12:06,480 --> 00:12:07,300
+please note that
+
+273
+00:12:07,300 --> 00:12:08,360
+this immediate value,
+
+274
+00:12:08,360 --> 00:12:10,980
+since it is embedded within a 32-bit instruction,
+
+275
+00:12:10,980 --> 00:12:11,940
+this immediate value
+
+276
+00:12:11,940 --> 00:12:15,220
+only takes up 12 bits.
+
+277
+00:12:15,220 --> 00:12:18,380
+So the range of this immediate is actually limited.
+
+278
+00:12:18,380 --> 00:12:20,200
+The range it can express is actually limited.
+
+279
+00:12:21,860 --> 00:12:24,200
+So this is the basic format.
+
+280
+00:12:24,200 --> 00:12:26,240
+We won't go into more detail here.
+
+281
+00:12:26,240 --> 00:12:28,520
+So, this immediate value, you see, it only takes up 12 bits.
+
+282
+00:12:28,520 --> 00:12:29,000
+That is, 12 bits.
+
+283
+00:12:29,000 --> 00:12:30,000
+Now, with 12 bits, the range it can represent is, as written below, it can only express values in the range of 2 to the power of 11.
+
+284
+00:12:30,000 --> 00:12:34,460
+Actually, the immediate value is also sign-extended before it takes part in the arithmetic operation.
+
+285
+00:12:34,460 --> 00:12:36,160
+This immediate value only takes up 12 bits.
+
+286
+00:12:36,160 --> 00:12:37,300
+So it occupies 12 bits.
+
+287
+00:12:37,300 --> 00:12:39,240
+Now, these 12 bits mean the range it can express is exactly what is written below.
+
+288
+00:12:39,240 --> 00:12:40,760
+Its representable range is limited to what is written below.
+
+289
+00:12:40,760 --> 00:12:41,900
+It is just as written below.
+
+290
+00:12:41,900 --> 00:12:43,420
+It can only express values from.
+
+291
+00:12:43,420 --> 00:12:46,340
+2 to the power of 11.
+
+292
+00:12:46,340 --> 00:12:49,140
+From negative 2 to the power of 11 to positive 2 to the power of 11.
+
+293
+00:12:49,140 --> 00:12:54,420
+Now, converting this into an actual decimal value.
+
+294
+00:12:54,420 --> 00:12:57,200
+That is, from negative 2048 to 2047.
+
+295
+00:12:57,200 --> 00:12:58,320
+A range of values like this.
+
+296
+00:12:58,320 --> 00:13:00,440
+Also, please note one thing.
+
+297
+00:13:00,440 --> 00:13:02,900
+That is, when it takes part in the arithmetic operation.
+
+298
+00:13:02,900 --> 00:13:04,060
+Since this is an addition instruction.
+
+299
+00:13:04,060 --> 00:13:05,960
+Before taking part in the arithmetic operation.
+
+300
+00:13:05,960 --> 00:13:09,400
+This immediate value will be sign-extended.
+
+301
+00:13:09,400 --> 00:13:10,960
+We covered this concept earlier.
+
+302
+00:13:10,960 --> 00:13:11,740
+What is sign extension?
+
+303
+00:13:11,740 --> 00:13:12,940
+It means that if this number
+
+304
+00:13:12,940 --> 00:13:14,640
+this eleven
+
+305
+00:13:14,640 --> 00:13:15,880
+twelve-bit number
+
+306
+00:13:15,880 --> 00:13:17,440
+if its most significant bit is one,
+
+307
+00:13:17,440 --> 00:13:18,920
+then the bits in front will actually all be
+
+308
+00:13:18,920 --> 00:13:20,400
+extended into
+
+309
+00:13:20,400 --> 00:13:21,840
+thirty-two bits of all ones,
+
+310
+00:13:21,840 --> 00:13:22,840
+which actually represents a negative number.
+
+311
+00:13:22,840 --> 00:13:25,180
+And if it's zero?
+
+312
+00:13:25,180 --> 00:13:26,000
+Then the bits in front stay
+
+313
+00:13:26,000 --> 00:13:27,400
+as zero.
+
+314
+00:13:27,400 --> 00:13:28,440
+That's sign extension.
+
+315
+00:13:28,440 --> 00:13:31,310
+So either way,
+
+316
+00:13:31,310 --> 00:13:33,270
+the range it can represent is actually limited.
+
+317
+00:13:33,270 --> 00:13:33,830
+This add
+
+318
+00:13:33,830 --> 00:13:37,310
+i is exactly this kind of instruction.
+
+319
+00:13:37,310 --> 00:13:41,450
+Now, just a note:
+
+320
+00:13:41,450 --> 00:13:44,190
+even though RISC-V provides
+
+321
+00:13:44,190 --> 00:13:46,250
+This addi instruction
+
+322
+00:13:46,250 --> 00:13:48,270
+but it does not provide a subi instruction.
+
+323
+00:13:48,270 --> 00:13:49,830
+Think about why.
+
+324
+00:13:49,830 --> 00:13:54,970
+The reason is actually very simple.
+
+325
+00:13:54,970 --> 00:13:55,770
+It's that, as we know,
+
+326
+00:13:55,770 --> 00:13:58,610
+subtracting — sub is subtracting —
+
+327
+00:13:58,610 --> 00:13:59,790
+subtracting an immediate value,
+
+328
+00:13:59,790 --> 00:14:01,730
+if you subtract a positive number,
+
+329
+00:14:01,730 --> 00:14:03,230
+it's actually equivalent to adding what?
+
+330
+00:14:03,230 --> 00:14:04,470
+Adding a negative number.
+
+331
+00:14:04,470 --> 00:14:05,750
+Think about it, isn't that right?
+
+332
+00:14:05,750 --> 00:14:09,070
+So RISC-V
+
+333
+00:14:09,070 --> 00:14:12,190
+— we know one of its starting points in designing instructions —
+
+334
+00:14:12,190 --> 00:14:13,910
+is to be as simple as possible.
+
+335
+00:14:13,910 --> 00:14:15,610
+So if it can save one instruction, it saves one.
+
+336
+00:14:15,610 --> 00:14:17,810
+So it didn't specifically
+
+337
+00:14:17,810 --> 00:14:19,790
+add an instruction for sub.
+
+338
+00:14:19,790 --> 00:14:20,670
+It's a reduced instruction set computer,
+
+339
+00:14:20,670 --> 00:14:23,550
+so it just uses addi in place of subi.
+
+340
+00:14:23,550 --> 00:14:28,090
+That's actually the purpose behind it.
+
+341
+00:14:28,090 --> 00:14:28,350
+So,
+
+342
+00:14:28,350 --> 00:14:32,810
+now that we've learned these,
+
+343
+00:14:32,810 --> 00:14:34,830
+add, addi,
+
+344
+00:14:34,830 --> 00:14:36,810
+and the sub instructions,
+
+345
+00:14:36,810 --> 00:14:37,970
+that is, addition and subtraction,
+
+346
+00:14:37,970 --> 00:14:39,570
+those are basically it for us.
+
+347
+00:14:39,570 --> 00:14:41,870
+Now, with these instructions in hand,
+
+348
+00:14:41,870 --> 00:14:43,550
+we can actually use them,
+
+349
+00:14:43,550 --> 00:14:46,210
+by combining them and picking certain values,
+
+350
+00:14:46,210 --> 00:14:49,370
+to express some higher-level uses.
+
+351
+00:14:49,370 --> 00:14:50,410
+So that's how it works.
+
+352
+00:14:50,410 --> 00:14:52,210
+But as for these higher-level functions,
+
+353
+00:14:52,210 --> 00:14:56,870
+RISC-V doesn't provide them with new instructions.
+
+354
+00:14:56,870 --> 00:14:59,090
+Instead, it provides what we call pseudo-instructions.
+
+355
+00:14:59,090 --> 00:15:00,650
+These are exactly the pseudo-instructions we're talking about.
+
+356
+00:15:00,650 --> 00:15:06,150
+For example, say we want to negate a number,
+
+357
+00:15:06,150 --> 00:15:07,290
+to take its negative value.
+
+358
+00:15:07,290 --> 00:15:10,230
+We define a pseudo-instruction,
+
+359
+00:15:10,230 --> 00:15:11,590
+called NEG.
+
+360
+00:15:11,590 --> 00:15:13,030
+That's the idea of 'negative'.
+
+361
+00:15:13,030 --> 00:15:14,550
+But for neg,
+
+362
+00:15:14,550 --> 00:15:15,770
+it's actually equivalent to
+
+363
+00:15:15,770 --> 00:15:17,690
+really just a sub instruction.
+
+364
+00:15:17,690 --> 00:15:18,550
+But,
+
+365
+00:15:18,550 --> 00:15:20,170
+note the special thing about it:
+
+366
+00:15:20,170 --> 00:15:25,010
+in the sub instruction's RSE field,
+
+367
+00:15:25,010 --> 00:15:26,390
+it places X0.
+
+368
+00:15:26,390 --> 00:15:27,790
+We know that X0,
+
+369
+00:15:27,790 --> 00:15:28,670
+this register,
+
+370
+00:15:28,670 --> 00:15:30,270
+as we covered earlier,
+
+371
+00:15:30,270 --> 00:15:31,250
+has a special meaning.
+
+372
+00:15:31,250 --> 00:15:32,430
+That is, with X0,
+
+373
+00:15:32,430 --> 00:15:35,510
+writing to it has no effect at all,
+
+374
+00:15:35,510 --> 00:15:36,630
+and when you read from it,
+
+375
+00:15:36,630 --> 00:15:38,130
+the value you get is always 0.
+
+376
+00:15:38,130 --> 00:15:39,110
+So we know
+
+377
+00:15:39,110 --> 00:15:40,550
+what effect this achieves.
+
+378
+00:15:40,550 --> 00:15:41,490
+It's actually
+
+379
+00:15:41,490 --> 00:15:43,930
+doing one thing,
+
+380
+00:15:43,930 --> 00:15:46,750
+namely subtracting RS from 0.
+
+381
+00:15:46,750 --> 00:15:49,710
+and then store it into ID.
+
+382
+00:15:49,710 --> 00:15:50,050
+We know that
+
+383
+00:15:50,050 --> 00:15:54,090
+if what's in RS is a positive number,
+
+384
+00:15:54,090 --> 00:15:54,870
+then effectively
+
+385
+00:15:54,870 --> 00:15:56,090
+for a number,
+
+386
+00:15:56,090 --> 00:15:56,970
+0 minus it
+
+387
+00:15:56,970 --> 00:15:57,810
+is actually taking its complement —
+
+388
+00:15:57,810 --> 00:16:01,550
+getting its negative value.
+
+389
+00:16:01,550 --> 00:16:04,210
+If it's 1, the result is negative 1; if it's negative 1, the result is 1.
+
+390
+00:16:04,210 --> 00:16:05,450
+It's like taking the negative.
+
+391
+00:16:05,450 --> 00:16:06,750
+That's what this negation means.
+
+392
+00:16:06,750 --> 00:16:13,280
+This is the instruction for negation.
+
+393
+00:16:13,280 --> 00:16:14,480
+So what else is there?
+
+394
+00:16:14,480 --> 00:16:16,880
+Sometimes we need to take
+
+395
+00:16:16,880 --> 00:16:19,480
+two values in registers
+
+396
+00:16:19,480 --> 00:16:20,580
+and, that is to say,
+
+397
+00:16:20,580 --> 00:16:22,300
+take the value in this register
+
+398
+00:16:22,300 --> 00:16:24,060
+and move it into another register.
+
+399
+00:16:24,060 --> 00:16:27,220
+In other instruction sets,
+
+400
+00:16:27,220 --> 00:16:28,460
+there's a corresponding Move instruction.
+
+401
+00:16:28,460 --> 00:16:30,260
+Now, RISC-V, on the other hand
+
+402
+00:16:30,260 --> 00:16:31,940
+does not provide a dedicated move instruction.
+
+403
+00:16:31,940 --> 00:16:34,700
+Instead, it's implemented using another instruction.
+
+404
+00:16:34,700 --> 00:16:35,960
+In other words, its move instruction
+
+405
+00:16:35,960 --> 00:16:37,540
+is actually equivalent to the addi instruction.
+
+406
+00:16:37,540 --> 00:16:39,120
+As you know, with the i in addi
+
+407
+00:16:39,120 --> 00:16:40,840
+if it turns this last value into 0,
+
+408
+00:16:40,840 --> 00:16:41,800
+what effect does that achieve?
+
+409
+00:16:41,800 --> 00:16:45,100
+It takes the value of rs1
+
+410
+00:16:45,100 --> 00:16:46,220
+and adds 0 to it,
+
+411
+00:16:46,220 --> 00:16:48,340
+and then puts the result into rd.
+
+412
+00:16:48,340 --> 00:16:48,800
+Now think about it,
+
+413
+00:16:48,800 --> 00:16:50,260
+isn't the value in rd
+
+414
+00:16:50,260 --> 00:16:51,380
+still just the value of rs1 in the end?
+
+415
+00:16:51,380 --> 00:16:52,640
+Right?
+
+416
+00:16:52,640 --> 00:16:54,320
+So in effect, it achieves
+
+417
+00:16:54,320 --> 00:16:56,320
+the effect of moving
+
+418
+00:16:56,320 --> 00:16:58,040
+a value between two registers.
+
+419
+00:16:58,040 --> 00:16:58,860
+So,
+
+420
+00:16:58,860 --> 00:17:00,600
+this is another example of a pseudo-instruction.
+
+421
+00:17:00,600 --> 00:17:02,740
+So the NOP instruction
+
+422
+00:17:02,740 --> 00:17:03,980
+The NOP instruction
+
+423
+00:17:03,980 --> 00:17:06,560
+It is a special instruction
+
+424
+00:17:06,560 --> 00:17:08,200
+It actually does nothing
+
+425
+00:17:08,200 --> 00:17:10,660
+Now, in RISC-V,
+
+426
+00:17:10,660 --> 00:17:13,040
+there isn't a dedicated NOP instruction
+
+427
+00:17:13,040 --> 00:17:15,660
+or a no-op instruction to do this
+
+428
+00:17:15,660 --> 00:17:18,100
+Instead, it just reuses our ADDI instruction
+
+429
+00:17:18,100 --> 00:17:20,560
+So how does the ADDI instruction do it?
+
+430
+00:17:20,560 --> 00:17:23,840
+It uses its rd and rs1 fields,
+
+431
+00:17:23,840 --> 00:17:25,840
+using the special register x0
+
+432
+00:17:25,840 --> 00:17:26,880
+And then,
+
+433
+00:17:26,880 --> 00:17:28,420
+here it uses the immediate value 0
+
+434
+00:17:28,420 --> 00:17:29,120
+What's the effect of this?
+
+435
+00:17:29,120 --> 00:17:30,320
+Think about it
+
+436
+00:17:30,320 --> 00:17:32,140
+You take out the value of x0,
+
+437
+00:17:32,140 --> 00:17:33,720
+add 0 to it,
+
+438
+00:17:33,720 --> 00:17:36,980
+and store the result back into x0
+
+439
+00:17:36,980 --> 00:17:39,140
+Now some students might say,
+
+440
+00:17:39,140 --> 00:17:40,900
+isn't that still doing something?
+
+441
+00:17:40,900 --> 00:17:41,900
+But as you know,
+
+442
+00:17:41,900 --> 00:17:43,480
+the x0 register is very special.
+
+443
+00:17:43,480 --> 00:17:44,320
+We mentioned earlier that
+
+444
+00:17:44,320 --> 00:17:46,980
+writing into x0
+
+445
+00:17:46,980 --> 00:17:47,640
+is it meaningful,
+
+446
+00:17:47,640 --> 00:17:49,440
+or is it meaningless?
+
+447
+00:17:49,440 --> 00:17:51,200
+It's completely meaningless.
+
+448
+00:17:51,200 --> 00:17:52,000
+So when the CPU is interpreting
+
+449
+00:17:52,000 --> 00:17:52,520
+this instruction,
+
+450
+00:17:52,520 --> 00:17:54,200
+it knows
+
+451
+00:17:54,200 --> 00:17:55,280
+that it really can't do anything.
+
+452
+00:17:55,280 --> 00:17:56,620
+So this instruction
+
+453
+00:17:56,620 --> 00:17:57,860
+won't do anything at all.
+
+454
+00:17:57,860 --> 00:18:01,120
+So it might just
+
+455
+00:18:01,120 --> 00:18:02,840
+go through the instruction cycle of the whole machine,
+
+456
+00:18:02,840 --> 00:18:05,440
+doing nothing but decoding,
+
+457
+00:18:05,440 --> 00:18:07,260
+and the actual action is to do nothing.
+
+458
+00:18:07,260 --> 00:18:09,500
+Now, some students ask about this instruction:
+
+459
+00:18:09,500 --> 00:18:11,880
+why did we invent this kind of NOP instruction in the first place?
+
+460
+00:18:11,880 --> 00:18:13,600
+Well, it's nothing more than something in the code,
+
+461
+00:18:13,600 --> 00:18:15,440
+It serves as a placeholder.
+
+462
+00:18:15,440 --> 00:18:16,920
+Or in other words, it acts as a no-operation.
+
+463
+00:18:16,920 --> 00:18:19,300
+Sometimes it has that effect.
+
+464
+00:18:19,300 --> 00:18:23,150
+So these are some
+
+465
+00:18:23,150 --> 00:18:24,730
+things based on arithmetic instructions,
+
+466
+00:18:24,730 --> 00:18:26,430
+we can implement some pseudo-instructions,
+
+467
+00:18:26,430 --> 00:18:34,000
+extending the functionality of our arithmetic instructions.
+
+468
+00:18:34,000 --> 00:18:34,460
+Now,
+
+469
+00:18:34,460 --> 00:18:38,940
+after learning the concepts we've covered so far,
+
+470
+00:18:38,940 --> 00:18:43,060
+especially after studying this addi instruction,
+
+471
+00:18:43,060 --> 00:18:45,000
+some of you may have a question.
+
+472
+00:18:45,000 --> 00:18:47,160
+Because we just emphasized this point,
+
+473
+00:18:47,160 --> 00:18:49,440
+that is, with the addi instruction,
+
+474
+00:18:49,440 --> 00:18:53,200
+one of its operands is an immediate value.
+
+475
+00:18:53,200 --> 00:18:54,960
+But this immediate value,
+
+476
+00:18:54,960 --> 00:18:58,200
+as we know, since the instruction is embedded within a single instruction,
+
+477
+00:18:58,200 --> 00:18:59,240
+its width is limited,
+
+478
+00:18:59,240 --> 00:19:01,200
+so the range it can express,
+
+479
+00:19:01,200 --> 00:19:02,120
+is actually quite small.
+
+480
+00:19:02,120 --> 00:19:05,240
+It can only be between 2047 and -2048.
+
+481
+00:19:05,240 --> 00:19:09,480
+Now, if we want to operate on
+
+482
+00:19:09,480 --> 00:19:12,380
+accessing a large number
+
+483
+00:19:12,380 --> 00:19:16,420
+By a large number, I mean one greater than 2047
+
+484
+00:19:16,420 --> 00:19:20,120
+that is, greater than or equal to 2047 and less than negative 2048
+
+485
+00:19:20,120 --> 00:19:21,360
+then what do we do?
+
+486
+00:19:21,360 --> 00:19:22,980
+Right?
+
+487
+00:19:22,980 --> 00:19:26,240
+So in this situation,
+
+488
+00:19:26,240 --> 00:19:28,440
+to solve this problem, RISC-V
+
+489
+00:19:28,440 --> 00:19:29,920
+basically addresses how to construct a large number
+
+490
+00:19:29,920 --> 00:19:32,340
+how do we build a large number?
+
+491
+00:19:32,340 --> 00:19:35,200
+Now, to solve this problem,
+
+492
+00:19:35,240 --> 00:19:38,740
+the solution RISC-V came up with is
+
+493
+00:19:38,740 --> 00:19:40,600
+it introduced a new instruction
+
+494
+00:19:40,600 --> 00:19:42,100
+As we know, a 32-bit number
+
+495
+00:19:42,100 --> 00:19:44,100
+can actually be broken down
+
+496
+00:19:44,100 --> 00:19:45,240
+a 32-bit number
+
+497
+00:19:45,240 --> 00:19:46,220
+can be split into
+
+498
+00:19:46,220 --> 00:19:50,200
+a high 20 bits and a low 12 bits
+
+499
+00:19:50,200 --> 00:19:51,820
+in this kind of arrangement
+
+500
+00:19:51,820 --> 00:19:52,320
+isn't that right?
+
+501
+00:19:52,320 --> 00:19:53,720
+Now what about the lower 12 bits?
+
+502
+00:19:53,720 --> 00:19:54,940
+We can use addi
+
+503
+00:19:54,940 --> 00:19:56,360
+to provide them here.
+
+504
+00:19:56,360 --> 00:19:57,560
+Because here,
+
+505
+00:19:57,560 --> 00:19:59,960
+it can represent a 12-bit number.
+
+506
+00:19:59,960 --> 00:20:02,960
+So we can first introduce a new instruction,
+
+507
+00:20:02,960 --> 00:20:07,960
+which sets the upper 20 bits of a 32-bit number,
+
+508
+00:20:07,960 --> 00:20:10,660
+and puts them into a register.
+
+509
+00:20:10,660 --> 00:20:11,500
+And then,
+
+510
+00:20:11,500 --> 00:20:12,620
+for those lower 12 bits,
+
+511
+00:20:12,620 --> 00:20:14,600
+we use the addi instruction to add them in.
+
+512
+00:20:14,600 --> 00:20:16,520
+You get what I mean, right?
+
+513
+00:20:16,520 --> 00:20:17,980
+Just add them in, and that's it.
+
+514
+00:20:17,980 --> 00:20:19,860
+So we fill in the rest,
+
+515
+00:20:19,860 --> 00:20:21,480
+and by filling in, I mean through addi,
+
+516
+00:20:21,480 --> 00:20:23,360
+that is, adding them in through addition,
+
+517
+00:20:23,360 --> 00:20:25,280
+adding them in A plus B style,
+
+518
+00:20:25,280 --> 00:20:26,880
+to fill in the remaining 12 bits.
+
+519
+00:20:26,880 --> 00:20:28,440
+This way, we can construct
+
+520
+00:20:28,440 --> 00:20:30,240
+a full 32-bit number.
+
+521
+00:20:30,240 --> 00:20:31,040
+Think about it — isn't that how it works?
+
+522
+00:20:31,040 --> 00:20:33,500
+Let's look at an example.
+
+523
+00:20:33,500 --> 00:20:35,260
+So this command,
+
+524
+00:20:35,260 --> 00:20:36,260
+first, let's understand
+
+525
+00:20:36,260 --> 00:20:39,040
+the command that builds these upper 20 bits
+
+526
+00:20:39,040 --> 00:20:40,780
+— the command that sets these upper 20 bits —
+
+527
+00:20:40,780 --> 00:20:41,700
+what kind of command is it?
+
+528
+00:20:41,700 --> 00:20:43,480
+It's implemented with a dedicated instruction
+
+529
+00:20:43,480 --> 00:20:45,680
+called the LUI instruction.
+
+530
+00:20:45,680 --> 00:20:47,300
+The LUI instruction,
+
+531
+00:20:47,300 --> 00:20:51,120
+actually, is short for load upper immediate.
+
+532
+00:20:51,120 --> 00:20:59,140
+So that's the LUI instruction.
+
+533
+00:20:59,140 --> 00:21:02,080
+Now, the LUI instruction uses what's called
+
+534
+00:21:02,080 --> 00:21:04,740
+the U-type instruction format.
+
+535
+00:21:04,740 --> 00:21:06,940
+We won't go into the details here.
+
+536
+00:21:06,940 --> 00:21:09,700
+This instruction,
+
+537
+00:21:09,700 --> 00:21:11,480
+the effect it achieves,
+
+538
+00:21:11,480 --> 00:21:12,660
+is that it constructs a
+
+539
+00:21:12,660 --> 00:21:13,820
+32-bit immediate value
+
+540
+00:21:13,820 --> 00:21:16,720
+whose upper 20 bits
+
+541
+00:21:16,720 --> 00:21:20,100
+It stores it on this side
+
+542
+00:21:20,100 --> 00:21:22,680
+the upper 20 bits, bits 31 to 12, are used for storage
+
+543
+00:21:22,680 --> 00:21:23,860
+After it's stored in there
+
+544
+00:21:23,860 --> 00:21:26,740
+bit 12 will be cleared to zero
+
+545
+00:21:26,740 --> 00:21:28,880
+and then it takes this final immediate value
+
+546
+00:21:28,880 --> 00:21:31,200
+and puts it into a register
+
+547
+00:21:31,200 --> 00:21:32,240
+that is, it puts it into this RD
+
+548
+00:21:32,240 --> 00:21:33,500
+for example, the register X5
+
+549
+00:21:33,500 --> 00:21:34,320
+On this side,
+
+550
+00:21:34,320 --> 00:21:36,100
+I've written out an equivalent effect
+
+551
+00:21:36,100 --> 00:21:39,280
+Suppose I use LUI X5 0X12345
+
+552
+00:21:39,280 --> 00:21:41,160
+The value in front here is actually a 20-bit number
+
+553
+00:21:41,160 --> 00:21:43,400
+So it's equivalent to taking this number
+
+554
+00:21:43,400 --> 00:21:44,660
+and shifting it left by 12 bits
+
+555
+00:21:44,660 --> 00:21:47,260
+that is, moving it into the upper 20 bits
+
+556
+00:21:47,260 --> 00:21:47,900
+and then
+
+557
+00:21:47,900 --> 00:21:49,500
+leaving the lower 12 bits on the right empty
+
+558
+00:21:49,500 --> 00:21:50,480
+and filling them all with 0
+
+559
+00:21:50,480 --> 00:21:51,840
+Why fill them with 0?
+
+560
+00:21:51,840 --> 00:21:53,680
+They're left there for the ADDI to add on top
+
+561
+00:21:53,680 --> 00:21:55,320
+You see what I mean, right?
+
+562
+00:21:55,320 --> 00:21:56,780
+That's what LUI does.
+
+563
+00:21:56,780 --> 00:22:00,780
+The specifics of the LUI instruction
+
+564
+00:22:00,780 --> 00:22:02,780
+and its effect
+
+565
+00:22:02,780 --> 00:22:03,660
+are covered in our exercise,
+
+566
+00:22:03,660 --> 00:22:04,400
+which you can go back and look at.
+
+567
+00:22:04,400 --> 00:22:07,040
+We won't go over it again in class.
+
+568
+00:22:07,040 --> 00:22:09,440
+So let's look at
+
+569
+00:22:09,440 --> 00:22:11,680
+how it's actually used.
+
+570
+00:22:11,680 --> 00:22:13,400
+Say we want to build a very large number,
+
+571
+00:22:13,400 --> 00:22:15,460
+0x12345678.
+
+572
+00:22:15,460 --> 00:22:17,020
+Now, for this number,
+
+573
+00:22:17,020 --> 00:22:18,320
+we split it into two parts:
+
+574
+00:22:18,320 --> 00:22:19,500
+it's really just
+
+575
+00:22:19,500 --> 00:22:21,980
+the upper 20 bits and the lower 12 bits.
+
+576
+00:22:21,980 --> 00:22:22,520
+Right?
+
+577
+00:22:22,520 --> 00:22:25,660
+So we can first take 12345678,
+
+578
+00:22:25,660 --> 00:22:27,480
+or rather 12345,
+
+579
+00:22:27,480 --> 00:22:29,880
+the number 0x12345,
+
+580
+00:22:29,880 --> 00:22:31,320
+and first use the LUI instruction
+
+581
+00:22:31,320 --> 00:22:33,520
+and put it into this register X1
+
+582
+00:22:33,520 --> 00:22:35,160
+Now, once that's in there,
+
+583
+00:22:35,160 --> 00:22:36,360
+based on the explanation we just gave,
+
+584
+00:22:36,360 --> 00:22:37,780
+we know it actually is
+
+585
+00:22:37,780 --> 00:22:41,400
+filling the upper 20 bits with this number
+
+586
+00:22:41,400 --> 00:22:42,600
+and at the same time,
+
+587
+00:22:42,600 --> 00:22:44,560
+clearing the lower 12 bits to zero.
+
+588
+00:22:44,560 --> 00:22:46,160
+After they're cleared,
+
+589
+00:22:46,160 --> 00:22:47,440
+how do we fill them back in?
+
+590
+00:22:47,440 --> 00:22:49,200
+We just use addi
+
+591
+00:22:49,200 --> 00:22:50,360
+to fill them in.
+
+592
+00:22:50,360 --> 00:22:51,900
+To fill them in,
+
+593
+00:22:51,900 --> 00:22:53,040
+we take 0x678
+
+594
+00:22:53,040 --> 00:22:56,280
+and add it onto X1.
+
+595
+00:22:56,280 --> 00:22:57,440
+Since X1 currently holds this value,
+
+596
+00:22:57,440 --> 00:22:59,500
+adding these two values together,
+
+597
+00:22:59,500 --> 00:23:01,680
+once you add them, as you can probably see,
+
+598
+00:23:01,680 --> 00:23:04,160
+you've assembled one big number,
+
+599
+00:23:04,160 --> 00:23:04,700
+right? Think about it,
+
+600
+00:23:04,700 --> 00:23:07,540
+this is how we use this instruction
+
+601
+00:23:07,540 --> 00:23:09,480
+to load a large number with this effect.
+
+602
+00:23:09,480 --> 00:23:11,480
+But let's pay attention here,
+
+603
+00:23:11,480 --> 00:23:13,520
+this is actually not
+
+604
+00:23:13,520 --> 00:23:16,240
+as simple as we thought.
+
+605
+00:23:16,240 --> 00:23:17,440
+Not as simple as we thought.
+
+606
+00:23:17,440 --> 00:23:19,080
+For example, let's take another case.
+
+607
+00:23:19,080 --> 00:23:20,840
+Suppose we have a number like this.
+
+608
+00:23:20,840 --> 00:23:23,280
+Take a look, it's 0x12345,
+
+609
+00:23:23,280 --> 00:23:24,860
+and then note that after it there's a
+
+610
+00:23:24,860 --> 00:23:26,700
+string of all f's.
+
+611
+00:23:26,700 --> 00:23:29,400
+Now, if we want to construct this number,
+
+612
+00:23:29,400 --> 00:23:30,060
+how do we do it?
+
+613
+00:23:30,060 --> 00:23:33,400
+Well, if we follow the approach from just now,
+
+614
+00:23:33,400 --> 00:23:34,960
+some of you would say, that's easy.
+
+615
+00:23:34,960 --> 00:23:36,520
+What do we do first?
+
+616
+00:23:36,520 --> 00:23:39,020
+First we take the number 12345
+
+617
+00:23:39,020 --> 00:23:41,560
+and load it into the upper 20 bits using the LUI instruction,
+
+618
+00:23:41,560 --> 00:23:41,740
+right?
+
+619
+00:23:41,740 --> 00:23:43,020
+That's fine.
+
+620
+00:23:43,020 --> 00:23:44,000
+That's absolutely fine.
+
+621
+00:23:44,000 --> 00:23:45,160
+And then below that,
+
+622
+00:23:45,160 --> 00:23:47,340
+we add it in with addi,
+
+623
+00:23:47,340 --> 00:23:49,780
+adding the number 0xff to it.
+
+624
+00:23:49,780 --> 00:23:51,220
+Haven't we put it together then?
+
+625
+00:23:51,220 --> 00:23:53,280
+Think about it — does that work?
+
+626
+00:23:53,280 --> 00:23:58,130
+Let's look back at our addi instruction.
+
+627
+00:23:58,130 --> 00:24:00,970
+How did we define its behavior back then?
+
+628
+00:24:00,970 --> 00:24:04,650
+Let's quickly take a look.
+
+629
+00:24:04,650 --> 00:24:16,260
+Which sentence here affects our computation result?
+
+630
+00:24:16,260 --> 00:24:17,180
+Pay attention to this,
+
+631
+00:24:17,180 --> 00:24:19,480
+we may have gone through it a bit quickly just now.
+
+632
+00:24:19,480 --> 00:24:23,640
+Have you taken another careful look at the meaning of this sentence?
+
+633
+00:24:23,640 --> 00:24:27,060
+What it says is that before it participates in the operation,
+
+634
+00:24:27,060 --> 00:24:29,020
+the immediate value gets — what happens to it?
+
+635
+00:24:29,020 --> 00:24:31,060
+Sign-extended.
+
+636
+00:24:31,060 --> 00:24:32,300
+What does that mean?
+
+637
+00:24:32,300 --> 00:24:37,140
+Let's go back to this one from just now.
+
+638
+00:24:37,140 --> 00:24:42,820
+What does this number actually mean?
+
+639
+00:24:42,820 --> 00:24:47,050
+In memory,
+
+640
+00:24:47,050 --> 00:24:48,050
+for the computer,
+
+641
+00:24:48,050 --> 00:24:49,490
+Is it a positive number?
+
+642
+00:24:49,490 --> 00:24:51,830
+See what I mean?
+
+643
+00:24:51,830 --> 00:24:53,490
+It's actually a negative number.
+
+644
+00:24:53,490 --> 00:24:54,750
+It's actually negative 1.
+
+645
+00:24:54,750 --> 00:24:55,870
+Think about it — isn't that right?
+
+646
+00:24:55,870 --> 00:24:58,170
+Because its sign bit, the highest bit, is
+
+647
+00:24:58,170 --> 00:24:59,090
+After sign extension,
+
+648
+00:24:59,090 --> 00:24:59,990
+it's actually a negative number.
+
+649
+00:24:59,990 --> 00:25:01,530
+And since it's negative,
+
+650
+00:25:01,530 --> 00:25:03,810
+it's not really like what we humans do
+
+651
+00:25:03,810 --> 00:25:05,650
+adding a positive number to a positive number.
+
+652
+00:25:05,650 --> 00:25:07,410
+It's actually taking the content in XL3
+
+653
+00:25:07,410 --> 00:25:08,850
+and adding it together with a negative 1.
+
+654
+00:25:08,850 --> 00:25:10,850
+So you're not actually going to get that result.
+
+655
+00:25:10,850 --> 00:25:11,930
+Do you all see what I mean?
+
+656
+00:25:11,930 --> 00:25:13,870
+So doing it this way
+
+657
+00:25:13,870 --> 00:25:17,130
+can't possibly give you that result.
+
+658
+00:25:17,130 --> 00:25:18,210
+Then a student asks,
+
+659
+00:25:18,210 --> 00:25:19,030
+Well, what if I want to
+
+660
+00:25:19,030 --> 00:25:21,490
+construct that number? How do I do it?
+
+661
+00:25:21,490 --> 00:25:22,790
+So actually, it's very simple.
+
+662
+00:25:22,790 --> 00:25:24,010
+We actually still use these two instructions.
+
+663
+00:25:24,010 --> 00:25:25,110
+It's just that, as we said,
+
+664
+00:25:25,110 --> 00:25:25,910
+we go ahead and...
+
+665
+00:25:25,910 --> 00:25:27,110
+Think about it mathematically.
+
+666
+00:25:27,110 --> 00:25:27,730
+We want to...
+
+667
+00:25:27,730 --> 00:25:29,590
+add 999.
+
+668
+00:25:29,590 --> 00:25:31,870
+That can actually be turned into what concept?
+
+669
+00:25:31,870 --> 00:25:34,710
+It can be obtained as 1000 - 1.
+
+670
+00:25:34,710 --> 00:25:35,550
+You see what I mean?
+
+671
+00:25:35,550 --> 00:25:36,610
+This 1000,
+
+672
+00:25:36,610 --> 00:25:37,610
+we can actually first...
+
+673
+00:25:37,610 --> 00:25:39,270
+add it to this higher position.
+
+674
+00:25:39,270 --> 00:25:41,370
+For example, we use 1000.
+
+675
+00:25:41,370 --> 00:25:42,330
+That 1 in 1000 is actually...
+
+676
+00:25:42,330 --> 00:25:43,570
+effectively the carry.
+
+677
+00:25:43,570 --> 00:25:45,650
+We can get it by subtracting 1 from 1000.
+
+678
+00:25:45,650 --> 00:25:48,330
+So, to get this number,
+
+679
+00:25:48,330 --> 00:25:49,750
+we can first construct such a number.
+
+680
+00:25:49,750 --> 00:25:52,390
+We first get 0x12346.
+
+681
+00:25:52,390 --> 00:25:54,570
+This 6 is actually
+
+682
+00:25:54,570 --> 00:25:56,570
+like borrowing a bit at the front,
+
+683
+00:25:56,570 --> 00:25:56,870
+right?
+
+684
+00:25:56,870 --> 00:25:59,230
+And then we add a -1 to it.
+
+685
+00:25:59,230 --> 00:25:59,730
+This way,
+
+686
+00:25:59,730 --> 00:26:01,370
+we get this result.
+
+687
+00:26:01,370 --> 00:26:02,430
+Think about it, doesn't that make sense?
+
+688
+00:26:02,430 --> 00:26:04,650
+So for us, actually,
+
+689
+00:26:04,650 --> 00:26:06,510
+in this kind of special case,
+
+690
+00:26:06,510 --> 00:26:07,370
+when we construct it,
+
+691
+00:26:07,370 --> 00:26:08,250
+we need to handle this,
+
+692
+00:26:08,250 --> 00:26:10,350
+and we have to use this approach to construct it.
+
+693
+00:26:10,350 --> 00:26:14,310
+That way, we can get this result.
+
+694
+00:26:14,310 --> 00:26:17,790
+The key reason is that for this number after addadd,
+
+695
+00:26:17,790 --> 00:26:20,070
+we have to do sign extension on it.
+
+696
+00:26:20,070 --> 00:26:22,430
+So this is equivalent to...
+
+697
+00:26:22,430 --> 00:26:25,210
+As you know, this result is effectively the same as sub,
+
+698
+00:26:25,210 --> 00:26:26,350
+the effect of subadd,
+
+699
+00:26:26,350 --> 00:26:26,590
+isn't it?
+
+700
+00:26:26,590 --> 00:26:28,310
+It's subtracting a 3-bit number.
+
+701
+00:26:28,310 --> 00:26:29,790
+the concept of subtracting one
+
+702
+00:26:29,790 --> 00:26:33,970
+Now, some of you might have a question here
+
+703
+00:26:33,970 --> 00:26:35,270
+isn't this just way too complicated?
+
+704
+00:26:35,270 --> 00:26:37,410
+I mean, when I want to construct a number
+
+705
+00:26:37,410 --> 00:26:39,690
+I actually have to do some special checks
+
+706
+00:26:39,690 --> 00:26:40,930
+and what do I mean by checks?
+
+707
+00:26:40,930 --> 00:26:43,630
+I mean checking this data in the lower 12 bits
+
+708
+00:26:43,630 --> 00:26:44,810
+to see if it has certain characteristics
+
+709
+00:26:44,810 --> 00:26:46,950
+In some cases it's really simple
+
+710
+00:26:46,950 --> 00:26:48,950
+you just add, but in other cases you still have to use this
+
+711
+00:26:48,950 --> 00:26:51,350
+detour — that is, work around it using subtraction
+
+712
+00:26:51,350 --> 00:26:51,650
+right?
+
+713
+00:26:51,650 --> 00:26:53,170
+Isn't that way too much hassle?
+
+714
+00:26:53,170 --> 00:26:56,230
+So, in order to reduce everyone's
+
+715
+00:26:56,230 --> 00:26:59,470
+effort in constructing an immediate value,
+
+716
+00:26:59,470 --> 00:27:02,810
+in our assembly instructions
+
+717
+00:27:02,810 --> 00:27:03,950
+it actually adopts a kind of
+
+718
+00:27:03,950 --> 00:27:06,830
+pseudo-instruction called LI
+
+719
+00:27:06,830 --> 00:27:11,270
+With this LI instruction,
+
+720
+00:27:11,270 --> 00:27:14,330
+LI is actually short for load immediate
+
+721
+00:27:14,330 --> 00:27:16,070
+That's the idea of loading an immediate.
+
+722
+00:27:16,070 --> 00:27:17,530
+It's basically taking an immediate value
+
+723
+00:27:17,530 --> 00:27:20,210
+In effect, it's like directly loading a value into a register.
+
+724
+00:27:20,210 --> 00:27:24,110
+So if you write it using this kind of micro-instruction,
+
+725
+00:27:24,110 --> 00:27:28,210
+then the real decision is whether to do a direct add
+
+726
+00:27:28,210 --> 00:27:30,410
+or something like a subtract-one operation.
+
+727
+00:27:30,410 --> 00:27:34,450
+This part of the work is really not something you need to worry about.
+
+728
+00:27:34,450 --> 00:27:35,630
+So who actually handles it?
+
+729
+00:27:35,630 --> 00:27:38,030
+In practice, this processing step
+
+730
+00:27:38,030 --> 00:27:39,330
+is handed over to the assembler.
+
+731
+00:27:39,330 --> 00:27:41,630
+So during the
+
+732
+00:27:41,630 --> 00:27:43,590
+assembly process,
+
+733
+00:27:43,590 --> 00:27:45,170
+the assembler will automatically figure out for you
+
+734
+00:27:45,170 --> 00:27:48,110
+what kind of method should be used for this number
+
+735
+00:27:48,110 --> 00:27:52,530
+to construct the final machine instruction,
+
+736
+00:27:52,530 --> 00:27:55,170
+and achieve the end result.
+
+737
+00:27:55,170 --> 00:27:58,290
+So later on, when we write code,
+
+738
+00:27:58,290 --> 00:27:59,650
+including in the exercises we did earlier,
+
+739
+00:27:59,650 --> 00:28:00,210
+you also saw that
+
+740
+00:28:00,210 --> 00:28:02,110
+when we copy a value into a register,
+
+741
+00:28:02,110 --> 00:28:03,850
+We don't use that
+
+742
+00:28:03,850 --> 00:28:07,290
+to do the copying ourselves with a dedicated LUI,
+
+743
+00:28:07,290 --> 00:28:08,970
+or an addi instruction.
+
+744
+00:28:08,970 --> 00:28:10,070
+What we actually do is
+
+745
+00:28:10,070 --> 00:28:11,510
+directly use this pseudo-instruction li,
+
+746
+00:28:11,510 --> 00:28:12,350
+to assign the value.
+
+747
+00:28:12,350 --> 00:28:13,710
+This is where the li instruction
+
+748
+00:28:13,710 --> 00:28:15,090
+we showed earlier in the code
+
+749
+00:28:15,090 --> 00:28:16,430
+comes from.
+
+750
+00:28:16,430 --> 00:28:17,610
+This is a pseudo-instruction.
+
+751
+00:28:17,610 --> 00:28:21,640
+Now, by using this approach,
+
+752
+00:28:21,640 --> 00:28:22,320
+we simply,
+
+753
+00:28:22,320 --> 00:28:23,720
+essentially reduce
+
+754
+00:28:23,720 --> 00:28:24,620
+our workload.
+
+755
+00:28:24,620 --> 00:28:26,160
+And you can also use this
+
+756
+00:28:26,160 --> 00:28:27,500
+to appreciate once more
+
+757
+00:28:27,500 --> 00:28:28,920
+why we provide
+
+758
+00:28:28,920 --> 00:28:29,760
+pseudo-instructions and that kind of
+
+759
+00:28:29,760 --> 00:28:32,100
+functionality.
+
+760
+00:28:32,100 --> 00:28:33,200
+In assembly,
+
+761
+00:28:33,200 --> 00:28:35,080
+So next,
+
+762
+00:28:35,080 --> 00:28:36,400
+for this li example,
+
+763
+00:28:36,400 --> 00:28:37,760
+let's take a look as well.
+
+764
+00:28:37,760 --> 00:28:39,640
+This example,
+
+765
+00:28:39,640 --> 00:28:41,460
+we were about to cover it,
+
+766
+00:28:41,460 --> 00:28:42,880
+and we might be a bit tight on time,
+
+767
+00:28:42,880 --> 00:28:45,900
+but let's go through it together anyway.
+
+768
+00:28:45,900 --> 00:28:46,980
+When you get back,
+
+769
+00:28:46,980 --> 00:28:48,220
+take a look at it yourselves.
+
+770
+00:28:48,220 --> 00:28:57,540
+This li instruction,
+
+771
+00:28:57,540 --> 00:28:59,040
+through this example,
+
+772
+00:28:59,040 --> 00:28:59,900
+let's get a feel for
+
+773
+00:28:59,900 --> 00:29:01,900
+what the assembler does for us.
+
+774
+00:29:01,900 --> 00:29:03,620
+Depending on the situation,
+
+775
+00:29:03,620 --> 00:29:05,400
+it turns the li instruction
+
+776
+00:29:05,400 --> 00:29:08,400
+into different raw machine instructions.
+
+777
+00:29:08,400 --> 00:29:11,060
+For example, right now,
+
+778
+00:29:11,060 --> 00:29:13,200
+for the variable X5,
+
+779
+00:29:13,200 --> 00:29:15,780
+we assign a value called 0X80.
+
+780
+00:29:15,780 --> 00:29:17,380
+Well, we know that
+
+781
+00:29:17,380 --> 00:29:19,680
+The number 0X80
+
+782
+00:29:19,680 --> 00:29:21,580
+falls within
+
+783
+00:29:21,580 --> 00:29:23,720
+the range of our D-level
+
+784
+00:29:23,720 --> 00:29:26,380
+between 2048 and 2047
+
+785
+00:29:26,380 --> 00:29:27,140
+Now think about it
+
+786
+00:29:27,140 --> 00:29:28,220
+in this kind of situation
+
+787
+00:29:28,220 --> 00:29:29,560
+do we still need to bring in
+
+788
+00:29:29,560 --> 00:29:30,760
+an instruction like LUI
+
+789
+00:29:30,760 --> 00:29:32,160
+to construct a large number?
+
+790
+00:29:32,160 --> 00:29:33,220
+It's actually a small number
+
+791
+00:29:33,220 --> 00:29:34,200
+Do you get what I mean?
+
+792
+00:29:34,200 --> 00:29:35,760
+It's a very small number
+
+793
+00:29:35,760 --> 00:29:37,420
+and it falls within this range
+
+794
+00:29:37,420 --> 00:29:39,140
+So since it's within this range
+
+795
+00:29:39,140 --> 00:29:40,400
+in fact, as we say
+
+796
+00:29:40,400 --> 00:29:42,220
+this LRI instruction
+
+797
+00:29:42,220 --> 00:29:44,520
+if you know how to edit it
+
+798
+00:29:44,520 --> 00:29:47,380
+you can simply translate it into a single
+
+799
+00:29:47,380 --> 00:29:48,920
+ADDRI instruction, and that's it
+
+800
+00:29:48,920 --> 00:29:51,120
+no need for two instructions to construct it
+
+801
+00:29:51,120 --> 00:29:52,220
+You still get what I mean.
+
+802
+00:29:52,220 --> 00:29:53,300
+Because this 8,
+
+803
+00:29:53,300 --> 00:29:54,760
+the number 80 in Linux 80,
+
+804
+00:29:54,760 --> 00:29:56,620
+can be embedded directly into a single instruction.
+
+805
+00:29:56,620 --> 00:29:59,120
+Through the ADDI instruction,
+
+806
+00:29:59,120 --> 00:30:01,920
+we can attach it straight into x5.
+
+807
+00:30:01,920 --> 00:30:03,720
+Do you still get what I mean?
+
+808
+00:30:03,720 --> 00:30:05,580
+In your code,
+
+809
+00:30:05,580 --> 00:30:06,840
+after you compile it,
+
+810
+00:30:06,840 --> 00:30:07,920
+go back and take a look.
+
+811
+00:30:07,920 --> 00:30:08,940
+These two instructions,
+
+812
+00:30:08,940 --> 00:30:11,980
+the machine code they generate is exactly identical.
+
+813
+00:30:11,980 --> 00:30:14,140
+That way you can verify what I'm saying.
+
+814
+00:30:14,140 --> 00:30:19,090
+So that's the first case.
+
+815
+00:30:19,090 --> 00:30:20,150
+The second case,
+
+816
+00:30:20,150 --> 00:30:21,670
+suppose the number is something like this.
+
+817
+00:30:21,670 --> 00:30:23,310
+What's the characteristic of this number?
+
+818
+00:30:23,310 --> 00:30:25,950
+First of all, this number is a large number.
+
+819
+00:30:25,950 --> 00:30:30,070
+It's definitely outside that range.
+
+820
+00:30:30,070 --> 00:30:30,470
+Right?
+
+821
+00:30:30,470 --> 00:30:31,550
+This number is very large.
+
+822
+00:30:31,550 --> 00:30:32,390
+At the same time,
+
+823
+00:30:32,390 --> 00:30:33,710
+what other feature does it have?
+
+824
+00:30:33,710 --> 00:30:35,850
+The twelfth bit of this number,
+
+825
+00:30:35,850 --> 00:30:37,170
+its highest bit,
+
+826
+00:30:37,170 --> 00:30:39,690
+most significant bit,
+
+827
+00:30:39,690 --> 00:30:40,810
+the highest bit is 0,
+
+828
+00:30:40,810 --> 00:30:42,530
+which means it is actually a positive number.
+
+829
+00:30:42,530 --> 00:30:44,450
+So for this kind of situation,
+
+830
+00:30:44,450 --> 00:30:47,390
+we can use our simplest approach to put it together.
+
+831
+00:30:47,390 --> 00:30:49,630
+What I mean by the simplest approach,
+
+832
+00:30:49,630 --> 00:30:52,710
+is that after splitting this number in two,
+
+833
+00:30:52,710 --> 00:30:58,790
+you directly combine it using the LUI instruction and the ADDI instruction,
+
+834
+00:30:58,790 --> 00:31:02,990
+and you get the equivalent result.
+
+835
+00:31:02,990 --> 00:31:04,490
+Go back one step,
+
+836
+00:31:04,490 --> 00:31:06,870
+and you'll see that the code generated by this instruction,
+
+837
+00:31:06,870 --> 00:31:08,230
+is just two machine instructions.
+
+838
+00:31:08,230 --> 00:31:10,870
+This is equivalent to that.
+
+839
+00:31:10,870 --> 00:31:13,170
+After you go back and work on it yourselves,
+
+840
+00:31:13,170 --> 00:31:14,310
+you can try doing this exercise.
+
+841
+00:31:14,310 --> 00:31:15,630
+Let's go back and look at this effect.
+
+842
+00:31:15,630 --> 00:31:17,610
+This is the second case.
+
+843
+00:31:17,610 --> 00:31:20,230
+Now, for the third case,
+
+844
+00:31:20,230 --> 00:31:21,970
+this is what we just demonstrated for you.
+
+845
+00:31:21,970 --> 00:31:24,490
+Suppose this number is also a large number,
+
+846
+00:31:24,490 --> 00:31:25,870
+and at the same time, after splitting it in two,
+
+847
+00:31:25,870 --> 00:31:27,130
+we find that its highest bit
+
+848
+00:31:27,130 --> 00:31:28,290
+is not zero, but one,
+
+849
+00:31:28,290 --> 00:31:29,610
+indicating it's a negative number.
+
+850
+00:31:29,610 --> 00:31:30,150
+What should we do then?
+
+851
+00:31:30,150 --> 00:31:32,630
+If it's a negative number,
+
+852
+00:31:32,630 --> 00:31:34,570
+then we have to use the approach we just showed,
+
+853
+00:31:34,570 --> 00:31:35,410
+which is a bit more complicated.
+
+854
+00:31:35,410 --> 00:31:38,070
+We use that method to do it.
+
+855
+00:31:38,070 --> 00:31:40,290
+So through this example,
+
+856
+00:31:40,290 --> 00:31:40,850
+we can see that
+
+857
+00:31:40,850 --> 00:31:42,790
+the same li instruction,
+
+858
+00:31:42,790 --> 00:31:44,050
+in different
+
+859
+00:31:44,050 --> 00:31:45,750
+situations — when you load a different,
+
+860
+00:31:45,750 --> 00:31:47,050
+construct a different number,
+
+861
+00:31:47,050 --> 00:31:48,430
+The machine instructions it generates
+
+862
+00:31:48,430 --> 00:31:49,510
+may not be the same.
+
+863
+00:31:49,510 --> 00:31:52,230
+That's the effect of this pseudo-instruction.
+
+864
+00:31:52,230 --> 00:31:54,090
+So through this example,
+
+865
+00:31:54,090 --> 00:31:56,210
+on the one hand, we've understood
+
+866
+00:31:56,210 --> 00:31:58,530
+what the Lui instruction does,
+
+867
+00:31:58,530 --> 00:32:00,630
+and on the other hand, we've also understood
+
+868
+00:32:00,630 --> 00:32:03,370
+that from now on,
+
+869
+00:32:03,370 --> 00:32:04,650
+in the end, we
+
+870
+00:32:04,650 --> 00:32:07,210
+will all use the Li pseudo-instruction to
+
+871
+00:32:07,210 --> 00:32:09,610
+assign values to variables.
+
+872
+00:32:09,610 --> 00:32:11,350
+So what actually happens behind
+
+873
+00:32:11,350 --> 00:32:12,530
+this variable in the end,
+
+874
+00:32:12,530 --> 00:32:14,350
+I hope through this you can
+
+875
+00:32:14,350 --> 00:32:16,150
+get a sense of how our
+
+876
+00:32:16,150 --> 00:32:18,610
+assembly instructions in RISC-V work,
+
+877
+00:32:18,610 --> 00:32:19,970
+which is actually determined by RISC-V's
+
+878
+00:32:19,970 --> 00:32:22,950
+instruction encoding mechanism.
+
+879
+00:32:22,950 --> 00:32:24,070
+Please keep this in mind.
+
+880
+00:32:24,070 --> 00:32:30,300
+Alright, that's all for the Li instruction.
+
+881
+00:32:30,300 --> 00:32:33,420
+So, regarding this arithmetic instruction,
+
+882
+00:32:33,420 --> 00:32:34,820
+let me check the remaining time.
+
+883
+00:32:34,820 --> 00:32:37,980
+The time seems to be...
+
+884
+00:32:37,980 --> 00:32:39,980
+Do you all want to take a break?
+
+885
+00:32:39,980 --> 00:32:42,100
+Given the time,
+
+886
+00:32:42,100 --> 00:32:42,640
+it feels a bit...
+
+887
+00:32:42,640 --> 00:32:44,960
+Should we take a break?
+
+888
+00:32:44,960 --> 00:32:46,920
+No break? OK.
+
+889
+00:32:46,920 --> 00:32:48,480
+Then let's just finish it up.
+
+890
+00:32:48,480 --> 00:32:50,020
+Either way, we'll get out early.
+
+891
+00:32:50,020 --> 00:32:51,740
+We'll wrap up
+
+892
+00:32:51,740 --> 00:32:52,480
+this morning.
+
+893
+00:32:52,480 --> 00:32:58,880
+So as we just mentioned,
+
+894
+00:32:58,880 --> 00:32:59,340
+that is to say,
+
+895
+00:32:59,340 --> 00:33:01,060
+the scenario we just talked about,
+
+896
+00:33:01,060 --> 00:33:02,360
+namely, we want to construct a large number.
+
+897
+00:33:02,360 --> 00:33:04,120
+For example, when copying to a register,
+
+898
+00:33:04,120 --> 00:33:06,480
+say x equals 100,
+
+899
+00:33:06,480 --> 00:33:07,920
+when we need to do an assignment like this,
+
+900
+00:33:07,920 --> 00:33:11,100
+we'll use this li approach.
+
+901
+00:33:11,100 --> 00:33:14,380
+So when do we need to build a large number?
+
+902
+00:33:14,380 --> 00:33:16,580
+When do we often need to access a large number?
+
+903
+00:33:16,580 --> 00:33:18,520
+As you know, besides this kind of
+
+904
+00:33:18,520 --> 00:33:21,000
+basic addition and subtraction
+
+905
+00:33:21,000 --> 00:33:22,480
+numeric operations,
+
+906
+00:33:22,480 --> 00:33:24,380
+we also often access addresses.
+
+907
+00:33:24,380 --> 00:33:26,160
+And these addresses,
+
+908
+00:33:26,160 --> 00:33:28,380
+as we know,
+
+909
+00:33:28,380 --> 00:33:30,420
+are often also this kind of large number.
+
+910
+00:33:30,420 --> 00:33:32,740
+Especially on our 32-bit machine,
+
+911
+00:33:32,740 --> 00:33:36,060
+when the address space is definitely in a very large range,
+
+912
+00:33:36,060 --> 00:33:38,240
+so how do we construct an address value?
+
+913
+00:33:38,240 --> 00:33:41,120
+This involves another concept.
+
+914
+00:33:41,120 --> 00:33:41,840
+Let's take a look.
+
+915
+00:33:41,840 --> 00:33:45,690
+When we construct an address,
+
+916
+00:33:45,690 --> 00:33:48,090
+it's actually not much different from constructing
+
+917
+00:33:48,090 --> 00:33:49,310
+an ordinary numeric value.
+
+918
+00:33:49,310 --> 00:33:51,870
+Under normal circumstances,
+
+919
+00:33:51,870 --> 00:33:54,630
+we can actually use that LUI instruction from just now,
+
+920
+00:33:54,630 --> 00:33:57,330
+that is, the LUI we just talked about.
+
+921
+00:33:57,330 --> 00:34:00,190
+to construct a large number in this way
+
+922
+00:34:00,190 --> 00:34:02,670
+using li to construct a large number in this way
+
+923
+00:34:02,670 --> 00:34:03,570
+to construct an address
+
+924
+00:34:03,570 --> 00:34:04,710
+But as you know,
+
+925
+00:34:04,710 --> 00:34:06,750
+the address constructed this way
+
+926
+00:34:06,750 --> 00:34:07,310
+is a kind of what?
+
+927
+00:34:07,310 --> 00:34:08,810
+It's an absolute value.
+
+928
+00:34:08,810 --> 00:34:10,310
+Because if you use this method,
+
+929
+00:34:10,310 --> 00:34:11,590
+the address you construct
+
+930
+00:34:11,590 --> 00:34:14,210
+is definitely something directly specified,
+
+931
+00:34:14,210 --> 00:34:18,030
+somewhere between 0 and 2 to the power of 32,
+
+932
+00:34:18,030 --> 00:34:19,250
+that is, the 32-bit range,
+
+933
+00:34:19,250 --> 00:34:20,550
+an absolute value like that.
+
+934
+00:34:20,550 --> 00:34:22,290
+But sometimes,
+
+935
+00:34:22,290 --> 00:34:24,270
+when we're actually constructing addresses,
+
+936
+00:34:24,270 --> 00:34:26,110
+we also want to construct some relative values.
+
+937
+00:34:26,110 --> 00:34:29,510
+This thing is the relative address,
+
+938
+00:34:29,510 --> 00:34:30,670
+the relative address.
+
+939
+00:34:30,670 --> 00:34:32,730
+Now, for this thing,
+
+940
+00:34:32,730 --> 00:34:35,270
+you'll probably see it later
+
+941
+00:34:35,270 --> 00:34:36,570
+For example, when programming,
+
+942
+00:34:36,570 --> 00:34:38,270
+you may also run into some related concepts.
+
+943
+00:34:38,270 --> 00:34:40,150
+For instance, have any of you come across
+
+944
+00:34:40,150 --> 00:34:42,710
+dynamic libraries?
+
+945
+00:34:42,710 --> 00:34:44,290
+The concept of dynamic libraries.
+
+946
+00:34:44,290 --> 00:34:46,070
+We know that with dynamic libraries,
+
+947
+00:34:46,070 --> 00:34:48,570
+when they are linked,
+
+948
+00:34:48,570 --> 00:34:49,810
+their addresses
+
+949
+00:34:49,810 --> 00:34:52,270
+all use a kind of relative address,
+
+950
+00:34:52,270 --> 00:34:53,530
+because,
+
+951
+00:34:53,530 --> 00:34:55,870
+because when they are dynamically loaded,
+
+952
+00:34:55,870 --> 00:34:58,050
+their addresses actually cannot be determined at the linking stage,
+
+953
+00:34:58,050 --> 00:35:00,670
+the static linking stage cannot determine them,
+
+954
+00:35:00,670 --> 00:35:02,310
+so it can only use a relative address
+
+955
+00:35:02,310 --> 00:35:03,050
+to determine them.
+
+956
+00:35:03,050 --> 00:35:04,690
+What this means is that
+
+957
+00:35:04,690 --> 00:35:05,570
+at compile time,
+
+958
+00:35:05,570 --> 00:35:06,230
+at link time,
+
+959
+00:35:06,230 --> 00:35:08,730
+you need to generate address-independent
+
+960
+00:35:08,730 --> 00:35:10,790
+instruction encodings
+
+961
+00:35:10,790 --> 00:35:11,210
+Instruction.
+
+962
+00:35:11,210 --> 00:35:15,210
+So how is this way implemented?
+
+963
+00:35:15,210 --> 00:35:17,110
+What is it relative to?
+
+964
+00:35:17,110 --> 00:35:18,730
+Well, actually, we say
+
+965
+00:35:18,730 --> 00:35:20,270
+in the compilation and linking technique,
+
+966
+00:35:20,270 --> 00:35:21,410
+we generally use
+
+967
+00:35:21,410 --> 00:35:25,130
+construction relative to the PC value.
+
+968
+00:35:25,130 --> 00:35:29,170
+Construction relative to the current PC value.
+
+969
+00:35:29,170 --> 00:35:31,010
+So how do we
+
+970
+00:35:31,010 --> 00:35:35,090
+construct an address relative to the current PC value?
+
+971
+00:35:35,090 --> 00:35:36,490
+We often use a... On RISC-V,
+
+972
+00:35:36,490 --> 00:35:37,890
+there is an instruction introduced called AUIPC.
+
+973
+00:35:37,890 --> 00:35:40,630
+So what is AUIPC?
+
+974
+00:35:40,630 --> 00:35:42,990
+The PC at the end here is actually the PC value.
+
+975
+00:35:42,990 --> 00:35:46,090
+Let's take a look at how this PC value...
+
+976
+00:35:46,090 --> 00:35:51,390
+how, relative to the PC value, it constructs an immediate number.
+
+977
+00:35:51,390 --> 00:35:53,550
+It works very similarly to AUI,
+
+978
+00:35:53,550 --> 00:36:00,010
+it also uses the U-type format,
+
+979
+00:36:00,010 --> 00:36:05,650
+similar to it.
+
+980
+00:36:05,650 --> 00:36:06,670
+Similar to that,
+
+981
+00:36:06,670 --> 00:36:09,170
+It also constructs a 32-bit immediate
+
+982
+00:36:09,170 --> 00:36:10,470
+And
+
+983
+00:36:10,470 --> 00:36:11,730
+this 32-bit immediate
+
+984
+00:36:11,730 --> 00:36:15,250
+is also built by taking the number specified here
+
+985
+00:36:15,250 --> 00:36:17,710
+and placing it into the upper 20 bits
+
+986
+00:36:17,710 --> 00:36:18,890
+with bit 12 cleared to zero
+
+987
+00:36:18,890 --> 00:36:21,930
+But unlike LUI,
+
+988
+00:36:21,930 --> 00:36:22,690
+there is one distinguishing feature
+
+989
+00:36:22,690 --> 00:36:24,970
+when it takes this number
+
+990
+00:36:24,970 --> 00:36:27,350
+we said LUI, after constructing this number,
+
+991
+00:36:27,350 --> 00:36:29,710
+it simply saves it directly into x5,
+
+992
+00:36:29,710 --> 00:36:29,990
+right?
+
+993
+00:36:29,990 --> 00:36:31,270
+But
+
+994
+00:36:31,270 --> 00:36:32,710
+AUIPC,
+
+995
+00:36:32,710 --> 00:36:33,310
+it can't do that
+
+996
+00:36:33,310 --> 00:36:35,530
+After it gets this value,
+
+997
+00:36:35,530 --> 00:36:36,850
+it has to take this value
+
+998
+00:36:36,850 --> 00:36:38,930
+and add it to the PC value,
+
+999
+00:36:38,930 --> 00:36:41,470
+and then save the result of that addition
+
+1000
+00:36:41,470 --> 00:36:43,330
+into the destination register.
+
+1001
+00:36:43,330 --> 00:36:46,590
+So the effect of its construction
+
+1002
+00:36:46,590 --> 00:36:47,570
+is actually equivalent to
+
+1003
+00:36:47,570 --> 00:36:49,670
+saying that after it shifts left by 12 bits,
+
+1004
+00:36:49,670 --> 00:36:51,430
+it adds that to the PC,
+
+1005
+00:36:51,430 --> 00:36:53,270
+and then puts the result into X5.
+
+1006
+00:36:53,270 --> 00:36:55,650
+Now, what does it mean to add it to the PC?
+
+1007
+00:36:55,650 --> 00:36:56,950
+Well, as you know, the result you get
+
+1008
+00:36:56,950 --> 00:36:58,790
+is actually a value that's relative to the PC,
+
+1009
+00:36:58,790 --> 00:37:02,810
+relative to the current PC.
+
+1010
+00:37:02,810 --> 00:37:04,090
+As for the original LUI,
+
+1011
+00:37:04,090 --> 00:37:04,970
+you could say
+
+1012
+00:37:04,970 --> 00:37:07,410
+it's actually not relative—
+
+1013
+00:37:07,410 --> 00:37:08,810
+well, it is actually relative too,
+
+1014
+00:37:08,810 --> 00:37:10,110
+except that what it's relative to is just 0.
+
+1015
+00:37:10,110 --> 00:37:11,550
+It's really just adding 0.
+
+1016
+00:37:11,550 --> 00:37:13,330
+But as we know,
+
+1017
+00:37:13,330 --> 00:37:14,250
+once you add the PC,
+
+1018
+00:37:14,250 --> 00:37:15,930
+the range it can express becomes much larger,
+
+1019
+00:37:15,930 --> 00:37:17,870
+because the range of the PC itself
+
+1020
+00:37:17,870 --> 00:37:18,770
+is from 0 to
+
+1021
+00:37:18,770 --> 00:37:21,530
+it could be a number between -2G and 2G
+
+1022
+00:37:21,530 --> 00:37:22,810
+or it could be a
+
+1023
+00:37:22,810 --> 00:37:25,910
+so on this basis, if you further
+
+1024
+00:37:25,910 --> 00:37:27,910
+add another value to it
+
+1025
+00:37:27,910 --> 00:37:29,530
+then the range it can express
+
+1026
+00:37:29,530 --> 00:37:31,410
+is actually even wider
+
+1027
+00:37:31,410 --> 00:37:37,150
+so that is the difference between AUIPC and LUI
+
+1028
+00:37:37,150 --> 00:37:41,810
+it is often used for constructing an address
+
+1029
+00:37:41,810 --> 00:37:44,410
+especially for constructing a relative address
+
+1030
+00:37:44,410 --> 00:37:46,470
+just get familiar with this
+
+1031
+00:37:46,470 --> 00:37:48,590
+because later on
+
+1032
+00:37:48,590 --> 00:37:50,110
+we will also use this kind of related stuff
+
+1033
+00:37:50,110 --> 00:37:52,350
+so now that we have this
+
+1034
+00:37:52,350 --> 00:37:56,890
+knowledge of how to use the AUIPC instruction
+
+1035
+00:37:56,890 --> 00:37:58,650
+we can take a look at this example
+
+1036
+00:37:58,650 --> 00:38:00,030
+I won't demonstrate it here
+
+1037
+00:38:00,030 --> 00:38:01,730
+these instructions are fairly simple
+
+1038
+00:38:01,730 --> 00:38:05,400
+you can combine what we covered in class
+
+1039
+00:38:05,400 --> 00:38:06,880
+about its effect and
+
+1040
+00:38:06,880 --> 00:38:09,040
+step through it in debug mode
+
+1041
+00:38:09,040 --> 00:38:13,520
+Let's see how the values in its registers change.
+
+1042
+00:38:13,520 --> 00:38:13,740
+So,
+
+1043
+00:38:13,740 --> 00:38:16,460
+similarly, we
+
+1044
+00:38:16,460 --> 00:38:17,560
+based on AUIPC,
+
+1045
+00:38:17,560 --> 00:38:19,280
+in practice we often
+
+1046
+00:38:19,280 --> 00:38:20,500
+don't use it directly,
+
+1047
+00:38:20,500 --> 00:38:23,860
+but instead use a pseudo-instruction called LA
+
+1048
+00:38:23,860 --> 00:38:25,100
+to use this approach,
+
+1049
+00:38:25,100 --> 00:38:25,880
+to use this command.
+
+1050
+00:38:25,880 --> 00:38:28,220
+LA, this pseudo-instruction,
+
+1051
+00:38:28,220 --> 00:38:30,740
+it is itself a pseudo-instruction,
+
+1052
+00:38:30,740 --> 00:38:32,660
+it actually stands for load address.
+
+1053
+00:38:32,660 --> 00:38:34,660
+We often use this command
+
+1054
+00:38:34,660 --> 00:38:37,240
+to construct an address,
+
+1055
+00:38:37,240 --> 00:38:39,660
+and then assign it to a register,
+
+1056
+00:38:39,660 --> 00:38:40,740
+assign it to a variable.
+
+1057
+00:38:40,740 --> 00:38:45,680
+So its effect
+
+1058
+00:38:45,680 --> 00:38:46,780
+actually comes from using
+
+1059
+00:38:46,780 --> 00:38:48,820
+the AUIPC instruction together with other instructions,
+
+1060
+00:38:48,820 --> 00:38:51,320
+combined to generate a
+
+1061
+00:38:51,320 --> 00:38:53,240
+This is something we'll use later on,
+
+1062
+00:38:53,240 --> 00:38:54,800
+so I'll explain it to you here.
+
+1063
+00:38:54,800 --> 00:38:56,240
+When it comes to instructions,
+
+1064
+00:38:56,240 --> 00:38:58,560
+that is, when we need to construct an address,
+
+1065
+00:38:58,560 --> 00:38:59,580
+we'll use this thing.
+
+1066
+00:38:59,580 --> 00:39:04,740
+As for the usage of this LA command,
+
+1067
+00:39:04,740 --> 00:39:06,200
+let's take a quick look at this example.
+
+1068
+00:39:06,200 --> 00:39:07,960
+This is the code LA command.
+
+1069
+00:39:07,960 --> 00:39:19,070
+Take a look at this command.
+
+1070
+00:39:19,070 --> 00:39:20,310
+As for this code,
+
+1071
+00:39:20,310 --> 00:39:21,470
+let me briefly walk you through it.
+
+1072
+00:39:21,470 --> 00:39:22,210
+It's very simple.
+
+1073
+00:39:22,210 --> 00:39:24,770
+This is essentially the effect of an LA load-address operation.
+
+1074
+00:39:24,770 --> 00:39:27,270
+Now, one thing to note when writing it,
+
+1075
+00:39:27,270 --> 00:39:29,130
+LA x5 here,
+
+1076
+00:39:29,130 --> 00:39:32,570
+this is the target register we ultimately want to load the address into.
+
+1077
+00:39:32,570 --> 00:39:34,530
+After that,
+
+1078
+00:39:34,530 --> 00:39:36,930
+you simply follow it with a
+
+1079
+00:39:36,930 --> 00:39:38,170
+Usually when we write it,
+
+1080
+00:39:38,170 --> 00:39:40,630
+you just directly follow it with a so-called
+
+1081
+00:39:40,630 --> 00:39:42,670
+label,
+
+1082
+00:39:42,670 --> 00:39:43,530
+or a
+
+1083
+00:39:43,530 --> 00:39:45,690
+you can think of it as essentially an address.
+
+1084
+00:39:45,690 --> 00:39:47,770
+Now, as for what the specific value of this label
+
+1085
+00:39:47,770 --> 00:39:49,390
+is,
+
+1086
+00:39:49,390 --> 00:39:51,390
+you don't need to specify it directly
+
+1087
+00:39:51,390 --> 00:39:52,190
+when writing the code.
+
+1088
+00:39:52,190 --> 00:39:55,010
+During the compilation process,
+
+1089
+00:39:55,010 --> 00:39:57,070
+the linker will automatically determine
+
+1090
+00:39:57,070 --> 00:39:57,850
+what this value should be.
+
+1091
+00:39:57,850 --> 00:39:59,630
+Based on the final generated
+
+1092
+00:39:59,630 --> 00:40:00,510
+executable program's
+
+1093
+00:40:00,510 --> 00:40:01,950
+address range,
+
+1094
+00:40:01,950 --> 00:40:03,410
+it will decide what this value is.
+
+1095
+00:40:03,410 --> 00:40:06,290
+So the effect of this is essentially equivalent to
+
+1096
+00:40:06,290 --> 00:40:08,010
+assigning this address
+
+1097
+00:40:08,010 --> 00:40:09,490
+to X5.
+
+1098
+00:40:09,490 --> 00:40:12,130
+Now, as you know,
+
+1099
+00:40:12,130 --> 00:40:13,770
+JR is something we'll talk about later,
+
+1100
+00:40:13,770 --> 00:40:14,870
+and it's essentially a jump instruction.
+
+1101
+00:40:14,870 --> 00:40:16,630
+So once you understand this effect,
+
+1102
+00:40:16,630 --> 00:40:18,370
+it actually jumps to
+
+1103
+00:40:18,370 --> 00:40:21,690
+essentially this thing jumps again to
+
+1104
+00:40:21,690 --> 00:40:22,610
+this address,
+
+1105
+00:40:22,610 --> 00:40:24,650
+which in fact forms a loop.
+
+1106
+00:40:24,650 --> 00:40:27,030
+That's basically the effect achieved here.
+
+1107
+00:40:27,030 --> 00:40:29,750
+Now, this next part,
+
+1108
+00:40:29,750 --> 00:40:31,430
+mainly I want you to get a feel for LA,
+
+1109
+00:40:31,430 --> 00:40:33,230
+and if you step back and look at it,
+
+1110
+00:40:33,230 --> 00:40:37,470
+you'll find it's actually made up of the AUIPC instruction.
+
+1111
+00:40:37,470 --> 00:40:41,050
+That's the LA command.
+
+1112
+00:40:41,050 --> 00:40:43,190
+So through what we covered earlier,
+
+1113
+00:40:43,190 --> 00:40:44,190
+it's really about
+
+1114
+00:40:44,190 --> 00:40:46,070
+whether we're constructing an address,
+
+1115
+00:40:46,070 --> 00:40:48,570
+or constructing a specific value,
+
+1116
+00:40:48,570 --> 00:40:50,190
+what we're really showing you is
+
+1117
+00:40:50,190 --> 00:40:51,450
+how to construct a large number.
+
+1118
+00:40:51,450 --> 00:40:55,310
+This is one method provided in RISC-V
+
+1119
+00:40:55,310 --> 00:40:56,870
+for constructing large numbers.
+
+1120
+00:40:56,870 --> 00:41:01,840
+Now, regarding these arithmetic instructions,
+
+1121
+00:41:01,840 --> 00:41:03,540
+This is also the first category of instructions we talked about.
+
+1122
+00:41:03,540 --> 00:41:05,380
+Basically, that's all I'll cover for now.
+
+1123
+00:41:05,380 --> 00:41:08,220
+There are actually quite a lot of these instructions.
+
+1124
+00:41:08,220 --> 00:41:11,940
+Including both micro-instructions and basic instructions.
+
+1125
+00:41:11,940 --> 00:41:13,440
+So after you get back,
+
+1126
+00:41:13,440 --> 00:41:16,080
+you can refer to the table I've given you here,
+
+1127
+00:41:16,080 --> 00:41:19,700
+and look at the basic usage of these instructions.

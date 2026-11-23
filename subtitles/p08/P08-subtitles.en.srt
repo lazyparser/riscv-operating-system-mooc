@@ -1,0 +1,5715 @@
+1
+00:00:05,780 --> 00:00:12,400
+Now let's move on to the second part of these assembly instructions, the instruction overview.
+
+2
+00:00:14,960 --> 00:00:19,340
+Your class is 45 minutes long, right?
+
+3
+00:00:20,440 --> 00:00:29,220
+Let me check, since we ran a bit over earlier, we'll cover a bit first, and we'll try to let everyone take a break around the 45-minute mark.
+
+4
+00:00:31,980 --> 00:00:36,980
+So let's take a look at this overview of assembly instructions — that is, an overview of RISC-V assembly instructions.
+
+5
+00:00:37,340 --> 00:00:43,580
+Now, when we talk about assembly instructions,
+
+6
+00:00:43,580 --> 00:00:45,740
+first we need to understand
+
+7
+00:00:45,740 --> 00:00:49,500
+the concept of the objects that assembly instructions operate on.
+
+8
+00:00:49,500 --> 00:00:52,780
+This is actually a bit similar to what we discussed earlier.
+
+9
+00:00:52,780 --> 00:00:54,880
+Remember in our first class,
+
+10
+00:00:54,880 --> 00:00:57,260
+when we were designing our own set of assembly instructions,
+
+11
+00:00:57,260 --> 00:00:58,880
+we also talked about the concept of an operand.
+
+12
+00:00:58,880 --> 00:01:00,920
+That is what's called OPERAND.
+
+13
+00:01:00,920 --> 00:01:04,340
+The idea of OPCODE and OPERAND.
+
+14
+00:01:04,340 --> 00:01:06,080
+What we're talking about here is the OPERAND concept.
+
+15
+00:01:06,080 --> 00:01:07,560
+Now, these operands,
+
+16
+00:01:07,560 --> 00:01:09,880
+we can divide them into two main categories.
+
+17
+00:01:09,880 --> 00:01:11,180
+Two main categories.
+
+18
+00:01:11,180 --> 00:01:13,040
+The first category is registers.
+
+19
+00:01:13,040 --> 00:01:15,340
+Because as we know, the basic objects operated on in these instructions
+
+20
+00:01:15,340 --> 00:01:17,860
+are really the most fundamental ones: registers.
+
+21
+00:01:17,860 --> 00:01:18,140
+Right?
+
+22
+00:01:18,140 --> 00:01:19,860
+So, on this point,
+
+23
+00:01:19,860 --> 00:01:23,470
+we
+
+24
+00:01:23,470 --> 00:01:25,350
+please note, because we
+
+25
+00:01:25,350 --> 00:01:26,570
+in this lecture,
+
+26
+00:01:26,570 --> 00:01:29,090
+we've also noted here,
+
+27
+00:01:29,090 --> 00:01:31,170
+that for this course,
+
+28
+00:01:31,170 --> 00:01:32,850
+this part
+
+29
+00:01:32,850 --> 00:01:34,990
+will mainly only cover
+
+30
+00:01:34,990 --> 00:01:37,210
+the general-purpose registers of RV32i.
+
+31
+00:01:37,210 --> 00:01:39,150
+That is, there are actually other registers too,
+
+32
+00:01:39,150 --> 00:01:41,630
+but since we have limited time,
+
+33
+00:01:41,630 --> 00:01:42,770
+we can't go into all of them.
+
+34
+00:01:42,770 --> 00:01:44,370
+Later on, we may also use some
+
+35
+00:01:44,370 --> 00:01:45,950
+registers for privileged instructions.
+
+36
+00:01:45,950 --> 00:01:47,270
+When we use them later,
+
+37
+00:01:47,270 --> 00:01:47,890
+we'll cover them then.
+
+38
+00:01:47,890 --> 00:01:50,890
+Here we only talk about RB32i.
+
+39
+00:01:50,890 --> 00:01:52,910
+Recall this concept,
+
+40
+00:01:52,910 --> 00:01:55,030
+which was covered in the last two lectures.
+
+41
+00:01:55,030 --> 00:01:56,310
+What does RV32i mean?
+
+42
+00:01:56,310 --> 00:02:01,140
+We're professionals now.
+
+43
+00:02:01,140 --> 00:02:02,640
+I can't keep treating you like
+
+44
+00:02:02,640 --> 00:02:04,460
+beginners who know nothing
+
+45
+00:02:04,460 --> 00:02:06,220
+when we discuss these topics.
+
+46
+00:02:06,220 --> 00:02:07,380
+From now on, when I mention RV32i,
+
+47
+00:02:07,380 --> 00:02:08,200
+I won't explain it.
+
+48
+00:02:08,200 --> 00:02:09,620
+The moment you see RV32i,
+
+49
+00:02:09,620 --> 00:02:10,560
+you should know what it is.
+
+50
+00:02:10,560 --> 00:02:14,480
+It's the 32-bit RISC-V machine's
+
+51
+00:02:14,480 --> 00:02:16,580
+integer instruction set.
+
+52
+00:02:16,580 --> 00:02:18,120
+Do you follow what I mean?
+
+53
+00:02:18,120 --> 00:02:19,160
+Because as we covered before,
+
+54
+00:02:19,160 --> 00:02:21,360
+the design of this RISC-V instruction set
+
+55
+00:02:21,360 --> 00:02:22,600
+is based on a modular concept.
+
+56
+00:02:22,600 --> 00:02:23,240
+Remember that?
+
+57
+00:02:23,240 --> 00:02:27,600
+Each letter stands for one module of the instruction set.
+
+58
+00:02:27,600 --> 00:02:29,200
+We're only focusing on this part here,
+
+59
+00:02:29,200 --> 00:02:30,340
+because this is the base instruction set,
+
+60
+00:02:30,340 --> 00:02:32,640
+and the integer instruction set is that base instruction set.
+
+61
+00:02:32,640 --> 00:02:34,960
+That is to say, once you understand these instruction sets,
+
+62
+00:02:34,960 --> 00:02:36,440
+basically, for ordinary programs,
+
+63
+00:02:36,440 --> 00:02:37,760
+you should be able to read and understand them.
+
+64
+00:02:37,760 --> 00:02:40,400
+So let's keep this point in mind.
+
+65
+00:02:40,400 --> 00:02:43,040
+Now, for this integer instruction set,
+
+66
+00:02:43,040 --> 00:02:45,440
+it defines 32 general-purpose registers,
+
+67
+00:02:45,440 --> 00:02:49,140
+named X0 to X31,
+
+68
+00:02:49,140 --> 00:02:49,980
+with numbering assigned to them.
+
+69
+00:02:49,980 --> 00:02:51,840
+As we go through these things,
+
+70
+00:02:51,840 --> 00:02:52,960
+we should take a look at this,
+
+71
+00:02:52,960 --> 00:02:54,580
+and I'll walk you through the manual.
+
+72
+00:02:54,580 --> 00:02:57,660
+Because later, when you actually go out to work,
+
+73
+00:02:57,660 --> 00:03:01,520
+knowing how to look things up in a manual is one of the most basic skills.
+
+74
+00:03:01,520 --> 00:03:02,540
+This is a skill,
+
+75
+00:03:02,540 --> 00:03:04,420
+not really special knowledge.
+
+76
+00:03:04,420 --> 00:03:06,060
+No matter which manual you need to consult,
+
+77
+00:03:06,060 --> 00:03:07,080
+you really have to know how to look things up.
+
+78
+00:03:07,080 --> 00:03:09,140
+You need to have this yourself; when what you get in school,
+
+79
+00:03:09,140 --> 00:03:11,160
+may no longer be enough to meet everyone's needs,
+
+80
+00:03:11,160 --> 00:03:13,780
+then everyone has to master this skill on their own.
+
+81
+00:03:13,780 --> 00:03:14,500
+you can learn on your own
+
+82
+00:03:14,500 --> 00:03:16,240
+Now, as for this manual,
+
+83
+00:03:16,240 --> 00:03:17,040
+as we just mentioned,
+
+84
+00:03:17,040 --> 00:03:19,240
+there's this thing called
+
+85
+00:03:19,240 --> 00:03:20,280
+everyone can follow along
+
+86
+00:03:20,280 --> 00:03:21,800
+and take a look at it together with me
+
+87
+00:03:21,800 --> 00:03:24,360
+under the reference directory,
+
+88
+00:03:24,360 --> 00:03:28,160
+under this reference directory,
+
+89
+00:03:28,160 --> 00:03:30,240
+there is one called
+
+90
+00:03:30,240 --> 00:03:35,040
+Risk 5 Spec 2019-1213.
+
+91
+00:03:35,040 --> 00:03:37,300
+This is currently the latest
+
+92
+00:03:37,300 --> 00:03:40,460
+unprivileged instruction set for Risk 5.
+
+93
+00:03:40,460 --> 00:03:42,100
+As we mentioned earlier,
+
+94
+00:03:42,100 --> 00:03:44,320
+its instruction set is split into two volumes,
+
+95
+00:03:44,320 --> 00:03:46,400
+one is the unprivileged instruction set,
+
+96
+00:03:46,400 --> 00:03:47,680
+and the other is the privileged instruction set.
+
+97
+00:03:47,680 --> 00:03:48,400
+The privileged instruction set
+
+98
+00:03:48,400 --> 00:03:50,780
+will come up a lot later when we develop the operating system,
+
+99
+00:03:50,780 --> 00:03:53,280
+we'll be dealing with it extensively,
+
+100
+00:03:53,280 --> 00:03:54,500
+and we'll go through it together then.
+
+101
+00:03:54,500 --> 00:03:56,540
+Let's open this instruction set first
+
+102
+00:03:56,540 --> 00:04:10,060
+Let's open it with that one
+
+103
+00:04:10,060 --> 00:04:26,530
+Opening this one might look a bit uncomfortable
+
+104
+00:04:26,530 --> 00:04:28,030
+You can all take a look at this
+
+105
+00:04:28,030 --> 00:04:29,190
+This spec is
+
+106
+00:04:29,190 --> 00:04:33,330
+What we'll spend a lot of time studying in this class and later on
+
+107
+00:04:33,330 --> 00:04:33,670
+this
+
+108
+00:04:33,670 --> 00:04:36,970
+We'll spend a lot of time studying it
+
+109
+00:04:36,970 --> 00:04:38,210
+a spec
+
+110
+00:04:38,210 --> 00:04:39,710
+So this spec,
+
+111
+00:04:39,710 --> 00:04:40,950
+it's Volume 1,
+
+112
+00:04:40,950 --> 00:04:43,570
+unprivileged RSA
+
+113
+00:04:43,570 --> 00:04:45,050
+We've already covered the concept of RSA,
+
+114
+00:04:45,050 --> 00:04:45,630
+right?
+
+115
+00:04:45,630 --> 00:04:46,490
+So
+
+116
+00:04:46,490 --> 00:04:48,550
+the thing I just talked about,
+
+117
+00:04:48,550 --> 00:04:50,310
+the concept of registers,
+
+118
+00:04:50,310 --> 00:04:52,330
+you can look up in many places.
+
+119
+00:04:52,330 --> 00:04:52,570
+So
+
+120
+00:04:52,570 --> 00:04:54,890
+we're
+
+121
+00:04:54,890 --> 00:04:57,190
+As for this chapter,
+
+122
+00:04:57,190 --> 00:04:57,910
+let me just say a few words.
+
+123
+00:04:57,910 --> 00:04:59,430
+For this book,
+
+124
+00:04:59,430 --> 00:05:02,450
+its first chapter is the introduction.
+
+125
+00:05:02,450 --> 00:05:03,470
+That covers some basics,
+
+126
+00:05:03,470 --> 00:05:05,470
+an introduction to the RISC-V instruction set,
+
+127
+00:05:05,470 --> 00:05:06,770
+the basic concepts.
+
+128
+00:05:06,770 --> 00:05:07,730
+And then below that,
+
+129
+00:05:07,730 --> 00:05:09,070
+it actually follows the modules,
+
+130
+00:05:09,070 --> 00:05:10,450
+that is, one instruction set
+
+131
+00:05:10,450 --> 00:05:11,870
+module by module,
+
+132
+00:05:11,870 --> 00:05:12,790
+introducing them to you one by one.
+
+133
+00:05:12,790 --> 00:05:15,090
+For example, RV32I,
+
+134
+00:05:15,090 --> 00:05:17,910
+this RV32I,
+
+135
+00:05:17,910 --> 00:05:19,670
+this basic integer instruction set,
+
+136
+00:05:19,670 --> 00:05:20,490
+is right here,
+
+137
+00:05:20,490 --> 00:05:21,890
+covered in this chapter.
+
+138
+00:05:21,890 --> 00:05:23,730
+The focus of this course, actually,
+
+139
+00:05:23,730 --> 00:05:24,610
+is mainly to learn
+
+140
+00:05:24,610 --> 00:05:25,890
+the instructions in this chapter.
+
+141
+00:05:25,890 --> 00:05:30,880
+You still remember what RV32E means, right?
+
+142
+00:05:30,880 --> 00:05:32,440
+I already covered that earlier.
+
+143
+00:05:32,440 --> 00:05:32,860
+Right?
+
+144
+00:05:32,860 --> 00:05:34,260
+So I won't go into it again here.
+
+145
+00:05:34,260 --> 00:05:38,520
+Now, for this RV32E instruction set,
+
+146
+00:05:38,520 --> 00:05:39,120
+let me take a look.
+
+147
+00:05:39,120 --> 00:05:40,580
+So you see there's a diagram here,
+
+148
+00:05:40,580 --> 00:05:47,450
+did everyone notice it?
+
+149
+00:05:47,450 --> 00:05:48,210
+This diagram.
+
+150
+00:05:48,210 --> 00:05:50,610
+What this diagram is actually telling us
+
+151
+00:05:50,610 --> 00:05:52,730
+is some of the basic instructions it supports,
+
+152
+00:05:52,730 --> 00:05:53,870
+the basic registers.
+
+153
+00:05:53,870 --> 00:05:55,830
+X0 to X31,
+
+154
+00:05:55,830 --> 00:05:58,110
+a total of 32 registers.
+
+155
+00:05:58,110 --> 00:05:59,970
+These are its general-purpose registers.
+
+156
+00:05:59,970 --> 00:06:02,810
+Now, whatever it says here as X-Lens on the diagram,
+
+157
+00:06:02,810 --> 00:06:03,810
+pay attention to this.
+
+158
+00:06:03,810 --> 00:06:05,150
+So what is this X-Lens?
+
+159
+00:06:05,150 --> 00:06:06,370
+It actually refers to...
+
+160
+00:06:06,370 --> 00:06:08,570
+It is actually a variable
+
+161
+00:06:08,570 --> 00:06:10,590
+You could say the spec defines XLEN
+
+162
+00:06:10,590 --> 00:06:11,250
+Which essentially means
+
+163
+00:06:11,250 --> 00:06:13,470
+it can be 32 or 64
+
+164
+00:06:13,470 --> 00:06:14,710
+or even 128
+
+165
+00:06:14,710 --> 00:06:16,030
+Do you follow what I mean?
+
+166
+00:06:16,030 --> 00:06:18,070
+That is, on different
+
+167
+00:06:18,070 --> 00:06:21,110
+say, 64-bit machines
+
+168
+00:06:21,110 --> 00:06:23,550
+the width of these registers
+
+169
+00:06:23,550 --> 00:06:25,330
+is 64 bits
+
+170
+00:06:25,330 --> 00:06:28,230
+On 32-bit machines,
+
+171
+00:06:28,230 --> 00:06:31,270
+the width of these registers is 32 bits
+
+172
+00:06:31,270 --> 00:06:33,030
+This differs from case to case
+
+173
+00:06:33,030 --> 00:06:35,170
+Now let me emphasize one more time:
+
+174
+00:06:35,170 --> 00:06:36,970
+from here on, including the exercises later,
+
+175
+00:06:36,970 --> 00:06:39,150
+everything is based on a 32-bit CPU
+
+176
+00:06:39,150 --> 00:06:40,850
+a RISC-V 32 CPU
+
+177
+00:06:40,850 --> 00:06:42,650
+So whenever you see these registers,
+
+178
+00:06:42,650 --> 00:06:43,850
+you should immediately picture in your mind
+
+179
+00:06:43,850 --> 00:06:45,090
+what they look like
+
+180
+00:06:45,090 --> 00:06:49,050
+a storage space that is 32 bits wide
+
+181
+00:06:49,050 --> 00:06:50,050
+see what I mean
+
+182
+00:06:50,050 --> 00:06:52,670
+That's exactly what X-Lens means
+
+183
+00:06:52,670 --> 00:06:56,530
+Its bits start counting from 0
+
+184
+00:06:56,530 --> 00:06:57,190
+which is the lowest bit
+
+185
+00:06:57,190 --> 00:06:58,650
+The rightmost one is called the least significant bit
+
+186
+00:06:58,650 --> 00:06:59,950
+and the leftmost one is the most significant bit
+
+187
+00:06:59,950 --> 00:07:02,070
+So this rightmost bit,
+
+188
+00:07:02,070 --> 00:07:02,850
+that's bit 0
+
+189
+00:07:02,850 --> 00:07:04,670
+and the second one is bit 1
+
+190
+00:07:04,670 --> 00:07:07,310
+and as you go further left, it gets higher and higher
+
+191
+00:07:07,310 --> 00:07:09,110
+Then subtract 1
+
+192
+00:07:09,110 --> 00:07:10,470
+you all understand what that means, right?
+
+193
+00:07:10,470 --> 00:07:11,230
+That's just 31
+
+194
+00:07:11,230 --> 00:07:12,230
+Right?
+
+195
+00:07:12,230 --> 00:07:14,250
+Okay, this one,
+
+196
+00:07:14,250 --> 00:07:16,290
+let me briefly go over this diagram
+
+197
+00:07:16,290 --> 00:07:17,590
+How should you read it?
+
+198
+00:07:17,590 --> 00:07:20,170
+x0 is a very special register
+
+199
+00:07:20,170 --> 00:07:20,970
+called zero
+
+200
+00:07:20,970 --> 00:07:22,770
+meaning that this register
+
+201
+00:07:22,770 --> 00:07:24,190
+Now, this register,
+
+202
+00:07:24,190 --> 00:07:25,390
+this register,
+
+203
+00:07:25,390 --> 00:07:27,970
+so we actually don't
+
+204
+00:07:27,970 --> 00:07:31,190
+you can't perform write operations on it.
+
+205
+00:07:31,190 --> 00:07:32,650
+If you read this register,
+
+206
+00:07:32,650 --> 00:07:34,030
+what you read out will always be 0.
+
+207
+00:07:34,030 --> 00:07:35,170
+Please note that
+
+208
+00:07:35,170 --> 00:07:37,090
+this is a special register.
+
+209
+00:07:37,090 --> 00:07:38,450
+As for the other registers,
+
+210
+00:07:38,450 --> 00:07:39,770
+they are all readable and writable.
+
+211
+00:07:39,770 --> 00:07:42,590
+And then,
+
+212
+00:07:42,590 --> 00:07:44,110
+if you look at the bottom of this diagram,
+
+213
+00:07:44,110 --> 00:07:45,370
+we also mentioned this earlier,
+
+214
+00:07:45,370 --> 00:07:47,910
+it brings up a register called PC.
+
+215
+00:07:47,910 --> 00:07:49,590
+Now, please note that
+
+216
+00:07:49,590 --> 00:07:50,570
+for this register,
+
+217
+00:07:50,570 --> 00:07:51,550
+in RISC-V,
+
+218
+00:07:51,550 --> 00:07:52,550
+it only tells you that
+
+219
+00:07:52,550 --> 00:07:54,430
+internally I have this kind of register,
+
+220
+00:07:54,430 --> 00:07:55,470
+but this register
+
+221
+00:07:55,470 --> 00:07:58,110
+You cannot access it.
+
+222
+00:07:58,110 --> 00:07:59,490
+It is actually used
+
+223
+00:07:59,490 --> 00:08:02,030
+internally to store what
+
+224
+00:08:02,030 --> 00:08:03,390
+the PC, right?
+
+225
+00:08:03,390 --> 00:08:06,530
+That is, the position where the program is currently executing
+
+226
+00:08:06,530 --> 00:08:08,610
+which instruction — that concept,
+
+227
+00:08:08,610 --> 00:08:11,570
+meaning Program Counter.
+
+228
+00:08:11,570 --> 00:08:13,850
+But note that this register,
+
+229
+00:08:13,850 --> 00:08:16,510
+we actually cannot access it directly.
+
+230
+00:08:16,510 --> 00:08:22,440
+So how do we get the current program's
+
+231
+00:08:22,440 --> 00:08:23,800
+PC value?
+
+232
+00:08:23,800 --> 00:08:26,080
+We have a special method to do that later.
+
+233
+00:08:26,080 --> 00:08:27,820
+When we get to it later,
+
+234
+00:08:27,820 --> 00:08:28,920
+I'll bring it up again.
+
+235
+00:08:28,920 --> 00:08:30,280
+This figure,
+
+236
+00:08:30,280 --> 00:08:36,300
+it's really just talking about this thing.
+
+237
+00:08:36,300 --> 00:08:37,980
+This is what we call
+
+238
+00:08:37,980 --> 00:08:40,520
+the 32 registers,
+
+239
+00:08:40,520 --> 00:08:42,180
+and then,
+
+240
+00:08:42,180 --> 00:08:43,080
+the second point, please note
+
+241
+00:08:43,080 --> 00:08:44,860
+When it comes to registers, that is,
+
+242
+00:08:44,860 --> 00:08:47,340
+our HAT,
+
+243
+00:08:47,340 --> 00:08:48,440
+please note,
+
+244
+00:08:48,440 --> 00:08:49,440
+from now on we will use
+
+245
+00:08:49,440 --> 00:08:50,760
+the terminology we covered earlier,
+
+246
+00:08:50,760 --> 00:08:51,640
+and we don't call it a CPU.
+
+247
+00:08:51,640 --> 00:08:52,660
+Because when we say CPU,
+
+248
+00:08:52,660 --> 00:08:54,080
+or concepts like Core,
+
+249
+00:08:54,080 --> 00:08:55,080
+that can be ambiguous.
+
+250
+00:08:55,080 --> 00:08:56,180
+We talked about this earlier.
+
+251
+00:08:56,180 --> 00:08:57,620
+I think you understand what I mean.
+
+252
+00:08:57,620 --> 00:08:59,820
+In our RiskFile,
+
+253
+00:08:59,820 --> 00:09:01,160
+there is a concept called HUD.
+
+254
+00:09:01,160 --> 00:09:01,640
+But actually,
+
+255
+00:09:01,640 --> 00:09:02,160
+it is really a kind of,
+
+256
+00:09:02,160 --> 00:09:03,600
+you can think of it as a kind of,
+
+257
+00:09:03,600 --> 00:09:06,180
+the smallest unit of execution in a processor.
+
+258
+00:09:06,180 --> 00:09:08,000
+So this thing,
+
+259
+00:09:08,000 --> 00:09:09,960
+is actually a bit like
+
+260
+00:09:09,960 --> 00:09:11,380
+the traditional concept of a CPU.
+
+261
+00:09:11,380 --> 00:09:12,520
+But compared to the CPU concept,
+
+262
+00:09:12,520 --> 00:09:13,400
+it's already a bit different.
+
+263
+00:09:13,400 --> 00:09:15,380
+So when it performs this
+
+264
+00:09:15,380 --> 00:09:17,660
+arithmetic and logic operation,
+
+265
+00:09:17,660 --> 00:09:18,880
+its operand data
+
+266
+00:09:18,880 --> 00:09:20,940
+must come directly from registers.
+
+267
+00:09:20,940 --> 00:09:21,740
+This concept
+
+268
+00:09:21,740 --> 00:09:23,420
+should also be easy to understand,
+
+269
+00:09:23,420 --> 00:09:24,420
+because right at the beginning we talked about
+
+270
+00:09:24,420 --> 00:09:25,140
+this computer
+
+271
+00:09:25,140 --> 00:09:25,960
+this architecture,
+
+272
+00:09:25,960 --> 00:09:27,280
+when we discussed this model, we mentioned that
+
+273
+00:09:27,280 --> 00:09:30,080
+data moves up level by level,
+
+274
+00:09:30,080 --> 00:09:32,040
+from the hard disk to memory,
+
+275
+00:09:32,040 --> 00:09:33,200
+and then on to registers.
+
+276
+00:09:33,200 --> 00:09:34,120
+Remember this concept?
+
+277
+00:09:34,120 --> 00:09:36,060
+Our arithmetic logic unit,
+
+278
+00:09:36,060 --> 00:09:37,300
+when it does any operations,
+
+279
+00:09:37,300 --> 00:09:38,460
+from the perspective of
+
+280
+00:09:38,460 --> 00:09:39,660
+the CPU,
+
+281
+00:09:39,660 --> 00:09:40,120
+Inside it,
+
+282
+00:09:40,120 --> 00:09:42,100
+what can it access directly?
+
+283
+00:09:42,100 --> 00:09:43,860
+Only those registers.
+
+284
+00:09:43,860 --> 00:09:44,240
+It cannot,
+
+285
+00:09:44,240 --> 00:09:45,720
+it won't go directly and...
+
+286
+00:09:45,720 --> 00:09:46,920
+for this...
+
+287
+00:09:46,920 --> 00:09:48,980
+that is, take data from memory
+
+288
+00:09:48,980 --> 00:09:50,260
+and directly operate on it.
+
+289
+00:09:50,260 --> 00:09:51,200
+Before it can compute,
+
+290
+00:09:51,200 --> 00:09:51,740
+it can only...
+
+291
+00:09:51,740 --> 00:09:52,860
+if the data is outside,
+
+292
+00:09:52,860 --> 00:09:53,960
+it can only load it from memory
+
+293
+00:09:53,960 --> 00:09:54,820
+first into what?
+
+294
+00:09:54,820 --> 00:09:55,740
+Into the registers.
+
+295
+00:09:55,740 --> 00:09:57,660
+Only then can its processing unit
+
+296
+00:09:57,660 --> 00:09:59,200
+take the data from the registers
+
+297
+00:09:59,200 --> 00:10:00,160
+and process it.
+
+298
+00:10:00,160 --> 00:10:01,260
+After the data is processed,
+
+299
+00:10:01,260 --> 00:10:03,060
+it is also placed into the registers first.
+
+300
+00:10:03,060 --> 00:10:03,800
+Do you all understand what I mean?
+
+301
+00:10:03,800 --> 00:10:05,900
+And if you want to save it,
+
+302
+00:10:05,900 --> 00:10:06,880
+it can only be moved out
+
+303
+00:10:06,880 --> 00:10:07,620
+from the registers
+
+304
+00:10:07,620 --> 00:10:09,280
+and put somewhere else.
+
+305
+00:10:09,280 --> 00:10:11,220
+So when we...
+
+306
+00:10:11,220 --> 00:10:12,520
+the instructions for these operations,
+
+307
+00:10:12,520 --> 00:10:13,000
+it's the same story.
+
+308
+00:10:13,000 --> 00:10:13,920
+In the instructions you work with,
+
+309
+00:10:13,920 --> 00:10:14,840
+when you perform operations,
+
+310
+00:10:14,840 --> 00:10:16,160
+if you want to do arithmetic or logic,
+
+311
+00:10:16,160 --> 00:10:17,900
+addition, subtraction, multiplication, division,
+
+312
+00:10:17,900 --> 00:10:18,960
+you can only
+
+313
+00:10:18,960 --> 00:10:20,420
+fetch data from the registers,
+
+314
+00:10:20,420 --> 00:10:21,040
+and then...
+
+315
+00:10:21,040 --> 00:10:22,840
+the result can only go back into the registers.
+
+316
+00:10:22,840 --> 00:10:23,480
+That's what it means.
+
+317
+00:10:23,480 --> 00:10:28,640
+So that's the stuff related to registers.
+
+318
+00:10:28,640 --> 00:10:32,080
+Now, besides operating on registers,
+
+319
+00:10:32,080 --> 00:10:34,480
+our instructions also need to be able to operate on memory,
+
+320
+00:10:34,480 --> 00:10:35,460
+because, as I just mentioned,
+
+321
+00:10:35,460 --> 00:10:38,380
+Your data ultimately still has to be fetched in from outside.
+
+322
+00:10:38,380 --> 00:10:41,460
+You have to move the data from memory into the registers first.
+
+323
+00:10:41,460 --> 00:10:44,120
+So for moving data back and forth between registers and memory,
+
+324
+00:10:44,120 --> 00:10:46,200
+for these read, write, and move operations,
+
+325
+00:10:46,200 --> 00:10:47,860
+there are also some special instructions to handle them.
+
+326
+00:10:47,860 --> 00:10:50,300
+So memory is also something that our instructions
+
+327
+00:10:50,300 --> 00:10:54,340
+operate on as a basic object.
+
+328
+00:10:54,340 --> 00:10:56,960
+Now, when it comes to operating on memory,
+
+329
+00:10:56,960 --> 00:10:58,360
+there are a few concepts you should pay attention to.
+
+330
+00:10:58,360 --> 00:11:03,920
+That is, for read and write operations,
+
+331
+00:11:03,920 --> 00:11:04,880
+for accesses,
+
+332
+00:11:04,880 --> 00:11:06,720
+what is the basic unit?
+
+333
+00:11:06,720 --> 00:11:07,260
+It's the byte.
+
+334
+00:11:07,260 --> 00:11:09,340
+This concept should be very simple.
+
+335
+00:11:09,340 --> 00:11:11,880
+That is, when we read data,
+
+336
+00:11:11,880 --> 00:11:14,680
+we read it one byte at a time.
+
+337
+00:11:14,680 --> 00:11:17,260
+Each byte
+
+338
+00:11:17,260 --> 00:11:18,640
+actually implies a concept,
+
+339
+00:11:18,640 --> 00:11:20,260
+which is that every byte has an address.
+
+340
+00:11:20,260 --> 00:11:23,640
+That is, when we've been learning high-level languages,
+
+341
+00:11:23,640 --> 00:11:25,740
+we keep saying a pointer points to that address
+
+342
+00:11:25,740 --> 00:11:27,200
+now, strictly speaking, that address
+
+343
+00:11:27,200 --> 00:11:29,840
+corresponds to the concept of a single byte
+
+344
+00:11:29,840 --> 00:11:31,080
+every byte has an address
+
+345
+00:11:31,080 --> 00:11:32,060
+every byte has an address
+
+346
+00:11:32,060 --> 00:11:32,360
+right?
+
+347
+00:11:32,360 --> 00:11:33,480
+that's what it means
+
+348
+00:11:33,480 --> 00:11:37,820
+so for our RV32,
+
+349
+00:11:37,820 --> 00:11:41,000
+that is, for our 32-bit machine,
+
+350
+00:11:41,000 --> 00:11:43,260
+the memory space it can access,
+
+351
+00:11:43,260 --> 00:11:46,400
+how many bytes can it access at most?
+
+352
+00:11:46,400 --> 00:11:48,460
+how many bytes can it access?
+
+353
+00:11:48,460 --> 00:11:50,360
+it's 2 to the power of 32
+
+354
+00:11:50,360 --> 00:11:52,620
+and if you convert that,
+
+355
+00:11:52,620 --> 00:11:53,200
+that's 4G
+
+356
+00:11:53,200 --> 00:11:56,340
+so this is the basic concept
+
+357
+00:11:56,340 --> 00:11:58,820
+of operands
+
+358
+00:11:58,820 --> 00:12:01,600
+what we just talked about was
+
+359
+00:12:01,600 --> 00:12:03,240
+the assembly,
+
+360
+00:12:03,240 --> 00:12:05,320
+the assembly instructions we operate on in RISC-V
+
+361
+00:12:05,320 --> 00:12:06,280
+some basic objects.
+
+362
+00:12:06,280 --> 00:12:08,580
+Now, next, let's take a look
+
+363
+00:12:08,580 --> 00:12:09,960
+at assembly instructions,
+
+364
+00:12:09,960 --> 00:12:12,340
+the concept of their so-called encoding format.
+
+365
+00:12:12,340 --> 00:12:14,980
+Now, this concept of encoding format
+
+366
+00:12:14,980 --> 00:12:16,820
+actually, earlier on,
+
+367
+00:12:16,820 --> 00:12:22,500
+when I gave you some introductory overview,
+
+368
+00:12:22,500 --> 00:12:25,640
+talking about the mini computer,
+
+369
+00:12:25,640 --> 00:12:28,060
+when we designed an assembly instruction ourselves,
+
+370
+00:12:28,060 --> 00:12:30,340
+we actually mentioned this concept back then too.
+
+371
+00:12:30,340 --> 00:12:31,640
+Think back for a moment.
+
+372
+00:12:31,640 --> 00:12:34,680
+Remember when we got to that page,
+
+373
+00:12:34,680 --> 00:12:36,580
+the assembly instruction we designed,
+
+374
+00:12:36,580 --> 00:12:38,460
+we even said at the time,
+
+375
+00:12:38,460 --> 00:12:40,160
+just for show,
+
+376
+00:12:40,160 --> 00:12:41,940
+we actually came up with two instruction formats.
+
+377
+00:12:41,940 --> 00:12:45,220
+Actually, that is related to this concept here.
+
+378
+00:12:45,220 --> 00:12:46,820
+That is to say, these
+
+379
+00:12:46,820 --> 00:12:48,160
+assembly instructions of ours,
+
+380
+00:12:48,160 --> 00:12:49,520
+because we know that for assembly instructions,
+
+381
+00:12:49,520 --> 00:12:51,400
+It ultimately still corresponds to
+
+382
+00:12:51,400 --> 00:12:52,840
+being translated into those machine instructions.
+
+383
+00:12:52,840 --> 00:12:53,960
+Now, inside that machine instruction,
+
+384
+00:12:53,960 --> 00:12:54,920
+every single
+
+385
+00:12:54,920 --> 00:12:56,700
+32-bit word,
+
+386
+00:12:56,700 --> 00:12:57,840
+those bytes,
+
+387
+00:12:57,840 --> 00:12:58,660
+those contents,
+
+388
+00:12:58,660 --> 00:13:00,640
+actually carry different meanings.
+
+389
+00:13:00,640 --> 00:13:01,060
+So let's
+
+390
+00:13:01,060 --> 00:13:03,700
+go over the basic concepts once more.
+
+391
+00:13:03,700 --> 00:13:04,640
+Next,
+
+392
+00:13:04,640 --> 00:13:05,500
+we're going to
+
+393
+00:13:05,500 --> 00:13:07,720
+take a closer look at this.
+
+394
+00:13:07,720 --> 00:13:08,320
+So here,
+
+395
+00:13:08,320 --> 00:13:10,180
+for RISC-V,
+
+396
+00:13:10,180 --> 00:13:11,820
+we mainly mean this
+
+397
+00:13:11,820 --> 00:13:13,500
+basic
+
+398
+00:13:13,500 --> 00:13:14,640
+integer instruction set,
+
+399
+00:13:14,640 --> 00:13:18,620
+it has six encoding formats in total,
+
+400
+00:13:18,620 --> 00:13:22,720
+called the R, I, S, B, U, and J types respectively.
+
+401
+00:13:22,720 --> 00:13:23,640
+What exactly it is,
+
+402
+00:13:23,640 --> 00:13:25,500
+we'll take a look when we get there.
+
+403
+00:13:25,500 --> 00:13:27,400
+So overall, we can see
+
+404
+00:13:27,400 --> 00:13:28,860
+what kinds of concepts are involved here.
+
+405
+00:13:28,860 --> 00:13:32,300
+First, this involves the question of instruction length.
+
+406
+00:13:32,300 --> 00:13:35,180
+In the specification,
+
+407
+00:13:35,180 --> 00:13:36,820
+there is a technical term
+
+408
+00:13:36,820 --> 00:13:39,780
+called capital-I ILEN1,
+
+409
+00:13:39,780 --> 00:13:43,300
+a name like a variable.
+
+410
+00:13:43,300 --> 00:13:45,540
+You can look it up; it's in the specification.
+
+411
+00:13:45,540 --> 00:13:47,500
+It is actually used to refer to
+
+412
+00:13:47,500 --> 00:13:49,760
+the length of the instructions
+
+413
+00:13:49,760 --> 00:13:52,440
+under different processors.
+
+414
+00:13:52,440 --> 00:13:53,420
+So for now,
+
+415
+00:13:53,420 --> 00:13:54,420
+that is to say,
+
+416
+00:13:54,420 --> 00:13:55,720
+for us,
+
+417
+00:13:55,720 --> 00:13:58,440
+we mainly target RV32I,
+
+418
+00:13:58,440 --> 00:14:02,140
+which is to say, for 32-bit machines,
+
+419
+00:14:02,140 --> 00:14:03,760
+the length of its instructions
+
+420
+00:14:03,760 --> 00:14:06,220
+is 32 bits.
+
+421
+00:14:06,220 --> 00:14:06,760
+So what does that mean?
+
+422
+00:14:06,760 --> 00:14:08,420
+It means how big one instruction is.
+
+423
+00:14:08,420 --> 00:14:10,080
+We usually tend to use bytes.
+
+424
+00:14:10,080 --> 00:14:11,860
+So 32 bits is how many bytes?
+
+425
+00:14:11,860 --> 00:14:13,260
+That's 4 bytes.
+
+426
+00:14:13,260 --> 00:14:13,940
+Right?
+
+427
+00:14:13,940 --> 00:14:15,800
+So one instruction is just 4 bytes.
+
+428
+00:14:15,800 --> 00:14:18,380
+So that's actually quite convenient for us to parse.
+
+429
+00:14:18,380 --> 00:14:22,480
+I mean, once you get a machine instruction file,
+
+430
+00:14:22,480 --> 00:14:23,820
+say you're asked to do disassembly,
+
+431
+00:14:23,820 --> 00:14:26,700
+how do you actually pull out the instructions one by one?
+
+432
+00:14:26,700 --> 00:14:28,200
+You just start from the beginning,
+
+433
+00:14:28,200 --> 00:14:29,420
+4 bytes at a time,
+
+434
+00:14:29,420 --> 00:14:30,640
+take them out 4 bytes at a time.
+
+435
+00:14:30,640 --> 00:14:32,640
+That's basically the idea.
+
+436
+00:14:32,640 --> 00:14:33,760
+Now this...
+
+437
+00:14:33,760 --> 00:14:37,900
+But some cases may not be like that.
+
+438
+00:14:37,900 --> 00:14:39,580
+For instance, when the compressed extension is supported,
+
+439
+00:14:39,580 --> 00:14:41,360
+an instruction may be just 16 bytes --
+
+440
+00:14:41,360 --> 00:14:42,400
+I mean 16 bits.
+
+441
+00:14:42,400 --> 00:14:43,620
+That is, half.
+
+442
+00:14:43,620 --> 00:14:44,760
+So under this situation,
+
+443
+00:14:44,760 --> 00:14:47,140
+our course will not discuss it.
+
+444
+00:14:47,140 --> 00:14:48,700
+Because what we mainly talk about is
+
+445
+00:14:48,700 --> 00:14:50,060
+the uncompressed case.
+
+446
+00:14:50,060 --> 00:14:52,960
+Now the second concept-related point,
+
+447
+00:14:52,960 --> 00:14:54,260
+that is the issue of instruction alignment.
+
+448
+00:14:54,260 --> 00:14:56,320
+What do we mean by the issue of instruction alignment?
+
+449
+00:14:56,320 --> 00:14:58,460
+Well, we know that this instruction,
+
+450
+00:14:58,460 --> 00:15:00,240
+normally it sits on the hard drive as a file,
+
+451
+00:15:00,240 --> 00:15:01,280
+and when it is executed,
+
+452
+00:15:01,280 --> 00:15:03,140
+we need to take it from the hard drive and do what with it?
+
+453
+00:15:03,140 --> 00:15:04,900
+First, as the first step, read it to where first?
+
+454
+00:15:04,900 --> 00:15:06,920
+First load it into memory.
+
+455
+00:15:06,920 --> 00:15:07,140
+Right?
+
+456
+00:15:07,140 --> 00:15:09,300
+So the so-called issue of alignment,
+
+457
+00:15:09,300 --> 00:15:11,320
+actually refers to, inside memory,
+
+458
+00:15:11,320 --> 00:15:12,280
+this machine instruction,
+
+459
+00:15:12,280 --> 00:15:17,540
+the address value of the position where it is placed,
+
+460
+00:15:17,540 --> 00:15:18,300
+right?
+
+461
+00:15:18,300 --> 00:15:21,560
+For example, let's say it's 32-bit aligned.
+
+462
+00:15:21,560 --> 00:15:23,280
+Then its size is four bytes.
+
+463
+00:15:23,280 --> 00:15:25,720
+Its address is always a multiple of four bytes.
+
+464
+00:15:25,720 --> 00:15:29,300
+Its address is definitely 4, 8, 12,
+
+465
+00:15:29,300 --> 00:15:30,160
+something like that.
+
+466
+00:15:30,160 --> 00:15:31,120
+You get what I mean?
+
+467
+00:15:31,120 --> 00:15:32,220
+That's what we call alignment.
+
+468
+00:15:32,220 --> 00:15:33,520
+If things get misaligned,
+
+469
+00:15:33,520 --> 00:15:35,060
+it may cause the program to behave abnormally.
+
+470
+00:15:35,060 --> 00:15:38,140
+So this is actually specified in the specification too.
+
+471
+00:15:38,140 --> 00:15:39,300
+That is, when you load it,
+
+472
+00:15:39,300 --> 00:15:41,500
+you must load it into memory at an aligned address.
+
+473
+00:15:41,500 --> 00:15:43,760
+The so-called instruction alignment is this concept.
+
+474
+00:15:43,760 --> 00:15:44,480
+That is, it's loaded at an address where...
+
+475
+00:15:44,480 --> 00:15:46,460
+The so-called alignment here is 32 bits.
+
+476
+00:15:46,460 --> 00:15:48,380
+In practice, that means the address it's loaded to
+
+477
+00:15:48,380 --> 00:15:49,980
+must be a multiple of 4.
+
+478
+00:15:49,980 --> 00:15:52,340
+Of course, we probably don't care much about this process.
+
+479
+00:15:52,340 --> 00:15:54,220
+This is probably handled when the program runs,
+
+480
+00:15:54,220 --> 00:15:55,860
+and for us, it's really just hitting the Enter key.
+
+481
+00:15:55,860 --> 00:15:57,940
+But in this process, the loading process,
+
+482
+00:15:57,940 --> 00:16:00,520
+is actually done for you by the system.
+
+483
+00:16:00,520 --> 00:16:04,040
+That's the second concept.
+
+484
+00:16:04,040 --> 00:16:05,540
+Now the third one is,
+
+485
+00:16:05,540 --> 00:16:07,320
+when we talk about an instruction,
+
+486
+00:16:07,320 --> 00:16:08,640
+what you get is four bytes,
+
+487
+00:16:08,640 --> 00:16:10,240
+and those four bytes are 32 bits.
+
+488
+00:16:10,240 --> 00:16:11,600
+So these are bits,
+
+489
+00:16:11,600 --> 00:16:14,040
+and those 32 bits actually carry meaning.
+
+490
+00:16:14,040 --> 00:16:15,800
+So we take these 32 bits,
+
+491
+00:16:15,800 --> 00:16:18,580
+and depending on the encoding format of the instruction,
+
+492
+00:16:18,580 --> 00:16:19,640
+we divide them into different fields.
+
+493
+00:16:19,640 --> 00:16:21,320
+As you can see up here, look,
+
+494
+00:16:21,320 --> 00:16:22,640
+this is a table, right?
+
+495
+00:16:22,640 --> 00:16:24,220
+For example, this one,
+
+496
+00:16:24,220 --> 00:16:25,340
+for example, we have,
+
+497
+00:16:25,340 --> 00:16:27,860
+this R-type,
+
+498
+00:16:27,860 --> 00:16:28,700
+for the R-type,
+
+499
+00:16:28,700 --> 00:16:30,600
+this is basically like,
+
+500
+00:16:30,600 --> 00:16:31,620
+that's one instruction.
+
+501
+00:16:31,620 --> 00:16:33,780
+So for this instruction
+
+502
+00:16:33,780 --> 00:16:36,000
+we can see it's split into many parts
+
+503
+00:16:36,000 --> 00:16:38,180
+divided into many parts like this
+
+504
+00:16:38,180 --> 00:16:39,960
+this is the concept of fields
+
+505
+00:16:39,960 --> 00:16:42,000
+each part is called a field
+
+506
+00:16:42,000 --> 00:16:44,620
+each field has a different meaning
+
+507
+00:16:44,620 --> 00:16:47,100
+we'll look at this carefully later
+
+508
+00:16:47,100 --> 00:16:48,480
+when we cover each instruction format
+
+509
+00:16:48,480 --> 00:16:51,440
+we'll talk about what it means
+
+510
+00:16:51,440 --> 00:16:52,680
+what exactly this thing is
+
+511
+00:16:52,680 --> 00:16:54,320
+why do we need to understand this?
+
+512
+00:16:54,320 --> 00:16:56,300
+Well, it's because we sometimes need to look things up in the manual
+
+513
+00:16:56,300 --> 00:16:56,760
+we need to look things up
+
+514
+00:16:56,760 --> 00:16:58,220
+For example, when you get
+
+515
+00:16:58,220 --> 00:17:00,100
+because in our low-level development
+
+516
+00:17:00,100 --> 00:17:01,140
+we often have to deal with
+
+517
+00:17:01,140 --> 00:17:04,140
+analyzing situations in memory
+
+518
+00:17:04,140 --> 00:17:06,600
+Unlike high-level programmers, who may not care much about this
+
+519
+00:17:06,600 --> 00:17:08,380
+high-level programmers are probably more focused on
+
+520
+00:17:08,380 --> 00:17:09,420
+business logic issues
+
+521
+00:17:09,420 --> 00:17:11,780
+But in low-level development, we tend to focus more on
+
+522
+00:17:11,780 --> 00:17:13,840
+the hardware, for example, some things in memory
+
+523
+00:17:13,840 --> 00:17:16,260
+that we dig into bit by bit,
+
+524
+00:17:16,260 --> 00:17:18,100
+and sometimes you run into this kind of situation.
+
+525
+00:17:18,100 --> 00:17:20,620
+So just try to get a feel for
+
+526
+00:17:20,620 --> 00:17:23,220
+how this differs from developing in high-level languages.
+
+527
+00:17:23,220 --> 00:17:26,920
+Now, since we're going to dig into the state in memory,
+
+528
+00:17:26,920 --> 00:17:28,880
+you definitely need to know
+
+529
+00:17:28,880 --> 00:17:30,740
+what each field in memory actually is.
+
+530
+00:17:30,740 --> 00:17:33,740
+As for these specific fields
+
+531
+00:17:33,740 --> 00:17:35,720
+and exactly what they mean,
+
+532
+00:17:35,720 --> 00:17:37,160
+of course, that's all in the manual,
+
+533
+00:17:37,160 --> 00:17:38,200
+and we'll take a look at it together in a bit.
+
+534
+00:17:38,200 --> 00:17:39,400
+So first, we know
+
+535
+00:17:39,400 --> 00:17:40,940
+it's divided into different fields,
+
+536
+00:17:40,940 --> 00:17:43,320
+and for each instruction,
+
+537
+00:17:43,320 --> 00:17:44,120
+exactly, for example,
+
+538
+00:17:44,120 --> 00:17:45,760
+is it used for addition,
+
+539
+00:17:45,760 --> 00:17:47,180
+or is it used for subtraction,
+
+540
+00:17:47,180 --> 00:17:48,440
+or is it used for something else?
+
+541
+00:17:48,440 --> 00:17:50,260
+So that's the concept of instruction types.
+
+542
+00:17:50,260 --> 00:17:52,040
+Now, about these instruction types,
+
+543
+00:17:52,040 --> 00:17:53,860
+let's actually mention one thing,
+
+544
+00:17:53,860 --> 00:17:55,900
+which is that this opcode field alone
+
+545
+00:17:55,900 --> 00:17:57,880
+cannot uniquely determine
+
+546
+00:17:57,880 --> 00:18:00,480
+the type of this instruction.
+
+547
+00:18:00,480 --> 00:18:02,060
+This is probably a bit different
+
+548
+00:18:02,060 --> 00:18:02,840
+from the concept we had back then
+
+549
+00:18:02,840 --> 00:18:04,380
+in that simple
+
+550
+00:18:04,380 --> 00:18:05,440
+mini computer design.
+
+551
+00:18:05,440 --> 00:18:06,600
+There's a slight difference.
+
+552
+00:18:06,600 --> 00:18:07,940
+This opcode field,
+
+553
+00:18:07,940 --> 00:18:09,480
+this opcode thing,
+
+554
+00:18:09,480 --> 00:18:10,700
+cannot uniquely determine
+
+555
+00:18:10,700 --> 00:18:12,240
+whether this is an add instruction
+
+556
+00:18:12,240 --> 00:18:14,500
+or some kind of subtraction instruction.
+
+557
+00:18:14,500 --> 00:18:16,840
+In fact, it's determined through
+
+558
+00:18:16,840 --> 00:18:18,000
+the opcode and
+
+559
+00:18:18,000 --> 00:18:20,140
+what was mentioned here just now,
+
+560
+00:18:20,140 --> 00:18:21,300
+function3,
+
+561
+00:18:21,300 --> 00:18:21,700
+function
+
+562
+00:18:21,700 --> 00:18:23,420
+this funct
+
+563
+00:18:23,420 --> 00:18:25,240
+These are all terms from the specification.
+
+564
+00:18:25,240 --> 00:18:25,960
+I copied them out.
+
+565
+00:18:25,960 --> 00:18:27,120
+Of course, I need to explain them to you.
+
+566
+00:18:27,120 --> 00:18:29,860
+funct is actually short for function.
+
+567
+00:18:29,860 --> 00:18:30,640
+function
+
+568
+00:18:30,640 --> 00:18:31,860
+meaning
+
+569
+00:18:31,860 --> 00:18:33,940
+As for 3 and 7,
+
+570
+00:18:33,940 --> 00:18:34,880
+what they actually mean is
+
+571
+00:18:34,880 --> 00:18:36,060
+this field
+
+572
+00:18:36,060 --> 00:18:36,840
+this field
+
+573
+00:18:36,840 --> 00:18:38,040
+occupies how many bits.
+
+574
+00:18:38,040 --> 00:18:39,380
+7 means it occupies 7 bits.
+
+575
+00:18:39,380 --> 00:18:41,180
+You see what I mean?
+
+576
+00:18:41,180 --> 00:18:43,060
+3 means it occupies 3 bits.
+
+577
+00:18:43,060 --> 00:18:43,420
+Look at this.
+
+578
+00:18:43,420 --> 00:18:44,700
+It writes 12 here,
+
+579
+00:18:44,700 --> 00:18:46,340
+what does 14 mean?
+
+580
+00:18:46,340 --> 00:18:47,280
+It means it occupies
+
+581
+00:18:47,280 --> 00:18:48,740
+Bits 12 to 14
+
+582
+00:18:48,740 --> 00:18:50,060
+12, 13, 14
+
+583
+00:18:50,060 --> 00:18:50,900
+3 bits
+
+584
+00:18:50,900 --> 00:18:51,800
+That's what it means.
+
+585
+00:18:51,800 --> 00:18:54,040
+So when you read the manual in the future,
+
+586
+00:18:54,040 --> 00:18:55,920
+you should be able to understand it.
+
+587
+00:18:55,920 --> 00:18:58,280
+So all of these,
+
+588
+00:18:58,280 --> 00:18:59,540
+these three fields together,
+
+589
+00:18:59,540 --> 00:19:02,540
+ultimately determine
+
+590
+00:19:02,540 --> 00:19:04,740
+what exactly this instruction is used for.
+
+591
+00:19:04,740 --> 00:19:06,040
+There is actually a concept here.
+
+592
+00:19:06,040 --> 00:19:07,820
+Let's take a quick look.
+
+593
+00:19:07,820 --> 00:19:08,740
+This diagram
+
+594
+00:19:08,740 --> 00:19:10,420
+is a summary of the instruction types.
+
+595
+00:19:10,420 --> 00:19:12,360
+Let's go through it together.
+
+596
+00:19:12,360 --> 00:19:14,680
+Where exactly in the manual
+
+597
+00:19:14,680 --> 00:19:16,580
+Let's keep talking,
+
+598
+00:19:16,580 --> 00:19:18,200
+and look at the manual at the same time.
+
+599
+00:19:18,200 --> 00:19:18,780
+So this,
+
+600
+00:19:18,780 --> 00:19:21,980
+in our specification,
+
+601
+00:19:21,980 --> 00:19:23,180
+Where does it talk about
+
+602
+00:19:23,180 --> 00:19:25,900
+some of the instruction encoding formats,
+
+603
+00:19:25,900 --> 00:19:28,200
+these encoding format issues? Well,
+
+604
+00:19:28,200 --> 00:19:29,920
+it actually
+
+605
+00:19:29,920 --> 00:19:32,460
+at the very end,
+
+606
+00:19:32,460 --> 00:19:33,620
+in this chapter at the back,
+
+607
+00:19:33,620 --> 00:19:35,000
+it serves as a summary chapter,
+
+608
+00:19:35,000 --> 00:19:35,760
+listing them all out for you.
+
+609
+00:19:35,760 --> 00:19:37,620
+You can scroll down to
+
+610
+00:19:37,620 --> 00:19:41,980
+here, there's a section called, this part is called
+
+611
+00:19:41,980 --> 00:19:46,540
+RV32/64G.
+
+612
+00:19:46,540 --> 00:19:48,780
+Do you all know what this G means?
+
+613
+00:19:48,780 --> 00:19:49,420
+You still remember, right?
+
+614
+00:19:49,420 --> 00:19:51,920
+As we go along, let's also quickly review.
+
+615
+00:19:51,920 --> 00:19:56,300
+G is an abbreviation standing for IMAFD and so on.
+
+616
+00:19:56,300 --> 00:19:57,220
+You still remember, right?
+
+617
+00:19:57,220 --> 00:20:00,440
+It's actually not a specific module.
+
+618
+00:20:00,440 --> 00:20:02,340
+It's actually an abbreviation covering many modules.
+
+619
+00:20:02,340 --> 00:20:05,680
+So this instruction set listing,
+
+620
+00:20:05,680 --> 00:20:06,800
+is actually talking about
+
+621
+00:20:06,800 --> 00:20:08,340
+its instruction format
+
+622
+00:20:08,340 --> 00:20:09,060
+this chapter
+
+623
+00:20:09,060 --> 00:20:11,380
+we've reached this chapter
+
+624
+00:20:11,380 --> 00:20:11,960
+let's take a look
+
+625
+00:20:11,960 --> 00:20:13,420
+it's chapter 24
+
+626
+00:20:13,420 --> 00:20:16,380
+you may want to flip through this chapter later
+
+627
+00:20:16,380 --> 00:20:18,280
+this chapter is actually about
+
+628
+00:20:18,280 --> 00:20:21,700
+some formats of the instruction set
+
+629
+00:20:21,700 --> 00:20:24,260
+let me just briefly mention a few things
+
+630
+00:20:24,260 --> 00:20:26,220
+for example, what is this figure showing
+
+631
+00:20:26,220 --> 00:20:30,510
+what is it about
+
+632
+00:20:30,510 --> 00:20:31,490
+it is about
+
+633
+00:20:31,490 --> 00:20:34,230
+the basic OPCODE mapping relationship
+
+634
+00:20:34,230 --> 00:20:35,670
+actually, it was originally about
+
+635
+00:20:35,670 --> 00:20:37,170
+it is actually about
+
+636
+00:20:37,170 --> 00:20:38,890
+our
+
+637
+00:20:38,890 --> 00:20:40,590
+OPCODE
+
+638
+00:20:40,590 --> 00:20:42,170
+let's go back to this figure
+
+639
+00:20:42,170 --> 00:20:45,250
+our OPCODE
+
+640
+00:20:45,250 --> 00:20:48,160
+this field
+
+641
+00:20:48,160 --> 00:20:49,220
+This FIELD
+
+642
+00:20:49,220 --> 00:20:50,180
+takes up how many bits?
+
+643
+00:20:50,180 --> 00:20:51,120
+Let's count.
+
+644
+00:20:51,120 --> 00:20:53,540
+0 to 6, how many bits is that?
+
+645
+00:20:53,540 --> 00:20:55,800
+7 bits.
+
+646
+00:20:55,800 --> 00:20:56,120
+Right?
+
+647
+00:20:56,120 --> 00:20:57,280
+It actually
+
+648
+00:20:57,280 --> 00:20:58,380
+matches the table we just saw.
+
+649
+00:20:58,380 --> 00:20:59,680
+That table was really about these 7 bits,
+
+650
+00:20:59,680 --> 00:21:01,100
+how they are organized,
+
+651
+00:21:01,100 --> 00:21:02,800
+and what meaning they represent
+
+652
+00:21:02,800 --> 00:21:03,720
+when they take on different values.
+
+653
+00:21:03,720 --> 00:21:04,520
+That's what it actually means.
+
+654
+00:21:04,520 --> 00:21:05,700
+So
+
+655
+00:21:05,700 --> 00:21:07,880
+in this specification,
+
+656
+00:21:07,880 --> 00:21:09,600
+what does this diagram mean?
+
+657
+00:21:09,600 --> 00:21:10,360
+Let's take a look at it together.
+
+658
+00:21:10,360 --> 00:21:13,580
+It actually looks a bit like our...
+
+659
+00:21:13,580 --> 00:21:15,180
+It is a table,
+
+660
+00:21:15,180 --> 00:21:16,920
+just like our class schedule.
+
+661
+00:21:16,920 --> 00:21:17,960
+the same kind of thing
+
+662
+00:21:17,960 --> 00:21:18,900
+What is it actually talking about?
+
+663
+00:21:18,900 --> 00:21:19,300
+It's saying that,
+
+664
+00:21:19,300 --> 00:21:20,400
+first of all, we need to know that
+
+665
+00:21:20,400 --> 00:21:22,140
+for this OPC
+
+666
+00:21:22,140 --> 00:21:22,940
+map,
+
+667
+00:21:22,940 --> 00:21:26,020
+bit 0 and bit 1
+
+668
+00:21:26,020 --> 00:21:27,600
+are always 11.
+
+669
+00:21:27,600 --> 00:21:29,580
+If you look it up
+
+670
+00:21:29,580 --> 00:21:30,480
+in that memory,
+
+671
+00:21:30,480 --> 00:21:31,540
+when you go and check,
+
+672
+00:21:31,540 --> 00:21:32,860
+these two bits are definitely 11.
+
+673
+00:21:32,860 --> 00:21:34,720
+And then,
+
+674
+00:21:34,720 --> 00:21:35,900
+below that,
+
+675
+00:21:35,900 --> 00:21:36,700
+what it's actually talking about is,
+
+676
+00:21:36,700 --> 00:21:37,740
+apart from these two bits,
+
+677
+00:21:37,740 --> 00:21:38,620
+how many bits are left?
+
+678
+00:21:38,620 --> 00:21:39,980
+There were seven bits in total just now,
+
+679
+00:21:39,980 --> 00:21:42,040
+so taking away these two leaves five bits, right?
+
+680
+00:21:42,040 --> 00:21:43,540
+What should these five bits be?
+
+681
+00:21:43,540 --> 00:21:45,740
+This part is 0 and 1.
+
+682
+00:21:45,740 --> 00:21:48,740
+Then the remaining five bits go from 2 up to what?
+
+683
+00:21:48,740 --> 00:21:50,420
+Up to 6.
+
+684
+00:21:50,420 --> 00:21:51,400
+Think about it — isn't that right?
+
+685
+00:21:51,400 --> 00:21:55,420
+So as you can see, this is 2 through 6.
+
+686
+00:21:55,420 --> 00:21:58,920
+Now this one is actually talking about bits 2 through 4.
+
+687
+00:21:58,920 --> 00:22:00,480
+That is, three bits of values.
+
+688
+00:22:00,480 --> 00:22:02,400
+And this one is actually about...
+
+689
+00:22:02,400 --> 00:22:07,460
+I mean, its rows are talking about bits 2 through 4.
+
+690
+00:22:07,460 --> 00:22:08,540
+And its columns...
+
+691
+00:22:08,620 --> 00:22:09,400
+what are they about?
+
+692
+00:22:09,400 --> 00:22:12,880
+Bits 5 and 6.
+
+693
+00:22:12,880 --> 00:22:14,920
+Now later on, we'll...
+
+694
+00:22:14,920 --> 00:22:16,020
+that is to say...
+
+695
+00:22:16,020 --> 00:22:16,880
+For example, let's take an example.
+
+696
+00:22:16,880 --> 00:22:19,440
+Let's scroll down.
+
+697
+00:22:19,440 --> 00:22:20,360
+This table of ours...
+
+698
+00:22:20,360 --> 00:22:21,360
+we'll come back to it in a bit.
+
+699
+00:22:21,360 --> 00:22:22,920
+So just scrolling down...
+
+700
+00:22:22,920 --> 00:22:24,420
+here we have a summary table.
+
+701
+00:22:24,420 --> 00:22:27,460
+This is actually the
+
+702
+00:22:27,460 --> 00:22:31,220
+encoding format we just went through on the slides,
+
+703
+00:22:31,220 --> 00:22:33,580
+the one that shows
+
+704
+00:22:33,580 --> 00:22:35,020
+the six types
+
+705
+00:22:35,020 --> 00:22:36,040
+in a table.
+
+706
+00:22:36,040 --> 00:22:37,260
+Now, below that,
+
+707
+00:22:37,260 --> 00:22:39,560
+we have the instruction format.
+
+708
+00:22:39,560 --> 00:22:41,440
+For example, let's take a look,
+
+709
+00:22:41,440 --> 00:22:43,360
+say there's an instruction,
+
+710
+00:22:43,360 --> 00:22:44,240
+like an addition instruction,
+
+711
+00:22:44,240 --> 00:22:46,420
+which is the first one we'll cover later,
+
+712
+00:22:46,420 --> 00:22:47,820
+the add instruction.
+
+713
+00:22:47,820 --> 00:22:50,020
+The add instruction.
+
+714
+00:22:50,020 --> 00:22:51,520
+Now, for this add instruction,
+
+715
+00:22:51,520 --> 00:22:52,480
+its opcode
+
+716
+00:22:52,480 --> 00:22:53,880
+is already written here:
+
+717
+00:22:53,880 --> 00:22:55,700
+011 0011.
+
+718
+00:22:55,700 --> 00:22:57,160
+So where does this value come from?
+
+719
+00:22:57,160 --> 00:22:59,220
+Where does this value come from?
+
+720
+00:22:59,220 --> 00:23:01,180
+We actually covered it just now.
+
+721
+00:23:01,180 --> 00:23:02,160
+For this instruction,
+
+722
+00:23:02,160 --> 00:23:03,560
+the lowest two bits are 11.
+
+723
+00:23:03,560 --> 00:23:04,980
+You see that, right?
+
+724
+00:23:04,980 --> 00:23:06,560
+Look at these lowest two bits,
+
+725
+00:23:06,560 --> 00:23:07,220
+aren't they all 11?
+
+726
+00:23:07,220 --> 00:23:09,980
+I won't draw them out.
+
+727
+00:23:09,980 --> 00:23:11,540
+These lowest two bits are just 11.
+
+728
+00:23:11,540 --> 00:23:12,980
+So what we really care about,
+
+729
+00:23:12,980 --> 00:23:14,760
+is that upper part, these 5 bits.
+
+730
+00:23:14,760 --> 00:23:15,980
+For add, the upper 5 bits,
+
+731
+00:23:15,980 --> 00:23:17,120
+this 0111,
+
+732
+00:23:17,120 --> 00:23:20,480
+where do these 5 bits come from?
+
+733
+00:23:20,480 --> 00:23:21,600
+These 5 bits,
+
+734
+00:23:21,600 --> 00:23:22,600
+we split them into two parts,
+
+735
+00:23:22,600 --> 00:23:23,500
+because just now, based on
+
+736
+00:23:23,500 --> 00:23:24,720
+the table above, what did we see?
+
+737
+00:23:24,720 --> 00:23:27,340
+It actually is,
+
+738
+00:23:27,340 --> 00:23:29,000
+the table above tells us,
+
+739
+00:23:29,000 --> 00:23:30,580
+the table above tells us,
+
+740
+00:23:30,580 --> 00:23:33,480
+these 5 bits are,
+
+741
+00:23:33,480 --> 00:23:35,280
+2 to 4 form one group
+
+742
+00:23:35,280 --> 00:23:36,480
+5 and 6
+
+743
+00:23:36,480 --> 00:23:37,040
+form another group
+
+744
+00:23:37,040 --> 00:23:37,720
+Do you all see it?
+
+745
+00:23:37,720 --> 00:23:39,240
+So,
+
+746
+00:23:39,240 --> 00:23:40,880
+So, given this situation,
+
+747
+00:23:40,880 --> 00:23:42,140
+then for the value we just had,
+
+748
+00:23:42,140 --> 00:23:46,150
+for this add instruction,
+
+749
+00:23:46,150 --> 00:23:49,510
+we need to take this thing,
+
+750
+00:23:49,510 --> 00:23:50,370
+and split it into what?
+
+751
+00:23:50,370 --> 00:23:51,490
+Split it into two parts,
+
+752
+00:23:51,490 --> 00:23:52,970
+separating it right here
+
+753
+00:23:52,970 --> 00:23:55,270
+On the left are bits 5 and 6
+
+754
+00:23:55,270 --> 00:23:56,250
+which is 1,
+
+755
+00:23:56,250 --> 00:23:57,430
+which is 10001
+
+756
+00:23:57,430 --> 00:23:58,970
+So where does this value come from?
+
+757
+00:23:58,970 --> 00:24:00,950
+Let's look up this table above
+
+758
+00:24:00,950 --> 00:24:01,870
+for this thing
+
+759
+00:24:01,870 --> 00:24:08,110
+10001
+
+760
+00:24:08,110 --> 00:24:08,710
+That is to say,
+
+761
+00:24:08,710 --> 00:24:10,730
+Let's first look at the top two bits, 01
+
+762
+00:24:10,730 --> 00:24:12,530
+01 — do we know who that is?
+
+763
+00:24:12,530 --> 00:24:12,970
+That's it.
+
+764
+00:24:12,970 --> 00:24:14,650
+Right?
+
+765
+00:24:14,650 --> 00:24:17,210
+Then let's look at the remaining three bits.
+
+766
+00:24:17,210 --> 00:24:18,350
+Just turn it sideways.
+
+767
+00:24:18,350 --> 00:24:19,410
+Turn it sideways and look.
+
+768
+00:24:19,410 --> 00:24:20,710
+What is it?
+
+769
+00:24:20,710 --> 00:24:21,970
+01 what?
+
+770
+00:24:21,970 --> 00:24:25,130
+01100, isn't it?
+
+771
+00:24:25,130 --> 00:24:26,830
+I think it's 01100.
+
+772
+00:24:26,830 --> 00:24:28,790
+So the 100 is this one.
+
+773
+00:24:28,790 --> 00:24:31,050
+So this is actually the thing.
+
+774
+00:24:31,050 --> 00:24:33,590
+So all these OP-type
+
+775
+00:24:33,590 --> 00:24:36,150
+instructions,
+
+776
+00:24:36,150 --> 00:24:37,950
+the encoding is actually
+
+777
+00:24:37,950 --> 00:24:38,950
+just 01100.
+
+778
+00:24:38,950 --> 00:24:40,050
+So the add instruction
+
+779
+00:24:40,050 --> 00:24:41,950
+actually belongs to this OP type,
+
+780
+00:24:41,950 --> 00:24:45,190
+the most basic operations.
+
+781
+00:24:45,190 --> 00:24:48,530
+We'll get to that later,
+
+782
+00:24:48,530 --> 00:24:49,290
+and then we'll come back and look at it again.
+
+783
+00:24:49,290 --> 00:24:50,990
+The point is, we need to learn how to read this table.
+
+784
+00:24:50,990 --> 00:24:52,590
+Of course, the way I'm explaining it,
+
+785
+00:24:52,590 --> 00:24:53,630
+since this is probably your first time seeing it,
+
+786
+00:24:53,630 --> 00:24:56,130
+you might not be fully comfortable with it right away.
+
+787
+00:24:56,130 --> 00:24:57,190
+That's fine — we have the recordings.
+
+788
+00:24:57,190 --> 00:24:59,190
+Later on, when you
+
+789
+00:24:59,190 --> 00:25:01,850
+actually need to use this, go back and watch the recording,
+
+790
+00:25:01,850 --> 00:25:03,950
+and you'll probably understand what I'm talking about now.
+
+791
+00:25:03,950 --> 00:25:05,250
+This is maybe one of
+
+792
+00:25:05,250 --> 00:25:08,230
+the benefits of having these screen recordings,
+
+793
+00:25:08,230 --> 00:25:08,870
+at this point.
+
+794
+00:25:08,870 --> 00:25:14,350
+This is just to give you a feel for it,
+
+795
+00:25:14,350 --> 00:25:15,430
+that is, how
+
+796
+00:25:15,430 --> 00:25:16,450
+we look things up in this table.
+
+797
+00:25:16,450 --> 00:25:18,670
+Later on, when we get to the actual commands,
+
+798
+00:25:18,670 --> 00:25:19,430
+we'll still need to refer back to it.
+
+799
+00:25:19,430 --> 00:25:22,170
+So what's the point of looking up these tables?
+
+800
+00:25:22,170 --> 00:25:24,010
+Well, if you really end up
+
+801
+00:25:24,010 --> 00:25:25,530
+When you're doing this kind of low-level development,
+
+802
+00:25:25,530 --> 00:25:26,530
+I keep stressing that
+
+803
+00:25:26,530 --> 00:25:27,970
+you will go byte by byte,
+
+804
+00:25:27,970 --> 00:25:29,750
+bit by bit, to check the memory.
+
+805
+00:25:29,750 --> 00:25:32,230
+So what these things mean,
+
+806
+00:25:32,230 --> 00:25:35,050
+that's what this document tells you.
+
+807
+00:25:35,050 --> 00:25:36,170
+You need to know how to read it.
+
+808
+00:25:36,170 --> 00:25:38,550
+There's no way we can
+
+809
+00:25:38,550 --> 00:25:39,530
+cover all of this later on
+
+810
+00:25:39,530 --> 00:25:40,590
+and explain it to you bit by bit,
+
+811
+00:25:40,590 --> 00:25:41,710
+because you just can't memorize all of it.
+
+812
+00:25:41,710 --> 00:25:43,350
+When you need it, just look it up — that's enough.
+
+813
+00:25:43,350 --> 00:25:44,390
+You understand what I mean?
+
+814
+00:25:44,390 --> 00:25:48,490
+This is a kind of skill.
+
+815
+00:25:48,490 --> 00:25:51,750
+Okay, so that was
+
+816
+00:25:51,750 --> 00:25:54,730
+a quick feel for
+
+817
+00:25:54,730 --> 00:25:55,910
+this so-called
+
+818
+00:25:55,910 --> 00:25:58,710
+concept of FUNCT and OPCODE encoding.
+
+819
+00:25:58,710 --> 00:26:02,230
+And the last one,
+
+820
+00:26:02,230 --> 00:26:04,770
+something else related to the encoding format,
+
+821
+00:26:04,770 --> 00:26:05,910
+Something everyone should understand
+
+822
+00:26:05,910 --> 00:26:08,850
+The RISC-V specification
+
+823
+00:26:08,850 --> 00:26:12,190
+specifies that instructions in memory
+
+824
+00:26:12,190 --> 00:26:15,190
+are laid out in little-endian order.
+
+825
+00:26:15,190 --> 00:26:18,490
+I don't know if you've covered this concept before.
+
+826
+00:26:18,490 --> 00:26:20,570
+A lot of you probably know
+
+827
+00:26:20,570 --> 00:26:22,030
+what little-endian and big-endian mean.
+
+828
+00:26:22,030 --> 00:26:23,890
+Where did you actually learn about that?
+
+829
+00:26:23,890 --> 00:26:26,990
+You come across it when doing network programming.
+
+830
+00:26:26,990 --> 00:26:28,810
+Remember Socket?
+
+831
+00:26:28,810 --> 00:26:30,090
+We talked about that.
+
+832
+00:26:30,090 --> 00:26:31,430
+Things like network byte order,
+
+833
+00:26:31,430 --> 00:26:32,710
+host byte order,
+
+834
+00:26:32,710 --> 00:26:33,850
+little-endian, big-endian.
+
+835
+00:26:33,850 --> 00:26:34,770
+Remember those concepts?
+
+836
+00:26:34,770 --> 00:26:37,630
+Actually, the earliest origin of this
+
+837
+00:26:37,630 --> 00:26:38,530
+is right here.
+
+838
+00:26:38,530 --> 00:26:39,550
+That is to say, it's really
+
+839
+00:26:39,550 --> 00:26:40,630
+what we call
+
+840
+00:26:40,630 --> 00:26:41,930
+the concept of host byte order.
+
+841
+00:26:41,930 --> 00:26:42,550
+Little-endian.
+
+842
+00:26:42,550 --> 00:26:44,050
+Now, for those of you who aren't familiar with it,
+
+843
+00:26:44,050 --> 00:26:44,590
+no problem.
+
+844
+00:26:44,590 --> 00:26:46,170
+We'll go over it for you here.
+
+845
+00:26:46,170 --> 00:26:47,470
+Let's review it once more.
+
+846
+00:26:47,470 --> 00:26:50,290
+Because later, when we look at memory,
+
+847
+00:26:50,290 --> 00:26:52,070
+you need to pay attention to this.
+
+848
+00:26:52,070 --> 00:26:53,610
+Otherwise, what you see will just be a mess.
+
+849
+00:26:53,610 --> 00:26:57,210
+So what is little-endian?
+
+850
+00:26:57,210 --> 00:26:58,250
+First, we need to understand a concept
+
+851
+00:26:58,250 --> 00:27:00,530
+called host byte order.
+
+852
+00:27:00,530 --> 00:27:03,490
+So what is host byte order?
+
+853
+00:27:03,490 --> 00:27:04,450
+We define it,
+
+854
+00:27:04,450 --> 00:27:06,290
+let's just read it through once,
+
+855
+00:27:06,290 --> 00:27:07,650
+and then we'll explain it.
+
+856
+00:27:07,650 --> 00:27:08,670
+That is to say,
+
+857
+00:27:08,670 --> 00:27:11,630
+when we discuss host byte order,
+
+858
+00:27:11,630 --> 00:27:12,570
+or let's just say directly,
+
+859
+00:27:12,570 --> 00:27:14,250
+when we discuss the concept of byte order,
+
+860
+00:27:14,250 --> 00:27:16,230
+we're definitely talking about what exactly?
+
+861
+00:27:16,230 --> 00:27:18,430
+it must be about a multi-byte integer
+
+862
+00:27:18,430 --> 00:27:20,150
+rather than a single-byte integer
+
+863
+00:27:20,150 --> 00:27:21,990
+what do I mean by a single-byte integer
+
+864
+00:27:21,990 --> 00:27:23,230
+I mean the 8-bit kind
+
+865
+00:27:23,230 --> 00:27:24,790
+like a character, that kind of thing
+
+866
+00:27:24,790 --> 00:27:25,530
+you follow, right?
+
+867
+00:27:25,530 --> 00:27:27,070
+a character takes up 8 bits, doesn't it?
+
+868
+00:27:27,070 --> 00:27:28,590
+and that's an integer too
+
+869
+00:27:28,590 --> 00:27:29,530
+in a computer,
+
+870
+00:27:29,530 --> 00:27:30,830
+for this kind of single-byte integer
+
+871
+00:27:30,830 --> 00:27:32,110
+there's really no concept of endianness
+
+872
+00:27:32,110 --> 00:27:33,150
+because it's just one byte to begin with
+
+873
+00:27:33,150 --> 00:27:33,810
+what order could there be?
+
+874
+00:27:33,810 --> 00:27:34,970
+what ordering issue could there be?
+
+875
+00:27:34,970 --> 00:27:35,250
+right?
+
+876
+00:27:35,250 --> 00:27:37,150
+that is to say, as soon as you're dealing with
+
+877
+00:27:37,150 --> 00:27:38,650
+a multi-byte integer
+
+878
+00:27:38,650 --> 00:27:40,650
+which ones are multi-byte integers?
+
+879
+00:27:40,650 --> 00:27:42,490
+a short,
+
+880
+00:27:42,490 --> 00:27:44,210
+an int
+
+881
+00:27:44,210 --> 00:27:44,890
+A long,
+
+882
+00:27:44,890 --> 00:27:45,510
+this kind of thing,
+
+883
+00:27:45,510 --> 00:27:46,670
+you still need to understand it.
+
+884
+00:27:46,670 --> 00:27:48,090
+A short just takes up a couple of bytes.
+
+885
+00:27:48,090 --> 00:27:49,370
+Usually a short,
+
+886
+00:27:49,370 --> 00:27:50,050
+takes up two bytes,
+
+887
+00:27:50,050 --> 00:27:50,270
+right?
+
+888
+00:27:50,270 --> 00:27:51,930
+An int is probably generally just
+
+889
+00:27:51,930 --> 00:27:53,130
+four bytes.
+
+890
+00:27:53,130 --> 00:27:53,970
+For a long, it depends on
+
+891
+00:27:53,970 --> 00:27:55,370
+the specific
+
+892
+00:27:55,370 --> 00:27:57,590
+configuration and so on.
+
+893
+00:27:57,590 --> 00:27:59,130
+So,
+
+894
+00:27:59,130 --> 00:28:00,870
+first of all, I want to emphasize that,
+
+895
+00:28:00,870 --> 00:28:01,250
+that is to say,
+
+896
+00:28:01,250 --> 00:28:02,570
+when you discuss byte order,
+
+897
+00:28:02,570 --> 00:28:03,870
+it must be a multi-byte integer;
+
+898
+00:28:03,870 --> 00:28:06,330
+otherwise, don't worry about byte order at all.
+
+899
+00:28:06,330 --> 00:28:07,610
+Now, when it comes to this
+
+900
+00:28:07,610 --> 00:28:08,910
+instruction,
+
+901
+00:28:08,910 --> 00:28:10,510
+Why does endianness come into play here?
+
+902
+00:28:10,510 --> 00:28:11,870
+Because as we just mentioned
+
+903
+00:28:11,870 --> 00:28:12,970
+how many bytes does an instruction take up?
+
+904
+00:28:12,970 --> 00:28:14,710
+It takes up 4 bytes
+
+905
+00:28:14,710 --> 00:28:16,830
+so it's already more than one byte, right?
+
+906
+00:28:16,830 --> 00:28:18,590
+This raises the question of how these 4 bytes
+
+907
+00:28:18,590 --> 00:28:20,230
+are laid out in memory.
+
+908
+00:28:20,230 --> 00:28:21,510
+I think you get what I mean.
+
+909
+00:28:21,510 --> 00:28:23,330
+So this is the problem we need to discuss.
+
+910
+00:28:23,330 --> 00:28:25,970
+Now, as we said,
+
+911
+00:28:25,970 --> 00:28:28,470
+once we understand the basic concept of endianness,
+
+912
+00:28:28,470 --> 00:28:30,150
+we can say there are two types.
+
+913
+00:28:30,150 --> 00:28:31,690
+One is called big-endian,
+
+914
+00:28:31,690 --> 00:28:32,770
+and the other is called little-endian.
+
+915
+00:28:32,770 --> 00:28:36,070
+Big-endian is called Big Ending,
+
+916
+00:28:36,070 --> 00:28:37,350
+and little-endian is called Little Ending.
+
+917
+00:28:37,350 --> 00:28:38,390
+This is in the documentation.
+
+918
+00:28:38,390 --> 00:28:39,950
+We should know these English terms as well,
+
+919
+00:28:39,950 --> 00:28:41,950
+since we need to understand this stuff.
+
+920
+00:28:41,950 --> 00:28:44,590
+Now, regarding the host byte order we just mentioned
+
+921
+00:28:44,590 --> 00:28:46,650
+The concept of host byte order
+
+922
+00:28:46,650 --> 00:28:48,010
+may not be mentioned directly in the specification,
+
+923
+00:28:48,010 --> 00:28:50,310
+but in practice it is what we call the endianness issue.
+
+924
+00:28:50,310 --> 00:28:52,530
+Now, this endianness,
+
+925
+00:28:52,530 --> 00:28:55,570
+it is related to the type of CPU.
+
+926
+00:28:55,570 --> 00:28:56,930
+Different CPUs
+
+927
+00:28:56,930 --> 00:29:01,070
+will have different byte order conventions.
+
+928
+00:29:01,070 --> 00:29:02,590
+So,
+
+929
+00:29:02,590 --> 00:29:03,650
+in our specification,
+
+930
+00:29:03,650 --> 00:29:04,910
+when we talk about the RISC-V specification,
+
+931
+00:29:04,910 --> 00:29:06,950
+it also has to make a corresponding provision for this.
+
+932
+00:29:06,950 --> 00:29:08,030
+So here,
+
+933
+00:29:08,030 --> 00:29:09,270
+what it stipulates is that,
+
+934
+00:29:09,270 --> 00:29:11,930
+by default, it is little-endian.
+
+935
+00:29:11,930 --> 00:29:12,810
+Note this carefully:
+
+936
+00:29:12,810 --> 00:29:13,850
+by default, it is little-endian.
+
+937
+00:29:13,850 --> 00:29:15,430
+Now, exactly what is big-endian,
+
+938
+00:29:15,430 --> 00:29:16,310
+and what is little-endian?
+
+939
+00:29:16,310 --> 00:29:17,690
+Do you still remember
+
+940
+00:29:17,690 --> 00:29:20,370
+this concept?
+
+941
+00:29:20,370 --> 00:29:22,330
+Can you explain it in your own words?
+
+942
+00:29:22,330 --> 00:29:26,470
+For this question,
+
+943
+00:29:26,470 --> 00:29:27,990
+I still don't have a name list,
+
+944
+00:29:27,990 --> 00:29:29,250
+so I'll just pick someone at random.
+
+945
+00:29:29,250 --> 00:29:29,950
+Let's see,
+
+946
+00:29:29,950 --> 00:29:31,990
+one of the girls in the second row,
+
+947
+00:29:31,990 --> 00:29:32,950
+I'll just pick any one of you.
+
+948
+00:29:32,950 --> 00:29:34,870
+There are two of you in green,
+
+949
+00:29:34,870 --> 00:29:35,630
+two in blue,
+
+950
+00:29:35,630 --> 00:29:35,990
+right?
+
+951
+00:29:35,990 --> 00:29:36,450
+Never mind,
+
+952
+00:29:36,450 --> 00:29:37,190
+let's go with the one in blue.
+
+953
+00:29:37,190 --> 00:29:37,730
+The student in blue,
+
+954
+00:29:37,730 --> 00:29:39,450
+that shouldn't be ambiguous, right?
+
+955
+00:29:39,450 --> 00:29:40,410
+The one in blue,
+
+956
+00:29:40,410 --> 00:29:41,330
+that girl there,
+
+957
+00:29:41,330 --> 00:29:42,950
+little-endian,
+
+958
+00:29:42,950 --> 00:29:43,690
+big-endian,
+
+959
+00:29:43,690 --> 00:29:44,810
+do you still remember them?
+
+960
+00:29:44,810 --> 00:29:45,950
+Like, if we say
+
+961
+00:29:45,950 --> 00:29:47,310
+asking you to explain
+
+962
+00:29:47,310 --> 00:29:48,210
+what big-endian and little-endian byte order mean
+
+963
+00:29:48,210 --> 00:29:56,300
+Can any of you explain it?
+
+964
+00:29:56,300 --> 00:29:56,540
+Hmm,
+
+965
+00:29:56,540 --> 00:29:57,680
+roughly right.
+
+966
+00:29:57,680 --> 00:29:59,060
+And little-endian is the reverse of that,
+
+967
+00:29:59,060 --> 00:29:59,240
+right?
+
+968
+00:29:59,240 --> 00:30:02,220
+It seems everyone has learned this before.
+
+969
+00:30:02,220 --> 00:30:03,080
+So on our side,
+
+970
+00:30:03,080 --> 00:30:04,660
+we don't need to explain it too much.
+
+971
+00:30:04,660 --> 00:30:05,740
+Let's just take a quick look at this diagram.
+
+972
+00:30:05,740 --> 00:30:06,720
+It's really just illustrating
+
+973
+00:30:06,720 --> 00:30:07,500
+what that student
+
+974
+00:30:07,500 --> 00:30:08,400
+just said,
+
+975
+00:30:08,400 --> 00:30:08,940
+that is to say,
+
+976
+00:30:09,280 --> 00:30:10,280
+say we have a number
+
+977
+00:30:10,280 --> 00:30:12,180
+over here, this is actually a
+
+978
+00:30:12,180 --> 00:30:15,140
+we specifically took an example of one
+
+979
+00:30:15,140 --> 00:30:17,760
+that takes up four bytes in memory,
+
+980
+00:30:17,760 --> 00:30:18,520
+an integer like that
+
+981
+00:30:18,520 --> 00:30:19,780
+As for this integer,
+
+982
+00:30:19,780 --> 00:30:21,940
+we humans usually write it in decimal,
+
+983
+00:30:21,940 --> 00:30:24,380
+for example, a 2874.
+
+984
+00:30:24,380 --> 00:30:25,280
+How large is this number?
+
+985
+00:30:25,280 --> 00:30:27,260
+ones, tens, hundreds, thousands, ten-thousands,
+
+986
+00:30:27,260 --> 00:30:28,520
+hundred-thousands, millions, ten-millions, hundred-millions.
+
+987
+00:30:28,520 --> 00:30:30,600
+It's two hundred eighty-seven million...
+
+988
+00:30:30,600 --> 00:30:31,820
+Following our human habit,
+
+989
+00:30:31,820 --> 00:30:33,840
+we write it from the high digits down to the low digits.
+
+990
+00:30:33,840 --> 00:30:34,880
+That's what we say, right?
+
+991
+00:30:34,880 --> 00:30:36,240
+Two hundred eighty-seven million...
+
+992
+00:30:36,240 --> 00:30:37,720
+Isn't this from high digits to low digits?
+
+993
+00:30:37,720 --> 00:30:38,900
+Then the left side, we call it,
+
+994
+00:30:38,900 --> 00:30:42,280
+numerically speaking, the high-order bits of the data.
+
+995
+00:30:42,280 --> 00:30:43,980
+And the right side is called the low-order bits of the data.
+
+996
+00:30:43,980 --> 00:30:46,140
+Now, the computer,
+
+997
+00:30:46,140 --> 00:30:47,580
+of course, it doesn't like this kind of thing.
+
+998
+00:30:47,580 --> 00:30:49,100
+When the computer represents numbers,
+
+999
+00:30:49,100 --> 00:30:50,520
+it wants to convert them into binary.
+
+1000
+00:30:50,520 --> 00:30:52,900
+So below here, it's been converted into a binary
+
+1001
+00:30:52,900 --> 00:30:54,120
+So what about binary?
+
+1002
+00:30:54,120 --> 00:30:56,600
+It also has the concepts of high bits and low bits.
+
+1003
+00:30:56,600 --> 00:30:58,220
+So in the end,
+
+1004
+00:30:58,220 --> 00:30:59,820
+when we're programming,
+
+1005
+00:30:59,820 --> 00:31:01,700
+we actually prefer to use hexadecimal to represent things.
+
+1006
+00:31:01,700 --> 00:31:02,020
+Right?
+
+1007
+00:31:02,020 --> 00:31:03,500
+Now, converting it to hexadecimal,
+
+1008
+00:31:03,500 --> 00:31:06,200
+you might wonder why I picked such a strange value.
+
+1009
+00:31:06,200 --> 00:31:07,760
+It's because when converted to hexadecimal,
+
+1010
+00:31:07,760 --> 00:31:09,120
+it becomes a very nice-looking number,
+
+1011
+00:31:09,120 --> 00:31:10,840
+11223344.
+
+1012
+00:31:10,840 --> 00:31:11,240
+Right?
+
+1013
+00:31:11,240 --> 00:31:12,140
+Now, the 11,
+
+1014
+00:31:12,140 --> 00:31:13,000
+we consider it the high part,
+
+1015
+00:31:13,000 --> 00:31:14,880
+sitting in the high-order portion,
+
+1016
+00:31:14,880 --> 00:31:16,680
+the high-order 8 bits.
+
+1017
+00:31:16,680 --> 00:31:18,640
+The 44 is the low 8 bits.
+
+1018
+00:31:18,640 --> 00:31:21,000
+So once this number is given to you,
+
+1019
+00:31:21,000 --> 00:31:22,600
+a question immediately comes up,
+
+1020
+00:31:22,600 --> 00:31:23,660
+namely, when it's in memory,
+
+1021
+00:31:23,660 --> 00:31:24,540
+How do we store it?
+
+1022
+00:31:24,540 --> 00:31:25,700
+Because we know that
+
+1023
+00:31:25,700 --> 00:31:28,580
+to store these 32 bits
+
+1024
+00:31:28,580 --> 00:31:29,380
+of data,
+
+1025
+00:31:29,380 --> 00:31:30,180
+we can,
+
+1026
+00:31:30,180 --> 00:31:32,160
+since storage is byte-based,
+
+1027
+00:31:32,160 --> 00:31:34,360
+split it into four chunks to store.
+
+1028
+00:31:34,360 --> 00:31:35,660
+Then for each chunk,
+
+1029
+00:31:35,660 --> 00:31:36,360
+one byte like this,
+
+1030
+00:31:36,360 --> 00:31:37,640
+so it comes down to where
+
+1031
+00:31:37,640 --> 00:31:38,360
+this one byte
+
+1032
+00:31:38,360 --> 00:31:40,840
+is placed.
+
+1033
+00:31:40,840 --> 00:31:44,160
+Now, a student just explained this,
+
+1034
+00:31:44,160 --> 00:31:46,160
+using big-endian as the example,
+
+1035
+00:31:46,160 --> 00:31:47,240
+to explain it to everyone.
+
+1036
+00:31:47,240 --> 00:31:48,540
+What is big-endian?
+
+1037
+00:31:48,540 --> 00:31:50,660
+Big-endian means that
+
+1038
+00:31:50,660 --> 00:31:52,740
+the 'big' in big-endian refers to the high-order bits,
+
+1039
+00:31:52,740 --> 00:31:54,340
+you see what I mean,
+
+1040
+00:31:54,340 --> 00:31:56,600
+and the low-order bits are little-endian.
+
+1041
+00:31:56,600 --> 00:31:58,860
+So what about big endian?
+
+1042
+00:31:58,860 --> 00:32:00,500
+It means the high-order data part,
+
+1043
+00:32:00,500 --> 00:32:01,660
+that is, what we call this
+
+1044
+00:32:01,660 --> 00:32:04,220
+high-order data part.
+
+1045
+00:32:04,220 --> 00:32:06,540
+Suppose when we lay things out in memory,
+
+1046
+00:32:06,540 --> 00:32:08,780
+we always lay them out from low to high.
+
+1047
+00:32:08,780 --> 00:32:10,120
+Assuming we always lay them out
+
+1048
+00:32:10,120 --> 00:32:12,740
+from low to high,
+
+1049
+00:32:12,740 --> 00:32:15,280
+that is, when laying them out,
+
+1050
+00:32:15,280 --> 00:32:17,620
+assuming we always lay them out from low to high,
+
+1051
+00:32:17,620 --> 00:32:19,420
+then so-called big endian
+
+1052
+00:32:19,420 --> 00:32:20,700
+means its high-order part
+
+1053
+00:32:20,700 --> 00:32:24,160
+goes into the low byte first.
+
+1054
+00:32:24,160 --> 00:32:28,400
+So the high-order part, look, 11 goes into where?
+
+1055
+00:32:28,400 --> 00:32:32,040
+It goes into the byte at address A.
+
+1056
+00:32:32,040 --> 00:32:34,480
+And the following addresses are A+1 and A+2, right?
+
+1057
+00:32:34,480 --> 00:32:35,320
+Because, as we said, memory
+
+1058
+00:32:35,320 --> 00:32:37,960
+is laid out in units of bytes.
+
+1059
+00:32:37,960 --> 00:32:39,800
+So the high-order byte goes into the low byte first.
+
+1060
+00:32:39,800 --> 00:32:42,120
+And as for little endian,
+
+1061
+00:32:42,120 --> 00:32:45,140
+That is, the low bits go into the low byte first.
+
+1062
+00:32:45,140 --> 00:32:47,920
+If you keep this rule in mind,
+
+1063
+00:32:47,920 --> 00:32:49,460
+it should be very easy to understand
+
+1064
+00:32:49,460 --> 00:32:50,680
+what we call
+
+1065
+00:32:50,680 --> 00:32:52,360
+the concepts of big-endian and little-endian.
+
+1066
+00:32:52,360 --> 00:32:53,980
+Then later on,
+
+1067
+00:32:53,980 --> 00:32:55,700
+you'll also be doing it in reverse.
+
+1068
+00:32:55,700 --> 00:32:57,060
+For example, say I give you a chunk of memory,
+
+1069
+00:32:57,060 --> 00:32:59,580
+and the data in this memory is
+
+1070
+00:32:59,580 --> 00:33:00,300
+let's say,
+
+1071
+00:33:00,300 --> 00:33:04,920
+because in your future work,
+
+1072
+00:33:04,920 --> 00:33:05,740
+it's often the other way around.
+
+1073
+00:33:05,740 --> 00:33:06,900
+That is, you look at the memory first,
+
+1074
+00:33:06,900 --> 00:33:08,440
+and what's stored in the memory is
+
+1075
+00:33:08,440 --> 00:33:10,800
+because from the low address to the high address of the memory,
+
+1076
+00:33:10,800 --> 00:33:12,900
+the data you see is 1122334,
+
+1077
+00:33:12,900 --> 00:33:14,360
+and then I'm going to ask you,
+
+1078
+00:33:14,360 --> 00:33:16,720
+what value does this data represent? It's the reverse.
+
+1079
+00:33:16,720 --> 00:33:18,120
+In that case,
+
+1080
+00:33:18,120 --> 00:33:19,220
+at that point,
+
+1081
+00:33:19,220 --> 00:33:20,900
+Before you answer that question,
+
+1082
+00:33:20,900 --> 00:33:21,740
+the first thing you should do is ask,
+
+1083
+00:33:21,740 --> 00:33:22,720
+for example, say I'm the interviewer,
+
+1084
+00:33:22,720 --> 00:33:23,380
+and I ask you,
+
+1085
+00:33:23,380 --> 00:33:24,160
+given this block of memory,
+
+1086
+00:33:24,160 --> 00:33:26,640
+tell me what the value inside it is.
+
+1087
+00:33:26,640 --> 00:33:28,740
+Can you answer that directly?
+
+1088
+00:33:28,740 --> 00:33:30,200
+If you answer directly, you lose.
+
+1089
+00:33:30,200 --> 00:33:31,600
+You should ask him first,
+
+1090
+00:33:31,600 --> 00:33:32,940
+you should ask back,
+
+1091
+00:33:32,940 --> 00:33:34,960
+what kind of CPU is this?
+
+1092
+00:33:34,960 --> 00:33:37,180
+What is its byte order?
+
+1093
+00:33:37,180 --> 00:33:38,100
+He understands what I mean by that.
+
+1094
+00:33:38,100 --> 00:33:39,700
+So once the question gets to this point,
+
+1095
+00:33:39,700 --> 00:33:41,160
+I reckon the examiner won't ask any further.
+
+1096
+00:33:41,160 --> 00:33:43,120
+Because he'll figure you understand it.
+
+1097
+00:33:43,120 --> 00:33:45,820
+Now, as for our Risk5,
+
+1098
+00:33:45,820 --> 00:33:47,940
+it is little-endian,
+
+1099
+00:33:47,940 --> 00:33:50,480
+so you need to interpret it in little-endian order.
+
+1100
+00:33:50,480 --> 00:33:52,220
+And when you read it,
+
+1101
+00:33:52,220 --> 00:33:53,120
+For example, suppose
+
+1102
+00:33:53,120 --> 00:33:54,540
+that this is little-endian
+
+1103
+00:33:54,540 --> 00:33:55,580
+what value do you think this data is?
+
+1104
+00:33:55,580 --> 00:33:57,300
+Because we know little-endian
+
+1105
+00:33:57,300 --> 00:33:59,620
+puts the low byte into the low address first
+
+1106
+00:33:59,620 --> 00:34:01,080
+so when laying it out
+
+1107
+00:34:01,080 --> 00:34:04,040
+this 11 definitely goes in the low bits of the data
+
+1108
+00:34:04,040 --> 00:34:07,400
+then 22 above it, then higher and higher
+
+1109
+00:34:07,400 --> 00:34:10,160
+So if this block of data
+
+1110
+00:34:10,160 --> 00:34:13,780
+is in a RISC-V machine environment,
+
+1111
+00:34:13,780 --> 00:34:16,120
+then the data is actually like this
+
+1112
+00:34:16,120 --> 00:34:18,620
+See what I mean?
+
+1113
+00:34:18,620 --> 00:34:21,860
+Basically, you just need to be able to read it both ways
+
+1114
+00:34:21,860 --> 00:34:24,620
+That's what's meant by big-endian and little-endian for humans
+
+1115
+00:34:24,620 --> 00:34:26,760
+So why is it called big-endian and little-endian?
+
+1116
+00:34:26,760 --> 00:34:29,280
+Actually, the picture here is the big end and little end of an egg
+
+1117
+00:34:29,280 --> 00:34:30,460
+It's really just saying that
+
+1118
+00:34:30,460 --> 00:34:31,460
+when you eat a boiled egg
+
+1119
+00:34:31,460 --> 00:34:32,480
+you know how you crack the egg
+
+1120
+00:34:32,480 --> 00:34:34,840
+is your habit big-endian or little-endian?
+
+1121
+00:34:34,840 --> 00:34:37,100
+Your habit is to strike the big end first,
+
+1122
+00:34:37,100 --> 00:34:38,600
+or the small end first?
+
+1123
+00:34:38,600 --> 00:34:41,320
+What's your habit?
+
+1124
+00:34:41,320 --> 00:34:44,800
+My habit is definitely to strike the big end first.
+
+1125
+00:34:44,800 --> 00:34:45,800
+Once you strike it, you set it down.
+
+1126
+00:34:45,800 --> 00:34:47,000
+Can it stand up?
+
+1127
+00:34:47,000 --> 00:34:50,040
+That's the more fun version.
+
+1128
+00:34:50,040 --> 00:34:50,840
+Let me tell everyone about it.
+
+1129
+00:34:50,840 --> 00:34:51,700
+It's about big-endian and little-endian byte order.
+
+1130
+00:34:51,700 --> 00:34:54,100
+Now, we know that in RISC-V,
+
+1131
+00:34:54,100 --> 00:34:56,020
+the instructions in memory,
+
+1132
+00:34:56,020 --> 00:34:57,340
+they use little-endian byte order.
+
+1133
+00:34:57,340 --> 00:34:59,340
+Just keep this page open.
+
+1134
+00:34:59,340 --> 00:35:00,860
+Later, when we
+
+1135
+00:35:00,860 --> 00:35:01,620
+do some exercises ourselves,
+
+1136
+00:35:01,620 --> 00:35:02,460
+we'll go back and look at this.
+
+1137
+00:35:02,460 --> 00:35:05,500
+So, regarding this,
+
+1138
+00:35:05,500 --> 00:35:08,680
+this encoding format,
+
+1139
+00:35:08,680 --> 00:35:10,340
+the basic concepts in these things,
+
+1140
+00:35:10,340 --> 00:35:12,340
+we'll just cover them on this slide.
+
+1141
+00:35:12,340 --> 00:35:13,720
+That's really what all this is about.
+
+1142
+00:35:13,720 --> 00:35:15,680
+So now,
+
+1143
+00:35:15,680 --> 00:35:17,840
+next let's take a look at
+
+1144
+00:35:17,840 --> 00:35:19,600
+some of these specific encoding formats.
+
+1145
+00:35:19,600 --> 00:35:21,520
+As we said, there are six encoding formats.
+
+1146
+00:35:21,520 --> 00:35:24,320
+So what is this thing called RISBUG?
+
+1147
+00:35:24,320 --> 00:35:25,720
+What does each letter mean?
+
+1148
+00:35:25,720 --> 00:35:27,920
+Later, when we get to the specific instructions,
+
+1149
+00:35:27,920 --> 00:35:28,800
+we'll go through them again.
+
+1150
+00:35:28,800 --> 00:35:30,820
+For now, we just want you to get the general idea,
+
+1151
+00:35:30,820 --> 00:35:31,540
+for example,
+
+1152
+00:35:31,540 --> 00:35:33,020
+if someone asks you what R is,
+
+1153
+00:35:33,020 --> 00:35:33,940
+well, we know
+
+1154
+00:35:33,940 --> 00:35:35,200
+it's actually an English abbreviation.
+
+1155
+00:35:35,200 --> 00:35:37,100
+Once you remember the abbreviation,
+
+1156
+00:35:37,100 --> 00:35:38,140
+you'll probably find it easier to understand
+
+1157
+00:35:38,140 --> 00:35:39,480
+what this instruction format
+
+1158
+00:35:39,480 --> 00:35:40,520
+roughly looks like.
+
+1159
+00:35:40,520 --> 00:35:41,800
+So R,
+
+1160
+00:35:41,800 --> 00:35:43,480
+it stands for
+
+1161
+00:35:43,480 --> 00:35:45,060
+it's actually an abbreviation of the word register
+
+1162
+00:35:45,060 --> 00:35:47,480
+so where does its characteristic show up
+
+1163
+00:35:47,480 --> 00:35:48,200
+pay attention here
+
+1164
+00:35:48,200 --> 00:35:50,220
+in its instructions
+
+1165
+00:35:50,220 --> 00:35:51,900
+in its format
+
+1166
+00:35:51,900 --> 00:35:53,140
+it has three fields
+
+1167
+00:35:53,140 --> 00:35:54,840
+all used to hold registers
+
+1168
+00:35:54,840 --> 00:35:57,000
+by these code names
+
+1169
+00:35:57,000 --> 00:35:58,240
+like RS
+
+1170
+00:35:58,240 --> 00:35:59,100
+and look,
+
+1171
+00:35:59,100 --> 00:36:00,300
+RD
+
+1172
+00:36:00,300 --> 00:36:04,180
+now this D here
+
+1173
+00:36:04,180 --> 00:36:05,020
+note this carefully
+
+1174
+00:36:05,020 --> 00:36:05,860
+this RD here
+
+1175
+00:36:05,860 --> 00:36:06,720
+means that this D
+
+1176
+00:36:06,720 --> 00:36:07,620
+comes from the English
+
+1177
+00:36:07,620 --> 00:36:09,460
+abbreviation of destination
+
+1178
+00:36:09,460 --> 00:36:11,080
+you all know what destination means
+
+1179
+00:36:11,080 --> 00:36:11,840
+it's the target
+
+1180
+00:36:11,840 --> 00:36:15,300
+target in the usual English sense
+
+1181
+00:36:15,300 --> 00:36:15,640
+What does that mean?
+
+1182
+00:36:15,640 --> 00:36:17,960
+It means that the final computed result
+
+1183
+00:36:17,960 --> 00:36:20,020
+will be placed into this register.
+
+1184
+00:36:20,020 --> 00:36:21,000
+Do you all understand what I mean?
+
+1185
+00:36:21,000 --> 00:36:24,340
+When we designed that mini CPU earlier,
+
+1186
+00:36:24,340 --> 00:36:24,900
+we also
+
+1187
+00:36:24,900 --> 00:36:26,160
+when doing addition,
+
+1188
+00:36:26,160 --> 00:36:27,720
+didn't we also take that computed result
+
+1189
+00:36:27,720 --> 00:36:30,420
+and put it into register 1?
+
+1190
+00:36:30,420 --> 00:36:30,600
+Right?
+
+1191
+00:36:30,600 --> 00:36:32,220
+Adding two registers together
+
+1192
+00:36:32,220 --> 00:36:33,140
+and putting the result into register 1.
+
+1193
+00:36:33,140 --> 00:36:34,420
+You can go back and review that.
+
+1194
+00:36:34,420 --> 00:36:35,440
+So this rd,
+
+1195
+00:36:35,440 --> 00:36:37,160
+it's used to hold the final result
+
+1196
+00:36:37,160 --> 00:36:37,880
+in that register.
+
+1197
+00:36:37,880 --> 00:36:38,840
+rs
+
+1198
+00:36:38,840 --> 00:36:40,220
+what does the s mean?
+
+1199
+00:36:40,220 --> 00:36:42,100
+The s comes from the English word 'source'.
+
+1200
+00:36:42,100 --> 00:36:43,340
+Source, the origin
+
+1201
+00:36:43,340 --> 00:36:44,280
+still understand
+
+1202
+00:36:44,280 --> 00:36:45,120
+source
+
+1203
+00:36:45,120 --> 00:36:46,360
+then it means it
+
+1204
+00:36:46,360 --> 00:36:47,840
+for example, if I want to do addition
+
+1205
+00:36:47,840 --> 00:36:48,620
+when doing addition
+
+1206
+00:36:48,620 --> 00:36:50,120
+A plus B equals C
+
+1207
+00:36:50,120 --> 00:36:52,240
+then A and B are the source
+
+1208
+00:36:52,240 --> 00:36:54,900
+and C is the destination
+
+1209
+00:36:54,900 --> 00:36:56,180
+so this
+
+1210
+00:36:56,180 --> 00:36:57,800
+once you see this, you know
+
+1211
+00:36:57,800 --> 00:37:00,340
+what this RS ultimately means
+
+1212
+00:37:00,340 --> 00:37:01,700
+and then finally when it becomes
+
+1213
+00:37:01,700 --> 00:37:02,780
+that assembly instruction
+
+1214
+00:37:02,780 --> 00:37:04,800
+we have a correspondence with this
+
+1215
+00:37:04,800 --> 00:37:07,820
+now this register
+
+1216
+00:37:07,820 --> 00:37:08,580
+please note
+
+1217
+00:37:08,580 --> 00:37:10,580
+each register generally occupies
+
+1218
+00:37:10,580 --> 00:37:11,760
+they are all the same
+
+1219
+00:37:11,760 --> 00:37:12,800
+each one, if inside it
+
+1220
+00:37:12,800 --> 00:37:14,520
+needs to indicate a register
+
+1221
+00:37:14,520 --> 00:37:16,360
+It generally takes one register
+
+1222
+00:37:16,360 --> 00:37:17,760
+and uses 5 bits.
+
+1223
+00:37:17,760 --> 00:37:18,760
+Now think about it,
+
+1224
+00:37:18,760 --> 00:37:19,640
+why 5 bits?
+
+1225
+00:37:19,640 --> 00:37:21,840
+It's actually related to
+
+1226
+00:37:21,840 --> 00:37:22,800
+what we learned earlier.
+
+1227
+00:37:22,800 --> 00:37:24,420
+What do 5 bits mean?
+
+1228
+00:37:24,420 --> 00:37:28,420
+It means this:
+
+1229
+00:37:28,420 --> 00:37:29,480
+the range it can express
+
+1230
+00:37:29,480 --> 00:37:31,900
+for registers is 32.
+
+1231
+00:37:31,900 --> 00:37:32,660
+Right?
+
+1232
+00:37:32,660 --> 00:37:33,720
+We mentioned earlier,
+
+1233
+00:37:33,720 --> 00:37:34,780
+how many general-purpose registers are there?
+
+1234
+00:37:34,780 --> 00:37:35,660
+32.
+
+1235
+00:37:35,660 --> 00:37:36,460
+That's exactly the reason.
+
+1236
+00:37:36,460 --> 00:37:38,040
+It won't waste a single extra bit,
+
+1237
+00:37:38,040 --> 00:37:38,980
+nor will it be short one.
+
+1238
+00:37:38,980 --> 00:37:40,360
+Because at this level,
+
+1239
+00:37:40,360 --> 00:37:41,720
+you have to carefully study
+
+1240
+00:37:41,720 --> 00:37:43,840
+how to design every single bit.
+
+1241
+00:37:43,840 --> 00:37:45,180
+The people who designed the spec
+
+1242
+00:37:45,180 --> 00:37:46,160
+definitely thought through
+
+1243
+00:37:46,160 --> 00:37:47,100
+every single bit
+
+1244
+00:37:47,100 --> 00:37:47,720
+nothing is wasted
+
+1245
+00:37:47,720 --> 00:37:51,340
+So this is the R type
+
+1246
+00:37:51,340 --> 00:37:52,540
+meaning that in this instruction
+
+1247
+00:37:52,540 --> 00:37:54,840
+three registers are involved
+
+1248
+00:37:54,840 --> 00:37:55,620
+its operands
+
+1249
+00:37:55,620 --> 00:37:56,680
+involve three registers
+
+1250
+00:37:56,680 --> 00:37:58,760
+This is also a characteristic of RISC-V,
+
+1251
+00:37:58,760 --> 00:38:00,460
+a feature of this reduced instruction set
+
+1252
+00:38:00,460 --> 00:38:01,520
+meaning that in a single instruction
+
+1253
+00:38:01,520 --> 00:38:03,380
+you can involve up to three registers
+
+1254
+00:38:03,380 --> 00:38:06,280
+And the more registers involved,
+
+1255
+00:38:06,280 --> 00:38:07,180
+as you can imagine
+
+1256
+00:38:07,180 --> 00:38:08,640
+the more powerful the operation
+
+1257
+00:38:08,640 --> 00:38:10,120
+can relatively be
+
+1258
+00:38:10,120 --> 00:38:12,200
+because operating on registers is faster
+
+1259
+00:38:12,200 --> 00:38:15,920
+Then the second type is called I
+
+1260
+00:38:15,920 --> 00:38:16,620
+I stands for
+
+1261
+00:38:16,620 --> 00:38:18,500
+This I does not mean integer.
+
+1262
+00:38:18,500 --> 00:38:21,900
+This I means immediate.
+
+1263
+00:38:21,900 --> 00:38:24,460
+Immediate translated into Chinese is called an immediate value.
+
+1264
+00:38:24,460 --> 00:38:27,180
+That means in this instruction,
+
+1265
+00:38:27,180 --> 00:38:28,300
+it carries a
+
+1266
+00:38:28,300 --> 00:38:31,420
+uses this limited number of bits
+
+1267
+00:38:31,420 --> 00:38:32,660
+to represent an integer,
+
+1268
+00:38:32,660 --> 00:38:34,380
+to represent an integer.
+
+1269
+00:38:34,380 --> 00:38:35,300
+Look at this.
+
+1270
+00:38:35,300 --> 00:38:36,680
+For example, its
+
+1271
+00:38:36,680 --> 00:38:38,500
+in this I-type format,
+
+1272
+00:38:38,500 --> 00:38:39,560
+compared with the R-type,
+
+1273
+00:38:39,560 --> 00:38:40,160
+what is the difference?
+
+1274
+00:38:40,160 --> 00:38:40,720
+You can take a look.
+
+1275
+00:38:40,720 --> 00:38:42,220
+It has opcode,
+
+1276
+00:38:42,220 --> 00:38:42,980
+it has rd,
+
+1277
+00:38:42,980 --> 00:38:44,040
+it has rs1.
+
+1278
+00:38:44,040 --> 00:38:44,500
+There is rs1,
+
+1279
+00:38:44,500 --> 00:38:45,900
+but this rs1
+
+1280
+00:38:45,900 --> 00:38:47,260
+is no longer present here.
+
+1281
+00:38:47,260 --> 00:38:49,740
+That is to say, it's missing one register,
+
+1282
+00:38:49,740 --> 00:38:50,260
+but,
+
+1283
+00:38:50,260 --> 00:38:52,160
+it uses a chunk of content
+
+1284
+00:38:52,160 --> 00:38:53,520
+to represent an immediate value.
+
+1285
+00:38:53,520 --> 00:38:56,560
+This immediate value takes up 12 bits.
+
+1286
+00:38:56,560 --> 00:38:59,780
+How large a range of integers can 12 bits express? You can work that out when you get back.
+
+1287
+00:38:59,780 --> 00:39:01,260
+This is the immediate type.
+
+1288
+00:39:01,260 --> 00:39:04,660
+This is the immediate type.
+
+1289
+00:39:04,660 --> 00:39:06,300
+Then there's the store type.
+
+1290
+00:39:06,300 --> 00:39:08,060
+We'll just go over this quickly later.
+
+1291
+00:39:08,060 --> 00:39:08,860
+We'll talk about it when we get there.
+
+1292
+00:39:08,860 --> 00:39:11,860
+Store is used to store data,
+
+1293
+00:39:11,860 --> 00:39:14,840
+that is, it's an instruction we use later to access memory.
+
+1294
+00:39:14,840 --> 00:39:17,000
+B stands for branch.
+
+1295
+00:39:17,000 --> 00:39:20,400
+Branch, as you can guess, is actually related to jumping.
+
+1296
+00:39:20,400 --> 00:39:21,240
+Conditional branching.
+
+1297
+00:39:21,240 --> 00:39:22,900
+U stands for upper.
+
+1298
+00:39:22,900 --> 00:39:24,220
+Next comes jump.
+
+1299
+00:39:24,220 --> 00:39:26,000
+We won't go into this one for now.
+
+1300
+00:39:26,000 --> 00:39:27,600
+We'll look at it when we get to it.
+
+1301
+00:39:27,600 --> 00:39:29,880
+This is what's called the encoding format.
+
+1302
+00:39:29,880 --> 00:39:35,980
+So,
+
+1303
+00:39:35,980 --> 00:39:39,660
+as the wrap-up for this little section,
+
+1304
+00:39:39,660 --> 00:39:41,640
+we're essentially giving you an overview.
+
+1305
+00:39:41,640 --> 00:39:42,420
+And since it's an overview,
+
+1306
+00:39:42,420 --> 00:39:43,300
+we should also take a quick look at
+
+1307
+00:39:43,300 --> 00:39:45,320
+which ones we'll be learning later on,
+
+1308
+00:39:45,320 --> 00:39:46,620
+these assembly instructions.
+
+1309
+00:39:46,620 --> 00:39:48,700
+This table of ours,
+
+1310
+00:39:48,700 --> 00:39:50,620
+I've just put together a simple list for you.
+
+1311
+00:39:50,620 --> 00:39:51,520
+That is to say,
+
+1312
+00:39:51,520 --> 00:39:53,040
+for ours,
+
+1313
+00:39:53,040 --> 00:39:55,600
+actually, if you go and look at the spec,
+
+1314
+00:39:55,600 --> 00:39:56,840
+the ones we need to learn,
+
+1315
+00:39:56,840 --> 00:39:58,540
+the instructions the spec lists out for us,
+
+1316
+00:39:58,540 --> 00:40:00,120
+there are actually more than just these.
+
+1317
+00:40:00,120 --> 00:40:02,000
+Our space is limited,
+
+1318
+00:40:02,000 --> 00:40:05,740
+so we'll only cover these ones for you.
+
+1319
+00:40:05,740 --> 00:40:07,420
+Now, these instructions,
+
+1320
+00:40:07,420 --> 00:40:08,940
+we've grouped into several major categories.
+
+1321
+00:40:08,940 --> 00:40:11,620
+category by category for you
+
+1322
+00:40:11,620 --> 00:40:13,600
+including arithmetic instructions,
+
+1323
+00:40:13,600 --> 00:40:14,540
+logical instructions,
+
+1324
+00:40:14,540 --> 00:40:15,880
+shift instructions,
+
+1325
+00:40:15,880 --> 00:40:17,160
+memory load and store instructions,
+
+1326
+00:40:17,160 --> 00:40:18,880
+and branch and jump instructions.
+
+1327
+00:40:18,880 --> 00:40:19,760
+These categories,
+
+1328
+00:40:19,760 --> 00:40:22,960
+basically, these five major categories,
+
+1329
+00:40:22,960 --> 00:40:23,620
+five major categories.
+
+1330
+00:40:23,620 --> 00:40:24,740
+If you have a basic grasp of these five categories
+
+1331
+00:40:24,740 --> 00:40:27,040
+of instructions,
+
+1332
+00:40:27,040 --> 00:40:29,180
+then when you go and look at some
+
+1333
+00:40:29,180 --> 00:40:31,340
+ordinary assembly code,
+
+1334
+00:40:31,340 --> 00:40:32,560
+you should have no problem with it.
+
+1335
+00:40:32,560 --> 00:40:34,440
+I think you should have no problem with it.
+
+1336
+00:40:34,440 --> 00:40:36,820
+And learning assembly instructions is the same way,
+
+1337
+00:40:36,820 --> 00:40:37,620
+that is to say,
+
+1338
+00:40:37,620 --> 00:40:39,780
+you know, when you say,
+
+1339
+00:40:39,780 --> 00:40:40,880
+"Oh, assembly is too hard to write,
+
+1340
+00:40:40,880 --> 00:40:42,920
+it's too difficult for us to learn."
+
+1341
+00:40:42,920 --> 00:40:44,340
+Actually, you don't need to worry.
+
+1342
+00:40:44,340 --> 00:40:46,200
+Because in most of your future work,
+
+1343
+00:40:46,200 --> 00:40:47,140
+when it comes to assembly instructions,
+
+1344
+00:40:47,140 --> 00:40:49,160
+compared to writing,
+
+1345
+00:40:49,160 --> 00:40:50,500
+pages and pages of assembly instructions,
+
+1346
+00:40:50,500 --> 00:40:51,120
+the chances are actually not that many.
+
+1347
+00:40:51,120 --> 00:40:53,040
+Actually, most of the time,
+
+1348
+00:40:53,040 --> 00:40:54,560
+as long as you can understand
+
+1349
+00:40:54,560 --> 00:40:56,500
+some short snippets of assembly instructions,
+
+1350
+00:40:56,500 --> 00:40:57,480
+that's already enough.
+
+1351
+00:40:57,480 --> 00:40:59,440
+You all understand what I mean, right?
+
+1352
+00:40:59,440 --> 00:41:00,020
+So,
+
+1353
+00:41:00,020 --> 00:41:03,220
+in other words, we don't have to be like high-level
+
+1354
+00:41:03,220 --> 00:41:04,220
+languages such as C,
+
+1355
+00:41:04,220 --> 00:41:04,860
+that is to say,
+
+1356
+00:41:04,860 --> 00:41:07,300
+for example, writing a few thousand lines a day,
+
+1357
+00:41:07,300 --> 00:41:09,140
+which for some students doesn't seem to be a problem.
+
+1358
+00:41:09,140 --> 00:41:12,620
+But at the assembly level, writing code like that,
+
+1359
+00:41:12,620 --> 00:41:13,720
+that's simply a joke.
+
+1360
+00:41:13,720 --> 00:41:15,320
+That is to say, writing thousands of lines of assembly a day,
+
+1361
+00:41:15,320 --> 00:41:16,180
+I said this guy must be
+
+1362
+00:41:16,180 --> 00:41:17,160
+joking.
+
+1363
+00:41:17,160 --> 00:41:19,040
+What he wrote must have problems.
+
+1364
+00:41:19,040 --> 00:41:19,640
+This...
+
+1365
+00:41:19,640 --> 00:41:22,660
+Sometimes some of you may have heard
+
+1366
+00:41:22,660 --> 00:41:23,080
+some people say,
+
+1367
+00:41:23,080 --> 00:41:25,100
+there are programmers like this,
+
+1368
+00:41:25,100 --> 00:41:26,540
+he says he only writes a few lines of code a day.
+
+1369
+00:41:26,540 --> 00:41:27,860
+That's possible,
+
+1370
+00:41:27,860 --> 00:41:28,460
+because he just...
+
+1371
+00:41:28,460 --> 00:41:31,300
+for example, he just wrote a few lines of code in assembly.
+
+1372
+00:41:31,300 --> 00:41:33,500
+That is also possible.
+
+1373
+00:41:33,500 --> 00:41:37,520
+Okay, so we've roughly divided instructions into these categories.
+
+1374
+00:41:37,520 --> 00:41:39,040
+As for the specific instructions,
+
+1375
+00:41:39,040 --> 00:41:39,920
+we'll look at them later.
+
+1376
+00:41:39,920 --> 00:41:43,360
+So besides what we just talked about,
+
+1377
+00:41:43,360 --> 00:41:44,960
+these are called instructions, which is instruction.
+
+1378
+00:41:44,960 --> 00:41:46,120
+The instructions we talked about earlier,
+
+1379
+00:41:46,120 --> 00:41:47,420
+so besides instructions,
+
+1380
+00:41:47,420 --> 00:41:49,840
+we said in our specification
+
+1381
+00:41:49,840 --> 00:41:51,760
+It also defines the corresponding thing called pseudo-instruction.
+
+1382
+00:41:51,760 --> 00:41:53,000
+We covered this concept earlier.
+
+1383
+00:41:53,000 --> 00:41:54,940
+The concept of a pseudo-instruction.
+
+1384
+00:41:54,940 --> 00:41:58,060
+So if you look at this table, this pseudo-instruction.
+
+1385
+00:41:58,060 --> 00:41:59,920
+This column, that is, is the pseudo-instruction.
+
+1386
+00:41:59,920 --> 00:42:02,540
+A pseudo-instruction is actually what's called a base instruction here.
+
+1387
+00:42:02,540 --> 00:42:07,140
+That is, one pseudo-instruction may correspond to multiple base instructions.
+
+1388
+00:42:07,140 --> 00:42:09,840
+As we just said, otherwise why call it a pseudo-instruction?
+
+1389
+00:42:09,840 --> 00:42:13,140
+There is no actual machine instruction that corresponds to it.
+
+1390
+00:42:13,140 --> 00:42:18,400
+In reality, it gets translated into real basic machine instructions.
+
+1391
+00:42:18,400 --> 00:42:19,280
+That's what a pseudo-instruction is.
+
+1392
+00:42:19,280 --> 00:42:22,800
+Now, the related table of pseudo-instructions.
+
+1393
+00:42:22,800 --> 00:42:23,640
+This table here.
+
+1394
+00:42:23,640 --> 00:42:25,060
+Is actually not from the specification.
+
+1395
+00:42:25,060 --> 00:42:26,280
+The actual specification.
+
+1396
+00:42:26,280 --> 00:42:28,580
+You can go take a look at it.
+
+1397
+00:42:28,580 --> 00:42:31,540
+In our
+
+1398
+00:42:31,540 --> 00:42:33,960
+Chapter 25 of the specification we just mentioned.
+
+1399
+00:42:33,960 --> 00:42:34,780
+Ah.
+
+1400
+00:42:34,780 --> 00:42:35,540
+Chapter 25.
+
+1401
+00:42:35,540 --> 00:42:37,880
+Chapter 25 is called the RISC-V
+
+1402
+00:42:37,880 --> 00:42:38,960
+uh
+
+1403
+00:42:38,960 --> 00:42:40,720
+Assembly Programming
+
+1404
+00:42:40,720 --> 00:42:42,500
+Handbook, handbook.
+
+1405
+00:42:42,500 --> 00:42:44,080
+It's a very small
+
+1406
+00:42:44,080 --> 00:42:44,880
+uh,
+
+1407
+00:42:44,880 --> 00:42:45,980
+tiny little booklet.
+
+1408
+00:42:45,980 --> 00:42:46,600
+In it,
+
+1409
+00:42:46,600 --> 00:42:48,040
+it simply lists some
+
+1410
+00:42:48,040 --> 00:42:48,880
+uh,
+
+1411
+00:42:48,880 --> 00:42:50,700
+commonly used
+
+1412
+00:42:50,700 --> 00:42:51,600
+pseudo-instructions.
+
+1413
+00:42:51,600 --> 00:42:53,420
+As you can see here, there are commonly used pseudo-instructions
+
+1414
+00:42:53,420 --> 00:42:56,880
+and their corresponding basic instructions, the mapping between them.
+
+1415
+00:42:56,880 --> 00:42:59,480
+Later on, when you need to look up a pseudo-instruction,
+
+1416
+00:42:59,480 --> 00:43:00,380
+you can look it up here.
+
+1417
+00:43:00,380 --> 00:43:07,100
+This is basically an overview of the pseudo-instructions.
+
+1418
+00:43:07,100 --> 00:43:09,040
+Later, when we talk about instructions,
+
+1419
+00:43:09,040 --> 00:43:11,560
+we'll also cover some commonly used pseudo-instructions along the way.
+
+1420
+00:43:11,560 --> 00:43:17,450
+So that basically covers the overview of instructions.
+
+1421
+00:43:17,450 --> 00:43:19,290
+That's all I'll cover for that part.
+
+1422
+00:43:19,290 --> 00:43:20,010
+Now, next up,
+
+1423
+00:43:20,010 --> 00:43:24,090
+we're going to start the detailed instruction walkthrough.
+
+1424
+00:43:24,090 --> 00:43:25,630
+For the material that follows,
+
+1425
+00:43:25,630 --> 00:43:27,590
+you'll probably need to work through it as we go along,
+
+1426
+00:43:27,590 --> 00:43:28,510
+doing some exercises along the way.
+
+1427
+00:43:28,510 --> 00:43:29,510
+Otherwise,
+
+1428
+00:43:29,510 --> 00:43:31,590
+it'll get pretty dry to learn.
+
+1429
+00:43:31,590 --> 00:43:36,010
+So make sure you have your computer up and running.

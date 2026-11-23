@@ -1,0 +1,7427 @@
+1
+00:00:01,840 --> 00:00:08,520
+Earlier we spent some time talking about assembly instructions — that was the main focus.
+
+2
+00:00:08,700 --> 00:00:17,080
+Now let's move on to the next topic: the calling convention for RISC-V assembly functions.
+
+3
+00:00:17,500 --> 00:00:24,720
+Because when we write code, we spend a huge amount of effort on writing functions.
+
+4
+00:00:24,720 --> 00:00:30,860
+And calls between functions actually come with some special requirements, which you should be aware of.
+
+5
+00:00:30,860 --> 00:00:34,040
+I'll introduce this in the following parts.
+
+6
+00:00:34,040 --> 00:00:35,280
+Let's take a look.
+
+7
+00:00:35,280 --> 00:00:36,520
+First, let's look at
+
+8
+00:00:36,520 --> 00:00:38,860
+what the function call process actually is.
+
+9
+00:00:38,860 --> 00:00:40,680
+Let's do a quick review first.
+
+10
+00:00:40,680 --> 00:00:45,860
+So in this function call process,
+
+11
+00:00:45,860 --> 00:00:47,800
+there's a fairly important concept involved,
+
+12
+00:00:47,800 --> 00:00:49,620
+which is the concept of the stack.
+
+13
+00:00:49,620 --> 00:00:50,020
+Right?
+
+14
+00:00:50,020 --> 00:00:51,620
+Now, this concept of the stack,
+
+15
+00:00:51,620 --> 00:00:54,240
+back in the data structures course,
+
+16
+00:00:54,240 --> 00:00:55,420
+we actually touched on it as well.
+
+17
+00:00:55,420 --> 00:00:57,480
+Let me just briefly mention it here.
+
+18
+00:00:57,480 --> 00:01:00,080
+So what exactly is a stack?
+
+19
+00:01:00,080 --> 00:01:02,640
+When we talk about a stack,
+
+20
+00:01:02,640 --> 00:01:05,080
+there are a few concepts associated with it.
+
+21
+00:01:05,080 --> 00:01:05,740
+First,
+
+22
+00:01:05,740 --> 00:01:06,940
+let's talk about the stack.
+
+23
+00:01:06,940 --> 00:01:07,600
+That is,
+
+24
+00:01:07,600 --> 00:01:09,500
+let's cover the stack first.
+
+25
+00:01:09,500 --> 00:01:09,780
+Stack.
+
+26
+00:01:09,780 --> 00:01:11,340
+When we say stack,
+
+27
+00:01:11,340 --> 00:01:13,680
+do you all still know what a stack is?
+
+28
+00:01:13,680 --> 00:01:16,640
+What does 'stack' mean in English?
+
+29
+00:01:16,640 --> 00:01:17,740
+Have you ever thought about it?
+
+30
+00:01:17,740 --> 00:01:19,760
+When these foreigners name things,
+
+31
+00:01:19,760 --> 00:01:21,040
+they definitely have a purpose, right?
+
+32
+00:01:21,040 --> 00:01:22,020
+What does 'stack' mean?
+
+33
+00:01:22,020 --> 00:01:22,480
+Stack.
+
+34
+00:01:22,480 --> 00:01:25,060
+Some of you may know.
+
+35
+00:01:25,060 --> 00:01:27,720
+We say that this stack,
+
+36
+00:01:27,720 --> 00:01:29,000
+in English, is actually,
+
+37
+00:01:29,000 --> 00:01:30,560
+the concept of stacking wood.
+
+38
+00:01:30,560 --> 00:01:32,400
+You know how wood is stacked, right?
+
+39
+00:01:32,400 --> 00:01:35,680
+One log is placed at the bottom,
+
+40
+00:01:35,680 --> 00:01:35,940
+right?
+
+41
+00:01:35,940 --> 00:01:36,880
+Then,
+
+42
+00:01:36,880 --> 00:01:38,020
+you pile another log on top,
+
+43
+00:01:38,020 --> 00:01:40,100
+and keep stacking more and more on top.
+
+44
+00:01:40,100 --> 00:01:40,460
+Right?
+
+45
+00:01:40,460 --> 00:01:42,120
+Now, how do you take a log back out?
+
+46
+00:01:42,120 --> 00:01:44,380
+You can only take them from the top down.
+
+47
+00:01:44,380 --> 00:01:45,020
+Think about it — isn't that true?
+
+48
+00:01:45,020 --> 00:01:47,100
+You can't pull a log out from the middle,
+
+49
+00:01:47,100 --> 00:01:48,280
+I mean the big logs,
+
+50
+00:01:48,280 --> 00:01:49,060
+like raw timber and so on.
+
+51
+00:01:49,060 --> 00:01:49,960
+You can't pull one out from the bottom.
+
+52
+00:01:49,960 --> 00:01:51,580
+You can only pull them from the top down.
+
+53
+00:01:51,580 --> 00:01:52,700
+So this stack,
+
+54
+00:01:52,700 --> 00:01:53,220
+what is it?
+
+55
+00:01:53,220 --> 00:01:54,760
+It's a first-in, last-out concept.
+
+56
+00:01:54,760 --> 00:01:55,020
+Right?
+
+57
+00:01:55,020 --> 00:01:56,860
+What goes on first,
+
+58
+00:01:56,860 --> 00:01:59,520
+gets taken out later.
+
+59
+00:01:59,520 --> 00:02:03,500
+So that's the basic idea of a stack.
+
+60
+00:02:03,500 --> 00:02:05,140
+Now, once you understand this,
+
+61
+00:02:05,140 --> 00:02:07,200
+So let's take the stack and
+
+62
+00:02:07,200 --> 00:02:08,140
+give it a simple definition.
+
+63
+00:02:08,140 --> 00:02:11,000
+For example, we say this stack
+
+64
+00:02:11,000 --> 00:02:11,920
+has a stack bottom,
+
+65
+00:02:11,920 --> 00:02:13,540
+bottom,
+
+66
+00:02:13,540 --> 00:02:15,840
+bottom,
+
+67
+00:02:15,840 --> 00:02:18,020
+and then there's also a stack top, called top.
+
+68
+00:02:18,020 --> 00:02:19,040
+Right?
+
+69
+00:02:19,040 --> 00:02:20,680
+Now the bottom,
+
+70
+00:02:20,680 --> 00:02:21,820
+let's say you take this,
+
+71
+00:02:21,820 --> 00:02:23,220
+just like when we were talking about the wood earlier,
+
+72
+00:02:23,220 --> 00:02:24,860
+we say this will be the ground later,
+
+73
+00:02:24,860 --> 00:02:26,560
+this is the ground.
+
+74
+00:02:26,560 --> 00:02:27,660
+Let's draw it upside down like this.
+
+75
+00:02:27,660 --> 00:02:29,720
+So the wood,
+
+76
+00:02:29,720 --> 00:02:31,480
+when we stack it upwards,
+
+77
+00:02:31,480 --> 00:02:33,180
+this is the first piece of wood.
+
+78
+00:02:33,180 --> 00:02:35,060
+Then we stack the second piece of wood.
+
+79
+00:02:35,060 --> 00:02:36,500
+When we stack the second piece of wood,
+
+80
+00:02:36,500 --> 00:02:37,660
+we say this process
+
+81
+00:02:37,660 --> 00:02:39,000
+We call it pushing onto the stack
+
+82
+00:02:39,000 --> 00:02:42,600
+And when we take the second piece of wood out,
+
+83
+00:02:42,600 --> 00:02:44,800
+we call that popping off the stack
+
+84
+00:02:44,800 --> 00:02:46,060
+which is pop, right?
+
+85
+00:02:46,060 --> 00:02:47,760
+Let's do a quick review.
+
+86
+00:02:47,760 --> 00:02:49,840
+So where does this concept of a stack
+
+87
+00:02:49,840 --> 00:02:51,000
+come into play
+
+88
+00:02:51,000 --> 00:02:52,880
+in our function calls?
+
+89
+00:02:52,880 --> 00:02:55,560
+This brings us to the concept of the function stack.
+
+90
+00:02:55,560 --> 00:02:57,760
+Let's look at the second one first,
+
+91
+00:02:57,760 --> 00:02:58,660
+which is the function stack.
+
+92
+00:02:58,660 --> 00:03:00,780
+Now, for the function stack,
+
+93
+00:03:00,780 --> 00:03:02,220
+we can use this diagram
+
+94
+00:03:02,220 --> 00:03:03,800
+to help everyone get a feel for it.
+
+95
+00:03:03,800 --> 00:03:04,620
+That is to say,
+
+96
+00:03:04,620 --> 00:03:07,120
+suppose we have a bunch of functions.
+
+97
+00:03:07,120 --> 00:03:07,600
+Functions,
+
+98
+00:03:07,600 --> 00:03:08,220
+as we know,
+
+99
+00:03:08,220 --> 00:03:09,280
+have a certain concept behind them,
+
+100
+00:03:09,280 --> 00:03:10,480
+namely that functions call functions.
+
+101
+00:03:10,480 --> 00:03:12,100
+So let's suppose here
+
+102
+00:03:12,100 --> 00:03:12,960
+we have a concept
+
+103
+00:03:12,960 --> 00:03:14,660
+where function A calls function B
+
+104
+00:03:14,660 --> 00:03:16,160
+and function B calls function C
+
+105
+00:03:16,160 --> 00:03:17,360
+that's the basic idea
+
+106
+00:03:17,360 --> 00:03:19,100
+Now, when we implement
+
+107
+00:03:19,100 --> 00:03:20,680
+this function call process,
+
+108
+00:03:20,680 --> 00:03:23,320
+we need to define a stack
+
+109
+00:03:23,320 --> 00:03:25,820
+The stack is really just a block of memory
+
+110
+00:03:25,820 --> 00:03:27,620
+And what is this memory used for?
+
+111
+00:03:27,620 --> 00:03:29,160
+What is it used for?
+
+112
+00:03:29,160 --> 00:03:32,360
+It's used to hold, during the function call,
+
+113
+00:03:32,360 --> 00:03:34,480
+the local variables that are used,
+
+114
+00:03:34,480 --> 00:03:36,560
+or to save some
+
+115
+00:03:36,560 --> 00:03:39,040
+register values,
+
+116
+00:03:39,040 --> 00:03:40,360
+so during the function call,
+
+117
+00:03:40,360 --> 00:03:42,280
+when passing parameters,
+
+118
+00:03:42,280 --> 00:03:43,320
+or handling return values,
+
+119
+00:03:43,320 --> 00:03:44,760
+it saves those values
+
+120
+00:03:44,760 --> 00:03:47,720
+Let's take a look at how the stack works in this process.
+
+121
+00:03:47,720 --> 00:03:50,320
+So now let's say we are about to
+
+122
+00:03:50,320 --> 00:03:52,020
+start executing from this function A
+
+123
+00:03:52,020 --> 00:03:53,860
+Now, as soon as function A starts executing,
+
+124
+00:03:53,860 --> 00:03:56,000
+every time a function is about to execute,
+
+125
+00:03:56,000 --> 00:03:57,100
+we need to allocate a piece of space for that function
+
+126
+00:03:57,100 --> 00:03:58,040
+to store its own
+
+127
+00:03:58,040 --> 00:03:59,720
+stack frame
+
+128
+00:03:59,720 --> 00:04:00,840
+the stack frame.
+
+129
+00:04:00,840 --> 00:04:03,760
+So we first need to push a piece of wood onto it
+
+130
+00:04:03,760 --> 00:04:04,880
+This piece of wood
+
+131
+00:04:04,880 --> 00:04:07,640
+is pushed on as a wooden block,
+
+132
+00:04:07,640 --> 00:04:08,580
+and this piece we push
+
+133
+00:04:08,580 --> 00:04:10,420
+is the stack frame of function A.
+
+134
+00:04:10,420 --> 00:04:12,140
+Now, what goes inside this stack frame?
+
+135
+00:04:12,140 --> 00:04:13,460
+So what does it hold? As we know, it holds
+
+136
+00:04:13,460 --> 00:04:15,820
+As you know, it holds some of the things we define,
+
+137
+00:04:15,820 --> 00:04:17,700
+for example, in the function A we defined,
+
+138
+00:04:17,700 --> 00:04:20,180
+its local variables.
+
+139
+00:04:20,180 --> 00:04:21,520
+In the C language,
+
+140
+00:04:21,520 --> 00:04:22,260
+what do you call these?
+
+141
+00:04:22,260 --> 00:04:23,240
+Remember, right?
+
+142
+00:04:23,240 --> 00:04:26,180
+It's called an automatic variable.
+
+143
+00:04:26,180 --> 00:04:28,400
+Why is it called an automatic variable?
+
+144
+00:04:28,400 --> 00:04:29,920
+Did the teacher explain this to you before?
+
+145
+00:04:29,920 --> 00:04:30,940
+Why is it called an automatic variable?
+
+146
+00:04:30,940 --> 00:04:33,660
+Well, this variable, this chunk of memory,
+
+147
+00:04:33,660 --> 00:04:36,040
+its allocation and release
+
+148
+00:04:36,040 --> 00:04:38,440
+don't need to be maintained by you, the programmer.
+
+149
+00:04:38,440 --> 00:04:40,260
+It gets reclaimed automatically.
+
+150
+00:04:40,260 --> 00:04:42,720
+So why does it get reclaimed automatically?
+
+151
+00:04:42,720 --> 00:04:45,000
+It's because it lives on the stack.
+
+152
+00:04:45,000 --> 00:04:46,500
+The stack gets reclaimed automatically.
+
+153
+00:04:46,500 --> 00:04:47,200
+That's the reason.
+
+154
+00:04:47,200 --> 00:04:48,900
+So,
+
+155
+00:04:48,900 --> 00:04:51,520
+this is function A's stack frame.
+
+156
+00:04:51,520 --> 00:04:54,640
+Now function A starts executing.
+
+157
+00:04:54,640 --> 00:04:55,520
+Then the function
+
+158
+00:04:55,520 --> 00:04:56,880
+say function A executes and executes and executes,
+
+159
+00:04:56,880 --> 00:04:58,020
+and when it reaches this step,
+
+160
+00:04:58,020 --> 00:04:59,860
+it's about to call function B.
+
+161
+00:04:59,860 --> 00:05:01,780
+So if it wants to call function B
+
+162
+00:05:01,780 --> 00:05:03,620
+you know what we have to do
+
+163
+00:05:03,620 --> 00:05:06,360
+we need to allocate another frame for function B
+
+164
+00:05:06,360 --> 00:05:06,660
+right?
+
+165
+00:05:06,660 --> 00:05:08,040
+And this frame
+
+166
+00:05:08,040 --> 00:05:10,260
+is pushed down through this push-frame approach
+
+167
+00:05:10,260 --> 00:05:12,700
+pushed into this stack region
+
+168
+00:05:12,700 --> 00:05:14,580
+pushed into the stack region
+
+169
+00:05:14,580 --> 00:05:16,320
+Then B starts executing
+
+170
+00:05:16,320 --> 00:05:17,980
+and B in turn calls function C
+
+171
+00:05:17,980 --> 00:05:20,220
+The red color represents the function calls
+
+172
+00:05:20,220 --> 00:05:21,580
+What does a function call mean?
+
+173
+00:05:21,580 --> 00:05:24,620
+It means the instruction we just saw
+
+174
+00:05:24,620 --> 00:05:27,620
+those jal instructions
+
+175
+00:05:27,620 --> 00:05:28,620
+See what I mean?
+
+176
+00:05:28,620 --> 00:05:32,560
+Then function C starts executing
+
+177
+00:05:32,560 --> 00:05:35,220
+for function C we need to allocate yet another frame
+
+178
+00:05:35,220 --> 00:05:36,520
+So this frame
+
+179
+00:05:36,520 --> 00:05:38,840
+as you can see on the left, the frames of the function stack
+
+180
+00:05:38,840 --> 00:05:40,820
+keep growing downward
+
+181
+00:05:40,820 --> 00:05:43,660
+So as you can see,
+
+182
+00:05:43,660 --> 00:05:45,920
+I happen to have just this little bit of space left here.
+
+183
+00:05:45,920 --> 00:05:47,620
+Suppose the function calls another function again,
+
+184
+00:05:47,620 --> 00:05:49,160
+what will this function do?
+
+185
+00:05:49,160 --> 00:05:51,440
+It will use up all the space underneath.
+
+186
+00:05:51,440 --> 00:05:52,640
+What do we call this kind of situation?
+
+187
+00:05:52,640 --> 00:05:54,460
+We call it a stack overflow.
+
+188
+00:05:54,460 --> 00:05:55,680
+That is exactly what a stack overflow is.
+
+189
+00:05:55,680 --> 00:05:58,860
+So when we determine how much stack space to allocate,
+
+190
+00:05:58,860 --> 00:06:00,600
+there is actually some careful thought involved.
+
+191
+00:06:00,600 --> 00:06:03,740
+Then function C begins to execute,
+
+192
+00:06:03,740 --> 00:06:05,120
+and after function C finishes executing,
+
+193
+00:06:05,120 --> 00:06:05,840
+it needs to return.
+
+194
+00:06:05,840 --> 00:06:07,180
+When it returns, as we know,
+
+195
+00:06:07,180 --> 00:06:11,860
+returning means that within the stack frame of function C,
+
+196
+00:06:11,860 --> 00:06:13,700
+all its automatic variables and such,
+
+197
+00:06:13,700 --> 00:06:14,440
+they are no longer needed.
+
+198
+00:06:14,440 --> 00:06:15,820
+So it has to reclaim them.
+
+199
+00:06:15,820 --> 00:06:18,200
+Now this reclamation process,
+
+200
+00:06:18,200 --> 00:06:20,920
+is the process of popping the stack.
+
+201
+00:06:20,920 --> 00:06:22,740
+And after we reclaim it,
+
+202
+00:06:22,740 --> 00:06:24,720
+function C gets reclaimed.
+
+203
+00:06:24,720 --> 00:06:26,860
+Then B resumes execution,
+
+204
+00:06:26,860 --> 00:06:28,040
+and function B also returns.
+
+205
+00:06:28,040 --> 00:06:29,160
+So this process,
+
+206
+00:06:29,160 --> 00:06:30,900
+it just happens gradually like this,
+
+207
+00:06:30,900 --> 00:06:35,560
+until finally function A also finishes executing.
+
+208
+00:06:35,560 --> 00:06:36,420
+And then, at the very end,
+
+209
+00:06:36,420 --> 00:06:37,540
+once function A exits,
+
+210
+00:06:37,540 --> 00:06:39,500
+you can think of it as the program being completely done.
+
+211
+00:06:39,500 --> 00:06:40,500
+After it finishes,
+
+212
+00:06:40,500 --> 00:06:42,740
+all of this stack frame gets released.
+
+213
+00:06:42,740 --> 00:06:45,140
+And then we return to the original starting position.
+
+214
+00:06:45,140 --> 00:06:47,680
+Basically, when we talk about the function call process,
+
+215
+00:06:47,680 --> 00:06:48,900
+that is exactly how it works.
+
+216
+00:06:48,900 --> 00:06:52,420
+The automatic variables in our C code,
+
+217
+00:06:52,420 --> 00:06:53,540
+they actually live right here.
+
+218
+00:06:53,540 --> 00:06:55,820
+Okay, that's it for this.
+
+219
+00:06:55,820 --> 00:06:59,860
+And let me mention this in passing,
+
+220
+00:06:59,860 --> 00:07:01,020
+for example, in our C code,
+
+221
+00:07:01,020 --> 00:07:02,120
+Where are global variables?
+
+222
+00:07:02,120 --> 00:07:04,140
+Where do global variables go?
+
+223
+00:07:04,140 --> 00:07:06,760
+Automatic variables go on the stack.
+
+224
+00:07:06,760 --> 00:07:08,040
+Where do global variables go?
+
+225
+00:07:08,040 --> 00:07:10,680
+They go in what we talked about earlier,
+
+226
+00:07:10,680 --> 00:07:12,020
+that segment.
+
+227
+00:07:12,020 --> 00:07:12,560
+Think about it, isn't that right?
+
+228
+00:07:12,560 --> 00:07:15,460
+This is exactly what we covered when we were learning C,
+
+229
+00:07:15,460 --> 00:07:16,340
+learning assembly.
+
+230
+00:07:16,340 --> 00:07:17,820
+The concepts are actually very close.
+
+231
+00:07:17,820 --> 00:07:19,260
+It's because C is very close to
+
+232
+00:07:19,260 --> 00:07:20,500
+low-level development,
+
+233
+00:07:20,500 --> 00:07:21,820
+and the concepts in C,
+
+234
+00:07:21,820 --> 00:07:22,860
+the concepts in C,
+
+235
+00:07:22,860 --> 00:07:23,520
+many of them
+
+236
+00:07:23,520 --> 00:07:25,180
+actually come from assembly,
+
+237
+00:07:25,180 --> 00:07:26,120
+from machine instructions.
+
+238
+00:07:26,120 --> 00:07:26,820
+Right?
+
+239
+00:07:26,820 --> 00:07:30,300
+Basically, the concept of the function call process,
+
+240
+00:07:30,300 --> 00:07:31,400
+we'll just review up to here.
+
+241
+00:07:31,400 --> 00:07:34,500
+So that brings us back to our topic today
+
+242
+00:07:34,500 --> 00:07:36,040
+which is why we need to define
+
+243
+00:07:36,040 --> 00:07:38,540
+the concept of a function calling convention
+
+244
+00:07:38,540 --> 00:07:40,720
+Now, as we mentioned earlier
+
+245
+00:07:40,720 --> 00:07:42,340
+with functions,
+
+246
+00:07:42,340 --> 00:07:44,820
+when function A calls function B,
+
+247
+00:07:44,820 --> 00:07:46,240
+in our terminology,
+
+248
+00:07:46,240 --> 00:07:47,400
+in our specification,
+
+249
+00:07:47,400 --> 00:07:48,460
+we refer to this function A
+
+250
+00:07:48,460 --> 00:07:50,680
+as the caller,
+
+251
+00:07:50,680 --> 00:07:52,100
+called '调用者' in Chinese.
+
+252
+00:07:52,100 --> 00:07:53,220
+In English, it's called the caller.
+
+253
+00:07:53,220 --> 00:07:55,940
+And the function being called,
+
+254
+00:07:55,940 --> 00:07:56,780
+we call it the callee.
+
+255
+00:07:56,780 --> 00:07:57,660
+Right?
+
+256
+00:07:57,660 --> 00:07:59,440
+Since you've all studied English,
+
+257
+00:07:59,440 --> 00:08:00,360
+you should be able to understand this.
+
+258
+00:08:00,360 --> 00:08:02,680
+The concept of the suffixes ER and EE.
+
+259
+00:08:02,680 --> 00:08:03,700
+So,
+
+260
+00:08:03,700 --> 00:08:06,600
+let's say this function A
+
+261
+00:08:06,600 --> 00:08:08,660
+This caller
+
+262
+00:08:08,660 --> 00:08:10,760
+starts executing instructions one by one,
+
+263
+00:08:10,760 --> 00:08:12,440
+and when it reaches this instruction,
+
+264
+00:08:12,440 --> 00:08:14,200
+it will invoke a call.
+
+265
+00:08:14,200 --> 00:08:15,520
+Now, the call,
+
+266
+00:08:15,520 --> 00:08:16,820
+as we'll see later,
+
+267
+00:08:16,820 --> 00:08:17,880
+is actually just an instruction.
+
+268
+00:08:17,880 --> 00:08:19,720
+We're simply borrowing it here to represent
+
+269
+00:08:19,720 --> 00:08:21,200
+the invocation of a function.
+
+270
+00:08:21,200 --> 00:08:22,440
+So this function
+
+271
+00:08:22,440 --> 00:08:23,840
+then makes a call.
+
+272
+00:08:23,840 --> 00:08:25,120
+So it calls,
+
+273
+00:08:25,120 --> 00:08:26,480
+and the call starts executing.
+
+274
+00:08:26,480 --> 00:08:27,400
+It starts executing,
+
+275
+00:08:27,400 --> 00:08:28,140
+executing and executing,
+
+276
+00:08:28,140 --> 00:08:28,960
+and when it gets to this point,
+
+277
+00:08:28,960 --> 00:08:30,640
+we say the call has finished executing.
+
+278
+00:08:30,640 --> 00:08:31,520
+And once it's done,
+
+279
+00:08:31,520 --> 00:08:32,360
+it needs to return.
+
+280
+00:08:32,360 --> 00:08:33,600
+So on return,
+
+281
+00:08:33,600 --> 00:08:34,920
+We know it will definitely return to
+
+282
+00:08:34,920 --> 00:08:36,020
+the caller,
+
+283
+00:08:36,020 --> 00:08:38,500
+to the instruction right after the call,
+
+284
+00:08:38,500 --> 00:08:39,880
+and continue executing from there.
+
+285
+00:08:39,880 --> 00:08:41,500
+That's the execution process of a function.
+
+286
+00:08:41,500 --> 00:08:43,760
+Now, during this function execution process,
+
+287
+00:08:43,760 --> 00:08:45,340
+what concepts do we know are involved?
+
+288
+00:08:45,340 --> 00:08:47,200
+For example, we say the caller
+
+289
+00:08:47,200 --> 00:08:48,280
+may need to pass
+
+290
+00:08:48,280 --> 00:08:49,600
+arguments to the callee,
+
+291
+00:08:49,600 --> 00:08:50,400
+right?
+
+292
+00:08:50,400 --> 00:08:52,400
+And when the caller
+
+293
+00:08:52,400 --> 00:08:53,340
+returns,
+
+294
+00:08:53,340 --> 00:08:55,000
+it may need to return some content,
+
+295
+00:08:55,000 --> 00:08:56,440
+which we call the return value.
+
+296
+00:08:56,440 --> 00:08:59,020
+There's also a return address involved,
+
+297
+00:08:59,020 --> 00:08:59,720
+these concepts.
+
+298
+00:08:59,720 --> 00:09:03,480
+So what do all these concepts involve?
+
+299
+00:09:03,480 --> 00:09:04,220
+They involve, that is to say,
+
+300
+00:09:04,220 --> 00:09:06,340
+the interaction between the caller function and the callee.
+
+301
+00:09:06,340 --> 00:09:07,600
+So it's essentially a
+
+302
+00:09:07,600 --> 00:09:09,960
+there's a boundary here
+
+303
+00:09:09,960 --> 00:09:11,140
+between the two
+
+304
+00:09:11,140 --> 00:09:13,080
+there has to be some kind of
+
+305
+00:09:13,080 --> 00:09:15,620
+where do I put my call arguments
+
+306
+00:09:15,620 --> 00:09:18,660
+that is, where does my caller put them
+
+307
+00:09:18,660 --> 00:09:19,760
+and only then can this callee go
+
+308
+00:09:19,760 --> 00:09:20,900
+and actually get those arguments
+
+309
+00:09:20,900 --> 00:09:21,500
+think about it, right?
+
+310
+00:09:21,500 --> 00:09:23,360
+When I return,
+
+311
+00:09:23,360 --> 00:09:24,700
+this callee has to put the return value
+
+312
+00:09:24,700 --> 00:09:25,640
+somewhere too
+
+313
+00:09:25,640 --> 00:09:26,460
+and then,
+
+314
+00:09:26,460 --> 00:09:27,360
+the caller also has to know
+
+315
+00:09:27,360 --> 00:09:28,840
+and once the caller knows,
+
+316
+00:09:28,840 --> 00:09:29,920
+it can go and take this data
+
+317
+00:09:29,920 --> 00:09:30,440
+and pull it out
+
+318
+00:09:30,440 --> 00:09:31,920
+So all of these things
+
+319
+00:09:31,920 --> 00:09:32,900
+are really just a kind of
+
+320
+00:09:32,900 --> 00:09:35,360
+agreement that both sides have to settle on
+
+321
+00:09:35,360 --> 00:09:36,020
+Think about it —
+
+322
+00:09:36,020 --> 00:09:38,000
+if we don't agree on this beforehand,
+
+323
+00:09:38,000 --> 00:09:40,200
+the whole process would fall apart.
+
+324
+00:09:40,200 --> 00:09:42,680
+Now some of you might say,
+
+325
+00:09:42,680 --> 00:09:44,280
+isn't this simple enough?
+
+326
+00:09:44,280 --> 00:09:46,440
+I can put it wherever I want.
+
+327
+00:09:46,440 --> 00:09:48,060
+Like in the example we just had,
+
+328
+00:09:48,060 --> 00:09:50,740
+we put the function's return address
+
+329
+00:09:50,740 --> 00:09:52,560
+right in x5.
+
+330
+00:09:52,560 --> 00:09:52,900
+Right?
+
+331
+00:09:52,900 --> 00:09:53,980
+You still remember, right?
+
+332
+00:09:53,980 --> 00:09:57,740
+In the example we just had,
+
+333
+00:09:57,740 --> 00:09:59,580
+yes, this very example.
+
+334
+00:09:59,580 --> 00:10:03,020
+In this example,
+
+335
+00:10:03,020 --> 00:10:04,240
+what we actually did was make a convention.
+
+336
+00:10:04,240 --> 00:10:05,560
+What did we do, and how did we agree on it?
+
+337
+00:10:05,560 --> 00:10:07,840
+We took that return address
+
+338
+00:10:07,840 --> 00:10:09,540
+and agreed that it would be placed in x5, right?
+
+339
+00:10:09,540 --> 00:10:11,860
+So what is this function actually?
+
+340
+00:10:11,860 --> 00:10:12,500
+It's the caller.
+
+341
+00:10:12,500 --> 00:10:15,580
+This is the caller
+
+342
+00:10:15,580 --> 00:10:17,160
+And this sum is what?
+
+343
+00:10:17,160 --> 00:10:17,740
+It's the callee
+
+344
+00:10:17,740 --> 00:10:21,020
+Right?
+
+345
+00:10:21,020 --> 00:10:23,160
+So the two sides actually reach an agreement
+
+346
+00:10:23,160 --> 00:10:25,420
+We put the return address in X5
+
+347
+00:10:25,420 --> 00:10:25,940
+That way
+
+348
+00:10:25,940 --> 00:10:27,980
+the flow works on both sides
+
+349
+00:10:27,980 --> 00:10:28,460
+Think about it, doesn't it?
+
+350
+00:10:28,460 --> 00:10:29,700
+So
+
+351
+00:10:29,700 --> 00:10:31,720
+if that's the case
+
+352
+00:10:31,720 --> 00:10:32,700
+why do we even need an agreement?
+
+353
+00:10:32,700 --> 00:10:33,600
+We could just decide on our own
+
+354
+00:10:33,600 --> 00:10:34,740
+If I feel like using X5, that's fine
+
+355
+00:10:34,740 --> 00:10:36,300
+Today I feel like using X5
+
+356
+00:10:36,300 --> 00:10:37,460
+Tomorrow I'll use S6, and that's fine too
+
+357
+00:10:37,460 --> 00:10:38,000
+Think about it, doesn't it?
+
+358
+00:10:38,000 --> 00:10:39,500
+Right?
+
+359
+00:10:39,500 --> 00:10:41,660
+Well, this is definitely not as simple as you think
+
+360
+00:10:41,660 --> 00:10:43,260
+Why is that? Think about it
+
+361
+00:10:43,260 --> 00:10:44,800
+So where does the problem come from?
+
+362
+00:10:44,800 --> 00:10:48,440
+Well,
+
+363
+00:10:48,440 --> 00:10:52,100
+if the caller and the callee
+
+364
+00:10:52,100 --> 00:10:53,020
+are both written by you,
+
+365
+00:10:53,020 --> 00:10:55,980
+then of course there's no problem at all.
+
+366
+00:10:55,980 --> 00:10:57,340
+You don't need any convention whatsoever.
+
+367
+00:10:57,340 --> 00:10:59,340
+You don't need an agreement with yourself.
+
+368
+00:10:59,340 --> 00:10:59,860
+Think about it, right?
+
+369
+00:10:59,860 --> 00:11:03,060
+But in most cases,
+
+370
+00:11:03,060 --> 00:11:06,220
+the function you write may be used by someone else,
+
+371
+00:11:06,220 --> 00:11:06,880
+right?
+
+372
+00:11:06,880 --> 00:11:09,200
+That means the caller and the callee
+
+373
+00:11:09,200 --> 00:11:10,360
+may not be the same person.
+
+374
+00:11:10,360 --> 00:11:14,020
+And that's when you need a convention.
+
+375
+00:11:14,100 --> 00:11:15,200
+You see what I mean?
+
+376
+00:11:15,200 --> 00:11:17,900
+Everyone has to follow one uniform rule
+
+377
+00:11:17,900 --> 00:11:19,520
+for where you put your parameters,
+
+378
+00:11:19,520 --> 00:11:20,560
+where you put your return value,
+
+379
+00:11:20,560 --> 00:11:21,960
+and where you put your return address.
+
+380
+00:11:21,960 --> 00:11:23,740
+And this way,
+
+381
+00:11:23,740 --> 00:11:26,020
+The function you write is handed over for others to use,
+
+382
+00:11:26,020 --> 00:11:28,180
+so that other people can use it too.
+
+383
+00:11:28,180 --> 00:11:29,760
+Similarly, when the compiler
+
+384
+00:11:29,760 --> 00:11:30,660
+generates machine code,
+
+385
+00:11:30,660 --> 00:11:33,160
+it also has to follow this convention when generating where your
+
+386
+00:11:33,160 --> 00:11:34,920
+call parameters and return values are placed,
+
+387
+00:11:34,920 --> 00:11:36,320
+and how return parameters are handled.
+
+388
+00:11:36,320 --> 00:11:37,620
+This is a kind of convention.
+
+389
+00:11:37,620 --> 00:11:41,680
+So, as part of our standard,
+
+390
+00:11:41,680 --> 00:11:42,720
+in our assembly,
+
+391
+00:11:42,720 --> 00:11:45,820
+apart from defining these assembly instructions,
+
+392
+00:11:45,820 --> 00:11:49,160
+we also define this part about the calling convention.
+
+393
+00:11:49,160 --> 00:11:50,420
+This is also part of the specification.
+
+394
+00:11:50,420 --> 00:11:55,380
+As for this whole programming convention,
+
+395
+00:11:55,380 --> 00:11:57,300
+as we will see later,
+
+396
+00:11:57,300 --> 00:12:00,740
+we can briefly summarize it into about three parts.
+
+397
+00:12:00,740 --> 00:12:04,360
+One is the programming convention for registers,
+
+398
+00:12:04,360 --> 00:12:06,180
+that is, how we use these registers.
+
+399
+00:12:06,180 --> 00:12:07,020
+We have 32
+
+400
+00:12:07,020 --> 00:12:09,660
+— for example, RISC-V has 32 registers.
+
+401
+00:12:09,660 --> 00:12:11,300
+you can't just use them however you like
+
+402
+00:12:11,300 --> 00:12:14,680
+This is the programming convention for registers.
+
+403
+00:12:14,680 --> 00:12:16,060
+The second one
+
+404
+00:12:16,060 --> 00:12:16,580
+is about
+
+405
+00:12:16,580 --> 00:12:19,880
+the programming convention for function call and return instructions.
+
+406
+00:12:19,880 --> 00:12:22,180
+That is, when we do function calls,
+
+407
+00:12:22,180 --> 00:12:24,280
+the most critical parts are a function call instruction
+
+408
+00:12:24,280 --> 00:12:26,480
+and a function return instruction.
+
+409
+00:12:26,480 --> 00:12:29,120
+How we should use these two instructions
+
+410
+00:12:29,120 --> 00:12:30,520
+also follows conventions,
+
+411
+00:12:30,520 --> 00:12:31,440
+and there are requirements for them too.
+
+412
+00:12:31,440 --> 00:12:32,160
+That's the second point.
+
+413
+00:12:32,160 --> 00:12:33,420
+The third point is this:
+
+414
+00:12:33,420 --> 00:12:34,900
+when we implement a function,
+
+415
+00:12:34,900 --> 00:12:36,780
+say I implement a function for others to use,
+
+416
+00:12:36,780 --> 00:12:39,740
+there are also requirements for how that function is implemented.
+
+417
+00:12:39,740 --> 00:12:40,640
+What this function
+
+418
+00:12:40,640 --> 00:12:42,100
+should do,
+
+419
+00:12:42,100 --> 00:12:42,720
+certain aspects of it,
+
+420
+00:12:42,720 --> 00:12:44,340
+we have specific requirements for.
+
+421
+00:12:44,340 --> 00:12:44,880
+So,
+
+422
+00:12:44,880 --> 00:12:46,560
+once we've grasped these three parts,
+
+423
+00:12:46,560 --> 00:12:47,380
+basically
+
+424
+00:12:47,380 --> 00:12:49,280
+the programming convention part
+
+425
+00:12:49,280 --> 00:12:50,920
+will be clear to us.
+
+426
+00:12:50,920 --> 00:12:51,760
+Let's take a look.
+
+427
+00:12:51,760 --> 00:12:52,600
+First, let's look at part one,
+
+428
+00:12:52,600 --> 00:12:53,980
+which is about
+
+429
+00:12:53,980 --> 00:12:56,060
+the programming conventions for registers.
+
+430
+00:12:56,060 --> 00:12:58,560
+Let's take a look at this table.
+
+431
+00:12:58,560 --> 00:13:00,480
+This table,
+
+432
+00:13:00,480 --> 00:13:01,500
+that is to say,
+
+433
+00:13:01,500 --> 00:13:03,800
+first, what is the first concept?
+
+434
+00:13:03,800 --> 00:13:04,620
+First, as we know,
+
+435
+00:13:04,620 --> 00:13:06,880
+our registers,
+
+436
+00:13:06,880 --> 00:13:07,700
+in RISC-V,
+
+437
+00:13:07,700 --> 00:13:08,760
+the general-purpose registers,
+
+438
+00:13:08,760 --> 00:13:10,580
+there are 32 of them in total.
+
+439
+00:13:10,640 --> 00:13:12,020
+Now, what did we talk about earlier?
+
+440
+00:13:12,020 --> 00:13:13,260
+x0, x1, x2
+
+441
+00:13:13,260 --> 00:13:14,840
+This is one kind of it.
+
+442
+00:13:14,840 --> 00:13:15,940
+In other words, in the spec,
+
+443
+00:13:15,940 --> 00:13:17,380
+the name defined for this register,
+
+444
+00:13:17,380 --> 00:13:18,980
+think of it as a standardized name.
+
+445
+00:13:18,980 --> 00:13:21,300
+You can think of it as its real name.
+
+446
+00:13:21,300 --> 00:13:22,720
+For example, my real name is Wang Chen,
+
+447
+00:13:22,720 --> 00:13:23,400
+right?
+
+448
+00:13:23,400 --> 00:13:24,680
+That's my real name.
+
+449
+00:13:24,680 --> 00:13:26,780
+This is the real name defined in the spec.
+
+450
+00:13:26,780 --> 00:13:28,820
+But when we program,
+
+451
+00:13:28,820 --> 00:13:30,440
+since we have this concept of convention,
+
+452
+00:13:30,440 --> 00:13:32,600
+because we often use this register,
+
+453
+00:13:32,600 --> 00:13:33,280
+to do a certain thing,
+
+454
+00:13:33,280 --> 00:13:34,560
+we've gotten used to,
+
+455
+00:13:34,560 --> 00:13:36,280
+not using numbers to represent it,
+
+456
+00:13:36,280 --> 00:13:38,080
+because numbers don't convey any meaning.
+
+457
+00:13:38,080 --> 00:13:39,700
+We give it an alias.
+
+458
+00:13:39,700 --> 00:13:41,100
+This alias,
+
+459
+00:13:41,100 --> 00:13:42,600
+is a name with a certain meaning.
+
+460
+00:13:42,600 --> 00:13:43,600
+Do you get what I mean?
+
+461
+00:13:43,600 --> 00:13:46,160
+Of course, it seems I don't have any aliases yet.
+
+462
+00:13:46,160 --> 00:13:47,580
+This lets me give it a nickname.
+
+463
+00:13:47,580 --> 00:13:49,180
+I can give it an alias.
+
+464
+00:13:49,180 --> 00:13:50,360
+This is called an alias.
+
+465
+00:13:50,360 --> 00:13:52,900
+And this is called the programming name.
+
+466
+00:13:52,900 --> 00:13:54,140
+That is, when we're programming,
+
+467
+00:13:54,140 --> 00:13:55,880
+we actually habitually write this name.
+
+468
+00:13:55,880 --> 00:13:57,320
+That is to say, in your code,
+
+469
+00:13:57,320 --> 00:13:57,960
+for example, this one,
+
+470
+00:13:57,960 --> 00:14:00,120
+this X0 register,
+
+471
+00:14:00,120 --> 00:14:01,160
+it has an alias called zero.
+
+472
+00:14:01,160 --> 00:14:02,620
+So when you write code,
+
+473
+00:14:02,620 --> 00:14:04,720
+writing either of these two — the assembler recognizes both.
+
+474
+00:14:04,720 --> 00:14:05,840
+Everyone gets what I mean, right?
+
+475
+00:14:05,840 --> 00:14:06,500
+It recognizes both.
+
+476
+00:14:06,500 --> 00:14:07,440
+But,
+
+477
+00:14:07,440 --> 00:14:08,860
+more often, perhaps,
+
+478
+00:14:08,860 --> 00:14:10,680
+sometimes when you look at code written by other people,
+
+479
+00:14:10,680 --> 00:14:13,300
+more people prefer to use this name zero,
+
+480
+00:14:13,300 --> 00:14:15,600
+simply because it has a specific meaning in this context.
+
+481
+00:14:15,600 --> 00:14:17,680
+So why does x0 express a certain meaning?
+
+482
+00:14:17,680 --> 00:14:19,460
+When you read it, it's always 0.
+
+483
+00:14:19,460 --> 00:14:21,340
+Writing into it is completely meaningless.
+
+484
+00:14:21,340 --> 00:14:22,280
+You see what I mean.
+
+485
+00:14:22,280 --> 00:14:23,860
+So we give it a real
+
+486
+00:14:23,860 --> 00:14:26,240
+common name, calling it zero,
+
+487
+00:14:26,240 --> 00:14:27,060
+to represent it.
+
+488
+00:14:27,060 --> 00:14:27,620
+That's the idea.
+
+489
+00:14:27,620 --> 00:14:29,560
+When we write programs,
+
+490
+00:14:29,560 --> 00:14:33,100
+I actually recommend using these programming names,
+
+491
+00:14:33,100 --> 00:14:34,620
+because it's easier to understand that way.
+
+492
+00:14:34,620 --> 00:14:36,860
+Writing those numbers instead is harder to follow.
+
+493
+00:14:36,860 --> 00:14:38,460
+Keep that in mind.
+
+494
+00:14:38,460 --> 00:14:41,860
+So these are their programming names.
+
+495
+00:14:41,860 --> 00:14:43,580
+As for exactly why they're called these names,
+
+496
+00:14:43,580 --> 00:14:45,140
+for example, why it's called ra,
+
+497
+00:14:45,140 --> 00:14:46,360
+of course, a lot of them are abbreviations.
+
+498
+00:14:46,360 --> 00:14:49,360
+Later, when we go through the conventions and explain them,
+
+499
+00:14:49,360 --> 00:14:51,260
+we'll get a deeper understanding of why they're named this way.
+
+500
+00:14:51,260 --> 00:14:53,480
+And there's one more thing to understand
+
+501
+00:14:53,480 --> 00:14:55,840
+That is, who is responsible during a function call
+
+502
+00:14:55,840 --> 00:14:58,280
+for maintaining these registers.
+
+503
+00:14:58,280 --> 00:15:00,360
+So when we go through the introduction,
+
+504
+00:15:00,360 --> 00:15:01,820
+we'll walk you through that as well.
+
+505
+00:15:01,820 --> 00:15:03,000
+Let's first take a look at
+
+506
+00:15:03,000 --> 00:15:04,420
+the first one, X0.
+
+507
+00:15:04,420 --> 00:15:05,500
+We already talked about X0 just now,
+
+508
+00:15:05,500 --> 00:15:07,020
+so we won't go into it.
+
+509
+00:15:07,020 --> 00:15:07,900
+Because it's very special,
+
+510
+00:15:07,900 --> 00:15:09,700
+we gave it a name, zero.
+
+511
+00:15:09,700 --> 00:15:11,920
+Now, it
+
+512
+00:15:11,920 --> 00:15:13,060
+doesn't really have a specific use
+
+513
+00:15:13,060 --> 00:15:14,780
+during function calls,
+
+514
+00:15:14,780 --> 00:15:16,200
+so we don't consider
+
+515
+00:15:16,200 --> 00:15:18,080
+the issue of freely maintaining this register
+
+516
+00:15:18,080 --> 00:15:19,760
+during function calls for it.
+
+517
+00:15:19,760 --> 00:15:22,100
+So this NA here means
+
+518
+00:15:22,100 --> 00:15:23,900
+not considered,
+
+519
+00:15:23,900 --> 00:15:24,560
+not relevant,
+
+520
+00:15:24,560 --> 00:15:25,340
+Not available.
+
+521
+00:15:25,340 --> 00:15:26,140
+That's what it means.
+
+522
+00:15:26,140 --> 00:15:28,500
+Let's go over it.
+
+523
+00:15:28,500 --> 00:15:29,240
+Okay.
+
+524
+00:15:29,240 --> 00:15:31,840
+So the next register is a very important one.
+
+525
+00:15:31,840 --> 00:15:33,100
+This register, x1,
+
+526
+00:15:33,100 --> 00:15:35,940
+its alias is ra.
+
+527
+00:15:35,940 --> 00:15:40,680
+We say it's actually used to hold the function's
+
+528
+00:15:40,680 --> 00:15:42,340
+This wording doesn't seem quite accurate.
+
+529
+00:15:42,340 --> 00:15:44,040
+It's not called storing the return
+
+530
+00:15:44,040 --> 00:15:46,520
+It should be storing the value of the function's return address.
+
+531
+00:15:46,520 --> 00:15:47,680
+Please note this.
+
+532
+00:15:47,680 --> 00:15:49,660
+You can go back and correct this.
+
+533
+00:15:49,660 --> 00:15:53,280
+It should be storing the return value of the function address
+
+534
+00:15:53,280 --> 00:15:54,080
+the value of the address.
+
+535
+00:15:54,080 --> 00:15:56,180
+Storing the return value of the function address.
+
+536
+00:15:56,180 --> 00:15:58,400
+In English, we call it the return address,
+
+537
+00:15:58,400 --> 00:16:01,900
+which actually expresses the meaning more accurately.
+
+538
+00:16:01,900 --> 00:16:05,860
+So ra is actually the abbreviation for return address.
+
+539
+00:16:05,940 --> 00:16:08,100
+ra, an abbreviation for return address.
+
+540
+00:16:08,100 --> 00:16:10,020
+It's actually what we just talked about
+
+541
+00:16:10,020 --> 00:16:11,720
+when that function returns,
+
+542
+00:16:11,720 --> 00:16:13,760
+the next address it is going to execute,
+
+543
+00:16:13,760 --> 00:16:15,580
+the address specified as the next one.
+
+544
+00:16:15,580 --> 00:16:16,580
+Do you still get what I mean?
+
+545
+00:16:16,580 --> 00:16:19,080
+So,
+
+546
+00:16:19,080 --> 00:16:22,720
+why do we call it caller here?
+
+547
+00:16:22,720 --> 00:16:24,260
+It means that,
+
+548
+00:16:24,260 --> 00:16:26,060
+it says that,
+
+549
+00:16:26,060 --> 00:16:27,980
+it is the person who calls the function,
+
+550
+00:16:27,980 --> 00:16:29,240
+who maintains this
+
+551
+00:16:29,240 --> 00:16:31,240
+content of this register.
+
+552
+00:16:31,240 --> 00:16:32,420
+So what does that mean?
+
+553
+00:16:32,420 --> 00:16:33,140
+It means that,
+
+554
+00:16:33,140 --> 00:16:34,740
+when, say, function A
+
+555
+00:16:34,740 --> 00:16:35,800
+calls function B,
+
+556
+00:16:35,800 --> 00:16:37,400
+this function B is the callee.
+
+557
+00:16:37,400 --> 00:16:38,020
+Think about it, isn't that right?
+
+558
+00:16:38,020 --> 00:16:40,120
+That just shows that the callee may, inside
+
+559
+00:16:40,120 --> 00:16:41,680
+its own function,
+
+560
+00:16:41,680 --> 00:16:43,800
+change the value of this ra.
+
+561
+00:16:43,800 --> 00:16:46,300
+So this callee,
+
+562
+00:16:46,300 --> 00:16:47,780
+this function A,
+
+563
+00:16:47,780 --> 00:16:49,280
+will need to,
+
+564
+00:16:49,280 --> 00:16:51,440
+say if sometimes it might
+
+565
+00:16:51,440 --> 00:16:55,360
+possibly, this callee
+
+566
+00:16:55,360 --> 00:16:56,400
+might want to use this value,
+
+567
+00:16:56,400 --> 00:16:57,760
+then you'll have to figure out a way
+
+568
+00:16:57,760 --> 00:16:58,600
+to save this value yourself.
+
+569
+00:16:58,600 --> 00:16:59,700
+So,
+
+570
+00:16:59,700 --> 00:17:01,040
+we define it as
+
+571
+00:17:01,040 --> 00:17:03,440
+the callee being responsible for maintaining
+
+572
+00:17:03,440 --> 00:17:04,980
+the value in this register.
+
+573
+00:17:04,980 --> 00:17:07,160
+We'll come back to this concept
+
+574
+00:17:07,160 --> 00:17:08,760
+when we talk about the assembly code
+
+575
+00:17:08,760 --> 00:17:10,520
+and look at it again then.
+
+576
+00:17:10,520 --> 00:17:12,540
+You'll probably understand it more deeply by then.
+
+577
+00:17:12,540 --> 00:17:14,420
+For now, let's just remember this conclusion.
+
+578
+00:17:14,420 --> 00:17:17,380
+Alright, so the second one is called x2.
+
+579
+00:17:17,380 --> 00:17:18,120
+As for x2,
+
+580
+00:17:18,120 --> 00:17:19,960
+we call it sp.
+
+581
+00:17:19,960 --> 00:17:21,700
+What does SP mean?
+
+582
+00:17:21,700 --> 00:17:22,660
+It stands for Stack Pointer.
+
+583
+00:17:22,660 --> 00:17:24,340
+That's the stack pointer we talked about earlier.
+
+584
+00:17:24,340 --> 00:17:26,380
+When we push onto and pop off the stack,
+
+585
+00:17:26,380 --> 00:17:27,800
+we're essentially moving this stack pointer.
+
+586
+00:17:27,800 --> 00:17:30,180
+So we often use this register
+
+587
+00:17:30,180 --> 00:17:31,180
+to hold the stack pointer.
+
+588
+00:17:31,180 --> 00:17:31,880
+That's why,
+
+589
+00:17:31,880 --> 00:17:35,080
+we named it SP.
+
+590
+00:17:35,080 --> 00:17:38,500
+Now, who is responsible for maintaining it?
+
+591
+00:17:38,500 --> 00:17:40,320
+We say it's the callee function,
+
+592
+00:17:40,320 --> 00:17:44,000
+meaning that inside the called sub-function,
+
+593
+00:17:44,000 --> 00:17:45,600
+we maintain this stack.
+
+594
+00:17:45,600 --> 00:17:47,180
+Because as we know, popping and pushing
+
+595
+00:17:47,180 --> 00:17:49,400
+are actually done inside the sub-function.
+
+596
+00:17:49,400 --> 00:17:51,960
+In a moment, again through examples,
+
+597
+00:17:51,960 --> 00:17:53,580
+we'll gain a deeper understanding of this concept.
+
+598
+00:17:53,580 --> 00:17:55,980
+Next up,
+
+599
+00:17:55,980 --> 00:17:58,280
+there's a group of registers,
+
+600
+00:17:58,280 --> 00:18:00,580
+namely x5 to x7.
+
+601
+00:18:00,580 --> 00:18:01,860
+from x8 to x31
+
+602
+00:18:01,860 --> 00:18:03,820
+how many registers is that in total?
+
+603
+00:18:03,820 --> 00:18:05,200
+5 to 7
+
+604
+00:18:05,200 --> 00:18:06,120
+5, 6, 7, that's 3 of them
+
+605
+00:18:06,120 --> 00:18:08,480
+28, 29, 30, 31
+
+606
+00:18:08,480 --> 00:18:09,100
+that's 4 of them
+
+607
+00:18:09,100 --> 00:18:10,520
+4 plus 3 gives us 7 in total
+
+608
+00:18:10,520 --> 00:18:12,160
+these 7 registers
+
+609
+00:18:12,160 --> 00:18:13,700
+we call them
+
+610
+00:18:13,700 --> 00:18:15,980
+temporary registers
+
+611
+00:18:15,980 --> 00:18:17,460
+so the ones starting with t
+
+612
+00:18:17,460 --> 00:18:18,860
+so the registers here
+
+613
+00:18:18,860 --> 00:18:20,640
+their alias is t
+
+614
+00:18:20,640 --> 00:18:21,880
+t followed by a number
+
+615
+00:18:21,880 --> 00:18:24,740
+now this t
+
+616
+00:18:24,740 --> 00:18:26,660
+we say it actually is
+
+617
+00:18:26,660 --> 00:18:30,560
+you can think of it this way
+
+618
+00:18:30,560 --> 00:18:31,980
+these temporary registers
+
+619
+00:18:31,980 --> 00:18:35,320
+temporary relative to whom?
+
+620
+00:18:35,320 --> 00:18:39,040
+they are temporary relative to the caller
+
+621
+00:18:39,040 --> 00:18:40,980
+That is to say, for these registers,
+
+622
+00:18:40,980 --> 00:18:44,040
+in this calling convention,
+
+623
+00:18:44,040 --> 00:18:46,220
+when function A calls function B,
+
+624
+00:18:46,220 --> 00:18:47,760
+for example, when it calls function B,
+
+625
+00:18:47,760 --> 00:18:49,500
+inside function B,
+
+626
+00:18:49,500 --> 00:18:51,220
+it's basically our convention that
+
+627
+00:18:51,220 --> 00:18:52,320
+in this function B,
+
+628
+00:18:52,320 --> 00:18:55,820
+you're allowed to freely use these temporary registers.
+
+629
+00:18:55,820 --> 00:18:58,260
+Now, suppose this function A
+
+630
+00:18:58,260 --> 00:19:00,160
+also uses these t registers,
+
+631
+00:19:00,160 --> 00:19:01,980
+because once it enters this function,
+
+632
+00:19:01,980 --> 00:19:03,400
+these registers might get overwritten.
+
+633
+00:19:03,400 --> 00:19:04,740
+You see what I mean, right?
+
+634
+00:19:04,740 --> 00:19:07,020
+So that means, if my function A
+
+635
+00:19:07,020 --> 00:19:09,820
+uses these registers internally,
+
+636
+00:19:09,820 --> 00:19:11,280
+then before you call the function,
+
+637
+00:19:11,280 --> 00:19:12,460
+you need to take these registers yourself,
+
+638
+00:19:12,460 --> 00:19:17,020
+and before you make the call as the caller,
+
+639
+00:19:17,020 --> 00:19:18,400
+you need to save their values.
+
+640
+00:19:18,400 --> 00:19:22,160
+And then, when this function returns,
+
+641
+00:19:22,160 --> 00:19:24,660
+You just need to restore them yourself and that's it.
+
+642
+00:19:24,660 --> 00:19:26,560
+That is to say, these temporary registers,
+
+643
+00:19:26,560 --> 00:19:28,640
+in calls, in these functions,
+
+644
+00:19:28,640 --> 00:19:29,640
+will get overwritten.
+
+645
+00:19:29,640 --> 00:19:31,120
+That's what's meant by temporary registers.
+
+646
+00:19:31,120 --> 00:19:33,900
+So what does this so-called saving
+
+647
+00:19:33,900 --> 00:19:34,780
+mean, think about it.
+
+648
+00:19:34,780 --> 00:19:37,600
+Where do we save them to?
+
+649
+00:19:37,600 --> 00:19:40,180
+Where else
+
+650
+00:19:40,180 --> 00:19:41,680
+can we use to hold register values?
+
+651
+00:19:41,680 --> 00:19:44,620
+Well, of course they're still saved in the function stack.
+
+652
+00:19:44,620 --> 00:19:45,160
+Right?
+
+653
+00:19:45,160 --> 00:19:47,140
+Saved in whose function stack?
+
+654
+00:19:47,140 --> 00:19:49,580
+Well, of course they're saved by the caller,
+
+655
+00:19:49,580 --> 00:19:50,900
+since the caller does the saving,
+
+656
+00:19:50,900 --> 00:19:52,760
+then the caller saves them in its own stack.
+
+657
+00:19:52,760 --> 00:19:56,900
+So that's the idea of temporary registers.
+
+658
+00:19:56,900 --> 00:19:59,240
+Next,
+
+659
+00:19:59,240 --> 00:20:01,900
+we have what are called saved registers.
+
+660
+00:20:01,900 --> 00:20:03,140
+As for saved registers,
+
+661
+00:20:03,140 --> 00:20:04,360
+It's the opposite of that one
+
+662
+00:20:04,360 --> 00:20:06,400
+It's called S saved
+
+663
+00:20:06,400 --> 00:20:07,040
+Saved means
+
+664
+00:20:07,040 --> 00:20:08,280
+These all start with S
+
+665
+00:20:08,280 --> 00:20:09,800
+So for these registers
+
+666
+00:20:09,800 --> 00:20:14,140
+it's the caller who is responsible for maintaining them
+
+667
+00:20:14,140 --> 00:20:15,940
+So what that means is
+
+668
+00:20:15,940 --> 00:20:16,940
+when you call
+
+669
+00:20:16,940 --> 00:20:18,260
+say this function A
+
+670
+00:20:18,260 --> 00:20:19,780
+again, let's say A calls B
+
+671
+00:20:19,780 --> 00:20:21,560
+A calls B
+
+672
+00:20:21,560 --> 00:20:25,580
+Suppose A uses this register S0
+
+673
+00:20:25,580 --> 00:20:26,460
+Let me give an example
+
+674
+00:20:26,460 --> 00:20:27,960
+Say it uses the register S0
+
+675
+00:20:27,960 --> 00:20:30,840
+So when A calls B
+
+676
+00:20:30,840 --> 00:20:32,600
+actually, B
+
+677
+00:20:32,600 --> 00:20:35,080
+can always be guaranteed that
+
+678
+00:20:35,080 --> 00:20:36,400
+when B returns
+
+679
+00:20:36,400 --> 00:20:39,280
+the value in S0 is unchanged
+
+680
+00:20:39,280 --> 00:20:41,000
+That's what we call a saved register
+
+681
+00:20:41,000 --> 00:20:42,960
+So, since everyone thinks
+
+682
+00:20:42,960 --> 00:20:44,940
+if B wants to guarantee that the value in S0
+
+683
+00:20:44,940 --> 00:20:47,900
+stays the same before and after the call,
+
+684
+00:20:47,900 --> 00:20:49,640
+then one approach is this:
+
+685
+00:20:49,640 --> 00:20:52,320
+you just never use this S0 register inside B.
+
+686
+00:20:52,320 --> 00:20:52,900
+Does that sound right?
+
+687
+00:20:52,900 --> 00:20:55,060
+But that's impossible,
+
+688
+00:20:55,060 --> 00:20:57,300
+because you might still need to use this S0 register.
+
+689
+00:20:57,300 --> 00:20:58,380
+There are only so many registers—
+
+690
+00:20:58,380 --> 00:20:59,840
+thirty-something might not be enough.
+
+691
+00:20:59,840 --> 00:21:01,460
+So if you do need to use it, what can you do?
+
+692
+00:21:01,460 --> 00:21:04,380
+What does B have to do?
+
+693
+00:21:04,380 --> 00:21:05,740
+Since it's the one responsible for preserving it,
+
+694
+00:21:05,740 --> 00:21:07,640
+then you find a way to, before using it,
+
+695
+00:21:07,640 --> 00:21:10,500
+save this S0 register onto the stack first,
+
+696
+00:21:10,500 --> 00:21:12,180
+and then start using S0.
+
+697
+00:21:12,180 --> 00:21:14,020
+After you're done with it, before returning,
+
+698
+00:21:14,020 --> 00:21:15,360
+there's one more thing you have to do—what is it?
+
+699
+00:21:15,360 --> 00:21:18,900
+You restore this S0 back from the stack.
+
+700
+00:21:18,900 --> 00:21:19,940
+Think about it—does that make sense?
+
+701
+00:21:19,940 --> 00:21:21,180
+restore it.
+
+702
+00:21:21,180 --> 00:21:22,600
+So after it's restored,
+
+703
+00:21:22,600 --> 00:21:23,640
+when we return,
+
+704
+00:21:23,640 --> 00:21:24,820
+from A's perspective,
+
+705
+00:21:24,820 --> 00:21:25,900
+from A's point of view,
+
+706
+00:21:25,900 --> 00:21:27,260
+the value of s0 hasn't changed at all, right?
+
+707
+00:21:27,260 --> 00:21:28,360
+Think about it — isn't that the idea?
+
+708
+00:21:28,360 --> 00:21:29,740
+This is what's called
+
+709
+00:21:29,740 --> 00:21:31,880
+So for the s registers,
+
+710
+00:21:31,880 --> 00:21:35,260
+it's the callee that guarantees their values are preserved.
+
+711
+00:21:35,260 --> 00:21:37,920
+So make sure you understand this,
+
+712
+00:21:37,920 --> 00:21:38,600
+that's the concept.
+
+713
+00:21:38,600 --> 00:21:41,740
+Compared with the t registers, it's basically the opposite arrangement.
+
+714
+00:21:41,740 --> 00:21:46,540
+Then there are also the argument registers,
+
+715
+00:21:46,540 --> 00:21:47,440
+the argument registers,
+
+716
+00:21:47,440 --> 00:21:50,380
+meaning the arguments.
+
+717
+00:21:50,380 --> 00:21:51,540
+So these registers,
+
+718
+00:21:51,540 --> 00:21:52,800
+they all start with a,
+
+719
+00:21:52,800 --> 00:21:54,140
+they're used when we pass parameters,
+
+720
+00:21:54,140 --> 00:21:55,560
+when calling a function, we need to pass parameters.
+
+721
+00:21:55,560 --> 00:21:57,800
+So for RISC-V,
+
+722
+00:21:57,800 --> 00:21:58,920
+it recommends that you
+
+723
+00:21:58,920 --> 00:22:00,300
+just pass the parameters directly in the registers,
+
+724
+00:22:00,300 --> 00:22:00,860
+passing them through the registers
+
+725
+00:22:00,860 --> 00:22:02,260
+because that's the most efficient,
+
+726
+00:22:02,260 --> 00:22:03,180
+the fastest way.
+
+727
+00:22:03,180 --> 00:22:03,980
+So that's why we
+
+728
+00:22:03,980 --> 00:22:06,240
+use a0 through a7,
+
+729
+00:22:06,240 --> 00:22:07,220
+which adds up to
+
+730
+00:22:07,220 --> 00:22:08,400
+8 registers you can use.
+
+731
+00:22:08,400 --> 00:22:10,220
+In other words, you can fully make use of
+
+732
+00:22:10,220 --> 00:22:12,300
+8 registers to pass parameters.
+
+733
+00:22:12,300 --> 00:22:14,240
+Then when returning,
+
+734
+00:22:14,240 --> 00:22:16,220
+the return value can also be placed
+
+735
+00:22:16,220 --> 00:22:18,120
+into the two registers a0 and a1.
+
+736
+00:22:18,120 --> 00:22:19,100
+That's what it means.
+
+737
+00:22:19,100 --> 00:22:21,640
+Now similarly,
+
+738
+00:22:21,640 --> 00:22:23,360
+since these registers are used for passing parameters,
+
+739
+00:22:23,360 --> 00:22:24,260
+that means
+
+740
+00:22:24,260 --> 00:22:28,900
+for the caller,
+
+741
+00:22:28,900 --> 00:22:30,760
+Actually, the value in this register
+
+742
+00:22:30,760 --> 00:22:32,040
+might get changed.
+
+743
+00:22:32,040 --> 00:22:33,400
+So if you want to
+
+744
+00:22:33,400 --> 00:22:35,040
+use it again after using it once,
+
+745
+00:22:35,040 --> 00:22:35,960
+you have to maintain it yourself.
+
+746
+00:22:35,960 --> 00:22:38,080
+So it is maintained by the caller.
+
+747
+00:22:38,080 --> 00:22:40,940
+Now, through this convention,
+
+748
+00:22:40,940 --> 00:22:42,280
+what advantage can you see?
+
+749
+00:22:42,280 --> 00:22:43,720
+I'm essentially saying that
+
+750
+00:22:43,720 --> 00:22:45,420
+some registers are volatile before the call,
+
+751
+00:22:45,420 --> 00:22:46,200
+they can change,
+
+752
+00:22:46,200 --> 00:22:46,900
+while some registers
+
+753
+00:22:46,900 --> 00:22:48,180
+stay unchanged after the call,
+
+754
+00:22:48,180 --> 00:22:48,500
+right?
+
+755
+00:22:48,500 --> 00:22:49,040
+So
+
+756
+00:22:49,040 --> 00:22:50,520
+the point is to achieve
+
+757
+00:22:50,520 --> 00:22:51,080
+what kind of effect?
+
+758
+00:22:51,080 --> 00:22:52,100
+If you didn't have this rule,
+
+759
+00:22:52,100 --> 00:22:53,520
+to guarantee that this register
+
+760
+00:22:53,520 --> 00:22:54,300
+is preserved during use,
+
+761
+00:22:54,300 --> 00:22:55,120
+always
+
+762
+00:22:55,120 --> 00:22:56,600
+and never get disturbed
+
+763
+00:22:56,600 --> 00:22:57,980
+one of the dumbest approaches would be this:
+
+764
+00:22:57,980 --> 00:22:59,700
+when function A
+
+765
+00:22:59,700 --> 00:23:00,600
+calls function B,
+
+766
+00:23:00,600 --> 00:23:01,620
+I save every single register,
+
+767
+00:23:01,620 --> 00:23:03,020
+all of them,
+
+768
+00:23:03,020 --> 00:23:03,540
+right? Of course, whether that's the way...
+
+769
+00:23:03,540 --> 00:23:04,780
+and then,
+
+770
+00:23:04,780 --> 00:23:05,380
+and then,
+
+771
+00:23:05,380 --> 00:23:06,160
+when exiting the function,
+
+772
+00:23:06,160 --> 00:23:07,000
+I restore all those registers
+
+773
+00:23:07,000 --> 00:23:07,920
+back out again.
+
+774
+00:23:07,920 --> 00:23:09,320
+Actually, this can also achieve
+
+775
+00:23:09,320 --> 00:23:10,240
+the same effect.
+
+776
+00:23:10,240 --> 00:23:10,860
+But as you all know,
+
+777
+00:23:10,860 --> 00:23:11,960
+the efficiency is far too low,
+
+778
+00:23:11,960 --> 00:23:13,180
+because we have so many registers.
+
+779
+00:23:13,180 --> 00:23:14,500
+If every time you call a function,
+
+780
+00:23:14,500 --> 00:23:15,680
+you save all the registers...
+
+781
+00:23:15,680 --> 00:23:17,220
+and restore them again on the way out
+
+782
+00:23:17,220 --> 00:23:18,200
+that is way too inefficient
+
+783
+00:23:18,200 --> 00:23:18,760
+Think about it, isn't it
+
+784
+00:23:18,760 --> 00:23:20,540
+So we simply settle on a convention
+
+785
+00:23:20,540 --> 00:23:21,900
+that is, there is a set of registers
+
+786
+00:23:21,900 --> 00:23:24,240
+that you don't have to worry about
+
+787
+00:23:24,240 --> 00:23:25,620
+and some registers that you must handle
+
+788
+00:23:25,620 --> 00:23:26,440
+And that way
+
+789
+00:23:26,440 --> 00:23:29,060
+we improve the efficiency of
+
+790
+00:23:29,060 --> 00:23:30,760
+function calls as much as possible
+
+791
+00:23:30,760 --> 00:23:31,460
+Similarly
+
+792
+00:23:31,460 --> 00:23:32,800
+with this standard in place
+
+793
+00:23:32,800 --> 00:23:33,760
+we also reached what we talked about earlier
+
+794
+00:23:33,760 --> 00:23:35,600
+we solved the problem we mentioned earlier
+
+795
+00:23:35,600 --> 00:23:37,240
+namely, the generality of functions
+
+796
+00:23:37,240 --> 00:23:38,160
+Because this way
+
+797
+00:23:38,160 --> 00:23:39,420
+as long as everyone follows this convention
+
+798
+00:23:39,420 --> 00:23:40,200
+a function of yours
+
+799
+00:23:40,200 --> 00:23:41,760
+whether you wrote it or I wrote it
+
+800
+00:23:41,760 --> 00:23:42,920
+can be handed over to anyone to use
+
+801
+00:23:42,920 --> 00:23:45,240
+So if we all follow this convention,
+
+802
+00:23:45,240 --> 00:23:45,920
+things won't get messy.
+
+803
+00:23:45,920 --> 00:23:48,800
+So this register convention,
+
+804
+00:23:48,800 --> 00:23:49,960
+that's basically the idea.
+
+805
+00:23:49,960 --> 00:23:52,960
+And now you also understand
+
+806
+00:23:52,960 --> 00:23:54,940
+why these names start with a,
+
+807
+00:23:54,940 --> 00:23:56,340
+why some start with s and some with t.
+
+808
+00:23:56,340 --> 00:23:58,660
+They actually carry meaning.
+
+809
+00:23:58,660 --> 00:24:00,960
+Later, when we write code,
+
+810
+00:24:00,960 --> 00:24:05,380
+we'll try to use these programming names as much as possible.
+
+811
+00:24:05,380 --> 00:24:07,220
+They are also called ABI names.
+
+812
+00:24:07,220 --> 00:24:08,540
+As for the ABI,
+
+813
+00:24:08,540 --> 00:24:09,320
+the concept,
+
+814
+00:24:09,320 --> 00:24:10,120
+just get a general understanding of it.
+
+815
+00:24:10,120 --> 00:24:11,660
+I won't go into it in detail here.
+
+816
+00:24:11,660 --> 00:24:13,960
+Alright,
+
+817
+00:24:13,960 --> 00:24:16,420
+so first of all, the first thing we mentioned is,
+
+818
+00:24:16,420 --> 00:24:18,780
+the first aspect of the convention is the register convention.
+
+819
+00:24:18,780 --> 00:24:19,920
+The second aspect,
+
+820
+00:24:19,920 --> 00:24:22,880
+is what happens when we talk about function calls.
+
+821
+00:24:22,880 --> 00:24:25,200
+When it comes to function jumps and returns,
+
+822
+00:24:25,200 --> 00:24:26,760
+in terms of instruction encoding,
+
+823
+00:24:26,760 --> 00:24:28,620
+actually, combining this with what we just talked about,
+
+824
+00:24:28,620 --> 00:24:29,880
+the convention on these registers,
+
+825
+00:24:29,880 --> 00:24:30,800
+we can do the same thing here,
+
+826
+00:24:30,800 --> 00:24:33,580
+and define part of the convention for its call instructions as well.
+
+827
+00:24:33,580 --> 00:24:35,700
+Let's take a look at what this convention is.
+
+828
+00:24:35,700 --> 00:24:37,260
+Actually, we've already covered some of it earlier.
+
+829
+00:24:37,260 --> 00:24:38,960
+For example,
+
+830
+00:24:38,960 --> 00:24:40,000
+as you can see,
+
+831
+00:24:40,000 --> 00:24:41,300
+this actually involves some pseudo-instructions.
+
+832
+00:24:41,300 --> 00:24:44,720
+Because pseudo-instructions were also proposed
+
+833
+00:24:44,720 --> 00:24:47,300
+for the sake of making things more convenient for us to use.
+
+834
+00:24:47,300 --> 00:24:48,980
+You see,
+
+835
+00:24:48,980 --> 00:24:50,400
+instructions like this JAR instruction,
+
+836
+00:24:50,400 --> 00:24:53,240
+it is actually a pseudo-instruction.
+
+837
+00:24:53,240 --> 00:24:54,220
+It actually uses
+
+838
+00:24:54,220 --> 00:24:55,440
+the register convention we defined earlier.
+
+839
+00:24:55,440 --> 00:24:57,240
+Didn't we just agree that x1
+
+840
+00:24:57,240 --> 00:24:59,220
+Didn't we just agree on X1?
+
+841
+00:24:59,220 --> 00:25:03,400
+That's what we call ra, right?
+
+842
+00:25:03,400 --> 00:25:03,960
+Think about it, isn't that so?
+
+843
+00:25:03,960 --> 00:25:07,140
+So we actually agreed on X1 as the convention
+
+844
+00:25:07,140 --> 00:25:10,060
+to save the return address
+
+845
+00:25:10,060 --> 00:25:11,800
+and we'll never just use it casually again
+
+846
+00:25:11,800 --> 00:25:12,820
+Unlike before, when we used it however we liked
+
+847
+00:25:12,820 --> 00:25:13,580
+Before we had this convention,
+
+848
+00:25:13,580 --> 00:25:14,480
+we used X5,
+
+849
+00:25:14,480 --> 00:25:14,840
+right?
+
+850
+00:25:14,840 --> 00:25:15,660
+In that example.
+
+851
+00:25:15,660 --> 00:25:16,480
+Now, what I'm saying is,
+
+852
+00:25:16,480 --> 00:25:18,380
+since we've all agreed to use X1,
+
+853
+00:25:18,380 --> 00:25:19,300
+in our code,
+
+854
+00:25:19,300 --> 00:25:21,340
+we shouldn't keep writing X1 explicitly every single time.
+
+855
+00:25:21,340 --> 00:25:22,600
+So we defined a
+
+856
+00:25:22,600 --> 00:25:23,580
+pseudo-instruction, the ret instruction.
+
+857
+00:25:23,580 --> 00:25:24,520
+For this instruction,
+
+858
+00:25:24,520 --> 00:25:26,180
+notice that it doesn't specify
+
+859
+00:25:26,180 --> 00:25:28,000
+an rd here.
+
+860
+00:25:28,000 --> 00:25:29,420
+If rd isn't specified,
+
+861
+00:25:29,420 --> 00:25:30,680
+So what's actually implied
+
+862
+00:25:30,680 --> 00:25:31,540
+is the use of x1.
+
+863
+00:25:31,540 --> 00:25:32,860
+So from now on, when we code,
+
+864
+00:25:32,860 --> 00:25:33,620
+when we write our programs,
+
+865
+00:25:33,620 --> 00:25:35,020
+we should try to use the call instruction,
+
+866
+00:25:35,020 --> 00:25:37,760
+which by convention uses x1
+
+867
+00:25:37,760 --> 00:25:38,860
+to save the return address.
+
+868
+00:25:38,860 --> 00:25:40,960
+That's one point.
+
+869
+00:25:40,960 --> 00:25:42,720
+The second one is this:
+
+870
+00:25:42,720 --> 00:25:43,900
+as we just mentioned,
+
+871
+00:25:43,900 --> 00:25:44,700
+this kind is called
+
+872
+00:25:44,700 --> 00:25:46,580
+a non-returning function call.
+
+873
+00:25:46,580 --> 00:25:48,340
+That is, as we just agreed,
+
+874
+00:25:48,340 --> 00:25:49,220
+x0
+
+875
+00:25:49,220 --> 00:25:50,140
+is zero,
+
+876
+00:25:50,140 --> 00:25:51,540
+a special address,
+
+877
+00:25:51,540 --> 00:25:52,780
+a special register.
+
+878
+00:25:52,780 --> 00:25:53,720
+So as long as you put
+
+879
+00:25:53,720 --> 00:25:55,620
+the return address in there, it can't actually hold
+
+880
+00:25:55,620 --> 00:25:56,760
+any return address at all.
+
+881
+00:25:56,760 --> 00:25:58,180
+So since that's the case,
+
+882
+00:25:58,180 --> 00:25:59,040
+from now on we'll just
+
+883
+00:25:59,040 --> 00:26:00,980
+not write it out so long and wordy.
+
+884
+00:26:00,980 --> 00:26:02,400
+We'll just write a J.
+
+885
+00:26:02,400 --> 00:26:04,900
+JR just represents this kind of
+
+886
+00:26:04,900 --> 00:26:06,400
+equivalent effect.
+
+887
+00:26:06,400 --> 00:26:08,380
+That's the second type.
+
+888
+00:26:08,380 --> 00:26:11,060
+Then there's also a third type,
+
+889
+00:26:11,060 --> 00:26:12,900
+which is — didn't we just say
+
+890
+00:26:12,900 --> 00:26:14,980
+we have some long jumps?
+
+891
+00:26:14,980 --> 00:26:16,200
+You remember, right?
+
+892
+00:26:16,200 --> 00:26:18,040
+So for long jumps,
+
+893
+00:26:18,040 --> 00:26:19,280
+because long jumps,
+
+894
+00:26:19,280 --> 00:26:22,560
+long jumps mainly use these instructions.
+
+895
+00:26:22,560 --> 00:26:24,560
+And because a long jump
+
+896
+00:26:24,560 --> 00:26:27,380
+itself also implicitly uses X1,
+
+897
+00:26:27,380 --> 00:26:29,440
+or rather, the tail call.
+
+898
+00:26:29,440 --> 00:26:31,380
+A tail call — you can imagine
+
+899
+00:26:31,380 --> 00:26:32,240
+what a tail call is.
+
+900
+00:26:32,240 --> 00:26:33,980
+A tail call is, in English, called a tail
+
+901
+00:26:33,980 --> 00:26:37,620
+Say function A calls function B,
+
+902
+00:26:37,620 --> 00:26:39,420
+and function B calls function C.
+
+903
+00:26:39,420 --> 00:26:42,360
+Then this function C doesn't call any function.
+
+904
+00:26:42,360 --> 00:26:43,100
+So in the end, this
+
+905
+00:26:43,100 --> 00:26:45,520
+step where B calls C,
+
+906
+00:26:45,520 --> 00:26:47,320
+we call that a tail call.
+
+907
+00:26:47,320 --> 00:26:49,520
+You get what I mean, right?
+
+908
+00:26:49,520 --> 00:26:51,900
+In English, it's usually called tail
+
+909
+00:26:51,900 --> 00:26:53,560
+— basically the last call.
+
+910
+00:26:53,560 --> 00:26:56,000
+Because this function C can never go on to call function D.
+
+911
+00:26:56,000 --> 00:26:56,800
+You get what I mean.
+
+912
+00:26:56,800 --> 00:26:59,100
+So this kind is called a tail call.
+
+913
+00:26:59,100 --> 00:27:01,340
+Now what about A calling B?
+
+914
+00:27:01,340 --> 00:27:02,320
+That's not a tail call,
+
+915
+00:27:02,320 --> 00:27:03,700
+because after it calls B,
+
+916
+00:27:03,700 --> 00:27:04,680
+B will still go on to call C.
+
+917
+00:27:04,680 --> 00:27:05,000
+That kind of thing.
+
+918
+00:27:05,000 --> 00:27:07,100
+So that step is not called a tail call.
+
+919
+00:27:07,100 --> 00:27:08,100
+That's called a regular call.
+
+920
+00:27:08,100 --> 00:27:10,260
+So that's what a tail call means.
+
+921
+00:27:10,260 --> 00:27:11,340
+A pseudo call means that
+
+922
+00:27:11,340 --> 00:27:13,860
+it can no longer save this
+
+923
+00:27:13,860 --> 00:27:16,080
+because after B calls C,
+
+924
+00:27:16,080 --> 00:27:18,860
+C will just
+
+925
+00:27:18,860 --> 00:27:20,300
+C will just
+
+926
+00:27:20,300 --> 00:27:22,260
+Right,
+
+927
+00:27:22,260 --> 00:27:24,360
+it won't go on to call D anymore.
+
+928
+00:27:24,360 --> 00:27:25,980
+So we don't need to save this
+
+929
+00:27:25,980 --> 00:27:27,600
+final return address again.
+
+930
+00:27:27,600 --> 00:27:30,440
+So here we can just use x0.
+
+931
+00:27:30,440 --> 00:27:33,460
+Okay, that's
+
+932
+00:27:33,460 --> 00:27:36,620
+another group of
+
+933
+00:27:36,620 --> 00:27:37,600
+commonly used ones.
+
+934
+00:27:37,600 --> 00:27:38,520
+Now the last one
+
+935
+00:27:38,520 --> 00:27:40,220
+concerns returning from a function.
+
+936
+00:27:40,220 --> 00:27:41,540
+Because we also agreed that
+
+937
+00:27:41,540 --> 00:27:44,820
+x1 holds this return address,
+
+938
+00:27:44,820 --> 00:27:45,660
+so we don't need to
+
+939
+00:27:45,660 --> 00:27:47,020
+write it out in such a long-winded way.
+
+940
+00:27:47,020 --> 00:27:48,200
+We can just use one
+
+941
+00:27:48,200 --> 00:27:49,980
+Simply put, the pseudo-instruction
+
+942
+00:27:49,980 --> 00:27:51,260
+ret is the return instruction,
+
+943
+00:27:51,260 --> 00:27:53,200
+used to indicate a return.
+
+944
+00:27:53,200 --> 00:27:55,540
+Of course, this is not the return of the C language.
+
+945
+00:27:55,540 --> 00:27:58,900
+This is the return pseudo-instruction in assembly.
+
+946
+00:27:58,900 --> 00:28:00,240
+Now, this kind of thing
+
+947
+00:28:00,240 --> 00:28:02,140
+involves function jumps,
+
+948
+00:28:02,140 --> 00:28:03,060
+and it's a programming convention.
+
+949
+00:28:03,060 --> 00:28:04,300
+That is, from now on,
+
+950
+00:28:04,300 --> 00:28:05,200
+we should try our best to use this
+
+951
+00:28:05,200 --> 00:28:06,900
+set of instructions
+
+952
+00:28:06,900 --> 00:28:10,500
+to write function calls and returns.
+
+953
+00:28:10,500 --> 00:28:12,560
+Just so you're aware of this.
+
+954
+00:28:12,560 --> 00:28:17,610
+Now, the ones we use most often
+
+955
+00:28:17,610 --> 00:28:18,770
+are call and return,
+
+956
+00:28:18,770 --> 00:28:20,350
+which are used a lot.
+
+957
+00:28:20,350 --> 00:28:24,460
+That's it.
+
+958
+00:28:24,460 --> 00:28:26,280
+Now, regarding this thing,
+
+959
+00:28:26,280 --> 00:28:28,380
+let's take another look at the effect.
+
+960
+00:28:28,380 --> 00:28:30,120
+We've made a simple animated diagram for you.
+
+961
+00:28:30,120 --> 00:28:31,520
+Let's take a look at how this works.
+
+962
+00:28:31,520 --> 00:28:32,540
+For example, suppose we now have
+
+963
+00:28:32,540 --> 00:28:34,600
+the caller on the left
+
+964
+00:28:34,600 --> 00:28:36,440
+and the callee on the right.
+
+965
+00:28:36,440 --> 00:28:38,760
+Let's look at this function process,
+
+966
+00:28:38,760 --> 00:28:39,760
+and take another look at this.
+
+967
+00:28:39,760 --> 00:28:42,260
+That is to say, once this programming convention is in place,
+
+968
+00:28:42,260 --> 00:28:43,360
+the function's invocation
+
+969
+00:28:43,360 --> 00:28:45,700
+how does the function call actually take place?
+
+970
+00:28:45,700 --> 00:28:47,680
+Suppose our caller
+
+971
+00:28:47,680 --> 00:28:50,400
+starts executing instruction i,
+
+972
+00:28:50,400 --> 00:28:54,720
+then moves down to i+1, the second instruction,
+
+973
+00:28:54,720 --> 00:28:56,340
+and then further down,
+
+974
+00:28:56,340 --> 00:28:58,160
+this instruction starts making a call.
+
+975
+00:28:58,160 --> 00:28:59,500
+Now we know that this call
+
+976
+00:28:59,500 --> 00:29:00,740
+already has a specific meaning.
+
+977
+00:29:00,740 --> 00:29:01,760
+According to our programming convention,
+
+978
+00:29:01,760 --> 00:29:02,600
+what is it equivalent to?
+
+979
+00:29:02,600 --> 00:29:04,920
+Think back to what we just covered,
+
+980
+00:29:04,920 --> 00:29:07,600
+it is actually equivalent to a long jump.
+
+981
+00:29:07,600 --> 00:29:08,980
+As for this long jump,
+
+982
+00:29:08,980 --> 00:29:10,700
+we don't care about AUIPC.
+
+983
+00:29:10,700 --> 00:29:12,380
+What we mainly care about is the second instruction below,
+
+984
+00:29:12,380 --> 00:29:13,220
+which is JLR.
+
+985
+00:29:13,220 --> 00:29:14,380
+As for JLR,
+
+986
+00:29:14,380 --> 00:29:15,400
+its target,
+
+987
+00:29:15,400 --> 00:29:17,000
+its return address is,
+
+988
+00:29:17,000 --> 00:29:19,380
+by convention, saved in x1.
+
+989
+00:29:19,380 --> 00:29:19,920
+Think about it, isn't that right?
+
+990
+00:29:19,920 --> 00:29:21,860
+Now, x1,
+
+991
+00:29:21,860 --> 00:29:23,600
+as we said, has an alias called ra.
+
+992
+00:29:23,600 --> 00:29:24,920
+So what it does inside is,
+
+993
+00:29:24,920 --> 00:29:26,160
+what operation does it perform?
+
+994
+00:29:26,160 --> 00:29:28,360
+It takes its next address,
+
+995
+00:29:28,360 --> 00:29:32,960
+that is, the address of this instruction, ra + m,
+
+996
+00:29:32,960 --> 00:29:34,760
+and saves it in
+
+997
+00:29:34,760 --> 00:29:37,780
+x1.
+
+998
+00:29:37,780 --> 00:29:38,700
+We've now agreed on this:
+
+999
+00:29:38,700 --> 00:29:40,080
+it goes in x1.
+
+1000
+00:29:40,080 --> 00:29:41,920
+Don't put it in any other register.
+
+1001
+00:29:41,920 --> 00:29:42,880
+Then it violates the convention.
+
+1002
+00:29:42,880 --> 00:29:43,720
+If that's the case, code like yours
+
+1003
+00:29:43,720 --> 00:29:45,860
+may not interoperate when given to others.
+
+1004
+00:29:45,860 --> 00:29:47,040
+Please keep that in mind.
+
+1005
+00:29:47,040 --> 00:29:49,640
+So, this way,
+
+1006
+00:29:49,640 --> 00:29:50,360
+we take this
+
+1007
+00:29:50,360 --> 00:29:51,740
+address of the I plus M instruction
+
+1008
+00:29:51,740 --> 00:29:53,100
+and put it into this register.
+
+1009
+00:29:53,100 --> 00:29:54,140
+What's stored inside it
+
+1010
+00:29:54,140 --> 00:29:56,020
+is exactly the address of the I plus M instruction.
+
+1011
+00:29:56,020 --> 00:29:57,140
+Please pay attention to this.
+
+1012
+00:29:57,140 --> 00:29:58,060
+Then,
+
+1013
+00:29:58,060 --> 00:29:58,460
+as you all know,
+
+1014
+00:29:58,460 --> 00:30:00,020
+what happens next?
+
+1015
+00:30:00,020 --> 00:30:01,000
+This call instruction
+
+1016
+00:30:01,000 --> 00:30:03,240
+is nothing more than a jump.
+
+1017
+00:30:03,240 --> 00:30:04,780
+It just jumps into this call.
+
+1018
+00:30:04,780 --> 00:30:05,360
+Think about it, isn't that right?
+
+1019
+00:30:05,360 --> 00:30:06,600
+And then inside the call,
+
+1020
+00:30:06,600 --> 00:30:07,640
+it starts executing one by one
+
+1021
+00:30:07,640 --> 00:30:09,300
+So our PC
+
+1022
+00:30:09,300 --> 00:30:10,540
+starts executing from here
+
+1023
+00:30:10,540 --> 00:30:12,520
+and then the PC just keeps executing
+
+1024
+00:30:12,520 --> 00:30:13,220
+j plus 1
+
+1025
+00:30:13,220 --> 00:30:14,080
+j plus 2
+
+1026
+00:30:14,080 --> 00:30:14,680
+this is very simple
+
+1027
+00:30:14,680 --> 00:30:15,700
+and then at the end
+
+1028
+00:30:15,700 --> 00:30:17,040
+we call return
+
+1029
+00:30:17,040 --> 00:30:18,920
+now when we write code
+
+1030
+00:30:18,920 --> 00:30:20,100
+we just call return to go back
+
+1031
+00:30:20,100 --> 00:30:22,500
+no need to write those complicated instructions anymore
+
+1032
+00:30:22,500 --> 00:30:23,200
+this instruction
+
+1033
+00:30:23,200 --> 00:30:24,580
+what is this instruction equivalent to
+
+1034
+00:30:24,580 --> 00:30:28,640
+it is equivalent to the jr instruction
+
+1035
+00:30:28,640 --> 00:30:30,300
+x0 and 0
+
+1036
+00:30:30,300 --> 00:30:31,360
+parenthesis x1
+
+1037
+00:30:31,360 --> 00:30:33,100
+this is also a convention here
+
+1038
+00:30:33,100 --> 00:30:34,720
+because the convention is x1
+
+1039
+00:30:34,720 --> 00:30:35,620
+and what does that tell us
+
+1040
+00:30:35,620 --> 00:30:38,000
+it jumps based on the value in here
+
+1041
+00:30:38,000 --> 00:30:40,460
+It jumps there.
+
+1042
+00:30:40,460 --> 00:30:41,520
+You get what I mean, right?
+
+1043
+00:30:41,520 --> 00:30:43,400
+So, based on the calculation method we just used,
+
+1044
+00:30:43,400 --> 00:30:44,740
+it actually jumps to
+
+1045
+00:30:44,740 --> 00:30:46,420
+the location of this instruction.
+
+1046
+00:30:46,420 --> 00:30:48,280
+So it definitely jumps here.
+
+1047
+00:30:48,280 --> 00:30:50,280
+Then the PC comes back,
+
+1048
+00:30:50,280 --> 00:30:52,780
+and once it returns, the process is complete.
+
+1049
+00:30:52,780 --> 00:30:53,280
+Think about it, isn't that right?
+
+1050
+00:30:53,280 --> 00:30:55,300
+So from this example, we can see that
+
+1051
+00:30:55,300 --> 00:30:56,960
+from now on, when we write code,
+
+1052
+00:30:56,960 --> 00:30:58,040
+we should always use call
+
+1053
+00:30:58,040 --> 00:30:59,920
+and these pseudo-instructions to implement it.
+
+1054
+00:30:59,920 --> 00:31:01,160
+So why can these pseudo-instructions
+
+1055
+00:31:01,160 --> 00:31:02,540
+implement this process?
+
+1056
+00:31:02,540 --> 00:31:03,440
+The reason is simply that
+
+1057
+00:31:03,440 --> 00:31:05,440
+they follow our programming convention,
+
+1058
+00:31:05,440 --> 00:31:06,880
+our programming convention—
+
+1059
+00:31:06,880 --> 00:31:09,260
+the calling convention for function calls.
+
+1060
+00:31:09,260 --> 00:31:16,880
+This is the calling convention for function calls.
+
+1061
+00:31:16,880 --> 00:31:18,360
+That is the second aspect.
+
+1062
+00:31:18,360 --> 00:31:20,980
+Now, the third aspect is this:
+
+1063
+00:31:20,980 --> 00:31:23,840
+Ultimately, we need to write a function.
+
+1064
+00:31:23,840 --> 00:31:25,320
+So how should we write this function?
+
+1065
+00:31:25,320 --> 00:31:26,740
+When we write this function,
+
+1066
+00:31:26,740 --> 00:31:27,760
+there are actually some conventions to follow.
+
+1067
+00:31:27,760 --> 00:31:28,840
+Please pay attention to this.
+
+1068
+00:31:28,840 --> 00:31:29,920
+Of course,
+
+1069
+00:31:29,920 --> 00:31:31,400
+as for this part of the content,
+
+1070
+00:31:31,400 --> 00:31:33,000
+when we write C code,
+
+1071
+00:31:33,000 --> 00:31:34,320
+we actually don't pay much attention to it.
+
+1072
+00:31:34,320 --> 00:31:35,480
+Why is that?
+
+1073
+00:31:35,480 --> 00:31:38,640
+Because this part is actually handled for us by the assembler.
+
+1074
+00:31:38,640 --> 00:31:40,860
+Since this follows a standard convention,
+
+1075
+00:31:40,860 --> 00:31:45,040
+all assemblers will, at the beginning and end of our code,
+
+1076
+00:31:45,040 --> 00:31:46,760
+insert some special instructions for us.
+
+1077
+00:31:46,760 --> 00:31:51,840
+These special instructions are actually related to operations like pushing onto and popping off the stack.
+
+1078
+00:31:51,840 --> 00:31:54,500
+You can't see any of this when we write C code.
+
+1079
+00:31:54,500 --> 00:31:56,400
+This is the concept of automation.
+
+1080
+00:31:56,400 --> 00:32:00,520
+That is, all this 'automatic' stuff doesn't really mean the program executes itself automatically.
+
+1081
+00:32:00,520 --> 00:32:05,060
+It's just that these operations you perform are actually some instructions generated for you by the assembler,
+
+1082
+00:32:05,060 --> 00:32:06,280
+inserted into your code.
+
+1083
+00:32:06,280 --> 00:32:07,620
+You all get what I mean, right?
+
+1084
+00:32:07,620 --> 00:32:08,700
+Let's take a look at
+
+1085
+00:32:08,700 --> 00:32:10,500
+this programming convention,
+
+1086
+00:32:10,500 --> 00:32:11,780
+what exactly it does.
+
+1087
+00:32:11,780 --> 00:32:14,800
+So when we write a function,
+
+1088
+00:32:14,800 --> 00:32:17,140
+actually we only need to write the function body itself.
+
+1089
+00:32:17,140 --> 00:32:18,140
+This process of insertion,
+
+1090
+00:32:18,140 --> 00:32:19,940
+actually, inserting things at the front and at the back,
+
+1091
+00:32:19,940 --> 00:32:21,700
+what exactly does that do?
+
+1092
+00:32:21,700 --> 00:32:23,840
+Let's look at this diagram together.
+
+1093
+00:32:23,840 --> 00:32:27,220
+So first, at the beginning of the function,
+
+1094
+00:32:27,220 --> 00:32:29,040
+our assembler will help us
+
+1095
+00:32:29,040 --> 00:32:30,760
+insert some special push instructions
+
+1096
+00:32:30,760 --> 00:32:32,540
+and some special save instructions.
+
+1097
+00:32:32,540 --> 00:32:34,540
+What does it do?
+
+1098
+00:32:34,540 --> 00:32:36,840
+At the beginning of the function,
+
+1099
+00:32:36,840 --> 00:32:37,900
+this prologue,
+
+1100
+00:32:37,900 --> 00:32:40,580
+which is also a term from specifications and the literature,
+
+1101
+00:32:40,580 --> 00:32:41,900
+Just so everyone gets the idea,
+
+1102
+00:32:41,900 --> 00:32:43,820
+what is it trying to express?
+
+1103
+00:32:43,820 --> 00:32:44,460
+It's a bit like...
+
+1104
+00:32:44,460 --> 00:32:46,960
+I actually looked this word up,
+
+1105
+00:32:46,960 --> 00:32:49,240
+I pronounce it 'prologue'.
+
+1106
+00:32:49,240 --> 00:32:50,020
+It's probably called 'prologue'.
+
+1107
+00:32:50,020 --> 00:32:51,200
+Not entirely sure that's accurate,
+
+1108
+00:32:51,200 --> 00:32:52,460
+but it's kind of like... what is it like?
+
+1109
+00:32:52,460 --> 00:32:54,900
+It's like when a play is performed,
+
+1110
+00:32:54,900 --> 00:32:56,840
+when the stage opens up,
+
+1111
+00:32:56,840 --> 00:32:59,860
+we say there are some people who come out first to warm up the crowd.
+
+1112
+00:32:59,860 --> 00:33:00,420
+You understand what I mean,
+
+1113
+00:33:00,420 --> 00:33:02,840
+anyone seen this kind of thing, or whatever?
+
+1114
+00:33:02,840 --> 00:33:05,700
+That is, before the main character appears,
+
+1115
+00:33:05,700 --> 00:33:06,720
+there will be some extras,
+
+1116
+00:33:06,720 --> 00:33:08,200
+running around in front carrying flags.
+
+1117
+00:33:08,200 --> 00:33:09,000
+Get what I mean?
+
+1118
+00:33:09,000 --> 00:33:10,600
+Warm up the place first.
+
+1119
+00:33:10,600 --> 00:33:12,540
+This kind of thing might also be called a prologue.
+
+1120
+00:33:12,540 --> 00:33:16,740
+That is, a kind of... before getting into the main content.
+
+1121
+00:33:16,740 --> 00:33:19,440
+The kind of process described earlier
+
+1122
+00:33:19,440 --> 00:33:21,580
+Well, this process is what we call the prologue.
+
+1123
+00:33:21,580 --> 00:33:23,080
+So what does it actually do?
+
+1124
+00:33:23,080 --> 00:33:25,440
+First, it says it will decrease the value of SP.
+
+1125
+00:33:25,440 --> 00:33:27,460
+Do you know what decreasing the value of SP actually means?
+
+1126
+00:33:27,460 --> 00:33:30,040
+What exactly is SP?
+
+1127
+00:33:30,040 --> 00:33:31,680
+As we mentioned earlier,
+
+1128
+00:33:31,680 --> 00:33:32,940
+SP is a register.
+
+1129
+00:33:32,940 --> 00:33:34,880
+This register is actually x-something.
+
+1130
+00:33:34,880 --> 00:33:36,280
+Is it x1?
+
+1131
+00:33:36,280 --> 00:33:37,840
+It's x2, right?
+
+1132
+00:33:37,840 --> 00:33:40,000
+x2 is actually SP.
+
+1133
+00:33:40,000 --> 00:33:41,580
+SP is in fact the stack pointer.
+
+1134
+00:33:41,580 --> 00:33:43,780
+So when we decrease this stack pointer,
+
+1135
+00:33:43,780 --> 00:33:44,580
+think about what that means.
+
+1136
+00:33:44,580 --> 00:33:45,560
+Look at the diagram on the right.
+
+1137
+00:33:45,560 --> 00:33:46,900
+It's essentially taking this
+
+1138
+00:33:46,900 --> 00:33:48,680
+and pushing the stack further down.
+
+1139
+00:33:48,680 --> 00:33:49,780
+Do you follow what I mean?
+
+1140
+00:33:49,780 --> 00:33:50,880
+After pushing the stack,
+
+1141
+00:33:50,880 --> 00:33:52,100
+It actually sets up
+
+1142
+00:33:52,100 --> 00:33:53,620
+You can think of it this way, conceptually
+
+1143
+00:33:53,620 --> 00:33:54,780
+It's like, for this function,
+
+1144
+00:33:54,780 --> 00:33:56,240
+it sets up a stack frame for the function.
+
+1145
+00:33:56,240 --> 00:33:59,200
+So what is this stack frame used for?
+
+1146
+00:33:59,200 --> 00:34:00,820
+It's used to save some registers,
+
+1147
+00:34:00,820 --> 00:34:03,380
+and to save and define some local variables.
+
+1148
+00:34:03,380 --> 00:34:03,940
+Think about it, isn't that right?
+
+1149
+00:34:03,940 --> 00:34:06,800
+So decreasing the value of SP
+
+1150
+00:34:06,800 --> 00:34:08,680
+is essentially setting up a stack frame for the function,
+
+1151
+00:34:08,680 --> 00:34:10,920
+and then based on
+
+1152
+00:34:10,920 --> 00:34:12,840
+which SAVE registers are used in this function,
+
+1153
+00:34:12,840 --> 00:34:14,880
+and how many local variables there are,
+
+1154
+00:34:14,880 --> 00:34:15,340
+that much stack space is allocated.
+
+1155
+00:34:15,340 --> 00:34:18,340
+Now, let's go back over this statement.
+
+1156
+00:34:18,340 --> 00:34:20,740
+What did we mean earlier by SAVE registers?
+
+1157
+00:34:20,740 --> 00:34:22,540
+SAVE registers.
+
+1158
+00:34:22,540 --> 00:34:25,140
+Let's go back to that table from just now.
+
+1159
+00:34:25,140 --> 00:34:28,870
+When you look at this on your own,
+
+1160
+00:34:28,870 --> 00:34:29,910
+refer to this table along with it.
+
+1161
+00:34:29,910 --> 00:34:31,450
+SAVE registers
+
+1162
+00:34:31,450 --> 00:34:33,230
+What does that mean?
+
+1163
+00:34:33,230 --> 00:34:35,530
+By convention,
+
+1164
+00:34:35,530 --> 00:34:37,130
+what are save registers?
+
+1165
+00:34:37,130 --> 00:34:39,430
+It means the call has to guarantee
+
+1166
+00:34:39,430 --> 00:34:40,450
+the values of these registers
+
+1167
+00:34:40,450 --> 00:34:42,130
+Put plainly,
+
+1168
+00:34:42,130 --> 00:34:45,730
+for the caller,
+
+1169
+00:34:45,730 --> 00:34:48,130
+the values in these save registers
+
+1170
+00:34:48,130 --> 00:34:50,270
+before and after the call
+
+1171
+00:34:50,270 --> 00:34:52,270
+must be guaranteed to remain unchanged.
+
+1172
+00:34:52,270 --> 00:34:53,090
+Now, for
+
+1173
+00:34:53,090 --> 00:34:55,190
+the called function,
+
+1174
+00:34:55,190 --> 00:34:56,430
+how do you make sure these registers
+
+1175
+00:34:56,430 --> 00:34:58,190
+stay the same before and after the call?
+
+1176
+00:34:58,190 --> 00:34:59,710
+Well, the only way is to do what?
+
+1177
+00:34:59,710 --> 00:35:01,930
+Don't you have to take these save registers
+
+1178
+00:35:01,930 --> 00:35:02,910
+and save them?
+
+1179
+00:35:02,910 --> 00:35:03,090
+Right?
+
+1180
+00:35:03,090 --> 00:35:04,330
+Whether you use them or not,
+
+1181
+00:35:04,330 --> 00:35:06,470
+Of course, if you optimize it better,
+
+1182
+00:35:06,470 --> 00:35:07,930
+you can detect it,
+
+1183
+00:35:07,930 --> 00:35:09,590
+meaning if it's not used, then don't save it.
+
+1184
+00:35:09,590 --> 00:35:11,150
+And if it is used, then you save it.
+
+1185
+00:35:11,150 --> 00:35:14,390
+But maybe you don't want to worry about that,
+
+1186
+00:35:14,390 --> 00:35:15,310
+so no matter what,
+
+1187
+00:35:15,310 --> 00:35:15,930
+following this convention,
+
+1188
+00:35:15,930 --> 00:35:17,570
+you just save these save registers and that's it.
+
+1189
+00:35:17,570 --> 00:35:19,750
+Then before coming out,
+
+1190
+00:35:19,750 --> 00:35:20,350
+before returning,
+
+1191
+00:35:20,350 --> 00:35:22,430
+just restore them again and that's it.
+
+1192
+00:35:22,430 --> 00:35:23,070
+Right?
+
+1193
+00:35:23,070 --> 00:35:25,510
+So about the save registers,
+
+1194
+00:35:25,510 --> 00:35:27,110
+let's get a feel for what this means.
+
+1195
+00:35:27,110 --> 00:35:41,780
+That is, we take the save registers,
+
+1196
+00:35:41,780 --> 00:35:44,040
+based on the save registers used in the function.
+
+1197
+00:35:44,040 --> 00:35:46,420
+So in principle, according to which ones you used,
+
+1198
+00:35:46,420 --> 00:35:47,940
+if you used them,
+
+1199
+00:35:47,940 --> 00:35:48,880
+then you save them.
+
+1200
+00:35:48,880 --> 00:35:49,440
+If you didn't use them,
+
+1201
+00:35:49,440 --> 00:35:50,400
+Actually, you could also skip saving them.
+
+1202
+00:35:50,400 --> 00:35:52,160
+This is also something that can improve efficiency.
+
+1203
+00:35:52,160 --> 00:35:55,080
+This is something for everyone to think about and get a feel for.
+
+1204
+00:35:55,080 --> 00:35:57,240
+This so-called saving of the save registers,
+
+1205
+00:35:57,240 --> 00:35:58,640
+what does saving it mean, exactly?
+
+1206
+00:35:58,640 --> 00:36:00,840
+Now, as for local variables,
+
+1207
+00:36:00,840 --> 00:36:02,660
+that is, suppose I define one inside a function,
+
+1208
+00:36:02,660 --> 00:36:04,560
+a local variable called a.
+
+1209
+00:36:04,560 --> 00:36:05,880
+So where does this a live?
+
+1210
+00:36:05,880 --> 00:36:06,900
+Actually, it also goes on the stack.
+
+1211
+00:36:06,900 --> 00:36:08,300
+You also have to allocate space for it.
+
+1212
+00:36:08,300 --> 00:36:08,480
+Right?
+
+1213
+00:36:08,480 --> 00:36:10,460
+Of course, you — earlier on,
+
+1214
+00:36:10,460 --> 00:36:10,980
+on the right side,
+
+1215
+00:36:10,980 --> 00:36:12,220
+as you move this down,
+
+1216
+00:36:12,220 --> 00:36:14,380
+when laying out this stack frame,
+
+1217
+00:36:14,380 --> 00:36:15,660
+it's actually been worked out ahead of time,
+
+1218
+00:36:15,660 --> 00:36:16,620
+how much space this needs to allocate.
+
+1219
+00:36:16,620 --> 00:36:17,520
+This is at the compilation stage,
+
+1220
+00:36:17,520 --> 00:36:18,800
+and it has actually already been computed for you.
+
+1221
+00:36:18,800 --> 00:36:20,740
+First, pull it down.
+
+1222
+00:36:20,740 --> 00:36:22,120
+Then we start putting things into it.
+
+1223
+00:36:22,120 --> 00:36:23,860
+That's essentially how it's set up.
+
+1224
+00:36:23,860 --> 00:36:25,620
+Then,
+
+1225
+00:36:25,620 --> 00:36:26,840
+The second step is to save the saved registers
+
+1226
+00:36:26,840 --> 00:36:27,800
+onto the stack.
+
+1227
+00:36:27,800 --> 00:36:29,320
+We covered this earlier.
+
+1228
+00:36:29,320 --> 00:36:30,400
+Third,
+
+1229
+00:36:30,400 --> 00:36:31,780
+if the function will still call
+
+1230
+00:36:31,780 --> 00:36:32,460
+Pay attention here.
+
+1231
+00:36:32,460 --> 00:36:34,680
+If the function will still call
+
+1232
+00:36:34,680 --> 00:36:36,020
+other functions, what does that tell us?
+
+1233
+00:36:36,020 --> 00:36:39,840
+It means this function is not a leaf function.
+
+1234
+00:36:39,840 --> 00:36:41,680
+It will still call new functions.
+
+1235
+00:36:41,680 --> 00:36:43,980
+So since it's going to call new functions,
+
+1236
+00:36:43,980 --> 00:36:46,220
+why do we have to save the ra register
+
+1237
+00:36:46,220 --> 00:36:47,260
+as well?
+
+1238
+00:36:47,260 --> 00:36:48,800
+This is exactly what we talked about earlier,
+
+1239
+00:36:48,800 --> 00:36:50,400
+the usage of the ra register.
+
+1240
+00:36:50,400 --> 00:36:57,740
+Let's review it again.
+
+1241
+00:36:57,740 --> 00:37:04,100
+The use of this RA register,
+
+1242
+00:37:04,100 --> 00:37:07,320
+as for the RA register,
+
+1243
+00:37:07,320 --> 00:37:08,820
+how did we put it just now?
+
+1244
+00:37:08,820 --> 00:37:12,180
+Who is responsible during a function call
+
+1245
+00:37:12,180 --> 00:37:13,220
+for maintaining these registers?
+
+1246
+00:37:13,220 --> 00:37:15,420
+We said it is the caller who maintains them.
+
+1247
+00:37:15,420 --> 00:37:16,800
+So the caller here,
+
+1248
+00:37:16,800 --> 00:37:17,520
+that is to say,
+
+1249
+00:37:17,520 --> 00:37:20,060
+who was the caller in what we just saw?
+
+1250
+00:37:20,060 --> 00:37:24,960
+Let me go back again.
+
+1251
+00:37:24,960 --> 00:37:27,000
+Too slow.
+
+1252
+00:37:27,000 --> 00:37:31,430
+That is to say,
+
+1253
+00:37:31,430 --> 00:37:34,710
+if a function also calls other functions,
+
+1254
+00:37:34,710 --> 00:37:36,970
+that is, if this current function, this function,
+
+1255
+00:37:36,970 --> 00:37:38,950
+also calls other functions,
+
+1256
+00:37:38,950 --> 00:37:40,670
+then isn't this function the caller?
+
+1257
+00:37:40,670 --> 00:37:43,290
+Do you still get what I mean?
+
+1258
+00:37:43,290 --> 00:37:44,670
+Suppose this function,
+
+1259
+00:37:44,670 --> 00:37:46,330
+if it also calls other functions,
+
+1260
+00:37:46,330 --> 00:37:48,510
+that is, if this function also calls other functions,
+
+1261
+00:37:48,510 --> 00:37:50,550
+So this function, is it the caller?
+
+1262
+00:37:50,550 --> 00:37:53,070
+If it also calls other functions,
+
+1263
+00:37:53,070 --> 00:37:55,370
+then this register must be saved.
+
+1264
+00:37:55,370 --> 00:37:56,210
+Think about why.
+
+1265
+00:37:56,210 --> 00:37:58,330
+Because we know this function,
+
+1266
+00:37:58,330 --> 00:38:02,410
+suppose this function is called by another function,
+
+1267
+00:38:02,410 --> 00:38:04,350
+then this function A,
+
+1268
+00:38:04,350 --> 00:38:06,510
+suppose function A called this function,
+
+1269
+00:38:06,510 --> 00:38:09,690
+then after function A calls function,
+
+1270
+00:38:09,690 --> 00:38:11,470
+before it calls this function,
+
+1271
+00:38:11,470 --> 00:38:13,290
+it must have put in the ra register,
+
+1272
+00:38:13,290 --> 00:38:15,590
+its return address.
+
+1273
+00:38:15,590 --> 00:38:16,110
+Think about it, right?
+
+1274
+00:38:16,110 --> 00:38:20,710
+Then if this function of mine calls a new function,
+
+1275
+00:38:20,710 --> 00:38:21,570
+calls C,
+
+1276
+00:38:21,570 --> 00:38:22,850
+then suppose this is B,
+
+1277
+00:38:22,850 --> 00:38:25,050
+suppose this B calls C again,
+
+1278
+00:38:25,050 --> 00:38:26,370
+then when calling C,
+
+1279
+00:38:26,370 --> 00:38:27,510
+we know that when calling C,
+
+1280
+00:38:27,510 --> 00:38:30,410
+it will definitely overwrite the value in the ra register
+
+1281
+00:38:30,410 --> 00:38:31,430
+change it to its return address
+
+1282
+00:38:31,430 --> 00:38:31,950
+think about it, right?
+
+1283
+00:38:31,950 --> 00:38:34,550
+Now, if it modifies this value,
+
+1284
+00:38:34,550 --> 00:38:37,350
+then the next time it returns and wants to go back to A,
+
+1285
+00:38:37,350 --> 00:38:38,870
+it won't be able to get back.
+
+1286
+00:38:38,870 --> 00:38:40,110
+That's the problem we'd run into.
+
+1287
+00:38:40,110 --> 00:38:42,090
+So, given that this is the case,
+
+1288
+00:38:42,090 --> 00:38:44,530
+since I've determined that this function,
+
+1289
+00:38:44,530 --> 00:38:45,870
+if B is going to call C,
+
+1290
+00:38:45,870 --> 00:38:48,750
+then I need to take the original value in ra,
+
+1291
+00:38:48,750 --> 00:38:50,750
+that is, the original return address of A,
+
+1292
+00:38:50,750 --> 00:38:51,530
+and do what with it?
+
+1293
+00:38:51,530 --> 00:38:53,010
+Save it.
+
+1294
+00:38:53,010 --> 00:38:57,630
+Before my function returns,
+
+1295
+00:38:57,630 --> 00:38:59,390
+I just restore it, and that's it.
+
+1296
+00:38:59,390 --> 00:39:00,890
+That's the idea.
+
+1297
+00:39:00,890 --> 00:39:05,390
+So if this function is going to call other functions,
+
+1298
+00:39:05,390 --> 00:39:07,270
+we need to take the value of ra,
+
+1299
+00:39:07,270 --> 00:39:09,450
+what's actually stored in here is essentially,
+
+1300
+00:39:09,450 --> 00:39:11,490
+the return address value of function A.
+
+1301
+00:39:11,490 --> 00:39:13,130
+the value of this A function
+
+1302
+00:39:13,130 --> 00:39:15,490
+we save it
+
+1303
+00:39:15,490 --> 00:39:17,030
+and then later return it
+
+1304
+00:39:17,530 --> 00:39:18,810
+and just restore it, and that's it
+
+1305
+00:39:20,610 --> 00:39:21,370
+So this is
+
+1306
+00:39:21,630 --> 00:39:25,210
+basically, before our function actually executes,
+
+1307
+00:39:25,470 --> 00:39:26,490
+there's actually a lot of work to be done.
+
+1308
+00:39:27,010 --> 00:39:29,570
+And this work is also part of our convention.
+
+1309
+00:39:31,870 --> 00:39:34,950
+Now, next, let's look at the function epilogue.
+
+1310
+00:39:35,210 --> 00:39:37,510
+The epilogue is basically the reverse of this process.
+
+1311
+00:39:38,530 --> 00:39:39,290
+A reverse operation.
+
+1312
+00:39:39,550 --> 00:39:42,890
+The first step of the reverse operation is to restore what was temporarily saved.
+
+1313
+00:39:43,130 --> 00:39:44,670
+Because we saved these things
+
+1314
+00:39:44,670 --> 00:39:45,850
+earlier,
+
+1315
+00:39:45,850 --> 00:39:47,410
+and since we saved them,
+
+1316
+00:39:47,410 --> 00:39:48,290
+we restore them.
+
+1317
+00:39:48,290 --> 00:39:49,030
+After restoring them,
+
+1318
+00:39:49,030 --> 00:39:51,770
+with respect to the caller of this function,
+
+1319
+00:39:51,770 --> 00:39:52,610
+A,
+
+1320
+00:39:52,610 --> 00:39:54,090
+it's as if nothing has changed.
+
+1321
+00:39:54,090 --> 00:39:54,530
+Right?
+
+1322
+00:39:54,530 --> 00:39:56,830
+And at the same time, if needed,
+
+1323
+00:39:56,830 --> 00:39:58,810
+restore the saved ra from the stack.
+
+1324
+00:39:58,810 --> 00:40:00,890
+And what we mean by "if needed" is exactly this,
+
+1325
+00:40:00,890 --> 00:40:02,570
+that is, if there is a call,
+
+1326
+00:40:02,570 --> 00:40:03,470
+if there was no call,
+
+1327
+00:40:03,470 --> 00:40:04,450
+then actually nothing gets saved.
+
+1328
+00:40:04,450 --> 00:40:06,170
+If nothing is saved, then there is no need to restore it.
+
+1329
+00:40:06,170 --> 00:40:09,030
+So these two things correspond to each other.
+
+1330
+00:40:09,030 --> 00:40:10,330
+Then the last step,
+
+1331
+00:40:10,330 --> 00:40:12,130
+step three, increase sp.
+
+1332
+00:40:12,130 --> 00:40:13,550
+Now, what we mean by increasing sp,
+
+1333
+00:40:13,550 --> 00:40:14,230
+you can imagine,
+
+1334
+00:40:14,230 --> 00:40:16,030
+is that we are about to pop.
+
+1335
+00:40:16,030 --> 00:40:17,070
+We are going to deallocate the stack frame.
+
+1336
+00:40:17,070 --> 00:40:19,570
+Then the call uses ret to return.
+
+1337
+00:40:19,570 --> 00:40:20,950
+This ret is exactly what we talked about earlier,
+
+1338
+00:40:20,950 --> 00:40:22,050
+a standard function call.
+
+1339
+00:40:22,050 --> 00:40:28,480
+And that finally achieves this kind of effect.
+
+1340
+00:40:28,480 --> 00:40:30,920
+So this involves
+
+1341
+00:40:30,920 --> 00:40:32,380
+That is to say, the called function,
+
+1342
+00:40:32,380 --> 00:40:33,560
+that is, this function of ours,
+
+1343
+00:40:33,560 --> 00:40:36,380
+say A calls B,
+
+1344
+00:40:36,380 --> 00:40:37,560
+calls a function,
+
+1345
+00:40:37,560 --> 00:40:39,860
+then inside this function,
+
+1346
+00:40:39,860 --> 00:40:41,220
+actually, around the function body,
+
+1347
+00:40:41,220 --> 00:40:42,960
+before the function body and after the function body,
+
+1348
+00:40:42,960 --> 00:40:44,480
+there are some standard operations
+
+1349
+00:40:44,480 --> 00:40:45,680
+that we need to do.
+
+1350
+00:40:45,680 --> 00:40:47,160
+This part of the work,
+
+1351
+00:40:47,160 --> 00:40:48,060
+we normally don't see it,
+
+1352
+00:40:48,060 --> 00:40:50,300
+but that doesn't mean it doesn't exist.
+
+1353
+00:40:50,300 --> 00:40:52,820
+It's actually done for us by the compiler.
+
+1354
+00:40:52,820 --> 00:40:53,260
+But,
+
+1355
+00:40:53,260 --> 00:40:54,280
+today,
+
+1356
+00:40:54,280 --> 00:40:56,000
+we're going to try writing it ourselves.
+
+1357
+00:40:56,000 --> 00:40:58,920
+Suppose you had to implement it — how would you do it?
+
+1358
+00:40:58,920 --> 00:41:02,500
+to deepen your impression of this process.
+
+1359
+00:41:02,500 --> 00:41:06,560
+So basically, that covers everything about function calling conventions,
+
+1360
+00:41:06,560 --> 00:41:08,880
+I've now introduced it all to you.
+
+1361
+00:41:08,880 --> 00:41:10,600
+So let's go through some exercises
+
+1362
+00:41:10,600 --> 00:41:16,450
+to see how this actually works in practice.
+
+1363
+00:41:16,450 --> 00:41:19,570
+Next, we'll walk you through
+
+1364
+00:41:19,570 --> 00:41:20,770
+a quick look at
+
+1365
+00:41:20,770 --> 00:41:21,830
+these two examples here.
+
+1366
+00:41:21,830 --> 00:41:24,190
+One is ccleaf,
+
+1367
+00:41:24,190 --> 00:41:26,350
+and the other is called ccnested.
+
+1368
+00:41:26,350 --> 00:41:27,310
+Now, this one,
+
+1369
+00:41:27,310 --> 00:41:28,170
+basically, leaf,
+
+1370
+00:41:28,170 --> 00:41:30,510
+means this is a leaf call,
+
+1371
+00:41:30,510 --> 00:41:31,490
+that is, a leaf call,
+
+1372
+00:41:31,490 --> 00:41:33,770
+the concept of a leaf call.
+
+1373
+00:41:33,770 --> 00:41:35,610
+As for nested,
+
+1374
+00:41:35,610 --> 00:41:36,430
+it means a
+
+1375
+00:41:36,430 --> 00:41:38,950
+non-leaf call, essentially.
+
+1376
+00:41:38,950 --> 00:41:43,930
+Now, ccleaf,
+
+1377
+00:41:43,930 --> 00:41:44,430
+that is to say,
+
+1378
+00:41:44,430 --> 00:41:46,530
+what exactly is a leaf call?
+
+1379
+00:41:46,530 --> 00:41:47,590
+Let's take a look at this example.
+
+1380
+00:41:47,590 --> 00:41:48,830
+If we write it in C,
+
+1381
+00:41:48,830 --> 00:41:49,350
+That is to say,
+
+1382
+00:41:49,350 --> 00:41:51,310
+suppose you look at this start function,
+
+1383
+00:41:51,310 --> 00:41:52,750
+it calls this square function,
+
+1384
+00:41:52,750 --> 00:41:53,990
+just to compute a square,
+
+1385
+00:41:53,990 --> 00:41:55,570
+a times a.
+
+1386
+00:41:55,570 --> 00:41:58,830
+So after it calls this square function,
+
+1387
+00:41:58,830 --> 00:42:00,810
+this function won't call anything else.
+
+1388
+00:42:00,810 --> 00:42:03,750
+In other words, after this call,
+
+1389
+00:42:03,750 --> 00:42:04,590
+this function,
+
+1390
+00:42:04,590 --> 00:42:06,830
+the square function, won't call any new functions.
+
+1391
+00:42:06,830 --> 00:42:07,590
+Of course, isn't that right?
+
+1392
+00:42:07,590 --> 00:42:09,750
+This kind is called a leaf call,
+
+1393
+00:42:09,750 --> 00:42:11,050
+or a pseudo-call.
+
+1394
+00:42:11,050 --> 00:42:13,210
+Now let's take a look.
+
+1395
+00:42:13,210 --> 00:42:15,790
+Now, following this calling convention,
+
+1396
+00:42:15,790 --> 00:42:17,050
+how do we write this?
+
+1397
+00:42:17,050 --> 00:42:18,850
+rather than just writing it however we please.
+
+1398
+00:42:18,850 --> 00:42:21,130
+And this,
+
+1399
+00:42:21,130 --> 00:42:23,790
+also involves what we talked about earlier, passing arguments,
+
+1400
+00:42:23,790 --> 00:42:26,710
+because this function,
+
+1401
+00:42:26,710 --> 00:42:28,390
+We said it also takes a number of arguments.
+
+1402
+00:42:28,390 --> 00:42:29,630
+So, as for the arguments we just mentioned,
+
+1403
+00:42:29,630 --> 00:42:31,110
+which registers do we use to pass them?
+
+1404
+00:42:31,110 --> 00:42:32,410
+According to our convention,
+
+1405
+00:42:32,410 --> 00:42:37,030
+we first use a0 to pass the first argument,
+
+1406
+00:42:37,030 --> 00:42:38,070
+a1 for the second argument,
+
+1407
+00:42:38,070 --> 00:42:38,290
+right?
+
+1408
+00:42:38,290 --> 00:42:40,010
+What if that's not enough?
+
+1409
+00:42:40,010 --> 00:42:41,130
+We can also use these,
+
+1410
+00:42:41,130 --> 00:42:43,530
+a2 through a7,
+
+1411
+00:42:43,530 --> 00:42:43,850
+right?
+
+1412
+00:42:43,850 --> 00:42:45,710
+So what about a function,
+
+1413
+00:42:45,710 --> 00:42:46,590
+returning its return value?
+
+1414
+00:42:46,590 --> 00:42:47,150
+That's also
+
+1415
+00:42:47,150 --> 00:42:48,430
+according to the convention,
+
+1416
+00:42:48,430 --> 00:42:49,490
+that is, the return value
+
+1417
+00:42:49,490 --> 00:42:50,510
+is preferably put
+
+1418
+00:42:50,510 --> 00:42:51,610
+in a register to be returned,
+
+1419
+00:42:51,610 --> 00:42:52,690
+so we also
+
+1420
+00:42:52,690 --> 00:42:53,870
+put it in a0 first.
+
+1421
+00:42:53,870 --> 00:42:55,050
+Then we put A1's in.
+
+1422
+00:42:55,050 --> 00:42:55,930
+It works like this.
+
+1423
+00:42:55,930 --> 00:42:56,770
+If it exceeds that,
+
+1424
+00:42:56,770 --> 00:42:57,490
+we might have to
+
+1425
+00:42:57,490 --> 00:42:58,750
+use some other technique.
+
+1426
+00:42:58,750 --> 00:42:59,710
+For now,
+
+1427
+00:42:59,710 --> 00:43:00,290
+let's set that aside.
+
+1428
+00:43:00,290 --> 00:43:02,430
+Let's take a look at
+
+1429
+00:43:02,430 --> 00:43:03,590
+this code.
+
+1430
+00:43:03,590 --> 00:43:21,470
+This one
+
+1431
+00:43:21,470 --> 00:43:22,650
+is in our
+
+1432
+00:43:23,230 --> 00:43:26,890
+ccleaf.
+
+1433
+00:43:26,890 --> 00:43:29,370
+cc is short for call conversion.
+
+1434
+00:43:29,370 --> 00:43:37,470
+Let's first take a look.
+
+1435
+00:43:37,470 --> 00:43:47,570
+So we'll just dive right in.
+
+1436
+00:43:47,570 --> 00:43:49,650
+How does this reflect
+
+1437
+00:43:49,650 --> 00:43:51,630
+the programming conventions we just talked about?
+
+1438
+00:43:51,630 --> 00:43:54,230
+First, note that this program executes
+
+1439
+00:43:54,230 --> 00:43:56,190
+starting from the start function.
+
+1440
+00:43:56,190 --> 00:43:58,130
+And that function
+
+1441
+00:43:58,130 --> 00:44:01,010
+Before this function,
+
+1442
+00:44:01,010 --> 00:44:01,890
+first we see
+
+1443
+00:44:01,890 --> 00:44:03,230
+we did a few things.
+
+1444
+00:44:03,230 --> 00:44:04,610
+Below this code,
+
+1445
+00:44:04,610 --> 00:44:06,770
+we first have a piece of logic here.
+
+1446
+00:44:06,770 --> 00:44:09,210
+Now, this logic,
+
+1447
+00:44:09,210 --> 00:44:10,190
+let me explain it to you.
+
+1448
+00:44:10,190 --> 00:44:11,190
+From its comments,
+
+1449
+00:44:11,190 --> 00:44:11,650
+we can see
+
+1450
+00:44:11,650 --> 00:44:13,270
+what we are actually defining here,
+
+1451
+00:44:13,270 --> 00:44:13,870
+this region,
+
+1452
+00:44:13,870 --> 00:44:16,610
+this region doesn't actually hold instructions,
+
+1453
+00:44:16,610 --> 00:44:17,710
+what's placed here is actually,
+
+1454
+00:44:17,710 --> 00:44:19,350
+you can think of it as a stack area.
+
+1455
+00:44:19,350 --> 00:44:21,270
+We actually defined a stack.
+
+1456
+00:44:21,270 --> 00:44:23,250
+A stack is just a piece of memory,
+
+1457
+00:44:23,250 --> 00:44:23,790
+right everyone?
+
+1458
+00:44:23,790 --> 00:44:25,690
+Since we need to make function calls,
+
+1459
+00:44:25,690 --> 00:44:26,530
+we must have a stack,
+
+1460
+00:44:26,530 --> 00:44:28,010
+which means we must use memory.
+
+1461
+00:44:28,010 --> 00:44:29,890
+This memory here
+
+1462
+00:44:29,890 --> 00:44:30,870
+is defined statically
+
+1463
+00:44:30,870 --> 00:44:33,430
+What we actually did was make use of this
+
+1464
+00:44:33,430 --> 00:44:35,050
+directive
+
+1465
+00:44:35,050 --> 00:44:36,690
+that is, a directive in the assembly instructions
+
+1466
+00:44:36,690 --> 00:44:39,730
+to tell the compiler, when generating the executable program,
+
+1467
+00:44:39,730 --> 00:44:43,270
+to add roughly 10 words for us here
+
+1468
+00:44:43,270 --> 00:44:44,530
+10 words
+
+1469
+00:44:44,530 --> 00:44:47,210
+One Dword is 4 bytes
+
+1470
+00:44:47,210 --> 00:44:48,670
+so that's 40 bytes in total
+
+1471
+00:44:48,670 --> 00:44:51,210
+You can compile this code and then
+
+1472
+00:44:51,210 --> 00:44:54,590
+take a look at the last 40 bytes of it
+
+1473
+00:44:54,590 --> 00:44:56,930
+which is actually used to hold the stack area
+
+1474
+00:44:56,930 --> 00:44:59,690
+The part before it is used for the instructions
+
+1475
+00:44:59,690 --> 00:45:07,690
+So before the function is actually executed,
+
+1476
+00:45:07,690 --> 00:45:12,010
+that is, while our start function is executing,
+
+1477
+00:45:12,010 --> 00:45:14,230
+this is where it really starts running,
+
+1478
+00:45:14,230 --> 00:45:15,790
+before it actually executes below,
+
+1479
+00:45:15,790 --> 00:45:17,630
+we first have a step of operation doing what?
+
+1480
+00:45:17,630 --> 00:45:22,370
+We're actually preparing a key parameter for the stack
+
+1481
+00:45:22,370 --> 00:45:24,710
+That is, when we push and pop on the stack
+
+1482
+00:45:24,710 --> 00:45:27,530
+we're actually operating on a stack pointer the whole time
+
+1483
+00:45:27,530 --> 00:45:28,030
+Right?
+
+1484
+00:45:28,030 --> 00:45:29,270
+Now, this stack pointer
+
+1485
+00:45:29,270 --> 00:45:31,410
+we need to give it an initial value
+
+1486
+00:45:31,410 --> 00:45:34,550
+We assign this stack pointer through the la instruction
+
+1487
+00:45:34,550 --> 00:45:36,350
+As we talked about earlier,
+
+1488
+00:45:36,350 --> 00:45:37,110
+what is la used for?
+
+1489
+00:45:37,110 --> 00:45:39,030
+It's used to load an address
+
+1490
+00:45:39,030 --> 00:45:40,350
+load address
+
+1491
+00:45:40,350 --> 00:45:42,850
+That is, it takes an address
+
+1492
+00:45:42,850 --> 00:45:45,330
+and loads it into the sp register
+
+1493
+00:45:45,330 --> 00:45:46,750
+And this address
+
+1494
+00:45:46,750 --> 00:45:47,510
+is stack end
+
+1495
+00:45:47,510 --> 00:45:49,350
+So what does that mean?
+
+1496
+00:45:49,350 --> 00:45:49,750
+It means that
+
+1497
+00:45:49,750 --> 00:45:51,170
+this stack end
+
+1498
+00:45:51,170 --> 00:45:52,670
+is what we defined below just now,
+
+1499
+00:45:52,670 --> 00:45:53,530
+the stack's what,
+
+1500
+00:45:53,530 --> 00:45:56,030
+the stack's end position
+
+1501
+00:45:56,030 --> 00:45:57,550
+What does this mean?
+
+1502
+00:45:57,550 --> 00:45:58,250
+It means that,
+
+1503
+00:45:58,250 --> 00:46:00,330
+we basically, let's say,
+
+1504
+00:46:00,330 --> 00:46:05,190
+this stack of ours,
+
+1505
+00:46:05,190 --> 00:46:10,780
+we defined a stack area, right,
+
+1506
+00:46:10,780 --> 00:46:12,180
+and at the top of this stack area,
+
+1507
+00:46:12,180 --> 00:46:14,520
+according to its definition,
+
+1508
+00:46:14,520 --> 00:46:16,180
+this side is start stack,
+
+1509
+00:46:16,180 --> 00:46:18,940
+the stack we just defined is what,
+
+1510
+00:46:18,940 --> 00:46:21,760
+it's start, right?
+
+1511
+00:46:21,760 --> 00:46:22,260
+start,
+
+1512
+00:46:22,260 --> 00:46:25,060
+this character is written a bit ugly,
+
+1513
+00:46:25,060 --> 00:46:28,720
+over here is the end of the stack,
+
+1514
+00:46:28,720 --> 00:46:31,800
+on top is where we put our instructions,
+
+1515
+00:46:31,800 --> 00:46:33,300
+this block down here is the stack area,
+
+1516
+00:46:33,300 --> 00:46:34,360
+so for this stack area,
+
+1517
+00:46:34,360 --> 00:46:36,740
+at the very beginning, we set the sp register,
+
+1518
+00:46:36,740 --> 00:46:37,640
+to point where?
+
+1519
+00:46:37,640 --> 00:46:39,320
+It points to stack end,
+
+1520
+00:46:39,320 --> 00:46:43,740
+which means this stack of ours at the very beginning
+
+1521
+00:46:43,740 --> 00:46:47,460
+Our stack currently grows from low to high.
+
+1522
+00:46:47,460 --> 00:46:49,440
+When we drew the diagram just now,
+
+1523
+00:46:49,440 --> 00:46:51,000
+the stack was drawn upside down,
+
+1524
+00:46:51,000 --> 00:46:52,480
+with low addresses at the top
+
+1525
+00:46:52,480 --> 00:46:53,460
+and high addresses at the bottom.
+
+1526
+00:46:53,460 --> 00:46:55,200
+What we actually do is
+
+1527
+00:46:55,200 --> 00:46:57,980
+prepare the stack to grow toward
+
+1528
+00:46:57,980 --> 00:47:01,000
+the top, so when we push onto the stack, we push it upward.
+
+1529
+00:47:01,000 --> 00:47:03,740
+So we set the stack pointer
+
+1530
+00:47:03,740 --> 00:47:07,560
+to point at the high-address region of memory from the start.
+
+1531
+00:47:07,560 --> 00:47:10,860
+That's exactly the effect that instruction had just now.
+
+1532
+00:47:10,860 --> 00:47:13,420
+Let me explain this to you.
+
+1533
+00:47:13,420 --> 00:47:16,860
+That's what stack_end means.
+
+1534
+00:47:16,860 --> 00:47:19,040
+Okay, so
+
+1535
+00:47:19,040 --> 00:47:20,720
+this instruction here
+
+1536
+00:47:20,720 --> 00:47:22,780
+gets the stack pointer ready.
+
+1537
+00:47:22,780 --> 00:47:24,360
+It effectively prepares this stack area.
+
+1538
+00:47:24,360 --> 00:47:26,620
+Once the stack is ready,
+
+1539
+00:47:26,620 --> 00:47:28,240
+we start executing our instructions.
+
+1540
+00:47:28,240 --> 00:47:30,500
+Now, this one is first
+
+1541
+00:47:30,500 --> 00:47:35,920
+put the value 3 into the register a0.
+
+1542
+00:47:35,920 --> 00:47:37,880
+You can see here, what we're writing now
+
+1543
+00:47:37,880 --> 00:47:40,580
+uses the aliases for all the register names,
+
+1544
+00:47:40,580 --> 00:47:41,680
+all of them use their ABI names.
+
+1545
+00:47:41,680 --> 00:47:43,620
+a0 — what is a0 here?
+
+1546
+00:47:43,620 --> 00:47:44,900
+It's actually the parameter, right?
+
+1547
+00:47:44,900 --> 00:47:46,900
+Based on this code earlier,
+
+1548
+00:47:46,900 --> 00:47:48,560
+we can see that that's exactly what it means.
+
+1549
+00:47:48,560 --> 00:47:51,320
+In other words, we pass this value 3 as an argument —
+
+1550
+00:47:51,320 --> 00:47:54,020
+when passing arguments, we put 3 into a0 first.
+
+1551
+00:47:54,020 --> 00:47:54,840
+According to the convention,
+
+1552
+00:47:54,840 --> 00:47:56,340
+a0 is used to pass the first argument.
+
+1553
+00:47:56,340 --> 00:47:59,300
+And then, once we've set up this 3,
+
+1554
+00:47:59,300 --> 00:48:01,380
+once it's in place,
+
+1555
+00:48:01,380 --> 00:48:03,500
+we go ahead and call callSquare.
+
+1556
+00:48:03,500 --> 00:48:05,960
+So callSquare is essentially calling a function.
+
+1557
+00:48:05,960 --> 00:48:07,800
+Now, this function,
+
+1558
+00:48:07,800 --> 00:48:10,060
+the function name is actually this function's
+
+1559
+00:48:10,060 --> 00:48:11,060
+starting address,
+
+1560
+00:48:11,060 --> 00:48:14,000
+so from here is really where the function begins.
+
+1561
+00:48:14,000 --> 00:48:16,300
+So what's happening up front?
+
+1562
+00:48:16,300 --> 00:48:20,630
+We take this stack
+
+1563
+00:48:20,630 --> 00:48:23,570
+addi sp, sp, -8
+
+1564
+00:48:23,570 --> 00:48:25,870
+The -8 basically means subtraction.
+
+1565
+00:48:25,870 --> 00:48:27,530
+Now, as we just said about the stack,
+
+1566
+00:48:27,530 --> 00:48:28,750
+high addresses are at the bottom
+
+1567
+00:48:28,750 --> 00:48:30,150
+and low addresses are at the top.
+
+1568
+00:48:30,150 --> 00:48:33,590
+Subtracting 8 moves the stack pointer up.
+
+1569
+00:48:33,590 --> 00:48:33,770
+Right?
+
+1570
+00:48:33,770 --> 00:48:34,830
+And moving it up
+
+1571
+00:48:34,830 --> 00:48:36,690
+is basically opening up space on the stack, isn't it?
+
+1572
+00:48:36,690 --> 00:48:37,610
+That is in fact pushing onto the stack.
+
+1573
+00:48:37,610 --> 00:48:38,250
+Think about it — isn't that right?
+
+1574
+00:48:38,250 --> 00:48:40,790
+After pushing onto the stack,
+
+1575
+00:48:40,790 --> 00:48:43,770
+we then save s0 and s1.
+
+1576
+00:48:43,770 --> 00:48:44,490
+Why is that?
+
+1577
+00:48:44,490 --> 00:48:46,070
+Because as we mentioned earlier,
+
+1578
+00:48:46,070 --> 00:48:47,830
+in the code that comes after this,
+
+1579
+00:48:47,830 --> 00:48:51,150
+we deliberately use registers like s0 and s1.
+
+1580
+00:48:51,150 --> 00:48:52,470
+So for the register s0,
+
+1581
+00:48:52,470 --> 00:48:53,310
+As we mentioned earlier,
+
+1582
+00:48:53,310 --> 00:48:55,970
+who is responsible for preserving its invariants?
+
+1583
+00:48:55,970 --> 00:48:58,930
+It's the callee that preserves its invariants.
+
+1584
+00:48:58,930 --> 00:49:01,270
+So what that means is, with this function,
+
+1585
+00:49:01,270 --> 00:49:02,430
+inside this function,
+
+1586
+00:49:02,430 --> 00:49:04,230
+it has to preserve these variables,
+
+1587
+00:49:04,230 --> 00:49:06,570
+preserve the invariants of these registers.
+
+1588
+00:49:06,570 --> 00:49:09,430
+So first it puts them onto the stack.
+
+1589
+00:49:09,430 --> 00:49:12,390
+sw is store word,
+
+1590
+00:49:12,390 --> 00:49:15,430
+taking the value in this register
+
+1591
+00:49:15,430 --> 00:49:17,150
+and saving it
+
+1592
+00:49:17,150 --> 00:49:18,730
+into the stack.
+
+1593
+00:49:18,730 --> 00:49:21,330
+We won't belabor this meaning here.
+
+1594
+00:49:21,330 --> 00:49:23,190
+Go back and, together with what we covered earlier,
+
+1595
+00:49:23,190 --> 00:49:24,230
+all this instruction stuff,
+
+1596
+00:49:24,230 --> 00:49:25,210
+take a look at it yourselves.
+
+1597
+00:49:25,210 --> 00:49:28,010
+Basically, this just saves s0.
+
+1598
+00:49:28,010 --> 00:49:28,870
+And then below that,
+
+1599
+00:49:28,870 --> 00:49:31,010
+it goes and executes this square,
+
+1600
+00:49:31,010 --> 00:49:32,270
+doing the multiplication.
+
+1601
+00:49:32,270 --> 00:49:33,150
+Because a0
+
+1602
+00:49:33,150 --> 00:49:34,730
+has already been saved.
+
+1603
+00:49:34,730 --> 00:49:36,510
+What's in a0 is our parameter.
+
+1604
+00:49:36,510 --> 00:49:37,810
+Then, we take a0
+
+1605
+00:49:37,810 --> 00:49:38,610
+and with a move instruction,
+
+1606
+00:49:38,610 --> 00:49:40,890
+we move a0 into s0 first.
+
+1607
+00:49:40,890 --> 00:49:41,870
+Then,
+
+1608
+00:49:41,870 --> 00:49:43,350
+we perform a multiplication on s0.
+
+1609
+00:49:43,350 --> 00:49:44,050
+Here,
+
+1610
+00:49:44,050 --> 00:49:46,010
+we use a MUL instruction.
+
+1611
+00:49:46,010 --> 00:49:47,170
+We haven't covered the MUL instruction before.
+
+1612
+00:49:47,170 --> 00:49:48,230
+It actually belongs to that
+
+1613
+00:49:48,230 --> 00:49:50,690
+multiplication extension, the one that does multiplication.
+
+1614
+00:49:50,690 --> 00:49:51,170
+It simply means
+
+1615
+00:49:51,170 --> 00:49:53,510
+taking s0 and s0,
+
+1616
+00:49:53,510 --> 00:49:55,730
+multiplying the values in the two registers,
+
+1617
+00:49:55,730 --> 00:49:57,290
+and saving the result into s1.
+
+1618
+00:49:57,290 --> 00:49:58,270
+Very simple.
+
+1619
+00:49:58,270 --> 00:49:59,350
+Then,
+
+1620
+00:49:59,350 --> 00:50:01,170
+why does the next one...
+
+1621
+00:50:01,170 --> 00:50:02,430
+We also need to move this result
+
+1622
+00:50:02,430 --> 00:50:04,290
+back into a0.
+
+1623
+00:50:04,290 --> 00:50:05,950
+This is where returning comes in.
+
+1624
+00:50:05,950 --> 00:50:06,870
+Follow me?
+
+1625
+00:50:06,870 --> 00:50:07,370
+We said that
+
+1626
+00:50:07,370 --> 00:50:09,430
+the effect of our square function here
+
+1627
+00:50:09,430 --> 00:50:10,630
+is to take the result
+
+1628
+00:50:10,630 --> 00:50:13,410
+the value of a times a, and return it.
+
+1629
+00:50:13,410 --> 00:50:16,050
+And when we return it,
+
+1630
+00:50:16,050 --> 00:50:18,110
+we pass the return value through a0.
+
+1631
+00:50:18,110 --> 00:50:19,070
+That's by convention.
+
+1632
+00:50:19,070 --> 00:50:20,830
+It's not something we just made up.
+
+1633
+00:50:20,830 --> 00:50:21,470
+By convention,
+
+1634
+00:50:21,470 --> 00:50:23,390
+we simply store the result
+
+1635
+00:50:23,390 --> 00:50:24,690
+in a0, and that's it.
+
+1636
+00:50:24,690 --> 00:50:26,530
+And finally,
+
+1637
+00:50:26,530 --> 00:50:27,550
+our function here
+
+1638
+00:50:27,550 --> 00:50:29,450
+— this is actually the body of the function.
+
+1639
+00:50:29,450 --> 00:50:30,310
+So actually, right here,
+
+1640
+00:50:30,310 --> 00:50:31,630
+and before that,
+
+1641
+00:50:31,630 --> 00:50:32,450
+It's basically a prolog.
+
+1642
+00:50:32,450 --> 00:50:33,570
+And then after that comes the epilog.
+
+1643
+00:50:33,570 --> 00:50:36,270
+So the epilog is the counterpart
+
+1644
+00:50:36,270 --> 00:50:37,570
+of the prolog.
+
+1645
+00:50:37,570 --> 00:50:39,090
+Now, over here,
+
+1646
+00:50:39,090 --> 00:50:40,730
+we don't need the compiler to generate it for us,
+
+1647
+00:50:40,730 --> 00:50:41,930
+because over here
+
+1648
+00:50:41,930 --> 00:50:43,350
+we are writing assembly directly,
+
+1649
+00:50:43,350 --> 00:50:45,730
+without the step
+
+1650
+00:50:45,730 --> 00:50:46,690
+of converting C code into assembly.
+
+1651
+00:50:46,690 --> 00:50:48,370
+So our assembler,
+
+1652
+00:50:48,370 --> 00:50:48,910
+well, it simply
+
+1653
+00:50:48,910 --> 00:50:50,870
+does not take part in
+
+1654
+00:50:50,870 --> 00:50:51,790
+building this code.
+
+1655
+00:50:51,790 --> 00:50:53,050
+If it were C,
+
+1656
+00:50:53,050 --> 00:50:55,210
+we would have the compiler help us
+
+1657
+00:50:55,210 --> 00:50:57,810
+build this prolog and epilog.
+
+1658
+00:50:57,810 --> 00:50:59,450
+But we write it ourselves.
+
+1659
+00:50:59,450 --> 00:51:00,070
+Writing it ourselves,
+
+1660
+00:51:00,070 --> 00:51:01,910
+we then just go along with this
+
+1661
+00:51:01,910 --> 00:51:03,110
+they correspond to each other
+
+1662
+00:51:03,110 --> 00:51:03,670
+over here
+
+1663
+00:51:03,670 --> 00:51:04,830
+we just saved them earlier
+
+1664
+00:51:04,830 --> 00:51:06,190
+saved with sw
+
+1665
+00:51:06,190 --> 00:51:08,290
+so now we restore them first with lw
+
+1666
+00:51:08,290 --> 00:51:10,410
+that is, taking the values in memory
+
+1667
+00:51:10,410 --> 00:51:12,490
+and saving them back into our registers
+
+1668
+00:51:12,490 --> 00:51:13,050
+right?
+
+1669
+00:51:13,050 --> 00:51:14,910
+restoring them back
+
+1670
+00:51:14,910 --> 00:51:15,590
+loading them back
+
+1671
+00:51:15,590 --> 00:51:17,250
+so after loading them back
+
+1672
+00:51:17,250 --> 00:51:18,450
+what is this step doing?
+
+1673
+00:51:18,450 --> 00:51:21,090
+because earlier we pushed the stack down by one stack frame
+
+1674
+00:51:21,090 --> 00:51:22,150
+which is subtracting 8
+
+1675
+00:51:22,150 --> 00:51:23,930
+so over here we have to restore the stack
+
+1676
+00:51:23,930 --> 00:51:24,530
+that is, add 8
+
+1677
+00:51:24,530 --> 00:51:25,630
+see that?
+
+1678
+00:51:25,630 --> 00:51:27,010
+so this way
+
+1679
+00:51:27,010 --> 00:51:28,490
+when this function returns
+
+1680
+00:51:28,490 --> 00:51:29,370
+you can all step through it
+
+1681
+00:51:29,370 --> 00:51:31,070
+I won't debug this live right here.
+
+1682
+00:51:31,070 --> 00:51:31,790
+I'll just walk through it.
+
+1683
+00:51:31,790 --> 00:51:32,770
+You can take a look.
+
+1684
+00:51:32,770 --> 00:51:34,670
+This stack has been restored to its original value.
+
+1685
+00:51:34,670 --> 00:51:36,890
+So we achieved the intended effect.
+
+1686
+00:51:36,890 --> 00:51:39,050
+Now, after coming back,
+
+1687
+00:51:39,050 --> 00:51:40,130
+after we come back,
+
+1688
+00:51:40,130 --> 00:51:40,730
+over here,
+
+1689
+00:51:40,730 --> 00:51:41,270
+down below,
+
+1690
+00:51:41,270 --> 00:51:42,730
+we obviously need to execute a return.
+
+1691
+00:51:42,730 --> 00:51:43,990
+After the return,
+
+1692
+00:51:43,990 --> 00:51:46,030
+let's look at the effect of the return.
+
+1693
+00:51:46,030 --> 00:51:47,850
+Because when we did the call,
+
+1694
+00:51:47,850 --> 00:51:48,970
+we took the return address,
+
+1695
+00:51:48,970 --> 00:51:51,150
+which is actually the address of this instruction,
+
+1696
+00:51:51,150 --> 00:51:52,570
+and put it where?
+
+1697
+00:51:52,570 --> 00:51:54,290
+Which register was it saved in?
+
+1698
+00:51:54,290 --> 00:51:54,950
+According to the convention,
+
+1699
+00:51:54,950 --> 00:51:56,410
+when we do a call, it is saved in
+
+1700
+00:51:56,410 --> 00:51:57,710
+the X1 register.
+
+1701
+00:51:57,710 --> 00:51:58,490
+It's stored in ra, right?
+
+1702
+00:51:58,490 --> 00:52:00,290
+So when we return,
+
+1703
+00:52:00,290 --> 00:52:01,330
+the return actually goes based on ra.
+
+1704
+00:52:01,330 --> 00:52:02,530
+So we return back,
+
+1705
+00:52:02,530 --> 00:52:02,990
+and when we return,
+
+1706
+00:52:02,990 --> 00:52:04,190
+we of course return to this position.
+
+1707
+00:52:04,190 --> 00:52:06,290
+So we exit this function,
+
+1708
+00:52:06,290 --> 00:52:07,730
+and execution continues from here.
+
+1709
+00:52:07,730 --> 00:52:10,170
+That's the whole process.
+
+1710
+00:52:10,170 --> 00:52:13,610
+And this process is a standard way of writing code.
+
+1711
+00:52:13,610 --> 00:52:15,050
+It's not just written arbitrarily.
+
+1712
+00:52:15,050 --> 00:52:16,130
+Why is it written this way?
+
+1713
+00:52:16,130 --> 00:52:18,830
+The reason, based on that function call earlier,
+
+1714
+00:52:18,830 --> 00:52:19,750
+has already been explained to you.
+
+1715
+00:52:19,750 --> 00:52:21,030
+Now, here,
+
+1716
+00:52:21,030 --> 00:52:22,530
+since it's a pseudo call,
+
+1717
+00:52:22,530 --> 00:52:23,630
+you can see that
+
+1718
+00:52:23,630 --> 00:52:25,010
+during the pseudo call,
+
+1719
+00:52:25,010 --> 00:52:27,210
+we actually don't save ra,
+
+1720
+00:52:27,210 --> 00:52:28,510
+when pushing to the stack.
+
+1721
+00:52:28,510 --> 00:52:30,650
+Because inside this square function,
+
+1722
+00:52:30,650 --> 00:52:32,190
+we won't call any new functions again.
+
+1723
+00:52:32,190 --> 00:52:33,730
+Note that,
+
+1724
+00:52:33,730 --> 00:52:36,090
+and correspondingly,
+
+1725
+00:52:36,090 --> 00:52:38,670
+there's that nested example.
+
+1726
+00:52:38,670 --> 00:52:39,310
+Let's take a look.
+
+1727
+00:52:39,310 --> 00:52:50,010
+So this function,
+
+1728
+00:52:50,010 --> 00:52:50,950
+it goes like this.
+
+1729
+00:52:50,950 --> 00:52:51,870
+That is,
+
+1730
+00:52:51,870 --> 00:52:52,730
+it,
+
+1731
+00:52:52,730 --> 00:52:54,610
+it will,
+
+1732
+00:52:54,610 --> 00:52:55,710
+this start function,
+
+1733
+00:52:55,710 --> 00:52:56,870
+will call aabb.
+
+1734
+00:52:56,870 --> 00:52:58,610
+aabb, in fact, is basically,
+
+1735
+00:52:58,610 --> 00:52:59,850
+it implements what?
+
+1736
+00:52:59,850 --> 00:53:01,950
+It's a squared plus b squared.
+
+1737
+00:53:01,950 --> 00:53:03,930
+However,
+
+1738
+00:53:03,930 --> 00:53:05,550
+this function is not a leaf call,
+
+1739
+00:53:05,550 --> 00:53:06,850
+because inside this function,
+
+1740
+00:53:06,850 --> 00:53:08,050
+it goes and calls the square function again.
+
+1741
+00:53:08,050 --> 00:53:09,870
+The square function
+
+1742
+00:53:09,870 --> 00:53:10,870
+is a pseudo-call.
+
+1743
+00:53:10,870 --> 00:53:13,490
+What we mainly care about here is how to write this AABB function.
+
+1744
+00:53:13,490 --> 00:53:16,110
+In this example, we mainly care about how to write AABB.
+
+1745
+00:53:16,110 --> 00:53:17,570
+It's not a pseudo-call.
+
+1746
+00:53:17,570 --> 00:53:20,910
+So let's look at the difference between it and the square function we just saw.
+
+1747
+00:53:20,910 --> 00:53:23,710
+Get a feel for the difference in
+
+1748
+00:53:23,710 --> 00:53:25,550
+programming convention and writing style between pseudo-call and non-pseudo-call functions.
+
+1749
+00:53:25,550 --> 00:53:28,070
+So we won't go over this square function now,
+
+1750
+00:53:28,070 --> 00:53:31,410
+because the way it's written is the same as in the previous example.
+
+1751
+00:53:31,410 --> 00:53:33,070
+We'll mainly look at the AABB function.
+
+1752
+00:53:33,070 --> 00:53:43,390
+So for the AABB function,
+
+1753
+00:53:43,390 --> 00:53:46,030
+let's take a look.
+
+1754
+00:53:46,030 --> 00:53:56,490
+First, let's look at
+
+1755
+00:53:56,490 --> 00:53:59,710
+this is
+
+1756
+00:53:59,710 --> 00:54:00,970
+the start function
+
+1757
+00:54:00,970 --> 00:54:02,410
+calling the aabb function,
+
+1758
+00:54:02,410 --> 00:54:04,310
+since it has two parameters,
+
+1759
+00:54:04,310 --> 00:54:05,590
+you can see that
+
+1760
+00:54:05,590 --> 00:54:06,450
+it actually uses
+
+1761
+00:54:06,450 --> 00:54:08,130
+They are saved in a0 and a1.
+
+1762
+00:54:08,130 --> 00:54:08,410
+Right?
+
+1763
+00:54:08,410 --> 00:54:09,190
+By convention,
+
+1764
+00:54:09,190 --> 00:54:11,730
+a0 holds the first argument,
+
+1765
+00:54:11,730 --> 00:54:13,110
+and a1 holds
+
+1766
+00:54:13,110 --> 00:54:16,130
+the fourth argument.
+
+1767
+00:54:16,130 --> 00:54:20,930
+So this call,
+
+1768
+00:54:20,930 --> 00:54:21,690
+it's still the same,
+
+1769
+00:54:21,690 --> 00:54:21,990
+it jumps,
+
+1770
+00:54:21,990 --> 00:54:22,910
+and then,
+
+1771
+00:54:22,910 --> 00:54:26,030
+it starts calling this function, ABB.
+
+1772
+00:54:26,030 --> 00:54:27,290
+Now this function,
+
+1773
+00:54:27,290 --> 00:54:30,730
+you can see the difference compared to the one over here.
+
+1774
+00:54:30,730 --> 00:54:35,590
+Besides saving s0 through s2,
+
+1775
+00:54:35,590 --> 00:54:37,610
+what else do you see it saving?
+
+1776
+00:54:37,610 --> 00:54:38,630
+ra.
+
+1777
+00:54:38,630 --> 00:54:42,550
+Why does it need to save ra here?
+
+1778
+00:54:42,550 --> 00:54:44,130
+Think about it.
+
+1779
+00:54:44,130 --> 00:54:46,090
+Based on what we explained earlier,
+
+1780
+00:54:46,090 --> 00:54:47,850
+because this function
+
+1781
+00:54:47,850 --> 00:54:48,570
+AABB
+
+1782
+00:54:48,570 --> 00:54:51,350
+inside it, it will also call
+
+1783
+00:54:51,350 --> 00:54:53,450
+square
+
+1784
+00:54:53,450 --> 00:54:54,630
+JR
+
+1785
+00:54:54,630 --> 00:54:56,350
+of course, here what's used is JR
+
+1786
+00:54:56,350 --> 00:54:57,690
+what JR reflects is that
+
+1787
+00:54:57,690 --> 00:54:58,390
+it's a pseudo-call
+
+1788
+00:54:58,390 --> 00:55:01,150
+it won't come back again
+
+1789
+00:55:01,150 --> 00:55:05,880
+so, this function
+
+1790
+00:55:05,880 --> 00:55:07,020
+because it will still call JR
+
+1791
+00:55:07,020 --> 00:55:07,600
+as for JR
+
+1792
+00:55:07,600 --> 00:55:09,340
+this instruction will go and modify
+
+1793
+00:55:09,340 --> 00:55:10,680
+the RA register
+
+1794
+00:55:10,680 --> 00:55:11,260
+everyone, pay attention
+
+1795
+00:55:11,260 --> 00:55:13,060
+so, in order to guarantee
+
+1796
+00:55:13,060 --> 00:55:15,000
+because if we say
+
+1797
+00:55:15,000 --> 00:55:17,500
+if you don't save this RA
+
+1798
+00:55:17,500 --> 00:55:18,280
+just think about it
+
+1799
+00:55:18,280 --> 00:55:19,240
+when this instruction runs
+
+1800
+00:55:19,240 --> 00:55:20,980
+it will have modified this RA register
+
+1801
+00:55:20,980 --> 00:55:22,100
+Then it got changed to
+
+1802
+00:55:22,100 --> 00:55:23,520
+it got changed to its own
+
+1803
+00:55:23,520 --> 00:55:25,040
+address of this instruction
+
+1804
+00:55:25,040 --> 00:55:25,360
+Right?
+
+1805
+00:55:25,360 --> 00:55:26,800
+Because it is this instruction's
+
+1806
+00:55:26,800 --> 00:55:27,980
+the address of the next instruction, right?
+
+1807
+00:55:27,980 --> 00:55:29,580
+Now, if
+
+1808
+00:55:29,580 --> 00:55:31,220
+you don't save this RA,
+
+1809
+00:55:31,220 --> 00:55:32,720
+relatively speaking,
+
+1810
+00:55:32,720 --> 00:55:33,520
+that is, if you
+
+1811
+00:55:33,520 --> 00:55:34,840
+don't restore this RA here,
+
+1812
+00:55:34,840 --> 00:55:36,400
+then when you do this return,
+
+1813
+00:55:36,400 --> 00:55:39,040
+it won't be able to jump back.
+
+1814
+00:55:39,040 --> 00:55:40,540
+Think about it, isn't that so?
+
+1815
+00:55:40,540 --> 00:55:41,680
+It just won't be able to jump back.
+
+1816
+00:55:41,680 --> 00:55:45,440
+Jump back to our
+
+1817
+00:55:45,440 --> 00:55:47,440
+the position after
+
+1818
+00:55:47,440 --> 00:55:49,360
+this start function,
+
+1819
+00:55:49,360 --> 00:55:51,320
+this problem will occur.
+
+1820
+00:55:51,320 --> 00:55:54,420
+So let's think about it ourselves.
+
+1821
+00:55:54,420 --> 00:55:55,500
+That is to say, why we
+
+1822
+00:55:55,500 --> 00:55:57,300
+save ra here.
+
+1823
+00:55:57,300 --> 00:55:59,500
+In other words, the difference between this AABB function
+
+1824
+00:55:59,500 --> 00:56:02,980
+and that tail-call function we just looked at,
+
+1825
+00:56:02,980 --> 00:56:05,700
+the Square function,
+
+1826
+00:56:05,700 --> 00:56:06,960
+is this: look at this function here,
+
+1827
+00:56:06,960 --> 00:56:09,280
+it doesn't need to save ra,
+
+1828
+00:56:09,280 --> 00:56:11,580
+while this one does save ra.
+
+1829
+00:56:11,580 --> 00:56:15,190
+That's the reason for it.
+
+1830
+00:56:15,190 --> 00:56:18,670
+I'll leave this for you to look at on your own back home,
+
+1831
+00:56:18,670 --> 00:56:20,150
+so I won't say more about it here.
+
+1832
+00:56:20,150 --> 00:56:22,070
+The program is very simple,
+
+1833
+00:56:22,070 --> 00:56:23,950
+what it implements is very simple in itself.
+
+1834
+00:56:23,950 --> 00:56:25,530
+The main point is through these two examples,
+
+1835
+00:56:25,530 --> 00:56:26,690
+get a feel for it:
+
+1836
+00:56:26,690 --> 00:56:29,630
+now that we have these calling conventions,
+
+1837
+00:56:29,630 --> 00:56:31,870
+how do we write a standard
+
+1838
+00:56:31,870 --> 00:56:33,770
+RISC-V assembly function?
+
+1839
+00:56:33,770 --> 00:56:36,530
+This is the content of this chapter
+
+1840
+00:56:36,530 --> 00:56:41,420
+that we want everyone to really master.
+
+1841
+00:56:41,420 --> 00:56:44,120
+Now, for these two examples,
+
+1842
+00:56:44,120 --> 00:56:46,300
+I won't debug them right here
+
+1843
+00:56:46,300 --> 00:56:47,580
+to show you the result.
+
+1844
+00:56:47,580 --> 00:56:49,720
+Based on what we just covered in class,
+
+1845
+00:56:49,720 --> 00:56:50,940
+especially the calling convention,
+
+1846
+00:56:50,940 --> 00:56:52,260
+the use of these registers,
+
+1847
+00:56:52,260 --> 00:56:53,840
+the use of function instructions,
+
+1848
+00:56:53,840 --> 00:56:56,700
+and also the callee's
+
+1849
+00:56:56,700 --> 00:56:59,240
+prologue and epilogue,
+
+1850
+00:56:59,240 --> 00:57:02,420
+and the way the call is written,
+
+1851
+00:57:02,420 --> 00:57:04,840
+go debug it yourselves,
+
+1852
+00:57:04,840 --> 00:57:05,800
+and trace through
+
+1853
+00:57:05,800 --> 00:57:06,760
+the execution of this function,
+
+1854
+00:57:06,760 --> 00:57:08,780
+and get familiar with the
+
+1855
+00:57:08,780 --> 00:57:10,460
+concepts of the calling convention.
+
+1856
+00:57:10,460 --> 00:57:14,260
+As for 5-8,
+
+1857
+00:57:14,260 --> 00:57:16,540
+that's also left for you to do on your own at home.

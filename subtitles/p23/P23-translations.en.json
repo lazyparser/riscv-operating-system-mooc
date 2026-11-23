@@ -1,0 +1,4242 @@
+[
+ {
+  "id": 0,
+  "text": "Next, we're going to cover Chapter 13."
+ },
+ {
+  "id": 1,
+  "text": "In Chapter 13, what we want to introduce is"
+ },
+ {
+  "id": 2,
+  "text": "how to implement preemptive multitasking."
+ },
+ {
+  "id": 3,
+  "text": "It breaks down into a few parts."
+ },
+ {
+  "id": 4,
+  "text": "First, let's look at what preemptive multitasking actually means."
+ },
+ {
+  "id": 5,
+  "text": "Earlier in the course,"
+ },
+ {
+  "id": 6,
+  "text": "we showed you how to implement cooperative multitasking, right?"
+ },
+ {
+  "id": 7,
+  "text": "Now, cooperative multitasking is relatively simple."
+ },
+ {
+  "id": 8,
+  "text": "At the time, we actually used function calls and returns,"
+ },
+ {
+  "id": 9,
+  "text": "and that's essentially how we implemented a cooperative scheme."
+ },
+ {
+  "id": 10,
+  "text": "Cooperation is simple to implement,"
+ },
+ {
+  "id": 11,
+  "text": "but its drawbacks are pretty obvious."
+ },
+ {
+  "id": 12,
+  "text": "It requires each of the tasks"
+ },
+ {
+  "id": 13,
+  "text": "to actively call the task_yield function"
+ },
+ {
+  "id": 14,
+  "text": "to give up its use of the processor"
+ },
+ {
+  "id": 15,
+  "text": "and hand it over to another task to run."
+ },
+ {
+  "id": 16,
+  "text": "Now, in a lot of real operating systems out there,"
+ },
+ {
+  "id": 17,
+  "text": "this kind of cooperative multitasking"
+ },
+ {
+  "id": 18,
+  "text": "has actually been gradually phased out."
+ },
+ {
+  "id": 19,
+  "text": "Instead, we mostly use what's called"
+ },
+ {
+  "id": 20,
+  "text": "through preemptive multitasking"
+ },
+ {
+  "id": 21,
+  "text": "That is, we want the operating system"
+ },
+ {
+  "id": 22,
+  "text": "to decide by itself which task"
+ },
+ {
+  "id": 23,
+  "text": "gets to use the CPU,"
+ },
+ {
+  "id": 24,
+  "text": "so it can proactively take the CPU away from a task in order to reschedule,"
+ },
+ {
+  "id": 25,
+  "text": "rather than having the task give it up on its own."
+ },
+ {
+  "id": 26,
+  "text": "So how is this actually implemented?"
+ },
+ {
+  "id": 27,
+  "text": "In fact, it uses"
+ },
+ {
+  "id": 28,
+  "text": "some of the concepts related to interrupts"
+ },
+ {
+  "id": 29,
+  "text": "that we introduced to you earlier."
+ },
+ {
+  "id": 30,
+  "text": "So next,"
+ },
+ {
+  "id": 31,
+  "text": "let's take a look at"
+ },
+ {
+  "id": 32,
+  "text": "how this preemptive multitasking"
+ },
+ {
+  "id": 33,
+  "text": "is implemented."
+ },
+ {
+  "id": 34,
+  "text": "Now,"
+ },
+ {
+  "id": 35,
+  "text": "let's first look at this diagram."
+ },
+ {
+  "id": 36,
+  "text": "In this diagram,"
+ },
+ {
+  "id": 37,
+  "text": "we can see there are two tasks,"
+ },
+ {
+  "id": 38,
+  "text": "right?"
+ },
+ {
+  "id": 39,
+  "text": "Task A and Task B."
+ },
+ {
+  "id": 40,
+  "text": "Now, this Task A,"
+ },
+ {
+  "id": 41,
+  "text": "its instructions,"
+ },
+ {
+  "id": 42,
+  "text": "starting from I all the way to I plus M,"
+ },
+ {
+  "id": 43,
+  "text": "keep executing one after another."
+ },
+ {
+  "id": 44,
+  "text": "And B, starting from J to"
+ },
+ {
+  "id": 45,
+  "text": "J plus N, starts executing."
+ },
+ {
+  "id": 46,
+  "text": "Now, since what we're implementing here is"
+ },
+ {
+  "id": 47,
+  "text": "preemptive multitasking,"
+ },
+ {
+  "id": 48,
+  "text": "as you can see,"
+ },
+ {
+  "id": 49,
+  "text": "with these two tasks,"
+ },
+ {
+  "id": 50,
+  "text": "inside them,"
+ },
+ {
+  "id": 51,
+  "text": "they don't call any task function to"
+ },
+ {
+  "id": 52,
+  "text": "voluntarily give up the CPU."
+ },
+ {
+  "id": 53,
+  "text": "So once any task is running,"
+ },
+ {
+  "id": 54,
+  "text": "how can we let another task"
+ },
+ {
+  "id": 55,
+  "text": "also get to use this CPU?"
+ },
+ {
+  "id": 56,
+  "text": "Right?"
+ },
+ {
+  "id": 57,
+  "text": "That's exactly what we want to achieve."
+ },
+ {
+  "id": 58,
+  "text": "Well, the method we actually adopt,"
+ },
+ {
+  "id": 59,
+  "text": "is to make use of what we learned earlier,"
+ },
+ {
+  "id": 60,
+  "text": "This interrupt approach"
+ },
+ {
+  "id": 61,
+  "text": "is actually what we used earlier"
+ },
+ {
+  "id": 62,
+  "text": "with the timer interrupt."
+ },
+ {
+  "id": 63,
+  "text": "We make this interrupt"
+ },
+ {
+  "id": 64,
+  "text": "occur periodically,"
+ },
+ {
+  "id": 65,
+  "text": "and then each time the timer expires,"
+ },
+ {
+  "id": 66,
+  "text": "once the interrupt fires,"
+ },
+ {
+  "id": 67,
+  "text": "we can handle it in the timer interrupt handling process,"
+ },
+ {
+  "id": 68,
+  "text": "where the kernel —"
+ },
+ {
+  "id": 69,
+  "text": "that is, our operating system —"
+ },
+ {
+  "id": 70,
+  "text": "schedules these tasks."
+ },
+ {
+  "id": 71,
+  "text": "That is essentially the effect we want to achieve."
+ },
+ {
+  "id": 72,
+  "text": "Now, once this interrupt occurs,"
+ },
+ {
+  "id": 73,
+  "text": "based on what we have learned,"
+ },
+ {
+  "id": 74,
+  "text": "we know it is actually a trap,"
+ },
+ {
+  "id": 75,
+  "text": "and in the trap handler,"
+ },
+ {
+  "id": 76,
+  "text": "we will perform operations like these."
+ },
+ {
+  "id": 77,
+  "text": "These operations are actually very similar"
+ },
+ {
+  "id": 78,
+  "text": "to the cooperative approach from earlier,"
+ },
+ {
+  "id": 79,
+  "text": "though of course the implementation is somewhat different."
+ },
+ {
+  "id": 80,
+  "text": "because after all, it is implemented in the middle of an interrupt handling process"
+ },
+ {
+  "id": 81,
+  "text": "but the overall idea is still similar to what we saw before"
+ },
+ {
+  "id": 82,
+  "text": "the first step is to save the original context"
+ },
+ {
+  "id": 83,
+  "text": "then switch the context"
+ },
+ {
+  "id": 84,
+  "text": "then restore the next new context"
+ },
+ {
+  "id": 85,
+  "text": "and finally"
+ },
+ {
+  "id": 86,
+  "text": "since this is an interrupt handler"
+ },
+ {
+  "id": 87,
+  "text": "of course it ends up calling mret to return"
+ },
+ {
+  "id": 88,
+  "text": "that is something you should be aware of"
+ },
+ {
+  "id": 89,
+  "text": "next, let's take a look at this"
+ },
+ {
+  "id": 90,
+  "text": "inside the chip handler function"
+ },
+ {
+  "id": 91,
+  "text": "it actually"
+ },
+ {
+  "id": 92,
+  "text": "what its execution process looks like in detail"
+ },
+ {
+  "id": 93,
+  "text": "how the details are implemented"
+ },
+ {
+  "id": 94,
+  "text": "based on what we just introduced"
+ },
+ {
+  "id": 95,
+  "text": "we know that after chip occurs"
+ },
+ {
+  "id": 96,
+  "text": "we actually make use of the timer system interrupt"
+ },
+ {
+  "id": 97,
+  "text": "and in fact, inside this chip function"
+ },
+ {
+  "id": 98,
+  "text": "you can imagine that"
+ },
+ {
+  "id": 99,
+  "text": "we will definitely check"
+ },
+ {
+  "id": 100,
+  "text": "Is this interrupt a timer interrupt,"
+ },
+ {
+  "id": 101,
+  "text": "or some other exception?"
+ },
+ {
+  "id": 102,
+  "text": "Now, if it's some other interrupt or exception,"
+ },
+ {
+  "id": 103,
+  "text": "then its handling flow"
+ },
+ {
+  "id": 104,
+  "text": "is really no different from the exception handling"
+ },
+ {
+  "id": 105,
+  "text": "and external interrupt handling"
+ },
+ {
+  "id": 106,
+  "text": "that we introduced earlier."
+ },
+ {
+  "id": 107,
+  "text": "So the logic on the left"
+ },
+ {
+  "id": 108,
+  "text": "is perfectly fine,"
+ },
+ {
+  "id": 109,
+  "text": "meaning it takes the path on the left,"
+ },
+ {
+  "id": 110,
+  "text": "which is the same as the original logic,"
+ },
+ {
+  "id": 111,
+  "text": "with no difference at all."
+ },
+ {
+  "id": 112,
+  "text": "Now, if it's a timer interrupt,"
+ },
+ {
+  "id": 113,
+  "text": "then we need to do some extra work on our side."
+ },
+ {
+  "id": 114,
+  "text": "Apart from what we just mentioned—"
+ },
+ {
+  "id": 115,
+  "text": "maintaining an internal clock tick—"
+ },
+ {
+  "id": 116,
+  "text": "the core operation on our side is that"
+ },
+ {
+  "id": 117,
+  "text": "we will call"
+ },
+ {
+  "id": 118,
+  "text": "the original switch2 function in here,"
+ },
+ {
+  "id": 119,
+  "text": "to perform the context switch."
+ },
+ {
+  "id": 120,
+  "text": "And then, finally,"
+ },
+ {
+  "id": 121,
+  "text": "it actually still exits the interrupt via mret."
+ },
+ {
+  "id": 122,
+  "text": "So the logic is actually still very clear."
+ },
+ {
+  "id": 123,
+  "text": "Now, as for the concrete implementation,"
+ },
+ {
+  "id": 124,
+  "text": "we need to take a look at it."
+ },
+ {
+  "id": 125,
+  "text": "That is, how do we implement it?"
+ },
+ {
+  "id": 126,
+  "text": "So when an interrupt occurs,"
+ },
+ {
+  "id": 127,
+  "text": "according to our earlier design,"
+ },
+ {
+  "id": 128,
+  "text": "we know"
+ },
+ {
+  "id": 129,
+  "text": "it will actually still go through this logic."
+ },
+ {
+  "id": 130,
+  "text": "It will definitely still go to the trap vector,"
+ },
+ {
+  "id": 131,
+  "text": "into this entry point,"
+ },
+ {
+  "id": 132,
+  "text": "right?"
+ },
+ {
+  "id": 133,
+  "text": "And inside here,"
+ },
+ {
+  "id": 134,
+  "text": "it saves the context,"
+ },
+ {
+  "id": 135,
+  "text": "and so on."
+ },
+ {
+  "id": 136,
+  "text": "As for the specifics,"
+ },
+ {
+  "id": 137,
+  "text": "we'll talk about that later."
+ },
+ {
+  "id": 138,
+  "text": "That is, there are also some changes in here,"
+ },
+ {
+  "id": 139,
+  "text": "but the most essential part"
+ },
+ {
+  "id": 140,
+  "text": "definitely still removed that"
+ },
+ {
+  "id": 141,
+  "text": "chip handler processing function,"
+ },
+ {
+  "id": 142,
+  "text": "right?"
+ },
+ {
+  "id": 143,
+  "text": "Now, as for this function,"
+ },
+ {
+  "id": 144,
+  "text": "we know"
+ },
+ {
+  "id": 145,
+  "text": "we now,"
+ },
+ {
+  "id": 146,
+  "text": "based on our earlier introduction,"
+ },
+ {
+  "id": 147,
+  "text": "when it comes in as an interrupt,"
+ },
+ {
+  "id": 148,
+  "text": "it will actually"
+ },
+ {
+  "id": 149,
+  "text": "go into the timer handling logic,"
+ },
+ {
+  "id": 150,
+  "text": "that is, this function,"
+ },
+ {
+  "id": 151,
+  "text": "it will go into this one here."
+ },
+ {
+  "id": 152,
+  "text": "Now, the logic of this handler,"
+ },
+ {
+  "id": 153,
+  "text": "we have some changes to it now."
+ },
+ {
+  "id": 154,
+  "text": "Besides some things,"
+ },
+ {
+  "id": 155,
+  "text": "like maintaining a clock tick count,"
+ },
+ {
+  "id": 156,
+  "text": "the most core part is actually that"
+ },
+ {
+  "id": 157,
+  "text": "it will call that schedule"
+ },
+ {
+  "id": 158,
+  "text": "function."
+ },
+ {
+  "id": 159,
+  "text": "Now, as for this schedule function,"
+ },
+ {
+  "id": 160,
+  "text": "Actually, inside it,"
+ },
+ {
+  "id": 161,
+  "text": "in the end, we call switch2,"
+ },
+ {
+  "id": 162,
+  "text": "this function,"
+ },
+ {
+  "id": 163,
+  "text": "and this function,"
+ },
+ {
+  "id": 164,
+  "text": "is actually implemented in our assembly code."
+ },
+ {
+  "id": 165,
+  "text": "Now, this switch_to function,"
+ },
+ {
+  "id": 166,
+  "text": "eventually still goes to mret."
+ },
+ {
+  "id": 167,
+  "text": "This corresponds to that flowchart we had earlier."
+ },
+ {
+  "id": 168,
+  "text": "Let's take another look at it ourselves."
+ },
+ {
+  "id": 169,
+  "text": "That is to say,"
+ },
+ {
+  "id": 170,
+  "text": "so this entire trap handler,"
+ },
+ {
+  "id": 171,
+  "text": "the way it's described here might be slightly confusing."
+ },
+ {
+  "id": 172,
+  "text": "So this trap handler,"
+ },
+ {
+  "id": 173,
+  "text": "don't confuse it with this trap handler,"
+ },
+ {
+  "id": 174,
+  "text": "this actually represents,"
+ },
+ {
+  "id": 175,
+  "text": "I mean, this entire processing procedure,"
+ },
+ {
+  "id": 176,
+  "text": "this whole processing procedure of ours,"
+ },
+ {
+  "id": 177,
+  "text": "the entire processing procedure."
+ },
+ {
+  "id": 178,
+  "text": "So this trap handler,"
+ },
+ {
+  "id": 179,
+  "text": "this whole processing procedure."
+ },
+ {
+  "id": 180,
+  "text": "In fact, it is"
+ },
+ {
+  "id": 181,
+  "text": "after making such an active call,"
+ },
+ {
+  "id": 182,
+  "text": "and finally going through mreturn,"
+ },
+ {
+  "id": 183,
+  "text": "we return"
+ },
+ {
+  "id": 184,
+  "text": "to our normal processing flow."
+ },
+ {
+  "id": 185,
+  "text": "But in this process,"
+ },
+ {
+  "id": 186,
+  "text": "because at its core,"
+ },
+ {
+  "id": 187,
+  "text": "it actually implements a"
+ },
+ {
+  "id": 188,
+  "text": "switch2 process,"
+ },
+ {
+  "id": 189,
+  "text": "and in there,"
+ },
+ {
+  "id": 190,
+  "text": "we achieve our"
+ },
+ {
+  "id": 191,
+  "text": "task switching effect."
+ },
+ {
+  "id": 192,
+  "text": "So"
+ },
+ {
+  "id": 193,
+  "text": "this is our"
+ },
+ {
+  "id": 194,
+  "text": "trap handler function's"
+ },
+ {
+  "id": 195,
+  "text": "implementation process,"
+ },
+ {
+  "id": 196,
+  "text": "which I've walked you through."
+ },
+ {
+  "id": 197,
+  "text": "Now, in terms of"
+ },
+ {
+  "id": 198,
+  "text": "the design of these related data structures,"
+ },
+ {
+  "id": 199,
+  "text": "we also need to make some corresponding adjustments."
+ },
+ {
+  "id": 200,
+  "text": "Because, why is that?"
+ },
+ {
+  "id": 201,
+  "text": "Because, if we recall,"
+ },
+ {
+  "id": 202,
+  "text": "in the case of cooperative multitasking,"
+ },
+ {
+  "id": 203,
+  "text": "our"
+ },
+ {
+  "id": 204,
+  "text": "that is, not the trap handler,"
+ },
+ {
+  "id": 205,
+  "text": "that is, inside this function called switch_to,"
+ },
+ {
+  "id": 206,
+  "text": "it actually goes through"
+ },
+ {
+  "id": 207,
+  "text": "not through mret,"
+ },
+ {
+  "id": 208,
+  "text": "everyone still remembers, right?"
+ },
+ {
+  "id": 209,
+  "text": "we used that"
+ },
+ {
+  "id": 210,
+  "text": "the function's return instruction to achieve it."
+ },
+ {
+  "id": 211,
+  "text": "Now, as we know with the return instruction,"
+ },
+ {
+  "id": 212,
+  "text": "why can we return back?"
+ },
+ {
+  "id": 213,
+  "text": "Actually, it's because we make use of this register, ra,"
+ },
+ {
+  "id": 214,
+  "text": "right?"
+ },
+ {
+  "id": 215,
+  "text": "Indeed, the register ra,"
+ },
+ {
+  "id": 216,
+  "text": "but here,"
+ },
+ {
+  "id": 217,
+  "text": "since it uses mret,"
+ },
+ {
+  "id": 218,
+  "text": "we know we need to"
+ },
+ {
+  "id": 219,
+  "text": "to return from here"
+ },
+ {
+  "id": 220,
+  "text": "Actually, which register should we be using?"
+ },
+ {
+  "id": 221,
+  "text": "We are actually using the mepc register"
+ },
+ {
+  "id": 222,
+  "text": "right?"
+ },
+ {
+  "id": 223,
+  "text": "to implement the return,"
+ },
+ {
+  "id": 224,
+  "text": "returning from an exception,"
+ },
+ {
+  "id": 225,
+  "text": "returning from a trap."
+ },
+ {
+  "id": 226,
+  "text": "So back when we were in the coroutine,"
+ },
+ {
+  "id": 227,
+  "text": "this ra register of ours,"
+ },
+ {
+  "id": 228,
+  "text": "in our context,"
+ },
+ {
+  "id": 229,
+  "text": "of course we had already saved it."
+ },
+ {
+  "id": 230,
+  "text": "But right now,"
+ },
+ {
+  "id": 231,
+  "text": "since we want to use the mret instruction"
+ },
+ {
+  "id": 232,
+  "text": "to return,"
+ },
+ {
+  "id": 233,
+  "text": "then we cannot use ra anymore."
+ },
+ {
+  "id": 234,
+  "text": "We actually need to take this register,"
+ },
+ {
+  "id": 235,
+  "text": "and also save a copy of it"
+ },
+ {
+  "id": 236,
+  "text": "in our context."
+ },
+ {
+  "id": 237,
+  "text": "So when we implement it,"
+ },
+ {
+  "id": 238,
+  "text": "at this point,"
+ },
+ {
+  "id": 239,
+  "text": "we actually no longer care about that ra thing."
+ },
+ {
+  "id": 240,
+  "text": "Because in this trap handler,"
+ },
+ {
+  "id": 241,
+  "text": "we actually don't care much about the ra register,"
+ },
+ {
+  "id": 242,
+  "text": "what we care about is the mepc register."
+ },
+ {
+  "id": 243,
+  "text": "I wrote that wrong earlier."
+ },
+ {
+  "id": 244,
+  "text": "It should be mepc."
+ },
+ {
+  "id": 245,
+  "text": "This spot here."
+ },
+ {
+  "id": 246,
+  "text": "What I wrote here earlier should be mepc."
+ },
+ {
+  "id": 247,
+  "text": "This register here."
+ },
+ {
+  "id": 248,
+  "text": "Now, since this register,"
+ },
+ {
+  "id": 249,
+  "text": "takes part in our task context switching,"
+ },
+ {
+  "id": 250,
+  "text": "so naturally,"
+ },
+ {
+  "id": 251,
+  "text": "for each task,"
+ },
+ {
+  "id": 252,
+  "text": "when we maintain its context,"
+ },
+ {
+  "id": 253,
+  "text": "we also need to maintain something equivalent to epc."
+ },
+ {
+  "id": 254,
+  "text": "Of course, we named it pc on our side."
+ },
+ {
+  "id": 255,
+  "text": "Of course, if we called it epc,"
+ },
+ {
+  "id": 256,
+  "text": "it might be easier to understand."
+ },
+ {
+  "id": 257,
+  "text": "Actually, both this pc and epc are used to"
+ },
+ {
+  "id": 258,
+  "text": "maintain the contents of that register."
+ },
+ {
+  "id": 259,
+  "text": "We'll take it when a task switch happens"
+ },
+ {
+  "id": 260,
+  "text": "perform the corresponding save and restore,"
+ },
+ {
+  "id": 261,
+  "text": "and that is how we implement task switching."
+ },
+ {
+  "id": 262,
+  "text": "The other parts are actually very similar."
+ },
+ {
+  "id": 263,
+  "text": "Now, specifically, how does MEPC work in the quantum task?"
+ },
+ {
+  "id": 264,
+  "text": "How does it achieve the effect we want?"
+ },
+ {
+  "id": 265,
+  "text": "Let me give you a simple demonstration."
+ },
+ {
+  "id": 266,
+  "text": "So next,"
+ },
+ {
+  "id": 267,
+  "text": "let's take some time to do a simple demonstration for you."
+ },
+ {
+  "id": 268,
+  "text": "So first of all,"
+ },
+ {
+  "id": 269,
+  "text": "here is some of the relevant code."
+ },
+ {
+  "id": 270,
+  "text": "As we can see in this code,"
+ },
+ {
+  "id": 271,
+  "text": "our context struct here,"
+ },
+ {
+  "id": 272,
+  "text": "has been adjusted a bit."
+ },
+ {
+  "id": 273,
+  "text": "Besides, in the coroutine room from before,"
+ },
+ {
+  "id": 274,
+  "text": "we still save those registers in the same way,"
+ },
+ {
+  "id": 275,
+  "text": "but over here we have also added and defined a new"
+ },
+ {
+  "id": 276,
+  "text": "variable called PC."
+ },
+ {
+  "id": 277,
+  "text": "This variable is actually used to,"
+ },
+ {
+  "id": 278,
+  "text": "to be precise, it should be used to save that EPC,"
+ },
+ {
+  "id": 279,
+  "text": "used to save the EPC."
+ },
+ {
+  "id": 280,
+  "text": "This part may not be written very accurately here,"
+ },
+ {
+  "id": 281,
+  "text": "but I want to emphasize this point:"
+ },
+ {
+  "id": 282,
+  "text": "it saves the EPC."
+ },
+ {
+  "id": 283,
+  "text": "And then,"
+ },
+ {
+  "id": 284,
+  "text": "in this function,"
+ },
+ {
+  "id": 285,
+  "text": "we also made some corresponding adjustments."
+ },
+ {
+  "id": 286,
+  "text": "So after the trap vector comes in,"
+ },
+ {
+  "id": 287,
+  "text": "in the previous logic,"
+ },
+ {
+  "id": 288,
+  "text": "we would only save all the general-purpose registers."
+ },
+ {
+  "id": 289,
+  "text": "But now,"
+ },
+ {
+  "id": 290,
+  "text": "we added some more logic."
+ },
+ {
+  "id": 291,
+  "text": "As you can see,"
+ },
+ {
+  "id": 292,
+  "text": "the logic we added,"
+ },
+ {
+  "id": 293,
+  "text": "the logic here,"
+ },
+ {
+  "id": 294,
+  "text": "actually saves MEPC as well."
+ },
+ {
+  "id": 295,
+  "text": "It saves it into the context."
+ },
+ {
+  "id": 296,
+  "text": "Please take note of this."
+ },
+ {
+  "id": 297,
+  "text": "And then,"
+ },
+ {
+  "id": 298,
+  "text": "according to our logic,"
+ },
+ {
+  "id": 299,
+  "text": "here"
+ },
+ {
+  "id": 300,
+  "text": "it just goes and calls that handler function"
+ },
+ {
+  "id": 301,
+  "text": "inside the handler function,"
+ },
+ {
+  "id": 302,
+  "text": "as we described earlier,"
+ },
+ {
+  "id": 303,
+  "text": "it will actually trigger another call"
+ },
+ {
+  "id": 304,
+  "text": "to the switch2 function"
+ },
+ {
+  "id": 305,
+  "text": "and this switch2 function"
+ },
+ {
+  "id": 306,
+  "text": "will ultimately call mreturn to return"
+ },
+ {
+  "id": 307,
+  "text": "it will, in the end,"
+ },
+ {
+  "id": 308,
+  "text": "ultimately call mreturn to return"
+ },
+ {
+  "id": 309,
+  "text": "and before calling mreturn to return,"
+ },
+ {
+  "id": 310,
+  "text": "it will save all the general-purpose registers as well"
+ },
+ {
+  "id": 311,
+  "text": "this corresponds to what we saw earlier"
+ },
+ {
+  "id": 312,
+  "text": "these two correspond to each other"
+ },
+ {
+  "id": 313,
+  "text": "and similarly, corresponding to that,"
+ },
+ {
+  "id": 314,
+  "text": "we have some logic on this side too"
+ },
+ {
+  "id": 315,
+  "text": "which is to restore the EPC as well"
+ },
+ {
+  "id": 316,
+  "text": "so here,"
+ },
+ {
+  "id": 317,
+  "text": "please pay attention to this,"
+ },
+ {
+  "id": 318,
+  "text": "when you're reading the code,"
+ },
+ {
+  "id": 319,
+  "text": "it's these two parts that we handle"
+ },
+ {
+  "id": 320,
+  "text": "When we grabbed the temporary multitasking here,"
+ },
+ {
+  "id": 321,
+  "text": "we made some corresponding adjustments."
+ },
+ {
+  "id": 322,
+  "text": "And let's pay attention to one thing,"
+ },
+ {
+  "id": 323,
+  "text": "which is the switch_to function."
+ },
+ {
+  "id": 324,
+  "text": "Because the whole flow we have now,"
+ },
+ {
+  "id": 325,
+  "text": "it actually goes around in a circle."
+ },
+ {
+  "id": 326,
+  "text": "We actually come in from the trap vector,"
+ },
+ {
+  "id": 327,
+  "text": "and then go out from here."
+ },
+ {
+  "id": 328,
+  "text": "So for this switch_to function,"
+ },
+ {
+  "id": 329,
+  "text": "the saving logic that used to be there,"
+ },
+ {
+  "id": 330,
+  "text": "it's actually placed over here in the switch_to function."
+ },
+ {
+  "id": 331,
+  "text": "Right?"
+ },
+ {
+  "id": 332,
+  "text": "If you still remember"
+ },
+ {
+  "id": 333,
+  "text": "how it was implemented during cooperative multitasking,"
+ },
+ {
+  "id": 334,
+  "text": "then now, with this logic,"
+ },
+ {
+  "id": 335,
+  "text": "we basically removed it from switch_to,"
+ },
+ {
+  "id": 336,
+  "text": "and instead we reused this logic from the trap vector."
+ },
+ {
+  "id": 337,
+  "text": "So on this side, there's no save logic anymore."
+ },
+ {
+  "id": 338,
+  "text": "There's no save logic on this side anymore."
+ },
+ {
+  "id": 339,
+  "text": "Please keep that in mind."
+ },
+ {
+  "id": 340,
+  "text": "These are all some adjustments for this preemptive multitasking."
+ },
+ {
+  "id": 341,
+  "text": "Now, after understanding the related code and struct adjustments we just made,"
+ },
+ {
+  "id": 342,
+  "text": "let's take a look."
+ },
+ {
+  "id": 343,
+  "text": "In a preemptive multitasking system,"
+ },
+ {
+  "id": 344,
+  "text": "how does this process actually happen?"
+ },
+ {
+  "id": 345,
+  "text": "Let me give you a simple animated demonstration."
+ },
+ {
+  "id": 346,
+  "text": "All right."
+ },
+ {
+  "id": 347,
+  "text": "This diagram,"
+ },
+ {
+  "id": 348,
+  "text": "picking up from what we just looked at,"
+ },
+ {
+  "id": 349,
+  "text": "that is, on the left is one task,"
+ },
+ {
+  "id": 350,
+  "text": "and on the right is another task,"
+ },
+ {
+  "id": 351,
+  "text": "right?"
+ },
+ {
+  "id": 352,
+  "text": "And this one,"
+ },
+ {
+  "id": 353,
+  "text": "on this side,"
+ },
+ {
+  "id": 354,
+  "text": "is its context."
+ },
+ {
+  "id": 355,
+  "text": "And on the right side,"
+ },
+ {
+  "id": 356,
+  "text": "is also its context."
+ },
+ {
+  "id": 357,
+  "text": "They are in memory."
+ },
+ {
+  "id": 358,
+  "text": "Good."
+ },
+ {
+  "id": 359,
+  "text": "Now this blue-colored part,"
+ },
+ {
+  "id": 360,
+  "text": "it actually represents the CPU"
+ },
+ {
+  "id": 361,
+  "text": "so let's assume there is only one CPU"
+ },
+ {
+  "id": 362,
+  "text": "then how do we implement these two tasks"
+ },
+ {
+  "id": 363,
+  "text": "switching on this CPU"
+ },
+ {
+  "id": 364,
+  "text": "let's take a look together"
+ },
+ {
+  "id": 365,
+  "text": "so first is initialization"
+ },
+ {
+  "id": 366,
+  "text": "just like the previous one"
+ },
+ {
+  "id": 367,
+  "text": "that is, we first take"
+ },
+ {
+  "id": 368,
+  "text": "the address of Task A's first instruction"
+ },
+ {
+  "id": 369,
+  "text": "and put it in here"
+ },
+ {
+  "id": 370,
+  "text": "do some initialization"
+ },
+ {
+  "id": 371,
+  "text": "the right side is the same"
+ },
+ {
+  "id": 372,
+  "text": "put ra in there"
+ },
+ {
+  "id": 373,
+  "text": "right?"
+ },
+ {
+  "id": 374,
+  "text": "nothing special about this"
+ },
+ {
+  "id": 375,
+  "text": "then, down below"
+ },
+ {
+  "id": 376,
+  "text": "we need to use mscratch"
+ },
+ {
+  "id": 377,
+  "text": "that is, initialize first"
+ },
+ {
+  "id": 378,
+  "text": "assuming this Task A on the left"
+ },
+ {
+  "id": 379,
+  "text": "is the first task we want to schedule"
+ },
+ {
+  "id": 380,
+  "text": "So, first, let's take"
+ },
+ {
+  "id": 381,
+  "text": "First, let's point the mscratch register"
+ },
+ {
+  "id": 382,
+  "text": "to the task on the left,"
+ },
+ {
+  "id": 383,
+  "text": "to its corresponding context."
+ },
+ {
+  "id": 384,
+  "text": "This way, it means we want to"
+ },
+ {
+  "id": 385,
+  "text": "Right from the start,"
+ },
+ {
+  "id": 386,
+  "text": "we run the task on the left first."
+ },
+ {
+  "id": 387,
+  "text": "Good."
+ },
+ {
+  "id": 388,
+  "text": "Then the PC starts running."
+ },
+ {
+  "id": 389,
+  "text": "So let's assume it first executes the first instruction,"
+ },
+ {
+  "id": 390,
+  "text": "and then"
+ },
+ {
+  "id": 391,
+  "text": "goes on to execute the second instruction."
+ },
+ {
+  "id": 392,
+  "text": "Now, when executing the second instruction,"
+ },
+ {
+  "id": 393,
+  "text": "the value of PC down here"
+ },
+ {
+  "id": 394,
+  "text": "this value here,"
+ },
+ {
+  "id": 395,
+  "text": "is also changing accordingly."
+ },
+ {
+  "id": 396,
+  "text": "This value is changing as well."
+ },
+ {
+  "id": 397,
+  "text": "Good."
+ },
+ {
+  "id": 398,
+  "text": "Now let's assume at this point,"
+ },
+ {
+  "id": 399,
+  "text": "this timer,"
+ },
+ {
+  "id": 400,
+  "text": "For example, when we reach the"
+ },
+ {
+  "id": 401,
+  "text": "timer,"
+ },
+ {
+  "id": 402,
+  "text": "once the timer fires,"
+ },
+ {
+  "id": 403,
+  "text": "we know that the trap handling flow"
+ },
+ {
+  "id": 404,
+  "text": "that we learned earlier"
+ },
+ {
+  "id": 405,
+  "text": "will kick in."
+ },
+ {
+  "id": 406,
+  "text": "Now, as for the trap,"
+ },
+ {
+  "id": 407,
+  "text": "we know that in its handling flow,"
+ },
+ {
+  "id": 408,
+  "text": "one very important point is that"
+ },
+ {
+  "id": 409,
+  "text": "it will take this"
+ },
+ {
+  "id": 410,
+  "text": "— since this was an interrupt,"
+ },
+ {
+  "id": 411,
+  "text": "right,"
+ },
+ {
+  "id": 412,
+  "text": "it was an interrupt —"
+ },
+ {
+  "id": 413,
+  "text": "it takes the address"
+ },
+ {
+  "id": 414,
+  "text": "of this instruction, the I plus 2 instruction,"
+ },
+ {
+  "id": 415,
+  "text": "the address of it,"
+ },
+ {
+  "id": 416,
+  "text": "and saves it into mepc."
+ },
+ {
+  "id": 417,
+  "text": "So you can see that"
+ },
+ {
+  "id": 418,
+  "text": "at this point,"
+ },
+ {
+  "id": 419,
+  "text": "it will become an I plus 2."
+ },
+ {
+  "id": 420,
+  "text": "What about I plus 2?"
+ },
+ {
+  "id": 421,
+  "text": "Actually, it is this instruction's"
+ },
+ {
+  "id": 422,
+  "text": "the address of this instruction"
+ },
+ {
+  "id": 423,
+  "text": "And saving it here,"
+ },
+ {
+  "id": 424,
+  "text": "we will see later on,"
+ },
+ {
+  "id": 425,
+  "text": "it will serve this task"
+ },
+ {
+  "id": 426,
+  "text": "after a switch and then a return later,"
+ },
+ {
+  "id": 427,
+  "text": "it will come into play."
+ },
+ {
+  "id": 428,
+  "text": "Let's take a look at how this process happens."
+ },
+ {
+  "id": 429,
+  "text": "So suppose its MEPC now,"
+ },
+ {
+  "id": 430,
+  "text": "has become I plus 2."
+ },
+ {
+  "id": 431,
+  "text": "So it becomes I plus 2,"
+ },
+ {
+  "id": 432,
+  "text": "and then, this trap,"
+ },
+ {
+  "id": 433,
+  "text": "at the same time, it will jump to this"
+ },
+ {
+  "id": 434,
+  "text": "the entry of our trap handler,"
+ },
+ {
+  "id": 435,
+  "text": "to perform the corresponding operations."
+ },
+ {
+  "id": 436,
+  "text": "So the first step,"
+ },
+ {
+  "id": 437,
+  "text": "according to the code we had earlier,"
+ },
+ {
+  "id": 438,
+  "text": "the implementation of it,"
+ },
+ {
+  "id": 439,
+  "text": "its first step is to take the previous context's"
+ },
+ {
+  "id": 440,
+  "text": "So the so-called previous one is what's currently pointed to"
+ },
+ {
+  "id": 441,
+  "text": "the contents of this context"
+ },
+ {
+  "id": 442,
+  "text": "need to be saved"
+ },
+ {
+  "id": 443,
+  "text": "By so-called saving,"
+ },
+ {
+  "id": 444,
+  "text": "we mean taking some of the contents on the CPU"
+ },
+ {
+  "id": 445,
+  "text": "and saving them into our memory"
+ },
+ {
+  "id": 446,
+  "text": "Now, in this process,"
+ },
+ {
+  "id": 447,
+  "text": "since we're currently focusing on mepc,"
+ },
+ {
+  "id": 448,
+  "text": "so it actually"
+ },
+ {
+  "id": 449,
+  "text": "we won't talk about the other registers"
+ },
+ {
+  "id": 450,
+  "text": "So actually it will take what's in mepc,"
+ },
+ {
+  "id": 451,
+  "text": "i+2, and save it in there"
+ },
+ {
+  "id": 452,
+  "text": "on the left"
+ },
+ {
+  "id": 453,
+  "text": "So on the left side here,"
+ },
+ {
+  "id": 454,
+  "text": "it will also become i+2"
+ },
+ {
+  "id": 455,
+  "text": "right?"
+ },
+ {
+  "id": 456,
+  "text": "Now after saving is done,"
+ },
+ {
+  "id": 457,
+  "text": "the next thing we need to do"
+ },
+ {
+  "id": 458,
+  "text": "is switch the context"
+ },
+ {
+  "id": 459,
+  "text": "Now by so-called switching,"
+ },
+ {
+  "id": 460,
+  "text": "So basically, what we do is take the pointer"
+ },
+ {
+  "id": 461,
+  "text": "stored in mscratch,"
+ },
+ {
+  "id": 462,
+  "text": "which originally pointed to the left side,"
+ },
+ {
+  "id": 463,
+  "text": "and now make it point to the right side instead."
+ },
+ {
+  "id": 464,
+  "text": "Then, next,"
+ },
+ {
+  "id": 465,
+  "text": "we need to get ready"
+ },
+ {
+  "id": 466,
+  "text": "to schedule the task on the right onto the CPU"
+ },
+ {
+  "id": 467,
+  "text": "and start running it."
+ },
+ {
+  "id": 468,
+  "text": "Now, before it runs,"
+ },
+ {
+  "id": 469,
+  "text": "what's the first thing we need to do?"
+ },
+ {
+  "id": 470,
+  "text": "We need to take the context on the right"
+ },
+ {
+  "id": 471,
+  "text": "and restore it onto the CPU,"
+ },
+ {
+  "id": 472,
+  "text": "because what we're doing now is replacing"
+ },
+ {
+  "id": 473,
+  "text": "the entire execution environment currently on the CPU,"
+ },
+ {
+  "id": 474,
+  "text": "essentially swapping it out,"
+ },
+ {
+  "id": 475,
+  "text": "replacing it with the task on the right."
+ },
+ {
+  "id": 476,
+  "text": "In this swapping process,"
+ },
+ {
+  "id": 477,
+  "text": "once again, we only care about MEPC."
+ },
+ {
+  "id": 478,
+  "text": "Looking at MEPC,"
+ },
+ {
+  "id": 479,
+  "text": "what value will it be replaced with?"
+ },
+ {
+  "id": 480,
+  "text": "it gets replaced with this"
+ },
+ {
+  "id": 481,
+  "text": "the original initialized return address,"
+ },
+ {
+  "id": 482,
+  "text": "which is the first instruction of the task on the right,"
+ },
+ {
+  "id": 483,
+  "text": "because the task on the right"
+ },
+ {
+  "id": 484,
+  "text": "is about to start running,"
+ },
+ {
+  "id": 485,
+  "text": "right?"
+ },
+ {
+  "id": 486,
+  "text": "Now the i + 2 value originally in there"
+ },
+ {
+  "id": 487,
+  "text": "gets replaced."
+ },
+ {
+  "id": 488,
+  "text": "But don't worry."
+ },
+ {
+  "id": 489,
+  "text": "Why?"
+ },
+ {
+  "id": 490,
+  "text": "Because even though this value gets replaced,"
+ },
+ {
+  "id": 491,
+  "text": "we've already saved a copy of it"
+ },
+ {
+  "id": 492,
+  "text": "in the original location for it."
+ },
+ {
+  "id": 493,
+  "text": "Pay attention here."
+ },
+ {
+  "id": 494,
+  "text": "In fact, this one saved here,"
+ },
+ {
+  "id": 495,
+  "text": "so this replacement over here"
+ },
+ {
+  "id": 496,
+  "text": "won't lose anything."
+ },
+ {
+  "id": 497,
+  "text": "Pay attention to this."
+ },
+ {
+  "id": 498,
+  "text": "So this one"
+ },
+ {
+  "id": 499,
+  "text": "just gets replaced."
+ },
+ {
+  "id": 500,
+  "text": "It becomes connected."
+ },
+ {
+  "id": 501,
+  "text": "Now, then,"
+ },
+ {
+  "id": 502,
+  "text": "think about it — after this is done,"
+ },
+ {
+  "id": 503,
+  "text": "when we start executing mret,"
+ },
+ {
+  "id": 504,
+  "text": "the process of switching our task will happen."
+ },
+ {
+  "id": 505,
+  "text": "This will happen."
+ },
+ {
+  "id": 506,
+  "text": "Because, as we know, with mret,"
+ },
+ {
+  "id": 507,
+  "text": "it actually takes the value in mepc"
+ },
+ {
+  "id": 508,
+  "text": "— it jumps based on the value inside there."
+ },
+ {
+  "id": 509,
+  "text": "So if this is set at this point,"
+ },
+ {
+  "id": 510,
+  "text": "then it will actually jump to that location to execute."
+ },
+ {
+  "id": 511,
+  "text": "So once this mret executes,"
+ },
+ {
+  "id": 512,
+  "text": "our pc actually jumps to task b,"
+ },
+ {
+  "id": 513,
+  "text": "and it starts running from its first instruction."
+ },
+ {
+  "id": 514,
+  "text": "At this point,"
+ },
+ {
+  "id": 515,
+  "text": "we have completed the first switch of this task."
+ },
+ {
+  "id": 516,
+  "text": "Next,"
+ },
+ {
+  "id": 517,
+  "text": "let's look at how the task switches back."
+ },
+ {
+  "id": 518,
+  "text": "Switching back is actually a process"
+ },
+ {
+  "id": 519,
+  "text": "that, just like before,"
+ },
+ {
+  "id": 520,
+  "text": "It's actually quite similar."
+ },
+ {
+  "id": 521,
+  "text": "So let's assume this PZ,"
+ },
+ {
+  "id": 522,
+  "text": "starts running again, continuing downward,"
+ },
+ {
+  "id": 523,
+  "text": "proceeding to J+1."
+ },
+ {
+  "id": 524,
+  "text": "Now, since this task,"
+ },
+ {
+  "id": 525,
+  "text": "did not give up the CPU voluntarily,"
+ },
+ {
+  "id": 526,
+  "text": "we don't know when it will switch."
+ },
+ {
+  "id": 527,
+  "text": "But the actual switch,"
+ },
+ {
+  "id": 528,
+  "text": "still happens at, well,"
+ },
+ {
+  "id": 529,
+  "text": "the moment of this interrupt."
+ },
+ {
+  "id": 530,
+  "text": "At this point, an interrupt should occur."
+ },
+ {
+  "id": 531,
+  "text": "We haven't drawn this interrupt yet,"
+ },
+ {
+  "id": 532,
+  "text": "but you can imagine it."
+ },
+ {
+  "id": 533,
+  "text": "Suppose at this moment,"
+ },
+ {
+  "id": 534,
+  "text": "this interrupt happens again."
+ },
+ {
+  "id": 535,
+  "text": "Once the interrupt occurs,"
+ },
+ {
+  "id": 536,
+  "text": "as you know, the same process we just described repeats."
+ },
+ {
+  "id": 537,
+  "text": "What is this repeating process?"
+ },
+ {
+  "id": 538,
+  "text": "Well, that is,"
+ },
+ {
+  "id": 539,
+  "text": "suppose the interrupt occurs at this point."
+ },
+ {
+  "id": 540,
+  "text": "Once an interrupt occurs,"
+ },
+ {
+  "id": 541,
+  "text": "it will take this instruction at pc plus 2"
+ },
+ {
+  "id": 542,
+  "text": "and save it into this field here."
+ },
+ {
+  "id": 543,
+  "text": "That's what I'm trying to say."
+ },
+ {
+  "id": 544,
+  "text": "And then,"
+ },
+ {
+  "id": 545,
+  "text": "this side here becomes pc plus 2."
+ },
+ {
+  "id": 546,
+  "text": "So after it's saved,"
+ },
+ {
+  "id": 547,
+  "text": "as we know,"
+ },
+ {
+  "id": 548,
+  "text": "it jumps to"
+ },
+ {
+  "id": 549,
+  "text": "this task handler,"
+ },
+ {
+  "id": 550,
+  "text": "into this trap handler function."
+ },
+ {
+  "id": 551,
+  "text": "Then it repeats the logic from before:"
+ },
+ {
+  "id": 552,
+  "text": "save,"
+ },
+ {
+  "id": 553,
+  "text": "save the original context,"
+ },
+ {
+  "id": 554,
+  "text": "and then switch,"
+ },
+ {
+  "id": 555,
+  "text": "switch."
+ },
+ {
+  "id": 556,
+  "text": "After the switch is done,"
+ },
+ {
+  "id": 557,
+  "text": "restore."
+ },
+ {
+  "id": 558,
+  "text": "When it restores,"
+ },
+ {
+  "id": 559,
+  "text": "as you all know, at this point"
+ },
+ {
+  "id": 560,
+  "text": "This register i+2, this value,"
+ },
+ {
+  "id": 561,
+  "text": "it will be replaced by the value over here."
+ },
+ {
+  "id": 562,
+  "text": "But that's fine,"
+ },
+ {
+  "id": 563,
+  "text": "we've already saved a copy here."
+ },
+ {
+  "id": 564,
+  "text": "So even though it gets replaced here,"
+ },
+ {
+  "id": 565,
+  "text": "that doesn't matter."
+ },
+ {
+  "id": 566,
+  "text": "Same as before."
+ },
+ {
+  "id": 567,
+  "text": "Now, when we restore,"
+ },
+ {
+  "id": 568,
+  "text": "this i+2 comes back in."
+ },
+ {
+  "id": 569,
+  "text": "So as you know,"
+ },
+ {
+  "id": 570,
+  "text": "at this point, moving on down,"
+ },
+ {
+  "id": 571,
+  "text": "when we execute mret,"
+ },
+ {
+  "id": 572,
+  "text": "where do we return to?"
+ },
+ {
+  "id": 573,
+  "text": "Well, quite naturally,"
+ },
+ {
+  "id": 574,
+  "text": "it goes by the value of this i+2,"
+ },
+ {
+  "id": 575,
+  "text": "to jump there and continue executing."
+ },
+ {
+  "id": 576,
+  "text": "Right?"
+ },
+ {
+  "id": 577,
+  "text": "So next,"
+ },
+ {
+  "id": 578,
+  "text": "it comes right back."
+ },
+ {
+  "id": 579,
+  "text": "And after that, there's nothing more to say."
+ },
+ {
+  "id": 580,
+  "text": "So what we're emphasizing here"
+ },
+ {
+  "id": 581,
+  "text": "is really this point:"
+ },
+ {
+  "id": 582,
+  "text": "in this process,"
+ },
+ {
+  "id": 583,
+  "text": "even though our task didn't voluntarily give up the CPU,"
+ },
+ {
+  "id": 584,
+  "text": "with the occurrence of this timer interrupt,"
+ },
+ {
+  "id": 585,
+  "text": "with all these things happening,"
+ },
+ {
+  "id": 586,
+  "text": "in the middle of that,"
+ },
+ {
+  "id": 587,
+  "text": "we use the interrupt handler"
+ },
+ {
+  "id": 588,
+  "text": "to carry out the scheduling and execution of the entire task."
+ },
+ {
+  "id": 589,
+  "text": "So that's essentially what we call preemption."
+ },
+ {
+  "id": 590,
+  "text": "That's exactly what it means."
+ },
+ {
+  "id": 591,
+  "text": "So in other words,"
+ },
+ {
+  "id": 592,
+  "text": "the task didn't voluntarily give up the CPU,"
+ },
+ {
+  "id": 593,
+  "text": "but our kernel,"
+ },
+ {
+  "id": 594,
+  "text": "preempted it."
+ },
+ {
+  "id": 595,
+  "text": "This is what's called preemptive multitasking."
+ },
+ {
+  "id": 596,
+  "text": "So up to this point,"
+ },
+ {
+  "id": 597,
+  "text": "we've finished introducing preemptive multitasking"
+ },
+ {
+  "id": 598,
+  "text": "to all of you."
+ },
+ {
+  "id": 599,
+  "text": "Now, some of you may ask,"
+ },
+ {
+  "id": 600,
+  "text": "I mean,"
+ },
+ {
+  "id": 601,
+  "text": "preemptive multitasking"
+ },
+ {
+  "id": 602,
+  "text": "once we implement it,"
+ },
+ {
+  "id": 603,
+  "text": "then the original,"
+ },
+ {
+  "id": 604,
+  "text": "this backward-compatible kind of"
+ },
+ {
+  "id": 605,
+  "text": "if the original cooperative multitasking,"
+ },
+ {
+  "id": 606,
+  "text": "actually refers to"
+ },
+ {
+  "id": 607,
+  "text": "I mean, our"
+ },
+ {
+  "id": 608,
+  "text": "the Task_yield interface,"
+ },
+ {
+  "id": 609,
+  "text": "does it become useless for us?"
+ },
+ {
+  "id": 610,
+  "text": "Because it's also possible,"
+ },
+ {
+  "id": 611,
+  "text": "as you can imagine,"
+ },
+ {
+  "id": 612,
+  "text": "it's possible that during the execution of our program,"
+ },
+ {
+  "id": 613,
+  "text": "we might"
+ },
+ {
+  "id": 614,
+  "text": "a task might want to voluntarily give up the CPU,"
+ },
+ {
+  "id": 615,
+  "text": "for example, we don't want to wait until the timer fires"
+ },
+ {
+  "id": 616,
+  "text": "before we get switched out,"
+ },
+ {
+  "id": 617,
+  "text": "because we may have finished our work,"
+ },
+ {
+  "id": 618,
+  "text": "and then we can release the CPU right away."
+ },
+ {
+  "id": 619,
+  "text": "So, this Task_yield function of ours,"
+ },
+ {
+  "id": 620,
+  "text": "In fact, we still have a need for its existence."
+ },
+ {
+  "id": 621,
+  "text": "So how do we maintain compatibility with this?"
+ },
+ {
+  "id": 622,
+  "text": "Well, we actually need to introduce"
+ },
+ {
+  "id": 623,
+  "text": "that is, for our third type,"
+ },
+ {
+  "id": 624,
+  "text": "the introduction of the software interrupt,"
+ },
+ {
+  "id": 625,
+  "text": "we actually implement it through this software interrupt mechanism."
+ },
+ {
+  "id": 626,
+  "text": "This allows us to achieve"
+ },
+ {
+  "id": 627,
+  "text": "that is, on top of the existing preemptive multitasking,"
+ },
+ {
+  "id": 628,
+  "text": "we can still be compatible with this kind of cooperative multitasking."
+ },
+ {
+  "id": 629,
+  "text": "Now, this software interrupt,"
+ },
+ {
+  "id": 630,
+  "text": "as we introduced earlier,"
+ },
+ {
+  "id": 631,
+  "text": "it still uses the CLINT device,"
+ },
+ {
+  "id": 632,
+  "text": "because this local interrupt,"
+ },
+ {
+  "id": 633,
+  "text": "the local interrupt generator,"
+ },
+ {
+  "id": 634,
+  "text": "it can generate software interrupts,"
+ },
+ {
+  "id": 635,
+  "text": "and it can also generate timer interrupts."
+ },
+ {
+  "id": 636,
+  "text": "So this thing,"
+ },
+ {
+  "id": 637,
+  "text": "that is, why did we think of"
+ },
+ {
+  "id": 638,
+  "text": "using a software interrupt to do this?"
+ },
+ {
+  "id": 639,
+  "text": "Well, think about it."
+ },
+ {
+  "id": 640,
+  "text": "That is to say, if we use the timer interrupt"
+ },
+ {
+  "id": 641,
+  "text": "to implement preemption,"
+ },
+ {
+  "id": 642,
+  "text": "what effect does that actually amount to?"
+ },
+ {
+  "id": 643,
+  "text": "It means that even if a task doesn't voluntarily give up the CPU,"
+ },
+ {
+  "id": 644,
+  "text": "then through this..."
+ },
+ {
+  "id": 645,
+  "text": "after we set this thing up,"
+ },
+ {
+  "id": 646,
+  "text": "it generates a timer interrupt,"
+ },
+ {
+  "id": 647,
+  "text": "and it can trigger us periodically,"
+ },
+ {
+  "id": 648,
+  "text": "like giving us a phone call, so to speak."
+ },
+ {
+  "id": 649,
+  "text": "Think of an analogy, everyone."
+ },
+ {
+  "id": 650,
+  "text": "It's like saying,"
+ },
+ {
+  "id": 651,
+  "text": "we tell this thing,"
+ },
+ {
+  "id": 652,
+  "text": "our task is running up there,"
+ },
+ {
+  "id": 653,
+  "text": "and before we start running it,"
+ },
+ {
+  "id": 654,
+  "text": "we have already set it up so that"
+ },
+ {
+  "id": 655,
+  "text": "this CLINT, this thing,"
+ },
+ {
+  "id": 656,
+  "text": "as a peripheral device,"
+ },
+ {
+  "id": 657,
+  "text": "for example, every one second,"
+ },
+ {
+  "id": 658,
+  "text": "gives us a phone call,"
+ },
+ {
+  "id": 659,
+  "text": "and then after it makes that call,"
+ },
+ {
+  "id": 660,
+  "text": "Our kernel,"
+ },
+ {
+  "id": 661,
+  "text": "in the process of receiving the interrupt,"
+ },
+ {
+  "id": 662,
+  "text": "switches this task"
+ },
+ {
+  "id": 663,
+  "text": "actually to achieve this effect"
+ },
+ {
+  "id": 664,
+  "text": "this is the concept of preemption."
+ },
+ {
+  "id": 665,
+  "text": "Now suppose we want to"
+ },
+ {
+  "id": 666,
+  "text": "voluntarily give up ourselves,"
+ },
+ {
+  "id": 667,
+  "text": "what does that actually mean?"
+ },
+ {
+  "id": 668,
+  "text": "It means that since we still want to"
+ },
+ {
+  "id": 669,
+  "text": "reuse the original code,"
+ },
+ {
+  "id": 670,
+  "text": "actually the main goal"
+ },
+ {
+  "id": 671,
+  "text": "is still to reuse the original code."
+ },
+ {
+  "id": 672,
+  "text": "And the original code,"
+ },
+ {
+  "id": 673,
+  "text": "as we know, actually comes in through"
+ },
+ {
+  "id": 674,
+  "text": "the interrupt entry point,"
+ },
+ {
+  "id": 675,
+  "text": "comes in through the interrupt entry point,"
+ },
+ {
+  "id": 676,
+  "text": "and then implements this preemption."
+ },
+ {
+  "id": 677,
+  "text": "So how do we make this"
+ },
+ {
+  "id": 678,
+  "text": "task, during execution,"
+ },
+ {
+  "id": 679,
+  "text": "for example, while I'm executing,"
+ },
+ {
+  "id": 680,
+  "text": "And then we call a task yield"
+ },
+ {
+  "id": 681,
+  "text": "So, we call a task yield,"
+ },
+ {
+  "id": 682,
+  "text": "which can actively go"
+ },
+ {
+  "id": 683,
+  "text": "Basically, it's like actively making a phone call to yourself,"
+ },
+ {
+  "id": 684,
+  "text": "that is, actively triggering an interrupt."
+ },
+ {
+  "id": 685,
+  "text": "Now, this is the concept of a software interrupt."
+ },
+ {
+  "id": 686,
+  "text": "Because all the other interrupts,"
+ },
+ {
+  "id": 687,
+  "text": "in fact, are not triggered actively by us,"
+ },
+ {
+  "id": 688,
+  "text": "right? A peripheral interrupt"
+ },
+ {
+  "id": 689,
+  "text": "can happen at any time,"
+ },
+ {
+  "id": 690,
+  "text": "and as for the timer interrupt,"
+ },
+ {
+  "id": 691,
+  "text": "that's not actively triggered by us either,"
+ },
+ {
+  "id": 692,
+  "text": "and this timer interrupt,"
+ },
+ {
+  "id": 693,
+  "text": "we don't trigger it actively either. We just set up a period ahead of time,"
+ },
+ {
+  "id": 694,
+  "text": "and when that period is up,"
+ },
+ {
+  "id": 695,
+  "text": "it generates on its own,"
+ },
+ {
+  "id": 696,
+  "text": "generated by this external thing,"
+ },
+ {
+  "id": 697,
+  "text": "and as for the software interrupt,"
+ },
+ {
+  "id": 698,
+  "text": "you can understand it as meaning that,"
+ },
+ {
+  "id": 699,
+  "text": "basically, we go and set this thing up."
+ },
+ {
+  "id": 700,
+  "text": "Of course, we do it by issuing a command"
+ },
+ {
+  "id": 701,
+  "text": "to set up this thing,"
+ },
+ {
+  "id": 702,
+  "text": "and then it generates an interrupt for us."
+ },
+ {
+  "id": 703,
+  "text": "Now, this thing is actually just like an exception—"
+ },
+ {
+  "id": 704,
+  "text": "relatively speaking, it's a bit like a synchronous process,"
+ },
+ {
+  "id": 705,
+  "text": "a bit like a synchronous process."
+ },
+ {
+  "id": 706,
+  "text": "This kind is called a software interrupt,"
+ },
+ {
+  "id": 707,
+  "text": "that is, an interrupt triggered by software."
+ },
+ {
+  "id": 708,
+  "text": "That's what a software interrupt is."
+ },
+ {
+  "id": 709,
+  "text": "So once it's triggered by a software interrupt,"
+ },
+ {
+  "id": 710,
+  "text": "you know, if it's like this—"
+ },
+ {
+  "id": 711,
+  "text": "once an interrupt is generated,"
+ },
+ {
+  "id": 712,
+  "text": "we can"
+ },
+ {
+  "id": 713,
+  "text": "just like with a timer interrupt,"
+ },
+ {
+  "id": 714,
+  "text": "we can completely reuse"
+ },
+ {
+  "id": 715,
+  "text": "the original handling flow and functions."
+ },
+ {
+  "id": 716,
+  "text": "Actually, the reason we introduce software interrupts,"
+ },
+ {
+  "id": 717,
+  "text": "is precisely to achieve this effect."
+ },
+ {
+  "id": 718,
+  "text": "So next, let's take a look at"
+ },
+ {
+  "id": 719,
+  "text": "that is, how we make use of it."
+ },
+ {
+  "id": 720,
+  "text": "How do we trigger a software interrupt?"
+ },
+ {
+  "id": 721,
+  "text": "How do we make use of a software interrupt?"
+ },
+ {
+  "id": 722,
+  "text": "Now, since the software interrupt is still generated by the CLINT,"
+ },
+ {
+  "id": 723,
+  "text": "this device,"
+ },
+ {
+  "id": 724,
+  "text": "so let's take a look at it first."
+ },
+ {
+  "id": 725,
+  "text": "Earlier, before this,"
+ },
+ {
+  "id": 726,
+  "text": "in the previous chapter, we mainly introduced"
+ },
+ {
+  "id": 727,
+  "text": "its timer part."
+ },
+ {
+  "id": 728,
+  "text": "Now it also has some registers"
+ },
+ {
+  "id": 729,
+  "text": "that are related to software interrupts."
+ },
+ {
+  "id": 730,
+  "text": "Let's take a look at them together now."
+ },
+ {
+  "id": 731,
+  "text": "It has a register called MSIP."
+ },
+ {
+  "id": 732,
+  "text": "This is, for each hart,"
+ },
+ {
+  "id": 733,
+  "text": "there is one MSIP register."
+ },
+ {
+  "id": 734,
+  "text": "This MSIP register is rather special."
+ },
+ {
+  "id": 735,
+  "text": "It is also a 32-bit register,"
+ },
+ {
+  "id": 736,
+  "text": "but this 32-bit register,"
+ },
+ {
+  "id": 737,
+  "text": "in practice, we only use"
+ },
+ {
+  "id": 738,
+  "text": "its lowest bit."
+ },
+ {
+  "id": 739,
+  "text": "The other high 32 bits"
+ },
+ {
+  "id": 740,
+  "text": "Actually, we don't use it."
+ },
+ {
+  "id": 741,
+  "text": "So what about the lowest bit?"
+ },
+ {
+  "id": 742,
+  "text": "Pay attention here, everyone."
+ },
+ {
+  "id": 743,
+  "text": "In hardware,"
+ },
+ {
+  "id": 744,
+  "text": "it actually gets mapped to"
+ },
+ {
+  "id": 745,
+  "text": "this,"
+ },
+ {
+  "id": 746,
+  "text": "mapped to the MIP register,"
+ },
+ {
+  "id": 747,
+  "text": "to its special MSIP bit."
+ },
+ {
+  "id": 748,
+  "text": "You can think of it this way:"
+ },
+ {
+  "id": 749,
+  "text": "when we write to this register,"
+ },
+ {
+  "id": 750,
+  "text": "once we write"
+ },
+ {
+  "id": 751,
+  "text": "the lowest bit of this register,"
+ },
+ {
+  "id": 752,
+  "text": "then this bit,"
+ },
+ {
+  "id": 753,
+  "text": "because we know this bit"
+ },
+ {
+  "id": 754,
+  "text": "is actually used to indicate"
+ },
+ {
+  "id": 755,
+  "text": "that is, it is actually the so-called interrupt's"
+ },
+ {
+  "id": 756,
+  "text": "software interrupt pending bit,"
+ },
+ {
+  "id": 757,
+  "text": "the software interrupt pending bit,"
+ },
+ {
+  "id": 758,
+  "text": "which is used to tell us whether this interrupt has occurred."
+ },
+ {
+  "id": 759,
+  "text": "Now, since we're mapping to this,"
+ },
+ {
+  "id": 760,
+  "text": "If we set the lowest bit of this MSIP register to 1,"
+ },
+ {
+  "id": 761,
+  "text": "and we set it to 1,"
+ },
+ {
+  "id": 762,
+  "text": "then this bit naturally becomes 1 as well,"
+ },
+ {
+  "id": 763,
+  "text": "so through this bit,"
+ },
+ {
+  "id": 764,
+  "text": "we can also read out that the software interrupt has occurred."
+ },
+ {
+  "id": 765,
+  "text": "That is actually what this means."
+ },
+ {
+  "id": 766,
+  "text": "Don't let this confuse you."
+ },
+ {
+  "id": 767,
+  "text": "That is to say,"
+ },
+ {
+  "id": 768,
+  "text": "this MSIP"
+ },
+ {
+  "id": 769,
+  "text": "is the name of a register inside the CLINT,"
+ },
+ {
+  "id": 770,
+  "text": "while this MSIP here,"
+ },
+ {
+  "id": 771,
+  "text": "actually refers to"
+ },
+ {
+  "id": 772,
+  "text": "a certain bit of the MIP register,"
+ },
+ {
+  "id": 773,
+  "text": "a certain bit position."
+ },
+ {
+  "id": 774,
+  "text": "Please pay attention to this,"
+ },
+ {
+  "id": 775,
+  "text": "don't mix them up."
+ },
+ {
+  "id": 776,
+  "text": "This is the MSIP register."
+ },
+ {
+  "id": 777,
+  "text": "Now, using it,"
+ },
+ {
+  "id": 778,
+  "text": "is very simple."
+ },
+ {
+  "id": 779,
+  "text": "As I just said,"
+ },
+ {
+  "id": 780,
+  "text": "Let me emphasize this again here."
+ },
+ {
+  "id": 781,
+  "text": "That is to say, when we write 1 to this"
+ },
+ {
+  "id": 782,
+  "text": "MICB register — that is, this MSI control register —"
+ },
+ {
+  "id": 783,
+  "text": "actually, writing 1 to its lowest bit"
+ },
+ {
+  "id": 784,
+  "text": "will trigger this software interrupt."
+ },
+ {
+  "id": 785,
+  "text": "What if we write 0?"
+ },
+ {
+  "id": 786,
+  "text": "It means we are acknowledging that interrupt."
+ },
+ {
+  "id": 787,
+  "text": "In effect, we are notifying the CLINT that"
+ },
+ {
+  "id": 788,
+  "text": "we have finished handling the software interrupt."
+ },
+ {
+  "id": 789,
+  "text": "This way,"
+ },
+ {
+  "id": 790,
+  "text": "it will not keep triggering this software interrupt repeatedly."
+ },
+ {
+  "id": 791,
+  "text": "Otherwise, if you don't acknowledge it,"
+ },
+ {
+  "id": 792,
+  "text": "this software interrupt will essentially keep being generated."
+ },
+ {
+  "id": 793,
+  "text": "The signal level stays high,"
+ },
+ {
+  "id": 794,
+  "text": "and then it will keep generating this software interrupt non-stop."
+ },
+ {
+  "id": 795,
+  "text": "So once you have finished handling it,"
+ },
+ {
+  "id": 796,
+  "text": "you must acknowledge it."
+ },
+ {
+  "id": 797,
+  "text": "Writing 0 to it turns it off."
+ },
+ {
+  "id": 798,
+  "text": "Otherwise, this software interrupt will keep being triggered forever."
+ },
+ {
+  "id": 799,
+  "text": "Please keep this in mind when writing to it."
+ },
+ {
+  "id": 800,
+  "text": "So based on the idea we just discussed,"
+ },
+ {
+  "id": 801,
+  "text": "that is, by triggering a software interrupt,"
+ },
+ {
+  "id": 802,
+  "text": "we go through the same flow"
+ },
+ {
+  "id": 803,
+  "text": "to carry out the task switch."
+ },
+ {
+  "id": 804,
+  "text": "Now, based on this idea,"
+ },
+ {
+  "id": 805,
+  "text": "for the function that this task used to have,"
+ },
+ {
+  "id": 806,
+  "text": "we rewrite it a bit."
+ },
+ {
+  "id": 807,
+  "text": "We can take the implementation of this function"
+ },
+ {
+  "id": 808,
+  "text": "and, compared with the cooperative"
+ },
+ {
+  "id": 809,
+  "text": "multitasking version's task yield,"
+ },
+ {
+  "id": 810,
+  "text": "we can actually make a comparison."
+ },
+ {
+  "id": 811,
+  "text": "Here,"
+ },
+ {
+  "id": 812,
+  "text": "it no longer calls that switch function,"
+ },
+ {
+  "id": 813,
+  "text": "but in fact it"
+ },
+ {
+  "id": 814,
+  "text": "just does one very simple thing,"
+ },
+ {
+  "id": 815,
+  "text": "which is writing a 1"
+ },
+ {
+  "id": 816,
+  "text": "into this mrcp register,"
+ },
+ {
+  "id": 817,
+  "text": "writing this 1."
+ },
+ {
+  "id": 818,
+  "text": "But this action is very simple,"
+ },
+ {
+  "id": 819,
+  "text": "yet this 1"
+ },
+ {
+  "id": 820,
+  "text": "We need to understand what actually happens behind the scenes."
+ },
+ {
+  "id": 821,
+  "text": "It actually triggers a software interrupt."
+ },
+ {
+  "id": 822,
+  "text": "So once the software interrupt is triggered,"
+ },
+ {
+  "id": 823,
+  "text": "it's really just the interrupt handling flow."
+ },
+ {
+  "id": 824,
+  "text": "So similarly,"
+ },
+ {
+  "id": 825,
+  "text": "it goes into that trap vector"
+ },
+ {
+  "id": 826,
+  "text": "function,"
+ },
+ {
+  "id": 827,
+  "text": "right?"
+ },
+ {
+  "id": 828,
+  "text": "And then that"
+ },
+ {
+  "id": 829,
+  "text": "calls the trap handler."
+ },
+ {
+  "id": 830,
+  "text": "The trap handler"
+ },
+ {
+  "id": 831,
+  "text": "in turn calls schedule."
+ },
+ {
+  "id": 832,
+  "text": "So if we walk through the whole process,"
+ },
+ {
+  "id": 833,
+  "text": "it's actually the same as"
+ },
+ {
+  "id": 834,
+  "text": "the process of the timer interrupt we just saw"
+ },
+ {
+  "id": 835,
+  "text": "that we generated earlier."
+ },
+ {
+  "id": 836,
+  "text": "Do you all see that?"
+ },
+ {
+  "id": 837,
+  "text": "It's actually the same."
+ },
+ {
+  "id": 838,
+  "text": "This way, we basically"
+ },
+ {
+  "id": 839,
+  "text": "keep the original logic unchanged."
+ },
+ {
+  "id": 840,
+  "text": "The only thing is that"
+ },
+ {
+  "id": 841,
+  "text": "I just took this function in task1"
+ },
+ {
+  "id": 842,
+  "text": "and"
+ },
+ {
+  "id": 843,
+  "text": "and"
+ },
+ {
+  "id": 844,
+  "text": "rewrote it,"
+ },
+ {
+  "id": 845,
+  "text": "meaning that inside"
+ },
+ {
+  "id": 846,
+  "text": "it just goes and"
+ },
+ {
+  "id": 847,
+  "text": "sets this"
+ },
+ {
+  "id": 848,
+  "text": "software interrupt register, and that's it."
+ },
+ {
+  "id": 849,
+  "text": "And then,"
+ },
+ {
+  "id": 850,
+  "text": "please pay attention here,"
+ },
+ {
+  "id": 851,
+  "text": "that is, at this point"
+ },
+ {
+  "id": 852,
+  "text": "we must"
+ },
+ {
+  "id": 853,
+  "text": "clear it to zero."
+ },
+ {
+  "id": 854,
+  "text": "This way, after it's handled,"
+ },
+ {
+  "id": 855,
+  "text": "we do a hardware return."
+ },
+ {
+  "id": 856,
+  "text": "This way,"
+ },
+ {
+  "id": 857,
+  "text": "the software interrupt won't stay"
+ },
+ {
+  "id": 858,
+  "text": "there forever."
+ },
+ {
+  "id": 859,
+  "text": "If you skip this step,"
+ },
+ {
+  "id": 860,
+  "text": "You'll notice that the soft terminal"
+ },
+ {
+  "id": 861,
+  "text": "will just keep coming in, again and again"
+ },
+ {
+  "id": 862,
+  "text": "Then the program falls into an infinite loop again"
+ },
+ {
+  "id": 863,
+  "text": "which is not good"
+ },
+ {
+  "id": 864,
+  "text": "So please keep that in mind"
+ },
+ {
+  "id": 865,
+  "text": "So this way"
+ },
+ {
+  "id": 866,
+  "text": "we have achieved compatibility with the cooperative"
+ },
+ {
+  "id": 867,
+  "text": "that is, voluntarily giving up the CPU"
+ },
+ {
+  "id": 868,
+  "text": "for this function"
+ },
+ {
+  "id": 869,
+  "text": "So this function"
+ },
+ {
+  "id": 870,
+  "text": "we can still keep it"
+ },
+ {
+  "id": 871,
+  "text": "still keep it"
+ },
+ {
+  "id": 872,
+  "text": "At the same time, likewise"
+ },
+ {
+  "id": 873,
+  "text": "we have also covered the interrupt part"
+ },
+ {
+  "id": 874,
+  "text": "basically in its entirety"
+ },
+ {
+  "id": 875,
+  "text": "That is to say, device interrupts"
+ },
+ {
+  "id": 876,
+  "text": "timer interrupts"
+ },
+ {
+  "id": 877,
+  "text": "and software interrupts"
+ },
+ {
+  "id": 878,
+  "text": "we have touched on all of them"
+ },
+ {
+  "id": 879,
+  "text": "Through these examples, you can get an idea of how it works"
+ },
+ {
+  "id": 880,
+  "text": "So for chapter 13,"
+ },
+ {
+  "id": 881,
+  "text": "that's all the content we'll cover."
+ },
+ {
+  "id": 882,
+  "text": "Now, this example,"
+ },
+ {
+  "id": 883,
+  "text": "let me give you a quick demonstration."
+ },
+ {
+  "id": 884,
+  "text": "That is, the final preemptive example,"
+ },
+ {
+  "id": 885,
+  "text": "in the 08 preemptive example,"
+ },
+ {
+  "id": 886,
+  "text": "the preemption example,"
+ },
+ {
+  "id": 887,
+  "text": "in this example,"
+ },
+ {
+  "id": 888,
+  "text": "and in this example,"
+ },
+ {
+  "id": 889,
+  "text": "we've also defined two tasks."
+ },
+ {
+  "id": 890,
+  "text": "Now, with these two tasks,"
+ },
+ {
+  "id": 891,
+  "text": "pay attention here."
+ },
+ {
+  "id": 892,
+  "text": "Inside them,"
+ },
+ {
+  "id": 893,
+  "text": "we only have, in the first task,"
+ },
+ {
+  "id": 894,
+  "text": "a TaskHead."
+ },
+ {
+  "id": 895,
+  "text": "Let's comment this out for now."
+ },
+ {
+  "id": 896,
+  "text": "Suppose we don't introduce this thing,"
+ },
+ {
+  "id": 897,
+  "text": "and let's take a look."
+ },
+ {
+  "id": 898,
+  "text": "That is, suppose we,"
+ },
+ {
+  "id": 899,
+  "text": "don't voluntarily give up the CPU at all,"
+ },
+ {
+  "id": 900,
+  "text": "So this..."
+ },
+ {
+  "id": 901,
+  "text": "So as you can see"
+ },
+ {
+  "id": 902,
+  "text": "these two tasks, inside this"
+ },
+ {
+  "id": 903,
+  "text": "apart from the delay,"
+ },
+ {
+  "id": 904,
+  "text": "it's basically just an infinite loop,"
+ },
+ {
+  "id": 905,
+  "text": "running on its own,"
+ },
+ {
+  "id": 906,
+  "text": "it never actively gives up the CPU."
+ },
+ {
+  "id": 907,
+  "text": "Now we again take these two tasks"
+ },
+ {
+  "id": 908,
+  "text": "and register them into our system,"
+ },
+ {
+  "id": 909,
+  "text": "creating them."
+ },
+ {
+  "id": 910,
+  "text": "Then we will also see this:"
+ },
+ {
+  "id": 911,
+  "text": "since we have now replaced the entire underlying kernel"
+ },
+ {
+  "id": 912,
+  "text": "with a preemptive one,"
+ },
+ {
+  "id": 913,
+  "text": "these two tasks will still keep getting switched."
+ },
+ {
+  "id": 914,
+  "text": "Let's look at the demo process."
+ },
+ {
+  "id": 915,
+  "text": "We can see — look, this 0101,"
+ },
+ {
+  "id": 916,
+  "text": "it's switching again, right?"
+ },
+ {
+  "id": 917,
+  "text": "This 0101 is switching again."
+ },
+ {
+  "id": 918,
+  "text": "And this switching frequency"
+ },
+ {
+  "id": 919,
+  "text": "is of course driven by that timer."
+ },
+ {
+  "id": 920,
+  "text": "Whatever we set the timer to"
+ },
+ {
+  "id": 921,
+  "text": "that's exactly what it is."
+ },
+ {
+  "id": 922,
+  "text": "This task,"
+ },
+ {
+  "id": 923,
+  "text": "one moment it's 0,"
+ },
+ {
+  "id": 924,
+  "text": "the next moment it's 1."
+ },
+ {
+  "id": 925,
+  "text": "Of course, sometimes"
+ },
+ {
+  "id": 926,
+  "text": "it prints two lines,"
+ },
+ {
+  "id": 927,
+  "text": "sometimes it prints one."
+ },
+ {
+  "id": 928,
+  "text": "That's mainly because"
+ },
+ {
+  "id": 929,
+  "text": "the timing isn't always that precise,"
+ },
+ {
+  "id": 930,
+  "text": "so it doesn't necessarily land"
+ },
+ {
+  "id": 931,
+  "text": "right on the printing point."
+ },
+ {
+  "id": 932,
+  "text": "So,"
+ },
+ {
+  "id": 933,
+  "text": "this,"
+ },
+ {
+  "id": 934,
+  "text": "this is preemption."
+ },
+ {
+  "id": 935,
+  "text": "That is to say, in our code,"
+ },
+ {
+  "id": 936,
+  "text": "we never voluntarily give up the CPU,"
+ },
+ {
+  "id": 937,
+  "text": "yet they can still be switched between each other."
+ },
+ {
+  "id": 938,
+  "text": "So here,"
+ },
+ {
+  "id": 939,
+  "text": "right here,"
+ },
+ {
+  "id": 940,
+  "text": "Right here,"
+ },
+ {
+  "id": 941,
+  "text": "let's add a voluntary yield."
+ },
+ {
+  "id": 942,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 943,
+  "text": "That is to say,"
+ },
+ {
+  "id": 944,
+  "text": "after the voluntary yield,"
+ },
+ {
+  "id": 945,
+  "text": "we can see"
+ },
+ {
+  "id": 946,
+  "text": "that at this point"
+ },
+ {
+  "id": 947,
+  "text": "the 'run' message hasn't been printed yet."
+ },
+ {
+  "id": 948,
+  "text": "Right after the create,"
+ },
+ {
+  "id": 949,
+  "text": "it immediately gave up the CPU and ran it."
+ },
+ {
+  "id": 950,
+  "text": "So this 0 won't print 'running' right away."
+ },
+ {
+  "id": 951,
+  "text": "Let's see the effect."
+ },
+ {
+  "id": 952,
+  "text": "Okay,"
+ },
+ {
+  "id": 953,
+  "text": "let's take a look."
+ },
+ {
+  "id": 954,
+  "text": "See, as soon as task0 yields,"
+ },
+ {
+  "id": 955,
+  "text": "we trigger a software interrupt."
+ },
+ {
+  "id": 956,
+  "text": "This is printed from inside the kernel."
+ },
+ {
+  "id": 957,
+  "text": "And then,"
+ },
+ {
+  "id": 958,
+  "text": "you see this 1111,"
+ },
+ {
+  "id": 959,
+  "text": "it just actively..."
+ },
+ {
+  "id": 960,
+  "text": "Since it triggered a software interrupt,"
+ },
+ {
+  "id": 961,
+  "text": "it will voluntarily give up the CPU."
+ },
+ {
+  "id": 962,
+  "text": "So you can see that task1"
+ },
+ {
+  "id": 963,
+  "text": "starts running immediately."
+ },
+ {
+  "id": 964,
+  "text": "Over here, task1 starts running right away."
+ },
+ {
+  "id": 965,
+  "text": "Now this,"
+ },
+ {
+  "id": 966,
+  "text": "and then afterwards,"
+ },
+ {
+  "id": 967,
+  "text": "it's actually another context switch."
+ },
+ {
+  "id": 968,
+  "text": "Then the timer goes off."
+ },
+ {
+  "id": 969,
+  "text": "The timer goes off."
+ },
+ {
+  "id": 970,
+  "text": "After the timer goes off,"
+ },
+ {
+  "id": 971,
+  "text": "our task0 says I'm back."
+ },
+ {
+  "id": 972,
+  "text": "This I'm back,"
+ },
+ {
+  "id": 973,
+  "text": "is actually reflected in this line here."
+ },
+ {
+  "id": 974,
+  "text": "Because at this point,"
+ },
+ {
+  "id": 975,
+  "text": "this is a voluntary give-up,"
+ },
+ {
+  "id": 976,
+  "text": "so actually,"
+ },
+ {
+  "id": 977,
+  "text": "for this task,"
+ },
+ {
+  "id": 978,
+  "text": "before the switch,"
+ },
+ {
+  "id": 979,
+  "text": "it was actually stopped right here."
+ },
+ {
+  "id": 980,
+  "text": "And then,"
+ },
+ {
+  "id": 981,
+  "text": "\"I'm back\", and it starts running again."
+ },
+ {
+  "id": 982,
+  "text": "Right?"
+ },
+ {
+  "id": 983,
+  "text": "And then,"
+ },
+ {
+  "id": 984,
+  "text": "it just starts running again."
+ },
+ {
+  "id": 985,
+  "text": "And then,"
+ },
+ {
+  "id": 986,
+  "text": "next,"
+ },
+ {
+  "id": 987,
+  "text": "it's the timer-based switching again."
+ },
+ {
+  "id": 988,
+  "text": "Timer-based switching."
+ },
+ {
+  "id": 989,
+  "text": "Now, after this,"
+ },
+ {
+  "id": 990,
+  "text": "it's just the two tasks"
+ },
+ {
+  "id": 991,
+  "text": "switching back and forth on their own."
+ },
+ {
+  "id": 992,
+  "text": "This,"
+ },
+ {
+  "id": 993,
+  "text": "I'll just demonstrate for you."
+ },
+ {
+  "id": 994,
+  "text": "So through this example,"
+ },
+ {
+  "id": 995,
+  "text": "I hope you get a sense of,"
+ },
+ {
+  "id": 996,
+  "text": "that is to say,"
+ },
+ {
+  "id": 997,
+  "text": "our preemptive approach—"
+ },
+ {
+  "id": 998,
+  "text": "actually, the core of preemptive scheduling,"
+ },
+ {
+  "id": 999,
+  "text": "is that it's done through interrupts."
+ },
+ {
+  "id": 1000,
+  "text": "through timer interrupts"
+ },
+ {
+  "id": 1001,
+  "text": "to periodically trigger our kernel"
+ },
+ {
+  "id": 1002,
+  "text": "to implement task scheduling"
+ },
+ {
+  "id": 1003,
+  "text": "Of course, what we have implemented"
+ },
+ {
+  "id": 1004,
+  "text": "the code we've implemented so far"
+ },
+ {
+  "id": 1005,
+  "text": "is relatively simple"
+ },
+ {
+  "id": 1006,
+  "text": "Now, based on this idea"
+ },
+ {
+  "id": 1007,
+  "text": "we can actually expand it"
+ },
+ {
+  "id": 1008,
+  "text": "expand it into a lot of much more complex"
+ },
+ {
+  "id": 1009,
+  "text": "task scheduling"
+ },
+ {
+  "id": 1010,
+  "text": "For example, we haven't added yet"
+ },
+ {
+  "id": 1011,
+  "text": "task priorities"
+ },
+ {
+  "id": 1012,
+  "text": "right?"
+ },
+ {
+  "id": 1013,
+  "text": "And then there's also"
+ },
+ {
+  "id": 1014,
+  "text": "things like task sleeping, and so on"
+ },
+ {
+  "id": 1015,
+  "text": "All of these can be built on top of what we have now"
+ },
+ {
+  "id": 1016,
+  "text": "these most basic"
+ },
+ {
+  "id": 1017,
+  "text": "features."
+ },
+ {
+  "id": 1018,
+  "text": "As for the more complex stuff,"
+ },
+ {
+  "id": 1019,
+  "text": "we'll leave that to you as an exercise."
+ },
+ {
+  "id": 1020,
+  "text": "and extend it ourselves."
+ },
+ {
+  "id": 1021,
+  "text": "So, this"
+ },
+ {
+  "id": 1022,
+  "text": "about this strong multitasking,"
+ },
+ {
+  "id": 1023,
+  "text": "we'll wrap up our introduction here."
+ },
+ {
+  "id": 1024,
+  "text": "As for the exercises,"
+ },
+ {
+  "id": 1025,
+  "text": "go home and work on them yourselves."
+ },
+ {
+  "id": 1026,
+  "text": "That's all for today's content,"
+ },
+ {
+  "id": 1027,
+  "text": "just this much."
+ },
+ {
+  "id": 1028,
+  "text": "We covered it quite fast,"
+ },
+ {
+  "id": 1029,
+  "text": "and there was quite a lot of content."
+ },
+ {
+  "id": 1030,
+  "text": "So for the remaining time, you can"
+ },
+ {
+  "id": 1031,
+  "text": "take this exercise,"
+ },
+ {
+  "id": 1032,
+  "text": "including the demo code from the course,"
+ },
+ {
+  "id": 1033,
+  "text": "and study it on your own."
+ },
+ {
+  "id": 1034,
+  "text": "If you want to see how, during the interrupt and exception process,"
+ },
+ {
+  "id": 1035,
+  "text": "those complicated registers I just talked about"
+ },
+ {
+  "id": 1036,
+  "text": "actually change,"
+ },
+ {
+  "id": 1037,
+  "text": "we can actually use GDB debugging,"
+ },
+ {
+  "id": 1038,
+  "text": "set breakpoints, and watch."
+ },
+ {
+  "id": 1039,
+  "text": "Set the breakpoint at the task entry point."
+ },
+ {
+  "id": 1040,
+  "text": "that is, breaking at our"
+ },
+ {
+  "id": 1041,
+  "text": "breaking at the entry points of these tasks,"
+ },
+ {
+  "id": 1042,
+  "text": "and debugging it yourself."
+ },
+ {
+  "id": 1043,
+  "text": "Break at the entry points of these tasks,"
+ },
+ {
+  "id": 1044,
+  "text": "and look at what happens before a task comes in"
+ },
+ {
+  "id": 1045,
+  "text": "and after it comes in,"
+ },
+ {
+  "id": 1046,
+  "text": "the actual changes in registers like mstatus,"
+ },
+ {
+  "id": 1047,
+  "text": "mepc,"
+ },
+ {
+  "id": 1048,
+  "text": "and so on."
+ },
+ {
+  "id": 1049,
+  "text": "Combine that with what we demonstrated in class,"
+ },
+ {
+  "id": 1050,
+  "text": "and watch it against the effect of that animation."
+ },
+ {
+  "id": 1051,
+  "text": "That way,"
+ },
+ {
+  "id": 1052,
+  "text": "by slowing down the action"
+ },
+ {
+  "id": 1053,
+  "text": "and dissecting the whole process,"
+ },
+ {
+  "id": 1054,
+  "text": "you will gain a deeper understanding of it."
+ },
+ {
+  "id": 1055,
+  "text": "All right, on the related content,"
+ },
+ {
+  "id": 1056,
+  "text": "that is all we will cover for now."
+ },
+ {
+  "id": 1057,
+  "text": "That's it for today."
+ },
+ {
+  "id": 1058,
+  "text": "Let's take the code,"
+ },
+ {
+  "id": 1059,
+  "text": "and go over it yourselves first."
+ }
+]

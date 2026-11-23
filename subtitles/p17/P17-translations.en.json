@@ -1,0 +1,7470 @@
+[
+ {
+  "id": 0,
+  "text": "Okay, so let's start today's class right now. We'll continue with Chapter 7 from last time, HelloRBOS, and keep going from there."
+ },
+ {
+  "id": 1,
+  "text": "Last class, we mainly walked through the system boot process, right?"
+ },
+ {
+  "id": 2,
+  "text": "We know that this Virtual board simulated on our emulator has 8 cores in total."
+ },
+ {
+  "id": 3,
+  "text": "Now, out of those 8 cores,"
+ },
+ {
+  "id": 4,
+  "text": "in practice, in our usage,"
+ },
+ {
+  "id": 5,
+  "text": "we only make sure to use one of them"
+ },
+ {
+  "id": 6,
+  "text": "and that's enough."
+ },
+ {
+  "id": 7,
+  "text": "So next,"
+ },
+ {
+  "id": 8,
+  "text": "what we're talking about is"
+ },
+ {
+  "id": 9,
+  "text": "when it comes to developing an operating system,"
+ },
+ {
+  "id": 10,
+  "text": "when you guys debug programs,"
+ },
+ {
+  "id": 11,
+  "text": "the thing you probably like most,"
+ },
+ {
+  "id": 12,
+  "text": "for instance, if you want to see how a program is running,"
+ },
+ {
+  "id": 13,
+  "text": "is through printing,"
+ },
+ {
+  "id": 14,
+  "text": "right?"
+ },
+ {
+  "id": 15,
+  "text": "printing its logs."
+ },
+ {
+  "id": 16,
+  "text": "Well, with this board,"
+ },
+ {
+  "id": 17,
+  "text": "honestly, we"
+ },
+ {
+  "id": 18,
+  "text": "didn't have a"
+ },
+ {
+  "id": 19,
+  "text": "proper way to print this stuff in the beginning."
+ },
+ {
+  "id": 20,
+  "text": "So, to make things easier,"
+ },
+ {
+  "id": 21,
+  "text": "for our later debugging,"
+ },
+ {
+  "id": 22,
+  "text": "we also need"
+ },
+ {
+  "id": 23,
+  "text": "to take some of the things inside"
+ },
+ {
+  "id": 24,
+  "text": "and print them out."
+ },
+ {
+  "id": 25,
+  "text": "Just like when we wrote our first program,"
+ },
+ {
+  "id": 26,
+  "text": "Hello World,"
+ },
+ {
+  "id": 27,
+  "text": "so how do we"
+ },
+ {
+  "id": 28,
+  "text": "print this thing out?"
+ },
+ {
+  "id": 29,
+  "text": "We actually make use of"
+ },
+ {
+  "id": 30,
+  "text": "a serial port device on this board"
+ },
+ {
+  "id": 31,
+  "text": "— this kind of serial port device —"
+ },
+ {
+  "id": 32,
+  "text": "to print the information out."
+ },
+ {
+  "id": 33,
+  "text": "Let's take a look"
+ },
+ {
+  "id": 34,
+  "text": "at what method is used"
+ },
+ {
+  "id": 35,
+  "text": "to print it out."
+ },
+ {
+  "id": 36,
+  "text": "Now, this diagram,"
+ },
+ {
+  "id": 37,
+  "text": "I believe I've already shown it to you before,"
+ },
+ {
+  "id": 38,
+  "text": "that is, in"
+ },
+ {
+  "id": 39,
+  "text": "embedded development,"
+ },
+ {
+  "id": 40,
+  "text": "Now, in the typical case,"
+ },
+ {
+  "id": 41,
+  "text": "this here"
+ },
+ {
+  "id": 42,
+  "text": "is our development board,"
+ },
+ {
+  "id": 43,
+  "text": "the target board."
+ },
+ {
+  "id": 44,
+  "text": "So what we do"
+ },
+ {
+  "id": 45,
+  "text": "is, normally, on this"
+ },
+ {
+  "id": 46,
+  "text": "host machine, we do the development,"
+ },
+ {
+  "id": 47,
+  "text": "but the actual program"
+ },
+ {
+  "id": 48,
+  "text": "runs on this target board,"
+ },
+ {
+  "id": 49,
+  "text": "right?"
+ },
+ {
+  "id": 50,
+  "text": "So this,"
+ },
+ {
+  "id": 51,
+  "text": "what do we call this kind of setup?"
+ },
+ {
+  "id": 52,
+  "text": "As mentioned earlier,"
+ },
+ {
+  "id": 53,
+  "text": "what is this kind of development environment called?"
+ },
+ {
+  "id": 54,
+  "text": "It's called a cross-development environment,"
+ },
+ {
+  "id": 55,
+  "text": "right?"
+ },
+ {
+  "id": 56,
+  "text": "In embedded development,"
+ },
+ {
+  "id": 57,
+  "text": "this is a typical runtime environment,"
+ },
+ {
+  "id": 58,
+  "text": "a typical development environment."
+ },
+ {
+  "id": 59,
+  "text": "So now, what we do here"
+ },
+ {
+  "id": 60,
+  "text": "That is to say, this development board"
+ },
+ {
+  "id": 61,
+  "text": "we didn't actually use"
+ },
+ {
+  "id": 62,
+  "text": "a real physical board"
+ },
+ {
+  "id": 63,
+  "text": "what we actually used is an emulator"
+ },
+ {
+  "id": 64,
+  "text": "to simulate an emulated board"
+ },
+ {
+  "id": 65,
+  "text": "that is, QMU is used to emulate it"
+ },
+ {
+  "id": 66,
+  "text": "Now, actually, the way QMU runs"
+ },
+ {
+  "id": 67,
+  "text": "compared to a physical board"
+ },
+ {
+  "id": 68,
+  "text": "the difference is really not that big"
+ },
+ {
+  "id": 69,
+  "text": "Now, for this kind of embedded-style board,"
+ },
+ {
+  "id": 70,
+  "text": "since the devices on it are limited"
+ },
+ {
+  "id": 71,
+  "text": "it's generally not like our PC environment,"
+ },
+ {
+  "id": 72,
+  "text": "which comes standard with a monitor"
+ },
+ {
+  "id": 73,
+  "text": "or something like a screen"
+ },
+ {
+  "id": 74,
+  "text": "so it's hard for us to, that is,"
+ },
+ {
+  "id": 75,
+  "text": "print our debug output right from the start"
+ },
+ {
+  "id": 76,
+  "text": "onto this kind of screen"
+ },
+ {
+  "id": 77,
+  "text": "actually, a screen is a very complex device"
+ },
+ {
+  "id": 78,
+  "text": "So what do we do?"
+ },
+ {
+  "id": 79,
+  "text": "Actually, when we debug"
+ },
+ {
+  "id": 80,
+  "text": "Generally, we actually make use of our host machine"
+ },
+ {
+  "id": 81,
+  "text": "Our host machine has a screen on it"
+ },
+ {
+  "id": 82,
+  "text": "Or you can think of it as something on the screen"
+ },
+ {
+  "id": 83,
+  "text": "running a console, this kind of concept"
+ },
+ {
+  "id": 84,
+  "text": "So yes, it does have a screen"
+ },
+ {
+  "id": 85,
+  "text": "So we can actually make use of this board"
+ },
+ {
+  "id": 86,
+  "text": "On top of it"
+ },
+ {
+  "id": 87,
+  "text": "Through this serial port cable"
+ },
+ {
+  "id": 88,
+  "text": "That is, this red cable, we connect them up"
+ },
+ {
+  "id": 89,
+  "text": "Through this serial port cable"
+ },
+ {
+  "id": 90,
+  "text": "Then the running status of the program inside it"
+ },
+ {
+  "id": 91,
+  "text": "Actually, through this serial port cable"
+ },
+ {
+  "id": 92,
+  "text": "For example, if you want to print Hello World"
+ },
+ {
+  "id": 93,
+  "text": "You just use this serial port cable"
+ },
+ {
+  "id": 94,
+  "text": "You send this message through this serial port cable"
+ },
+ {
+  "id": 95,
+  "text": "and print it out on our host machine"
+ },
+ {
+  "id": 96,
+  "text": "And then, through a program running on our host machine"
+ },
+ {
+  "id": 97,
+  "text": "a serial port receiving program"
+ },
+ {
+  "id": 98,
+  "text": "which you can think of as a client"
+ },
+ {
+  "id": 99,
+  "text": "and then it prints this content onto our screen"
+ },
+ {
+  "id": 100,
+  "text": "this way we can also see the internal debug information"
+ },
+ {
+  "id": 101,
+  "text": "right?"
+ },
+ {
+  "id": 102,
+  "text": "in fact, the very earliest kind of on-site debugging"
+ },
+ {
+  "id": 103,
+  "text": "was done exactly using this kind of approach"
+ },
+ {
+  "id": 104,
+  "text": "because back in the beginning,"
+ },
+ {
+  "id": 105,
+  "text": "if you wanted to hook up a display on this,"
+ },
+ {
+  "id": 106,
+  "text": "that was actually quite a complicated job"
+ },
+ {
+  "id": 107,
+  "text": "so we can use this serial port,"
+ },
+ {
+  "id": 108,
+  "text": "this kind of relatively simple device,"
+ },
+ {
+  "id": 109,
+  "text": "and output the content through it"
+ },
+ {
+  "id": 110,
+  "text": "and in this way,"
+ },
+ {
+  "id": 111,
+  "text": "we actually achieve the effect of both displaying and debugging"
+ },
+ {
+  "id": 112,
+  "text": "the output."
+ },
+ {
+  "id": 113,
+  "text": "right?"
+ },
+ {
+  "id": 114,
+  "text": "So this red-colored wire here"
+ },
+ {
+  "id": 115,
+  "text": "is our serial port cable"
+ },
+ {
+  "id": 116,
+  "text": "Now of course, what we're using right now is an emulator,"
+ },
+ {
+  "id": 117,
+  "text": "so inside it there isn't really a physical cable connected"
+ },
+ {
+  "id": 118,
+  "text": "but you should imagine that"
+ },
+ {
+  "id": 119,
+  "text": "inside, it actually emulates a physical serial port cable"
+ },
+ {
+  "id": 120,
+  "text": "So this kind of serial cable,"
+ },
+ {
+  "id": 121,
+  "text": "we say it's actually very simple."
+ },
+ {
+  "id": 122,
+  "text": "It's just one receive, one transmit."
+ },
+ {
+  "id": 123,
+  "text": "It's this diagram here."
+ },
+ {
+  "id": 124,
+  "text": "With this diagram added,"
+ },
+ {
+  "id": 125,
+  "text": "the meaning it actually conveys is this:"
+ },
+ {
+  "id": 126,
+  "text": "You can take what we just talked about on this side,"
+ },
+ {
+  "id": 127,
+  "text": "treat this end as this thing here,"
+ },
+ {
+  "id": 128,
+  "text": "and then treat this side as that thing,"
+ },
+ {
+  "id": 129,
+  "text": "and then the two sides are connected by one cable."
+ },
+ {
+  "id": 130,
+  "text": "Inside this cable, actually,"
+ },
+ {
+  "id": 131,
+  "text": "there are actually two wires."
+ },
+ {
+  "id": 132,
+  "text": "If you cut open that serial cable,"
+ },
+ {
+  "id": 133,
+  "text": "you'll find there are at least two or three wires inside."
+ },
+ {
+  "id": 134,
+  "text": "So this one-receive-one-transmit,"
+ },
+ {
+  "id": 135,
+  "text": "that is, the TX on this side,"
+ },
+ {
+  "id": 136,
+  "text": "in technical terms, is the transmitting end."
+ },
+ {
+  "id": 137,
+  "text": "That means it's for sending."
+ },
+ {
+  "id": 138,
+  "text": "So the transmit side, and then over here,"
+ },
+ {
+  "id": 139,
+  "text": "this side is a receive, RX."
+ },
+ {
+  "id": 140,
+  "text": "So T stands for transmit."
+ },
+ {
+  "id": 141,
+  "text": "And R stands for receive."
+ },
+ {
+  "id": 142,
+  "text": "That makes it easy to remember and understand."
+ },
+ {
+  "id": 143,
+  "text": "So what it sends here,"
+ },
+ {
+  "id": 144,
+  "text": "comes from here to its receiving end."
+ },
+ {
+  "id": 145,
+  "text": "And on this side,"
+ },
+ {
+  "id": 146,
+  "text": "if there is information,"
+ },
+ {
+  "id": 147,
+  "text": "you can also send information over from here."
+ },
+ {
+  "id": 148,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 149,
+  "text": "For example, when you press Enter on your side,"
+ },
+ {
+  "id": 150,
+  "text": "or type some characters,"
+ },
+ {
+  "id": 151,
+  "text": "how do those characters get transmitted to this board of ours?"
+ },
+ {
+  "id": 152,
+  "text": "Well, they actually go through the transmit direction here."
+ },
+ {
+  "id": 153,
+  "text": "So this serial port actually has two wires, one for sending and one for receiving."
+ },
+ {
+  "id": 154,
+  "text": "It can send and receive at the same time."
+ },
+ {
+  "id": 155,
+  "text": "Now, normally for our host machine,"
+ },
+ {
+  "id": 156,
+  "text": "before we use it,"
+ },
+ {
+  "id": 157,
+  "text": "people usually go and configure a serial port."
+ },
+ {
+  "id": 158,
+  "text": "Right?"
+ },
+ {
+  "id": 159,
+  "text": "If any of you have done real board development,"
+ },
+ {
+  "id": 160,
+  "text": "So all of these things need to be configured."
+ },
+ {
+  "id": 161,
+  "text": "Right?"
+ },
+ {
+  "id": 162,
+  "text": "Now, why do we need to configure things like those PLIC settings here?"
+ },
+ {
+  "id": 163,
+  "text": "These things are actually related to the serial port device."
+ },
+ {
+  "id": 164,
+  "text": "We'll give you some introduction to that later."
+ },
+ {
+  "id": 165,
+  "text": "Now, over here,"
+ },
+ {
+  "id": 166,
+  "text": "it's basically like we open one on the host machine."
+ },
+ {
+  "id": 167,
+  "text": "Like I just said, you open a terminal on the host machine."
+ },
+ {
+  "id": 168,
+  "text": "So this information,"
+ },
+ {
+  "id": 169,
+  "text": "is actually printed on that terminal."
+ },
+ {
+  "id": 170,
+  "text": "Right?"
+ },
+ {
+  "id": 171,
+  "text": "This is a standard embedded cross-development environment."
+ },
+ {
+  "id": 172,
+  "text": "Now, currently,"
+ },
+ {
+  "id": 173,
+  "text": "what we actually want to do is,"
+ },
+ {
+  "id": 174,
+  "text": "on this emulator,"
+ },
+ {
+  "id": 175,
+  "text": "that is, effectively on this board,"
+ },
+ {
+  "id": 176,
+  "text": "we want to take the serial port device on it"
+ },
+ {
+  "id": 177,
+  "text": "and put it to use."
+ },
+ {
+  "id": 178,
+  "text": "We need to get it working."
+ },
+ {
+  "id": 179,
+  "text": "And then, using this serial port device,"
+ },
+ {
+  "id": 180,
+  "text": "to pass the data over"
+ },
+ {
+  "id": 181,
+  "text": "and print a hello on ours"
+ },
+ {
+  "id": 182,
+  "text": "So this first step of ours"
+ },
+ {
+  "id": 183,
+  "text": "you see, actually in this whole process of ours,"
+ },
+ {
+  "id": 184,
+  "text": "this should be the second step"
+ },
+ {
+  "id": 185,
+  "text": "The first step is the entire initial boot process"
+ },
+ {
+  "id": 186,
+  "text": "The second step is to say,"
+ },
+ {
+  "id": 187,
+  "text": "we want to print a hello out on it"
+ },
+ {
+  "id": 188,
+  "text": "Once we have this thing,"
+ },
+ {
+  "id": 189,
+  "text": "everything after that becomes easy"
+ },
+ {
+  "id": 190,
+  "text": "because we can see"
+ },
+ {
+  "id": 191,
+  "text": "the results of the program running"
+ },
+ {
+  "id": 192,
+  "text": "right?"
+ },
+ {
+  "id": 193,
+  "text": "Of course, we can also use GDB to debug right now,"
+ },
+ {
+  "id": 194,
+  "text": "but a lot of the time,"
+ },
+ {
+  "id": 195,
+  "text": "we actually prefer"
+ },
+ {
+  "id": 196,
+  "text": "using this kind of printing-log approach to look at things,"
+ },
+ {
+  "id": 197,
+  "text": "because it's a bit more efficient that way"
+ },
+ {
+  "id": 198,
+  "text": "Now, as for how to get this"
+ },
+ {
+  "id": 199,
+  "text": "serial port device"
+ },
+ {
+  "id": 200,
+  "text": "put it to use"
+ },
+ {
+  "id": 201,
+  "text": "and what exactly UART is"
+ },
+ {
+  "id": 202,
+  "text": "these are the concepts we can"
+ },
+ {
+  "id": 203,
+  "text": "briefly introduce to you here"
+ },
+ {
+  "id": 204,
+  "text": "so this UART"
+ },
+ {
+  "id": 205,
+  "text": "the full name is called"
+ },
+ {
+  "id": 206,
+  "text": "it's actually an English acronym"
+ },
+ {
+  "id": 207,
+  "text": "namely Universal Asynchronous Receiver and Transmitter"
+ },
+ {
+  "id": 208,
+  "text": "so it actually expresses a few concepts"
+ },
+ {
+  "id": 209,
+  "text": "that is, it is a"
+ },
+ {
+  "id": 210,
+  "text": "Universal means unified"
+ },
+ {
+  "id": 211,
+  "text": "that is, historically speaking,"
+ },
+ {
+  "id": 212,
+  "text": "it took quite a lot of things"
+ },
+ {
+  "id": 213,
+  "text": "and made them fairly general-purpose"
+ },
+ {
+  "id": 214,
+  "text": "and unified"
+ },
+ {
+  "id": 215,
+  "text": "and then it embodies a"
+ },
+ {
+  "id": 216,
+  "text": "that is, it has the concept of asynchronous"
+ },
+ {
+  "id": 217,
+  "text": "Asynchronous, the concept of asynchronous"
+ },
+ {
+  "id": 218,
+  "text": "and then Receiver and Transmitter"
+ },
+ {
+  "id": 219,
+  "text": "which is what's written down below here"
+ },
+ {
+  "id": 220,
+  "text": "It can send and receive at the same time"
+ },
+ {
+  "id": 221,
+  "text": "That diagram we just saw"
+ },
+ {
+  "id": 222,
+  "text": "Everyone has seen it"
+ },
+ {
+  "id": 223,
+  "text": "It has two wires for sending and receiving"
+ },
+ {
+  "id": 224,
+  "text": "Right?"
+ },
+ {
+  "id": 225,
+  "text": "It sends and receives simultaneously"
+ },
+ {
+  "id": 226,
+  "text": "So we often"
+ },
+ {
+  "id": 227,
+  "text": "just call it the serial cable"
+ },
+ {
+  "id": 228,
+  "text": "Now, the serial cable"
+ },
+ {
+  "id": 229,
+  "text": "mainly because it has one characteristic"
+ },
+ {
+  "id": 230,
+  "text": "which is the concept of serial"
+ },
+ {
+  "id": 231,
+  "text": "So what do we mean by serial?"
+ },
+ {
+  "id": 232,
+  "text": "That is to say,"
+ },
+ {
+  "id": 233,
+  "text": "because when it sends and receives,"
+ },
+ {
+  "id": 234,
+  "text": "there are only two wires,"
+ },
+ {
+  "id": 235,
+  "text": "right?"
+ },
+ {
+  "id": 236,
+  "text": "Think about it. If we"
+ },
+ {
+  "id": 237,
+  "text": "take one of the wires"
+ },
+ {
+  "id": 238,
+  "text": "as an example,"
+ },
+ {
+  "id": 239,
+  "text": "then what it means is"
+ },
+ {
+  "id": 240,
+  "text": "We only have one channel"
+ },
+ {
+  "id": 241,
+  "text": "that can send and receive data."
+ },
+ {
+  "id": 242,
+  "text": "Now, when this data is sent and received,"
+ },
+ {
+  "id": 243,
+  "text": "at that time,"
+ },
+ {
+  "id": 244,
+  "text": "it actually,"
+ },
+ {
+  "id": 245,
+  "text": "what we call serial,"
+ },
+ {
+  "id": 246,
+  "text": "means that,"
+ },
+ {
+  "id": 247,
+  "text": "its,"
+ },
+ {
+  "id": 248,
+  "text": "the data inside it,"
+ },
+ {
+  "id": 249,
+  "text": "is sent out bit by bit,"
+ },
+ {
+  "id": 250,
+  "text": "one bit at a time."
+ },
+ {
+  "id": 251,
+  "text": "Now, more specifically,"
+ },
+ {
+  "id": 252,
+  "text": "that is to say, for example, let's say,"
+ },
+ {
+  "id": 253,
+  "text": "we want to send a character A."
+ },
+ {
+  "id": 254,
+  "text": "We know that this character A,"
+ },
+ {
+  "id": 255,
+  "text": "when represented in our computer,"
+ },
+ {
+  "id": 256,
+  "text": "it's ASCII, right?"
+ },
+ {
+  "id": 257,
+  "text": "It's actually,"
+ },
+ {
+  "id": 258,
+  "text": "an 8-bit piece of data, isn't it?"
+ },
+ {
+  "id": 259,
+  "text": "As for what exactly it is,"
+ },
+ {
+  "id": 260,
+  "text": "I can't remember exactly,"
+ },
+ {
+  "id": 261,
+  "text": "I think it was something like sixty-something, or whatever it was."
+ },
+ {
+  "id": 262,
+  "text": "So actually it's an 8-bit piece of data."
+ },
+ {
+  "id": 263,
+  "text": "Now, an 8-bit piece of data,"
+ },
+ {
+  "id": 264,
+  "text": "as represented in our computer,"
+ },
+ {
+  "id": 265,
+  "text": "is simply 8 bits."
+ },
+ {
+  "id": 266,
+  "text": "8 bits,"
+ },
+ {
+  "id": 267,
+  "text": "a sequence of 0s and 1s in those bit positions."
+ },
+ {
+  "id": 268,
+  "text": "I'll just make up the actual values here,"
+ },
+ {
+  "id": 269,
+  "text": "12345678."
+ },
+ {
+  "id": 270,
+  "text": "Say we have a piece of data like this."
+ },
+ {
+  "id": 271,
+  "text": "Now for this piece of data,"
+ },
+ {
+  "id": 272,
+  "text": "how does it actually get sent out over the serial port?"
+ },
+ {
+  "id": 273,
+  "text": "Well, this is serial transmission."
+ },
+ {
+  "id": 274,
+  "text": "It's sent one bit at a time."
+ },
+ {
+  "id": 275,
+  "text": "In other words, if it's 8 bits,"
+ },
+ {
+  "id": 276,
+  "text": "then you have to send 8 electrical pulses,"
+ },
+ {
+  "id": 277,
+  "text": "meaning the signal level has to change 8 times."
+ },
+ {
+  "id": 278,
+  "text": "A 0 represents a low level,"
+ },
+ {
+  "id": 279,
+  "text": "and a 1 represents a high level."
+ },
+ {
+  "id": 280,
+  "text": "That is to say, it's basically like"
+ },
+ {
+  "id": 281,
+  "text": "And also, what it says here is that"
+ },
+ {
+  "id": 282,
+  "text": "When it transmits,"
+ },
+ {
+  "id": 283,
+  "text": "over here it's"
+ },
+ {
+  "id": 284,
+  "text": "let me see if it's written here"
+ },
+ {
+  "id": 285,
+  "text": "that is to say, it actually sends it"
+ },
+ {
+  "id": 286,
+  "text": "from the low bit to the high bit."
+ },
+ {
+  "id": 287,
+  "text": "So if the data I've written here"
+ },
+ {
+  "id": 288,
+  "text": "in our computer is"
+ },
+ {
+  "id": 289,
+  "text": "a value like 11101011,"
+ },
+ {
+  "id": 290,
+  "text": "then when it transmits,"
+ },
+ {
+  "id": 291,
+  "text": "it sends the 0 first, then the 1,"
+ },
+ {
+  "id": 292,
+  "text": "and that's how it gets sent out."
+ },
+ {
+  "id": 293,
+  "text": "So, that is to say,"
+ },
+ {
+  "id": 294,
+  "text": "the voltage level on this wire,"
+ },
+ {
+  "id": 295,
+  "text": "if you measure it with that meter,"
+ },
+ {
+  "id": 296,
+  "text": "you'll find that"
+ },
+ {
+  "id": 297,
+  "text": "at the very beginning it's a low level,"
+ },
+ {
+  "id": 298,
+  "text": "that is, the first one is a low level."
+ },
+ {
+  "id": 299,
+  "text": "What we usually see on the oscilloscope is a low level."
+ },
+ {
+  "id": 300,
+  "text": "Then there's a high level"
+ },
+ {
+  "id": 301,
+  "text": "right?"
+ },
+ {
+  "id": 302,
+  "text": "And then another low level"
+ },
+ {
+  "id": 303,
+  "text": "And then another high level"
+ },
+ {
+  "id": 304,
+  "text": "So here it's 0101"
+ },
+ {
+  "id": 305,
+  "text": "That is, low, high, low, high"
+ },
+ {
+  "id": 306,
+  "text": "And then going further along"
+ },
+ {
+  "id": 307,
+  "text": "So if this is a timeline"
+ },
+ {
+  "id": 308,
+  "text": "the bits are sent out one by one like this"
+ },
+ {
+  "id": 309,
+  "text": "And the receiver also receives them bit by bit"
+ },
+ {
+  "id": 310,
+  "text": "Every time it finishes receiving eight bits"
+ },
+ {
+  "id": 311,
+  "text": "it knows that's one character"
+ },
+ {
+  "id": 312,
+  "text": "and then converts it into an A"
+ },
+ {
+  "id": 313,
+  "text": "That's the processing flow"
+ },
+ {
+  "id": 314,
+  "text": "You can picture it, right?"
+ },
+ {
+  "id": 315,
+  "text": "So this"
+ },
+ {
+  "id": 316,
+  "text": "since it's sent bit by bit"
+ },
+ {
+  "id": 317,
+  "text": "it brings in a concept"
+ },
+ {
+  "id": 318,
+  "text": "the concept of baud rate"
+ },
+ {
+  "id": 319,
+  "text": "This concept"
+ },
+ {
+  "id": 320,
+  "text": "We also hear this concept quite often,"
+ },
+ {
+  "id": 321,
+  "text": "meaning that when we configure it,"
+ },
+ {
+  "id": 322,
+  "text": "we also have to configure this,"
+ },
+ {
+  "id": 323,
+  "text": "because the baud rate on both sides must match —"
+ },
+ {
+  "id": 324,
+  "text": "the transmission frequency has to be the same,"
+ },
+ {
+  "id": 325,
+  "text": "so that the receiving side and the sending side"
+ },
+ {
+  "id": 326,
+  "text": "can line up with each other."
+ },
+ {
+  "id": 327,
+  "text": "Now, what is a baud rate? Its unit is actually"
+ },
+ {
+  "id": 328,
+  "text": "bits per second,"
+ },
+ {
+  "id": 329,
+  "text": "meaning how many bits per second,"
+ },
+ {
+  "id": 330,
+  "text": "that is, how many bits are sent per second."
+ },
+ {
+  "id": 331,
+  "text": "So do you understand now? When someone configures"
+ },
+ {
+  "id": 332,
+  "text": "a baud rate like 115200,"
+ },
+ {
+  "id": 333,
+  "text": "what does that mean? It means it sends"
+ },
+ {
+  "id": 334,
+  "text": "115200, that is,"
+ },
+ {
+  "id": 335,
+  "text": "115,200"
+ },
+ {
+  "id": 336,
+  "text": "high-and-low level transitions"
+ },
+ {
+  "id": 337,
+  "text": "per second."
+ },
+ {
+  "id": 338,
+  "text": "Each transition is one bit,"
+ },
+ {
+  "id": 339,
+  "text": "so 115200 means 115,200 bits per second."
+ },
+ {
+  "id": 340,
+  "text": "That's what it means"
+ },
+ {
+  "id": 341,
+  "text": "per second"
+ },
+ {
+  "id": 342,
+  "text": "This is its sending frequency"
+ },
+ {
+  "id": 343,
+  "text": "The bigger this number is"
+ },
+ {
+  "id": 344,
+  "text": "the faster it sends"
+ },
+ {
+  "id": 345,
+  "text": "right?"
+ },
+ {
+  "id": 346,
+  "text": "So this"
+ },
+ {
+  "id": 347,
+  "text": "and moreover, what's shown here is serial"
+ },
+ {
+  "id": 348,
+  "text": "Let me explain to you"
+ },
+ {
+  "id": 349,
+  "text": "why, what serial means"
+ },
+ {
+  "id": 350,
+  "text": "That's what it means"
+ },
+ {
+  "id": 351,
+  "text": "So parallel actually means"
+ },
+ {
+  "id": 352,
+  "text": "it's equivalent to saying"
+ },
+ {
+  "id": 353,
+  "text": "parallel means"
+ },
+ {
+  "id": 354,
+  "text": "right now there's only one wire"
+ },
+ {
+  "id": 355,
+  "text": "right?"
+ },
+ {
+  "id": 356,
+  "text": "So parallel means"
+ },
+ {
+  "id": 357,
+  "text": "if we used a parallel approach"
+ },
+ {
+  "id": 358,
+  "text": "to send eight bits"
+ },
+ {
+  "id": 359,
+  "text": "then you'd probably need eight wires"
+ },
+ {
+  "id": 360,
+  "text": "sending them at the same time,"
+ },
+ {
+  "id": 361,
+  "text": "sending all eight bits"
+ },
+ {
+  "id": 362,
+  "text": "over to the other side in one go."
+ },
+ {
+  "id": 363,
+  "text": "That is what we call parallel."
+ },
+ {
+  "id": 364,
+  "text": "Now, with serial, you can see"
+ },
+ {
+  "id": 365,
+  "text": "its advantage is quite obvious,"
+ },
+ {
+  "id": 366,
+  "text": "namely that it saves material."
+ },
+ {
+  "id": 367,
+  "text": "It only needs one wire,"
+ },
+ {
+  "id": 368,
+  "text": "right?"
+ },
+ {
+  "id": 369,
+  "text": "With a parallel port, at a minimum,"
+ },
+ {
+  "id": 370,
+  "text": "you would need eight wires,"
+ },
+ {
+  "id": 371,
+  "text": "and all of that costs money,"
+ },
+ {
+  "id": 372,
+  "text": "because every wire,"
+ },
+ {
+  "id": 373,
+  "text": "each of those lines, costs money."
+ },
+ {
+  "id": 374,
+  "text": "So for this serial port,"
+ },
+ {
+  "id": 375,
+  "text": "we can say that physically speaking,"
+ },
+ {
+  "id": 376,
+  "text": "it is also very economical and practical,"
+ },
+ {
+  "id": 377,
+  "text": "good enough for use."
+ },
+ {
+  "id": 378,
+  "text": "Now, the second point,"
+ },
+ {
+  "id": 379,
+  "text": "it is an asynchronous concept."
+ },
+ {
+  "id": 380,
+  "text": "So what does asynchronous mean here?"
+ },
+ {
+  "id": 381,
+  "text": "This brings us to"
+ },
+ {
+  "id": 382,
+  "text": "something we will introduce to you later,"
+ },
+ {
+  "id": 383,
+  "text": "which is that, because in this"
+ },
+ {
+  "id": 384,
+  "text": "as we just saw,"
+ },
+ {
+  "id": 385,
+  "text": "when it sends and receives data lines,"
+ },
+ {
+  "id": 386,
+  "text": "it only has data lines,"
+ },
+ {
+  "id": 387,
+  "text": "and it does not have"
+ },
+ {
+  "id": 388,
+  "text": "In other words, when we send data on both sides,"
+ },
+ {
+  "id": 389,
+  "text": "there is actually a concept involved,"
+ },
+ {
+  "id": 390,
+  "text": "which is called synchronization."
+ },
+ {
+  "id": 391,
+  "text": "What is synchronization?"
+ },
+ {
+  "id": 392,
+  "text": "It is basically like this:"
+ },
+ {
+  "id": 393,
+  "text": "if I want to interact with you,"
+ },
+ {
+  "id": 394,
+  "text": "we need to have a"
+ },
+ {
+  "id": 395,
+  "text": "signal to tell you,"
+ },
+ {
+  "id": 396,
+  "text": "\"I'm starting.\""
+ },
+ {
+  "id": 397,
+  "text": "When you see that I've started,"
+ },
+ {
+  "id": 398,
+  "text": "then you begin receiving data,"
+ },
+ {
+  "id": 399,
+  "text": "and only then can you correctly parse it."
+ },
+ {
+  "id": 400,
+  "text": "Suppose I don't do any kind of synchronization with you,"
+ },
+ {
+  "id": 401,
+  "text": "and I just start sending data to you."
+ },
+ {
+  "id": 402,
+  "text": "Then how do you know when to receive"
+ },
+ {
+  "id": 403,
+  "text": "and when to send?"
+ },
+ {
+  "id": 404,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 405,
+  "text": "This is what we call the concept of synchronization."
+ },
+ {
+  "id": 406,
+  "text": "Now, for synchronization,"
+ },
+ {
+  "id": 407,
+  "text": "there are many ways to do it."
+ },
+ {
+  "id": 408,
+  "text": "One way"
+ },
+ {
+  "id": 409,
+  "text": "is to synchronize using a clock."
+ },
+ {
+  "id": 410,
+  "text": "That is to say, everyone basically"
+ },
+ {
+  "id": 411,
+  "text": "has a watch in hand,"
+ },
+ {
+  "id": 412,
+  "text": "and we sync up on the time."
+ },
+ {
+  "id": 413,
+  "text": "For example, we agree that"
+ },
+ {
+  "id": 414,
+  "text": "we'll start sending data at one o'clock."
+ },
+ {
+  "id": 415,
+  "text": "Then at one o'clock you start"
+ },
+ {
+  "id": 416,
+  "text": "receiving the data."
+ },
+ {
+  "id": 417,
+  "text": "In this way,"
+ },
+ {
+  "id": 418,
+  "text": "we're using the clock."
+ },
+ {
+  "id": 419,
+  "text": "So this kind of approach"
+ },
+ {
+  "id": 420,
+  "text": "Usually, you need to add a clock line"
+ },
+ {
+  "id": 421,
+  "text": "so that after synchronization on the clock"
+ },
+ {
+  "id": 422,
+  "text": "you can then start sending the data."
+ },
+ {
+  "id": 423,
+  "text": "Now, if we look at this window,"
+ },
+ {
+  "id": 424,
+  "text": "it does not need a clock line."
+ },
+ {
+  "id": 425,
+  "text": "It is just a single data line."
+ },
+ {
+  "id": 426,
+  "text": "So how can you use just one data line"
+ },
+ {
+  "id": 427,
+  "text": "to synchronize the data?"
+ },
+ {
+  "id": 428,
+  "text": "That comes down to when it sends the data,"
+ },
+ {
+  "id": 429,
+  "text": "there is a data format issue."
+ },
+ {
+  "id": 430,
+  "text": "That is, the data it sends is not simply"
+ },
+ {
+  "id": 431,
+  "text": "just sending A, B, C, D."
+ },
+ {
+  "id": 432,
+  "text": "It actually has some special markers to indicate"
+ },
+ {
+  "id": 433,
+  "text": "that a piece of data has started being sent,"
+ },
+ {
+  "id": 434,
+  "text": "and that a piece of data has finished."
+ },
+ {
+  "id": 435,
+  "text": "I think you all understand what I mean here."
+ },
+ {
+  "id": 436,
+  "text": "So through this data protocol,"
+ },
+ {
+  "id": 437,
+  "text": "you can also achieve a synchronization effect."
+ },
+ {
+  "id": 438,
+  "text": "Later on, we will also show you"
+ },
+ {
+  "id": 439,
+  "text": "its specific handling method."
+ },
+ {
+  "id": 440,
+  "text": "So this involves"
+ },
+ {
+  "id": 441,
+  "text": "agreeing on a communication protocol format."
+ },
+ {
+  "id": 442,
+  "text": "So on the software side, there are some"
+ },
+ {
+  "id": 443,
+  "text": "On the hardware side, it's simple,"
+ },
+ {
+  "id": 444,
+  "text": "just one wire,"
+ },
+ {
+  "id": 445,
+  "text": "but on the software side, you have to define some special specifications"
+ },
+ {
+  "id": 446,
+  "text": "to make the whole thing work."
+ },
+ {
+  "id": 447,
+  "text": "So this is the concept of asynchronous."
+ },
+ {
+  "id": 448,
+  "text": "Now, full-duplex is easy to explain:"
+ },
+ {
+  "id": 449,
+  "text": "it means it can send and receive at the same time,"
+ },
+ {
+  "id": 450,
+  "text": "because as we can see,"
+ },
+ {
+  "id": 451,
+  "text": "it actually has two wires,"
+ },
+ {
+  "id": 452,
+  "text": "one receiving wire and one transmitting wire, right?"
+ },
+ {
+  "id": 453,
+  "text": "So it can achieve full-duplex."
+ },
+ {
+  "id": 454,
+  "text": "So this is what we call UART."
+ },
+ {
+  "id": 455,
+  "text": "After all that talk,"
+ },
+ {
+  "id": 456,
+  "text": "there is actually a standard specification."
+ },
+ {
+  "id": 457,
+  "text": "If you're interested, you can look it up,"
+ },
+ {
+  "id": 458,
+  "text": "there's an international standard specification for UART defined online."
+ },
+ {
+  "id": 459,
+  "text": "We'll just give you a brief overview."
+ },
+ {
+  "id": 460,
+  "text": "Okay, these are the characteristics of UART."
+ },
+ {
+  "id": 461,
+  "text": "Really, these are just some of the definitions of UART."
+ },
+ {
+  "id": 462,
+  "text": "So those were the definitions just now."
+ },
+ {
+  "id": 463,
+  "text": "Now, physically speaking,"
+ },
+ {
+  "id": 464,
+  "text": "let me give you a quick look,"
+ },
+ {
+  "id": 465,
+  "text": "it originally had this kind of connector standard."
+ },
+ {
+  "id": 466,
+  "text": "Nowadays, people probably use it less often,"
+ },
+ {
+  "id": 467,
+  "text": "because in many cases USB cables have taken its place."
+ },
+ {
+  "id": 468,
+  "text": "Actually, the earliest UART cable was this standard type,"
+ },
+ {
+  "id": 469,
+  "text": "the 9-pin cable."
+ },
+ {
+  "id": 470,
+  "text": "Now, on this side, this is of course called the male connector and the female connector."
+ },
+ {
+  "id": 471,
+  "text": "The male connector has those protruding, pointed pins."
+ },
+ {
+  "id": 472,
+  "text": "The female connector is actually recessed, with sockets."
+ },
+ {
+  "id": 473,
+  "text": "And the two sides can mate together."
+ },
+ {
+  "id": 474,
+  "text": "That's how they achieve a physical connection."
+ },
+ {
+  "id": 475,
+  "text": "Now, the pins on it are also specified by a standard,"
+ },
+ {
+  "id": 476,
+  "text": "defining what each pin means."
+ },
+ {
+  "id": 477,
+  "text": "So the commonly used ones, in practice,"
+ },
+ {
+  "id": 478,
+  "text": "even though there are nine pins,"
+ },
+ {
+  "id": 479,
+  "text": "in reality we only use"
+ },
+ {
+  "id": 480,
+  "text": "Generally, three of the pins are used."
+ },
+ {
+  "id": 481,
+  "text": "One is for receiving,"
+ },
+ {
+  "id": 482,
+  "text": "one is for transmitting,"
+ },
+ {
+  "id": 483,
+  "text": "because as we just saw, transmitting and receiving"
+ },
+ {
+  "id": 484,
+  "text": "is two wires, right?"
+ },
+ {
+  "id": 485,
+  "text": "And then,"
+ },
+ {
+  "id": 486,
+  "text": "there's actually also a ground line."
+ },
+ {
+  "id": 487,
+  "text": "So just get a rough idea of this."
+ },
+ {
+  "id": 488,
+  "text": "If you have an actual physical board,"
+ },
+ {
+  "id": 489,
+  "text": "you can go and take a look."
+ },
+ {
+  "id": 490,
+  "text": "You'll find this kind of interface coming out of it."
+ },
+ {
+  "id": 491,
+  "text": "This is its physical interface."
+ },
+ {
+  "id": 492,
+  "text": "Now, the more important part,"
+ },
+ {
+  "id": 493,
+  "text": "as we just mentioned,"
+ },
+ {
+  "id": 494,
+  "text": "is that from the software side,"
+ },
+ {
+  "id": 495,
+  "text": "since we still tend toward some"
+ },
+ {
+  "id": 496,
+  "text": "we still focus more on software concepts,"
+ },
+ {
+  "id": 497,
+  "text": "even though the physical side is simple,"
+ },
+ {
+  "id": 498,
+  "text": "sending and receiving data requires a communication protocol"
+ },
+ {
+  "id": 499,
+  "text": "to define its specification."
+ },
+ {
+  "id": 500,
+  "text": "its transmit and receive behavior, and its synchronization behavior"
+ },
+ {
+  "id": 501,
+  "text": "so it defines a communication protocol"
+ },
+ {
+  "id": 502,
+  "text": "now, this UART communication protocol,"
+ },
+ {
+  "id": 503,
+  "text": "is actually very simple"
+ },
+ {
+  "id": 504,
+  "text": "let's take a quick look at it"
+ },
+ {
+  "id": 505,
+  "text": "that is, what the process of sending and receiving data actually looks like"
+ },
+ {
+  "id": 506,
+  "text": "so this figure, the one on top here,"
+ },
+ {
+  "id": 507,
+  "text": "we can actually understand it as,"
+ },
+ {
+  "id": 508,
+  "text": "let's say this side is a sender,"
+ },
+ {
+  "id": 509,
+  "text": "TX,"
+ },
+ {
+  "id": 510,
+  "text": "and this side here,"
+ },
+ {
+  "id": 511,
+  "text": "let's say it's an RX,"
+ },
+ {
+  "id": 512,
+  "text": "and this here,"
+ },
+ {
+  "id": 513,
+  "text": "what it actually expresses is a"
+ },
+ {
+  "id": 514,
+  "text": "timeline"
+ },
+ {
+  "id": 515,
+  "text": "that is, if this side is time,"
+ },
+ {
+  "id": 516,
+  "text": "if the horizontal axis is time,"
+ },
+ {
+  "id": 517,
+  "text": "then the vertical axis,"
+ },
+ {
+  "id": 518,
+  "text": "represents,"
+ },
+ {
+  "id": 519,
+  "text": "its"
+ },
+ {
+  "id": 520,
+  "text": "This thing on this line,"
+ },
+ {
+  "id": 521,
+  "text": "the level going high and low,"
+ },
+ {
+  "id": 522,
+  "text": "it can actually be understood this way."
+ },
+ {
+  "id": 523,
+  "text": "So we say,"
+ },
+ {
+  "id": 524,
+  "text": "normally,"
+ },
+ {
+  "id": 525,
+  "text": "for example, on this line,"
+ },
+ {
+  "id": 526,
+  "text": "how do we, that is,"
+ },
+ {
+  "id": 527,
+  "text": "it's nothing more than either transmitting data,"
+ },
+ {
+  "id": 528,
+  "text": "or it's not in the state of transmitting data."
+ },
+ {
+  "id": 529,
+  "text": "These are two things,"
+ },
+ {
+  "id": 530,
+  "text": "and we need to tell them apart."
+ },
+ {
+  "id": 531,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 532,
+  "text": "So how do we tell whether"
+ },
+ {
+  "id": 533,
+  "text": "it's currently transmitting data,"
+ },
+ {
+  "id": 534,
+  "text": "or not transmitting data?"
+ },
+ {
+  "id": 535,
+  "text": "Well, we define it like this:"
+ },
+ {
+  "id": 536,
+  "text": "when this bus,"
+ },
+ {
+  "id": 537,
+  "text": "which is really just this line,"
+ },
+ {
+  "id": 538,
+  "text": "when this line is in the idle state,"
+ },
+ {
+  "id": 539,
+  "text": "that is, it's not working,"
+ },
+ {
+  "id": 540,
+  "text": "when it's not sending data,"
+ },
+ {
+  "id": 541,
+  "text": "the specification requires this signal line to be at logic one."
+ },
+ {
+  "id": 542,
+  "text": "What do we mean by logic one?"
+ },
+ {
+  "id": 543,
+  "text": "That is, if you measure it with a multimeter,"
+ },
+ {
+  "id": 544,
+  "text": "it actually guarantees that"
+ },
+ {
+  "id": 545,
+  "text": "on this line of this window,"
+ },
+ {
+  "id": 546,
+  "text": "it sits at a high level."
+ },
+ {
+  "id": 547,
+  "text": "So-called high and low,"
+ },
+ {
+  "id": 548,
+  "text": "of course, is a relative concept."
+ },
+ {
+  "id": 549,
+  "text": "It doesn't mean a specific number of volts."
+ },
+ {
+  "id": 550,
+  "text": "It might just be relative to some value."
+ },
+ {
+  "id": 551,
+  "text": "If it's higher than that,"
+ },
+ {
+  "id": 552,
+  "text": "then it's a high level;"
+ },
+ {
+  "id": 553,
+  "text": "lower than that, and it's a low level."
+ },
+ {
+  "id": 554,
+  "text": "So this,"
+ },
+ {
+  "id": 555,
+  "text": "that is, after it's pulled high,"
+ },
+ {
+  "id": 556,
+  "text": "it actually stays in the pulled-up state all the time."
+ },
+ {
+  "id": 557,
+  "text": "You just learn,"
+ },
+ {
+  "id": 558,
+  "text": "so,"
+ },
+ {
+  "id": 559,
+  "text": "how do we know it's about to start sending data?"
+ },
+ {
+  "id": 560,
+  "text": "So it"
+ },
+ {
+  "id": 561,
+  "text": "the transmitting end"
+ },
+ {
+  "id": 562,
+  "text": "will actively pull this high level down"
+ },
+ {
+  "id": 563,
+  "text": "pull down for one bit"
+ },
+ {
+  "id": 564,
+  "text": "So how long is this one bit?"
+ },
+ {
+  "id": 565,
+  "text": "Actually, you can work it out."
+ },
+ {
+  "id": 566,
+  "text": "Because, as we said, once the baud rate is set"
+ },
+ {
+  "id": 567,
+  "text": "you know that this"
+ },
+ {
+  "id": 568,
+  "text": "duration of one bit"
+ },
+ {
+  "id": 569,
+  "text": "is actually, for example, 115200"
+ },
+ {
+  "id": 570,
+  "text": "so the duration of this one bit is"
+ },
+ {
+  "id": 571,
+  "text": "1/115200 of a second"
+ },
+ {
+  "id": 572,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 573,
+  "text": "So how long does this one bit last?"
+ },
+ {
+  "id": 574,
+  "text": "Because the horizontal axis is time,"
+ },
+ {
+  "id": 575,
+  "text": "so how long does this one bit last?"
+ },
+ {
+  "id": 576,
+  "text": "These can all be measured."
+ },
+ {
+  "id": 577,
+  "text": "So at the very beginning,"
+ },
+ {
+  "id": 578,
+  "text": "it sits at a high level, which means"
+ },
+ {
+  "id": 579,
+  "text": "it is in the idle state"
+ },
+ {
+  "id": 580,
+  "text": "So once we're ready to start sending data"
+ },
+ {
+  "id": 581,
+  "text": "how do I tell the other side"
+ },
+ {
+  "id": 582,
+  "text": "that I'm about to start working?"
+ },
+ {
+  "id": 583,
+  "text": "Well, it pulls the line low"
+ },
+ {
+  "id": 584,
+  "text": "that is, it takes the voltage"
+ },
+ {
+  "id": 585,
+  "text": "from high to low"
+ },
+ {
+  "id": 586,
+  "text": "and holds it for one bit"
+ },
+ {
+  "id": 587,
+  "text": "of time,"
+ },
+ {
+  "id": 588,
+  "text": "and that signals the start."
+ },
+ {
+  "id": 589,
+  "text": "That is the start bit."
+ },
+ {
+  "id": 590,
+  "text": "It means exactly this:"
+ },
+ {
+  "id": 591,
+  "text": "the sender first sends a low level, a zero,"
+ },
+ {
+  "id": 592,
+  "text": "to indicate the beginning of the character transmission,"
+ },
+ {
+  "id": 593,
+  "text": "right?"
+ },
+ {
+  "id": 594,
+  "text": "Then, for the actual character being transmitted,"
+ },
+ {
+  "id": 595,
+  "text": "as we know, generally,"
+ },
+ {
+  "id": 596,
+  "text": "we just talk about one byte,"
+ },
+ {
+  "id": 597,
+  "text": "one piece of ASCII data,"
+ },
+ {
+  "id": 598,
+  "text": "that's what we call the transmitted data."
+ },
+ {
+  "id": 599,
+  "text": "Now, this gray part at the end,"
+ },
+ {
+  "id": 600,
+  "text": "that means it's sending this data"
+ },
+ {
+  "id": 601,
+  "text": "Now, this data,"
+ },
+ {
+  "id": 602,
+  "text": "according to the rules of the protocol,"
+ },
+ {
+  "id": 603,
+  "text": "has what's called a data length"
+ },
+ {
+  "id": 604,
+  "text": "This data length"
+ },
+ {
+  "id": 605,
+  "text": "can be 5, 6, 7, or 8 bits"
+ },
+ {
+  "id": 606,
+  "text": "But in general,"
+ },
+ {
+  "id": 607,
+  "text": "we usually just use one form,"
+ },
+ {
+  "id": 608,
+  "text": "with the length set to 8"
+ },
+ {
+  "id": 609,
+  "text": "bits"
+ },
+ {
+  "id": 610,
+  "text": "The ASCII standard uses 8 bits for everything"
+ },
+ {
+  "id": 611,
+  "text": "So when we send an 'A',"
+ },
+ {
+  "id": 612,
+  "text": "it takes up 8 bits"
+ },
+ {
+  "id": 613,
+  "text": "In other words, this entire"
+ },
+ {
+  "id": 614,
+  "text": "whole process"
+ },
+ {
+  "id": 615,
+  "text": "can actually only send one byte"
+ },
+ {
+  "id": 616,
+  "text": "Does everyone understand?"
+ },
+ {
+  "id": 617,
+  "text": "Every time it sends a byte,"
+ },
+ {
+  "id": 618,
+  "text": "there has to be a"
+ },
+ {
+  "id": 619,
+  "text": "process like this"
+ },
+ {
+  "id": 620,
+  "text": "So, we send 8 bits"
+ },
+ {
+  "id": 621,
+  "text": "Once that's sent,"
+ },
+ {
+  "id": 622,
+  "text": "it forms one 8-bit unit."
+ },
+ {
+  "id": 623,
+  "text": "Then,"
+ },
+ {
+  "id": 624,
+  "text": "the rule is to send the lowest bit first,"
+ },
+ {
+  "id": 625,
+  "text": "and the highest bit last."
+ },
+ {
+  "id": 626,
+  "text": "The example I gave you earlier,"
+ },
+ {
+  "id": 627,
+  "text": "I was actually explaining this very concept,"
+ },
+ {
+  "id": 628,
+  "text": "that is, with an 8-bit piece of data,"
+ },
+ {
+  "id": 629,
+  "text": "each of its bits —"
+ },
+ {
+  "id": 630,
+  "text": "do we send the low bit first,"
+ },
+ {
+  "id": 631,
+  "text": "or the high bit first?"
+ },
+ {
+  "id": 632,
+  "text": "This is also something"
+ },
+ {
+  "id": 633,
+  "text": "that has to be specified in the protocol."
+ },
+ {
+  "id": 634,
+  "text": "And then,"
+ },
+ {
+  "id": 635,
+  "text": "after the data has been sent,"
+ },
+ {
+  "id": 636,
+  "text": "it will be followed by"
+ },
+ {
+  "id": 637,
+  "text": "one additional bit."
+ },
+ {
+  "id": 638,
+  "text": "This bit,"
+ },
+ {
+  "id": 639,
+  "text": "we call it"
+ },
+ {
+  "id": 640,
+  "text": "machine parity bit"
+ },
+ {
+  "id": 641,
+  "text": "It's called parity in English."
+ },
+ {
+  "id": 642,
+  "text": "Now, this parity bit,"
+ },
+ {
+  "id": 643,
+  "text": "what it really does,"
+ },
+ {
+  "id": 644,
+  "text": "its actual purpose is to,"
+ },
+ {
+  "id": 645,
+  "text": "the original idea behind its design,"
+ },
+ {
+  "id": 646,
+  "text": "is essentially this:"
+ },
+ {
+  "id": 647,
+  "text": "it helps us check"
+ },
+ {
+  "id": 648,
+  "text": "whether the data got corrupted"
+ },
+ {
+  "id": 649,
+  "text": "during transmission."
+ },
+ {
+  "id": 650,
+  "text": "For example, as we all know,"
+ },
+ {
+  "id": 651,
+  "text": "circuits can be subject to interference."
+ },
+ {
+  "id": 652,
+  "text": "Once electromagnetic waves get disturbed,"
+ },
+ {
+  "id": 653,
+  "text": "a one you sent from your end,"
+ },
+ {
+  "id": 654,
+  "text": "might be read as a zero on the other side."
+ },
+ {
+  "id": 655,
+  "text": "You see what I mean, right?"
+ },
+ {
+  "id": 656,
+  "text": "There can be some instability,"
+ },
+ {
+  "id": 657,
+  "text": "causing some interference."
+ },
+ {
+  "id": 658,
+  "text": "So how do we detect"
+ },
+ {
+  "id": 659,
+  "text": "that the data has been disturbed?"
+ },
+ {
+  "id": 660,
+  "text": "A problem occurs."
+ },
+ {
+  "id": 661,
+  "text": "So we introduced a"
+ },
+ {
+  "id": 662,
+  "text": "concept of parity bits."
+ },
+ {
+  "id": 663,
+  "text": "That is to say, this parity check"
+ },
+ {
+  "id": 664,
+  "text": "well,"
+ },
+ {
+  "id": 665,
+  "text": "in practice there are a few kinds."
+ },
+ {
+  "id": 666,
+  "text": "One is no parity check,"
+ },
+ {
+  "id": 667,
+  "text": "that is to say,"
+ },
+ {
+  "id": 668,
+  "text": "for instance, in general,"
+ },
+ {
+  "id": 669,
+  "text": "we might assume that this,"
+ },
+ {
+  "id": 670,
+  "text": "normally, say, when you"
+ },
+ {
+  "id": 671,
+  "text": "connect your board to yourself,"
+ },
+ {
+  "id": 672,
+  "text": "just hooked up like this,"
+ },
+ {
+  "id": 673,
+  "text": "if there is no strong"
+ },
+ {
+  "id": 674,
+  "text": "electromagnetic interference in the environment,"
+ },
+ {
+  "id": 675,
+  "text": "the data generally won't go wrong; it's"
+ },
+ {
+  "id": 676,
+  "text": "still fairly stable."
+ },
+ {
+  "id": 677,
+  "text": "So if we save one bit,"
+ },
+ {
+  "id": 678,
+  "text": "the transmission speed will definitely be a bit faster."
+ },
+ {
+  "id": 679,
+  "text": "And this one"
+ },
+ {
+  "id": 680,
+  "text": "You can also configure it to"
+ },
+ {
+  "id": 681,
+  "text": "that is, not to do parity checking."
+ },
+ {
+  "id": 682,
+  "text": "Usually we seem to configure it this way,"
+ },
+ {
+  "id": 683,
+  "text": "without parity checking."
+ },
+ {
+  "id": 684,
+  "text": "But you can also configure it to do parity checking."
+ },
+ {
+  "id": 685,
+  "text": "Now, for parity checking,"
+ },
+ {
+  "id": 686,
+  "text": "there are two types: odd parity and even parity."
+ },
+ {
+  "id": 687,
+  "text": "So what is odd parity?"
+ },
+ {
+  "id": 688,
+  "text": "Well,"
+ },
+ {
+  "id": 689,
+  "text": "that is, if among the data bits,"
+ },
+ {
+  "id": 690,
+  "text": "the number of ones is even,"
+ },
+ {
+  "id": 691,
+  "text": "then the parity bit is 1."
+ },
+ {
+  "id": 692,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 693,
+  "text": "It means that as the sender,"
+ },
+ {
+  "id": 694,
+  "text": "say you want to send out a piece of data,"
+ },
+ {
+  "id": 695,
+  "text": "and in the data you are sending,"
+ },
+ {
+  "id": 696,
+  "text": "within these 8 bits,"
+ },
+ {
+  "id": 697,
+  "text": "say there are 7 ones,"
+ },
+ {
+  "id": 698,
+  "text": "then that means"
+ },
+ {
+  "id": 699,
+  "text": "there is an odd number of one bits."
+ },
+ {
+  "id": 700,
+  "text": "So"
+ },
+ {
+  "id": 701,
+  "text": "if the number of ones is odd,"
+ },
+ {
+  "id": 702,
+  "text": "this part here is written wrong,"
+ },
+ {
+  "id": 703,
+  "text": "sorry about that."
+ },
+ {
+  "id": 704,
+  "text": "This should probably be the odd"
+ },
+ {
+  "id": 705,
+  "text": "it should be odd parity,"
+ },
+ {
+  "id": 706,
+  "text": "down here it says even,"
+ },
+ {
+  "id": 707,
+  "text": "up here it should be odd."
+ },
+ {
+  "id": 708,
+  "text": "That is to say, if the sender"
+ },
+ {
+  "id": 709,
+  "text": "sends this data,"
+ },
+ {
+  "id": 710,
+  "text": "and there are 7 bits"
+ },
+ {
+  "id": 711,
+  "text": "that are 1 in it,"
+ },
+ {
+  "id": 712,
+  "text": "then that means"
+ },
+ {
+  "id": 713,
+  "text": "the number of ones is odd,"
+ },
+ {
+  "id": 714,
+  "text": "so the sender, on this"
+ },
+ {
+  "id": 715,
+  "text": "parity bit position here,"
+ },
+ {
+  "id": 716,
+  "text": "sets it to 1,"
+ },
+ {
+  "id": 717,
+  "text": "to tell the other side that"
+ },
+ {
+  "id": 718,
+  "text": "in the data I'm sending,"
+ },
+ {
+  "id": 719,
+  "text": "there are actually"
+ },
+ {
+  "id": 720,
+  "text": "then the number of 1s"
+ },
+ {
+  "id": 721,
+  "text": "is actually odd"
+ },
+ {
+  "id": 722,
+  "text": "So after the receiver gets it,"
+ },
+ {
+  "id": 723,
+  "text": "based on this bit,"
+ },
+ {
+  "id": 724,
+  "text": "it checks whether your odd parity data"
+ },
+ {
+  "id": 725,
+  "text": "matches what it says"
+ },
+ {
+  "id": 726,
+  "text": "the expressed meaning"
+ },
+ {
+  "id": 727,
+  "text": "is the same or not,"
+ },
+ {
+  "id": 728,
+  "text": "doing a simple check."
+ },
+ {
+  "id": 729,
+  "text": "Everyone understands, right?"
+ },
+ {
+  "id": 730,
+  "text": "This simple parity check,"
+ },
+ {
+  "id": 731,
+  "text": "it's just a simple check."
+ },
+ {
+  "id": 732,
+  "text": "Actually, it's not completely accurate,"
+ },
+ {
+  "id": 733,
+  "text": "but after all, it serves"
+ },
+ {
+  "id": 734,
+  "text": "a certain checking purpose."
+ },
+ {
+  "id": 735,
+  "text": "Now, this even parity,"
+ },
+ {
+  "id": 736,
+  "text": "is just the opposite."
+ },
+ {
+  "id": 737,
+  "text": "And so on and so forth."
+ },
+ {
+  "id": 738,
+  "text": "What else is there?"
+ },
+ {
+  "id": 739,
+  "text": "The parity bit is always 1."
+ },
+ {
+  "id": 740,
+  "text": "Why is the parity bit always 0?"
+ },
+ {
+  "id": 741,
+  "text": "Actually, it also has a special purpose."
+ },
+ {
+  "id": 742,
+  "text": "I won't go into the details here."
+ },
+ {
+  "id": 743,
+  "text": "So what this means is,"
+ },
+ {
+  "id": 744,
+  "text": "after it finishes sending the data,"
+ },
+ {
+  "id": 745,
+  "text": "it usually adds a parity bit as well."
+ },
+ {
+  "id": 746,
+  "text": "Or there might not be this bit at all."
+ },
+ {
+  "id": 747,
+  "text": "So after sending is done,"
+ },
+ {
+  "id": 748,
+  "text": "how does it indicate that"
+ },
+ {
+  "id": 749,
+  "text": "one byte has been completely sent?"
+ },
+ {
+  "id": 750,
+  "text": "Because we have a beginning,"
+ },
+ {
+  "id": 751,
+  "text": "we also need an end."
+ },
+ {
+  "id": 752,
+  "text": "This is the concept of synchronization."
+ },
+ {
+  "id": 753,
+  "text": "That is to say, before I send,"
+ },
+ {
+  "id": 754,
+  "text": "I wave my hand,"
+ },
+ {
+  "id": 755,
+  "text": "and after I finish sending,"
+ },
+ {
+  "id": 756,
+  "text": "I also wave my hand,"
+ },
+ {
+  "id": 757,
+  "text": "telling the other side that it's done."
+ },
+ {
+  "id": 758,
+  "text": "Right?"
+ },
+ {
+  "id": 759,
+  "text": "So for the start,"
+ },
+ {
+  "id": 760,
+  "text": "we signal the other side with a low level"
+ },
+ {
+  "id": 761,
+  "text": "a single-bit low level"
+ },
+ {
+  "id": 762,
+  "text": "to tell the other side."
+ },
+ {
+  "id": 763,
+  "text": "So how do we"
+ },
+ {
+  "id": 764,
+  "text": "tell the other side that it's finished?"
+ },
+ {
+  "id": 765,
+  "text": "It's actually on this line,"
+ },
+ {
+  "id": 766,
+  "text": "we need to actually produce"
+ },
+ {
+  "id": 767,
+  "text": "a high level of one bit, one and a half bits,"
+ },
+ {
+  "id": 768,
+  "text": "or two bits"
+ },
+ {
+  "id": 769,
+  "text": "and this is configurable as well."
+ },
+ {
+  "id": 770,
+  "text": "So in this way,"
+ },
+ {
+  "id": 771,
+  "text": "we tell the other side"
+ },
+ {
+  "id": 772,
+  "text": "that one byte has been sent,"
+ },
+ {
+  "id": 773,
+  "text": "that one byte has been sent."
+ },
+ {
+  "id": 774,
+  "text": "So our entire...,"
+ },
+ {
+  "id": 775,
+  "text": "that is to say,"
+ },
+ {
+  "id": 776,
+  "text": "once you say you want to send"
+ },
+ {
+  "id": 777,
+  "text": "eight bytes,"
+ },
+ {
+  "id": 778,
+  "text": "or say ten bytes,"
+ },
+ {
+  "id": 779,
+  "text": "then for each byte"
+ },
+ {
+  "id": 780,
+  "text": "they all have to go through such a process."
+ },
+ {
+  "id": 781,
+  "text": "So this is one"
+ },
+ {
+  "id": 782,
+  "text": "plus that makes one frame."
+ },
+ {
+  "id": 783,
+  "text": "This frame,"
+ },
+ {
+  "id": 784,
+  "text": "a frame in UART,"
+ },
+ {
+  "id": 785,
+  "text": "its this"
+ },
+ {
+  "id": 786,
+  "text": "actually has a start"
+ },
+ {
+  "id": 787,
+  "text": "and also adds a parity bit,"
+ },
+ {
+  "id": 788,
+  "text": "and together these make up"
+ },
+ {
+  "id": 789,
+  "text": "this one frame."
+ },
+ {
+  "id": 790,
+  "text": "Does everyone understand?"
+ },
+ {
+  "id": 791,
+  "text": "So this sending process"
+ },
+ {
+  "id": 792,
+  "text": "is actually not as"
+ },
+ {
+  "id": 793,
+  "text": "simple as you might imagine."
+ },
+ {
+  "id": 794,
+  "text": "It's not just that you send data,"
+ },
+ {
+  "id": 795,
+  "text": "pure data."
+ },
+ {
+  "id": 796,
+  "text": "It actually has some"
+ },
+ {
+  "id": 797,
+  "text": "bytes with special meanings in it,"
+ },
+ {
+  "id": 798,
+  "text": "which serve some synchronization purpose,"
+ },
+ {
+  "id": 799,
+  "text": "and a verification purpose."
+ },
+ {
+  "id": 800,
+  "text": "You get what I mean, right?"
+ },
+ {
+  "id": 801,
+  "text": "This is the communication protocol of the serial port."
+ },
+ {
+  "id": 802,
+  "text": "Then the transceivers on both sides"
+ },
+ {
+  "id": 803,
+  "text": "have to follow this protocol,"
+ },
+ {
+  "id": 804,
+  "text": "doing some checks on the data on the line,"
+ },
+ {
+  "id": 805,
+  "text": "so that the data is"
+ },
+ {
+  "id": 806,
+  "text": "correctly sent and received."
+ },
+ {
+  "id": 807,
+  "text": "Now, as for this information,"
+ },
+ {
+  "id": 808,
+  "text": "when we use this serial port transceiver,"
+ },
+ {
+  "id": 809,
+  "text": "what it actually means is that,"
+ },
+ {
+  "id": 810,
+  "text": "for us as software engineers,"
+ },
+ {
+  "id": 811,
+  "text": "we need to configure it."
+ },
+ {
+  "id": 812,
+  "text": "You understand that, right?"
+ },
+ {
+  "id": 813,
+  "text": "You see, as I just said,"
+ },
+ {
+  "id": 814,
+  "text": "the parity bit can be there or not."
+ },
+ {
+  "id": 815,
+  "text": "So whether you want it or not,"
+ },
+ {
+  "id": 816,
+  "text": "that's up to you to decide."
+ },
+ {
+  "id": 817,
+  "text": "Then, on the peripheral interface,"
+ },
+ {
+  "id": 818,
+  "text": "there are some special registers,"
+ },
+ {
+  "id": 819,
+  "text": "that let us configure it."
+ },
+ {
+  "id": 820,
+  "text": "So, before we correctly"
+ },
+ {
+  "id": 821,
+  "text": "send out a piece of data,"
+ },
+ {
+  "id": 822,
+  "text": "first there is a certain initialization process."
+ },
+ {
+  "id": 823,
+  "text": "That is, we need to configure some devices."
+ },
+ {
+  "id": 824,
+  "text": "All of our hardware devices,"
+ },
+ {
+  "id": 825,
+  "text": "including writing drivers,"
+ },
+ {
+  "id": 826,
+  "text": "actually follow this same idea."
+ },
+ {
+  "id": 827,
+  "text": "Before using them, you have to do some configuration,"
+ },
+ {
+  "id": 828,
+  "text": "do some initialization."
+ },
+ {
+  "id": 829,
+  "text": "Now, why do we need to do initialization?"
+ },
+ {
+  "id": 830,
+  "text": "There is definitely a reason behind it."
+ },
+ {
+  "id": 831,
+  "text": "So we look at this interface,"
+ },
+ {
+  "id": 832,
+  "text": "why is it done this way?"
+ },
+ {
+  "id": 833,
+  "text": "I've given you some introduction here."
+ },
+ {
+  "id": 834,
+  "text": "This is the concept of the communication protocol."
+ },
+ {
+  "id": 835,
+  "text": "So next,"
+ },
+ {
+  "id": 836,
+  "text": "let's take a look at"
+ },
+ {
+  "id": 837,
+  "text": "when we actually do the programming,"
+ },
+ {
+  "id": 838,
+  "text": "how exactly we operate this thing."
+ },
+ {
+  "id": 839,
+  "text": "Now, as we mentioned earlier,"
+ },
+ {
+  "id": 840,
+  "text": "So this, we"
+ },
+ {
+  "id": 841,
+  "text": "this NS16550A,"
+ },
+ {
+  "id": 842,
+  "text": "actually it is"
+ },
+ {
+  "id": 843,
+  "text": "the emulator we are using now,"
+ },
+ {
+  "id": 844,
+  "text": "the one it emulates,"
+ },
+ {
+  "id": 845,
+  "text": "this serial transceiver,"
+ },
+ {
+  "id": 846,
+  "text": "is exactly the model of this device."
+ },
+ {
+  "id": 847,
+  "text": "This model,"
+ },
+ {
+  "id": 848,
+  "text": "by the way, is a real model."
+ },
+ {
+  "id": 849,
+  "text": "On those much larger machines, they use a rather common serial transceiver model."
+ },
+ {
+  "id": 850,
+  "text": "Now, this serial transceiver,"
+ },
+ {
+  "id": 851,
+  "text": "its technical manual is also available."
+ },
+ {
+  "id": 852,
+  "text": "This technical manual is also,"
+ },
+ {
+  "id": 853,
+  "text": "we'll take a look at it together with everyone in a bit."
+ },
+ {
+  "id": 854,
+  "text": "So, for us,"
+ },
+ {
+  "id": 855,
+  "text": "that is, when it comes to operating an external device,"
+ },
+ {
+  "id": 856,
+  "text": "namely this serial transceiver,"
+ },
+ {
+  "id": 857,
+  "text": "then what is it that you need to operate?"
+ },
+ {
+  "id": 858,
+  "text": "Think about it."
+ },
+ {
+  "id": 859,
+  "text": "It's basically to program it."
+ },
+ {
+  "id": 860,
+  "text": "When we talk about programming an interface device,"
+ },
+ {
+  "id": 861,
+  "text": "what we're really doing is controlling some of the registers inside it."
+ },
+ {
+  "id": 862,
+  "text": "Think about it — isn't that the case?"
+ },
+ {
+  "id": 863,
+  "text": "So when we program,"
+ },
+ {
+  "id": 864,
+  "text": "as for these registers,"
+ },
+ {
+  "id": 865,
+  "text": "how do we access a register?"
+ },
+ {
+  "id": 866,
+  "text": "For the general-purpose registers on the CPU,"
+ },
+ {
+  "id": 867,
+  "text": "we access them all by name."
+ },
+ {
+  "id": 868,
+  "text": "Right?"
+ },
+ {
+  "id": 869,
+  "text": "Things like X1, X0."
+ },
+ {
+  "id": 870,
+  "text": "You still remember that, right?"
+ },
+ {
+  "id": 871,
+  "text": "But these peripheral registers —"
+ },
+ {
+  "id": 872,
+  "text": "there are so many of them."
+ },
+ {
+  "id": 873,
+  "text": "How do we access them?"
+ },
+ {
+  "id": 874,
+  "text": "Moreover, the registers of each type of peripheral are different."
+ },
+ {
+  "id": 875,
+  "text": "We can't possibly give them all unified names."
+ },
+ {
+  "id": 876,
+  "text": "It's not like the CPU, which is just a single block."
+ },
+ {
+  "id": 877,
+  "text": "So what we actually use is,"
+ },
+ {
+  "id": 878,
+  "text": "what's called memory mapping."
+ },
+ {
+  "id": 879,
+  "text": "What is memory mapping?"
+ },
+ {
+  "id": 880,
+  "text": "That is to say, we take every peripheral,"
+ },
+ {
+  "id": 881,
+  "text": "across our entire physical address range,"
+ },
+ {
+  "id": 882,
+  "text": "and assign it an interval."
+ },
+ {
+  "id": 883,
+  "text": "For example, take this UART device."
+ },
+ {
+  "id": 884,
+  "text": "We see that in"
+ },
+ {
+  "id": 885,
+  "text": "well, this table here,"
+ },
+ {
+  "id": 886,
+  "text": "I dug it out of the QEMU source code."
+ },
+ {
+  "id": 887,
+  "text": "If you're interested, you can go and look at QEMU's"
+ },
+ {
+  "id": 888,
+  "text": "simulator source code."
+ },
+ {
+  "id": 889,
+  "text": "What it does in there is, for each type of peripheral,"
+ },
+ {
+  "id": 890,
+  "text": "and these are all peripherals in here,"
+ },
+ {
+  "id": 891,
+  "text": "which we'll introduce to you step by step later on."
+ },
+ {
+  "id": 892,
+  "text": "So the UART device is the serial port device,"
+ },
+ {
+  "id": 893,
+  "text": "and it is one kind of peripheral in here."
+ },
+ {
+  "id": 894,
+  "text": "Now, for all the registers of this peripheral,"
+ },
+ {
+  "id": 895,
+  "text": "it assigns an address to each register,"
+ },
+ {
+  "id": 896,
+  "text": "and these addresses are laid out linearly across the memory range."
+ },
+ {
+  "id": 897,
+  "text": "This is a physical address."
+ },
+ {
+  "id": 898,
+  "text": "And this physical address,"
+ },
+ {
+  "id": 899,
+  "text": "starting at the position 0x1000,"
+ },
+ {
+  "id": 900,
+  "text": "From this position"
+ },
+ {
+  "id": 901,
+  "text": "starting from this address"
+ },
+ {
+  "id": 902,
+  "text": "we reserved this chunk"
+ },
+ {
+  "id": 903,
+  "text": "for our use"
+ },
+ {
+  "id": 904,
+  "text": "for our use"
+ },
+ {
+  "id": 905,
+  "text": "Now, this chunk"
+ },
+ {
+  "id": 906,
+  "text": "was given a range called Linux100"
+ },
+ {
+  "id": 907,
+  "text": "That is, from this address"
+ },
+ {
+  "id": 908,
+  "text": "from this physical address to this address"
+ },
+ {
+  "id": 909,
+  "text": "this range was given"
+ },
+ {
+  "id": 910,
+  "text": "And for this range"
+ },
+ {
+  "id": 911,
+  "text": "we mapped it to this"
+ },
+ {
+  "id": 912,
+  "text": "to these registers of this serial port receiver"
+ },
+ {
+  "id": 913,
+  "text": "That's the idea"
+ },
+ {
+  "id": 914,
+  "text": "We"
+ },
+ {
+  "id": 915,
+  "text": "So let's make sure we understand this diagram from earlier"
+ },
+ {
+  "id": 916,
+  "text": "When we were thinking about that"
+ },
+ {
+  "id": 917,
+  "text": "boot process earlier"
+ },
+ {
+  "id": 918,
+  "text": "we also looked at this diagram, right?"
+ },
+ {
+  "id": 919,
+  "text": "Back then, which things did we only introduce in this diagram?"
+ },
+ {
+  "id": 920,
+  "text": "back then, we only introduced one"
+ },
+ {
+  "id": 921,
+  "text": "ROM and one RAM"
+ },
+ {
+  "id": 922,
+  "text": "so our memory is here"
+ },
+ {
+  "id": 923,
+  "text": "so the memory's"
+ },
+ {
+  "id": 924,
+  "text": "for example, this memory of ours"
+ },
+ {
+  "id": 925,
+  "text": "is as large as 128 megabytes"
+ },
+ {
+  "id": 926,
+  "text": "and for these 128 megabytes,"
+ },
+ {
+  "id": 927,
+  "text": "we actually mapped it to"
+ },
+ {
+  "id": 928,
+  "text": "our entire address"
+ },
+ {
+  "id": 929,
+  "text": "from Linux 8000 to Linux 8800"
+ },
+ {
+  "id": 930,
+  "text": "in this range"
+ },
+ {
+  "id": 931,
+  "text": "this range is actually 128 megabytes"
+ },
+ {
+  "id": 932,
+  "text": "so in terms of the physical address,"
+ },
+ {
+  "id": 933,
+  "text": "from the physical address of our bus,"
+ },
+ {
+  "id": 934,
+  "text": "the physical address of the bus,"
+ },
+ {
+  "id": 935,
+  "text": "from Linux 8000 to Linux 8800"
+ },
+ {
+  "id": 936,
+  "text": "in this range,"
+ },
+ {
+  "id": 937,
+  "text": "it is given to this memory"
+ },
+ {
+  "id": 938,
+  "text": "for the memory to use"
+ },
+ {
+  "id": 939,
+  "text": "you can understand it this way"
+ },
+ {
+  "id": 940,
+  "text": "So this memory of ours,"
+ },
+ {
+  "id": 941,
+  "text": "this physical memory,"
+ },
+ {
+  "id": 942,
+  "text": "if the base here is 0,"
+ },
+ {
+  "id": 943,
+  "text": "then 0 gets mapped to 0x80000000."
+ },
+ {
+  "id": 944,
+  "text": "You all get what I mean here, right?"
+ },
+ {
+  "id": 945,
+  "text": "Of course, when we program,"
+ },
+ {
+  "id": 946,
+  "text": "as far as we programmers are concerned,"
+ },
+ {
+  "id": 947,
+  "text": "the address we see is this one."
+ },
+ {
+  "id": 948,
+  "text": "You understand, right?"
+ },
+ {
+  "id": 949,
+  "text": "So when we compile and link,"
+ },
+ {
+  "id": 950,
+  "text": "we access based on this address,"
+ },
+ {
+  "id": 951,
+  "text": "the first byte of our memory,"
+ },
+ {
+  "id": 952,
+  "text": "that is, the first byte in our memory"
+ },
+ {
+  "id": 953,
+  "text": "actually corresponds to 0x80000000."
+ },
+ {
+  "id": 954,
+  "text": "When you did the exercises before,"
+ },
+ {
+  "id": 955,
+  "text": "you should have come across this concept already."
+ },
+ {
+  "id": 956,
+  "text": "Right?"
+ },
+ {
+  "id": 957,
+  "text": "Now, with the same concept,"
+ },
+ {
+  "id": 958,
+  "text": "take this serial port device,"
+ },
+ {
+  "id": 959,
+  "text": "the registers that are accessed on it"
+ },
+ {
+  "id": 960,
+  "text": "also gets mapped to"
+ },
+ {
+  "id": 961,
+  "text": "our unified"
+ },
+ {
+  "id": 962,
+  "text": "physical address space"
+ },
+ {
+  "id": 963,
+  "text": "And this mapping"
+ },
+ {
+  "id": 964,
+  "text": "maps to 0x1000,"
+ },
+ {
+  "id": 965,
+  "text": "a range like this."
+ },
+ {
+  "id": 966,
+  "text": "A range like this."
+ },
+ {
+  "id": 967,
+  "text": "This range actually comes from here."
+ },
+ {
+  "id": 968,
+  "text": "Now, this so-called mapping process,"
+ },
+ {
+  "id": 969,
+  "text": "is done for us by the physical hardware."
+ },
+ {
+  "id": 970,
+  "text": "Our software doesn't need to configure this."
+ },
+ {
+  "id": 971,
+  "text": "Of course, over here we're using an emulator,"
+ },
+ {
+  "id": 972,
+  "text": "so it's implemented in software,"
+ },
+ {
+  "id": 973,
+  "text": "but on real hardware,"
+ },
+ {
+  "id": 974,
+  "text": "you can think of it as the circuit board being designed"
+ },
+ {
+  "id": 975,
+  "text": "with the connections wired up."
+ },
+ {
+  "id": 976,
+  "text": "And the address range configured up here"
+ },
+ {
+  "id": 977,
+  "text": "is reserved for the serial port device's registers."
+ },
+ {
+  "id": 978,
+  "text": "What each of these registers represents"
+ },
+ {
+  "id": 979,
+  "text": "is specially defined."
+ },
+ {
+  "id": 980,
+  "text": "Let's come back to that later."
+ },
+ {
+  "id": 981,
+  "text": "So when we access these registers,"
+ },
+ {
+  "id": 982,
+  "text": "we access them through these addresses."
+ },
+ {
+  "id": 983,
+  "text": "That's actually what this means."
+ },
+ {
+  "id": 984,
+  "text": "So this is what we call"
+ },
+ {
+  "id": 985,
+  "text": "the first step to accessing this register:"
+ },
+ {
+  "id": 986,
+  "text": "first, you need to know its address."
+ },
+ {
+  "id": 987,
+  "text": "Now, on this,"
+ },
+ {
+  "id": 988,
+  "text": "let's look at our code together"
+ },
+ {
+  "id": 989,
+  "text": "and see"
+ },
+ {
+  "id": 990,
+  "text": "where we see"
+ },
+ {
+  "id": 991,
+  "text": "the concepts I just mentioned."
+ },
+ {
+  "id": 992,
+  "text": "I've opened it right here,"
+ },
+ {
+  "id": 993,
+  "text": "I didn't have time to open it earlier—"
+ },
+ {
+  "id": 994,
+  "text": "the code we gave you, I've opened it."
+ },
+ {
+  "id": 995,
+  "text": "In this code,"
+ },
+ {
+  "id": 996,
+  "text": "for example, today we covered"
+ },
+ {
+  "id": 997,
+  "text": "the operating system's—"
+ },
+ {
+  "id": 998,
+  "text": "still this one,"
+ },
+ {
+  "id": 999,
+  "text": "01 hello rvls, right here."
+ },
+ {
+  "id": 1000,
+  "text": "So, where do we see this?"
+ },
+ {
+  "id": 1001,
+  "text": "Where does this show up in our code?"
+ },
+ {
+  "id": 1002,
+  "text": "This thing we just talked about,"
+ },
+ {
+  "id": 1003,
+  "text": "the concept of serial port mapping,"
+ },
+ {
+  "id": 1004,
+  "text": "we can open up this file,"
+ },
+ {
+  "id": 1005,
+  "text": "uart.c,"
+ },
+ {
+  "id": 1006,
+  "text": "Can everyone still see it clearly?"
+ },
+ {
+  "id": 1007,
+  "text": "It's a little bit dark."
+ },
+ {
+  "id": 1008,
+  "text": "So as we can see,"
+ },
+ {
+  "id": 1009,
+  "text": "that is, we should"
+ },
+ {
+  "id": 1010,
+  "text": "first look at this file,"
+ },
+ {
+  "id": 1011,
+  "text": "or rather, the code in"
+ },
+ {
+  "id": 1012,
+  "text": "this file, platform.h."
+ },
+ {
+  "id": 1013,
+  "text": "Now, this platform.h,"
+ },
+ {
+  "id": 1014,
+  "text": "this is where we define"
+ },
+ {
+  "id": 1015,
+  "text": "everything related to our development board,"
+ },
+ {
+  "id": 1016,
+  "text": "all the physical"
+ },
+ {
+  "id": 1017,
+  "text": "characteristics and properties."
+ },
+ {
+  "id": 1018,
+  "text": "The concept of a platform,"
+ },
+ {
+  "id": 1019,
+  "text": "which we covered earlier,"
+ },
+ {
+  "id": 1020,
+  "text": "You all still remember this, right?"
+ },
+ {
+  "id": 1021,
+  "text": "platform"
+ },
+ {
+  "id": 1022,
+  "text": "actually corresponds to"
+ },
+ {
+  "id": 1023,
+  "text": "essentially our"
+ },
+ {
+  "id": 1024,
+  "text": "this development board,"
+ },
+ {
+  "id": 1025,
+  "text": "or you could say this SoC,"
+ },
+ {
+  "id": 1026,
+  "text": "the concept of it."
+ },
+ {
+  "id": 1027,
+  "text": "So in here,"
+ },
+ {
+  "id": 1028,
+  "text": "for example, earlier we defined"
+ },
+ {
+  "id": 1029,
+  "text": "the concept of eight processors,"
+ },
+ {
+  "id": 1030,
+  "text": "and we've kept that here."
+ },
+ {
+  "id": 1031,
+  "text": "In today's exercise,"
+ },
+ {
+  "id": 1032,
+  "text": "we've added another concept,"
+ },
+ {
+  "id": 1033,
+  "text": "namely, we first defined a"
+ },
+ {
+  "id": 1034,
+  "text": "UART0 as this 1000."
+ },
+ {
+  "id": 1035,
+  "text": "Now why define this?"
+ },
+ {
+  "id": 1036,
+  "text": "This is exactly what we just talked about —"
+ },
+ {
+  "id": 1037,
+  "text": "it's the starting address of its mapping."
+ },
+ {
+  "id": 1038,
+  "text": "So for all the registers,"
+ },
+ {
+  "id": 1039,
+  "text": "we place them according to this base address."
+ },
+ {
+  "id": 1040,
+  "text": "to do a corresponding operation."
+ },
+ {
+  "id": 1041,
+  "text": "Because here we defined a"
+ },
+ {
+  "id": 1042,
+  "text": "UART_REG macro."
+ },
+ {
+  "id": 1043,
+  "text": "Now, as you can see,"
+ },
+ {
+  "id": 1044,
+  "text": "this macro is actually inside this"
+ },
+ {
+  "id": 1045,
+  "text": "It takes a parameter REG,"
+ },
+ {
+  "id": 1046,
+  "text": "and then"
+ },
+ {
+  "id": 1047,
+  "text": "it actually works on UART0,"
+ },
+ {
+  "id": 1048,
+  "text": "that 1000 range we just saw,"
+ },
+ {
+  "id": 1049,
+  "text": "using it as the base value,"
+ },
+ {
+  "id": 1050,
+  "text": "and adding an offset"
+ },
+ {
+  "id": 1051,
+  "text": "to get"
+ },
+ {
+  "id": 1052,
+  "text": "the address of a corresponding register."
+ },
+ {
+  "id": 1053,
+  "text": "The macro is used to get"
+ },
+ {
+  "id": 1054,
+  "text": "the address of a corresponding register,"
+ },
+ {
+  "id": 1055,
+  "text": "that is, one of the registers on UART0."
+ },
+ {
+  "id": 1056,
+  "text": "That is the effect of this macro."
+ },
+ {
+  "id": 1057,
+  "text": "This macro is in fact intended to achieve this effect."
+ },
+ {
+  "id": 1058,
+  "text": "And this REG parameter,"
+ },
+ {
+  "id": 1059,
+  "text": "is actually passed as these macros."
+ },
+ {
+  "id": 1060,
+  "text": "So all these macros"
+ },
+ {
+  "id": 1061,
+  "text": "these macros,"
+ },
+ {
+  "id": 1062,
+  "text": "actually correspond to,"
+ },
+ {
+  "id": 1063,
+  "text": "one by one,"
+ },
+ {
+  "id": 1064,
+  "text": "the control registers on this UART serial device"
+ },
+ {
+  "id": 1065,
+  "text": "— these control registers."
+ },
+ {
+  "id": 1066,
+  "text": "Their offsets are 0, 1, 2 respectively."
+ },
+ {
+  "id": 1067,
+  "text": "So in total, you can think of it this way:"
+ },
+ {
+  "id": 1068,
+  "text": "on the UART device,"
+ },
+ {
+  "id": 1069,
+  "text": "it provides 8 registers in total"
+ },
+ {
+  "id": 1070,
+  "text": "— just 8 registers."
+ },
+ {
+  "id": 1071,
+  "text": "Then later on,"
+ },
+ {
+  "id": 1072,
+  "text": "we use these macros,"
+ },
+ {
+  "id": 1073,
+  "text": "pass in the base, and we can get"
+ },
+ {
+  "id": 1074,
+  "text": "the address of each register."
+ },
+ {
+  "id": 1075,
+  "text": "Then, through that address,"
+ },
+ {
+  "id": 1076,
+  "text": "we can access the register."
+ },
+ {
+  "id": 1077,
+  "text": "So reading and writing the registers,"
+ },
+ {
+  "id": 1078,
+  "text": "there's no problem with any of that."
+ },
+ {
+  "id": 1079,
+  "text": "Now, this UART serial device,"
+ },
+ {
+  "id": 1080,
+  "text": "what this device is actually"
+ },
+ {
+  "id": 1081,
+  "text": "What are these registers actually used for?"
+ },
+ {
+  "id": 1082,
+  "text": "To figure this out, we need to look at"
+ },
+ {
+  "id": 1083,
+  "text": "the specific datasheet for this serial port device"
+ },
+ {
+  "id": 1084,
+  "text": "this datasheet,"
+ },
+ {
+  "id": 1085,
+  "text": "And we've already provided this datasheet for you,"
+ },
+ {
+  "id": 1086,
+  "text": "we have also provided for everyone"
+ },
+ {
+  "id": 1087,
+  "text": "in the repository you downloaded."
+ },
+ {
+  "id": 1088,
+  "text": "You can go in here,"
+ },
+ {
+  "id": 1089,
+  "text": "there's a directory called reference,"
+ },
+ {
+  "id": 1090,
+  "text": "which means reference materials."
+ },
+ {
+  "id": 1091,
+  "text": "Inside this reference materials directory,"
+ },
+ {
+  "id": 1092,
+  "text": "there's a document called TD16550PDF."
+ },
+ {
+  "id": 1093,
+  "text": "This document actually contains the definitions of its registers."
+ },
+ {
+  "id": 1094,
+  "text": "Of course, that standard data—"
+ },
+ {
+  "id": 1095,
+  "text": "that is, the datasheets engineers read—"
+ },
+ {
+  "id": 1096,
+  "text": "is really similar to this kind of document."
+ },
+ {
+  "id": 1097,
+  "text": "It's this document."
+ },
+ {
+  "id": 1098,
+  "text": "Let me also show it to you first,"
+ },
+ {
+  "id": 1099,
+  "text": "so that if any of you do low-level development in the future,"
+ },
+ {
+  "id": 1100,
+  "text": "So this datasheet is something you'll need to consult often."
+ },
+ {
+  "id": 1101,
+  "text": "In other words, information on all the components is actually included on it."
+ },
+ {
+  "id": 1102,
+  "text": "This NS16550 serial port device,"
+ },
+ {
+  "id": 1103,
+  "text": "its standard document"
+ },
+ {
+  "id": 1104,
+  "text": "is actually a document that looks like this."
+ },
+ {
+  "id": 1105,
+  "text": "But this document is in English,"
+ },
+ {
+  "id": 1106,
+  "text": "and the content is quite engineering-oriented."
+ },
+ {
+  "id": 1107,
+  "text": "So we won't use this document to introduce it to you."
+ },
+ {
+  "id": 1108,
+  "text": "We actually picked up a document,"
+ },
+ {
+  "id": 1109,
+  "text": "a document that someone on the internet"
+ },
+ {
+  "id": 1110,
+  "text": "specially summarized for us."
+ },
+ {
+  "id": 1111,
+  "text": "This document,"
+ },
+ {
+  "id": 1112,
+  "text": "it's much easier to read."
+ },
+ {
+  "id": 1113,
+  "text": "Let me put it this way,"
+ },
+ {
+  "id": 1114,
+  "text": "it's easier to read."
+ },
+ {
+  "id": 1115,
+  "text": "Its,"
+ },
+ {
+  "id": 1116,
+  "text": "it actually takes that kind of"
+ },
+ {
+  "id": 1117,
+  "text": "standard engineering-oriented document,"
+ },
+ {
+  "id": 1118,
+  "text": "and converts it into"
+ },
+ {
+  "id": 1119,
+  "text": "a reference document that's easier to look things up in."
+ },
+ {
+  "id": 1120,
+  "text": "So let's take this document"
+ },
+ {
+  "id": 1121,
+  "text": "and use it as a reference for this programming exercise."
+ },
+ {
+  "id": 1122,
+  "text": "Let's take a look at it together."
+ },
+ {
+  "id": 1123,
+  "text": "In other words, including the one up here on my screen,"
+ },
+ {
+  "id": 1124,
+  "text": "this diagram is actually also from that"
+ },
+ {
+  "id": 1125,
+  "text": "resource document I just mentioned"
+ },
+ {
+  "id": 1126,
+  "text": "— I extracted it from there."
+ },
+ {
+  "id": 1127,
+  "text": "So let's take a quick look."
+ },
+ {
+  "id": 1128,
+  "text": "Over here on this diagram,"
+ },
+ {
+  "id": 1129,
+  "text": "of course, we should explain"
+ },
+ {
+  "id": 1130,
+  "text": "what some of it means."
+ },
+ {
+  "id": 1131,
+  "text": "For example, over here it says"
+ },
+ {
+  "id": 1132,
+  "text": "A0, A1, A2."
+ },
+ {
+  "id": 1133,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 1134,
+  "text": "What it actually means is"
+ },
+ {
+  "id": 1135,
+  "text": "the offsets of those registers."
+ },
+ {
+  "id": 1136,
+  "text": "that offset"
+ },
+ {
+  "id": 1137,
+  "text": "Because it only provides"
+ },
+ {
+  "id": 1138,
+  "text": "8 registers,"
+ },
+ {
+  "id": 1139,
+  "text": "and those 8 registers"
+ },
+ {
+  "id": 1140,
+  "text": "As you all know,"
+ },
+ {
+  "id": 1141,
+  "text": "to represent 8 registers,"
+ },
+ {
+  "id": 1142,
+  "text": "you only need 3 bits"
+ },
+ {
+  "id": 1143,
+  "text": "and that's enough."
+ },
+ {
+  "id": 1144,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 1145,
+  "text": "So the encoding is simply"
+ },
+ {
+  "id": 1146,
+  "text": "000,"
+ },
+ {
+  "id": 1147,
+  "text": "001, 010, and so on."
+ },
+ {
+  "id": 1148,
+  "text": "Right?"
+ },
+ {
+  "id": 1149,
+  "text": "With 8 such encodings,"
+ },
+ {
+  "id": 1150,
+  "text": "you can express 8 registers."
+ },
+ {
+  "id": 1151,
+  "text": "Of course, in actual use,"
+ },
+ {
+  "id": 1152,
+  "text": "you don't use this number directly to access them."
+ },
+ {
+  "id": 1153,
+  "text": "Instead, you have to add the mechanism we mentioned just now,"
+ },
+ {
+  "id": 1154,
+  "text": "the 1000 mechanism,"
+ },
+ {
+  "id": 1155,
+  "text": "to get its actual address."
+ },
+ {
+  "id": 1156,
+  "text": "That's how you can access these registers."
+ },
+ {
+  "id": 1157,
+  "text": "So these are the 8 registers."
+ },
+ {
+  "id": 1158,
+  "text": "Now note that,"
+ },
+ {
+  "id": 1159,
+  "text": "as you can see, these registers"
+ },
+ {
+  "id": 1160,
+  "text": "That is to say, there are some registers"
+ },
+ {
+  "id": 1161,
+  "text": "that actually appear more than once."
+ },
+ {
+  "id": 1162,
+  "text": "0000000001"
+ },
+ {
+  "id": 1163,
+  "text": "It has entries that show up repeatedly."
+ },
+ {
+  "id": 1164,
+  "text": "Now, these repeated entries"
+ },
+ {
+  "id": 1165,
+  "text": "basically mean that,"
+ },
+ {
+  "id": 1166,
+  "text": "this register,"
+ },
+ {
+  "id": 1167,
+  "text": "it has some shared or multiplexed functions."
+ },
+ {
+  "id": 1168,
+  "text": "And on top of that,"
+ },
+ {
+  "id": 1169,
+  "text": "each of these registers,"
+ },
+ {
+  "id": 1170,
+  "text": "is further split into two modes,"
+ },
+ {
+  "id": 1171,
+  "text": "namely read mode and write mode."
+ },
+ {
+  "id": 1172,
+  "text": "So what do we mean by read mode?"
+ },
+ {
+  "id": 1173,
+  "text": "It means that when we"
+ },
+ {
+  "id": 1174,
+  "text": "read from this register,"
+ },
+ {
+  "id": 1175,
+  "text": "what information can we get out of it?"
+ },
+ {
+  "id": 1176,
+  "text": "That is essentially what it is telling us."
+ },
+ {
+  "id": 1177,
+  "text": "And when we write to this register,"
+ },
+ {
+  "id": 1178,
+  "text": "what effect does that achieve?"
+ },
+ {
+  "id": 1179,
+  "text": "It is giving us that kind of explanation."
+ },
+ {
+  "id": 1180,
+  "text": "So when you look at these registers,"
+ },
+ {
+  "id": 1181,
+  "text": "take this register zero, for example,"
+ },
+ {
+  "id": 1182,
+  "text": "what it actually expresses is this."
+ },
+ {
+  "id": 1183,
+  "text": "When you read it,"
+ },
+ {
+  "id": 1184,
+  "text": "it is used to read some kind of"
+ },
+ {
+  "id": 1185,
+  "text": "value from the receiving register."
+ },
+ {
+  "id": 1186,
+  "text": "We'll come back to this later."
+ },
+ {
+  "id": 1187,
+  "text": "But when you write to it,"
+ },
+ {
+  "id": 1188,
+  "text": "it can have two different functions."
+ },
+ {
+  "id": 1189,
+  "text": "One is writing,"
+ },
+ {
+  "id": 1190,
+  "text": "which means writing into this transmit register."
+ },
+ {
+  "id": 1191,
+  "text": "And then there is another one,"
+ },
+ {
+  "id": 1192,
+  "text": "which is to enable something or other."
+ },
+ {
+  "id": 1193,
+  "text": "So what this means,"
+ },
+ {
+  "id": 1194,
+  "text": "in practice, is that"
+ },
+ {
+  "id": 1195,
+  "text": "when this register is written to,"
+ },
+ {
+  "id": 1196,
+  "text": "it has two different functions."
+ },
+ {
+  "id": 1197,
+  "text": "So how do we..."
+ },
+ {
+  "id": 1198,
+  "text": "Well, these two different functions"
+ },
+ {
+  "id": 1199,
+  "text": "cannot be enabled at the same time."
+ },
+ {
+  "id": 1200,
+  "text": "So it will set some other bits"
+ },
+ {
+  "id": 1201,
+  "text": "to achieve, that is to say, selecting different functions"
+ },
+ {
+  "id": 1202,
+  "text": "which we'll see later when we program"
+ },
+ {
+  "id": 1203,
+  "text": "I'm telling you this here"
+ },
+ {
+  "id": 1204,
+  "text": "so that when you read this document on your own"
+ },
+ {
+  "id": 1205,
+  "text": "you understand the concept"
+ },
+ {
+  "id": 1206,
+  "text": "Let's first take this diagram"
+ },
+ {
+  "id": 1207,
+  "text": "and just briefly go over it"
+ },
+ {
+  "id": 1208,
+  "text": "Anyway, just know that there are eight registers"
+ },
+ {
+  "id": 1209,
+  "text": "and each register has two different modes"
+ },
+ {
+  "id": 1210,
+  "text": "read mode and write mode"
+ },
+ {
+  "id": 1211,
+  "text": "You can read from it and you can write to it"
+ },
+ {
+  "id": 1212,
+  "text": "And roughly what they mean"
+ },
+ {
+  "id": 1213,
+  "text": "we'll look at in detail later"
+ },
+ {
+  "id": 1214,
+  "text": "What we just did was get a sense of"
+ },
+ {
+  "id": 1215,
+  "text": "the registers of this serial port device and some of the"
+ },
+ {
+  "id": 1216,
+  "text": "basic concepts of how to access it"
+ },
+ {
+  "id": 1217,
+  "text": "As for the actual code"
+ },
+ {
+  "id": 1218,
+  "text": "I just showed it to you"
+ },
+ {
+  "id": 1219,
+  "text": "right here"
+ },
+ {
+  "id": 1220,
+  "text": "Correspondingly, we defined some macros here to match those,"
+ },
+ {
+  "id": 1221,
+  "text": "to represent the values of these registers."
+ },
+ {
+  "id": 1222,
+  "text": "At the same time, we also defined a set of"
+ },
+ {
+  "id": 1223,
+  "text": "a set of functions, like uart_read and so on,"
+ },
+ {
+  "id": 1224,
+  "text": "uart_write and so on."
+ },
+ {
+  "id": 1225,
+  "text": "Now, for this set of functions, as you can see,"
+ },
+ {
+  "id": 1226,
+  "text": "they are actually converted through these macros mentioned earlier."
+ },
+ {
+  "id": 1227,
+  "text": "So this one,"
+ },
+ {
+  "id": 1228,
+  "text": "calling this macro is essentially like taking from this register,"
+ },
+ {
+  "id": 1229,
+  "text": "passing in a register value,"
+ },
+ {
+  "id": 1230,
+  "text": "and it will take that value"
+ },
+ {
+  "id": 1231,
+  "text": "and fetch it out through this,"
+ },
+ {
+  "id": 1232,
+  "text": "just like accessing a variable."
+ },
+ {
+  "id": 1233,
+  "text": "When you read it here,"
+ },
+ {
+  "id": 1234,
+  "text": "you're accessing a register."
+ },
+ {
+  "id": 1235,
+  "text": "Now we just treat it like accessing a variable,"
+ },
+ {
+  "id": 1236,
+  "text": "and that works the same way."
+ },
+ {
+  "id": 1237,
+  "text": "Writing works the same way too."
+ },
+ {
+  "id": 1238,
+  "text": "Take a look at this."
+ },
+ {
+  "id": 1239,
+  "text": "If you can't quite follow it,"
+ },
+ {
+  "id": 1240,
+  "text": "We can talk about it more after class."
+ },
+ {
+  "id": 1241,
+  "text": "The code is still fairly simple."
+ },
+ {
+  "id": 1242,
+  "text": "It's just this part."
+ },
+ {
+  "id": 1243,
+  "text": "We basically take this behavior,"
+ },
+ {
+  "id": 1244,
+  "text": "and use these two"
+ },
+ {
+  "id": 1245,
+  "text": "— actually just two functions — to implement it."
+ },
+ {
+  "id": 1246,
+  "text": "Now, when it comes to using this serial port device,"
+ },
+ {
+  "id": 1247,
+  "text": "there are mainly a few parts."
+ },
+ {
+  "id": 1248,
+  "text": "That is, first of all, we know"
+ },
+ {
+  "id": 1249,
+  "text": "what we need to do with it:"
+ },
+ {
+  "id": 1250,
+  "text": "we need to initialize it,"
+ },
+ {
+  "id": 1251,
+  "text": "right?"
+ },
+ {
+  "id": 1252,
+  "text": "Now, what initialization means,"
+ },
+ {
+  "id": 1253,
+  "text": "basically, is"
+ },
+ {
+  "id": 1254,
+  "text": "setting that"
+ },
+ {
+  "id": 1255,
+  "text": "— for example, the baud rate,"
+ },
+ {
+  "id": 1256,
+  "text": "setting what we just mentioned,"
+ },
+ {
+  "id": 1257,
+  "text": "like the parity bit,"
+ },
+ {
+  "id": 1258,
+  "text": "and all that."
+ },
+ {
+  "id": 1259,
+  "text": "This way,"
+ },
+ {
+  "id": 1260,
+  "text": "Only then can this device work properly."
+ },
+ {
+  "id": 1261,
+  "text": "This is something we must do."
+ },
+ {
+  "id": 1262,
+  "text": "Now, for the corresponding code,"
+ },
+ {
+  "id": 1263,
+  "text": "we can take a look at"
+ },
+ {
+  "id": 1264,
+  "text": "in our code,"
+ },
+ {
+  "id": 1265,
+  "text": "this UART init"
+ },
+ {
+  "id": 1266,
+  "text": "function."
+ },
+ {
+  "id": 1267,
+  "text": "This function will, during our"
+ },
+ {
+  "id": 1268,
+  "text": "boot process,"
+ },
+ {
+  "id": 1269,
+  "text": "be called."
+ },
+ {
+  "id": 1270,
+  "text": "We'll look at it together in a moment."
+ },
+ {
+  "id": 1271,
+  "text": "Now, here I've captured a screenshot,"
+ },
+ {
+  "id": 1272,
+  "text": "and I'll briefly go over it,"
+ },
+ {
+  "id": 1273,
+  "text": "that is, roughly what this initialization"
+ },
+ {
+  "id": 1274,
+  "text": "needs to initialize."
+ },
+ {
+  "id": 1275,
+  "text": "So, first,"
+ },
+ {
+  "id": 1276,
+  "text": "we first"
+ },
+ {
+  "id": 1277,
+  "text": "take the interrupt and"
+ },
+ {
+  "id": 1278,
+  "text": "the interrupt functionality"
+ },
+ {
+  "id": 1279,
+  "text": "inside this device"
+ },
+ {
+  "id": 1280,
+  "text": "We've disabled it."
+ },
+ {
+  "id": 1281,
+  "text": "Now, this serial port device,"
+ },
+ {
+  "id": 1282,
+  "text": "when will the interrupt actually be used?"
+ },
+ {
+  "id": 1283,
+  "text": "We'll use it later on."
+ },
+ {
+  "id": 1284,
+  "text": "We don't need it for now."
+ },
+ {
+  "id": 1285,
+  "text": "For the moment, we don't want to introduce the concept of interrupts,"
+ },
+ {
+  "id": 1286,
+  "text": "because we haven't covered interrupts yet."
+ },
+ {
+  "id": 1287,
+  "text": "All we need to know here is that"
+ },
+ {
+  "id": 1288,
+  "text": "we've turned the interrupt function off for now,"
+ },
+ {
+  "id": 1289,
+  "text": "and we're not using that feature."
+ },
+ {
+  "id": 1290,
+  "text": "Now, down here,"
+ },
+ {
+  "id": 1291,
+  "text": "we're actually setting the baud rate of this serial port."
+ },
+ {
+  "id": 1292,
+  "text": "We already covered the concept of baud rate earlier,"
+ },
+ {
+  "id": 1293,
+  "text": "the transmit and receive rate."
+ },
+ {
+  "id": 1294,
+  "text": "We have to configure that first."
+ },
+ {
+  "id": 1295,
+  "text": "Next,"
+ },
+ {
+  "id": 1296,
+  "text": "what are we actually setting here?"
+ },
+ {
+  "id": 1297,
+  "text": "We're setting some of its data and control bits."
+ },
+ {
+  "id": 1298,
+  "text": "These concepts"
+ },
+ {
+  "id": 1299,
+  "text": "basically mean that"
+ },
+ {
+  "id": 1300,
+  "text": "This piece of code"
+ },
+ {
+  "id": 1301,
+  "text": "is actually, basically,"
+ },
+ {
+  "id": 1302,
+  "text": "what we're doing is setting this thing up"
+ },
+ {
+  "id": 1303,
+  "text": "Now, of course, this interface of ours"
+ },
+ {
+  "id": 1304,
+  "text": "is set up on the client side"
+ },
+ {
+  "id": 1305,
+  "text": "but we also need to set it on the board"
+ },
+ {
+  "id": 1306,
+  "text": "because our board doesn't have an interface"
+ },
+ {
+  "id": 1307,
+  "text": "so we set it up through code instead"
+ },
+ {
+  "id": 1308,
+  "text": "Same effect."
+ },
+ {
+  "id": 1309,
+  "text": "What's below this,"
+ },
+ {
+  "id": 1310,
+  "text": "is actually setting up these, what are they,"
+ },
+ {
+  "id": 1311,
+  "text": "these error-correcting code bits and so on,"
+ },
+ {
+  "id": 1312,
+  "text": "these kinds of concepts"
+ },
+ {
+  "id": 1313,
+  "text": "So how exactly is this thing configured?"
+ },
+ {
+  "id": 1314,
+  "text": "Let's take a look at the code together."
+ },
+ {
+  "id": 1315,
+  "text": "This one,"
+ },
+ {
+  "id": 1316,
+  "text": "right here,"
+ },
+ {
+  "id": 1317,
+  "text": "just this part right here."
+ },
+ {
+  "id": 1318,
+  "text": "Let's look at this first."
+ },
+ {
+  "id": 1319,
+  "text": "Here, it's disabling interrupts."
+ },
+ {
+  "id": 1320,
+  "text": "I'll skip that part."
+ },
+ {
+  "id": 1321,
+  "text": "Uh,"
+ },
+ {
+  "id": 1322,
+  "text": "let's first take a look at this"
+ },
+ {
+  "id": 1323,
+  "text": "piece of code."
+ },
+ {
+  "id": 1324,
+  "text": "There's a detailed explanation above as well."
+ },
+ {
+  "id": 1325,
+  "text": "Let me just quickly go through it here."
+ },
+ {
+  "id": 1326,
+  "text": "Uh,"
+ },
+ {
+  "id": 1327,
+  "text": "this thing,"
+ },
+ {
+  "id": 1328,
+  "text": "we"
+ },
+ {
+  "id": 1329,
+  "text": "set this thing up,"
+ },
+ {
+  "id": 1330,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1331,
+  "text": "uh,"
+ },
+ {
+  "id": 1332,
+  "text": "it works like this."
+ },
+ {
+  "id": 1333,
+  "text": "There's this concept behind it,"
+ },
+ {
+  "id": 1334,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1335,
+  "text": "uh,"
+ },
+ {
+  "id": 1336,
+  "text": "when setting the baud rate,"
+ },
+ {
+  "id": 1337,
+  "text": "we know that this serial device,"
+ },
+ {
+  "id": 1338,
+  "text": "it..."
+ },
+ {
+  "id": 1339,
+  "text": "this so-called baud rate actually..."
+ },
+ {
+  "id": 1340,
+  "text": "It's basically a frequency that generates data"
+ },
+ {
+  "id": 1341,
+  "text": "Right?"
+ },
+ {
+  "id": 1342,
+  "text": "Now, physically speaking,"
+ },
+ {
+  "id": 1343,
+  "text": "in reality,"
+ },
+ {
+  "id": 1344,
+  "text": "in actual physical terms,"
+ },
+ {
+  "id": 1345,
+  "text": "we say this serial port transceiver,"
+ },
+ {
+  "id": 1346,
+  "text": "you can think of it as a serial port device."
+ },
+ {
+  "id": 1347,
+  "text": "So this serial port transceiver,"
+ },
+ {
+  "id": 1348,
+  "text": "on our board,"
+ },
+ {
+  "id": 1349,
+  "text": "right?"
+ },
+ {
+  "id": 1350,
+  "text": "On this SoC board of ours,"
+ },
+ {
+  "id": 1351,
+  "text": "and this SoC,"
+ },
+ {
+  "id": 1352,
+  "text": "of course, has some CPUs inside it,"
+ },
+ {
+  "id": 1353,
+  "text": "and things like that,"
+ },
+ {
+  "id": 1354,
+  "text": "which we won't worry about."
+ },
+ {
+  "id": 1355,
+  "text": "The CPU."
+ },
+ {
+  "id": 1356,
+  "text": "And this thing,"
+ },
+ {
+  "id": 1357,
+  "text": "actually counts as its peripheral device."
+ },
+ {
+  "id": 1358,
+  "text": "There are many peripheral devices,"
+ },
+ {
+  "id": 1359,
+  "text": "and we'll just dot dot dot."
+ },
+ {
+  "id": 1360,
+  "text": "Let's not talk about that."
+ },
+ {
+  "id": 1361,
+  "text": "So the UART device,"
+ },
+ {
+  "id": 1362,
+  "text": "it actually belongs to the peripheral devices."
+ },
+ {
+  "id": 1363,
+  "text": "Now this peripheral,"
+ },
+ {
+  "id": 1364,
+  "text": "well,"
+ },
+ {
+  "id": 1365,
+  "text": "right now"
+ },
+ {
+  "id": 1366,
+  "text": "it has to go through one of these over here."
+ },
+ {
+  "id": 1367,
+  "text": "Say we have a TX port,"
+ },
+ {
+  "id": 1368,
+  "text": "and this data"
+ },
+ {
+  "id": 1369,
+  "text": "needs to be sent out."
+ },
+ {
+  "id": 1370,
+  "text": "Now, for sending it out,"
+ },
+ {
+  "id": 1371,
+  "text": "there is a frequency at which the data is generated,"
+ },
+ {
+  "id": 1372,
+  "text": "and we have to configure that."
+ },
+ {
+  "id": 1373,
+  "text": "So as for this frequency,"
+ },
+ {
+  "id": 1374,
+  "text": "how is it actually produced?"
+ },
+ {
+  "id": 1375,
+  "text": "It actually comes from outside,"
+ },
+ {
+  "id": 1376,
+  "text": "on our side we generally have some"
+ },
+ {
+  "id": 1377,
+  "text": "uh,"
+ },
+ {
+  "id": 1378,
+  "text": "a thing called a crystal oscillator."
+ },
+ {
+  "id": 1379,
+  "text": "A crystal oscillator means that"
+ },
+ {
+  "id": 1380,
+  "text": "It is a component."
+ },
+ {
+  "id": 1381,
+  "text": "It generates this fixed frequency."
+ },
+ {
+  "id": 1382,
+  "text": "So this crystal oscillator,"
+ },
+ {
+  "id": 1383,
+  "text": "or clock,"
+ },
+ {
+  "id": 1384,
+  "text": "it produces an input clock."
+ },
+ {
+  "id": 1385,
+  "text": "Now, under normal circumstances,"
+ },
+ {
+  "id": 1386,
+  "text": "as we know,"
+ },
+ {
+  "id": 1387,
+  "text": "this clock on the board,"
+ },
+ {
+  "id": 1388,
+  "text": "it is generally a fixed frequency."
+ },
+ {
+  "id": 1389,
+  "text": "For example, it is the fixed frequency X."
+ },
+ {
+  "id": 1390,
+  "text": "Now here,"
+ },
+ {
+  "id": 1391,
+  "text": "the frequency Y that it produces,"
+ },
+ {
+  "id": 1392,
+  "text": "is actually configurable."
+ },
+ {
+  "id": 1393,
+  "text": "We have things like 115200,"
+ },
+ {
+  "id": 1394,
+  "text": "9600,"
+ },
+ {
+  "id": 1395,
+  "text": "these frequencies, right?"
+ },
+ {
+  "id": 1396,
+  "text": "So this thing,"
+ },
+ {
+  "id": 1397,
+  "text": "on this serial port device,"
+ },
+ {
+  "id": 1398,
+  "text": "there are some components inside it,"
+ },
+ {
+  "id": 1399,
+  "text": "that can take this X as the input"
+ },
+ {
+  "id": 1400,
+  "text": "as the input."
+ },
+ {
+  "id": 1401,
+  "text": "And this is essentially the output frequency."
+ },
+ {
+  "id": 1402,
+  "text": "By configuring some of the parameters inside it,"
+ },
+ {
+  "id": 1403,
+  "text": "we can make it produce—"
+ },
+ {
+  "id": 1404,
+  "text": "that is to say, we only have"
+ },
+ {
+  "id": 1405,
+  "text": "one unified input frequency x,"
+ },
+ {
+  "id": 1406,
+  "text": "but we can generate"
+ },
+ {
+  "id": 1407,
+  "text": "different output frequencies y."
+ },
+ {
+  "id": 1408,
+  "text": "And that is something we can configure."
+ },
+ {
+  "id": 1409,
+  "text": "Now, this configuration,"
+ },
+ {
+  "id": 1410,
+  "text": "we need to make use of—"
+ },
+ {
+  "id": 1411,
+  "text": "the configuration on this component here,"
+ },
+ {
+  "id": 1412,
+  "text": "is set up like this:"
+ },
+ {
+  "id": 1413,
+  "text": "that is to say, on"
+ },
+ {
+  "id": 1414,
+  "text": "in our manual here,"
+ },
+ {
+  "id": 1415,
+  "text": "in this manual,"
+ },
+ {
+  "id": 1416,
+  "text": "you can scroll down,"
+ },
+ {
+  "id": 1417,
+  "text": "in this part of the manual,"
+ },
+ {
+  "id": 1418,
+  "text": "there is a table here,"
+ },
+ {
+  "id": 1419,
+  "text": "there is a table here"
+ },
+ {
+  "id": 1420,
+  "text": "It's called the baud rate generator programming table."
+ },
+ {
+  "id": 1421,
+  "text": "Baud rate generator programming table."
+ },
+ {
+  "id": 1422,
+  "text": "Generate this programming table."
+ },
+ {
+  "id": 1423,
+  "text": "What it actually means is,"
+ },
+ {
+  "id": 1424,
+  "text": "it describes it this way."
+ },
+ {
+  "id": 1425,
+  "text": "You can take a quick look at it."
+ },
+ {
+  "id": 1426,
+  "text": "The text is a bit small."
+ },
+ {
+  "id": 1427,
+  "text": "Let me zoom in a little."
+ },
+ {
+  "id": 1428,
+  "text": "On this table of his,"
+ },
+ {
+  "id": 1429,
+  "text": "what concept is he expressing?"
+ },
+ {
+  "id": 1430,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1431,
+  "text": "this,"
+ },
+ {
+  "id": 1432,
+  "text": "he says all the boards,"
+ },
+ {
+  "id": 1433,
+  "text": "typically will have,"
+ },
+ {
+  "id": 1434,
+  "text": "will have a"
+ },
+ {
+  "id": 1435,
+  "text": "18432 MHz"
+ },
+ {
+  "id": 1436,
+  "text": "crystal,"
+ },
+ {
+  "id": 1437,
+  "text": "which is a crystal oscillator,"
+ },
+ {
+  "id": 1438,
+  "text": "which is what I just mentioned."
+ },
+ {
+  "id": 1439,
+  "text": "It is a"
+ },
+ {
+  "id": 1440,
+  "text": "a component"
+ },
+ {
+  "id": 1441,
+  "text": "it will generate a"
+ },
+ {
+  "id": 1442,
+  "text": "it has a fixed input frequency"
+ },
+ {
+  "id": 1443,
+  "text": "So,"
+ },
+ {
+  "id": 1444,
+  "text": "if we take this"
+ },
+ {
+  "id": 1445,
+  "text": "that is to say, when it's said like this,"
+ },
+ {
+  "id": 1446,
+  "text": "this kind of thing,"
+ },
+ {
+  "id": 1447,
+  "text": "it basically produces two kinds of"
+ },
+ {
+  "id": 1448,
+  "text": "there are two input frequencies"
+ },
+ {
+  "id": 1449,
+  "text": "that is, either a 1.8432MHz clock,"
+ },
+ {
+  "id": 1450,
+  "text": "or else 7-point"
+ },
+ {
+  "id": 1451,
+  "text": "this higher one,"
+ },
+ {
+  "id": 1452,
+  "text": "just these two kinds"
+ },
+ {
+  "id": 1453,
+  "text": "it currently has two input clocks"
+ },
+ {
+  "id": 1454,
+  "text": "which is what we call X,"
+ },
+ {
+  "id": 1455,
+  "text": "the input clock frequency"
+ },
+ {
+  "id": 1456,
+  "text": "Then through some special register configuration,"
+ },
+ {
+  "id": 1457,
+  "text": "we can take this output,"
+ },
+ {
+  "id": 1458,
+  "text": "and configure it for different output frequencies,"
+ },
+ {
+  "id": 1459,
+  "text": "that is, the baud rate."
+ },
+ {
+  "id": 1460,
+  "text": "There are 50 and 75"
+ },
+ {
+  "id": 1461,
+  "text": "You see, there are a series of things here."
+ },
+ {
+  "id": 1462,
+  "text": "So we just need to take some special values in this register,"
+ },
+ {
+  "id": 1463,
+  "text": "and set it to these values,"
+ },
+ {
+  "id": 1464,
+  "text": "and it's equivalent to saying,"
+ },
+ {
+  "id": 1465,
+  "text": "it works like y equals f of x,"
+ },
+ {
+  "id": 1466,
+  "text": "where this x,"
+ },
+ {
+  "id": 1467,
+  "text": "as we just said,"
+ },
+ {
+  "id": 1468,
+  "text": "is fixed at 18342 or these two values."
+ },
+ {
+  "id": 1469,
+  "text": "Then we can adjust the parameters of this function f,"
+ },
+ {
+  "id": 1470,
+  "text": "which is basically adjusting the register,"
+ },
+ {
+  "id": 1471,
+  "text": "so that the resulting y, which is the baud rate,"
+ },
+ {
+  "id": 1472,
+  "text": "changes differently,"
+ },
+ {
+  "id": 1473,
+  "text": "right at this point."
+ },
+ {
+  "id": 1474,
+  "text": "Now, this table,"
+ },
+ {
+  "id": 1475,
+  "text": "has a correspondence relationship."
+ },
+ {
+  "id": 1476,
+  "text": "How do we adjust it?"
+ },
+ {
+  "id": 1477,
+  "text": "Basically, this f,"
+ },
+ {
+  "id": 1478,
+  "text": "let's say it follows a linear rule like ax plus b,"
+ },
+ {
+  "id": 1479,
+  "text": "something like x plus b."
+ },
+ {
+  "id": 1480,
+  "text": "We assume it works like this."
+ },
+ {
+  "id": 1481,
+  "text": "So this thing,"
+ },
+ {
+  "id": 1482,
+  "text": "this parameter A,"
+ },
+ {
+  "id": 1483,
+  "text": "we can adjust this parameter here."
+ },
+ {
+  "id": 1484,
+  "text": "That's essentially what it means."
+ },
+ {
+  "id": 1485,
+  "text": "So when we're writing this program,"
+ },
+ {
+  "id": 1486,
+  "text": "what our comment is trying to say is,"
+ },
+ {
+  "id": 1487,
+  "text": "what we want to produce,"
+ },
+ {
+  "id": 1488,
+  "text": "what we actually use is,"
+ },
+ {
+  "id": 1489,
+  "text": "we actually use 18432 as the input frequency."
+ },
+ {
+  "id": 1490,
+  "text": "Then, if we want to produce"
+ },
+ {
+  "id": 1491,
+  "text": "an output baud rate of 38.4K,"
+ },
+ {
+  "id": 1492,
+  "text": "then all we really need to do is set"
+ },
+ {
+  "id": 1493,
+  "text": "the value in this register to 3,"
+ },
+ {
+  "id": 1494,
+  "text": "and that's it."
+ },
+ {
+  "id": 1495,
+  "text": "That's the idea."
+ },
+ {
+  "id": 1496,
+  "text": "So which two registers are these?"
+ },
+ {
+  "id": 1497,
+  "text": "We describe them in the code."
+ },
+ {
+  "id": 1498,
+  "text": "Let's take a look together."
+ },
+ {
+  "id": 1499,
+  "text": "In this code,"
+ },
+ {
+  "id": 1500,
+  "text": "What's written here means"
+ },
+ {
+  "id": 1501,
+  "text": "we're actually configuring this DLL and DLM"
+ },
+ {
+  "id": 1502,
+  "text": "these two registers"
+ },
+ {
+  "id": 1503,
+  "text": "As for these two registers,"
+ },
+ {
+  "id": 1504,
+  "text": "we also saw them earlier in this manual"
+ },
+ {
+  "id": 1505,
+  "text": "Where was it?"
+ },
+ {
+  "id": 1506,
+  "text": "Let me take a look."
+ },
+ {
+  "id": 1507,
+  "text": "It should be around here."
+ },
+ {
+  "id": 1508,
+  "text": "What it corresponds to is actually"
+ },
+ {
+  "id": 1509,
+  "text": "it's an abbreviation."
+ },
+ {
+  "id": 1510,
+  "text": "So,"
+ },
+ {
+  "id": 1511,
+  "text": "for LLM,"
+ },
+ {
+  "id": 1512,
+  "text": "it corresponds to what's on this table."
+ },
+ {
+  "id": 1513,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 1514,
+  "text": "As for this stuff,"
+ },
+ {
+  "id": 1515,
+  "text": "you don't need to memorize it."
+ },
+ {
+  "id": 1516,
+  "text": "It's mainly obtained by looking things up in the manual."
+ },
+ {
+  "id": 1517,
+  "text": "For DL,"
+ },
+ {
+  "id": 1518,
+  "text": "it's just this abbreviation"
+ },
+ {
+  "id": 1519,
+  "text": "which is"
+ },
+ {
+  "id": 1520,
+  "text": "short for Device Latch List"
+ },
+ {
+  "id": 1521,
+  "text": "that is"
+ },
+ {
+  "id": 1522,
+  "text": "that's what it means"
+ },
+ {
+  "id": 1523,
+  "text": "what I mean is"
+ },
+ {
+  "id": 1524,
+  "text": "the value you need to configure is not the value we just configured"
+ },
+ {
+  "id": 1525,
+  "text": "we just calculated it as 3, right?"
+ },
+ {
+  "id": 1526,
+  "text": "right?"
+ },
+ {
+  "id": 1527,
+  "text": "the value we configured earlier was 3"
+ },
+ {
+  "id": 1528,
+  "text": "so 3,"
+ },
+ {
+  "id": 1529,
+  "text": "when we represent it inside the computer"
+ },
+ {
+  "id": 1530,
+  "text": "that is, all the configurable values"
+ },
+ {
+  "id": 1531,
+  "text": "are actually a 16-bit number"
+ },
+ {
+  "id": 1532,
+  "text": "so 3,"
+ },
+ {
+  "id": 1533,
+  "text": "in the computer,"
+ },
+ {
+  "id": 1534,
+  "text": "it is actually a number like 0x0003"
+ },
+ {
+  "id": 1535,
+  "text": "so all the configurable values are 16-bit"
+ },
+ {
+  "id": 1536,
+  "text": "right, a 16-bit number like this"
+ },
+ {
+  "id": 1537,
+  "text": "and 16 bits,"
+ },
+ {
+  "id": 1538,
+  "text": "it needs two"
+ },
+ {
+  "id": 1539,
+  "text": "two bytes to represent"
+ },
+ {
+  "id": 1540,
+  "text": "Right?"
+ },
+ {
+  "id": 1541,
+  "text": "Now, one register."
+ },
+ {
+  "id": 1542,
+  "text": "In this UART,"
+ },
+ {
+  "id": 1543,
+  "text": "this UART,"
+ },
+ {
+  "id": 1544,
+  "text": "I forgot to mention earlier,"
+ },
+ {
+  "id": 1545,
+  "text": "for these UART registers,"
+ },
+ {
+  "id": 1546,
+  "text": "each register is 8 bits wide."
+ },
+ {
+  "id": 1547,
+  "text": "So this 0x0003"
+ },
+ {
+  "id": 1548,
+  "text": "is actually stored in two registers."
+ },
+ {
+  "id": 1549,
+  "text": "These two registers,"
+ },
+ {
+  "id": 1550,
+  "text": "one is called dll,"
+ },
+ {
+  "id": 1551,
+  "text": "and the other is called dllm."
+ },
+ {
+  "id": 1552,
+  "text": "That's what it means."
+ },
+ {
+  "id": 1553,
+  "text": "Now, for dll,"
+ },
+ {
+  "id": 1554,
+  "text": "this l here,"
+ },
+ {
+  "id": 1555,
+  "text": "this l,"
+ },
+ {
+  "id": 1556,
+  "text": "stands for low."
+ },
+ {
+  "id": 1557,
+  "text": "What does low mean?"
+ },
+ {
+  "id": 1558,
+  "text": "It means the low bits."
+ },
+ {
+  "id": 1559,
+  "text": "That is, this number"
+ },
+ {
+  "id": 1560,
+  "text": "This 03 has to be put into"
+ },
+ {
+  "id": 1561,
+  "text": "the register called DLL."
+ },
+ {
+  "id": 1562,
+  "text": "And this 00, the high bits,"
+ },
+ {
+  "id": 1563,
+  "text": "we have to put them into"
+ },
+ {
+  "id": 1564,
+  "text": "the register called DLM."
+ },
+ {
+  "id": 1565,
+  "text": "So if you look at our code here,"
+ },
+ {
+  "id": 1566,
+  "text": "we are basically writing values into these two registers,"
+ },
+ {
+  "id": 1567,
+  "text": "writing values in,"
+ },
+ {
+  "id": 1568,
+  "text": "right?"
+ },
+ {
+  "id": 1569,
+  "text": "The low bits get 0x03."
+ },
+ {
+  "id": 1570,
+  "text": "Let me explain what these two lines mean."
+ },
+ {
+  "id": 1571,
+  "text": "So what does the next line mean?"
+ },
+ {
+  "id": 1572,
+  "text": "Why do we have to set one more register,"
+ },
+ {
+  "id": 1573,
+  "text": "the LCR register, before writing this data?"
+ },
+ {
+  "id": 1574,
+  "text": "This LCR register,"
+ },
+ {
+  "id": 1575,
+  "text": "this is because..."
+ },
+ {
+  "id": 1576,
+  "text": "Take a look here, I've written an explanation for you."
+ },
+ {
+  "id": 1577,
+  "text": "That is to say, our DLL and DLM,"
+ },
+ {
+  "id": 1578,
+  "text": "these two registers,"
+ },
+ {
+  "id": 1579,
+  "text": "they share their addresses with our receive and transmit..."
+ },
+ {
+  "id": 1580,
+  "text": "As for these two registers,"
+ },
+ {
+  "id": 1581,
+  "text": "the enable register,"
+ },
+ {
+  "id": 1582,
+  "text": "actually shares an address,"
+ },
+ {
+  "id": 1583,
+  "text": "shares an address."
+ },
+ {
+  "id": 1584,
+  "text": "Now, since there is a multiplexing relationship,"
+ },
+ {
+  "id": 1585,
+  "text": "we need to write a particular bit in the LCR register,"
+ },
+ {
+  "id": 1586,
+  "text": "that is, to make it select that one,"
+ },
+ {
+  "id": 1587,
+  "text": "because one register can't be used for both at the same time."
+ },
+ {
+  "id": 1588,
+  "text": "It either does that thing we just talked about,"
+ },
+ {
+  "id": 1589,
+  "text": "or it does the job of enabling interrupts,"
+ },
+ {
+  "id": 1590,
+  "text": "or it does that thing we just talked about,"
+ },
+ {
+  "id": 1591,
+  "text": "setting the baud rate."
+ },
+ {
+  "id": 1592,
+  "text": "So for this function, you can only pick one of the two."
+ },
+ {
+  "id": 1593,
+  "text": "We need to flip a switch,"
+ },
+ {
+  "id": 1594,
+  "text": "to select the function of this register,"
+ },
+ {
+  "id": 1595,
+  "text": "to pick it."
+ },
+ {
+  "id": 1596,
+  "text": "So actually, the function of this register,"
+ },
+ {
+  "id": 1597,
+  "text": "the function of this statement,"
+ },
+ {
+  "id": 1598,
+  "text": "is really done by controlling the LCR's"
+ },
+ {
+  "id": 1599,
+  "text": "bit 7."
+ },
+ {
+  "id": 1600,
+  "text": "Set this bit 7 to 1."
+ },
+ {
+  "id": 1601,
+  "text": "As for why the code is written this way,"
+ },
+ {
+  "id": 1602,
+  "text": "we won't go into it here."
+ },
+ {
+  "id": 1603,
+  "text": "That's basic C language knowledge."
+ },
+ {
+  "id": 1604,
+  "text": "Setting a particular bit,"
+ },
+ {
+  "id": 1605,
+  "text": "setting bit 7 to 1."
+ },
+ {
+  "id": 1606,
+  "text": "As for why it's bit 7,"
+ },
+ {
+  "id": 1607,
+  "text": "you can look that up in the manual."
+ },
+ {
+  "id": 1608,
+  "text": "It's the LCR register,"
+ },
+ {
+  "id": 1609,
+  "text": "and its bit 7 is used for exactly this purpose."
+ },
+ {
+  "id": 1610,
+  "text": "Once it's set like this,"
+ },
+ {
+  "id": 1611,
+  "text": "it effectively means that,"
+ },
+ {
+  "id": 1612,
+  "text": "these DL and DM,"
+ },
+ {
+  "id": 1613,
+  "text": "can now be used to configure the baud rate."
+ },
+ {
+  "id": 1614,
+  "text": "Just to mention this here,"
+ },
+ {
+  "id": 1615,
+  "text": "you can refer back to our earlier explanation,"
+ },
+ {
+  "id": 1616,
+  "text": "and look at it together."
+ },
+ {
+  "id": 1617,
+  "text": "Then the next one,"
+ },
+ {
+  "id": 1618,
+  "text": "is about this part here,"
+ },
+ {
+  "id": 1619,
+  "text": "here it's setting that parity bit."
+ },
+ {
+  "id": 1620,
+  "text": "and so on — this concept."
+ },
+ {
+  "id": 1621,
+  "text": "Now, this,"
+ },
+ {
+  "id": 1622,
+  "text": "it involves the LCR register."
+ },
+ {
+  "id": 1623,
+  "text": "You can go and check the manual."
+ },
+ {
+  "id": 1624,
+  "text": "In that manual, the different bits"
+ },
+ {
+  "id": 1625,
+  "text": "have different meanings."
+ },
+ {
+  "id": 1626,
+  "text": "Each bit in here,"
+ },
+ {
+  "id": 1627,
+  "text": "why it is set that way,"
+ },
+ {
+  "id": 1628,
+  "text": "well, here"
+ },
+ {
+  "id": 1629,
+  "text": "I think I won't go into detail,"
+ },
+ {
+  "id": 1630,
+  "text": "because explaining all of that would take way too much time."
+ },
+ {
+  "id": 1631,
+  "text": "You'd better go through the manual,"
+ },
+ {
+  "id": 1632,
+  "text": "look at these bits in LCR,"
+ },
+ {
+  "id": 1633,
+  "text": "and see what each of them means."
+ },
+ {
+  "id": 1634,
+  "text": "I've already listed them out here."
+ },
+ {
+  "id": 1635,
+  "text": "Why we set it,"
+ },
+ {
+  "id": 1636,
+  "text": "what we set it to,"
+ },
+ {
+  "id": 1637,
+  "text": "the exact value we set it to,"
+ },
+ {
+  "id": 1638,
+  "text": "you can just check the manual and see for yourself."
+ },
+ {
+  "id": 1639,
+  "text": "So, that being the case,"
+ },
+ {
+  "id": 1640,
+  "text": "So our serial port is essentially initialized now."
+ },
+ {
+  "id": 1641,
+  "text": "The effect of our initialization,"
+ },
+ {
+  "id": 1642,
+  "text": "you can look at what's written here — it basically says,"
+ },
+ {
+  "id": 1643,
+  "text": "our data bits use 8 bits,"
+ },
+ {
+  "id": 1644,
+  "text": "and the stop bit uses 1 bit,"
+ },
+ {
+  "id": 1645,
+  "text": "and then there is no parity check,"
+ },
+ {
+  "id": 1646,
+  "text": "and so on."
+ },
+ {
+  "id": 1647,
+  "text": "Once we finish going through this, we'll call it a day."
+ },
+ {
+  "id": 1648,
+  "text": "This is the serial port initialization."
+ },
+ {
+  "id": 1649,
+  "text": "Now, since what we want to do"
+ },
+ {
+  "id": 1650,
+  "text": "is print content out on that serial port,"
+ },
+ {
+  "id": 1651,
+  "text": "then actually, for this serial device of ours,"
+ },
+ {
+  "id": 1652,
+  "text": "we're really only using its transmit function right now."
+ },
+ {
+  "id": 1653,
+  "text": "It's like on the diagram from earlier,"
+ },
+ {
+  "id": 1654,
+  "text": "since we now want to print out"
+ },
+ {
+  "id": 1655,
+  "text": "Hello and so on,"
+ },
+ {
+  "id": 1656,
+  "text": "then once we've initialized the serial device on this side,"
+ },
+ {
+  "id": 1657,
+  "text": "after getting it all set up,"
+ },
+ {
+  "id": 1658,
+  "text": "what we actually use it for is to send the content over,"
+ },
+ {
+  "id": 1659,
+  "text": "right?"
+ },
+ {
+  "id": 1660,
+  "text": "So actually, we are only using its transmit function."
+ },
+ {
+  "id": 1661,
+  "text": "The receive function we are not using for now."
+ },
+ {
+  "id": 1662,
+  "text": "So what we are using right now is the transmit function."
+ },
+ {
+  "id": 1663,
+  "text": "Now, about this transmit function,"
+ },
+ {
+  "id": 1664,
+  "text": "let's take a look at how to use it."
+ },
+ {
+  "id": 1665,
+  "text": "We say that UART operates in full duplex,"
+ },
+ {
+  "id": 1666,
+  "text": "with transmit and receive as two independent directions for data transfer."
+ },
+ {
+  "id": 1667,
+  "text": "Now, on this point,"
+ },
+ {
+  "id": 1668,
+  "text": "I want to bring up something for you."
+ },
+ {
+  "id": 1669,
+  "text": "That is, for data transmission and reception,"
+ },
+ {
+  "id": 1670,
+  "text": "in general,"
+ },
+ {
+  "id": 1671,
+  "text": "we have two ways of handling it."
+ },
+ {
+  "id": 1672,
+  "text": "One is called the polling method,"
+ },
+ {
+  "id": 1673,
+  "text": "and the other is called the interrupt method."
+ },
+ {
+  "id": 1674,
+  "text": "So what is the polling method?"
+ },
+ {
+  "id": 1675,
+  "text": "It actually means this."
+ },
+ {
+  "id": 1676,
+  "text": "Suppose we want to send a piece of data."
+ },
+ {
+  "id": 1677,
+  "text": "Inside this UART,"
+ },
+ {
+  "id": 1678,
+  "text": "there is actually a register."
+ },
+ {
+  "id": 1679,
+  "text": "This register..."
+ },
+ {
+  "id": 1680,
+  "text": "Inside it,"
+ },
+ {
+  "id": 1681,
+  "text": "if you want to put data in,"
+ },
+ {
+  "id": 1682,
+  "text": "this register"
+ },
+ {
+  "id": 1683,
+  "text": "is connected to its data lines and sends it out."
+ },
+ {
+  "id": 1684,
+  "text": "So the content in this register,"
+ },
+ {
+  "id": 1685,
+  "text": "as we know,"
+ },
+ {
+  "id": 1686,
+  "text": "you put one byte in,"
+ },
+ {
+  "id": 1687,
+  "text": "it puts one byte in at a time,"
+ },
+ {
+  "id": 1688,
+  "text": "you put one byte in,"
+ },
+ {
+  "id": 1689,
+  "text": "and it sends one out."
+ },
+ {
+  "id": 1690,
+  "text": "Put one in, send one out."
+ },
+ {
+  "id": 1691,
+  "text": "But this sending, as we know,"
+ },
+ {
+  "id": 1692,
+  "text": "takes time."
+ },
+ {
+  "id": 1693,
+  "text": "Right, everyone?"
+ },
+ {
+  "id": 1694,
+  "text": "In other words, this..."
+ },
+ {
+  "id": 1695,
+  "text": "you can't just send into it whenever you like,"
+ },
+ {
+  "id": 1696,
+  "text": "because if that byte hasn't finished sending yet"
+ },
+ {
+  "id": 1697,
+  "text": "and you put a second byte in,"
+ },
+ {
+  "id": 1698,
+  "text": "you'll overwrite the previous byte,"
+ },
+ {
+  "id": 1699,
+  "text": "and your data will get corrupted."
+ },
+ {
+  "id": 1700,
+  "text": "So, to achieve this effect,"
+ },
+ {
+  "id": 1701,
+  "text": "there is a way, that is to say,"
+ },
+ {
+  "id": 1702,
+  "text": "we have the polling method or the interrupt method"
+ },
+ {
+  "id": 1703,
+  "text": "to know when to put the data in,"
+ },
+ {
+  "id": 1704,
+  "text": "so that it can be sent out correctly."
+ },
+ {
+  "id": 1705,
+  "text": "Now, what we call polling,"
+ },
+ {
+  "id": 1706,
+  "text": "means we can keep checking a register,"
+ },
+ {
+  "id": 1707,
+  "text": "to see whether this register is currently free."
+ },
+ {
+  "id": 1708,
+  "text": "If it is free,"
+ },
+ {
+  "id": 1709,
+  "text": "we send the data out,"
+ },
+ {
+  "id": 1710,
+  "text": "right?"
+ },
+ {
+  "id": 1711,
+  "text": "If the register is not free,"
+ },
+ {
+  "id": 1712,
+  "text": "then we don't send it."
+ },
+ {
+  "id": 1713,
+  "text": "That's what polling is."
+ },
+ {
+  "id": 1714,
+  "text": "It is implemented through a loop,"
+ },
+ {
+  "id": 1715,
+  "text": "constantly checking it."
+ },
+ {
+  "id": 1716,
+  "text": "Then there is also the interrupt method,"
+ },
+ {
+  "id": 1717,
+  "text": "which means that when this register"
+ },
+ {
+  "id": 1718,
+  "text": "is free,"
+ },
+ {
+  "id": 1719,
+  "text": "we let this UART device..."
+ },
+ {
+  "id": 1720,
+  "text": "It will notify us through an interrupt."
+ },
+ {
+  "id": 1721,
+  "text": "It's like giving us a call to say,"
+ },
+ {
+  "id": 1722,
+  "text": "\"I'm free now,"
+ },
+ {
+  "id": 1723,
+  "text": "you can put it in.\""
+ },
+ {
+  "id": 1724,
+  "text": "At that point,"
+ },
+ {
+  "id": 1725,
+  "text": "we can use the interrupt approach."
+ },
+ {
+  "id": 1726,
+  "text": "As for the interrupt,"
+ },
+ {
+  "id": 1727,
+  "text": "since we haven't covered that concept yet,"
+ },
+ {
+  "id": 1728,
+  "text": "we'll hold off on it for now."
+ },
+ {
+  "id": 1729,
+  "text": "Let's focus on how this polling works."
+ },
+ {
+  "id": 1730,
+  "text": "Here,"
+ },
+ {
+  "id": 1731,
+  "text": "there are two registers involved."
+ },
+ {
+  "id": 1732,
+  "text": "One is called the transmit holder,"
+ },
+ {
+  "id": 1733,
+  "text": "that is, the THR register."
+ },
+ {
+  "id": 1734,
+  "text": "This register,"
+ },
+ {
+  "id": 1735,
+  "text": "as we call it, is the register for putting data."
+ },
+ {
+  "id": 1736,
+  "text": "The data we want to send,"
+ },
+ {
+  "id": 1737,
+  "text": "we just need to put it into this register,"
+ },
+ {
+  "id": 1738,
+  "text": "and it will send it out."
+ },
+ {
+  "id": 1739,
+  "text": "So how do we know this register"
+ },
+ {
+  "id": 1740,
+  "text": "already finished being processed by it,"
+ },
+ {
+  "id": 1741,
+  "text": "already sent out."
+ },
+ {
+  "id": 1742,
+  "text": "Then we use a register on this side"
+ },
+ {
+  "id": 1743,
+  "text": "called the line status register."
+ },
+ {
+  "id": 1744,
+  "text": "There's a special bit in it that tells us"
+ },
+ {
+  "id": 1745,
+  "text": "whether the transmit register is already free."
+ },
+ {
+  "id": 1746,
+  "text": "So combining these two registers,"
+ },
+ {
+  "id": 1747,
+  "text": "we can implement data transmission."
+ },
+ {
+  "id": 1748,
+  "text": "Let's look at how the code is actually written."
+ },
+ {
+  "id": 1749,
+  "text": "The code is actually quite simple."
+ },
+ {
+  "id": 1750,
+  "text": "You can see that we've implemented a"
+ },
+ {
+  "id": 1751,
+  "text": "function called uartputc,"
+ },
+ {
+  "id": 1752,
+  "text": "this function."
+ },
+ {
+  "id": 1753,
+  "text": "This function actually mimics"
+ },
+ {
+  "id": 1754,
+  "text": "the putc function in our C library."
+ },
+ {
+  "id": 1755,
+  "text": "As you know, putc"
+ },
+ {
+  "id": 1756,
+  "text": "only sends one byte at a time,"
+ },
+ {
+  "id": 1757,
+  "text": "right?"
+ },
+ {
+  "id": 1758,
+  "text": "And here you can see"
+ },
+ {
+  "id": 1759,
+  "text": "there's just a while loop here,"
+ },
+ {
+  "id": 1760,
+  "text": "What is this while loop doing?"
+ },
+ {
+  "id": 1761,
+  "text": "What this while loop is actually doing is"
+ },
+ {
+  "id": 1762,
+  "text": "As you can see, what it's really doing is"
+ },
+ {
+  "id": 1763,
+  "text": "continuously reading a register"
+ },
+ {
+  "id": 1764,
+  "text": "specifically this lsr register"
+ },
+ {
+  "id": 1765,
+  "text": "reading out the value inside this register"
+ },
+ {
+  "id": 1766,
+  "text": "and at the same time, through this AND operation,"
+ },
+ {
+  "id": 1767,
+  "text": "checking whether bit 5 of this register"
+ },
+ {
+  "id": 1768,
+  "text": "is currently equal to 1"
+ },
+ {
+  "id": 1769,
+  "text": "If it is 1,"
+ },
+ {
+  "id": 1770,
+  "text": "if at this point, that is,"
+ },
+ {
+  "id": 1771,
+  "text": "if it equals 0,"
+ },
+ {
+  "id": 1772,
+  "text": "then the value read out here"
+ },
+ {
+  "id": 1773,
+  "text": "is not yet 1"
+ },
+ {
+  "id": 1774,
+  "text": "and if it's not 1, that means"
+ },
+ {
+  "id": 1775,
+  "text": "this register is currently not free"
+ },
+ {
+  "id": 1776,
+  "text": "that is, our THR register here"
+ },
+ {
+  "id": 1777,
+  "text": "is currently not free yet"
+ },
+ {
+  "id": 1778,
+  "text": "and while it's not free, it just spins in this infinite loop"
+ },
+ {
+  "id": 1779,
+  "text": "So when does this code..."
+ },
+ {
+  "id": 1780,
+  "text": "If we can get down to this part here,"
+ },
+ {
+  "id": 1781,
+  "text": "that means the LSR we just read out,"
+ },
+ {
+  "id": 1782,
+  "text": "bit 5 of it, is 1."
+ },
+ {
+  "id": 1783,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 1784,
+  "text": "So when it's 1, it means this register,"
+ },
+ {
+  "id": 1785,
+  "text": "the THR here, is free."
+ },
+ {
+  "id": 1786,
+  "text": "Being free, it goes down to the next step,"
+ },
+ {
+  "id": 1787,
+  "text": "and at this point, through a write operation,"
+ },
+ {
+  "id": 1788,
+  "text": "we write the character into this register."
+ },
+ {
+  "id": 1789,
+  "text": "So you can actually think of this line as meaning,"
+ },
+ {
+  "id": 1790,
+  "text": "the data has been sent out to the window,"
+ },
+ {
+  "id": 1791,
+  "text": "thus achieving synchronization with this sending device."
+ },
+ {
+  "id": 1792,
+  "text": "this synchronization effect"
+ },
+ {
+  "id": 1793,
+  "text": "We call this approach the polling method."
+ },
+ {
+  "id": 1794,
+  "text": "The polling method."
+ },
+ {
+  "id": 1795,
+  "text": "So after implementing the sending of a single character,"
+ },
+ {
+  "id": 1796,
+  "text": "well, you know, when sending,"
+ },
+ {
+  "id": 1797,
+  "text": "say I want to send a hello or something,"
+ },
+ {
+  "id": 1798,
+  "text": "what we actually do is break it down into each character,"
+ },
+ {
+  "id": 1799,
+  "text": "and call putc once for every character."
+ },
+ {
+  "id": 1800,
+  "text": "and just send it out"
+ },
+ {
+  "id": 1801,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 1802,
+  "text": "And that's how the character gets transmitted."
+ },
+ {
+  "id": 1803,
+  "text": "So using the serial port,"
+ },
+ {
+  "id": 1804,
+  "text": "we can achieve this effect."
+ },
+ {
+  "id": 1805,
+  "text": "As for the related code,"
+ },
+ {
+  "id": 1806,
+  "text": "you can go take a look."
+ },
+ {
+  "id": 1807,
+  "text": "It's the example we just talked about,"
+ },
+ {
+  "id": 1808,
+  "text": "in that code's os,"
+ },
+ {
+  "id": 1809,
+  "text": "the example inside hello rbos."
+ },
+ {
+  "id": 1810,
+  "text": "Feel free to check it out."
+ },
+ {
+  "id": 1811,
+  "text": "We'll leave this one to you,"
+ },
+ {
+  "id": 1812,
+  "text": "and in the second class later,"
+ },
+ {
+  "id": 1813,
+  "text": "we'll spend some time going through it together."
+ },
+ {
+  "id": 1814,
+  "text": "You can try this example out as an exercise,"
+ },
+ {
+  "id": 1815,
+  "text": "and see what we just covered,"
+ },
+ {
+  "id": 1816,
+  "text": "combining it with what we just talked about."
+ },
+ {
+  "id": 1817,
+  "text": "Go and take a look."
+ },
+ {
+  "id": 1818,
+  "text": "Alright, let's, let's continue."
+ },
+ {
+  "id": 1819,
+  "text": "Now that I've gone over the code with you,"
+ },
+ {
+  "id": 1820,
+  "text": "I forgot to give you a quick demo"
+ },
+ {
+  "id": 1821,
+  "text": "So let's take a look at that simple Hello demo from just now"
+ },
+ {
+  "id": 1822,
+  "text": "After we compile it"
+ },
+ {
+  "id": 1823,
+  "text": "once we just run make run,"
+ },
+ {
+  "id": 1824,
+  "text": "we can see"
+ },
+ {
+  "id": 1825,
+  "text": "that a Hello appears on the screen"
+ },
+ {
+  "id": 1826,
+  "text": "RBOS"
+ },
+ {
+  "id": 1827,
+  "text": "Now, when it prints this out here,"
+ },
+ {
+  "id": 1828,
+  "text": "what we need to understand is that"
+ },
+ {
+  "id": 1829,
+  "text": "we are actually controlling the UART device inside the emulator"
+ },
+ {
+  "id": 1830,
+  "text": "and you can imagine that there is a virtual UART line"
+ },
+ {
+  "id": 1831,
+  "text": "and through that UART line from the device,"
+ },
+ {
+  "id": 1832,
+  "text": "it gets printed to our host machine's console"
+ },
+ {
+  "id": 1833,
+  "text": "and then these characters appear on the console"
+ },
+ {
+  "id": 1834,
+  "text": "and those characters are what we printed out"
+ },
+ {
+  "id": 1835,
+  "text": "And the corresponding code"
+ },
+ {
+  "id": 1836,
+  "text": "is in our"
+ },
+ {
+  "id": 1837,
+  "text": "hello,"
+ },
+ {
+  "id": 1838,
+  "text": "our kono.c code,"
+ },
+ {
+  "id": 1839,
+  "text": "this function that we talked about earlier"
+ },
+ {
+  "id": 1840,
+  "text": "In other words, it's actually jumped into from assembly"
+ },
+ {
+  "id": 1841,
+  "text": "the first C function, right?"
+ },
+ {
+  "id": 1842,
+  "text": "Now, in this C function,"
+ },
+ {
+  "id": 1843,
+  "text": "right at the start, it runs"
+ },
+ {
+  "id": 1844,
+  "text": "a UART initialization,"
+ },
+ {
+  "id": 1845,
+  "text": "getting that serial port device initialized."
+ },
+ {
+  "id": 1846,
+  "text": "Then, through a puts,"
+ },
+ {
+  "id": 1847,
+  "text": "this puts,"
+ },
+ {
+  "id": 1848,
+  "text": "inside it actually,"
+ },
+ {
+  "id": 1849,
+  "text": "for each of its characters,"
+ },
+ {
+  "id": 1850,
+  "text": "calls that putc,"
+ },
+ {
+  "id": 1851,
+  "text": "and then takes each character"
+ },
+ {
+  "id": 1852,
+  "text": "and, through the serial port,"
+ },
+ {
+  "id": 1853,
+  "text": "prints it out to our console."
+ },
+ {
+  "id": 1854,
+  "text": "And after the printing is done,"
+ },
+ {
+  "id": 1855,
+  "text": "of course we just write an infinite loop,"
+ },
+ {
+  "id": 1856,
+  "text": "and it just stops there."
+ },
+ {
+  "id": 1857,
+  "text": "So as we can see,"
+ },
+ {
+  "id": 1858,
+  "text": "in our output here,"
+ },
+ {
+  "id": 1859,
+  "text": "it doesn't go any further at this point."
+ },
+ {
+  "id": 1860,
+  "text": "So that's basically the effect."
+ },
+ {
+  "id": 1861,
+  "text": "Let me briefly explain it to you."
+ },
+ {
+  "id": 1862,
+  "text": "Alright."
+ },
+ {
+  "id": 1863,
+  "text": "As for this simple piece of code,"
+ },
+ {
+  "id": 1864,
+  "text": "you can just go back and look through it yourselves."
+ },
+ {
+  "id": 1865,
+  "text": "I won't spend class time"
+ },
+ {
+  "id": 1866,
+  "text": "going through it here in the lecture."
+ }
+]

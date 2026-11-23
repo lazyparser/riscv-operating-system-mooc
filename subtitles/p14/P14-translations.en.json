@@ -1,0 +1,2238 @@
+[
+ {
+  "id": 0,
+  "text": "All right, next up is the final chapter on assembly instructions."
+ },
+ {
+  "id": 1,
+  "text": "This part mainly introduces the concept of mixing assembly and C programming,"
+ },
+ {
+  "id": 2,
+  "text": "because it will come up in our code later, so we'll talk about it here."
+ },
+ {
+  "id": 3,
+  "text": "So mixing assembly and C really falls into two main categories,"
+ },
+ {
+  "id": 4,
+  "text": "one is calling C functions from assembly"
+ },
+ {
+  "id": 5,
+  "text": "that's one"
+ },
+ {
+  "id": 6,
+  "text": "and the other way around"
+ },
+ {
+  "id": 7,
+  "text": "which is in C"
+ },
+ {
+  "id": 8,
+  "text": "we can also embed calls to some"
+ },
+ {
+  "id": 9,
+  "text": "or write some assembly code"
+ },
+ {
+  "id": 10,
+  "text": "These are techniques you'll often use in low-level development."
+ },
+ {
+  "id": 11,
+  "text": "So let me walk you through them here."
+ },
+ {
+  "id": 12,
+  "text": "Let's start with the first part,"
+ },
+ {
+  "id": 13,
+  "text": "which is assembly calling C."
+ },
+ {
+  "id": 14,
+  "text": "This part is actually pretty simple,"
+ },
+ {
+  "id": 15,
+  "text": "because in the exercise we just did"
+ },
+ {
+  "id": 16,
+  "text": "this concept already showed up"
+ },
+ {
+  "id": 17,
+  "text": "right?"
+ },
+ {
+  "id": 18,
+  "text": "We've already touched on some of these related things."
+ },
+ {
+  "id": 19,
+  "text": "Assembly calling C"
+ },
+ {
+  "id": 20,
+  "text": "Now let's take"
+ },
+ {
+  "id": 21,
+  "text": "a look at this together."
+ },
+ {
+  "id": 22,
+  "text": "That is to say, C"
+ },
+ {
+  "id": 23,
+  "text": "doesn't really have anything special about it."
+ },
+ {
+  "id": 24,
+  "text": "C is, at the end of the day, just a high-level language."
+ },
+ {
+  "id": 25,
+  "text": "After it's compiled,"
+ },
+ {
+  "id": 26,
+  "text": "it's really just assembly code and machine instructions."
+ },
+ {
+  "id": 27,
+  "text": "So as long as we follow"
+ },
+ {
+  "id": 28,
+  "text": "the function calling process we just talked about,"
+ },
+ {
+  "id": 29,
+  "text": "the calling convention,"
+ },
+ {
+  "id": 30,
+  "text": "we can actually write"
+ },
+ {
+  "id": 31,
+  "text": "correct"
+ },
+ {
+  "id": 32,
+  "text": "assembly-calling-C handling like this."
+ },
+ {
+  "id": 33,
+  "text": "Now here,"
+ },
+ {
+  "id": 34,
+  "text": "the main thing is to follow the ABI,"
+ },
+ {
+  "id": 35,
+  "text": "which is what we just mentioned."
+ },
+ {
+  "id": 36,
+  "text": "That is to say, the ABI,"
+ },
+ {
+  "id": 37,
+  "text": "which stands for Abstract Binary Interface,"
+ },
+ {
+  "id": 38,
+  "text": "actually involves what we just talked about,"
+ },
+ {
+  "id": 39,
+  "text": "for example, the size of data types."
+ },
+ {
+  "id": 40,
+  "text": "That is to say, whether it's assembly or C,"
+ },
+ {
+  "id": 41,
+  "text": "you actually deal with data types,"
+ },
+ {
+  "id": 42,
+  "text": "for example, how many bytes an int takes up,"
+ },
+ {
+  "id": 43,
+  "text": "how many bytes a char takes up,"
+ },
+ {
+  "id": 44,
+  "text": "how many characters a character takes up—"
+ },
+ {
+  "id": 45,
+  "text": "how many bytes it takes up,"
+ },
+ {
+  "id": 46,
+  "text": "concepts like that."
+ },
+ {
+  "id": 47,
+  "text": "Then there are also some memory"
+ },
+ {
+  "id": 48,
+  "text": "alignment issues,"
+ },
+ {
+  "id": 49,
+  "text": "four-byte alignment,"
+ },
+ {
+  "id": 50,
+  "text": "and all that kind of thing."
+ },
+ {
+  "id": 51,
+  "text": "Actually, as long as it's cross-language,"
+ },
+ {
+  "id": 52,
+  "text": "underneath it's all the same—"
+ },
+ {
+  "id": 53,
+  "text": "you have to deal with all of it."
+ },
+ {
+  "id": 54,
+  "text": "Then there's also function calls,"
+ },
+ {
+  "id": 55,
+  "text": "which we just covered."
+ },
+ {
+  "id": 56,
+  "text": "System calls—"
+ },
+ {
+  "id": 57,
+  "text": "this might involve,"
+ },
+ {
+  "id": 58,
+  "text": "mainly, the applications or user-mode programs,"
+ },
+ {
+  "id": 59,
+  "text": "and it's a concept about the interface between them and the operating system."
+ },
+ {
+  "id": 60,
+  "text": "Let's not go into that here."
+ },
+ {
+  "id": 61,
+  "text": "It's not really related to what we're discussing."
+ },
+ {
+  "id": 62,
+  "text": "Then there's another thing,"
+ },
+ {
+  "id": 63,
+  "text": "when making a function call,"
+ },
+ {
+  "id": 64,
+  "text": "there are certain conventions,"
+ },
+ {
+  "id": 65,
+  "text": "for example, the registers,"
+ },
+ {
+  "id": 66,
+  "text": "we use a0 and a7 to pass parameters."
+ },
+ {
+  "id": 67,
+  "text": "The return values go in a0 and a1."
+ },
+ {
+  "id": 68,
+  "text": "These are all things we covered earlier."
+ },
+ {
+  "id": 69,
+  "text": "They become part of the specification."
+ },
+ {
+  "id": 70,
+  "text": "So for a specific example,"
+ },
+ {
+  "id": 71,
+  "text": "let's take a quick look at one."
+ },
+ {
+  "id": 72,
+  "text": "Very simple."
+ },
+ {
+  "id": 73,
+  "text": "This example,"
+ },
+ {
+  "id": 74,
+  "text": "let's take a look at it."
+ },
+ {
+  "id": 75,
+  "text": "It's ASM to C."
+ },
+ {
+  "id": 76,
+  "text": "ASM stands for"
+ },
+ {
+  "id": 77,
+  "text": "ASM stands for"
+ },
+ {
+  "id": 78,
+  "text": "the abbreviation of 'assembly'."
+ },
+ {
+  "id": 79,
+  "text": "And 'to' m"
+ },
+ {
+  "id": 80,
+  "text": "And this 2 here is \"to\""
+ },
+ {
+  "id": 81,
+  "text": "In English, it's just \"to\""
+ },
+ {
+  "id": 82,
+  "text": "As in from S-mode to C"
+ },
+ {
+  "id": 83,
+  "text": "Right?"
+ },
+ {
+  "id": 84,
+  "text": "That's what it means."
+ },
+ {
+  "id": 85,
+  "text": "Just wanted to tell you all"
+ },
+ {
+  "id": 86,
+  "text": "a bit about the naming here,"
+ },
+ {
+  "id": 87,
+  "text": "why it's called this."
+ },
+ {
+  "id": 88,
+  "text": "So over here,"
+ },
+ {
+  "id": 89,
+  "text": "we can see"
+ },
+ {
+  "id": 90,
+  "text": "that down here,"
+ },
+ {
+  "id": 91,
+  "text": "we actually have an assembly instruction,"
+ },
+ {
+  "id": 92,
+  "text": "the test.s file,"
+ },
+ {
+  "id": 93,
+  "text": "and right here,"
+ },
+ {
+  "id": 94,
+  "text": "we have a test.c."
+ },
+ {
+  "id": 95,
+  "text": "So this is essentially mixed programming."
+ },
+ {
+  "id": 96,
+  "text": "That is, what we have here is"
+ },
+ {
+  "id": 97,
+  "text": "actually, we're..."
+ },
+ {
+  "id": 98,
+  "text": "we start executing from the assembly in test.c first,"
+ },
+ {
+  "id": 99,
+  "text": "and during execution,"
+ },
+ {
+  "id": 100,
+  "text": "it will jump into this test.c"
+ },
+ {
+  "id": 101,
+  "text": "So how does it jump?"
+ },
+ {
+  "id": 102,
+  "text": "It's very simple."
+ },
+ {
+  "id": 103,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 104,
+  "text": "First, let's look at this test.c."
+ },
+ {
+  "id": 105,
+  "text": "This function isn't much different from what we talked about earlier."
+ },
+ {
+  "id": 106,
+  "text": "The main things to understand here are:"
+ },
+ {
+  "id": 107,
+  "text": "One is that"
+ },
+ {
+  "id": 108,
+  "text": "we first need to prepare a stack area."
+ },
+ {
+  "id": 109,
+  "text": "There's nothing much to say about this."
+ },
+ {
+  "id": 110,
+  "text": "Whether it's C or assembly, we're all writing functions."
+ },
+ {
+  "id": 111,
+  "text": "And functions all need to use the stack."
+ },
+ {
+  "id": 112,
+  "text": "So we all need to prepare a stack"
+ },
+ {
+  "id": 113,
+  "text": "area,"
+ },
+ {
+  "id": 114,
+  "text": "and we need to take this stack"
+ },
+ {
+  "id": 115,
+  "text": "and initialize it."
+ },
+ {
+  "id": 116,
+  "text": "We've covered this before."
+ },
+ {
+  "id": 117,
+  "text": "Then next,"
+ },
+ {
+  "id": 118,
+  "text": "that is, we need to"
+ },
+ {
+  "id": 119,
+  "text": "go from this start function"
+ },
+ {
+  "id": 120,
+  "text": "Start executing."
+ },
+ {
+  "id": 121,
+  "text": "In the course of the execution,"
+ },
+ {
+  "id": 122,
+  "text": "we'll call a function foo."
+ },
+ {
+  "id": 123,
+  "text": "This function foo"
+ },
+ {
+  "id": 124,
+  "text": "is just a function written in C."
+ },
+ {
+  "id": 125,
+  "text": "Now, as we mentioned earlier,"
+ },
+ {
+  "id": 126,
+  "text": "a function name is actually the address of that function."
+ },
+ {
+  "id": 127,
+  "text": "Right?"
+ },
+ {
+  "id": 128,
+  "text": "When we learned C,"
+ },
+ {
+  "id": 129,
+  "text": "we also talked about the concept of function pointers."
+ },
+ {
+  "id": 130,
+  "text": "The function name is the function's address."
+ },
+ {
+  "id": 131,
+  "text": "So when we're in assembly"
+ },
+ {
+  "id": 132,
+  "text": "and want to call a C function,"
+ },
+ {
+  "id": 133,
+  "text": "all we actually need to do is take that C"
+ },
+ {
+  "id": 134,
+  "text": "function's name"
+ },
+ {
+  "id": 135,
+  "text": "and write it right here."
+ },
+ {
+  "id": 136,
+  "text": "Right?"
+ },
+ {
+  "id": 137,
+  "text": "It's really just a label."
+ },
+ {
+  "id": 138,
+  "text": "Just a label."
+ },
+ {
+  "id": 139,
+  "text": "So when we call"
+ },
+ {
+  "id": 140,
+  "text": "followed by a function name,"
+ },
+ {
+  "id": 141,
+  "text": "it will naturally jump to that function and execute it."
+ },
+ {
+  "id": 142,
+  "text": "It's that simple."
+ },
+ {
+  "id": 143,
+  "text": "So the only thing we need to do,"
+ },
+ {
+  "id": 144,
+  "text": "is that if we want to pass parameters,"
+ },
+ {
+  "id": 145,
+  "text": "then here,"
+ },
+ {
+  "id": 146,
+  "text": "we just need to"
+ },
+ {
+  "id": 147,
+  "text": "use a0 and a1,"
+ },
+ {
+  "id": 148,
+  "text": "the two standard conventions,"
+ },
+ {
+  "id": 149,
+  "text": "to pass the parameters, and that's it."
+ },
+ {
+  "id": 150,
+  "text": "Everything before this is the same."
+ },
+ {
+  "id": 151,
+  "text": "We pass 1 and 2 in."
+ },
+ {
+  "id": 152,
+  "text": "Now this function,"
+ },
+ {
+  "id": 153,
+  "text": "it takes two parameters,"
+ },
+ {
+  "id": 154,
+  "text": "a and b."
+ },
+ {
+  "id": 155,
+  "text": "So we pass the parameters,"
+ },
+ {
+  "id": 156,
+  "text": "and then,"
+ },
+ {
+  "id": 157,
+  "text": "and then let's pay attention here,"
+ },
+ {
+  "id": 158,
+  "text": "at this point,"
+ },
+ {
+  "id": 159,
+  "text": "we need to take this function foo,"
+ },
+ {
+  "id": 160,
+  "text": "We use the Global directive"
+ },
+ {
+  "id": 161,
+  "text": "to declare it."
+ },
+ {
+  "id": 162,
+  "text": "Because this function"
+ },
+ {
+  "id": 163,
+  "text": "is not defined in this file,"
+ },
+ {
+  "id": 164,
+  "text": "you see?"
+ },
+ {
+  "id": 165,
+  "text": "This is basically"
+ },
+ {
+  "id": 166,
+  "text": "the same effect as extern in C."
+ },
+ {
+  "id": 167,
+  "text": "In other words, we tell the compiler"
+ },
+ {
+  "id": 168,
+  "text": "that this function F0"
+ },
+ {
+  "id": 169,
+  "text": "is defined elsewhere,"
+ },
+ {
+  "id": 170,
+  "text": "that it's a global thing."
+ },
+ {
+  "id": 171,
+  "text": "Then when it compiles,"
+ },
+ {
+  "id": 172,
+  "text": "it won't report errors again,"
+ },
+ {
+  "id": 173,
+  "text": "saying it can't find this function, and so on."
+ },
+ {
+  "id": 174,
+  "text": "Because this function"
+ },
+ {
+  "id": 175,
+  "text": "is defined in test.c,"
+ },
+ {
+  "id": 176,
+  "text": "so we need to declare it here."
+ },
+ {
+  "id": 177,
+  "text": "So basically, for the assembly part,"
+ },
+ {
+  "id": 178,
+  "text": "that covers all the content involved."
+ },
+ {
+  "id": 179,
+  "text": "And as for the C part, there's really no difference in how it's written."
+ },
+ {
+  "id": 180,
+  "text": "Just write it the way it's supposed to be written."
+ },
+ {
+  "id": 181,
+  "text": "As for C, well, I think..."
+ },
+ {
+  "id": 182,
+  "text": "With this function we have now,"
+ },
+ {
+  "id": 183,
+  "text": "we don't need to explain it much more."
+ },
+ {
+  "id": 184,
+  "text": "Now it's just about saying,"
+ },
+ {
+  "id": 185,
+  "text": "when you all look at this function now,"
+ },
+ {
+  "id": 186,
+  "text": "aren't you already thinking in your heads"
+ },
+ {
+  "id": 187,
+  "text": "about the assembly language behind it,"
+ },
+ {
+  "id": 188,
+  "text": "what kind of concept that is?"
+ },
+ {
+  "id": 189,
+  "text": "Once you've studied this,"
+ },
+ {
+  "id": 190,
+  "text": "the way you look at C functions"
+ },
+ {
+  "id": 191,
+  "text": "might have a certain..."
+ },
+ {
+  "id": 192,
+  "text": "what do you call it?"
+ },
+ {
+  "id": 193,
+  "text": "Do you call it a sublimation? Like, an elevation?"
+ },
+ {
+  "id": 194,
+  "text": "Or some other concept?"
+ },
+ {
+  "id": 195,
+  "text": "Meaning, the way you look at C now,"
+ },
+ {
+  "id": 196,
+  "text": "actually, if you can... behind it..."
+ },
+ {
+  "id": 197,
+  "text": "the moment you see C,"
+ },
+ {
+  "id": 198,
+  "text": "you can picture the assembly behind it,"
+ },
+ {
+  "id": 199,
+  "text": "roughly what it looks like."
+ },
+ {
+  "id": 200,
+  "text": "Well, congratulations."
+ },
+ {
+  "id": 201,
+  "text": "That is to say, I think this course,"
+ },
+ {
+  "id": 202,
+  "text": "at least you haven't learned it for nothing."
+ },
+ {
+  "id": 203,
+  "text": "Now, when you look at this C code,"
+ },
+ {
+  "id": 204,
+  "text": "this thing is actually just a label."
+ },
+ {
+  "id": 205,
+  "text": "Now, its two parameters,"
+ },
+ {
+  "id": 206,
+  "text": "well, we can all imagine,"
+ },
+ {
+  "id": 207,
+  "text": "when this code is handed over to the compiler to compile,"
+ },
+ {
+  "id": 208,
+  "text": "when it generates the code for you,"
+ },
+ {
+  "id": 209,
+  "text": "it will definitely help you put A0 and A1,"
+ },
+ {
+  "id": 210,
+  "text": "which actually correspond to A and B."
+ },
+ {
+  "id": 211,
+  "text": "At the same time,"
+ },
+ {
+  "id": 212,
+  "text": "the return value C here,"
+ },
+ {
+  "id": 213,
+  "text": "it will definitely be placed in A1, A0."
+ },
+ {
+  "id": 214,
+  "text": "This is something we definitely need to know."
+ },
+ {
+  "id": 215,
+  "text": "That's pretty much how it works."
+ },
+ {
+  "id": 216,
+  "text": "At the same time,"
+ },
+ {
+  "id": 217,
+  "text": "when you look at this code,"
+ },
+ {
+  "id": 218,
+  "text": "is it the case that the machine instructions generated from this code,"
+ },
+ {
+  "id": 219,
+  "text": "only this one instruction corresponds"
+ },
+ {
+  "id": 220,
+  "text": "Now, what's the machine instruction corresponding to this one?"
+ },
+ {
+  "id": 221,
+  "text": "No, it's not."
+ },
+ {
+  "id": 222,
+  "text": "We have a"
+ },
+ {
+  "id": 223,
+  "text": "piece of code at the entry and"
+ },
+ {
+  "id": 224,
+  "text": "that is, when we exit,"
+ },
+ {
+  "id": 225,
+  "text": "that piece of code,"
+ },
+ {
+  "id": 226,
+  "text": "right?"
+ },
+ {
+  "id": 227,
+  "text": "This piece of code,"
+ },
+ {
+  "id": 228,
+  "text": "after you compile it,"
+ },
+ {
+  "id": 229,
+  "text": "go and take a look,"
+ },
+ {
+  "id": 230,
+  "text": "it's actually not the same."
+ },
+ {
+  "id": 231,
+  "text": "Now, can we"
+ },
+ {
+  "id": 232,
+  "text": "take a quick look at it?"
+ },
+ {
+  "id": 233,
+  "text": "Let me see,"
+ },
+ {
+  "id": 234,
+  "text": "this one,"
+ },
+ {
+  "id": 235,
+  "text": "let's take a look,"
+ },
+ {
+  "id": 236,
+  "text": "can we see this piece of code?"
+ },
+ {
+  "id": 237,
+  "text": "Let's take a look,"
+ },
+ {
+  "id": 238,
+  "text": "say, right here,"
+ },
+ {
+  "id": 239,
+  "text": "you can all take a look."
+ },
+ {
+  "id": 240,
+  "text": "This is what we see after disassembling it back."
+ },
+ {
+  "id": 241,
+  "text": "Look at this part."
+ },
+ {
+  "id": 242,
+  "text": "This is that C function,"
+ },
+ {
+  "id": 243,
+  "text": "our a plus b code,"
+ },
+ {
+  "id": 244,
+  "text": "and the machine instructions it generates."
+ },
+ {
+  "id": 245,
+  "text": "Actually, in this part,"
+ },
+ {
+  "id": 246,
+  "text": "the code before it,"
+ },
+ {
+  "id": 247,
+  "text": "we actually correspond to..."
+ },
+ {
+  "id": 248,
+  "text": "we didn't write any code to generate it at all."
+ },
+ {
+  "id": 249,
+  "text": "So where does it come from?"
+ },
+ {
+  "id": 250,
+  "text": "Well, the compiler does it for us."
+ },
+ {
+  "id": 251,
+  "text": "This is the epilogue."
+ },
+ {
+  "id": 252,
+  "text": "What is it actually doing for us?"
+ },
+ {
+  "id": 253,
+  "text": "Pushing to the stack."
+ },
+ {
+  "id": 254,
+  "text": "See that?"
+ },
+ {
+  "id": 255,
+  "text": "And then what does it do next?"
+ },
+ {
+  "id": 256,
+  "text": "It saves some registers."
+ },
+ {
+  "id": 257,
+  "text": "And so on."
+ },
+ {
+  "id": 258,
+  "text": "And then,"
+ },
+ {
+  "id": 259,
+  "text": "this code also won't be generated in our own code."
+ },
+ {
+  "id": 260,
+  "text": "This code is also generated for us by the compiler."
+ },
+ {
+  "id": 261,
+  "text": "It's actually doing a store here."
+ },
+ {
+  "id": 262,
+  "text": "And then,"
+ },
+ {
+  "id": 263,
+  "text": "it restores some data,"
+ },
+ {
+  "id": 264,
+  "text": "and then stores again."
+ },
+ {
+  "id": 265,
+  "text": "And then return."
+ },
+ {
+  "id": 266,
+  "text": "Did everyone see that?"
+ },
+ {
+  "id": 267,
+  "text": "Return, of course, corresponds to"
+ },
+ {
+  "id": 268,
+  "text": "something similar to this here."
+ },
+ {
+  "id": 269,
+  "text": "But then,"
+ },
+ {
+  "id": 270,
+  "text": "why does it put the result here"
+ },
+ {
+  "id": 271,
+  "text": "and save it into a0?"
+ },
+ {
+  "id": 272,
+  "text": "That's also a convention."
+ },
+ {
+  "id": 273,
+  "text": "Because the return value has to go into a0."
+ },
+ {
+  "id": 274,
+  "text": "Remember that, right?"
+ },
+ {
+  "id": 275,
+  "text": "So when you look at this assembly later on,"
+ },
+ {
+  "id": 276,
+  "text": "as for why it's like this,"
+ },
+ {
+  "id": 277,
+  "text": "I've already explained the reason to you."
+ },
+ {
+  "id": 278,
+  "text": "This side is the second example."
+ },
+ {
+  "id": 279,
+  "text": "Now, this"
+ },
+ {
+  "id": 280,
+  "text": "This is what we mean by assembly calling C."
+ },
+ {
+  "id": 281,
+  "text": "Assembly calling C."
+ },
+ {
+  "id": 282,
+  "text": "Very simple."
+ },
+ {
+  "id": 283,
+  "text": "Now for the second one,"
+ },
+ {
+  "id": 284,
+  "text": "what we want to tell you is"
+ },
+ {
+  "id": 285,
+  "text": "in C language,"
+ },
+ {
+  "id": 286,
+  "text": "if we want to embed some"
+ },
+ {
+  "id": 287,
+  "text": "assembly, how do we do it?"
+ },
+ {
+  "id": 288,
+  "text": "Just understand this."
+ },
+ {
+  "id": 289,
+  "text": "First of all,"
+ },
+ {
+  "id": 290,
+  "text": "if you want to embed assembly in C,"
+ },
+ {
+  "id": 291,
+  "text": "you need to write this kind of keyword,"
+ },
+ {
+  "id": 292,
+  "text": "that is, a keyword starting with ASM."
+ },
+ {
+  "id": 293,
+  "text": "The syntax is like this."
+ },
+ {
+  "id": 294,
+  "text": "ASM is a keyword,"
+ },
+ {
+  "id": 295,
+  "text": "and the square brackets after it mean"
+ },
+ {
+  "id": 296,
+  "text": "this keyword is optional."
+ },
+ {
+  "id": 297,
+  "text": "Then it's wrapped in parentheses,"
+ },
+ {
+  "id": 298,
+  "text": "and inside are the assembly instructions,"
+ },
+ {
+  "id": 299,
+  "text": "while outside it's C language code."
+ },
+ {
+  "id": 300,
+  "text": "Out here, everything is C language instructions."
+ },
+ {
+  "id": 301,
+  "text": "In here, in the middle, we embed"
+ },
+ {
+  "id": 302,
+  "text": "a piece of assembly like this."
+ },
+ {
+  "id": 303,
+  "text": "That's how you write it."
+ },
+ {
+  "id": 304,
+  "text": "Now, at the front,"
+ },
+ {
+  "id": 305,
+  "text": "there are keywords."
+ },
+ {
+  "id": 306,
+  "text": "And then, volatile,"
+ },
+ {
+  "id": 307,
+  "text": "it means that,"
+ },
+ {
+  "id": 308,
+  "text": "if you add this,"
+ },
+ {
+  "id": 309,
+  "text": "you are telling the compiler,"
+ },
+ {
+  "id": 310,
+  "text": "these assembly instructions inside here,"
+ },
+ {
+  "id": 311,
+  "text": "you don't want it to optimize them."
+ },
+ {
+  "id": 312,
+  "text": "If you do want optimization,"
+ },
+ {
+  "id": 313,
+  "text": "because the compiler might try"
+ },
+ {
+  "id": 314,
+  "text": "to optimize your instructions,"
+ },
+ {
+  "id": 315,
+  "text": "so if you don't want optimization,"
+ },
+ {
+  "id": 316,
+  "text": "just add a volatile."
+ },
+ {
+  "id": 317,
+  "text": "If you don't care,"
+ },
+ {
+  "id": 318,
+  "text": "just leave it out."
+ },
+ {
+  "id": 319,
+  "text": "So this part is optional."
+ },
+ {
+  "id": 320,
+  "text": "This"
+ },
+ {
+  "id": 321,
+  "text": "sometimes you'll see"
+ },
+ {
+  "id": 322,
+  "text": "in front of this there are some additional"
+ },
+ {
+  "id": 323,
+  "text": "double slash things like this"
+ },
+ {
+  "id": 324,
+  "text": "which actually have the same effect"
+ },
+ {
+  "id": 325,
+  "text": "I won't go into that in detail"
+ },
+ {
+  "id": 326,
+  "text": "and then"
+ },
+ {
+  "id": 327,
+  "text": "this is"
+ },
+ {
+  "id": 328,
+  "text": "this is 'asm', which is the keyword"
+ },
+ {
+  "id": 329,
+  "text": "and then"
+ },
+ {
+  "id": 330,
+  "text": "inside it there are four main parts"
+ },
+ {
+  "id": 331,
+  "text": "the first part is wrapped in quotes"
+ },
+ {
+  "id": 332,
+  "text": "enclosed"
+ },
+ {
+  "id": 333,
+  "text": "and this part is the core of it all"
+ },
+ {
+  "id": 334,
+  "text": "this is where the assembly instructions are written"
+ },
+ {
+  "id": 335,
+  "text": "now, for the assembly instructions,"
+ },
+ {
+  "id": 336,
+  "text": "they are wrapped in double quotes here"
+ },
+ {
+  "id": 337,
+  "text": "and if you need multiple instructions,"
+ },
+ {
+  "id": 338,
+  "text": "you separate them with a semicolon or backslash n"
+ },
+ {
+  "id": 339,
+  "text": "which represents a newline"
+ },
+ {
+  "id": 340,
+  "text": "Just split it apart."
+ },
+ {
+  "id": 341,
+  "text": "This is its syntax."
+ },
+ {
+  "id": 342,
+  "text": "Then these three items below"
+ },
+ {
+  "id": 343,
+  "text": "are all optional."
+ },
+ {
+  "id": 344,
+  "text": "Note carefully,"
+ },
+ {
+  "id": 345,
+  "text": "they are just"
+ },
+ {
+  "id": 346,
+  "text": "these three items,"
+ },
+ {
+  "id": 347,
+  "text": "they're not actually assembly instructions."
+ },
+ {
+  "id": 348,
+  "text": "They're really a kind of"
+ },
+ {
+  "id": 349,
+  "text": "they're really a kind of directive statement,"
+ },
+ {
+  "id": 350,
+  "text": "telling the assembler,"
+ },
+ {
+  "id": 351,
+  "text": "for this assembly instruction in front of you,"
+ },
+ {
+  "id": 352,
+  "text": "there are some special annotations."
+ },
+ {
+  "id": 353,
+  "text": "You can actually understand it that way."
+ },
+ {
+  "id": 354,
+  "text": "So what is it annotating?"
+ },
+ {
+  "id": 355,
+  "text": "It's actually annotating"
+ },
+ {
+  "id": 356,
+  "text": "in your assembler,"
+ },
+ {
+  "id": 357,
+  "text": "for this assembly instruction,"
+ },
+ {
+  "id": 358,
+  "text": "what output operands and input operands"
+ },
+ {
+  "id": 359,
+  "text": "there are."
+ },
+ {
+  "id": 360,
+  "text": "as well as what might affect this thing,"
+ },
+ {
+  "id": 361,
+  "text": "let me briefly introduce each of them to you."
+ },
+ {
+  "id": 362,
+  "text": "Let me show you through an example."
+ },
+ {
+  "id": 363,
+  "text": "What's on the right is actually an example."
+ },
+ {
+  "id": 364,
+  "text": "This example implements a"
+ },
+ {
+  "id": 365,
+  "text": "we write a for function in C,"
+ },
+ {
+  "id": 366,
+  "text": "and inside this function,"
+ },
+ {
+  "id": 367,
+  "text": "what it actually does"
+ },
+ {
+  "id": 368,
+  "text": "is implement an A plus B equals C,"
+ },
+ {
+  "id": 369,
+  "text": "an effect like that."
+ },
+ {
+  "id": 370,
+  "text": "That is to say, if I don't use assembly,"
+ },
+ {
+  "id": 371,
+  "text": "if this part is not written in assembly,"
+ },
+ {
+  "id": 372,
+  "text": "it's nothing more than implementing C equals A plus B."
+ },
+ {
+  "id": 373,
+  "text": "But suppose one day I suddenly feel that"
+ },
+ {
+  "id": 374,
+  "text": "C plus A -- C's A plus B -- is not efficient enough,"
+ },
+ {
+  "id": 375,
+  "text": "and I insist on writing it myself in assembly,"
+ },
+ {
+  "id": 376,
+  "text": "then I can still rewrite and change it."
+ },
+ {
+  "id": 377,
+  "text": "So how do we write it?"
+ },
+ {
+  "id": 378,
+  "text": "Well, based on the description just now,"
+ },
+ {
+  "id": 379,
+  "text": "you've already seen"
+ },
+ {
+  "id": 380,
+  "text": "That is to say, this is a keyword that must be written"
+ },
+ {
+  "id": 381,
+  "text": "Adding a volatile"
+ },
+ {
+  "id": 382,
+  "text": "is basically telling our assembler that"
+ },
+ {
+  "id": 383,
+  "text": "for this assembly instruction in here"
+ },
+ {
+  "id": 384,
+  "text": "I don't want you to do any optimization"
+ },
+ {
+  "id": 385,
+  "text": "Just honestly follow whatever I wrote"
+ },
+ {
+  "id": 386,
+  "text": "and generate exactly that"
+ },
+ {
+  "id": 387,
+  "text": "Then, next,"
+ },
+ {
+  "id": 388,
+  "text": "this here"
+ },
+ {
+  "id": 389,
+  "text": "corresponds to this,"
+ },
+ {
+  "id": 390,
+  "text": "the output operands."
+ },
+ {
+  "id": 391,
+  "text": "This part specifies"
+ },
+ {
+  "id": 392,
+  "text": "and then this corresponds to"
+ },
+ {
+  "id": 393,
+  "text": "the description of the input operands."
+ },
+ {
+  "id": 394,
+  "text": "And the third part,"
+ },
+ {
+  "id": 395,
+  "text": "I just didn't write it"
+ },
+ {
+  "id": 396,
+  "text": "because there isn't really much"
+ },
+ {
+  "id": 397,
+  "text": "that needs to be described there,"
+ },
+ {
+  "id": 398,
+  "text": "since I only used"
+ },
+ {
+  "id": 399,
+  "text": "two registers anyway."
+ },
+ {
+  "id": 400,
+  "text": "So, what do these output operands"
+ },
+ {
+  "id": 401,
+  "text": "and input operands mean?"
+ },
+ {
+  "id": 402,
+  "text": "Well, the so-called output operands"
+ },
+ {
+  "id": 403,
+  "text": "are essentially registers that I might"
+ },
+ {
+  "id": 404,
+  "text": "write to—"
+ },
+ {
+  "id": 405,
+  "text": "registers whose values I might change."
+ },
+ {
+  "id": 406,
+  "text": "Those registers count as output operands."
+ },
+ {
+  "id": 407,
+  "text": "That's the concept."
+ },
+ {
+  "id": 408,
+  "text": "Conversely, the input"
+ },
+ {
+  "id": 409,
+  "text": "concept is the opposite."
+ },
+ {
+  "id": 410,
+  "text": "Now, what exactly am I explaining here?"
+ },
+ {
+  "id": 411,
+  "text": "Take a look at this."
+ },
+ {
+  "id": 412,
+  "text": "Because when I was writing this,"
+ },
+ {
+  "id": 413,
+  "text": "first of all, I couldn't immediately—"
+ },
+ {
+  "id": 414,
+  "text": "that is, I didn't want to absolutely specify"
+ },
+ {
+  "id": 415,
+  "text": "exactly which register to use,"
+ },
+ {
+  "id": 416,
+  "text": "because which register you actually use,"
+ },
+ {
+  "id": 417,
+  "text": "in practice, we generally try to leave that to the compiler"
+ },
+ {
+  "id": 418,
+  "text": "to decide for us."
+ },
+ {
+  "id": 419,
+  "text": "We just tell it"
+ },
+ {
+  "id": 420,
+  "text": "Here we need a register"
+ },
+ {
+  "id": 421,
+  "text": "This needs a register"
+ },
+ {
+  "id": 422,
+  "text": "This needs a register"
+ },
+ {
+  "id": 423,
+  "text": "Then we take this register"
+ },
+ {
+  "id": 424,
+  "text": "and we give it a name"
+ },
+ {
+  "id": 425,
+  "text": "See that?"
+ },
+ {
+  "id": 426,
+  "text": "We call it sum"
+ },
+ {
+  "id": 427,
+  "text": "We call them add1 and add2"
+ },
+ {
+  "id": 428,
+  "text": "These are not actual register names"
+ },
+ {
+  "id": 429,
+  "text": "Right?"
+ },
+ {
+  "id": 430,
+  "text": "What they actually turn into"
+ },
+ {
+  "id": 431,
+  "text": "is something the compiler generates for us in practice"
+ },
+ {
+  "id": 432,
+  "text": "We don't explicitly force that here"
+ },
+ {
+  "id": 433,
+  "text": "The only thing we have to tell it is this"
+ },
+ {
+  "id": 434,
+  "text": "What we need to tell it is this"
+ },
+ {
+  "id": 435,
+  "text": "Since what we want to implement is C equals A plus B"
+ },
+ {
+  "id": 436,
+  "text": "we have to tell the compiler"
+ },
+ {
+  "id": 437,
+  "text": "that you need to take this C"
+ },
+ {
+  "id": 438,
+  "text": "and associate it with this register"
+ },
+ {
+  "id": 439,
+  "text": "and you need to associate this register A with that"
+ },
+ {
+  "id": 440,
+  "text": "You need to associate B with this thing"
+ },
+ {
+  "id": 441,
+  "text": "Then we tell it through an add instruction"
+ },
+ {
+  "id": 442,
+  "text": "Just use this assembly instruction to achieve the effect, and that's it"
+ },
+ {
+  "id": 443,
+  "text": "So how do we tell it"
+ },
+ {
+  "id": 444,
+  "text": "About this correspondence between them?"
+ },
+ {
+  "id": 445,
+  "text": "That is done through these two lines here"
+ },
+ {
+  "id": 446,
+  "text": "Because as we said earlier"
+ },
+ {
+  "id": 447,
+  "text": "This one specifies the output"
+ },
+ {
+  "id": 448,
+  "text": "That is, which register I'm going to write to"
+ },
+ {
+  "id": 449,
+  "text": "So on my side here"
+ },
+ {
+  "id": 450,
+  "text": "I tell it that the sum register"
+ },
+ {
+  "id": 451,
+  "text": "corresponds to this c of ours"
+ },
+ {
+  "id": 452,
+  "text": "Because in the end we have to return this c"
+ },
+ {
+  "id": 453,
+  "text": "We have to pass it back out, right"
+ },
+ {
+  "id": 454,
+  "text": "So we tell it c"
+ },
+ {
+  "id": 455,
+  "text": "Then what about add1?"
+ },
+ {
+  "id": 456,
+  "text": "And what about add2?"
+ },
+ {
+  "id": 457,
+  "text": "They correspond to a and b"
+ },
+ {
+  "id": 458,
+  "text": "Which means we bind the registers with the variables defined in C"
+ },
+ {
+  "id": 459,
+  "text": "We tie them together"
+ },
+ {
+  "id": 460,
+  "text": "made a mapping"
+ },
+ {
+  "id": 461,
+  "text": "telling the compiler how to carry out this mapping process"
+ },
+ {
+  "id": 462,
+  "text": "so it's really a correspondence effect"
+ },
+ {
+  "id": 463,
+  "text": "it's really telling it the corresponding effect"
+ },
+ {
+  "id": 464,
+  "text": "now, once that purpose is achieved"
+ },
+ {
+  "id": 465,
+  "text": "the compiler will, in the actual process"
+ },
+ {
+  "id": 466,
+  "text": "in the actual compilation process, assign us an actual register"
+ },
+ {
+  "id": 467,
+  "text": "and then take this register and these things"
+ },
+ {
+  "id": 468,
+  "text": "and map them together"
+ },
+ {
+  "id": 469,
+  "text": "and of course, on our side here"
+ },
+ {
+  "id": 470,
+  "text": "you can see there's also this kind of R syntax written here"
+ },
+ {
+  "id": 471,
+  "text": "this R syntax"
+ },
+ {
+  "id": 472,
+  "text": "is really just telling it"
+ },
+ {
+  "id": 473,
+  "text": "that is, we want to take this variable A and this variable C"
+ },
+ {
+  "id": 474,
+  "text": "and map them to registers"
+ },
+ {
+  "id": 475,
+  "text": "you can also specify that you put this variable on the stack"
+ },
+ {
+  "id": 476,
+  "text": "and map it to memory"
+ },
+ {
+  "id": 477,
+  "text": "that works too"
+ },
+ {
+  "id": 478,
+  "text": "you indicate that with the character M"
+ },
+ {
+  "id": 479,
+  "text": "but here we'll use R"
+ },
+ {
+  "id": 480,
+  "text": "just tell it to use the corresponding register, and that's all there is to it"
+ },
+ {
+  "id": 481,
+  "text": "So this is one way of writing it."
+ },
+ {
+  "id": 482,
+  "text": "Sometimes,"
+ },
+ {
+  "id": 483,
+  "text": "you'll also see code that other people wrote,"
+ },
+ {
+  "id": 484,
+  "text": "that is, written in a simpler way."
+ },
+ {
+  "id": 485,
+  "text": "If you want to keep it simple, you can write it like this."
+ },
+ {
+  "id": 486,
+  "text": "In fact, the effect is exactly the same."
+ },
+ {
+  "id": 487,
+  "text": "Now here,"
+ },
+ {
+  "id": 488,
+  "text": "all it amounts to is that we don't define any complicated names,"
+ },
+ {
+  "id": 489,
+  "text": "like sum or anything like that,"
+ },
+ {
+  "id": 490,
+  "text": "or that add1 thing from just now."
+ },
+ {
+  "id": 491,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 492,
+  "text": "What we actually used was what?"
+ },
+ {
+  "id": 493,
+  "text": "We used 0, 1, and 2 to represent them."
+ },
+ {
+  "id": 494,
+  "text": "Take this 0 here."
+ },
+ {
+  "id": 495,
+  "text": "It actually corresponds to what we just..."
+ },
+ {
+  "id": 496,
+  "text": "This is a typo."
+ },
+ {
+  "id": 497,
+  "text": "The 0 actually corresponds to..."
+ },
+ {
+  "id": 498,
+  "text": "our..."
+ },
+ {
+  "id": 499,
+  "text": "This one is a typo."
+ },
+ {
+  "id": 500,
+  "text": "add1"
+ },
+ {
+  "id": 501,
+  "text": "is actually 1,"
+ },
+ {
+  "id": 502,
+  "text": "and add2 is 2,"
+ },
+ {
+  "id": 503,
+  "text": "right?"
+ },
+ {
+  "id": 504,
+  "text": "An effect like this."
+ },
+ {
+  "id": 505,
+  "text": "Now, below,"
+ },
+ {
+  "id": 506,
+  "text": "it's actually the same,"
+ },
+ {
+  "id": 507,
+  "text": "except that here"
+ },
+ {
+  "id": 508,
+  "text": "it doesn't write 0 and 1, 1, 2"
+ },
+ {
+  "id": 509,
+  "text": "and those things,"
+ },
+ {
+  "id": 510,
+  "text": "because by default"
+ },
+ {
+  "id": 511,
+  "text": "it just follows this order."
+ },
+ {
+  "id": 512,
+  "text": "The first one that appears on its side,"
+ },
+ {
+  "id": 513,
+  "text": "it uses it"
+ },
+ {
+  "id": 514,
+  "text": "to mean 0."
+ },
+ {
+  "id": 515,
+  "text": "This one is 1,"
+ },
+ {
+  "id": 516,
+  "text": "and this one is 2."
+ },
+ {
+  "id": 517,
+  "text": "Following this order,"
+ },
+ {
+  "id": 518,
+  "text": "they can just be specified by default."
+ },
+ {
+  "id": 519,
+  "text": "So with this kind of thing,"
+ },
+ {
+  "id": 520,
+  "text": "is a simplified form of writing."
+ },
+ {
+  "id": 521,
+  "text": "So once you understand"
+ },
+ {
+  "id": 522,
+  "text": "what it actually means under the hood,"
+ },
+ {
+  "id": 523,
+  "text": "you'll see that in a lot of code,"
+ },
+ {
+  "id": 524,
+  "text": "what's commonly used is still this simplified way of writing it,"
+ },
+ {
+  "id": 525,
+  "text": "and you should be able to read it."
+ },
+ {
+  "id": 526,
+  "text": "So this gives us"
+ },
+ {
+  "id": 527,
+  "text": "a way to write some assembly in C."
+ },
+ {
+  "id": 528,
+  "text": "Of course, the example here is quite simple,"
+ },
+ {
+  "id": 529,
+  "text": "and there may be more complex syntax,"
+ },
+ {
+  "id": 530,
+  "text": "for instance, since you can write multiple instructions and so on."
+ },
+ {
+  "id": 531,
+  "text": "For more details,"
+ },
+ {
+  "id": 532,
+  "text": "you can go to Reference 3,"
+ },
+ {
+  "id": 533,
+  "text": "an assembly manual,"
+ },
+ {
+  "id": 534,
+  "text": "which has a detailed description"
+ },
+ {
+  "id": 535,
+  "text": "of how to embed assembly."
+ },
+ {
+  "id": 536,
+  "text": "We won't go into that here."
+ },
+ {
+  "id": 537,
+  "text": "Just be aware of it."
+ },
+ {
+  "id": 538,
+  "text": "Then, when you get back,"
+ },
+ {
+  "id": 539,
+  "text": "try doing some exercises on your own."
+ },
+ {
+  "id": 540,
+  "text": "It's this 5-9."
+ },
+ {
+  "id": 541,
+  "text": "So basically, what it means is"
+ },
+ {
+  "id": 542,
+  "text": "you need to take this thing"
+ },
+ {
+  "id": 543,
+  "text": "and convert it into assembly."
+ },
+ {
+  "id": 544,
+  "text": "See how you would write it."
+ },
+ {
+  "id": 545,
+  "text": "Give it a try on your own."
+ },
+ {
+  "id": 546,
+  "text": "Now, regarding this,"
+ },
+ {
+  "id": 547,
+  "text": "when we talked about assembly instructions,"
+ },
+ {
+  "id": 548,
+  "text": "we spent quite a lot of time covering them with you."
+ },
+ {
+  "id": 549,
+  "text": "It took quite a bit of time."
+ },
+ {
+  "id": 550,
+  "text": "There's actually quite a lot of content."
+ },
+ {
+  "id": 551,
+  "text": "We still covered some key points,"
+ },
+ {
+  "id": 552,
+  "text": "as well as things that may come up"
+ },
+ {
+  "id": 553,
+  "text": "in the later parts of our course."
+ },
+ {
+  "id": 554,
+  "text": "We touched on those here."
+ },
+ {
+  "id": 555,
+  "text": "As for the rest of the content,"
+ },
+ {
+  "id": 556,
+  "text": "it will probably still be up to you,"
+ },
+ {
+  "id": 557,
+  "text": "during the exercises that come later,"
+ },
+ {
+  "id": 558,
+  "text": "to learn it on your own."
+ }
+]

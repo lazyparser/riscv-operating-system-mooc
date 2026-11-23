@@ -1,0 +1,3894 @@
+[
+ {
+  "id": 0,
+  "text": "Alright, let's continue our course today. Today we're covering Chapter 5, which is RISC-V assembly language programming."
+ },
+ {
+  "id": 1,
+  "text": "Today's lesson will involve some hands-on operations, so I hope everyone can actually get the environment we set up last time working and start using it."
+ },
+ {
+  "id": 2,
+  "text": "I don't know if you've gone back and tried the environment yet, but you'll definitely need it for the exercises."
+ },
+ {
+  "id": 3,
+  "text": "Today's lesson is called Assembly Language Programming."
+ },
+ {
+  "id": 4,
+  "text": "It's mainly divided into these five parts."
+ },
+ {
+  "id": 5,
+  "text": "The first part is an introductory overview of RISC-V assembly language."
+ },
+ {
+  "id": 6,
+  "text": "The second part gives a general overview of the instructions first."
+ },
+ {
+  "id": 7,
+  "text": "I'll give you an idea of roughly what's covered."
+ },
+ {
+  "id": 8,
+  "text": "Then the third part goes a bit further."
+ },
+ {
+  "id": 9,
+  "text": "In practice, that means walking through some of the detailed instructions."
+ },
+ {
+  "id": 10,
+  "text": "I'll go over those with you."
+ },
+ {
+  "id": 11,
+  "text": "The fourth part covers function calling conventions."
+ },
+ {
+  "id": 12,
+  "text": "And the fifth part"
+ },
+ {
+  "id": 13,
+  "text": "covers mixed programming of assembly and the C language."
+ },
+ {
+  "id": 14,
+  "text": "Along with related knowledge."
+ },
+ {
+  "id": 15,
+  "text": "Now, all of you"
+ },
+ {
+  "id": 16,
+  "text": "have probably studied some assembly language programming before."
+ },
+ {
+  "id": 17,
+  "text": "Well, the content"
+ },
+ {
+  "id": 18,
+  "text": "is actually quite similar."
+ },
+ {
+  "id": 19,
+  "text": "It's just that"
+ },
+ {
+  "id": 20,
+  "text": "Today we're building on RISC-V,"
+ },
+ {
+  "id": 21,
+  "text": "this new kind of instruction set architecture."
+ },
+ {
+  "id": 22,
+  "text": "Let me walk you through it."
+ },
+ {
+  "id": 23,
+  "text": "Now, the main references for today's class"
+ },
+ {
+  "id": 24,
+  "text": "are listed here for you."
+ },
+ {
+  "id": 25,
+  "text": "The first one is the unprivileged instruction set,"
+ },
+ {
+  "id": 26,
+  "text": "Volume 1 of RISC-V,"
+ },
+ {
+  "id": 27,
+  "text": "the Unprivileged ISA."
+ },
+ {
+  "id": 28,
+  "text": "As we go through the lecture, I'll take you along"
+ },
+ {
+  "id": 29,
+  "text": "to flip through this instruction set specification together."
+ },
+ {
+  "id": 30,
+  "text": "As for this instruction set document,"
+ },
+ {
+  "id": 31,
+  "text": "the content is in what we sent you,"
+ },
+ {
+  "id": 32,
+  "text": "that is, in the online repository,"
+ },
+ {
+  "id": 33,
+  "text": "it's placed under reference,"
+ },
+ {
+  "id": 34,
+  "text": "under the reference materials section."
+ },
+ {
+  "id": 35,
+  "text": "It's this one right here."
+ },
+ {
+  "id": 36,
+  "text": "When we need it later on,"
+ },
+ {
+  "id": 37,
+  "text": "I'll take you through it together."
+ },
+ {
+  "id": 38,
+  "text": "Then the second one"
+ },
+ {
+  "id": 39,
+  "text": "is this online material."
+ },
+ {
+  "id": 40,
+  "text": "So, this one of ours, this..."
+ },
+ {
+  "id": 41,
+  "text": "Since we're learning assembly language,"
+ },
+ {
+  "id": 42,
+  "text": "we know that with assembly language,"
+ },
+ {
+  "id": 43,
+  "text": "when it comes to processing it,"
+ },
+ {
+  "id": 44,
+  "text": "we mainly use what's called"
+ },
+ {
+  "id": 45,
+  "text": "an assembler,"
+ },
+ {
+  "id": 46,
+  "text": "a tool like that,"
+ },
+ {
+  "id": 47,
+  "text": "to work on it,"
+ },
+ {
+  "id": 48,
+  "text": "right?"
+ },
+ {
+  "id": 49,
+  "text": "And we,"
+ },
+ {
+  "id": 50,
+  "text": "we use GNU's assembler,"
+ },
+ {
+  "id": 51,
+  "text": "so for this assembler, its online documentation,"
+ },
+ {
+  "id": 52,
+  "text": "you can also take a look at it after class."
+ },
+ {
+  "id": 53,
+  "text": "I've listed the link right here for everyone."
+ },
+ {
+  "id": 54,
+  "text": "Now let's get into the main content of our course."
+ },
+ {
+  "id": 55,
+  "text": "The first part is an introductory overview for you."
+ },
+ {
+  "id": 56,
+  "text": "It mainly covers some basic concepts of assembly language."
+ },
+ {
+  "id": 57,
+  "text": "Let's first take a look at exactly what it is."
+ },
+ {
+  "id": 58,
+  "text": "What is assembly language?"
+ },
+ {
+  "id": 59,
+  "text": "Back in our first course,"
+ },
+ {
+  "id": 60,
+  "text": "When we talked about the history of language evolution,"
+ },
+ {
+  "id": 61,
+  "text": "I actually already touched on this briefly,"
+ },
+ {
+  "id": 62,
+  "text": "right?"
+ },
+ {
+  "id": 63,
+  "text": "You all know that assembly language"
+ },
+ {
+  "id": 64,
+  "text": "is basically machine language that's been slightly modified,"
+ },
+ {
+  "id": 65,
+  "text": "turned into a way of writing"
+ },
+ {
+  "id": 66,
+  "text": "that we humans can understand reasonably well,"
+ },
+ {
+  "id": 67,
+  "text": "right?"
+ },
+ {
+  "id": 68,
+  "text": "So it's a kind of..."
+ },
+ {
+  "id": 69,
+  "text": "assembly language,"
+ },
+ {
+  "id": 70,
+  "text": "in English,"
+ },
+ {
+  "id": 71,
+  "text": "is called Assembly Language,"
+ },
+ {
+  "id": 72,
+  "text": "and it's a low-level language."
+ },
+ {
+  "id": 73,
+  "text": "Now, note this:"
+ },
+ {
+  "id": 74,
+  "text": "when we say \"low-level\","
+ },
+ {
+  "id": 75,
+  "text": "it means that compared to our high-level languages,"
+ },
+ {
+  "id": 76,
+  "text": "its level of abstraction is relatively lower."
+ },
+ {
+  "id": 77,
+  "text": "As for what we mean by abstraction level,"
+ },
+ {
+  "id": 78,
+  "text": "you've probably learned some high-level languages,"
+ },
+ {
+  "id": 79,
+  "text": "like C, or things like C++ or Java."
+ },
+ {
+  "id": 80,
+  "text": "So where do you think this so-called 'high-level' aspect comes in?"
+ },
+ {
+  "id": 81,
+  "text": "It introduces concepts that are closer to"
+ },
+ {
+  "id": 82,
+  "text": "things we humans can understand fairly well, right?"
+ },
+ {
+  "id": 83,
+  "text": "For example, some object-oriented concepts,"
+ },
+ {
+  "id": 84,
+  "text": "structs,"
+ },
+ {
+  "id": 85,
+  "text": "and things like procedures and functions."
+ },
+ {
+  "id": 86,
+  "text": "Now, this assembly language,"
+ },
+ {
+  "id": 87,
+  "text": "what we call 'low-level',"
+ },
+ {
+  "id": 88,
+  "text": "is actually low-level in the sense that"
+ },
+ {
+  "id": 89,
+  "text": "it is closer to"
+ },
+ {
+  "id": 90,
+  "text": "the machine language of the computer's processor."
+ },
+ {
+  "id": 91,
+  "text": "When we program in it,"
+ },
+ {
+  "id": 92,
+  "text": "we actually need to understand"
+ },
+ {
+  "id": 93,
+  "text": "more, and understand more deeply, some things about the hardware."
+ },
+ {
+  "id": 94,
+  "text": "Only then will it be easier to use well."
+ },
+ {
+  "id": 95,
+  "text": "It's not like when you've only learned a high-level language,"
+ },
+ {
+  "id": 96,
+  "text": "where you actually end up forgetting some things about how the computer really works."
+ },
+ {
+  "id": 97,
+  "text": "So this,"
+ },
+ {
+  "id": 98,
+  "text": "when we talk about this assembly language,"
+ },
+ {
+  "id": 99,
+  "text": "it has some of these drawbacks, but it also has its advantages."
+ },
+ {
+  "id": 100,
+  "text": "So, here,"
+ },
+ {
+  "id": 101,
+  "text": "let me summarize this for you again."
+ },
+ {
+  "id": 102,
+  "text": "First,"
+ },
+ {
+  "id": 103,
+  "text": "let's take a look at the drawbacks of assembly language."
+ },
+ {
+  "id": 104,
+  "text": "Because when we talk about assembly language,"
+ },
+ {
+  "id": 105,
+  "text": "since you haven't had much contact with it or used it much,"
+ },
+ {
+  "id": 106,
+  "text": "you might feel a little bit afraid of it,"
+ },
+ {
+  "id": 107,
+  "text": "right?"
+ },
+ {
+  "id": 108,
+  "text": "And that's actually true,"
+ },
+ {
+  "id": 109,
+  "text": "because when you program in assembly language,"
+ },
+ {
+  "id": 110,
+  "text": "it's really not that convenient."
+ },
+ {
+  "id": 111,
+  "text": "As we just said,"
+ },
+ {
+  "id": 112,
+  "text": "it's a bit on the low-level side."
+ },
+ {
+  "id": 113,
+  "text": "So its"
+ },
+ {
+  "id": 114,
+  "text": "drawbacks show up in"
+ },
+ {
+  "id": 115,
+  "text": "three areas."
+ },
+ {
+  "id": 116,
+  "text": "First, it's hard to read."
+ },
+ {
+  "id": 117,
+  "text": "Second, it's hard to write."
+ },
+ {
+  "id": 118,
+  "text": "And third,"
+ },
+ {
+  "id": 119,
+  "text": "it's fairly hard to port."
+ },
+ {
+  "id": 120,
+  "text": "Right?"
+ },
+ {
+  "id": 121,
+  "text": "Think about it for a moment."
+ },
+ {
+  "id": 122,
+  "text": "That is to say,"
+ },
+ {
+  "id": 123,
+  "text": "what do we mean by 'hard to read'?"
+ },
+ {
+  "id": 124,
+  "text": "I think all of you"
+ },
+ {
+  "id": 125,
+  "text": "should know if you've learned some assembly language,"
+ },
+ {
+  "id": 126,
+  "text": "that"
+ },
+ {
+  "id": 127,
+  "text": "when it comes to writing it,"
+ },
+ {
+  "id": 128,
+  "text": "it's pretty obscure."
+ },
+ {
+  "id": 129,
+  "text": "Unlike high-level languages,"
+ },
+ {
+  "id": 130,
+  "text": "maybe some simple things,"
+ },
+ {
+  "id": 131,
+  "text": "that is to say,"
+ },
+ {
+  "id": 132,
+  "text": "if you want to implement the same functionality,"
+ },
+ {
+  "id": 133,
+  "text": "a high-level language might do it in one or two statements."
+ },
+ {
+  "id": 134,
+  "text": "But with assembly language,"
+ },
+ {
+  "id": 135,
+  "text": "you have to write many statements,"
+ },
+ {
+  "id": 136,
+  "text": "because it's basically one statement"
+ },
+ {
+  "id": 137,
+  "text": "corresponding to one machine instruction."
+ },
+ {
+  "id": 138,
+  "text": "And on top of that,"
+ },
+ {
+  "id": 139,
+  "text": "because it involves things like registers,"
+ },
+ {
+  "id": 140,
+  "text": "and various other operations."
+ },
+ {
+  "id": 141,
+  "text": "So the concept of registers"
+ },
+ {
+  "id": 142,
+  "text": "is very tightly coupled with the hardware."
+ },
+ {
+  "id": 143,
+  "text": "If you don't understand the hardware,"
+ },
+ {
+  "id": 144,
+  "text": "it's actually quite hard to write."
+ },
+ {
+  "id": 145,
+  "text": "So the second point is that it's hard to write."
+ },
+ {
+  "id": 146,
+  "text": "Right?"
+ },
+ {
+  "id": 147,
+  "text": "Hard to read and hard to write."
+ },
+ {
+  "id": 148,
+  "text": "Now, as for being hard to port,"
+ },
+ {
+  "id": 149,
+  "text": "can you figure this out on your own?"
+ },
+ {
+  "id": 150,
+  "text": "That is, why do we say it's relatively hard to port?"
+ },
+ {
+  "id": 151,
+  "text": "What exactly do we mean by porting?"
+ },
+ {
+  "id": 152,
+  "text": "Have any of you run into this issue before?"
+ },
+ {
+  "id": 153,
+  "text": "Well, the difficulty of porting is actually quite easy to understand."
+ },
+ {
+  "id": 154,
+  "text": "As we know, assembly language"
+ },
+ {
+  "id": 155,
+  "text": "corresponds one-to-one with machine instructions, basically."
+ },
+ {
+  "id": 156,
+  "text": "So with different instruction set architectures,"
+ },
+ {
+  "id": 157,
+  "text": "their machine language is definitely different."
+ },
+ {
+  "id": 158,
+  "text": "Think about it, isn't that so?"
+ },
+ {
+  "id": 159,
+  "text": "Different CPU types"
+ },
+ {
+  "id": 160,
+  "text": "Take x86, for example,"
+ },
+ {
+  "id": 161,
+  "text": "or, say, ARM."
+ },
+ {
+  "id": 162,
+  "text": "Their registers,"
+ },
+ {
+  "id": 163,
+  "text": "the numbers of them are all different,"
+ },
+ {
+  "id": 164,
+  "text": "and their functions are all different."
+ },
+ {
+  "id": 165,
+  "text": "So when it comes to operating on these different registers,"
+ },
+ {
+  "id": 166,
+  "text": "the instructions and so on are different too."
+ },
+ {
+  "id": 167,
+  "text": "So writing them is really two completely separate sets of things."
+ },
+ {
+  "id": 168,
+  "text": "Some of the concepts are kind of similar,"
+ },
+ {
+  "id": 169,
+  "text": "but writing them is really two completely separate sets of things."
+ },
+ {
+  "id": 170,
+  "text": "Now, given that this is the case,"
+ },
+ {
+  "id": 171,
+  "text": "just imagine this."
+ },
+ {
+  "id": 172,
+  "text": "That is, suppose we want to implement the same functionality."
+ },
+ {
+  "id": 173,
+  "text": "After I've written a set of assembly instructions for an x86 machine,"
+ },
+ {
+  "id": 174,
+  "text": "if I take those instructions and run them on,"
+ },
+ {
+  "id": 175,
+  "text": "say, an ARM machine,"
+ },
+ {
+  "id": 176,
+  "text": "they're definitely not going to run."
+ },
+ {
+  "id": 177,
+  "text": "In fact, you'd have to rewrite them."
+ },
+ {
+  "id": 178,
+  "text": "So what this shows is that,"
+ },
+ {
+  "id": 179,
+  "text": "it's quite hard to port."
+ },
+ {
+  "id": 180,
+  "text": "Unlike high-level source code,"
+ },
+ {
+  "id": 181,
+  "text": "with a high-level language,"
+ },
+ {
+  "id": 182,
+  "text": "you really only write the code once,"
+ },
+ {
+  "id": 183,
+  "text": "and you don't have to care at all"
+ },
+ {
+  "id": 184,
+  "text": "about these differences at the CPU level underneath,"
+ },
+ {
+  "id": 185,
+  "text": "right?"
+ },
+ {
+  "id": 186,
+  "text": "When you say you write it once,"
+ },
+ {
+  "id": 187,
+  "text": "the final translation"
+ },
+ {
+  "id": 188,
+  "text": "is actually done by the compiler,"
+ },
+ {
+  "id": 189,
+  "text": "which shields you from that whole layer."
+ },
+ {
+  "id": 190,
+  "text": "Think about it — isn't that the case?"
+ },
+ {
+  "id": 191,
+  "text": "Now, assembly language,"
+ },
+ {
+  "id": 192,
+  "text": "while its drawbacks are pretty obvious,"
+ },
+ {
+  "id": 193,
+  "text": "its advantages are also very clear."
+ },
+ {
+  "id": 194,
+  "text": "Right?"
+ },
+ {
+  "id": 195,
+  "text": "Since you're dealing directly with the hardware,"
+ },
+ {
+  "id": 196,
+  "text": "its advantage shows up in the fact that"
+ },
+ {
+  "id": 197,
+  "text": "it is extremely flexible and powerful."
+ },
+ {
+  "id": 198,
+  "text": "By flexible, I mean"
+ },
+ {
+  "id": 199,
+  "text": "you can imagine this:"
+ },
+ {
+  "id": 200,
+  "text": "也就是说, when we usually use a high-level language"
+ },
+ {
+  "id": 201,
+  "text": "to write these programs,"
+ },
+ {
+  "id": 202,
+  "text": "in the end, it has to go through the compiler,"
+ },
+ {
+  "id": 203,
+  "text": "which translates it into machine instructions for you,"
+ },
+ {
+  "id": 204,
+  "text": "before it can run on the CPU."
+ },
+ {
+  "id": 205,
+  "text": "Right?"
+ },
+ {
+  "id": 206,
+  "text": "So, since the compiler is the one doing the translation for you,"
+ },
+ {
+  "id": 207,
+  "text": "the optimization process in between,"
+ },
+ {
+  "id": 208,
+  "text": "and how the machine instructions are organized,"
+ },
+ {
+  "id": 209,
+  "text": "is actually handled by the compiler for you."
+ },
+ {
+  "id": 210,
+  "text": "You have no way to step in and intervene in any of this."
+ },
+ {
+  "id": 211,
+  "text": "But if you want to"
+ },
+ {
+  "id": 212,
+  "text": "optimize these machine instructions more deeply,"
+ },
+ {
+  "id": 213,
+  "text": "and bring out the machine's characteristics,"
+ },
+ {
+  "id": 214,
+  "text": "its capabilities,"
+ },
+ {
+  "id": 215,
+  "text": "and fully exploit them,"
+ },
+ {
+  "id": 216,
+  "text": "then you actually still have to"
+ },
+ {
+  "id": 217,
+  "text": "go down to the lowest level of machine instructions,"
+ },
+ {
+  "id": 218,
+  "text": "at that level,"
+ },
+ {
+  "id": 219,
+  "text": "and optimize at that level."
+ },
+ {
+  "id": 220,
+  "text": "So at this point,"
+ },
+ {
+  "id": 221,
+  "text": "you can flexibly organize things on your own,"
+ },
+ {
+  "id": 222,
+  "text": "these kinds of operations on the hardware."
+ },
+ {
+  "id": 223,
+  "text": "That is to say, you can bypass the compiler."
+ },
+ {
+  "id": 224,
+  "text": "Put simply, you bypass the compiler"
+ },
+ {
+  "id": 225,
+  "text": "to do these things."
+ },
+ {
+  "id": 226,
+  "text": "So this shows a principle:"
+ },
+ {
+  "id": 227,
+  "text": "the lower-level a feature is,"
+ },
+ {
+  "id": 228,
+  "text": "the more flexible it is."
+ },
+ {
+  "id": 229,
+  "text": "Right?"
+ },
+ {
+  "id": 230,
+  "text": "In fact, if you've used C,"
+ },
+ {
+  "id": 231,
+  "text": "and then you use Java,"
+ },
+ {
+  "id": 232,
+  "text": "or some other high-level language,"
+ },
+ {
+  "id": 233,
+  "text": "like Python,"
+ },
+ {
+  "id": 234,
+  "text": "you can feel this too."
+ },
+ {
+  "id": 235,
+  "text": "Right?"
+ },
+ {
+  "id": 236,
+  "text": "Because C, compared to"
+ },
+ {
+  "id": 237,
+  "text": "other high-level languages,"
+ },
+ {
+  "id": 238,
+  "text": "is also a bit on the low-level side."
+ },
+ {
+  "id": 239,
+  "text": "Because many high-level languages..."
+ },
+ {
+  "id": 240,
+  "text": "Actually, underneath it is written in C,"
+ },
+ {
+  "id": 241,
+  "text": "to write some of its libraries."
+ },
+ {
+  "id": 242,
+  "text": "So once you have mastered C,"
+ },
+ {
+  "id": 243,
+  "text": "you can actually write some"
+ },
+ {
+  "id": 244,
+  "text": "more efficient programs,"
+ },
+ {
+  "id": 245,
+  "text": "and they'll run faster too."
+ },
+ {
+  "id": 246,
+  "text": "Now, with this flexibility,"
+ },
+ {
+  "id": 247,
+  "text": "what makes it so powerful is that"
+ },
+ {
+  "id": 248,
+  "text": "we can operate at the low level"
+ },
+ {
+  "id": 249,
+  "text": "and control the hardware directly,"
+ },
+ {
+  "id": 250,
+  "text": "doing deeper optimizations."
+ },
+ {
+  "id": 251,
+  "text": "This is where your ability really shows."
+ },
+ {
+  "id": 252,
+  "text": "So that's why these things are"
+ },
+ {
+  "id": 253,
+  "text": "after you've mastered assembly language,"
+ },
+ {
+  "id": 254,
+  "text": "there are certain things that"
+ },
+ {
+  "id": 255,
+  "text": "in high-level languages"
+ },
+ {
+  "id": 256,
+  "text": "simply cannot be done at all,"
+ },
+ {
+  "id": 257,
+  "text": "but assembly can do them all."
+ },
+ {
+  "id": 258,
+  "text": "Now some students may ask,"
+ },
+ {
+  "id": 259,
+  "text": "so should I actually use assembly?"
+ },
+ {
+  "id": 260,
+  "text": "What kinds of things does it do?"
+ },
+ {
+  "id": 261,
+  "text": "Since it is so flexible and powerful,"
+ },
+ {
+  "id": 262,
+  "text": "then we say"
+ },
+ {
+  "id": 263,
+  "text": "naturally,"
+ },
+ {
+  "id": 264,
+  "text": "as we've already mentioned repeatedly just now,"
+ },
+ {
+  "id": 265,
+  "text": "that is, it can actually"
+ },
+ {
+  "id": 266,
+  "text": "directly manipulate the hardware"
+ },
+ {
+  "id": 267,
+  "text": "in a direct way."
+ },
+ {
+  "id": 268,
+  "text": "So the lower level you go,"
+ },
+ {
+  "id": 269,
+  "text": "the closer you get to the hardware,"
+ },
+ {
+  "id": 270,
+  "text": "in places where you access the hardware,"
+ },
+ {
+  "id": 271,
+  "text": "the more we will use assembly."
+ },
+ {
+  "id": 272,
+  "text": "For example,"
+ },
+ {
+  "id": 273,
+  "text": "writing drivers,"
+ },
+ {
+  "id": 274,
+  "text": "writing the operating system's"
+ },
+ {
+  "id": 275,
+  "text": "bootloader,"
+ },
+ {
+  "id": 276,
+  "text": "these kinds of parts"
+ },
+ {
+  "id": 277,
+  "text": "will all use"
+ },
+ {
+  "id": 278,
+  "text": "this assembly language."
+ },
+ {
+  "id": 279,
+  "text": "But, generally speaking,"
+ },
+ {
+  "id": 280,
+  "text": "It won't write large chunks of assembly"
+ },
+ {
+  "id": 281,
+  "text": "because if your program"
+ },
+ {
+  "id": 282,
+  "text": "needs a lot of assembly written for it,"
+ },
+ {
+  "id": 283,
+  "text": "then actually,"
+ },
+ {
+  "id": 284,
+  "text": "we'd actually recommend that you"
+ },
+ {
+  "id": 285,
+  "text": "write it in a high-level language instead,"
+ },
+ {
+  "id": 286,
+  "text": "because the maintainability"
+ },
+ {
+  "id": 287,
+  "text": "will probably be better,"
+ },
+ {
+  "id": 288,
+  "text": "and so will the readability."
+ },
+ {
+  "id": 289,
+  "text": "There's one more thing,"
+ },
+ {
+  "id": 290,
+  "text": "which is,"
+ },
+ {
+  "id": 291,
+  "text": "if you want to squeeze out"
+ },
+ {
+  "id": 292,
+  "text": "the ultimate performance,"
+ },
+ {
+  "id": 293,
+  "text": "then, as we just said,"
+ },
+ {
+  "id": 294,
+  "text": "since it requires"
+ },
+ {
+  "id": 295,
+  "text": "this kind of flexibility,"
+ },
+ {
+  "id": 296,
+  "text": "we can actually do that."
+ },
+ {
+  "id": 297,
+  "text": "If your mastery of assembly language"
+ },
+ {
+  "id": 298,
+  "text": "is at a really advanced level,"
+ },
+ {
+  "id": 299,
+  "text": "then in practice you can"
+ },
+ {
+  "id": 300,
+  "text": "you don't even need to rely on the compiler"
+ },
+ {
+  "id": 301,
+  "text": "to do some optimizations"
+ },
+ {
+  "id": 302,
+  "text": "you can optimize the instructions completely on your own"
+ },
+ {
+  "id": 303,
+  "text": "and that's perfectly fine"
+ },
+ {
+  "id": 304,
+  "text": "So this is what we call"
+ },
+ {
+  "id": 305,
+  "text": "the application scenario of assembly"
+ },
+ {
+  "id": 306,
+  "text": "That is to say, a lot of times, if"
+ },
+ {
+  "id": 307,
+  "text": "you are interested in some low-level stuff"
+ },
+ {
+  "id": 308,
+  "text": "if you're really into it,"
+ },
+ {
+  "id": 309,
+  "text": "or even sometimes maybe you want to"
+ },
+ {
+  "id": 310,
+  "text": "build one yourself,"
+ },
+ {
+  "id": 311,
+  "text": "something kind of cool,"
+ },
+ {
+  "id": 312,
+  "text": "like a hack, or, to put it less politely,"
+ },
+ {
+  "id": 313,
+  "text": "if you want to be a hacker,"
+ },
+ {
+  "id": 314,
+  "text": "then mastering assembly"
+ },
+ {
+  "id": 315,
+  "text": "is absolutely essential,"
+ },
+ {
+  "id": 316,
+  "text": "because a lot of"
+ },
+ {
+  "id": 317,
+  "text": "well, for example,"
+ },
+ {
+  "id": 318,
+  "text": "take some little viruses for instance,"
+ },
+ {
+  "id": 319,
+  "text": "a lot of them are written in assembly"
+ },
+ {
+  "id": 320,
+  "text": "right?"
+ },
+ {
+  "id": 321,
+  "text": "Because a virus itself has to be quite small,"
+ },
+ {
+  "id": 322,
+  "text": "it can be implanted very easily."
+ },
+ {
+  "id": 323,
+  "text": "So these are some"
+ },
+ {
+  "id": 324,
+  "text": "basic concepts of assembly"
+ },
+ {
+  "id": 325,
+  "text": "that everyone should get a handle on first."
+ },
+ {
+  "id": 326,
+  "text": "Now, after saying all this,"
+ },
+ {
+  "id": 327,
+  "text": "when it comes to writing assembly,"
+ },
+ {
+  "id": 328,
+  "text": "it is also a language,"
+ },
+ {
+  "id": 329,
+  "text": "and so, what is this language"
+ },
+ {
+  "id": 330,
+  "text": "actually like?"
+ },
+ {
+  "id": 331,
+  "text": "Let's take a look at it together next."
+ },
+ {
+  "id": 332,
+  "text": "So, about this"
+ },
+ {
+  "id": 333,
+  "text": "assembly language,"
+ },
+ {
+  "id": 334,
+  "text": "one thing to note,"
+ },
+ {
+  "id": 335,
+  "text": "is that when you write assembly language,"
+ },
+ {
+  "id": 336,
+  "text": "its syntax"
+ },
+ {
+  "id": 337,
+  "text": "actually depends, to some extent,"
+ },
+ {
+  "id": 338,
+  "text": "on the assembler you are using."
+ },
+ {
+  "id": 339,
+  "text": "Different assemblers"
+ },
+ {
+  "id": 340,
+  "text": "the syntax formats it supports are actually a bit different"
+ },
+ {
+  "id": 341,
+  "text": "So on our side,"
+ },
+ {
+  "id": 342,
+  "text": "let's define the scope of what we cover."
+ },
+ {
+  "id": 343,
+  "text": "Because when we do the exercises later,"
+ },
+ {
+  "id": 344,
+  "text": "the toolchain we provide by default"
+ },
+ {
+  "id": 345,
+  "text": "— that is, the compilation tools —"
+ },
+ {
+  "id": 346,
+  "text": "actually uses this GNU toolchain,"
+ },
+ {
+  "id": 347,
+  "text": "the compiler,"
+ },
+ {
+  "id": 348,
+  "text": "the assembler."
+ },
+ {
+  "id": 349,
+  "text": "So,"
+ },
+ {
+  "id": 350,
+  "text": "all of the material I'm introducing here"
+ },
+ {
+  "id": 351,
+  "text": "is really limited to"
+ },
+ {
+  "id": 352,
+  "text": "— that is,"
+ },
+ {
+  "id": 353,
+  "text": "making sure it's syntax that will"
+ },
+ {
+  "id": 354,
+  "text": "run on the GNU"
+ },
+ {
+  "id": 355,
+  "text": "assembler."
+ },
+ {
+  "id": 356,
+  "text": "Now, some of you,"
+ },
+ {
+  "id": 357,
+  "text": "if you take our code as it is now"
+ },
+ {
+  "id": 358,
+  "text": "and put it into a different assembler,"
+ },
+ {
+  "id": 359,
+  "text": "say one of the Intel ones,"
+ },
+ {
+  "id": 360,
+  "text": "Or if it's ARM's own built-in"
+ },
+ {
+  "id": 361,
+  "text": "assembler,"
+ },
+ {
+  "id": 362,
+  "text": "it might not recognize it."
+ },
+ {
+  "id": 363,
+  "text": "Please keep that in mind."
+ },
+ {
+  "id": 364,
+  "text": "There is a difference."
+ },
+ {
+  "id": 365,
+  "text": "Now let's take a look at"
+ },
+ {
+  "id": 366,
+  "text": "how to actually write an assembly program."
+ },
+ {
+  "id": 367,
+  "text": "Actually, an assembly program is still relatively"
+ },
+ {
+  "id": 368,
+  "text": "not too complicated in terms of syntax."
+ },
+ {
+  "id": 369,
+  "text": "In terms of the overall framework,"
+ },
+ {
+  "id": 370,
+  "text": "let's say one,"
+ },
+ {
+  "id": 371,
+  "text": "I've written it out here for you."
+ },
+ {
+  "id": 372,
+  "text": "That is, an assembly program,"
+ },
+ {
+  "id": 373,
+  "text": "for example, an assembly program,"
+ },
+ {
+  "id": 374,
+  "text": "is written as a file,"
+ },
+ {
+  "id": 375,
+  "text": "and the suffix is usually a lowercase s,"
+ },
+ {
+  "id": 376,
+  "text": "or an uppercase S."
+ },
+ {
+  "id": 377,
+  "text": "Now, between the lowercase s and the uppercase S,"
+ },
+ {
+  "id": 378,
+  "text": "do you all understand the difference yet?"
+ },
+ {
+  "id": 379,
+  "text": "I did briefly mention it last time."
+ },
+ {
+  "id": 380,
+  "text": "Remember this."
+ },
+ {
+  "id": 381,
+  "text": "Sometimes you may have noticed"
+ },
+ {
+  "id": 382,
+  "text": "that some assembly files"
+ },
+ {
+  "id": 383,
+  "text": "have a lowercase s as the file extension,"
+ },
+ {
+  "id": 384,
+  "text": "while others use an uppercase S."
+ },
+ {
+  "id": 385,
+  "text": "In the exercises that follow,"
+ },
+ {
+  "id": 386,
+  "text": "at least in this class,"
+ },
+ {
+  "id": 387,
+  "text": "we'll basically use the lowercase s throughout."
+ },
+ {
+  "id": 388,
+  "text": "Later on, when we write the operating system,"
+ },
+ {
+  "id": 389,
+  "text": "we'll use files with the uppercase S,"
+ },
+ {
+  "id": 390,
+  "text": "and you can compare them yourself."
+ },
+ {
+  "id": 391,
+  "text": "The main difference"
+ },
+ {
+  "id": 392,
+  "text": "is really that with the uppercase S,"
+ },
+ {
+  "id": 393,
+  "text": "the file can actually contain some"
+ },
+ {
+  "id": 394,
+  "text": "preprocessing directives,"
+ },
+ {
+  "id": 395,
+  "text": "such as #include,"
+ },
+ {
+  "id": 396,
+  "text": "#define, and so on."
+ },
+ {
+  "id": 397,
+  "text": "With the lowercase .s,"
+ },
+ {
+  "id": 398,
+  "text": "all it contains is"
+ },
+ {
+  "id": 399,
+  "text": "pure assembly instructions."
+ },
+ {
+  "id": 400,
+  "text": "That's how it is."
+ },
+ {
+  "id": 401,
+  "text": "This is something you can look into."
+ },
+ {
+  "id": 402,
+  "text": "So when we talk about a complete assembly program,"
+ },
+ {
+  "id": 403,
+  "text": "that is, a complete"
+ },
+ {
+  "id": 404,
+  "text": "assembly program,"
+ },
+ {
+  "id": 405,
+  "text": "which is a .s file,"
+ },
+ {
+  "id": 406,
+  "text": "what is it made up of?"
+ },
+ {
+  "id": 407,
+  "text": "It is essentially made up of"
+ },
+ {
+  "id": 408,
+  "text": "statements one by one."
+ },
+ {
+  "id": 409,
+  "text": "Each statement,"
+ },
+ {
+  "id": 410,
+  "text": "we call it a statement."
+ },
+ {
+  "id": 411,
+  "text": "In these slides,"
+ },
+ {
+  "id": 412,
+  "text": "I've also written the English terms."
+ },
+ {
+  "id": 413,
+  "text": "This is mainly to make it easier for you later,"
+ },
+ {
+  "id": 414,
+  "text": "because a lot of material"
+ },
+ {
+  "id": 415,
+  "text": "is still in English and you'll have to read it."
+ },
+ {
+  "id": 416,
+  "text": "So when you see the English,"
+ },
+ {
+  "id": 417,
+  "text": "if there are words"
+ },
+ {
+  "id": 418,
+  "text": "whose exact meaning you're not sure of,"
+ },
+ {
+  "id": 419,
+  "text": "you can also refer back to these."
+ },
+ {
+  "id": 420,
+  "text": "The things I've listed for you in the slides"
+ },
+ {
+  "id": 421,
+  "text": "Because basically,"
+ },
+ {
+  "id": 422,
+  "text": "the official documentation is all in English,"
+ },
+ {
+  "id": 423,
+  "text": "so I hope everyone will get familiar with these technical terms"
+ },
+ {
+  "id": 424,
+  "text": "—I do want you to understand them."
+ },
+ {
+  "id": 425,
+  "text": "If we only talk in Chinese,"
+ },
+ {
+  "id": 426,
+  "text": "it might cause some confusion."
+ },
+ {
+  "id": 427,
+  "text": "Just want to mention that to you."
+ },
+ {
+  "id": 428,
+  "text": "So this is the statements, line by line."
+ },
+ {
+  "id": 429,
+  "text": "Now what format does each line of statement follow?"
+ },
+ {
+  "id": 430,
+  "text": "The format is also very simple."
+ },
+ {
+  "id": 431,
+  "text": "Simple, it's just what I've listed for you here,"
+ },
+ {
+  "id": 432,
+  "text": "which is to say it's actually made up of three parts,"
+ },
+ {
+  "id": 433,
+  "text": "and the order is from left to right."
+ },
+ {
+  "id": 434,
+  "text": "The first part"
+ },
+ {
+  "id": 435,
+  "text": "is something called a label."
+ },
+ {
+  "id": 436,
+  "text": "A label,"
+ },
+ {
+  "id": 437,
+  "text": "which is what we'd call a tag or marker."
+ },
+ {
+  "id": 438,
+  "text": "Now after the label,"
+ },
+ {
+  "id": 439,
+  "text": "there must be a colon."
+ },
+ {
+  "id": 440,
+  "text": "So why put it in square brackets?"
+ },
+ {
+  "id": 441,
+  "text": "It means that"
+ },
+ {
+  "id": 442,
+  "text": "this item is optional"
+ },
+ {
+  "id": 443,
+  "text": "and can be omitted."
+ },
+ {
+  "id": 444,
+  "text": "If all three items are in square brackets,"
+ },
+ {
+  "id": 445,
+  "text": "that means it supports line breaks,"
+ },
+ {
+  "id": 446,
+  "text": "right?"
+ },
+ {
+  "id": 447,
+  "text": "That is to say, within this,"
+ },
+ {
+  "id": 448,
+  "text": "we can support line breaks."
+ },
+ {
+  "id": 449,
+  "text": "Now, the second item,"
+ },
+ {
+  "id": 450,
+  "text": "called operation."
+ },
+ {
+  "id": 451,
+  "text": "Now, the operation,"
+ },
+ {
+  "id": 452,
+  "text": "is relatively important."
+ },
+ {
+  "id": 453,
+  "text": "It is actually the real action."
+ },
+ {
+  "id": 454,
+  "text": "It actually happens here,"
+ },
+ {
+  "id": 455,
+  "text": "the operation action."
+ },
+ {
+  "id": 456,
+  "text": "Now, this operation,"
+ },
+ {
+  "id": 457,
+  "text": "also has"
+ },
+ {
+  "id": 458,
+  "text": "further subdivisions,"
+ },
+ {
+  "id": 459,
+  "text": "which we'll look at in a moment."
+ },
+ {
+  "id": 460,
+  "text": "Now there's another part,"
+ },
+ {
+  "id": 461,
+  "text": "which is the comment."
+ },
+ {
+  "id": 462,
+  "text": "A comment is just a note or remark in the code,"
+ },
+ {
+  "id": 463,
+  "text": "right?"
+ },
+ {
+  "id": 464,
+  "text": "This is something everyone should be familiar with."
+ },
+ {
+  "id": 465,
+  "text": "So the basic syntax looks like this."
+ },
+ {
+  "id": 466,
+  "text": "And the square brackets,"
+ },
+ {
+  "id": 467,
+  "text": "they indicate optional items."
+ },
+ {
+  "id": 468,
+  "text": "Now, in detail,"
+ },
+ {
+  "id": 469,
+  "text": "let's take a look at this."
+ },
+ {
+  "id": 470,
+  "text": "We mainly want to focus on"
+ },
+ {
+  "id": 471,
+  "text": "the label,"
+ },
+ {
+  "id": 472,
+  "text": "especially in the operation part,"
+ },
+ {
+  "id": 473,
+  "text": "what kinds of variations there actually are."
+ },
+ {
+  "id": 474,
+  "text": "So first, let's look at the label."
+ },
+ {
+  "id": 475,
+  "text": "As I just mentioned about the label,"
+ },
+ {
+  "id": 476,
+  "text": "that is to say,"
+ },
+ {
+  "id": 477,
+  "text": "it is actually a marker or label,"
+ },
+ {
+  "id": 478,
+  "text": "meaning that in this file,"
+ },
+ {
+  "id": 479,
+  "text": "any identifier that ends with a colon"
+ },
+ {
+  "id": 480,
+  "text": "it will be treated as a label"
+ },
+ {
+  "id": 481,
+  "text": "As we go through this,"
+ },
+ {
+  "id": 482,
+  "text": "let's look at the examples at the same time"
+ },
+ {
+  "id": 483,
+  "text": "That might make a stronger impression."
+ },
+ {
+  "id": 484,
+  "text": "Let's pull up that..."
+ },
+ {
+  "id": 485,
+  "text": "If the code is already on your machine,"
+ },
+ {
+  "id": 486,
+  "text": "you can open it and browse through it yourself."
+ },
+ {
+  "id": 487,
+  "text": "That is to say, in our..."
+ },
+ {
+  "id": 488,
+  "text": "in the code package we handed out to everyone,"
+ },
+ {
+  "id": 489,
+  "text": "there is a directory called code,"
+ },
+ {
+  "id": 490,
+  "text": "right?"
+ },
+ {
+  "id": 491,
+  "text": "Under this code directory,"
+ },
+ {
+  "id": 492,
+  "text": "there are two subdirectories."
+ },
+ {
+  "id": 493,
+  "text": "One is called ASM,"
+ },
+ {
+  "id": 494,
+  "text": "ASM is short for Assemble,"
+ },
+ {
+  "id": 495,
+  "text": "meaning assembly."
+ },
+ {
+  "id": 496,
+  "text": "So for this part,"
+ },
+ {
+  "id": 497,
+  "text": "the examples for this course"
+ },
+ {
+  "id": 498,
+  "text": "are all under this one."
+ },
+ {
+  "id": 499,
+  "text": "OS is for the operating system examples."
+ },
+ {
+  "id": 500,
+  "text": "Now, under Assemble,"
+ },
+ {
+  "id": 501,
+  "text": "there are many small examples divided up here."
+ },
+ {
+  "id": 502,
+  "text": "So let's take a look."
+ },
+ {
+  "id": 503,
+  "text": "Right now we'll cover this most basic part,"
+ },
+ {
+  "id": 504,
+  "text": "so let's look at this first example,"
+ },
+ {
+  "id": 505,
+  "text": "the example in this First directory."
+ },
+ {
+  "id": 506,
+  "text": "All of our files"
+ },
+ {
+  "id": 507,
+  "text": "are called test.s,"
+ },
+ {
+  "id": 508,
+  "text": "with a lowercase s as the extension."
+ },
+ {
+  "id": 509,
+  "text": "So you can open this file,"
+ },
+ {
+  "id": 510,
+  "text": "and this is our first"
+ },
+ {
+  "id": 511,
+  "text": "RISC-V assembly example."
+ },
+ {
+  "id": 512,
+  "text": "In this example,"
+ },
+ {
+  "id": 513,
+  "text": "you can see here"
+ },
+ {
+  "id": 514,
+  "text": "which parts are what we just talked about,"
+ },
+ {
+  "id": 515,
+  "text": "the thing called a label."
+ },
+ {
+  "id": 516,
+  "text": "As we just discussed,"
+ },
+ {
+  "id": 517,
+  "text": "this label must"
+ },
+ {
+  "id": 518,
+  "text": "end with a colon, right?"
+ },
+ {
+  "id": 519,
+  "text": "Isn't that so?"
+ },
+ {
+  "id": 520,
+  "text": "So, this..."
+ },
+ {
+  "id": 521,
+  "text": "Like, over here is a label."
+ },
+ {
+  "id": 522,
+  "text": "And of course, on my side here,"
+ },
+ {
+  "id": 523,
+  "text": "I've added some syntax highlighting,"
+ },
+ {
+  "id": 524,
+  "text": "so it might be a bit clearer to see."
+ },
+ {
+  "id": 525,
+  "text": "Now, this is also a label,"
+ },
+ {
+  "id": 526,
+  "text": "and,"
+ },
+ {
+  "id": 527,
+  "text": "one thing to notice,"
+ },
+ {
+  "id": 528,
+  "text": "this label,"
+ },
+ {
+  "id": 529,
+  "text": "it can actually be with"
+ },
+ {
+  "id": 530,
+  "text": "other stuff,"
+ },
+ {
+  "id": 531,
+  "text": "it can be written across two lines."
+ },
+ {
+  "id": 532,
+  "text": "Actually, if you write it like this,"
+ },
+ {
+  "id": 533,
+  "text": "it's really equivalent to..."
+ },
+ {
+  "id": 534,
+  "text": "I mean, these two lines,"
+ },
+ {
+  "id": 535,
+  "text": "these two lines are really equivalent to one line."
+ },
+ {
+  "id": 536,
+  "text": "You get what I mean, right?"
+ },
+ {
+  "id": 537,
+  "text": "Now, over here,"
+ },
+ {
+  "id": 538,
+  "text": "I've written it strictly on one line."
+ },
+ {
+  "id": 539,
+  "text": "Please note that."
+ },
+ {
+  "id": 540,
+  "text": "It's one complete statement,"
+ },
+ {
+  "id": 541,
+  "text": "that is, it fits on one line."
+ },
+ {
+  "id": 542,
+  "text": "So this,"
+ },
+ {
+  "id": 543,
+  "text": "what exactly is this label?"
+ },
+ {
+  "id": 544,
+  "text": "You can understand it this way:"
+ },
+ {
+  "id": 545,
+  "text": "in assembly,"
+ },
+ {
+  "id": 546,
+  "text": "this label"
+ },
+ {
+  "id": 547,
+  "text": "is essentially just an address."
+ },
+ {
+  "id": 548,
+  "text": "We give an address"
+ },
+ {
+  "id": 549,
+  "text": "a name,"
+ },
+ {
+  "id": 550,
+  "text": "that's the idea behind it."
+ },
+ {
+  "id": 551,
+  "text": "Because, as you all know,"
+ },
+ {
+  "id": 552,
+  "text": "this code,"
+ },
+ {
+  "id": 553,
+  "text": "after it's finally compiled,"
+ },
+ {
+  "id": 554,
+  "text": "what does it become?"
+ },
+ {
+  "id": 555,
+  "text": "After compilation,"
+ },
+ {
+  "id": 556,
+  "text": "it's just machine instructions,"
+ },
+ {
+  "id": 557,
+  "text": "right?"
+ },
+ {
+  "id": 558,
+  "text": "So this kind of,"
+ },
+ {
+  "id": 559,
+  "text": "this line here,"
+ },
+ {
+  "id": 560,
+  "text": "In the end, it will actually be compiled into"
+ },
+ {
+  "id": 561,
+  "text": "a single machine instruction."
+ },
+ {
+  "id": 562,
+  "text": "Now, as for a machine instruction,"
+ },
+ {
+  "id": 563,
+  "text": "as we know,"
+ },
+ {
+  "id": 564,
+  "text": "the process of running a program on a machine,"
+ },
+ {
+  "id": 565,
+  "text": "we already covered that"
+ },
+ {
+  "id": 566,
+  "text": "in the first lecture."
+ },
+ {
+  "id": 567,
+  "text": "Let's review it."
+ },
+ {
+  "id": 568,
+  "text": "Basically, every machine instruction"
+ },
+ {
+  "id": 569,
+  "text": "is loaded into memory,"
+ },
+ {
+  "id": 570,
+  "text": "and as it sits in memory,"
+ },
+ {
+  "id": 571,
+  "text": "doesn't it have an address?"
+ },
+ {
+  "id": 572,
+  "text": "Remember that animated demo of ours?"
+ },
+ {
+  "id": 573,
+  "text": "A mini, that mini CPU,"
+ },
+ {
+  "id": 574,
+  "text": "how does that mini CPU run?"
+ },
+ {
+  "id": 575,
+  "text": "Instructions are loaded in one by one"
+ },
+ {
+  "id": 576,
+  "text": "and executed, right?"
+ },
+ {
+  "id": 577,
+  "text": "Every instruction has an address."
+ },
+ {
+  "id": 578,
+  "text": "Now, this stop label,"
+ },
+ {
+  "id": 579,
+  "text": "you can actually think of it as"
+ },
+ {
+  "id": 580,
+  "text": "It adds an address to this instruction,"
+ },
+ {
+  "id": 581,
+  "text": "it attaches an address."
+ },
+ {
+  "id": 582,
+  "text": "So attaching it here,"
+ },
+ {
+  "id": 583,
+  "text": "presumably means we'll later need to use this address"
+ },
+ {
+  "id": 584,
+  "text": "to reference it."
+ },
+ {
+  "id": 585,
+  "text": "Some instructions"
+ },
+ {
+  "id": 586,
+  "text": "don't have an address attached in front,"
+ },
+ {
+  "id": 587,
+  "text": "which probably means we don't care"
+ },
+ {
+  "id": 588,
+  "text": "about the address of that instruction."
+ },
+ {
+  "id": 589,
+  "text": "Now, suppose"
+ },
+ {
+  "id": 590,
+  "text": "sometimes we do need to reference"
+ },
+ {
+  "id": 591,
+  "text": "the address of this instruction,"
+ },
+ {
+  "id": 592,
+  "text": "then we can"
+ },
+ {
+  "id": 593,
+  "text": "put a label right here."
+ },
+ {
+  "id": 594,
+  "text": "Even for some variables we define,"
+ },
+ {
+  "id": 595,
+  "text": "we can also add a label."
+ },
+ {
+  "id": 596,
+  "text": "Because everything in memory,"
+ },
+ {
+  "id": 597,
+  "text": "like a global variable,"
+ },
+ {
+  "id": 598,
+  "text": "may also have"
+ },
+ {
+  "id": 599,
+  "text": "its own address."
+ },
+ {
+  "id": 600,
+  "text": "Think about it, isn't that so?"
+ },
+ {
+  "id": 601,
+  "text": "So a label..."
+ },
+ {
+  "id": 602,
+  "text": "in assembly,"
+ },
+ {
+  "id": 603,
+  "text": "you can really just think of it as"
+ },
+ {
+  "id": 604,
+  "text": "an address, and that's all there is to it."
+ },
+ {
+  "id": 605,
+  "text": "Alright."
+ },
+ {
+  "id": 606,
+  "text": "That's the concept of a label."
+ },
+ {
+  "id": 607,
+  "text": "Very simple."
+ },
+ {
+  "id": 608,
+  "text": "Now moving further down,"
+ },
+ {
+  "id": 609,
+  "text": "we have the operation."
+ },
+ {
+  "id": 610,
+  "text": "The form of an operation is a bit more complex,"
+ },
+ {
+  "id": 611,
+  "text": "with quite a few variations."
+ },
+ {
+  "id": 612,
+  "text": "As for the operation,"
+ },
+ {
+  "id": 613,
+  "text": "if we summarize it,"
+ },
+ {
+  "id": 614,
+  "text": "it can take four forms."
+ },
+ {
+  "id": 615,
+  "text": "The first one is the instruction."
+ },
+ {
+  "id": 616,
+  "text": "Because, as we said, the most basic thing is,"
+ },
+ {
+  "id": 617,
+  "text": "in our assembly language,"
+ },
+ {
+  "id": 618,
+  "text": "one statement actually corresponds to one machine instruction."
+ },
+ {
+  "id": 619,
+  "text": "So an instruction is called an instruction."
+ },
+ {
+  "id": 620,
+  "text": "a string that directly corresponds to binary machine instructions"
+ },
+ {
+  "id": 621,
+  "text": "So in the example we just looked at,"
+ },
+ {
+  "id": 622,
+  "text": "which ones are machine instructions?"
+ },
+ {
+  "id": 623,
+  "text": "Take a look, everyone — which ones are machine instructions?"
+ },
+ {
+  "id": 624,
+  "text": "Strictly speaking,"
+ },
+ {
+  "id": 625,
+  "text": "all of these are actually machine instructions."
+ },
+ {
+  "id": 626,
+  "text": "But correspondingly, when we talk about"
+ },
+ {
+  "id": 627,
+  "text": "the concept of an instruction,"
+ },
+ {
+  "id": 628,
+  "text": "in these statements,"
+ },
+ {
+  "id": 629,
+  "text": "this is the instruction."
+ },
+ {
+  "id": 630,
+  "text": "We'll learn later that"
+ },
+ {
+  "id": 631,
+  "text": "the identifier add, this string,"
+ },
+ {
+  "id": 632,
+  "text": "is a code name for a basic instruction in RISC-V,"
+ },
+ {
+  "id": 633,
+  "text": "a basic instruction in RISC-V."
+ },
+ {
+  "id": 634,
+  "text": "This is what we call an instruction."
+ },
+ {
+  "id": 635,
+  "text": "Now some of you might ask,"
+ },
+ {
+  "id": 636,
+  "text": "what about things like LRI here?"
+ },
+ {
+  "id": 637,
+  "text": "Aren't those instructions too?"
+ },
+ {
+  "id": 638,
+  "text": "They are instructions as well,"
+ },
+ {
+  "id": 639,
+  "text": "but"
+ },
+ {
+  "id": 640,
+  "text": "We'll talk about that later."
+ },
+ {
+  "id": 641,
+  "text": "This kind of instruction,"
+ },
+ {
+  "id": 642,
+  "text": "we call it a pseudo-instruction."
+ },
+ {
+  "id": 643,
+  "text": "It still differs"
+ },
+ {
+  "id": 644,
+  "text": "from the native instruction"
+ },
+ {
+  "id": 645,
+  "text": "in some ways."
+ },
+ {
+  "id": 646,
+  "text": "Now, as for pseudo-instructions,"
+ },
+ {
+  "id": 647,
+  "text": "on our course materials,"
+ },
+ {
+  "id": 648,
+  "text": "it's written as,"
+ },
+ {
+  "id": 649,
+  "text": "the English term is 'Pseudo Instruction'"
+ },
+ {
+  "id": 650,
+  "text": "—meaning pseudo,"
+ },
+ {
+  "id": 651,
+  "text": "a fake instruction."
+ },
+ {
+  "id": 652,
+  "text": "So what..."
+ },
+ {
+  "id": 653,
+  "text": "why do we call it a fake instruction?"
+ },
+ {
+  "id": 654,
+  "text": "The thing is,"
+ },
+ {
+  "id": 655,
+  "text": "when you actually go look up"
+ },
+ {
+  "id": 656,
+  "text": "the RISC-V manual,"
+ },
+ {
+  "id": 657,
+  "text": "it actually..."
+ },
+ {
+  "id": 658,
+  "text": "it doesn't correspond to a"
+ },
+ {
+  "id": 659,
+  "text": "native"
+ },
+ {
+  "id": 660,
+  "text": "This RISC-V instruction,"
+ },
+ {
+  "id": 661,
+  "text": "rather, we say it"
+ },
+ {
+  "id": 662,
+  "text": "exists purely from the perspective of writing code"
+ },
+ {
+  "id": 663,
+  "text": "efficiently,"
+ },
+ {
+  "id": 664,
+  "text": "purely for the convenience of"
+ },
+ {
+  "id": 665,
+  "text": "our programmers when writing code."
+ },
+ {
+  "id": 666,
+  "text": "That is, it takes some"
+ },
+ {
+  "id": 667,
+  "text": "hard-to-use instructions,"
+ },
+ {
+  "id": 668,
+  "text": "basic instructions,"
+ },
+ {
+  "id": 669,
+  "text": "or some variations of instructions,"
+ },
+ {
+  "id": 670,
+  "text": "or some"
+ },
+ {
+  "id": 671,
+  "text": "combinations of native instructions,"
+ },
+ {
+  "id": 672,
+  "text": "and wraps them into a simple one,"
+ },
+ {
+  "id": 673,
+  "text": "giving it an alias."
+ },
+ {
+  "id": 674,
+  "text": "You get what I mean here, right?"
+ },
+ {
+  "id": 675,
+  "text": "It's given an alias,"
+ },
+ {
+  "id": 676,
+  "text": "and then,"
+ },
+ {
+  "id": 677,
+  "text": "to make it easier for us to use."
+ },
+ {
+  "id": 678,
+  "text": "So this pseudo-instruction,"
+ },
+ {
+  "id": 679,
+  "text": "it's possible that a pseudo-instruction is"
+ },
+ {
+  "id": 680,
+  "text": "Perhaps it's"
+ },
+ {
+  "id": 681,
+  "text": "that is to say, as an assembler"
+ },
+ {
+  "id": 682,
+  "text": "after we've written"
+ },
+ {
+  "id": 683,
+  "text": "this assembly"
+ },
+ {
+  "id": 684,
+  "text": "code,"
+ },
+ {
+  "id": 685,
+  "text": "don't we hand it over to"
+ },
+ {
+  "id": 686,
+  "text": "that Example"
+ },
+ {
+  "id": 687,
+  "text": "assembler to"
+ },
+ {
+  "id": 688,
+  "text": "process it?"
+ },
+ {
+  "id": 689,
+  "text": "What does the assembler do?"
+ },
+ {
+  "id": 690,
+  "text": "It takes this assembly language"
+ },
+ {
+  "id": 691,
+  "text": "and translates it into what?"
+ },
+ {
+  "id": 692,
+  "text": "Converts it into what?"
+ },
+ {
+  "id": 693,
+  "text": "Doesn't it convert it into"
+ },
+ {
+  "id": 694,
+  "text": "machine instructions?"
+ },
+ {
+  "id": 695,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 696,
+  "text": "Now, this assembly instruction,"
+ },
+ {
+  "id": 697,
+  "text": "when it sees this kind of"
+ },
+ {
+  "id": 698,
+  "text": "pseudo-instruction,"
+ },
+ {
+  "id": 699,
+  "text": "it will break it down further."
+ },
+ {
+  "id": 700,
+  "text": "It is broken down into"
+ },
+ {
+  "id": 701,
+  "text": "what we covered earlier—"
+ },
+ {
+  "id": 702,
+  "text": "real instructions that are then processed."
+ },
+ {
+  "id": 703,
+  "text": "This is called a pseudo-instruction,"
+ },
+ {
+  "id": 704,
+  "text": "and it is part of the assembly syntax as well."
+ },
+ {
+  "id": 705,
+  "text": "In our instruction set,"
+ },
+ {
+  "id": 706,
+  "text": "you'll see that in the specification"
+ },
+ {
+  "id": 707,
+  "text": "there is a definition for it too,"
+ },
+ {
+  "id": 708,
+  "text": "but it is actually an alias for an instruction."
+ },
+ {
+  "id": 709,
+  "text": "You can think of it this way:"
+ },
+ {
+  "id": 710,
+  "text": "a combination of instructions, or an alias for an instruction."
+ },
+ {
+  "id": 711,
+  "text": "As for what pseudo-instructions really are,"
+ },
+ {
+  "id": 712,
+  "text": "we'll go over that gradually later on,"
+ },
+ {
+  "id": 713,
+  "text": "and you can take your time to understand it then."
+ },
+ {
+  "id": 714,
+  "text": "So as for which pseudo-instructions exist,"
+ },
+ {
+  "id": 715,
+  "text": "we'll naturally know once we've studied them."
+ },
+ {
+  "id": 716,
+  "text": "So here I'll just tell you directly:"
+ },
+ {
+  "id": 717,
+  "text": "for example, this is a pseudo-instruction."
+ },
+ {
+  "id": 718,
+  "text": "It looks very similar to that instruction,"
+ },
+ {
+  "id": 719,
+  "text": "but actually, after it is processed by the assembler,"
+ },
+ {
+  "id": 720,
+  "text": "It actually gets translated into some other real instructions."
+ },
+ {
+  "id": 721,
+  "text": "These are called pseudo-instructions."
+ },
+ {
+  "id": 722,
+  "text": "Now, what else is there?"
+ },
+ {
+  "id": 723,
+  "text": "There are also things called directives."
+ },
+ {
+  "id": 724,
+  "text": "You can look this up"
+ },
+ {
+  "id": 725,
+  "text": "when you check the online documentation,"
+ },
+ {
+  "id": 726,
+  "text": "it's all in there."
+ },
+ {
+  "id": 727,
+  "text": "So after I've talked about it,"
+ },
+ {
+  "id": 728,
+  "text": "it will probably be more convenient"
+ },
+ {
+  "id": 729,
+  "text": "for you to study it on your own."
+ },
+ {
+  "id": 730,
+  "text": "As for directives,"
+ },
+ {
+  "id": 731,
+  "text": "they are called..."
+ },
+ {
+  "id": 732,
+  "text": "In Chinese, we translate it"
+ },
+ {
+  "id": 733,
+  "text": "as \"指示\" (zhǐshì), meaning instructions or directives."
+ },
+ {
+  "id": 734,
+  "text": "That's because the word 'directive'"
+ },
+ {
+  "id": 735,
+  "text": "in its original meaning"
+ },
+ {
+  "id": 736,
+  "text": "means instruction or directive."
+ },
+ {
+  "id": 737,
+  "text": "But if you feel"
+ },
+ {
+  "id": 738,
+  "text": "this Chinese translation..."
+ },
+ {
+  "id": 739,
+  "text": "because our Chinese translation..."
+ },
+ {
+  "id": 740,
+  "text": "Actually, it's not official either."
+ },
+ {
+  "id": 741,
+  "text": "It's just my own"
+ },
+ {
+  "id": 742,
+  "text": "referencing some things online,"
+ },
+ {
+  "id": 743,
+  "text": "or my own understanding,"
+ },
+ {
+  "id": 744,
+  "text": "that I wrote this with."
+ },
+ {
+  "id": 745,
+  "text": "So if you all"
+ },
+ {
+  "id": 746,
+  "text": "if you feel this translation"
+ },
+ {
+  "id": 747,
+  "text": "doesn't quite suit your taste,"
+ },
+ {
+  "id": 748,
+  "text": "then just remember"
+ },
+ {
+  "id": 749,
+  "text": "the original English text."
+ },
+ {
+  "id": 750,
+  "text": "Because memorizing the original"
+ },
+ {
+  "id": 751,
+  "text": "is actually better."
+ },
+ {
+  "id": 752,
+  "text": "It might be more convenient."
+ },
+ {
+  "id": 753,
+  "text": "If you have a better understanding of the original text,"
+ },
+ {
+  "id": 754,
+  "text": "you really don't have to force it into Chinese."
+ },
+ {
+  "id": 755,
+  "text": "Now, this fence instruction,"
+ },
+ {
+  "id": 756,
+  "text": "we call it a fence operation,"
+ },
+ {
+  "id": 757,
+  "text": "and some books also call it a fence operation."
+ },
+ {
+  "id": 758,
+  "text": "So this Chinese translation has quite a few variations."
+ },
+ {
+  "id": 759,
+  "text": "Please pay attention and distinguish between them."
+ },
+ {
+  "id": 760,
+  "text": "But in the original text, it's called a directive."
+ },
+ {
+  "id": 761,
+  "text": "What is a directive?"
+ },
+ {
+  "id": 762,
+  "text": "What are its characteristics?"
+ },
+ {
+  "id": 763,
+  "text": "Its characteristic is"
+ },
+ {
+  "id": 764,
+  "text": "it must always start with a dot,"
+ },
+ {
+  "id": 765,
+  "text": "something that begins with a small dot."
+ },
+ {
+  "id": 766,
+  "text": "Let's take a look"
+ },
+ {
+  "id": 767,
+  "text": "at that example from just now,"
+ },
+ {
+  "id": 768,
+  "text": "which ones are called directives."
+ },
+ {
+  "id": 769,
+  "text": "Everyone, take a look"
+ },
+ {
+  "id": 770,
+  "text": "at which ones are directives."
+ },
+ {
+  "id": 771,
+  "text": "This one is a directive,"
+ },
+ {
+  "id": 772,
+  "text": "right?"
+ },
+ {
+  "id": 773,
+  "text": "This kind is also a directive."
+ },
+ {
+  "id": 774,
+  "text": "Do you all see it?"
+ },
+ {
+  "id": 775,
+  "text": "These are all called directives."
+ },
+ {
+  "id": 776,
+  "text": "Over here, I've marked them out as well."
+ },
+ {
+  "id": 777,
+  "text": "This kind of directive,"
+ },
+ {
+  "id": 778,
+  "text": "it actually does not belong"
+ },
+ {
+  "id": 779,
+  "text": "to RISC-V instructions."
+ },
+ {
+  "id": 780,
+  "text": "It's actually part of the specification itself."
+ },
+ {
+  "id": 781,
+  "text": "It actually belongs to"
+ },
+ {
+  "id": 782,
+  "text": "syntax that the assembler defines itself."
+ },
+ {
+  "id": 783,
+  "text": "Syntax it defines on its own."
+ },
+ {
+  "id": 784,
+  "text": "It's really meant for the assembler to read."
+ },
+ {
+  "id": 785,
+  "text": "Based on your"
+ },
+ {
+  "id": 786,
+  "text": "directives like this,"
+ },
+ {
+  "id": 787,
+  "text": "the assembler will actually do some special processing."
+ },
+ {
+  "id": 788,
+  "text": "It will perform some special processing."
+ },
+ {
+  "id": 789,
+  "text": "It's a bit like preprocessing,"
+ },
+ {
+  "id": 790,
+  "text": "things like include, or define, that kind of stuff."
+ },
+ {
+  "id": 791,
+  "text": "But I'd say they're not exactly the same."
+ },
+ {
+  "id": 792,
+  "text": "But it's something used by the assembler."
+ },
+ {
+  "id": 793,
+  "text": "What exactly do these things represent?"
+ },
+ {
+  "id": 794,
+  "text": "We'll take a look at them when we come across them later."
+ },
+ {
+  "id": 795,
+  "text": "For now, we're just going over"
+ },
+ {
+  "id": 796,
+  "text": "some general concepts here."
+ },
+ {
+  "id": 797,
+  "text": "Like this .and thing,"
+ },
+ {
+  "id": 798,
+  "text": "you can probably guess what this kind of thing is for, right?"
+ },
+ {
+  "id": 799,
+  "text": "What does .and mean?"
+ },
+ {
+  "id": 800,
+  "text": "That is, telling the assembler"
+ },
+ {
+  "id": 801,
+  "text": "that our program here"
+ },
+ {
+  "id": 802,
+  "text": "is done."
+ },
+ {
+  "id": 803,
+  "text": "Still with me?"
+ },
+ {
+  "id": 804,
+  "text": "If you put this .end after it"
+ },
+ {
+  "id": 805,
+  "text": "and then write some more stuff,"
+ },
+ {
+  "id": 806,
+  "text": "you can try it out later—"
+ },
+ {
+  "id": 807,
+  "text": "it really won't get assembled;"
+ },
+ {
+  "id": 808,
+  "text": "it simply won't be processed at all."
+ },
+ {
+  "id": 809,
+  "text": "Now, this macro thing here—"
+ },
+ {
+  "id": 810,
+  "text": "can you tell what this is?"
+ },
+ {
+  "id": 811,
+  "text": "What is it defining?"
+ },
+ {
+  "id": 812,
+  "text": "It's defining a macro."
+ },
+ {
+  "id": 813,
+  "text": "Right?"
+ },
+ {
+  "id": 814,
+  "text": "A macro."
+ },
+ {
+  "id": 815,
+  "text": "This .endm here"
+ },
+ {
+  "id": 816,
+  "text": "simply marks"
+ },
+ {
+  "id": 817,
+  "text": "that everything between this macro and this .endm"
+ },
+ {
+  "id": 818,
+  "text": "is actually defining the macro."
+ },
+ {
+  "id": 819,
+  "text": "So what is the macro?"
+ },
+ {
+  "id": 820,
+  "text": "We'll see it again in a moment."
+ },
+ {
+  "id": 821,
+  "text": "The .text part,"
+ },
+ {
+  "id": 822,
+  "text": "is really just telling everyone that"
+ },
+ {
+  "id": 823,
+  "text": "the instructions we generate,"
+ },
+ {
+  "id": 824,
+  "text": "need to be placed into that thing called the"
+ },
+ {
+  "id": 825,
+  "text": ".text section."
+ },
+ {
+  "id": 826,
+  "text": "You still remember this concept, right?"
+ },
+ {
+  "id": 827,
+  "text": "Last time, why did we"
+ },
+ {
+  "id": 828,
+  "text": "go on and on about those"
+ },
+ {
+  "id": 829,
+  "text": "compilation and linking concepts, the ELF stuff?"
+ },
+ {
+  "id": 830,
+  "text": "Because we actually use all of that right here."
+ },
+ {
+  "id": 831,
+  "text": "So when you see these things,"
+ },
+ {
+  "id": 832,
+  "text": "think back to what we covered earlier."
+ },
+ {
+  "id": 833,
+  "text": "Knowledge is"
+ },
+ {
+  "id": 834,
+  "text": "always built up — the earlier stuff lays the groundwork for what comes later."
+ },
+ {
+  "id": 835,
+  "text": "As for .global,"
+ },
+ {
+  "id": 836,
+  "text": "it's a bit like the thing in C,"
+ },
+ {
+  "id": 837,
+  "text": "like when you define a global variable."
+ },
+ {
+  "id": 838,
+  "text": "It's telling you that this thing here,"
+ },
+ {
+  "id": 839,
+  "text": "this identifier,"
+ },
+ {
+  "id": 840,
+  "text": "Now, this 'start' thing,"
+ },
+ {
+  "id": 841,
+  "text": "it's a global thing."
+ },
+ {
+  "id": 842,
+  "text": "So what exactly is this 'start'?"
+ },
+ {
+  "id": 843,
+  "text": "It's yet another address."
+ },
+ {
+  "id": 844,
+  "text": "You can think of this address as"
+ },
+ {
+  "id": 845,
+  "text": "just the name of a function."
+ },
+ {
+  "id": 846,
+  "text": "You see what I mean, right?"
+ },
+ {
+  "id": 847,
+  "text": "You can understand it that way."
+ },
+ {
+  "id": 848,
+  "text": "Because this function 'start' here,"
+ },
+ {
+  "id": 849,
+  "text": "it's visible externally,"
+ },
+ {
+  "id": 850,
+  "text": "so they just use it like this,"
+ },
+ {
+  "id": 851,
+  "text": "somewhat like what you'd define in C,"
+ },
+ {
+  "id": 852,
+  "text": "the concept of a global variable."
+ },
+ {
+  "id": 853,
+  "text": "extern"
+ },
+ {
+  "id": 854,
+  "text": "It's a bit like that extern,"
+ },
+ {
+  "id": 855,
+  "text": "a bit like that extern,"
+ },
+ {
+  "id": 856,
+  "text": "but of course you can't compare them completely."
+ },
+ {
+  "id": 857,
+  "text": "Can't compare them, yeah."
+ },
+ {
+  "id": 858,
+  "text": "This is the third thing we've talked about, right?"
+ },
+ {
+  "id": 859,
+  "text": "pseudo-op"
+ },
+ {
+  "id": 860,
+  "text": "This is called a pseudo-instruction"
+ },
+ {
+  "id": 861,
+  "text": "Please pay attention to this kind of pseudo-instruction"
+ },
+ {
+  "id": 862,
+  "text": "It does not correspond to an actual instruction"
+ },
+ {
+  "id": 863,
+  "text": "It only exists in the assembler"
+ },
+ {
+  "id": 864,
+  "text": "If you go look at the RISC-V spec"
+ },
+ {
+  "id": 865,
+  "text": "or in Intel's instruction manual"
+ },
+ {
+  "id": 866,
+  "text": "you won't find these things there"
+ },
+ {
+  "id": 867,
+  "text": "You can only find it in the GNU Assembler's manual"
+ },
+ {
+  "id": 868,
+  "text": "You'll see its definition in the assembler manual"
+ },
+ {
+  "id": 869,
+  "text": "So please note this"
+ },
+ {
+  "id": 870,
+  "text": "And then, there's more"
+ },
+ {
+  "id": 871,
+  "text": "That is, in the Operation field"
+ },
+ {
+  "id": 872,
+  "text": "what else can appear?"
+ },
+ {
+  "id": 873,
+  "text": "You can also have what is called a macro"
+ },
+ {
+  "id": 874,
+  "text": "This is a macro"
+ },
+ {
+  "id": 875,
+  "text": "What is a macro?"
+ },
+ {
+  "id": 876,
+  "text": "It's actually quite similar to the concept of macros defined in C"
+ },
+ {
+  "id": 877,
+  "text": "As we know, in C we can define a macro"
+ },
+ {
+  "id": 878,
+  "text": "and then in the C code"
+ },
+ {
+  "id": 879,
+  "text": "use the macro to substitute for it"
+ },
+ {
+  "id": 880,
+  "text": "Right?"
+ },
+ {
+  "id": 881,
+  "text": "This concept is pretty simple, isn't it?"
+ },
+ {
+  "id": 882,
+  "text": "Look here."
+ },
+ {
+  "id": 883,
+  "text": "We defined a macro."
+ },
+ {
+  "id": 884,
+  "text": "do nothing"
+ },
+ {
+  "id": 885,
+  "text": "Actually, I didn't do anything here."
+ },
+ {
+  "id": 886,
+  "text": "The name of this macro already tells us"
+ },
+ {
+  "id": 887,
+  "text": "that this section below"
+ },
+ {
+  "id": 888,
+  "text": "these two instructions really do nothing."
+ },
+ {
+  "id": 889,
+  "text": "Because this nop, we'll learn about it later,"
+ },
+ {
+  "id": 890,
+  "text": "is actually an empty instruction."
+ },
+ {
+  "id": 891,
+  "text": "It doesn't actually do anything."
+ },
+ {
+  "id": 892,
+  "text": "We'll talk about it when we get there."
+ },
+ {
+  "id": 893,
+  "text": "Anyway, the point is, later on,"
+ },
+ {
+  "id": 894,
+  "text": "look here,"
+ },
+ {
+  "id": 895,
+  "text": "we invoked the macro do nothing here."
+ },
+ {
+  "id": 896,
+  "text": "Now, when the assembler processes this piece of code,"
+ },
+ {
+  "id": 897,
+  "text": "it will take the macro do nothing"
+ },
+ {
+  "id": 898,
+  "text": "and expand it."
+ },
+ {
+  "id": 899,
+  "text": "This is the same concept as preprocessing in C."
+ },
+ {
+  "id": 900,
+  "text": "After expansion,"
+ },
+ {
+  "id": 901,
+  "text": "as you can see, this becomes two nop instructions,"
+ },
+ {
+  "id": 902,
+  "text": "and nop itself is again a microinstruction."
+ },
+ {
+  "id": 903,
+  "text": "So microinstructions are then translated into machine instructions."
+ },
+ {
+  "id": 904,
+  "text": "We'll take another look at that later on."
+ },
+ {
+  "id": 905,
+  "text": "So it has this kind of macro substitution,"
+ },
+ {
+  "id": 906,
+  "text": "this kind of effect."
+ },
+ {
+  "id": 907,
+  "text": "This is what happens when a macro is called,"
+ },
+ {
+  "id": 908,
+  "text": "that is, this again."
+ },
+ {
+  "id": 909,
+  "text": "All right, that's..."
+ },
+ {
+  "id": 910,
+  "text": "So basically,"
+ },
+ {
+  "id": 911,
+  "text": "with regard to the .option directive,"
+ },
+ {
+  "id": 912,
+  "text": "the things involved here,"
+ },
+ {
+  "id": 913,
+  "text": "we've covered for you."
+ },
+ {
+  "id": 914,
+  "text": "Of course, there are still some more complicated parts,"
+ },
+ {
+  "id": 915,
+  "text": "which we won't go into."
+ },
+ {
+  "id": 916,
+  "text": "Basically, we've just"
+ },
+ {
+  "id": 917,
+  "text": "touched on the basic ones we'll be using,"
+ },
+ {
+  "id": 918,
+  "text": "here for everyone."
+ },
+ {
+  "id": 919,
+  "text": "Now, the last part"
+ },
+ {
+  "id": 920,
+  "text": "What we mean is comments."
+ },
+ {
+  "id": 921,
+  "text": "As for comments,"
+ },
+ {
+  "id": 922,
+  "text": "there are actually many ways to write them."
+ },
+ {
+  "id": 923,
+  "text": "Including the kind that looks like C comments,"
+ },
+ {
+  "id": 924,
+  "text": "those are supported too."
+ },
+ {
+  "id": 925,
+  "text": "But in assembly language,"
+ },
+ {
+  "id": 926,
+  "text": "the most commonly used form is one"
+ },
+ {
+  "id": 927,
+  "text": "that starts with a sharp sign."
+ },
+ {
+  "id": 928,
+  "text": "Please keep that in mind."
+ },
+ {
+  "id": 929,
+  "text": "I mentioned this before,"
+ },
+ {
+  "id": 930,
+  "text": "it's just the common convention."
+ },
+ {
+  "id": 931,
+  "text": "There are others."
+ },
+ {
+  "id": 932,
+  "text": "If you see other forms later on,"
+ },
+ {
+  "id": 933,
+  "text": "like using a semicolon,"
+ },
+ {
+  "id": 934,
+  "text": "or double slashes,"
+ },
+ {
+  "id": 935,
+  "text": "or something like that,"
+ },
+ {
+  "id": 936,
+  "text": "don't say the professor never taught it."
+ },
+ {
+  "id": 937,
+  "text": "This is just because"
+ },
+ {
+  "id": 938,
+  "text": "on our side,"
+ },
+ {
+  "id": 939,
+  "text": "for simplicity,"
+ },
+ {
+  "id": 940,
+  "text": "So we've listed for you"
+ },
+ {
+  "id": 941,
+  "text": "the most commonly used way,"
+ },
+ {
+  "id": 942,
+  "text": "which is to start with the hash symbol."
+ },
+ {
+  "id": 943,
+  "text": "When you start with the hash symbol,"
+ },
+ {
+  "id": 944,
+  "text": "in C it doesn't mean a comment,"
+ },
+ {
+  "id": 945,
+  "text": "it's a preprocessor directive."
+ },
+ {
+  "id": 946,
+  "text": "But in assembly,"
+ },
+ {
+  "id": 947,
+  "text": "this is a comment."
+ },
+ {
+  "id": 948,
+  "text": "See, here it starts with the hash symbol,"
+ },
+ {
+  "id": 949,
+  "text": "and over here they all start with the hash symbol."
+ },
+ {
+  "id": 950,
+  "text": "That is to say, when it's being processed,"
+ },
+ {
+  "id": 951,
+  "text": "starting from this hash symbol,"
+ },
+ {
+  "id": 952,
+  "text": "this line is processed line by line,"
+ },
+ {
+  "id": 953,
+  "text": "and everything from this hash symbol onward"
+ },
+ {
+  "id": 954,
+  "text": "is considered a comment."
+ },
+ {
+  "id": 955,
+  "text": "So it's the same here."
+ },
+ {
+  "id": 956,
+  "text": "For this line,"
+ },
+ {
+  "id": 957,
+  "text": "the beginning is still some normal operations,"
+ },
+ {
+  "id": 958,
+  "text": "but from here on out,"
+ },
+ {
+  "id": 959,
+  "text": "the color all turns into this purple color."
+ },
+ {
+  "id": 960,
+  "text": "Right?"
+ },
+ {
+  "id": 961,
+  "text": "It's all covered now."
+ },
+ {
+  "id": 962,
+  "text": "So basically, that means"
+ },
+ {
+  "id": 963,
+  "text": "once you understand this,"
+ },
+ {
+  "id": 964,
+  "text": "you can basically write your own"
+ },
+ {
+  "id": 965,
+  "text": "very simple assembly file"
+ },
+ {
+  "id": 966,
+  "text": "quite easily, right?"
+ },
+ {
+  "id": 967,
+  "text": "Take a look."
+ },
+ {
+  "id": 968,
+  "text": "So, about assembly,"
+ },
+ {
+  "id": 969,
+  "text": "this basic, super-basic"
+ },
+ {
+  "id": 970,
+  "text": "what do you call it,"
+ },
+ {
+  "id": 971,
+  "text": "syntax stuff,"
+ },
+ {
+  "id": 972,
+  "text": "we'll stop our introduction here."
+ }
+]

@@ -1,0 +1,5290 @@
+[
+ {
+  "id": 0,
+  "text": "Let's start with the first part: arithmetic instructions."
+ },
+ {
+  "id": 1,
+  "text": "Arithmetic instructions, in English, are called Arithmetic Instructions — that is, arithmetic operations."
+ },
+ {
+  "id": 2,
+  "text": "Now, they are nothing more than addition and subtraction. Note that this does not include multiplication and division, because those instructions are not part of the base integer instructions."
+ },
+ {
+  "id": 3,
+  "text": "Multiplication and division have a dedicated M module,"
+ },
+ {
+  "id": 4,
+  "text": "that is, the multiplication and division instruction set,"
+ },
+ {
+  "id": 5,
+  "text": "the extension set and extension module,"
+ },
+ {
+  "id": 6,
+  "text": "which we will introduce to you."
+ },
+ {
+  "id": 7,
+  "text": "They are not within the scope of this part."
+ },
+ {
+  "id": 8,
+  "text": "What we mainly deal with here is addition and subtraction."
+ },
+ {
+  "id": 9,
+  "text": "The first instruction we are going to learn,"
+ },
+ {
+  "id": 10,
+  "text": "is the add instruction,"
+ },
+ {
+  "id": 11,
+  "text": "which is addition."
+ },
+ {
+  "id": 12,
+  "text": "This is the most basic one."
+ },
+ {
+  "id": 13,
+  "text": "Now, this add instruction,"
+ },
+ {
+  "id": 14,
+  "text": "its encoding type is R type."
+ },
+ {
+  "id": 15,
+  "text": "So this R type is the register type."
+ },
+ {
+  "id": 16,
+  "text": "What does register type mean?"
+ },
+ {
+  "id": 17,
+  "text": "It means that its operands,"
+ },
+ {
+  "id": 18,
+  "text": "its three operands are all registers."
+ },
+ {
+  "id": 19,
+  "text": "You can see it here."
+ },
+ {
+  "id": 20,
+  "text": "In terms of encoding"
+ },
+ {
+  "id": 21,
+  "text": "it needs to express three registers"
+ },
+ {
+  "id": 22,
+  "text": "RD, RSC, R2"
+ },
+ {
+  "id": 23,
+  "text": "Now, when translated into assembly"
+ },
+ {
+  "id": 24,
+  "text": "this is the syntax format"
+ },
+ {
+  "id": 25,
+  "text": "Note this"
+ },
+ {
+  "id": 26,
+  "text": "in RISC-V"
+ },
+ {
+  "id": 27,
+  "text": "the assembly"
+ },
+ {
+  "id": 28,
+  "text": "the convention is"
+ },
+ {
+  "id": 29,
+  "text": "to put RD"
+ },
+ {
+  "id": 30,
+  "text": "the register that finally holds the result"
+ },
+ {
+  "id": 31,
+  "text": "first"
+ },
+ {
+  "id": 32,
+  "text": "reversed"
+ },
+ {
+  "id": 33,
+  "text": "that is, the sources go at the back"
+ },
+ {
+  "id": 34,
+  "text": "the two sources at the back"
+ },
+ {
+  "id": 35,
+  "text": "there is such a relationship in there"
+ },
+ {
+  "id": 36,
+  "text": "within this relationship"
+ },
+ {
+  "id": 37,
+  "text": "when it reads"
+ },
+ {
+  "id": 38,
+  "text": "what it means is this"
+ },
+ {
+  "id": 39,
+  "text": "that is, when doing addition"
+ },
+ {
+  "id": 40,
+  "text": "How do we add?"
+ },
+ {
+  "id": 41,
+  "text": "We take out the value in this first RS — the register inside."
+ },
+ {
+  "id": 42,
+  "text": "What I'm explaining right now is actually from the CPU's point of view."
+ },
+ {
+  "id": 43,
+  "text": "If I were the CPU,"
+ },
+ {
+  "id": 44,
+  "text": "when I'm executing this instruction,"
+ },
+ {
+  "id": 45,
+  "text": "how would I carry it out?"
+ },
+ {
+  "id": 46,
+  "text": "I take a value out of RS —"
+ },
+ {
+  "id": 47,
+  "text": "that's one of the addends."
+ },
+ {
+  "id": 48,
+  "text": "Then,"
+ },
+ {
+  "id": 49,
+  "text": "I take another value out of RS2,"
+ },
+ {
+  "id": 50,
+  "text": "and I add these two values together,"
+ },
+ {
+  "id": 51,
+  "text": "getting a result."
+ },
+ {
+  "id": 52,
+  "text": "Now, this result —"
+ },
+ {
+  "id": 53,
+  "text": "where do I put it?"
+ },
+ {
+  "id": 54,
+  "text": "I put it into the RD register."
+ },
+ {
+  "id": 55,
+  "text": "That's really all it means."
+ },
+ {
+  "id": 56,
+  "text": "This is the add instruction."
+ },
+ {
+  "id": 57,
+  "text": "Now, when we actually write it,"
+ },
+ {
+  "id": 58,
+  "text": "we usually use lowercase,"
+ },
+ {
+  "id": 59,
+  "text": "when we're programming."
+ },
+ {
+  "id": 60,
+  "text": "Normally we use lowercase"
+ },
+ {
+  "id": 61,
+  "text": "when we write this syntax."
+ },
+ {
+  "id": 62,
+  "text": "I deliberately used uppercase,"
+ },
+ {
+  "id": 63,
+  "text": "mainly because it looks nicer."
+ },
+ {
+  "id": 64,
+  "text": "For example, x5, x6, x7."
+ },
+ {
+  "id": 65,
+  "text": "We talked about this earlier."
+ },
+ {
+  "id": 66,
+  "text": "Each register has a code name,"
+ },
+ {
+  "id": 67,
+  "text": "right?"
+ },
+ {
+  "id": 68,
+  "text": "So that's 5, 6, 7."
+ },
+ {
+  "id": 69,
+  "text": "Its encoding."
+ },
+ {
+  "id": 70,
+  "text": "As for the specific encoding,"
+ },
+ {
+  "id": 71,
+  "text": "it's actually quite simple."
+ },
+ {
+  "id": 72,
+  "text": "If it's x5,"
+ },
+ {
+  "id": 73,
+  "text": "you can imagine"
+ },
+ {
+  "id": 74,
+  "text": "that the value inside"
+ },
+ {
+  "id": 75,
+  "text": "those 5 bits is just 5."
+ },
+ {
+  "id": 76,
+  "text": "The value in x6 is 6."
+ },
+ {
+  "id": 77,
+  "text": "Once you understand that,"
+ },
+ {
+  "id": 78,
+  "text": "you also need to be able to read it the other way around."
+ },
+ {
+  "id": 79,
+  "text": "Now, this encoding format is R-type."
+ },
+ {
+  "id": 80,
+  "text": "The opcode is"
+ },
+ {
+  "id": 81,
+  "text": "011 0011."
+ },
+ {
+  "id": 82,
+  "text": "Why is it this value?"
+ },
+ {
+  "id": 83,
+  "text": "Just look it up in the table."
+ },
+ {
+  "id": 84,
+  "text": "It's listed right there in that table."
+ },
+ {
+  "id": 85,
+  "text": "I just demonstrated that briefly earlier."
+ },
+ {
+  "id": 86,
+  "text": "Right?"
+ },
+ {
+  "id": 87,
+  "text": "And then,"
+ },
+ {
+  "id": 88,
+  "text": "function3 is set to 000."
+ },
+ {
+  "id": 89,
+  "text": "function7 is set to seven 0s."
+ },
+ {
+  "id": 90,
+  "text": "Now why is that?"
+ },
+ {
+  "id": 91,
+  "text": "Actually, we may have gone through this a bit quickly just now."
+ },
+ {
+  "id": 92,
+  "text": "Let's go back to that table again."
+ },
+ {
+  "id": 93,
+  "text": "If you look up the add instruction in this table,"
+ },
+ {
+  "id": 94,
+  "text": "it's written out very clearly here."
+ },
+ {
+  "id": 95,
+  "text": "The add instruction"
+ },
+ {
+  "id": 96,
+  "text": "is exactly like this."
+ },
+ {
+  "id": 97,
+  "text": "This is the opcode field."
+ },
+ {
+  "id": 98,
+  "text": "This is function3 in 3 bits."
+ },
+ {
+  "id": 99,
+  "text": "This is function7 in 7 bits."
+ },
+ {
+  "id": 100,
+  "text": "This is the first instruction."
+ },
+ {
+  "id": 101,
+  "text": "So it uses the simplest encoding."
+ },
+ {
+  "id": 102,
+  "text": "All zeros."
+ },
+ {
+  "id": 103,
+  "text": "That is to say, these three values"
+ },
+ {
+  "id": 104,
+  "text": "uniquely determine"
+ },
+ {
+  "id": 105,
+  "text": "that this is an add instruction."
+ },
+ {
+  "id": 106,
+  "text": "Pay attention to this, everyone."
+ },
+ {
+  "id": 107,
+  "text": "Uniquely determined."
+ },
+ {
+  "id": 108,
+  "text": "This is an add instruction."
+ },
+ {
+  "id": 109,
+  "text": "Then RS1, RS2."
+ },
+ {
+  "id": 110,
+  "text": "We just covered this earlier,"
+ },
+ {
+  "id": 111,
+  "text": "the concept of source."
+ },
+ {
+  "id": 112,
+  "text": "RD is the destination."
+ },
+ {
+  "id": 113,
+  "text": "It's used to store the result."
+ },
+ {
+  "id": 114,
+  "text": "Very simple."
+ },
+ {
+  "id": 115,
+  "text": "This is an add instruction."
+ },
+ {
+  "id": 116,
+  "text": "Now, let's briefly"
+ },
+ {
+  "id": 117,
+  "text": "use this instruction as an example again"
+ },
+ {
+  "id": 118,
+  "text": "and take a look at"
+ },
+ {
+  "id": 119,
+  "text": "how we"
+ },
+ {
+  "id": 120,
+  "text": "Once we've sorted that out,"
+ },
+ {
+  "id": 121,
+  "text": "what does the final encoded"
+ },
+ {
+  "id": 122,
+  "text": "machine instruction"
+ },
+ {
+  "id": 123,
+  "text": "actually look like?"
+ },
+ {
+  "id": 124,
+  "text": "So just now, by looking it up in the table,"
+ },
+ {
+  "id": 125,
+  "text": "we already know"
+ },
+ {
+  "id": 126,
+  "text": "the OPCODE is 0011,"
+ },
+ {
+  "id": 127,
+  "text": "and these"
+ },
+ {
+  "id": 128,
+  "text": "were found"
+ },
+ {
+  "id": 129,
+  "text": "from the table just now."
+ },
+ {
+  "id": 130,
+  "text": "That leaves RSE2,"
+ },
+ {
+  "id": 131,
+  "text": "RSE, and RD — these three fields,"
+ },
+ {
+  "id": 132,
+  "text": "and we still don't know what to fill in, right?"
+ },
+ {
+  "id": 133,
+  "text": "So let's assume our command looks like this."
+ },
+ {
+  "id": 134,
+  "text": "Based on the explanation we just gave,"
+ },
+ {
+  "id": 135,
+  "text": "we said 5 corresponds to D,"
+ },
+ {
+  "id": 136,
+  "text": "6 to R1, R2."
+ },
+ {
+  "id": 137,
+  "text": "So what does that tell us?"
+ },
+ {
+  "id": 138,
+  "text": "It tells us the value placed in this RD is what number?"
+ },
+ {
+  "id": 139,
+  "text": "It has to be 5."
+ },
+ {
+  "id": 140,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 141,
+  "text": "What's stored in that RSE?"
+ },
+ {
+  "id": 142,
+  "text": "It's definitely 6."
+ },
+ {
+  "id": 143,
+  "text": "Then 7."
+ },
+ {
+  "id": 144,
+  "text": "S27."
+ },
+ {
+  "id": 145,
+  "text": "So,"
+ },
+ {
+  "id": 146,
+  "text": "but ultimately, what gets stored in the computer,"
+ },
+ {
+  "id": 147,
+  "text": "is definitely not an integer,"
+ },
+ {
+  "id": 148,
+  "text": "not a decimal number."
+ },
+ {
+  "id": 149,
+  "text": "It definitely has to be turned into something — what is it?"
+ },
+ {
+  "id": 150,
+  "text": "Binary, right?"
+ },
+ {
+  "id": 151,
+  "text": "Now, binary,"
+ },
+ {
+  "id": 152,
+  "text": "you know, that is,"
+ },
+ {
+  "id": 153,
+  "text": "let's convert it ourselves."
+ },
+ {
+  "id": 154,
+  "text": "Do the conversion."
+ },
+ {
+  "id": 155,
+  "text": "This is very simple, right?"
+ },
+ {
+  "id": 156,
+  "text": "It's just 111."
+ },
+ {
+  "id": 157,
+  "text": "The moment you see it, you should know it's 7."
+ },
+ {
+  "id": 158,
+  "text": "Right?"
+ },
+ {
+  "id": 159,
+  "text": "For example, in that command line of yours,"
+ },
+ {
+  "id": 160,
+  "text": "Type that, what is it"
+ },
+ {
+  "id": 161,
+  "text": "When you change mode"
+ },
+ {
+  "id": 162,
+  "text": "What does that 777 mean"
+ },
+ {
+  "id": 163,
+  "text": "Right?"
+ },
+ {
+  "id": 164,
+  "text": "Isn't it just 111?"
+ },
+ {
+  "id": 165,
+  "text": "111, right?"
+ },
+ {
+  "id": 166,
+  "text": "Isn't it?"
+ },
+ {
+  "id": 167,
+  "text": "These numbers should be somewhat"
+ },
+ {
+  "id": 168,
+  "text": "familiar to everyone"
+ },
+ {
+  "id": 169,
+  "text": "For example, that change mode"
+ },
+ {
+  "id": 170,
+  "text": "What does 664 mean?"
+ },
+ {
+  "id": 171,
+  "text": "What does 777 mean?"
+ },
+ {
+  "id": 172,
+  "text": "Right?"
+ },
+ {
+  "id": 173,
+  "text": "Of course, I'm getting off track here"
+ },
+ {
+  "id": 174,
+  "text": "So once we have this string of numbers"
+ },
+ {
+  "id": 175,
+  "text": "We basically know"
+ },
+ {
+  "id": 176,
+  "text": "What's in this memory"
+ },
+ {
+  "id": 177,
+  "text": "is just this thing"
+ },
+ {
+  "id": 178,
+  "text": "But ultimately we still need to know"
+ },
+ {
+  "id": 179,
+  "text": "where it is in memory"
+ },
+ {
+  "id": 180,
+  "text": "How are they laid out?"
+ },
+ {
+  "id": 181,
+  "text": "Right?"
+ },
+ {
+  "id": 182,
+  "text": "So usually we'll also"
+ },
+ {
+  "id": 183,
+  "text": "take this binary, which looks pretty ugly,"
+ },
+ {
+  "id": 184,
+  "text": "and for most of us,"
+ },
+ {
+  "id": 185,
+  "text": "we like to group it in eight bits, eight bits,"
+ },
+ {
+  "id": 186,
+  "text": "and split it up,"
+ },
+ {
+  "id": 187,
+  "text": "and then finally convert it into a"
+ },
+ {
+  "id": 188,
+  "text": "hexadecimal number"
+ },
+ {
+  "id": 189,
+  "text": "so we can work with it,"
+ },
+ {
+  "id": 190,
+  "text": "so we can do this,"
+ },
+ {
+  "id": 191,
+  "text": "to read it,"
+ },
+ {
+  "id": 192,
+  "text": "or to manipulate it,"
+ },
+ {
+  "id": 193,
+  "text": "right?"
+ },
+ {
+  "id": 194,
+  "text": "in programming."
+ },
+ {
+  "id": 195,
+  "text": "So in the end, we know that"
+ },
+ {
+  "id": 196,
+  "text": "this add x5 x6 x7"
+ },
+ {
+  "id": 197,
+  "text": "assembly instruction,"
+ },
+ {
+  "id": 198,
+  "text": "let's say your assembly instruction,"
+ },
+ {
+  "id": 199,
+  "text": "then after it's processed by the assembler,"
+ },
+ {
+  "id": 200,
+  "text": "It's essentially something like this:"
+ },
+ {
+  "id": 201,
+  "text": "a binary number."
+ },
+ {
+  "id": 202,
+  "text": "Now, with these binary numbers,"
+ },
+ {
+  "id": 203,
+  "text": "how are they laid out in memory?"
+ },
+ {
+  "id": 204,
+  "text": "This brings us to another issue:"
+ },
+ {
+  "id": 205,
+  "text": "the issue of endianness."
+ },
+ {
+  "id": 206,
+  "text": "Do you follow what I mean?"
+ },
+ {
+  "id": 207,
+  "text": "Now, conversely,"
+ },
+ {
+  "id": 208,
+  "text": "say I give you a piece of machine instructions,"
+ },
+ {
+  "id": 209,
+  "text": "you can basically disassemble it back."
+ },
+ {
+  "id": 210,
+  "text": "There's no such thing as 'discompiling'..."
+ },
+ {
+  "id": 211,
+  "text": "you can still disassemble it."
+ },
+ {
+  "id": 212,
+  "text": "So this is"
+ },
+ {
+  "id": 213,
+  "text": "the most fundamental skill of a hacker."
+ },
+ {
+  "id": 214,
+  "text": "Through this, we get to understand"
+ },
+ {
+  "id": 215,
+  "text": "how instructions are encoded,"
+ },
+ {
+  "id": 216,
+  "text": "and how they are stored in memory."
+ },
+ {
+  "id": 217,
+  "text": "So next,"
+ },
+ {
+  "id": 218,
+  "text": "we've covered this part,"
+ },
+ {
+  "id": 219,
+  "text": "so let's look at an exercise."
+ },
+ {
+  "id": 220,
+  "text": "This is our first one for today,"
+ },
+ {
+  "id": 221,
+  "text": "the add exercise."
+ },
+ {
+  "id": 222,
+  "text": "Let me walk you through it once now."
+ },
+ {
+  "id": 223,
+  "text": "Our exercises,"
+ },
+ {
+  "id": 224,
+  "text": "as I mentioned earlier,"
+ },
+ {
+  "id": 225,
+  "text": "are all placed here."
+ },
+ {
+  "id": 226,
+  "text": "Each directory,"
+ },
+ {
+  "id": 227,
+  "text": "basically, is the directory for that command,"
+ },
+ {
+  "id": 228,
+  "text": "the name of that command,"
+ },
+ {
+  "id": 229,
+  "text": "like add."
+ },
+ {
+  "id": 230,
+  "text": "So for ours,"
+ },
+ {
+  "id": 231,
+  "text": "under each directory,"
+ },
+ {
+  "id": 232,
+  "text": "let me briefly go over"
+ },
+ {
+  "id": 233,
+  "text": "the file organization."
+ },
+ {
+  "id": 234,
+  "text": "It's generally one source file,"
+ },
+ {
+  "id": 235,
+  "text": "plus a makefile."
+ },
+ {
+  "id": 236,
+  "text": "This makefile,"
+ },
+ {
+  "id": 237,
+  "text": "actually, the makefile in this first set,"
+ },
+ {
+  "id": 238,
+  "text": "you can't really see its actual content."
+ },
+ {
+  "id": 239,
+  "text": "It actually works through"
+ },
+ {
+  "id": 240,
+  "text": "It's just defining some common variable names."
+ },
+ {
+  "id": 241,
+  "text": "And then,"
+ },
+ {
+  "id": 242,
+  "text": "the key point is here,"
+ },
+ {
+  "id": 243,
+  "text": "which is include."
+ },
+ {
+  "id": 244,
+  "text": "This make syntax,"
+ },
+ {
+  "id": 245,
+  "text": "everyone is familiar with it, right?"
+ },
+ {
+  "id": 246,
+  "text": "What does this include mean?"
+ },
+ {
+  "id": 247,
+  "text": "It will actually look for this file,"
+ },
+ {
+  "id": 248,
+  "text": "then expand this file,"
+ },
+ {
+  "id": 249,
+  "text": "and substitute it here,"
+ },
+ {
+  "id": 250,
+  "text": "just like macro expansion,"
+ },
+ {
+  "id": 251,
+  "text": "right?"
+ },
+ {
+  "id": 252,
+  "text": "Like preprocessing."
+ },
+ {
+  "id": 253,
+  "text": "Now, this root.make,"
+ },
+ {
+  "id": 254,
+  "text": "where is it located?"
+ },
+ {
+  "id": 255,
+  "text": "It's in the parent directory."
+ },
+ {
+  "id": 256,
+  "text": "So to actually find"
+ },
+ {
+  "id": 257,
+  "text": "this root.make,"
+ },
+ {
+  "id": 258,
+  "text": "it's very simple—you just go"
+ },
+ {
+  "id": 259,
+  "text": "into this asm directory."
+ },
+ {
+  "id": 260,
+  "text": "Because right now we're in"
+ },
+ {
+  "id": 261,
+  "text": "this add directory,"
+ },
+ {
+  "id": 262,
+  "text": "we need to go up one level to the asm directory."
+ },
+ {
+  "id": 263,
+  "text": "Once we're in the asm directory,"
+ },
+ {
+  "id": 264,
+  "text": "actually right here"
+ },
+ {
+  "id": 265,
+  "text": "there's a root.make."
+ },
+ {
+  "id": 266,
+  "text": "Inside this file is really our"
+ },
+ {
+  "id": 267,
+  "text": "actual make statements."
+ },
+ {
+  "id": 268,
+  "text": "In the last class, when we covered"
+ },
+ {
+  "id": 269,
+  "text": "the makefile,"
+ },
+ {
+  "id": 270,
+  "text": "I think I briefly walked everyone through this file,"
+ },
+ {
+  "id": 271,
+  "text": "right?"
+ },
+ {
+  "id": 272,
+  "text": "I don't know if you see any issues with it now,"
+ },
+ {
+  "id": 273,
+  "text": "or if there are still questions."
+ },
+ {
+  "id": 274,
+  "text": "Actually, when we do the exercises,"
+ },
+ {
+  "id": 275,
+  "text": "we also demonstrate them based on that QEMU emulator."
+ },
+ {
+  "id": 276,
+  "text": "to demonstrate for you all"
+ },
+ {
+  "id": 277,
+  "text": "And since we want to"
+ },
+ {
+  "id": 278,
+  "text": "see how the assembly instructions are executed,"
+ },
+ {
+  "id": 279,
+  "text": "so don't we mostly run it directly"
+ },
+ {
+  "id": 280,
+  "text": "Because if you just run it, you can't really see any results."
+ },
+ {
+  "id": 281,
+  "text": "In practice, what we use more often is"
+ },
+ {
+  "id": 282,
+  "text": "the GDB debugger to look at some state in memory."
+ },
+ {
+  "id": 283,
+  "text": "So,"
+ },
+ {
+  "id": 284,
+  "text": "when you do the exercises later,"
+ },
+ {
+  "id": 285,
+  "text": "you'll probably need to use"
+ },
+ {
+  "id": 286,
+  "text": "the make debug command more."
+ },
+ {
+  "id": 287,
+  "text": "As for the make debug command,"
+ },
+ {
+  "id": 288,
+  "text": "what it actually does inside,"
+ },
+ {
+  "id": 289,
+  "text": "basically, it starts up QEMU,"
+ },
+ {
+  "id": 290,
+  "text": "and then,"
+ },
+ {
+  "id": 291,
+  "text": "it takes the file we compiled and generated,"
+ },
+ {
+  "id": 292,
+  "text": "this file,"
+ },
+ {
+  "id": 293,
+  "text": "and through the -kernel parameter,"
+ },
+ {
+  "id": 294,
+  "text": "it loads it up."
+ },
+ {
+  "id": 295,
+  "text": "At the same time,"
+ },
+ {
+  "id": 296,
+  "text": "please note,"
+ },
+ {
+  "id": 297,
+  "text": "there's a -S here,"
+ },
+ {
+  "id": 298,
+  "text": "a capital S."
+ },
+ {
+  "id": 299,
+  "text": "This one,"
+ },
+ {
+  "id": 300,
+  "text": "Let me also briefly explain"
+ },
+ {
+  "id": 301,
+  "text": "what QEMU actually is over here"
+ },
+ {
+  "id": 302,
+  "text": "since we haven't covered it yet"
+ },
+ {
+  "id": 303,
+  "text": "QEMU,"
+ },
+ {
+  "id": 304,
+  "text": "it's actually this thing right here"
+ },
+ {
+  "id": 305,
+  "text": "Last time I probably went through this part a bit too fast"
+ },
+ {
+  "id": 306,
+  "text": "and just glossed over it in one go"
+ },
+ {
+  "id": 307,
+  "text": "so let me go over it again for you"
+ },
+ {
+  "id": 308,
+  "text": "This thing here"
+ },
+ {
+  "id": 309,
+  "text": "actually serves as a"
+ },
+ {
+  "id": 310,
+  "text": "system-level emulator for QEMU"
+ },
+ {
+  "id": 311,
+  "text": "Because if we look back for a moment,"
+ },
+ {
+  "id": 312,
+  "text": "you all remember, right?"
+ },
+ {
+  "id": 313,
+  "text": "QEMU has two running modes"
+ },
+ {
+  "id": 314,
+  "text": "One is called user mode"
+ },
+ {
+  "id": 315,
+  "text": "We generally use user mode to run a"
+ },
+ {
+  "id": 316,
+  "text": "executable program"
+ },
+ {
+  "id": 317,
+  "text": "The kind we're running now,"
+ },
+ {
+  "id": 318,
+  "text": "compiled from assembly instructions,"
+ },
+ {
+  "id": 319,
+  "text": "strictly speaking,"
+ },
+ {
+  "id": 320,
+  "text": "It's actually a piece of logic code."
+ },
+ {
+  "id": 321,
+  "text": "It can't be run on an operating system"
+ },
+ {
+  "id": 322,
+  "text": "directly."
+ },
+ {
+  "id": 323,
+  "text": "If you try to run it,"
+ },
+ {
+  "id": 324,
+  "text": "directly under an operating system,"
+ },
+ {
+  "id": 325,
+  "text": "for example, running it directly on Linux,"
+ },
+ {
+  "id": 326,
+  "text": "it won't execute."
+ },
+ {
+  "id": 327,
+  "text": "What we're actually doing is running this code directly in a logical sense,"
+ },
+ {
+  "id": 328,
+  "text": "so we launch it in system mode."
+ },
+ {
+  "id": 329,
+  "text": "So that's why we start it in system mode."
+ },
+ {
+  "id": 330,
+  "text": "system is the 32-bit RISC-V machine simulator,"
+ },
+ {
+  "id": 331,
+  "text": "and then we pass in some parameters."
+ },
+ {
+  "id": 332,
+  "text": "-nographic basically means,"
+ },
+ {
+  "id": 333,
+  "text": "graphic, as we know, means graphics or images,"
+ },
+ {
+  "id": 334,
+  "text": "so it means it doesn't start a graphical interface."
+ },
+ {
+  "id": 335,
+  "text": "And then -smp means we only start a single core,"
+ },
+ {
+  "id": 336,
+  "text": "so basically just one hart."
+ },
+ {
+  "id": 337,
+  "text": "And the machine we start"
+ },
+ {
+  "id": 338,
+  "text": "is of the machine type called virt,"
+ },
+ {
+  "id": 339,
+  "text": "that is, the simulator."
+ },
+ {
+  "id": 340,
+  "text": "It simulates a device type called VRT."
+ },
+ {
+  "id": 341,
+  "text": "What this device type is,"
+ },
+ {
+  "id": 342,
+  "text": "later when we talk about the operating system,"
+ },
+ {
+  "id": 343,
+  "text": "we'll look at it in detail."
+ },
+ {
+  "id": 344,
+  "text": "For now, just having a simple understanding is enough."
+ },
+ {
+  "id": 345,
+  "text": "Anyway, through this approach,"
+ },
+ {
+  "id": 346,
+  "text": "we get the emulator running."
+ },
+ {
+  "id": 347,
+  "text": "It's essentially like a hart is up and running."
+ },
+ {
+  "id": 348,
+  "text": "Then on this hart we run"
+ },
+ {
+  "id": 349,
+  "text": "the assembly instructions we compiled and generated,"
+ },
+ {
+  "id": 350,
+  "text": "the machine instructions."
+ },
+ {
+  "id": 351,
+  "text": "So this is QEMU."
+ },
+ {
+  "id": 352,
+  "text": "First, we launch a QEMU emulator."
+ },
+ {
+  "id": 353,
+  "text": "And when we launch it,"
+ },
+ {
+  "id": 354,
+  "text": "after adding the -s and -S options,"
+ },
+ {
+  "id": 355,
+  "text": "what effect does it achieve?"
+ },
+ {
+  "id": 356,
+  "text": "Well, let's review for a moment."
+ },
+ {
+  "id": 357,
+  "text": "We talked about this before,"
+ },
+ {
+  "id": 358,
+  "text": "this kind of debugging method"
+ },
+ {
+  "id": 359,
+  "text": "is called remote debugging."
+ },
+ {
+  "id": 360,
+  "text": "Because the previous one, I'm not sure"
+ },
+ {
+  "id": 361,
+  "text": "Maybe let's briefly review that part again"
+ },
+ {
+  "id": 362,
+  "text": "That is to say, on which diagram"
+ },
+ {
+  "id": 363,
+  "text": "On the one with the crossing"
+ },
+ {
+  "id": 364,
+  "text": "On this diagram"
+ },
+ {
+  "id": 365,
+  "text": "Don't move it"
+ },
+ {
+  "id": 366,
+  "text": "On this diagram"
+ },
+ {
+  "id": 367,
+  "text": "Everyone still remembers, right?"
+ },
+ {
+  "id": 368,
+  "text": "Let's run it"
+ },
+ {
+  "id": 369,
+  "text": "That is, we said that QEMU and GDB work together to debug"
+ },
+ {
+  "id": 370,
+  "text": "So we're actually getting to today's runtime environment"
+ },
+ {
+  "id": 371,
+  "text": "We're actually using a remote debugging approach"
+ },
+ {
+  "id": 372,
+  "text": "Why?"
+ },
+ {
+  "id": 373,
+  "text": "Because it's a cross development and debugging environment"
+ },
+ {
+  "id": 374,
+  "text": "Our target machine and the machine running GDB"
+ },
+ {
+  "id": 375,
+  "text": "You can actually think of them as two different machines"
+ },
+ {
+  "id": 376,
+  "text": "It's just that our target machine"
+ },
+ {
+  "id": 377,
+  "text": "is currently an emulator"
+ },
+ {
+  "id": 378,
+  "text": "That is QEMU"
+ },
+ {
+  "id": 379,
+  "text": "QEMU"
+ },
+ {
+  "id": 380,
+  "text": "It emulates a RISC-V machine,"
+ },
+ {
+  "id": 381,
+  "text": "while our GDB is actually running on an x86 machine."
+ },
+ {
+  "id": 382,
+  "text": "Right?"
+ },
+ {
+  "id": 383,
+  "text": "This is a concept you need to grasp,"
+ },
+ {
+  "id": 384,
+  "text": "which is the cross development and debugging environment."
+ },
+ {
+  "id": 385,
+  "text": "So when we run this QEMU,"
+ },
+ {
+  "id": 386,
+  "text": "if we pass the -s -S flags,"
+ },
+ {
+  "id": 387,
+  "text": "especially the -s option,"
+ },
+ {
+  "id": 388,
+  "text": "it will actually automatically start a GDB server"
+ },
+ {
+  "id": 389,
+  "text": "for you inside QEMU."
+ },
+ {
+  "id": 390,
+  "text": "This diagram is explaining exactly that."
+ },
+ {
+  "id": 391,
+  "text": "Between GDB and the GDB server,"
+ },
+ {
+  "id": 392,
+  "text": "we need to connect over a network."
+ },
+ {
+  "id": 393,
+  "text": "It's just that right now,"
+ },
+ {
+  "id": 394,
+  "text": "the emulator and our GDB"
+ },
+ {
+  "id": 395,
+  "text": "are both actually running on the same"
+ },
+ {
+  "id": 396,
+  "text": "Ubuntu machine, right?"
+ },
+ {
+  "id": 397,
+  "text": "So in practice, this network connection"
+ },
+ {
+  "id": 398,
+  "text": "is a local loopback,"
+ },
+ {
+  "id": 399,
+  "text": "not a real one."
+ },
+ {
+  "id": 400,
+  "text": "Of course, you can also actually run it"
+ },
+ {
+  "id": 401,
+  "text": "on a different machine,"
+ },
+ {
+  "id": 402,
+  "text": "and that works fine too."
+ },
+ {
+  "id": 403,
+  "text": "For example, you could run this emulator"
+ },
+ {
+  "id": 404,
+  "text": "on another machine,"
+ },
+ {
+  "id": 405,
+  "text": "and then establish a connection over the network."
+ },
+ {
+  "id": 406,
+  "text": "That works as well."
+ },
+ {
+  "id": 407,
+  "text": "So what does this -S do?"
+ },
+ {
+  "id": 408,
+  "text": "It will actually"
+ },
+ {
+  "id": 409,
+  "text": "set up a network connection,"
+ },
+ {
+  "id": 410,
+  "text": "and moreover,"
+ },
+ {
+  "id": 411,
+  "text": "as a service,"
+ },
+ {
+  "id": 412,
+  "text": "as we say with sockets,"
+ },
+ {
+  "id": 413,
+  "text": "it definitely needs a port number, right?"
+ },
+ {
+  "id": 414,
+  "text": "You still remember that concept, right?"
+ },
+ {
+  "id": 415,
+  "text": "Well, with our -S,"
+ },
+ {
+  "id": 416,
+  "text": "it defaults to using"
+ },
+ {
+  "id": 417,
+  "text": "port number 1234"
+ },
+ {
+  "id": 418,
+  "text": "and starts up a service."
+ },
+ {
+  "id": 419,
+  "text": "You can think of this GDB"
+ },
+ {
+  "id": 420,
+  "text": "right on this port 1234,"
+ },
+ {
+  "id": 421,
+  "text": "waiting for GDB to initiate a connection to it."
+ },
+ {
+  "id": 422,
+  "text": "This is basically"
+ },
+ {
+  "id": 423,
+  "text": "how the Socket works."
+ },
+ {
+  "id": 424,
+  "text": "So after we launch GDB,"
+ },
+ {
+  "id": 425,
+  "text": "we connect to it through the Socket."
+ },
+ {
+  "id": 426,
+  "text": "Once connected, we can debug on both sides."
+ },
+ {
+  "id": 427,
+  "text": "That's the idea here,"
+ },
+ {
+  "id": 428,
+  "text": "which is the effect of the lowercase s."
+ },
+ {
+  "id": 429,
+  "text": "Now, what about the uppercase S?"
+ },
+ {
+  "id": 430,
+  "text": "What effect does it actually have?"
+ },
+ {
+  "id": 431,
+  "text": "It makes the program, well,"
+ },
+ {
+  "id": 432,
+  "text": "once you run it under GDB,"
+ },
+ {
+  "id": 433,
+  "text": "it will actually stop there and wait for you."
+ },
+ {
+  "id": 434,
+  "text": "Isn't that exactly the effect we want?"
+ },
+ {
+  "id": 435,
+  "text": "If it runs off on its own,"
+ },
+ {
+  "id": 436,
+  "text": "we'd have no way to debug it."
+ },
+ {
+  "id": 437,
+  "text": "Think about it — isn't that right?"
+ },
+ {
+  "id": 438,
+  "text": "So if we put the whole thing together,"
+ },
+ {
+  "id": 439,
+  "text": "we need to include these two options."
+ },
+ {
+  "id": 440,
+  "text": "Just tell QML to run in this mode, and that's it."
+ },
+ {
+  "id": 441,
+  "text": "Let me explain to everyone"
+ },
+ {
+  "id": 442,
+  "text": "what exactly is going on in the lab we're doing right now."
+ },
+ {
+  "id": 443,
+  "text": "So this is why you see it here,"
+ },
+ {
+  "id": 444,
+  "text": "the reason we launch it this way."
+ },
+ {
+  "id": 445,
+  "text": "Now, the next symbol means that"
+ },
+ {
+  "id": 446,
+  "text": "we will take the QML program process"
+ },
+ {
+  "id": 447,
+  "text": "and do what with it?"
+ },
+ {
+  "id": 448,
+  "text": "Send it to the background,"
+ },
+ {
+  "id": 449,
+  "text": "right?"
+ },
+ {
+  "id": 450,
+  "text": "Once it's in the background,"
+ },
+ {
+  "id": 451,
+  "text": "we can then launch a"
+ },
+ {
+  "id": 452,
+  "text": "local client —"
+ },
+ {
+  "id": 453,
+  "text": "that's the left part"
+ },
+ {
+  "id": 454,
+  "text": "of that diagram from earlier."
+ },
+ {
+  "id": 455,
+  "text": "This client"
+ },
+ {
+  "id": 456,
+  "text": "will be loaded on top of our"
+ },
+ {
+  "id": 457,
+  "text": "compiled and generated ERF file."
+ },
+ {
+  "id": 458,
+  "text": "And then,"
+ },
+ {
+  "id": 459,
+  "text": "just a quick note for everyone."
+ },
+ {
+  "id": 460,
+  "text": "Now, this -Q option,"
+ },
+ {
+  "id": 461,
+  "text": "actually just stands for quiet."
+ },
+ {
+  "id": 462,
+  "text": "You can go check"
+ },
+ {
+  "id": 463,
+  "text": "the manual yourselves."
+ },
+ {
+  "id": 464,
+  "text": "It's very simple:"
+ },
+ {
+  "id": 465,
+  "text": "it avoids this—"
+ },
+ {
+  "id": 466,
+  "text": "you know that when GDB"
+ },
+ {
+  "id": 467,
+  "text": "starts up,"
+ },
+ {
+  "id": 468,
+  "text": "it prints a bunch of garbage up front,"
+ },
+ {
+  "id": 469,
+  "text": "and this gets rid of that,"
+ },
+ {
+  "id": 470,
+  "text": "so it doesn't clutter our screen."
+ },
+ {
+  "id": 471,
+  "text": "And then,"
+ },
+ {
+  "id": 472,
+  "text": "let me focus on"
+ },
+ {
+  "id": 473,
+  "text": "this -x."
+ },
+ {
+  "id": 474,
+  "text": "With -x,"
+ },
+ {
+  "id": 475,
+  "text": "it actually takes an argument"
+ },
+ {
+  "id": 476,
+  "text": "that lets it run a configuration script."
+ },
+ {
+  "id": 477,
+  "text": "This configuration script,"
+ },
+ {
+  "id": 478,
+  "text": "we've already written it for you,"
+ },
+ {
+  "id": 479,
+  "text": "and it's a file called gdb init."
+ },
+ {
+  "id": 480,
+  "text": "In this file,"
+ },
+ {
+  "id": 481,
+  "text": "it actually runs a bunch of"
+ },
+ {
+  "id": 482,
+  "text": "the debug commands we use all the time."
+ },
+ {
+  "id": 483,
+  "text": "Because as you know,"
+ },
+ {
+  "id": 484,
+  "text": "after you start up gdb,"
+ },
+ {
+  "id": 485,
+  "text": "you'd have to type these commands by hand"
+ },
+ {
+  "id": 486,
+  "text": "to connect to the server side,"
+ },
+ {
+  "id": 487,
+  "text": "especially this target remote 1234,"
+ },
+ {
+  "id": 488,
+  "text": "which basically acts as"
+ },
+ {
+  "id": 489,
+  "text": "a client connecting to that GDB server."
+ },
+ {
+  "id": 490,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 491,
+  "text": "Having to type them every time is kind of annoying, right?"
+ },
+ {
+  "id": 492,
+  "text": "So you can take these commands you use often"
+ },
+ {
+  "id": 493,
+  "text": "and write them into a config script,"
+ },
+ {
+  "id": 494,
+  "text": "and then at that spot we just saw,"
+ },
+ {
+  "id": 495,
+  "text": "right here,"
+ },
+ {
+  "id": 496,
+  "text": "tell GDB about it through this argument."
+ },
+ {
+  "id": 497,
+  "text": "Then when GDB starts up,"
+ },
+ {
+  "id": 498,
+  "text": "it will automatically read that config script,"
+ },
+ {
+  "id": 499,
+  "text": "and run these commands by default for you."
+ },
+ {
+  "id": 500,
+  "text": "Understand what I mean?"
+ },
+ {
+  "id": 501,
+  "text": "That way,"
+ },
+ {
+  "id": 502,
+  "text": "it's convenient for us to just..."
+ },
+ {
+  "id": 503,
+  "text": "not type those commands ourselves every time."
+ },
+ {
+  "id": 504,
+  "text": "As for what each command means,"
+ },
+ {
+  "id": 505,
+  "text": "I won't say too much here."
+ },
+ {
+  "id": 506,
+  "text": "Especially what B and C mean."
+ },
+ {
+  "id": 507,
+  "text": "Earlier this is the most basic GDB command requirement."
+ },
+ {
+  "id": 508,
+  "text": "This sets a breakpoint, right?"
+ },
+ {
+  "id": 509,
+  "text": "You still remember?"
+ },
+ {
+  "id": 510,
+  "text": "A breakpoint can be followed by a function name."
+ },
+ {
+  "id": 511,
+  "text": "We just talked about what this start is."
+ },
+ {
+  "id": 512,
+  "text": "This start is actually what's in our program later."
+ },
+ {
+  "id": 513,
+  "text": "The first file from just now,"
+ },
+ {
+  "id": 514,
+  "text": "everyone has seen it, right?"
+ },
+ {
+  "id": 515,
+  "text": "There's a start here."
+ },
+ {
+  "id": 516,
+  "text": "As I just said, this start is an address."
+ },
+ {
+  "id": 517,
+  "text": "Setting a breakpoint means setting it at an address."
+ },
+ {
+  "id": 518,
+  "text": "Right?"
+ },
+ {
+  "id": 519,
+  "text": "So this start actually tells us"
+ },
+ {
+  "id": 520,
+  "text": "We set the breakpoint right here,"
+ },
+ {
+  "id": 521,
+  "text": "which is actually the very first instruction of our program."
+ },
+ {
+  "id": 522,
+  "text": "Now this one,"
+ },
+ {
+  "id": 523,
+  "text": "this is for setting the breakpoint,"
+ },
+ {
+  "id": 524,
+  "text": "and this one connects to the server side."
+ },
+ {
+  "id": 525,
+  "text": "As for c, it just"
+ },
+ {
+  "id": 526,
+  "text": "lets the program run."
+ },
+ {
+  "id": 527,
+  "text": "continue"
+ },
+ {
+  "id": 528,
+  "text": "But when it runs, it actually doesn't really run,"
+ },
+ {
+  "id": 529,
+  "text": "it just gets caught at the breakpoint."
+ },
+ {
+  "id": 530,
+  "text": "Then this one is actually"
+ },
+ {
+  "id": 531,
+  "text": "set design,"
+ },
+ {
+  "id": 532,
+  "text": "design,"
+ },
+ {
+  "id": 533,
+  "text": "which actually means"
+ },
+ {
+  "id": 534,
+  "text": "setting it to single-step debugging mode,"
+ },
+ {
+  "id": 535,
+  "text": "and it's single-step debugging at the assembly level."
+ },
+ {
+  "id": 536,
+  "text": "What this means is,"
+ },
+ {
+  "id": 537,
+  "text": "these few commands"
+ },
+ {
+  "id": 538,
+  "text": "are actually just"
+ },
+ {
+  "id": 539,
+  "text": "because when we debug,"
+ },
+ {
+  "id": 540,
+  "text": "Don't you have to keep checking the registers? Right?"
+ },
+ {
+  "id": 541,
+  "text": "Right?"
+ },
+ {
+  "id": 542,
+  "text": "If you have to look at the registers every single time,"
+ },
+ {
+  "id": 543,
+  "text": "that can be a bit of a hassle."
+ },
+ {
+  "id": 544,
+  "text": "So what we do is"
+ },
+ {
+  "id": 545,
+  "text": "use the display command every time,"
+ },
+ {
+  "id": 546,
+  "text": "so that during execution,"
+ },
+ {
+  "id": 547,
+  "text": "every time you single-step,"
+ },
+ {
+  "id": 548,
+  "text": "it will automatically print out the values of these registers for you."
+ },
+ {
+  "id": 549,
+  "text": "It'll print them out for you automatically."
+ },
+ {
+  "id": 550,
+  "text": "Because the setup we're demoing to you"
+ },
+ {
+  "id": 551,
+  "text": "is not that kind of graphical interface."
+ },
+ {
+  "id": 552,
+  "text": "If it were a graphical interface,"
+ },
+ {
+  "id": 553,
+  "text": "you'd probably find it pretty nice to use,"
+ },
+ {
+  "id": 554,
+  "text": "you know, the kind where"
+ },
+ {
+  "id": 555,
+  "text": "one window shows the registers,"
+ },
+ {
+  "id": 556,
+  "text": "which you can watch,"
+ },
+ {
+  "id": 557,
+  "text": "and another window shows something else, right?"
+ },
+ {
+  "id": 558,
+  "text": "Right now we just have one shell,"
+ },
+ {
+  "id": 559,
+  "text": "so this is the way we handle it."
+ },
+ {
+  "id": 560,
+  "text": "You see, this is also"
+ },
+ {
+  "id": 561,
+  "text": "Of course, if you want to do it a bit nicer,"
+ },
+ {
+  "id": 562,
+  "text": "you could set up a graphical interface to debug it,"
+ },
+ {
+  "id": 563,
+  "text": "but on our side,"
+ },
+ {
+  "id": 564,
+  "text": "we won't demonstrate that here."
+ },
+ {
+  "id": 565,
+  "text": "If any of you are interested, feel free to try it out on your own,"
+ },
+ {
+  "id": 566,
+  "text": "and if you manage to get it working,"
+ },
+ {
+  "id": 567,
+  "text": "you can share that graphical debugging method with everyone."
+ },
+ {
+  "id": 568,
+  "text": "Here we'll just"
+ },
+ {
+  "id": 569,
+  "text": "use the simplest, most straightforward way"
+ },
+ {
+  "id": 570,
+  "text": "to demonstrate it for you."
+ },
+ {
+  "id": 571,
+  "text": "So, regarding this"
+ },
+ {
+  "id": 572,
+  "text": "makefile run,"
+ },
+ {
+  "id": 573,
+  "text": "that's all we'll cover."
+ },
+ {
+  "id": 574,
+  "text": "So, with that said,"
+ },
+ {
+  "id": 575,
+  "text": "let's get back to the main topic."
+ },
+ {
+  "id": 576,
+  "text": "Let's return to our add"
+ },
+ {
+  "id": 577,
+  "text": "example."
+ },
+ {
+  "id": 578,
+  "text": "This add example is very simple."
+ },
+ {
+  "id": 579,
+  "text": "Let's read through it now."
+ },
+ {
+  "id": 580,
+  "text": "This piece of code,"
+ },
+ {
+  "id": 581,
+  "text": "can you follow it?"
+ },
+ {
+  "id": 582,
+  "text": "Combined with what we covered in the previous class,"
+ },
+ {
+  "id": 583,
+  "text": "some of the basic assembly syntax."
+ },
+ {
+  "id": 584,
+  "text": "What are all these things up front?"
+ },
+ {
+  "id": 585,
+  "text": "They're all comments."
+ },
+ {
+  "id": 586,
+  "text": "Nothing much to say about them."
+ },
+ {
+  "id": 587,
+  "text": "Then,"
+ },
+ {
+  "id": 588,
+  "text": "over here,"
+ },
+ {
+  "id": 589,
+  "text": "what's this called?"
+ },
+ {
+  "id": 590,
+  "text": "Try to recall it yourself."
+ },
+ {
+  "id": 591,
+  "text": "What's this called?"
+ },
+ {
+  "id": 592,
+  "text": "The ones starting with a dot."
+ },
+ {
+  "id": 593,
+  "text": "What are they called?"
+ },
+ {
+  "id": 594,
+  "text": "A directive,"
+ },
+ {
+  "id": 595,
+  "text": "right?"
+ },
+ {
+  "id": 596,
+  "text": "Is this an instruction?"
+ },
+ {
+  "id": 597,
+  "text": "No, it's not an instruction."
+ },
+ {
+  "id": 598,
+  "text": "This is just telling the assembler,"
+ },
+ {
+  "id": 599,
+  "text": "from here on out"
+ },
+ {
+  "id": 600,
+  "text": "the part below"
+ },
+ {
+  "id": 601,
+  "text": "during the assembly process"
+ },
+ {
+  "id": 602,
+  "text": "where does it go"
+ },
+ {
+  "id": 603,
+  "text": "it goes into the text section"
+ },
+ {
+  "id": 604,
+  "text": "what is a section"
+ },
+ {
+  "id": 605,
+  "text": "remember that diagram from our last class"
+ },
+ {
+  "id": 606,
+  "text": "what an ELF file looks like"
+ },
+ {
+  "id": 607,
+  "text": "right"
+ },
+ {
+  "id": 608,
+  "text": "we can"
+ },
+ {
+  "id": 609,
+  "text": "briefly review that for everyone"
+ },
+ {
+  "id": 610,
+  "text": "so that you don't suddenly lose your train of thought"
+ },
+ {
+  "id": 611,
+  "text": "so this might be"
+ },
+ {
+  "id": 612,
+  "text": "this is content we've covered before"
+ },
+ {
+  "id": 613,
+  "text": "and it will come up again and again here"
+ },
+ {
+  "id": 614,
+  "text": "remember this diagram"
+ },
+ {
+  "id": 615,
+  "text": "that is, because in the end we"
+ },
+ {
+  "id": 616,
+  "text": "what do we use"
+ },
+ {
+  "id": 617,
+  "text": "we use this GNU"
+ },
+ {
+  "id": 618,
+  "text": "we use the GNU toolchain"
+ },
+ {
+  "id": 619,
+  "text": "it generates all of this"
+ },
+ {
+  "id": 620,
+  "text": "What gets compiled and generated,"
+ },
+ {
+  "id": 621,
+  "text": "this kind of executable file,"
+ },
+ {
+  "id": 622,
+  "text": "or in other words, the binary file,"
+ },
+ {
+  "id": 623,
+  "text": "is all in ELF format."
+ },
+ {
+  "id": 624,
+  "text": "So as for where we put these instructions,"
+ },
+ {
+  "id": 625,
+  "text": "which section we put them into,"
+ },
+ {
+  "id": 626,
+  "text": "we can specify that in here."
+ },
+ {
+  "id": 627,
+  "text": "It is configurable."
+ },
+ {
+  "id": 628,
+  "text": "So what this piece of code does,"
+ },
+ {
+  "id": 629,
+  "text": "is essentially telling,"
+ },
+ {
+  "id": 630,
+  "text": "telling our assembler,"
+ },
+ {
+  "id": 631,
+  "text": "and the final,"
+ },
+ {
+  "id": 632,
+  "text": "the linker,"
+ },
+ {
+  "id": 633,
+  "text": "that for all the instructions below,"
+ },
+ {
+  "id": 634,
+  "text": "everything under this,"
+ },
+ {
+  "id": 635,
+  "text": "should be placed into that section,"
+ },
+ {
+  "id": 636,
+  "text": "the section called the text section."
+ },
+ {
+  "id": 637,
+  "text": "And then over here,"
+ },
+ {
+  "id": 638,
+  "text": "we declare a global function,"
+ },
+ {
+  "id": 639,
+  "text": "called _start."
+ },
+ {
+  "id": 640,
+  "text": "It is also the entry point of this entire program."
+ },
+ {
+  "id": 641,
+  "text": "Now this program"
+ },
+ {
+  "id": 642,
+  "text": "is actually made up of just a few statements."
+ },
+ {
+  "id": 643,
+  "text": "This is a label"
+ },
+ {
+  "id": 644,
+  "text": "marking the start of our program."
+ },
+ {
+  "id": 645,
+  "text": "Here are two statements."
+ },
+ {
+  "id": 646,
+  "text": "What is this li instruction?"
+ },
+ {
+  "id": 647,
+  "text": "We'll talk about it later."
+ },
+ {
+  "id": 648,
+  "text": "Let's ignore it for now."
+ },
+ {
+  "id": 649,
+  "text": "For now, just understand it as"
+ },
+ {
+  "id": 650,
+  "text": "basically performing an assignment on"
+ },
+ {
+  "id": 651,
+  "text": "the register x6."
+ },
+ {
+  "id": 652,
+  "text": "So li x6, 1"
+ },
+ {
+  "id": 653,
+  "text": "is essentially equivalent to x6 = 1."
+ },
+ {
+  "id": 654,
+  "text": "We'll use this later."
+ },
+ {
+  "id": 655,
+  "text": "I will explain this to you in more detail."
+ },
+ {
+  "id": 656,
+  "text": "But since we need to use it here,"
+ },
+ {
+  "id": 657,
+  "text": "I've written it down for now."
+ },
+ {
+  "id": 658,
+  "text": "So these two statements"
+ },
+ {
+  "id": 659,
+  "text": "are simply assigning values to two registers."
+ },
+ {
+  "id": 660,
+  "text": "After restoring the values,"
+ },
+ {
+  "id": 661,
+  "text": "what do we do?"
+ },
+ {
+  "id": 662,
+  "text": "We do addition."
+ },
+ {
+  "id": 663,
+  "text": "Add x6 and x7 together."
+ },
+ {
+  "id": 664,
+  "text": "Connecting this with the concept we just talked about,"
+ },
+ {
+  "id": 665,
+  "text": "these two are registers,"
+ },
+ {
+  "id": 666,
+  "text": "after adding them together,"
+ },
+ {
+  "id": 667,
+  "text": "put the result into x5."
+ },
+ {
+  "id": 668,
+  "text": "That's all this does."
+ },
+ {
+  "id": 669,
+  "text": "And then,"
+ },
+ {
+  "id": 670,
+  "text": "actually, the main part of our program is finished right here."
+ },
+ {
+  "id": 671,
+  "text": "What is this thing down here doing?"
+ },
+ {
+  "id": 672,
+  "text": "Next,"
+ },
+ {
+  "id": 673,
+  "text": "you can think of it as just a jump instruction."
+ },
+ {
+  "id": 674,
+  "text": "stop is the address of this instruction."
+ },
+ {
+  "id": 675,
+  "text": "Jump to this instruction itself — what effect does that achieve?"
+ },
+ {
+  "id": 676,
+  "text": "An infinite loop."
+ },
+ {
+  "id": 677,
+  "text": "Actually, this instruction doesn't do anything."
+ },
+ {
+  "id": 678,
+  "text": "It just loops forever."
+ },
+ {
+  "id": 679,
+  "text": "It's just an infinite loop."
+ },
+ {
+  "id": 680,
+  "text": "The main purpose is to keep our program"
+ },
+ {
+  "id": 681,
+  "text": "from running off and crashing,"
+ },
+ {
+  "id": 682,
+  "text": "because the QEMU simulator"
+ },
+ {
+  "id": 683,
+  "text": "may report some weird exceptions."
+ },
+ {
+  "id": 684,
+  "text": "Once our program runs,"
+ },
+ {
+  "id": 685,
+  "text": "it just keeps looping at this point,"
+ },
+ {
+  "id": 686,
+  "text": "and never exits."
+ },
+ {
+  "id": 687,
+  "text": "Since it doesn't exit,"
+ },
+ {
+  "id": 688,
+  "text": "naturally there won't be any problems."
+ },
+ {
+  "id": 689,
+  "text": "Think about it — isn't that the case?"
+ },
+ {
+  "id": 690,
+  "text": "In fact, that is exactly it."
+ },
+ {
+  "id": 691,
+  "text": "In all the later examples,"
+ },
+ {
+  "id": 692,
+  "text": "we'll add this line at the end."
+ },
+ {
+  "id": 693,
+  "text": "It's really just to achieve that purpose."
+ },
+ {
+  "id": 694,
+  "text": "There isn't much more meaning to it."
+ },
+ {
+  "id": 695,
+  "text": "The real content"
+ },
+ {
+  "id": 696,
+  "text": "comes before this loop."
+ },
+ {
+  "id": 697,
+  "text": "When we write our code,"
+ },
+ {
+  "id": 698,
+  "text": "including later when you do the exercises,"
+ },
+ {
+  "id": 699,
+  "text": "keep that in mind."
+ },
+ {
+  "id": 700,
+  "text": "And then the last dot directive,"
+ },
+ {
+  "id": 701,
+  "text": "which is also a direction,"
+ },
+ {
+  "id": 702,
+  "text": "a directive,"
+ },
+ {
+  "id": 703,
+  "text": "just tells us"
+ },
+ {
+  "id": 704,
+  "text": "that this file is finished."
+ },
+ {
+  "id": 705,
+  "text": "It's that simple."
+ },
+ {
+  "id": 706,
+  "text": "This is one of our"
+ },
+ {
+  "id": 707,
+  "text": "simplest"
+ },
+ {
+  "id": 708,
+  "text": "assembly programs."
+ },
+ {
+  "id": 709,
+  "text": "Now let's compile it."
+ },
+ {
+  "id": 710,
+  "text": "When compiling,"
+ },
+ {
+  "id": 711,
+  "text": "the command we run"
+ },
+ {
+  "id": 712,
+  "text": "is right here,"
+ },
+ {
+  "id": 713,
+  "text": "which is make."
+ },
+ {
+  "id": 714,
+  "text": "When it runs,"
+ },
+ {
+  "id": 715,
+  "text": "let me see,"
+ },
+ {
+  "id": 716,
+  "text": "when it runs,"
+ },
+ {
+  "id": 717,
+  "text": "it's through this gcc command,"
+ },
+ {
+  "id": 718,
+  "text": "that it gets compiled."
+ },
+ {
+  "id": 719,
+  "text": "What exactly do these things at the end mean?"
+ },
+ {
+  "id": 720,
+  "text": "We'll talk about that when we get to designing it later."
+ },
+ {
+  "id": 721,
+  "text": "So what does OBJ do?"
+ },
+ {
+  "id": 722,
+  "text": "We covered OBJ copy earlier."
+ },
+ {
+  "id": 723,
+  "text": "It's actually this:"
+ },
+ {
+  "id": 724,
+  "text": "because after we compile this instruction,"
+ },
+ {
+  "id": 725,
+  "text": "after this GCC command finishes compiling,"
+ },
+ {
+  "id": 726,
+  "text": "it actually produces a -O,"
+ },
+ {
+  "id": 727,
+  "text": "it produces an ERF file."
+ },
+ {
+  "id": 728,
+  "text": "This file is actually a"
+ },
+ {
+  "id": 729,
+  "text": "standard ERF format file."
+ },
+ {
+  "id": 730,
+  "text": "It contains many sections"
+ },
+ {
+  "id": 731,
+  "text": "that may be used for debugging,"
+ },
+ {
+  "id": 732,
+  "text": "or for other purposes."
+ },
+ {
+  "id": 733,
+  "text": "Because in our compilation options,"
+ },
+ {
+  "id": 734,
+  "text": "we added -G,"
+ },
+ {
+  "id": 735,
+  "text": "so the executable file that gets generated"
+ },
+ {
+  "id": 736,
+  "text": "actually contains a lot of other sections"
+ },
+ {
+  "id": 737,
+  "text": "that aren't really used at runtime."
+ },
+ {
+  "id": 738,
+  "text": "Now, the objcopy command,"
+ },
+ {
+  "id": 739,
+  "text": "can actually take these unused section contents"
+ },
+ {
+  "id": 740,
+  "text": "Strip it away."
+ },
+ {
+  "id": 741,
+  "text": "In the end, it generates a single"
+ },
+ {
+  "id": 742,
+  "text": "In the end, it generates a file with the same name, and that file"
+ },
+ {
+  "id": 743,
+  "text": "Inside, it contains"
+ },
+ {
+  "id": 744,
+  "text": "It only contains the executable machine instructions."
+ },
+ {
+  "id": 745,
+  "text": "So that's essentially the effect we achieve."
+ },
+ {
+  "id": 746,
+  "text": "Let's run it."
+ },
+ {
+  "id": 747,
+  "text": "I've been talking for quite a while,"
+ },
+ {
+  "id": 748,
+  "text": "and it might all feel pretty abstract to you."
+ },
+ {
+  "id": 749,
+  "text": "Let's take a look at the actual result."
+ },
+ {
+  "id": 750,
+  "text": "This is it."
+ },
+ {
+  "id": 751,
+  "text": "Down here are those two files, right?"
+ },
+ {
+  "id": 752,
+  "text": "As for this test.c.s,"
+ },
+ {
+  "id": 753,
+  "text": "it's exactly what we just talked about."
+ },
+ {
+  "id": 754,
+  "text": "Let's compile it."
+ },
+ {
+  "id": 755,
+  "text": "When you do the exercises later,"
+ },
+ {
+  "id": 756,
+  "text": "the environment is already set up for you."
+ },
+ {
+  "id": 757,
+  "text": "Don't type out complicated commands yourselves;"
+ },
+ {
+  "id": 758,
+  "text": "just type make, and that's it."
+ },
+ {
+  "id": 759,
+  "text": "As long as there are no errors,"
+ },
+ {
+  "id": 760,
+  "text": "which means that program has been compiled"
+ },
+ {
+  "id": 761,
+  "text": "After it's compiled,"
+ },
+ {
+  "id": 762,
+  "text": "take a look — there are actually two more files in there."
+ },
+ {
+  "id": 763,
+  "text": "One is called test.bin,"
+ },
+ {
+  "id": 764,
+  "text": "and one is called test.erf."
+ },
+ {
+  "id": 765,
+  "text": "This corresponds to"
+ },
+ {
+  "id": 766,
+  "text": "our..."
+ },
+ {
+  "id": 767,
+  "text": "it corresponds to what we just had here —"
+ },
+ {
+  "id": 768,
+  "text": "these two files, the erf and the bin."
+ },
+ {
+  "id": 769,
+  "text": "This is variable substitution."
+ },
+ {
+  "id": 770,
+  "text": "It's actually just the string \"test\"."
+ },
+ {
+  "id": 771,
+  "text": "Now let's take a look at these two things."
+ },
+ {
+  "id": 772,
+  "text": "How big is this erf?"
+ },
+ {
+  "id": 773,
+  "text": "5316."
+ },
+ {
+  "id": 774,
+  "text": "How big is the bin?"
+ },
+ {
+  "id": 775,
+  "text": "Only 16 bytes."
+ },
+ {
+  "id": 776,
+  "text": "Why is it 16 bytes?"
+ },
+ {
+  "id": 777,
+  "text": "Think about it, everyone."
+ },
+ {
+  "id": 778,
+  "text": "I just mentioned it —"
+ },
+ {
+  "id": 779,
+  "text": "this"
+ },
+ {
+  "id": 780,
+  "text": "This objcopy,"
+ },
+ {
+  "id": 781,
+  "text": "what effect does it achieve?"
+ },
+ {
+  "id": 782,
+  "text": "It strips out the extra sections"
+ },
+ {
+  "id": 783,
+  "text": "from the ELF file,"
+ },
+ {
+  "id": 784,
+  "text": "keeping only the final executable instructions."
+ },
+ {
+  "id": 785,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 786,
+  "text": "So how many instructions"
+ },
+ {
+  "id": 787,
+  "text": "do we actually end up with?"
+ },
+ {
+  "id": 788,
+  "text": "You can count them."
+ },
+ {
+  "id": 789,
+  "text": "Now here's the code for you."
+ },
+ {
+  "id": 790,
+  "text": "Take a look — how many instructions are there?"
+ },
+ {
+  "id": 791,
+  "text": "This generates one instruction."
+ },
+ {
+  "id": 792,
+  "text": "Even though it's a pseudo-instruction,"
+ },
+ {
+  "id": 793,
+  "text": "it actually corresponds to just one —"
+ },
+ {
+  "id": 794,
+  "text": "two."
+ },
+ {
+  "id": 795,
+  "text": "Not this one."
+ },
+ {
+  "id": 796,
+  "text": "It's that one."
+ },
+ {
+  "id": 797,
+  "text": "What we're looking at right now is the add."
+ },
+ {
+  "id": 798,
+  "text": "The add is this one."
+ },
+ {
+  "id": 799,
+  "text": "One."
+ },
+ {
+  "id": 800,
+  "text": "Two of them"
+ },
+ {
+  "id": 801,
+  "text": "Three of them"
+ },
+ {
+  "id": 802,
+  "text": "And there's one more, right?"
+ },
+ {
+  "id": 803,
+  "text": "It's this one"
+ },
+ {
+  "id": 804,
+  "text": "Isn't it?"
+ },
+ {
+  "id": 805,
+  "text": "So the actual instructions"
+ },
+ {
+  "id": 806,
+  "text": "are just four machine instructions"
+ },
+ {
+  "id": 807,
+  "text": "As we just mentioned,"
+ },
+ {
+  "id": 808,
+  "text": "one machine instruction is"
+ },
+ {
+  "id": 809,
+  "text": "on RISC-V 32,"
+ },
+ {
+  "id": 810,
+  "text": "one instruction"
+ },
+ {
+  "id": 811,
+  "text": "is how many bytes?"
+ },
+ {
+  "id": 812,
+  "text": "Four bytes"
+ },
+ {
+  "id": 813,
+  "text": "Four times four is sixteen,"
+ },
+ {
+  "id": 814,
+  "text": "so this last part,"
+ },
+ {
+  "id": 815,
+  "text": "after it's loaded,"
+ },
+ {
+  "id": 816,
+  "text": "is actually"
+ },
+ {
+  "id": 817,
+  "text": "just 16 bytes"
+ },
+ {
+  "id": 818,
+  "text": "This program is just 16 bytes"
+ },
+ {
+  "id": 819,
+  "text": "Now, if you want to look at this content,"
+ },
+ {
+  "id": 820,
+  "text": "You can also take a look."
+ },
+ {
+  "id": 821,
+  "text": "We can actually run that makehex."
+ },
+ {
+  "id": 822,
+  "text": "You can take a look at this."
+ },
+ {
+  "id": 823,
+  "text": "As for makehex,"
+ },
+ {
+  "id": 824,
+  "text": "go back and look at that one yourselves."
+ },
+ {
+  "id": 825,
+  "text": "It actually just calls a"
+ },
+ {
+  "id": 826,
+  "text": "hexdump program"
+ },
+ {
+  "id": 827,
+  "text": "to print out that binary data."
+ },
+ {
+  "id": 828,
+  "text": "So these are our instructions."
+ },
+ {
+  "id": 829,
+  "text": "Now, if,"
+ },
+ {
+  "id": 830,
+  "text": "suppose I gave you this instruction,"
+ },
+ {
+  "id": 831,
+  "text": "could you reverse-assemble it and figure out"
+ },
+ {
+  "id": 832,
+  "text": "what it's doing?"
+ },
+ {
+  "id": 833,
+  "text": "I'll leave this for you to try at home."
+ },
+ {
+  "id": 834,
+  "text": "Actually, I've already taught you how to do it."
+ },
+ {
+  "id": 835,
+  "text": "Among them, we know,"
+ },
+ {
+  "id": 836,
+  "text": "granted, there are some instructions you haven't learned yet,"
+ },
+ {
+  "id": 837,
+  "text": "but there's one instruction"
+ },
+ {
+  "id": 838,
+  "text": "you definitely should be able to do, right?"
+ },
+ {
+  "id": 839,
+  "text": "That's the add instruction."
+ },
+ {
+  "id": 840,
+  "text": "Where is the add instruction?"
+ },
+ {
+  "id": 841,
+  "text": "As we mentioned earlier,"
+ },
+ {
+  "id": 842,
+  "text": "it's aligned on four-byte boundaries."
+ },
+ {
+  "id": 843,
+  "text": "So basically, here we have"
+ },
+ {
+  "id": 844,
+  "text": "this is one instruction,"
+ },
+ {
+  "id": 845,
+  "text": "let me mark it with a red pen,"
+ },
+ {
+  "id": 846,
+  "text": "this is one instruction,"
+ },
+ {
+  "id": 847,
+  "text": "this is one instruction,"
+ },
+ {
+  "id": 848,
+  "text": "this is one instruction,"
+ },
+ {
+  "id": 849,
+  "text": "this is one instruction."
+ },
+ {
+  "id": 850,
+  "text": "Where is our add instruction?"
+ },
+ {
+  "id": 851,
+  "text": "It should be right here,"
+ },
+ {
+  "id": 852,
+  "text": "because if you go look at the source code,"
+ },
+ {
+  "id": 853,
+  "text": "this is the third instruction,"
+ },
+ {
+  "id": 854,
+  "text": "right?"
+ },
+ {
+  "id": 855,
+  "text": "Now, this instruction,"
+ },
+ {
+  "id": 856,
+  "text": "why is it B3027300?"
+ },
+ {
+  "id": 857,
+  "text": "Well, as we just discussed,"
+ },
+ {
+  "id": 858,
+  "text": "suppose I give you this data,"
+ },
+ {
+  "id": 859,
+  "text": "can you figure out..."
+ },
+ {
+  "id": 860,
+  "text": "you do the return byte"
+ },
+ {
+  "id": 861,
+  "text": "why does it correspond to"
+ },
+ {
+  "id": 862,
+  "text": "what is the add"
+ },
+ {
+  "id": 863,
+  "text": "x what"
+ },
+ {
+  "id": 864,
+  "text": "x what, I forget"
+ },
+ {
+  "id": 865,
+  "text": "you can return it as bytes later"
+ },
+ {
+  "id": 866,
+  "text": "now, when you return the byte"
+ },
+ {
+  "id": 867,
+  "text": "everyone should pay attention"
+ },
+ {
+  "id": 868,
+  "text": "to the endianness issue in here"
+ },
+ {
+  "id": 869,
+  "text": "that is, what you see is this"
+ },
+ {
+  "id": 870,
+  "text": "this is a byte"
+ },
+ {
+  "id": 871,
+  "text": "so if it's a word"
+ },
+ {
+  "id": 872,
+  "text": "think about it, what kind of number"
+ },
+ {
+  "id": 873,
+  "text": "do these bytes actually represent"
+ },
+ {
+  "id": 874,
+  "text": "it's actually 007302B3"
+ },
+ {
+  "id": 875,
+  "text": "and what I mean is"
+ },
+ {
+  "id": 876,
+  "text": "it actually represents 0X"
+ },
+ {
+  "id": 877,
+  "text": "00, read backwards"
+ },
+ {
+  "id": 878,
+  "text": "just read it backwards"
+ },
+ {
+  "id": 879,
+  "text": "and why is the high-order part 0"
+ },
+ {
+  "id": 880,
+  "text": "So, like we covered last time,"
+ },
+ {
+  "id": 881,
+  "text": "your function7 is just 7 zeros,"
+ },
+ {
+  "id": 882,
+  "text": "remember that?"
+ },
+ {
+  "id": 883,
+  "text": "You can probably guess this one too,"
+ },
+ {
+  "id": 884,
+  "text": "it's just like that."
+ },
+ {
+  "id": 885,
+  "text": "And which of these correspond to which counters,"
+ },
+ {
+  "id": 886,
+  "text": "you can go back and check that yourself."
+ },
+ {
+  "id": 887,
+  "text": "Work it out on your own."
+ },
+ {
+  "id": 888,
+  "text": "I won't do that here."
+ },
+ {
+  "id": 889,
+  "text": "I think everyone, based on what we covered earlier,"
+ },
+ {
+  "id": 890,
+  "text": "should be able to reverse-engineer it yourself."
+ },
+ {
+  "id": 891,
+  "text": "Of course, there's no need."
+ },
+ {
+  "id": 892,
+  "text": "Normally, if you have the source code,"
+ },
+ {
+  "id": 893,
+  "text": "we can just look at it directly."
+ },
+ {
+  "id": 894,
+  "text": "We can use the code command,"
+ },
+ {
+  "id": 895,
+  "text": "and this disassembly"
+ },
+ {
+  "id": 896,
+  "text": "is actually why we compile with -g,"
+ },
+ {
+  "id": 897,
+  "text": "because we include debugging information."
+ },
+ {
+  "id": 898,
+  "text": "make code will actually use"
+ },
+ {
+  "id": 899,
+  "text": "the objdump command we talked about earlier."
+ },
+ {
+  "id": 900,
+  "text": "and make a back edge for it."
+ },
+ {
+  "id": 901,
+  "text": "If you're interested, you can go look at the Makefile yourselves."
+ },
+ {
+  "id": 902,
+  "text": "So this command..."
+ },
+ {
+  "id": 903,
+  "text": "that's the corresponding command."
+ },
+ {
+  "id": 904,
+  "text": "This command..."
+ },
+ {
+  "id": 905,
+  "text": "you see what it wrote here is 0073."
+ },
+ {
+  "id": 906,
+  "text": "It's already converted over."
+ },
+ {
+  "id": 907,
+  "text": "Did everyone see that?"
+ },
+ {
+  "id": 908,
+  "text": "This tool has already done the corresponding conversion for us."
+ },
+ {
+  "id": 909,
+  "text": "Now, as for exactly why it is..."
+ },
+ {
+  "id": 910,
+  "text": "why it's x5, x6..."
+ },
+ {
+  "id": 911,
+  "text": "actually, these 5, 6, 7..."
+ },
+ {
+  "id": 912,
+  "text": "these three numbers..."
+ },
+ {
+  "id": 913,
+  "text": "how they get extracted out of here..."
+ },
+ {
+  "id": 914,
+  "text": "you can go back and work it out yourselves."
+ },
+ {
+  "id": 915,
+  "text": "I won't go into it here."
+ },
+ {
+  "id": 916,
+  "text": "This program does static analysis."
+ },
+ {
+  "id": 917,
+  "text": "We'll just..."
+ },
+ {
+  "id": 918,
+  "text": "so let's run it."
+ },
+ {
+  "id": 919,
+  "text": "Let's see how it gets to..."
+ },
+ {
+  "id": 920,
+  "text": "the effect of the addition we just added,"
+ },
+ {
+  "id": 921,
+  "text": "our code just now was"
+ },
+ {
+  "id": 922,
+  "text": "looking at 1 plus 2."
+ },
+ {
+  "id": 923,
+  "text": "So we know that during the run,"
+ },
+ {
+  "id": 924,
+  "text": "we should first see"
+ },
+ {
+  "id": 925,
+  "text": "register x6 being assigned the value 1,"
+ },
+ {
+  "id": 926,
+  "text": "and then, second step,"
+ },
+ {
+  "id": 927,
+  "text": "the value of register x7 should become 2."
+ },
+ {
+  "id": 928,
+  "text": "Right?"
+ },
+ {
+  "id": 929,
+  "text": "And then, what should happen as the third step?"
+ },
+ {
+  "id": 930,
+  "text": "We said the value of register x5 should become what?"
+ },
+ {
+  "id": 931,
+  "text": "It should become 3."
+ },
+ {
+  "id": 932,
+  "text": "That verifies the result of our program run."
+ },
+ {
+  "id": 933,
+  "text": "Now, when we run it,"
+ },
+ {
+  "id": 934,
+  "text": "we just"
+ },
+ {
+  "id": 935,
+  "text": "do make run, and that's it."
+ },
+ {
+  "id": 936,
+  "text": "As for what actually runs behind the scenes,"
+ },
+ {
+  "id": 937,
+  "text": "we've already explained that to you."
+ },
+ {
+  "id": 938,
+  "text": "Oh, sorry,"
+ },
+ {
+  "id": 939,
+  "text": "not run — it should be debug."
+ },
+ {
+  "id": 940,
+  "text": "If, while it's running,"
+ },
+ {
+  "id": 941,
+  "text": "if you run into that QEMU,"
+ },
+ {
+  "id": 942,
+  "text": "and it's not behaving properly,"
+ },
+ {
+  "id": 943,
+  "text": "and you can't exit,"
+ },
+ {
+  "id": 944,
+  "text": "how did I force that QEMU to stop just now?"
+ },
+ {
+  "id": 945,
+  "text": "Just press the Ctrl key,"
+ },
+ {
+  "id": 946,
+  "text": "hold the Ctrl key down,"
+ },
+ {
+  "id": 947,
+  "text": "and at the same time press A and X one after another."
+ },
+ {
+  "id": 948,
+  "text": "That will force QEMU to stop."
+ },
+ {
+  "id": 949,
+  "text": "You can go back and try it yourselves."
+ },
+ {
+  "id": 950,
+  "text": "That's how you stop the emulator."
+ },
+ {
+  "id": 951,
+  "text": "Now, back to the main topic."
+ },
+ {
+  "id": 952,
+  "text": "Let's run the debug."
+ },
+ {
+  "id": 953,
+  "text": "Let's see the effect of Make Debug."
+ },
+ {
+  "id": 954,
+  "text": "As you can see,"
+ },
+ {
+  "id": 955,
+  "text": "our program has already started running."
+ },
+ {
+  "id": 956,
+  "text": "Now, this thing at the front is something I typed in."
+ },
+ {
+  "id": 957,
+  "text": "That is, after you enter this GDB,"
+ },
+ {
+  "id": 958,
+  "text": "if you want to exit, how do you exit?"
+ },
+ {
+  "id": 959,
+  "text": "And also, you can just press one"
+ },
+ {
+  "id": 960,
+  "text": "First, press Ctrl C."
+ },
+ {
+  "id": 961,
+  "text": "For example, I press Ctrl C here."
+ },
+ {
+  "id": 962,
+  "text": "After pressing Ctrl C,"
+ },
+ {
+  "id": 963,
+  "text": "type a Quit command."
+ },
+ {
+  "id": 964,
+  "text": "And then type"
+ },
+ {
+  "id": 965,
+  "text": "it asks you Yes or No."
+ },
+ {
+  "id": 966,
+  "text": "You say Yes to exit,"
+ },
+ {
+  "id": 967,
+  "text": "and then it will exit fairly normally."
+ },
+ {
+  "id": 968,
+  "text": "Because sometimes some of you"
+ },
+ {
+  "id": 969,
+  "text": "may find that you,"
+ },
+ {
+  "id": 970,
+  "text": "using some less graceful,"
+ },
+ {
+  "id": 971,
+  "text": "rather forceful methods,"
+ },
+ {
+  "id": 972,
+  "text": "after killing this program,"
+ },
+ {
+  "id": 973,
+  "text": "it may cause that QML,"
+ },
+ {
+  "id": 974,
+  "text": "since we are running it in the background,"
+ },
+ {
+  "id": 975,
+  "text": "that process may not get killed."
+ },
+ {
+  "id": 976,
+  "text": "If that background"
+ },
+ {
+  "id": 977,
+  "text": "service can't be killed,"
+ },
+ {
+  "id": 978,
+  "text": "then next time you run it,"
+ },
+ {
+  "id": 979,
+  "text": "it may fail."
+ },
+ {
+  "id": 980,
+  "text": "I hope you all understand what I mean by this."
+ },
+ {
+  "id": 981,
+  "text": "So when you come out later on,"
+ },
+ {
+  "id": 982,
+  "text": "just come out using this approach of ours,"
+ },
+ {
+  "id": 983,
+  "text": "and don't jump out carelessly."
+ },
+ {
+  "id": 984,
+  "text": "Let's do a quick demonstration of this."
+ },
+ {
+  "id": 985,
+  "text": "Then we'll take a break."
+ },
+ {
+  "id": 986,
+  "text": "Let's demonstrate it."
+ },
+ {
+  "id": 987,
+  "text": "Still make a debug."
+ },
+ {
+  "id": 988,
+  "text": "Now you can see the program has started running."
+ },
+ {
+  "id": 989,
+  "text": "This 'read symbols from' thing,"
+ },
+ {
+  "id": 990,
+  "text": "because our test.ef was cross-compiled with -g,"
+ },
+ {
+  "id": 991,
+  "text": "it comes with debug information."
+ },
+ {
+  "id": 992,
+  "text": "And as we discussed earlier,"
+ },
+ {
+  "id": 993,
+  "text": "our config file sets the breakpoint right at"
+ },
+ {
+  "id": 994,
+  "text": "the start position from the beginning."
+ },
+ {
+  "id": 995,
+  "text": "So as soon as it starts up,"
+ },
+ {
+  "id": 996,
+  "text": "it actually stops at a special Linux 8000."
+ },
+ {
+  "id": 997,
+  "text": "Why is this value Linux 8000?"
+ },
+ {
+  "id": 998,
+  "text": "We'll cover that later."
+ },
+ {
+  "id": 999,
+  "text": "When we get to that part."
+ },
+ {
+  "id": 1000,
+  "text": "We'll get to that later"
+ },
+ {
+  "id": 1001,
+  "text": "For now, let's not worry about it"
+ },
+ {
+  "id": 1002,
+  "text": "Because what we're focused on right now"
+ },
+ {
+  "id": 1003,
+  "text": "is just this assembly syntax"
+ },
+ {
+  "id": 1004,
+  "text": "So you can see, at the very beginning,"
+ },
+ {
+  "id": 1005,
+  "text": "our three registers"
+ },
+ {
+  "id": 1006,
+  "text": "5, 6, 7 have values 0, 0, 0 respectively"
+ },
+ {
+  "id": 1007,
+  "text": "This is what we just set up in"
+ },
+ {
+  "id": 1008,
+  "text": "that config file to make it"
+ },
+ {
+  "id": 1009,
+  "text": "so that with every step we execute,"
+ },
+ {
+  "id": 1010,
+  "text": "we print these values"
+ },
+ {
+  "id": 1011,
+  "text": "to make it easier for us to see"
+ },
+ {
+  "id": 1012,
+  "text": "Now, this breakpoint here,"
+ },
+ {
+  "id": 1013,
+  "text": "is at the 'start' position,"
+ },
+ {
+  "id": 1014,
+  "text": "and that actually corresponds to"
+ },
+ {
+  "id": 1015,
+  "text": "line 12 of our code,"
+ },
+ {
+  "id": 1016,
+  "text": "which is really just the first instruction."
+ },
+ {
+  "id": 1017,
+  "text": "The goal of the first instruction,"
+ },
+ {
+  "id": 1018,
+  "text": "is to be able to take 1"
+ },
+ {
+  "id": 1019,
+  "text": "and load it into x6."
+ },
+ {
+  "id": 1020,
+  "text": "So right now the value of x6"
+ },
+ {
+  "id": 1021,
+  "text": "is still 0"
+ },
+ {
+  "id": 1022,
+  "text": "So it hasn't executed yet"
+ },
+ {
+  "id": 1023,
+  "text": "Because that command hasn't been executed yet"
+ },
+ {
+  "id": 1024,
+  "text": "Now we want to step"
+ },
+ {
+  "id": 1025,
+  "text": "this instruction"
+ },
+ {
+  "id": 1026,
+  "text": "How do you step in GDB? Well,"
+ },
+ {
+  "id": 1027,
+  "text": "the command is called si"
+ },
+ {
+  "id": 1028,
+  "text": "si stands for"
+ },
+ {
+  "id": 1029,
+  "text": "Single Instruction"
+ },
+ {
+  "id": 1030,
+  "text": "Remember this,"
+ },
+ {
+  "id": 1031,
+  "text": "and these commands become easy to remember"
+ },
+ {
+  "id": 1032,
+  "text": "Otherwise you just can't memorize them"
+ },
+ {
+  "id": 1033,
+  "text": "But if you remember the English, you understand what it means"
+ },
+ {
+  "id": 1034,
+  "text": "What does single instruction mean?"
+ },
+ {
+  "id": 1035,
+  "text": "It runs at the level of a single instruction"
+ },
+ {
+  "id": 1036,
+  "text": "Not a single high-level language statement"
+ },
+ {
+  "id": 1037,
+  "text": "We're talking about assembly instructions here"
+ },
+ {
+  "id": 1038,
+  "text": "instruction"
+ },
+ {
+  "id": 1039,
+  "text": "So after single instruction"
+ },
+ {
+  "id": 1040,
+  "text": "As you can see"
+ },
+ {
+  "id": 1041,
+  "text": "our x6 value has already changed to what"
+ },
+ {
+  "id": 1042,
+  "text": "Exactly because there's no highlight"
+ },
+ {
+  "id": 1043,
+  "text": "it might look a bit unfamiliar to you"
+ },
+ {
+  "id": 1044,
+  "text": "It was still 0 just now"
+ },
+ {
+  "id": 1045,
+  "text": "and now it has become 1"
+ },
+ {
+  "id": 1046,
+  "text": "This is the effect our instruction just now achieved"
+ },
+ {
+  "id": 1047,
+  "text": "Alright"
+ },
+ {
+  "id": 1048,
+  "text": "Just get used to reading it this way"
+ },
+ {
+  "id": 1049,
+  "text": "So this is si"
+ },
+ {
+  "id": 1050,
+  "text": "Now for the next step,"
+ },
+ {
+  "id": 1051,
+  "text": "let's change x7 to 2"
+ },
+ {
+  "id": 1052,
+  "text": "Actually, you don't have to type si every time"
+ },
+ {
+  "id": 1053,
+  "text": "I mean, once you've typed that command,"
+ },
+ {
+  "id": 1054,
+  "text": "just press Enter"
+ },
+ {
+  "id": 1055,
+  "text": "and it will repeat the last command"
+ },
+ {
+  "id": 1056,
+  "text": "So all you need to do is press Enter"
+ },
+ {
+  "id": 1057,
+  "text": "You can see this 7 has already become 2"
+ },
+ {
+  "id": 1058,
+  "text": "Right?"
+ },
+ {
+  "id": 1059,
+  "text": "So what are we going to do next?"
+ },
+ {
+  "id": 1060,
+  "text": "The next step is to do the addition."
+ },
+ {
+  "id": 1061,
+  "text": "The addition takes the value in x7 and the value in x6,"
+ },
+ {
+  "id": 1062,
+  "text": "adds them together and puts the result into x5."
+ },
+ {
+  "id": 1063,
+  "text": "Right now x5 contains a"
+ },
+ {
+  "id": 1064,
+  "text": "some other messy value."
+ },
+ {
+  "id": 1065,
+  "text": "So let's execute it once more."
+ },
+ {
+  "id": 1066,
+  "text": "You can see the value of x5 has already changed."
+ },
+ {
+  "id": 1067,
+  "text": "It's now become 3."
+ },
+ {
+  "id": 1068,
+  "text": "See that, right?"
+ },
+ {
+  "id": 1069,
+  "text": "Then what follows is"
+ },
+ {
+  "id": 1070,
+  "text": "starting to execute this infinite loop."
+ },
+ {
+  "id": 1071,
+  "text": "With the infinite loop,"
+ },
+ {
+  "id": 1072,
+  "text": "if you press enter again, it will keep executing on this same instruction forever,"
+ },
+ {
+  "id": 1073,
+  "text": "so our program won't exit."
+ },
+ {
+  "id": 1074,
+  "text": "Otherwise it might run off somewhere."
+ },
+ {
+  "id": 1075,
+  "text": "This instruction mainly serves that purpose."
+ },
+ {
+  "id": 1076,
+  "text": "So that's a simple example like this."
+ },
+ {
+  "id": 1077,
+  "text": "Everyone, go take a break."
+ },
+ {
+  "id": 1078,
+  "text": "Try running it yourselves."
+ },
+ {
+  "id": 1079,
+  "text": "To quit, just use what I mentioned earlier."
+ },
+ {
+  "id": 1080,
+  "text": "Ctrl C,"
+ },
+ {
+  "id": 1081,
+  "text": "then pick quit to exit."
+ },
+ {
+  "id": 1082,
+  "text": "Let's continue."
+ },
+ {
+  "id": 1083,
+  "text": "So what we just saw was"
+ },
+ {
+  "id": 1084,
+  "text": "the first add instruction."
+ },
+ {
+  "id": 1085,
+  "text": "Now, through this add instruction,"
+ },
+ {
+  "id": 1086,
+  "text": "simple as it is,"
+ },
+ {
+  "id": 1087,
+  "text": "I'd like you to get a feel for"
+ },
+ {
+  "id": 1088,
+  "text": "some basic concepts of assembly,"
+ },
+ {
+  "id": 1089,
+  "text": "and through the exercise just now,"
+ },
+ {
+  "id": 1090,
+  "text": "I also walked you through the operating environment."
+ },
+ {
+  "id": 1091,
+  "text": "So,"
+ },
+ {
+  "id": 1092,
+  "text": "next,"
+ },
+ {
+  "id": 1093,
+  "text": "let's go over some related concepts."
+ },
+ {
+  "id": 1094,
+  "text": "That is,"
+ },
+ {
+  "id": 1095,
+  "text": "as we know,"
+ },
+ {
+  "id": 1096,
+  "text": "when doing addition,"
+ },
+ {
+  "id": 1097,
+  "text": "when we perform operations on numbers,"
+ },
+ {
+  "id": 1098,
+  "text": "these numbers,"
+ },
+ {
+  "id": 1099,
+  "text": "they definitely have"
+ },
+ {
+  "id": 1100,
+  "text": "So to be able to support these positive numbers,"
+ },
+ {
+  "id": 1101,
+  "text": "negative numbers,"
+ },
+ {
+  "id": 1102,
+  "text": "these concepts,"
+ },
+ {
+  "id": 1103,
+  "text": "right?"
+ },
+ {
+  "id": 1104,
+  "text": "So in our computer,"
+ },
+ {
+  "id": 1105,
+  "text": "the related concepts"
+ },
+ {
+  "id": 1106,
+  "text": "involve"
+ },
+ {
+  "id": 1107,
+  "text": "involve some..."
+ },
+ {
+  "id": 1108,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 1109,
+  "text": "First, we need to understand the concepts of unsigned numbers and signed numbers."
+ },
+ {
+  "id": 1110,
+  "text": "So, the concepts of unsigned numbers and signed numbers,"
+ },
+ {
+  "id": 1111,
+  "text": "I think everyone should be fairly familiar with them."
+ },
+ {
+  "id": 1112,
+  "text": "We have these unsigned and signed concepts in high-level languages too."
+ },
+ {
+  "id": 1113,
+  "text": "And it's the same in computers."
+ },
+ {
+  "id": 1114,
+  "text": "So if we have a 32-bit piece of data,"
+ },
+ {
+  "id": 1115,
+  "text": "if it's used to represent an unsigned number,"
+ },
+ {
+  "id": 1116,
+  "text": "let's say, for instance, to keep it simple,"
+ },
+ {
+  "id": 1117,
+  "text": "an 8-bit, if an 8-bit piece of data can represent unsigned numbers,"
+ },
+ {
+  "id": 1118,
+  "text": "then the top bit is definitely not needed as a sign bit,"
+ },
+ {
+  "id": 1119,
+  "text": "so its representable range is larger."
+ },
+ {
+  "id": 1120,
+  "text": "And for signed numbers,"
+ },
+ {
+  "id": 1121,
+  "text": "we generally use the highest bit,"
+ },
+ {
+  "id": 1122,
+  "text": "0 meaning positive,"
+ },
+ {
+  "id": 1123,
+  "text": "1 meaning negative."
+ },
+ {
+  "id": 1124,
+  "text": "That's the basic idea behind it."
+ },
+ {
+  "id": 1125,
+  "text": "Now, to be more specific,"
+ },
+ {
+  "id": 1126,
+  "text": "how exactly are signed numbers represented in a computer?"
+ },
+ {
+  "id": 1127,
+  "text": "This is also some very fundamental stuff,"
+ },
+ {
+  "id": 1128,
+  "text": "because you'll probably need to look at values in memory,"
+ },
+ {
+  "id": 1129,
+  "text": "or specific values in registers."
+ },
+ {
+  "id": 1130,
+  "text": "So when we're dealing with signed numbers,"
+ },
+ {
+  "id": 1131,
+  "text": "their representation"
+ },
+ {
+  "id": 1132,
+  "text": "uses two's complement in binary."
+ },
+ {
+  "id": 1133,
+  "text": "Right?"
+ },
+ {
+  "id": 1134,
+  "text": "Now, I don't know if you still remember the concept of two's complement."
+ },
+ {
+  "id": 1135,
+  "text": "That is, if I give you a decimal number,"
+ },
+ {
+  "id": 1136,
+  "text": "and ask you to express it in two's complement form,"
+ },
+ {
+  "id": 1137,
+  "text": "how would you do it?"
+ },
+ {
+  "id": 1138,
+  "text": "I wonder if you still remember."
+ },
+ {
+  "id": 1139,
+  "text": "Do you remember which course you learned this concept in?"
+ },
+ {
+  "id": 1140,
+  "text": "Have you learned this concept before?"
+ },
+ {
+  "id": 1141,
+  "text": "You've learned it, right?"
+ },
+ {
+  "id": 1142,
+  "text": "As computer science majors,"
+ },
+ {
+  "id": 1143,
+  "text": "these most basic concepts,"
+ },
+ {
+  "id": 1144,
+  "text": "we still need to go over them here,"
+ },
+ {
+  "id": 1145,
+  "text": "and try them out once more."
+ },
+ {
+  "id": 1146,
+  "text": "So when we talk about this,"
+ },
+ {
+  "id": 1147,
+  "text": "when we get to two's complement,"
+ },
+ {
+  "id": 1148,
+  "text": "we're actually, here,"
+ },
+ {
+  "id": 1149,
+  "text": "not going to dig into all these concepts."
+ },
+ {
+  "id": 1150,
+  "text": "What we at least need to master is,"
+ },
+ {
+  "id": 1151,
+  "text": "if you're given an integer,"
+ },
+ {
+  "id": 1152,
+  "text": "how do you convert it into two's complement?"
+ },
+ {
+  "id": 1153,
+  "text": "Well, it's very simple."
+ },
+ {
+  "id": 1154,
+  "text": "We say that if this number,"
+ },
+ {
+  "id": 1155,
+  "text": "if it's a positive number,"
+ },
+ {
+  "id": 1156,
+  "text": "how is it represented in two's complement?"
+ },
+ {
+  "id": 1157,
+  "text": "It's just the number itself, right?"
+ },
+ {
+  "id": 1158,
+  "text": "The highest bit is simply 0,"
+ },
+ {
+  "id": 1159,
+  "text": "and the rest is just whatever the value is."
+ },
+ {
+  "id": 1160,
+  "text": "Now, what about negative numbers?"
+ },
+ {
+  "id": 1161,
+  "text": "It's a bit more complicated."
+ },
+ {
+  "id": 1162,
+  "text": "We say a negative number has to be converted into"
+ },
+ {
+  "id": 1163,
+  "text": "a binary two's complement."
+ },
+ {
+  "id": 1164,
+  "text": "There's a little formula for this, what is it?"
+ },
+ {
+  "id": 1165,
+  "text": "You still remember, right?"
+ },
+ {
+  "id": 1166,
+  "text": "Take its absolute value, right?"
+ },
+ {
+  "id": 1167,
+  "text": "Then after converting it to binary,"
+ },
+ {
+  "id": 1168,
+  "text": "invert it, and then do what?"
+ },
+ {
+  "id": 1169,
+  "text": "Add 1."
+ },
+ {
+  "id": 1170,
+  "text": "Still remember this concept, right?"
+ },
+ {
+  "id": 1171,
+  "text": "Let's use a simple example."
+ },
+ {
+  "id": 1172,
+  "text": "For example,"
+ },
+ {
+  "id": 1173,
+  "text": "take this binary number,"
+ },
+ {
+  "id": 1174,
+  "text": "let's say it's 4."
+ },
+ {
+  "id": 1175,
+  "text": "So for 4,"
+ },
+ {
+  "id": 1176,
+  "text": "if it's a positive number,"
+ },
+ {
+  "id": 1177,
+  "text": "its representation in the computer is 100,"
+ },
+ {
+  "id": 1178,
+  "text": "right?"
+ },
+ {
+  "id": 1179,
+  "text": "Now, if I use an 8-bit"
+ },
+ {
+  "id": 1180,
+  "text": "To store this 4 in an 8-bit byte,"
+ },
+ {
+  "id": 1181,
+  "text": "for the positive number 4,"
+ },
+ {
+  "id": 1182,
+  "text": "you just need to pad five 0s in front,"
+ },
+ {
+  "id": 1183,
+  "text": "this doesn't work for me,"
+ },
+ {
+  "id": 1184,
+  "text": "and that's it."
+ },
+ {
+  "id": 1185,
+  "text": "Right?"
+ },
+ {
+  "id": 1186,
+  "text": "This is a positive number."
+ },
+ {
+  "id": 1187,
+  "text": "Now, what do we do if it's a negative 4?"
+ },
+ {
+  "id": 1188,
+  "text": "How do we calculate negative 4?"
+ },
+ {
+  "id": 1189,
+  "text": "First we take its absolute value,"
+ },
+ {
+  "id": 1190,
+  "text": "which gives the original binary of 4,"
+ },
+ {
+  "id": 1191,
+  "text": "which is 100."
+ },
+ {
+  "id": 1192,
+  "text": "Then what do we do?"
+ },
+ {
+  "id": 1193,
+  "text": "Invert the bits."
+ },
+ {
+  "id": 1194,
+  "text": "What does inverting the bits mean?"
+ },
+ {
+  "id": 1195,
+  "text": "It becomes how much?"
+ },
+ {
+  "id": 1196,
+  "text": "It becomes 011."
+ },
+ {
+  "id": 1197,
+  "text": "Right?"
+ },
+ {
+  "id": 1198,
+  "text": "Then what do we do?"
+ },
+ {
+  "id": 1199,
+  "text": "After inverting, add 1."
+ },
+ {
+  "id": 1200,
+  "text": "So if we add 1,"
+ },
+ {
+  "id": 1201,
+  "text": "as we know, the result is 001."
+ },
+ {
+  "id": 1202,
+  "text": "And then,"
+ },
+ {
+  "id": 1203,
+  "text": "because we need to compare an 11-digit 8-bit number,"
+ },
+ {
+  "id": 1204,
+  "text": "the leading bits are"
+ },
+ {
+  "id": 1205,
+  "text": "since it's a negative number,"
+ },
+ {
+  "id": 1206,
+  "text": "what do we do with the leading bits?"
+ },
+ {
+  "id": 1207,
+  "text": "Pad them all with 1s."
+ },
+ {
+  "id": 1208,
+  "text": "Pad with eight 1s."
+ },
+ {
+  "id": 1209,
+  "text": "Not just five 1s and that's it."
+ },
+ {
+  "id": 1210,
+  "text": "Right?"
+ },
+ {
+  "id": 1211,
+  "text": "So in the end, it becomes this"
+ },
+ {
+  "id": 1212,
+  "text": "weird number,"
+ },
+ {
+  "id": 1213,
+  "text": "1 2 3 4 5 6 7, plus one more."
+ },
+ {
+  "id": 1214,
+  "text": "This is how negative 4 is represented in a computer."
+ },
+ {
+  "id": 1215,
+  "text": "Now the other way around,"
+ },
+ {
+  "id": 1216,
+  "text": "if I give you a two's complement number,"
+ },
+ {
+  "id": 1217,
+  "text": "can you work out the original number it represents?"
+ },
+ {
+  "id": 1218,
+  "text": "Do you remember how to do this?"
+ },
+ {
+  "id": 1219,
+  "text": "I think it's done by keeping this"
+ },
+ {
+  "id": 1220,
+  "text": "For example, suppose I give you a number like this,"
+ },
+ {
+  "id": 1221,
+  "text": "and you need to figure out what it is and how to do it."
+ },
+ {
+  "id": 1222,
+  "text": "We just keep the first 1 from the right that is not 0,"
+ },
+ {
+  "id": 1223,
+  "text": "and then flip everything before it."
+ },
+ {
+  "id": 1224,
+  "text": "Isn't that 4?"
+ },
+ {
+  "id": 1225,
+  "text": "Right?"
+ },
+ {
+  "id": 1226,
+  "text": "We won't go into this in more detail."
+ },
+ {
+  "id": 1227,
+  "text": "Because this thing,"
+ },
+ {
+  "id": 1228,
+  "text": "you can just look it up yourself."
+ },
+ {
+  "id": 1229,
+  "text": "It should all be in there."
+ },
+ {
+  "id": 1230,
+  "text": "So we won't say more about it here."
+ },
+ {
+  "id": 1231,
+  "text": "But we do need to understand these concepts."
+ },
+ {
+  "id": 1232,
+  "text": "So I'm just mentioning it here."
+ },
+ {
+  "id": 1233,
+  "text": "Now there is another important concept,"
+ },
+ {
+  "id": 1234,
+  "text": "which is the concept of sign extension and zero extension."
+ },
+ {
+  "id": 1235,
+  "text": "This probably wasn't covered much earlier on."
+ },
+ {
+  "id": 1236,
+  "text": "But when it comes to assembly,"
+ },
+ {
+  "id": 1237,
+  "text": "we need to mention it."
+ },
+ {
+  "id": 1238,
+  "text": "What we call sign extension,"
+ },
+ {
+  "id": 1239,
+  "text": "that is, just like the example before,"
+ },
+ {
+  "id": 1240,
+  "text": "That is to say, if this 0011,"
+ },
+ {
+  "id": 1241,
+  "text": "which we just computed a moment ago,"
+ },
+ {
+  "id": 1242,
+  "text": "is 100, here it only takes up 3 bits,"
+ },
+ {
+  "id": 1243,
+  "text": "but if we want to,"
+ },
+ {
+  "id": 1244,
+  "text": "there are still 5 bits missing in front,"
+ },
+ {
+  "id": 1245,
+  "text": "and if they haven't been filled in,"
+ },
+ {
+  "id": 1246,
+  "text": "then, because it's a negative number,"
+ },
+ {
+  "id": 1247,
+  "text": "we do sign extension."
+ },
+ {
+  "id": 1248,
+  "text": "That is, we fill in 1s,"
+ },
+ {
+  "id": 1249,
+  "text": "depending on whether its sign bit is 1 or 0."
+ },
+ {
+  "id": 1250,
+  "text": "If it's 1, we fill everything with 1s;"
+ },
+ {
+  "id": 1251,
+  "text": "if it's 0, we fill everything with 0s."
+ },
+ {
+  "id": 1252,
+  "text": "This is called sign extension."
+ },
+ {
+  "id": 1253,
+  "text": "And if it's zero extension,"
+ },
+ {
+  "id": 1254,
+  "text": "what does that mean?"
+ },
+ {
+  "id": 1255,
+  "text": "It means that regardless of whether"
+ },
+ {
+  "id": 1256,
+  "text": "this number starts with a 0 or a 1 in front,"
+ },
+ {
+  "id": 1257,
+  "text": "everything on the left is extended with 0s."
+ },
+ {
+  "id": 1258,
+  "text": "That's actually what it means."
+ },
+ {
+  "id": 1259,
+  "text": "These are called zero extension and sign extension."
+ },
+ {
+  "id": 1260,
+  "text": "And zero extension, sometimes,"
+ },
+ {
+  "id": 1261,
+  "text": "we also call it unsigned extension."
+ },
+ {
+  "id": 1262,
+  "text": "So these are the concepts of sign extension and zero extension."
+ },
+ {
+  "id": 1263,
+  "text": "We'll come back to these later,"
+ },
+ {
+  "id": 1264,
+  "text": "so I'm just mentioning them here."
+ },
+ {
+  "id": 1265,
+  "text": "Now in English,"
+ },
+ {
+  "id": 1266,
+  "text": "sign extension is called sign extension,"
+ },
+ {
+  "id": 1267,
+  "text": "and zero extension is called zero extension."
+ },
+ {
+  "id": 1268,
+  "text": "Now this example,"
+ },
+ {
+  "id": 1269,
+  "text": "as for this example,"
+ },
+ {
+  "id": 1270,
+  "text": "this example, everyone,"
+ },
+ {
+  "id": 1271,
+  "text": "let me see, in today's class,"
+ },
+ {
+  "id": 1272,
+  "text": "we might be running a bit short on time,"
+ },
+ {
+  "id": 1273,
+  "text": "so we won't have you"
+ },
+ {
+  "id": 1274,
+  "text": "do it right here in class."
+ },
+ {
+  "id": 1275,
+  "text": "This add2, actually this example,"
+ },
+ {
+  "id": 1276,
+  "text": "let's take a look at what the code does."
+ },
+ {
+  "id": 1277,
+  "text": "It's really just to let you see"
+ },
+ {
+  "id": 1278,
+  "text": "how a negative number is represented in memory and in registers."
+ },
+ {
+  "id": 1279,
+  "text": "It's very similar to the example from just now."
+ },
+ {
+  "id": 1280,
+  "text": "It's just that here"
+ },
+ {
+  "id": 1281,
+  "text": "we put a minus 2 in x7."
+ },
+ {
+  "id": 1282,
+  "text": "So in this x7 register,"
+ },
+ {
+  "id": 1283,
+  "text": "what exactly is the value in it?"
+ },
+ {
+  "id": 1284,
+  "text": "You can go and check."
+ },
+ {
+  "id": 1285,
+  "text": "Then after the calculation,"
+ },
+ {
+  "id": 1286,
+  "text": "since we know that 1 plus minus 2"
+ },
+ {
+  "id": 1287,
+  "text": "gives minus 1 in the end."
+ },
+ {
+  "id": 1288,
+  "text": "So what does minus 1 look like when stored in x5?"
+ },
+ {
+  "id": 1289,
+  "text": "Minus 1 is a bit special."
+ },
+ {
+  "id": 1290,
+  "text": "From now on, whenever you see all f's, that's -1."
+ },
+ {
+  "id": 1291,
+  "text": "Right?"
+ },
+ {
+  "id": 1292,
+  "text": "You need to get used to this."
+ },
+ {
+  "id": 1293,
+  "text": "I won't have you"
+ },
+ {
+  "id": 1294,
+  "text": "do it right here on the spot."
+ },
+ {
+  "id": 1295,
+  "text": "When you do it yourselves,"
+ },
+ {
+  "id": 1296,
+  "text": "the main purpose is to let you review"
+ },
+ {
+  "id": 1297,
+  "text": "the concept of two's complement."
+ },
+ {
+  "id": 1298,
+  "text": "That's the second concept."
+ },
+ {
+  "id": 1299,
+  "text": "Next, let's look at subtraction."
+ },
+ {
+  "id": 1300,
+  "text": "Subtraction is also fairly simple."
+ },
+ {
+  "id": 1301,
+  "text": "Subtraction is pretty simple."
+ },
+ {
+  "id": 1302,
+  "text": "As for subtraction,"
+ },
+ {
+  "id": 1303,
+  "text": "this"
+ },
+ {
+  "id": 1304,
+  "text": "I won't say too much about it."
+ },
+ {
+  "id": 1305,
+  "text": "For subtraction,"
+ },
+ {
+  "id": 1306,
+  "text": "it still uses"
+ },
+ {
+  "id": 1307,
+  "text": "its type is still R-type."
+ },
+ {
+  "id": 1308,
+  "text": "And then,"
+ },
+ {
+  "id": 1309,
+  "text": "the specific format"
+ },
+ {
+  "id": 1310,
+  "text": "is to subtract RS2 from RS1."
+ },
+ {
+  "id": 1311,
+  "text": "Here we use a minus sign."
+ },
+ {
+  "id": 1312,
+  "text": "RS1 minus RS2,"
+ },
+ {
+  "id": 1313,
+  "text": "and the resulting value"
+ },
+ {
+  "id": 1314,
+  "text": "is saved into RD."
+ },
+ {
+  "id": 1315,
+  "text": "That's subtraction."
+ },
+ {
+  "id": 1316,
+  "text": "Now, as for the specific example,"
+ },
+ {
+  "id": 1317,
+  "text": "here's an example using sub."
+ },
+ {
+  "id": 1318,
+  "text": "You can also go back"
+ },
+ {
+  "id": 1319,
+  "text": "and practice it yourself outside of class."
+ },
+ {
+  "id": 1320,
+  "text": "These are all provided in complete form."
+ },
+ {
+  "id": 1321,
+  "text": "Everyone, don't just use them as exercises and sit there."
+ }
+]

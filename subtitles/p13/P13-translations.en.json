@@ -1,0 +1,7430 @@
+[
+ {
+  "id": 0,
+  "text": "Earlier we spent some time talking about assembly instructions — that was the main focus."
+ },
+ {
+  "id": 1,
+  "text": "Now let's move on to the next topic: the calling convention for RISC-V assembly functions."
+ },
+ {
+  "id": 2,
+  "text": "Because when we write code, we spend a huge amount of effort on writing functions."
+ },
+ {
+  "id": 3,
+  "text": "And calls between functions actually come with some special requirements, which you should be aware of."
+ },
+ {
+  "id": 4,
+  "text": "I'll introduce this in the following parts."
+ },
+ {
+  "id": 5,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 6,
+  "text": "First, let's look at"
+ },
+ {
+  "id": 7,
+  "text": "what the function call process actually is."
+ },
+ {
+  "id": 8,
+  "text": "Let's do a quick review first."
+ },
+ {
+  "id": 9,
+  "text": "So in this function call process,"
+ },
+ {
+  "id": 10,
+  "text": "there's a fairly important concept involved,"
+ },
+ {
+  "id": 11,
+  "text": "which is the concept of the stack."
+ },
+ {
+  "id": 12,
+  "text": "Right?"
+ },
+ {
+  "id": 13,
+  "text": "Now, this concept of the stack,"
+ },
+ {
+  "id": 14,
+  "text": "back in the data structures course,"
+ },
+ {
+  "id": 15,
+  "text": "we actually touched on it as well."
+ },
+ {
+  "id": 16,
+  "text": "Let me just briefly mention it here."
+ },
+ {
+  "id": 17,
+  "text": "So what exactly is a stack?"
+ },
+ {
+  "id": 18,
+  "text": "When we talk about a stack,"
+ },
+ {
+  "id": 19,
+  "text": "there are a few concepts associated with it."
+ },
+ {
+  "id": 20,
+  "text": "First,"
+ },
+ {
+  "id": 21,
+  "text": "let's talk about the stack."
+ },
+ {
+  "id": 22,
+  "text": "That is,"
+ },
+ {
+  "id": 23,
+  "text": "let's cover the stack first."
+ },
+ {
+  "id": 24,
+  "text": "Stack."
+ },
+ {
+  "id": 25,
+  "text": "When we say stack,"
+ },
+ {
+  "id": 26,
+  "text": "do you all still know what a stack is?"
+ },
+ {
+  "id": 27,
+  "text": "What does 'stack' mean in English?"
+ },
+ {
+  "id": 28,
+  "text": "Have you ever thought about it?"
+ },
+ {
+  "id": 29,
+  "text": "When these foreigners name things,"
+ },
+ {
+  "id": 30,
+  "text": "they definitely have a purpose, right?"
+ },
+ {
+  "id": 31,
+  "text": "What does 'stack' mean?"
+ },
+ {
+  "id": 32,
+  "text": "Stack."
+ },
+ {
+  "id": 33,
+  "text": "Some of you may know."
+ },
+ {
+  "id": 34,
+  "text": "We say that this stack,"
+ },
+ {
+  "id": 35,
+  "text": "in English, is actually,"
+ },
+ {
+  "id": 36,
+  "text": "the concept of stacking wood."
+ },
+ {
+  "id": 37,
+  "text": "You know how wood is stacked, right?"
+ },
+ {
+  "id": 38,
+  "text": "One log is placed at the bottom,"
+ },
+ {
+  "id": 39,
+  "text": "right?"
+ },
+ {
+  "id": 40,
+  "text": "Then,"
+ },
+ {
+  "id": 41,
+  "text": "you pile another log on top,"
+ },
+ {
+  "id": 42,
+  "text": "and keep stacking more and more on top."
+ },
+ {
+  "id": 43,
+  "text": "Right?"
+ },
+ {
+  "id": 44,
+  "text": "Now, how do you take a log back out?"
+ },
+ {
+  "id": 45,
+  "text": "You can only take them from the top down."
+ },
+ {
+  "id": 46,
+  "text": "Think about it — isn't that true?"
+ },
+ {
+  "id": 47,
+  "text": "You can't pull a log out from the middle,"
+ },
+ {
+  "id": 48,
+  "text": "I mean the big logs,"
+ },
+ {
+  "id": 49,
+  "text": "like raw timber and so on."
+ },
+ {
+  "id": 50,
+  "text": "You can't pull one out from the bottom."
+ },
+ {
+  "id": 51,
+  "text": "You can only pull them from the top down."
+ },
+ {
+  "id": 52,
+  "text": "So this stack,"
+ },
+ {
+  "id": 53,
+  "text": "what is it?"
+ },
+ {
+  "id": 54,
+  "text": "It's a first-in, last-out concept."
+ },
+ {
+  "id": 55,
+  "text": "Right?"
+ },
+ {
+  "id": 56,
+  "text": "What goes on first,"
+ },
+ {
+  "id": 57,
+  "text": "gets taken out later."
+ },
+ {
+  "id": 58,
+  "text": "So that's the basic idea of a stack."
+ },
+ {
+  "id": 59,
+  "text": "Now, once you understand this,"
+ },
+ {
+  "id": 60,
+  "text": "So let's take the stack and"
+ },
+ {
+  "id": 61,
+  "text": "give it a simple definition."
+ },
+ {
+  "id": 62,
+  "text": "For example, we say this stack"
+ },
+ {
+  "id": 63,
+  "text": "has a stack bottom,"
+ },
+ {
+  "id": 64,
+  "text": "bottom,"
+ },
+ {
+  "id": 65,
+  "text": "bottom,"
+ },
+ {
+  "id": 66,
+  "text": "and then there's also a stack top, called top."
+ },
+ {
+  "id": 67,
+  "text": "Right?"
+ },
+ {
+  "id": 68,
+  "text": "Now the bottom,"
+ },
+ {
+  "id": 69,
+  "text": "let's say you take this,"
+ },
+ {
+  "id": 70,
+  "text": "just like when we were talking about the wood earlier,"
+ },
+ {
+  "id": 71,
+  "text": "we say this will be the ground later,"
+ },
+ {
+  "id": 72,
+  "text": "this is the ground."
+ },
+ {
+  "id": 73,
+  "text": "Let's draw it upside down like this."
+ },
+ {
+  "id": 74,
+  "text": "So the wood,"
+ },
+ {
+  "id": 75,
+  "text": "when we stack it upwards,"
+ },
+ {
+  "id": 76,
+  "text": "this is the first piece of wood."
+ },
+ {
+  "id": 77,
+  "text": "Then we stack the second piece of wood."
+ },
+ {
+  "id": 78,
+  "text": "When we stack the second piece of wood,"
+ },
+ {
+  "id": 79,
+  "text": "we say this process"
+ },
+ {
+  "id": 80,
+  "text": "We call it pushing onto the stack"
+ },
+ {
+  "id": 81,
+  "text": "And when we take the second piece of wood out,"
+ },
+ {
+  "id": 82,
+  "text": "we call that popping off the stack"
+ },
+ {
+  "id": 83,
+  "text": "which is pop, right?"
+ },
+ {
+  "id": 84,
+  "text": "Let's do a quick review."
+ },
+ {
+  "id": 85,
+  "text": "So where does this concept of a stack"
+ },
+ {
+  "id": 86,
+  "text": "come into play"
+ },
+ {
+  "id": 87,
+  "text": "in our function calls?"
+ },
+ {
+  "id": 88,
+  "text": "This brings us to the concept of the function stack."
+ },
+ {
+  "id": 89,
+  "text": "Let's look at the second one first,"
+ },
+ {
+  "id": 90,
+  "text": "which is the function stack."
+ },
+ {
+  "id": 91,
+  "text": "Now, for the function stack,"
+ },
+ {
+  "id": 92,
+  "text": "we can use this diagram"
+ },
+ {
+  "id": 93,
+  "text": "to help everyone get a feel for it."
+ },
+ {
+  "id": 94,
+  "text": "That is to say,"
+ },
+ {
+  "id": 95,
+  "text": "suppose we have a bunch of functions."
+ },
+ {
+  "id": 96,
+  "text": "Functions,"
+ },
+ {
+  "id": 97,
+  "text": "as we know,"
+ },
+ {
+  "id": 98,
+  "text": "have a certain concept behind them,"
+ },
+ {
+  "id": 99,
+  "text": "namely that functions call functions."
+ },
+ {
+  "id": 100,
+  "text": "So let's suppose here"
+ },
+ {
+  "id": 101,
+  "text": "we have a concept"
+ },
+ {
+  "id": 102,
+  "text": "where function A calls function B"
+ },
+ {
+  "id": 103,
+  "text": "and function B calls function C"
+ },
+ {
+  "id": 104,
+  "text": "that's the basic idea"
+ },
+ {
+  "id": 105,
+  "text": "Now, when we implement"
+ },
+ {
+  "id": 106,
+  "text": "this function call process,"
+ },
+ {
+  "id": 107,
+  "text": "we need to define a stack"
+ },
+ {
+  "id": 108,
+  "text": "The stack is really just a block of memory"
+ },
+ {
+  "id": 109,
+  "text": "And what is this memory used for?"
+ },
+ {
+  "id": 110,
+  "text": "What is it used for?"
+ },
+ {
+  "id": 111,
+  "text": "It's used to hold, during the function call,"
+ },
+ {
+  "id": 112,
+  "text": "the local variables that are used,"
+ },
+ {
+  "id": 113,
+  "text": "or to save some"
+ },
+ {
+  "id": 114,
+  "text": "register values,"
+ },
+ {
+  "id": 115,
+  "text": "so during the function call,"
+ },
+ {
+  "id": 116,
+  "text": "when passing parameters,"
+ },
+ {
+  "id": 117,
+  "text": "or handling return values,"
+ },
+ {
+  "id": 118,
+  "text": "it saves those values"
+ },
+ {
+  "id": 119,
+  "text": "Let's take a look at how the stack works in this process."
+ },
+ {
+  "id": 120,
+  "text": "So now let's say we are about to"
+ },
+ {
+  "id": 121,
+  "text": "start executing from this function A"
+ },
+ {
+  "id": 122,
+  "text": "Now, as soon as function A starts executing,"
+ },
+ {
+  "id": 123,
+  "text": "every time a function is about to execute,"
+ },
+ {
+  "id": 124,
+  "text": "we need to allocate a piece of space for that function"
+ },
+ {
+  "id": 125,
+  "text": "to store its own"
+ },
+ {
+  "id": 126,
+  "text": "stack frame"
+ },
+ {
+  "id": 127,
+  "text": "the stack frame."
+ },
+ {
+  "id": 128,
+  "text": "So we first need to push a piece of wood onto it"
+ },
+ {
+  "id": 129,
+  "text": "This piece of wood"
+ },
+ {
+  "id": 130,
+  "text": "is pushed on as a wooden block,"
+ },
+ {
+  "id": 131,
+  "text": "and this piece we push"
+ },
+ {
+  "id": 132,
+  "text": "is the stack frame of function A."
+ },
+ {
+  "id": 133,
+  "text": "Now, what goes inside this stack frame?"
+ },
+ {
+  "id": 134,
+  "text": "So what does it hold? As we know, it holds"
+ },
+ {
+  "id": 135,
+  "text": "As you know, it holds some of the things we define,"
+ },
+ {
+  "id": 136,
+  "text": "for example, in the function A we defined,"
+ },
+ {
+  "id": 137,
+  "text": "its local variables."
+ },
+ {
+  "id": 138,
+  "text": "In the C language,"
+ },
+ {
+  "id": 139,
+  "text": "what do you call these?"
+ },
+ {
+  "id": 140,
+  "text": "Remember, right?"
+ },
+ {
+  "id": 141,
+  "text": "It's called an automatic variable."
+ },
+ {
+  "id": 142,
+  "text": "Why is it called an automatic variable?"
+ },
+ {
+  "id": 143,
+  "text": "Did the teacher explain this to you before?"
+ },
+ {
+  "id": 144,
+  "text": "Why is it called an automatic variable?"
+ },
+ {
+  "id": 145,
+  "text": "Well, this variable, this chunk of memory,"
+ },
+ {
+  "id": 146,
+  "text": "its allocation and release"
+ },
+ {
+  "id": 147,
+  "text": "don't need to be maintained by you, the programmer."
+ },
+ {
+  "id": 148,
+  "text": "It gets reclaimed automatically."
+ },
+ {
+  "id": 149,
+  "text": "So why does it get reclaimed automatically?"
+ },
+ {
+  "id": 150,
+  "text": "It's because it lives on the stack."
+ },
+ {
+  "id": 151,
+  "text": "The stack gets reclaimed automatically."
+ },
+ {
+  "id": 152,
+  "text": "That's the reason."
+ },
+ {
+  "id": 153,
+  "text": "So,"
+ },
+ {
+  "id": 154,
+  "text": "this is function A's stack frame."
+ },
+ {
+  "id": 155,
+  "text": "Now function A starts executing."
+ },
+ {
+  "id": 156,
+  "text": "Then the function"
+ },
+ {
+  "id": 157,
+  "text": "say function A executes and executes and executes,"
+ },
+ {
+  "id": 158,
+  "text": "and when it reaches this step,"
+ },
+ {
+  "id": 159,
+  "text": "it's about to call function B."
+ },
+ {
+  "id": 160,
+  "text": "So if it wants to call function B"
+ },
+ {
+  "id": 161,
+  "text": "you know what we have to do"
+ },
+ {
+  "id": 162,
+  "text": "we need to allocate another frame for function B"
+ },
+ {
+  "id": 163,
+  "text": "right?"
+ },
+ {
+  "id": 164,
+  "text": "And this frame"
+ },
+ {
+  "id": 165,
+  "text": "is pushed down through this push-frame approach"
+ },
+ {
+  "id": 166,
+  "text": "pushed into this stack region"
+ },
+ {
+  "id": 167,
+  "text": "pushed into the stack region"
+ },
+ {
+  "id": 168,
+  "text": "Then B starts executing"
+ },
+ {
+  "id": 169,
+  "text": "and B in turn calls function C"
+ },
+ {
+  "id": 170,
+  "text": "The red color represents the function calls"
+ },
+ {
+  "id": 171,
+  "text": "What does a function call mean?"
+ },
+ {
+  "id": 172,
+  "text": "It means the instruction we just saw"
+ },
+ {
+  "id": 173,
+  "text": "those jal instructions"
+ },
+ {
+  "id": 174,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 175,
+  "text": "Then function C starts executing"
+ },
+ {
+  "id": 176,
+  "text": "for function C we need to allocate yet another frame"
+ },
+ {
+  "id": 177,
+  "text": "So this frame"
+ },
+ {
+  "id": 178,
+  "text": "as you can see on the left, the frames of the function stack"
+ },
+ {
+  "id": 179,
+  "text": "keep growing downward"
+ },
+ {
+  "id": 180,
+  "text": "So as you can see,"
+ },
+ {
+  "id": 181,
+  "text": "I happen to have just this little bit of space left here."
+ },
+ {
+  "id": 182,
+  "text": "Suppose the function calls another function again,"
+ },
+ {
+  "id": 183,
+  "text": "what will this function do?"
+ },
+ {
+  "id": 184,
+  "text": "It will use up all the space underneath."
+ },
+ {
+  "id": 185,
+  "text": "What do we call this kind of situation?"
+ },
+ {
+  "id": 186,
+  "text": "We call it a stack overflow."
+ },
+ {
+  "id": 187,
+  "text": "That is exactly what a stack overflow is."
+ },
+ {
+  "id": 188,
+  "text": "So when we determine how much stack space to allocate,"
+ },
+ {
+  "id": 189,
+  "text": "there is actually some careful thought involved."
+ },
+ {
+  "id": 190,
+  "text": "Then function C begins to execute,"
+ },
+ {
+  "id": 191,
+  "text": "and after function C finishes executing,"
+ },
+ {
+  "id": 192,
+  "text": "it needs to return."
+ },
+ {
+  "id": 193,
+  "text": "When it returns, as we know,"
+ },
+ {
+  "id": 194,
+  "text": "returning means that within the stack frame of function C,"
+ },
+ {
+  "id": 195,
+  "text": "all its automatic variables and such,"
+ },
+ {
+  "id": 196,
+  "text": "they are no longer needed."
+ },
+ {
+  "id": 197,
+  "text": "So it has to reclaim them."
+ },
+ {
+  "id": 198,
+  "text": "Now this reclamation process,"
+ },
+ {
+  "id": 199,
+  "text": "is the process of popping the stack."
+ },
+ {
+  "id": 200,
+  "text": "And after we reclaim it,"
+ },
+ {
+  "id": 201,
+  "text": "function C gets reclaimed."
+ },
+ {
+  "id": 202,
+  "text": "Then B resumes execution,"
+ },
+ {
+  "id": 203,
+  "text": "and function B also returns."
+ },
+ {
+  "id": 204,
+  "text": "So this process,"
+ },
+ {
+  "id": 205,
+  "text": "it just happens gradually like this,"
+ },
+ {
+  "id": 206,
+  "text": "until finally function A also finishes executing."
+ },
+ {
+  "id": 207,
+  "text": "And then, at the very end,"
+ },
+ {
+  "id": 208,
+  "text": "once function A exits,"
+ },
+ {
+  "id": 209,
+  "text": "you can think of it as the program being completely done."
+ },
+ {
+  "id": 210,
+  "text": "After it finishes,"
+ },
+ {
+  "id": 211,
+  "text": "all of this stack frame gets released."
+ },
+ {
+  "id": 212,
+  "text": "And then we return to the original starting position."
+ },
+ {
+  "id": 213,
+  "text": "Basically, when we talk about the function call process,"
+ },
+ {
+  "id": 214,
+  "text": "that is exactly how it works."
+ },
+ {
+  "id": 215,
+  "text": "The automatic variables in our C code,"
+ },
+ {
+  "id": 216,
+  "text": "they actually live right here."
+ },
+ {
+  "id": 217,
+  "text": "Okay, that's it for this."
+ },
+ {
+  "id": 218,
+  "text": "And let me mention this in passing,"
+ },
+ {
+  "id": 219,
+  "text": "for example, in our C code,"
+ },
+ {
+  "id": 220,
+  "text": "Where are global variables?"
+ },
+ {
+  "id": 221,
+  "text": "Where do global variables go?"
+ },
+ {
+  "id": 222,
+  "text": "Automatic variables go on the stack."
+ },
+ {
+  "id": 223,
+  "text": "Where do global variables go?"
+ },
+ {
+  "id": 224,
+  "text": "They go in what we talked about earlier,"
+ },
+ {
+  "id": 225,
+  "text": "that segment."
+ },
+ {
+  "id": 226,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 227,
+  "text": "This is exactly what we covered when we were learning C,"
+ },
+ {
+  "id": 228,
+  "text": "learning assembly."
+ },
+ {
+  "id": 229,
+  "text": "The concepts are actually very close."
+ },
+ {
+  "id": 230,
+  "text": "It's because C is very close to"
+ },
+ {
+  "id": 231,
+  "text": "low-level development,"
+ },
+ {
+  "id": 232,
+  "text": "and the concepts in C,"
+ },
+ {
+  "id": 233,
+  "text": "the concepts in C,"
+ },
+ {
+  "id": 234,
+  "text": "many of them"
+ },
+ {
+  "id": 235,
+  "text": "actually come from assembly,"
+ },
+ {
+  "id": 236,
+  "text": "from machine instructions."
+ },
+ {
+  "id": 237,
+  "text": "Right?"
+ },
+ {
+  "id": 238,
+  "text": "Basically, the concept of the function call process,"
+ },
+ {
+  "id": 239,
+  "text": "we'll just review up to here."
+ },
+ {
+  "id": 240,
+  "text": "So that brings us back to our topic today"
+ },
+ {
+  "id": 241,
+  "text": "which is why we need to define"
+ },
+ {
+  "id": 242,
+  "text": "the concept of a function calling convention"
+ },
+ {
+  "id": 243,
+  "text": "Now, as we mentioned earlier"
+ },
+ {
+  "id": 244,
+  "text": "with functions,"
+ },
+ {
+  "id": 245,
+  "text": "when function A calls function B,"
+ },
+ {
+  "id": 246,
+  "text": "in our terminology,"
+ },
+ {
+  "id": 247,
+  "text": "in our specification,"
+ },
+ {
+  "id": 248,
+  "text": "we refer to this function A"
+ },
+ {
+  "id": 249,
+  "text": "as the caller,"
+ },
+ {
+  "id": 250,
+  "text": "called '调用者' in Chinese."
+ },
+ {
+  "id": 251,
+  "text": "In English, it's called the caller."
+ },
+ {
+  "id": 252,
+  "text": "And the function being called,"
+ },
+ {
+  "id": 253,
+  "text": "we call it the callee."
+ },
+ {
+  "id": 254,
+  "text": "Right?"
+ },
+ {
+  "id": 255,
+  "text": "Since you've all studied English,"
+ },
+ {
+  "id": 256,
+  "text": "you should be able to understand this."
+ },
+ {
+  "id": 257,
+  "text": "The concept of the suffixes ER and EE."
+ },
+ {
+  "id": 258,
+  "text": "So,"
+ },
+ {
+  "id": 259,
+  "text": "let's say this function A"
+ },
+ {
+  "id": 260,
+  "text": "This caller"
+ },
+ {
+  "id": 261,
+  "text": "starts executing instructions one by one,"
+ },
+ {
+  "id": 262,
+  "text": "and when it reaches this instruction,"
+ },
+ {
+  "id": 263,
+  "text": "it will invoke a call."
+ },
+ {
+  "id": 264,
+  "text": "Now, the call,"
+ },
+ {
+  "id": 265,
+  "text": "as we'll see later,"
+ },
+ {
+  "id": 266,
+  "text": "is actually just an instruction."
+ },
+ {
+  "id": 267,
+  "text": "We're simply borrowing it here to represent"
+ },
+ {
+  "id": 268,
+  "text": "the invocation of a function."
+ },
+ {
+  "id": 269,
+  "text": "So this function"
+ },
+ {
+  "id": 270,
+  "text": "then makes a call."
+ },
+ {
+  "id": 271,
+  "text": "So it calls,"
+ },
+ {
+  "id": 272,
+  "text": "and the call starts executing."
+ },
+ {
+  "id": 273,
+  "text": "It starts executing,"
+ },
+ {
+  "id": 274,
+  "text": "executing and executing,"
+ },
+ {
+  "id": 275,
+  "text": "and when it gets to this point,"
+ },
+ {
+  "id": 276,
+  "text": "we say the call has finished executing."
+ },
+ {
+  "id": 277,
+  "text": "And once it's done,"
+ },
+ {
+  "id": 278,
+  "text": "it needs to return."
+ },
+ {
+  "id": 279,
+  "text": "So on return,"
+ },
+ {
+  "id": 280,
+  "text": "We know it will definitely return to"
+ },
+ {
+  "id": 281,
+  "text": "the caller,"
+ },
+ {
+  "id": 282,
+  "text": "to the instruction right after the call,"
+ },
+ {
+  "id": 283,
+  "text": "and continue executing from there."
+ },
+ {
+  "id": 284,
+  "text": "That's the execution process of a function."
+ },
+ {
+  "id": 285,
+  "text": "Now, during this function execution process,"
+ },
+ {
+  "id": 286,
+  "text": "what concepts do we know are involved?"
+ },
+ {
+  "id": 287,
+  "text": "For example, we say the caller"
+ },
+ {
+  "id": 288,
+  "text": "may need to pass"
+ },
+ {
+  "id": 289,
+  "text": "arguments to the callee,"
+ },
+ {
+  "id": 290,
+  "text": "right?"
+ },
+ {
+  "id": 291,
+  "text": "And when the caller"
+ },
+ {
+  "id": 292,
+  "text": "returns,"
+ },
+ {
+  "id": 293,
+  "text": "it may need to return some content,"
+ },
+ {
+  "id": 294,
+  "text": "which we call the return value."
+ },
+ {
+  "id": 295,
+  "text": "There's also a return address involved,"
+ },
+ {
+  "id": 296,
+  "text": "these concepts."
+ },
+ {
+  "id": 297,
+  "text": "So what do all these concepts involve?"
+ },
+ {
+  "id": 298,
+  "text": "They involve, that is to say,"
+ },
+ {
+  "id": 299,
+  "text": "the interaction between the caller function and the callee."
+ },
+ {
+  "id": 300,
+  "text": "So it's essentially a"
+ },
+ {
+  "id": 301,
+  "text": "there's a boundary here"
+ },
+ {
+  "id": 302,
+  "text": "between the two"
+ },
+ {
+  "id": 303,
+  "text": "there has to be some kind of"
+ },
+ {
+  "id": 304,
+  "text": "where do I put my call arguments"
+ },
+ {
+  "id": 305,
+  "text": "that is, where does my caller put them"
+ },
+ {
+  "id": 306,
+  "text": "and only then can this callee go"
+ },
+ {
+  "id": 307,
+  "text": "and actually get those arguments"
+ },
+ {
+  "id": 308,
+  "text": "think about it, right?"
+ },
+ {
+  "id": 309,
+  "text": "When I return,"
+ },
+ {
+  "id": 310,
+  "text": "this callee has to put the return value"
+ },
+ {
+  "id": 311,
+  "text": "somewhere too"
+ },
+ {
+  "id": 312,
+  "text": "and then,"
+ },
+ {
+  "id": 313,
+  "text": "the caller also has to know"
+ },
+ {
+  "id": 314,
+  "text": "and once the caller knows,"
+ },
+ {
+  "id": 315,
+  "text": "it can go and take this data"
+ },
+ {
+  "id": 316,
+  "text": "and pull it out"
+ },
+ {
+  "id": 317,
+  "text": "So all of these things"
+ },
+ {
+  "id": 318,
+  "text": "are really just a kind of"
+ },
+ {
+  "id": 319,
+  "text": "agreement that both sides have to settle on"
+ },
+ {
+  "id": 320,
+  "text": "Think about it —"
+ },
+ {
+  "id": 321,
+  "text": "if we don't agree on this beforehand,"
+ },
+ {
+  "id": 322,
+  "text": "the whole process would fall apart."
+ },
+ {
+  "id": 323,
+  "text": "Now some of you might say,"
+ },
+ {
+  "id": 324,
+  "text": "isn't this simple enough?"
+ },
+ {
+  "id": 325,
+  "text": "I can put it wherever I want."
+ },
+ {
+  "id": 326,
+  "text": "Like in the example we just had,"
+ },
+ {
+  "id": 327,
+  "text": "we put the function's return address"
+ },
+ {
+  "id": 328,
+  "text": "right in x5."
+ },
+ {
+  "id": 329,
+  "text": "Right?"
+ },
+ {
+  "id": 330,
+  "text": "You still remember, right?"
+ },
+ {
+  "id": 331,
+  "text": "In the example we just had,"
+ },
+ {
+  "id": 332,
+  "text": "yes, this very example."
+ },
+ {
+  "id": 333,
+  "text": "In this example,"
+ },
+ {
+  "id": 334,
+  "text": "what we actually did was make a convention."
+ },
+ {
+  "id": 335,
+  "text": "What did we do, and how did we agree on it?"
+ },
+ {
+  "id": 336,
+  "text": "We took that return address"
+ },
+ {
+  "id": 337,
+  "text": "and agreed that it would be placed in x5, right?"
+ },
+ {
+  "id": 338,
+  "text": "So what is this function actually?"
+ },
+ {
+  "id": 339,
+  "text": "It's the caller."
+ },
+ {
+  "id": 340,
+  "text": "This is the caller"
+ },
+ {
+  "id": 341,
+  "text": "And this sum is what?"
+ },
+ {
+  "id": 342,
+  "text": "It's the callee"
+ },
+ {
+  "id": 343,
+  "text": "Right?"
+ },
+ {
+  "id": 344,
+  "text": "So the two sides actually reach an agreement"
+ },
+ {
+  "id": 345,
+  "text": "We put the return address in X5"
+ },
+ {
+  "id": 346,
+  "text": "That way"
+ },
+ {
+  "id": 347,
+  "text": "the flow works on both sides"
+ },
+ {
+  "id": 348,
+  "text": "Think about it, doesn't it?"
+ },
+ {
+  "id": 349,
+  "text": "So"
+ },
+ {
+  "id": 350,
+  "text": "if that's the case"
+ },
+ {
+  "id": 351,
+  "text": "why do we even need an agreement?"
+ },
+ {
+  "id": 352,
+  "text": "We could just decide on our own"
+ },
+ {
+  "id": 353,
+  "text": "If I feel like using X5, that's fine"
+ },
+ {
+  "id": 354,
+  "text": "Today I feel like using X5"
+ },
+ {
+  "id": 355,
+  "text": "Tomorrow I'll use S6, and that's fine too"
+ },
+ {
+  "id": 356,
+  "text": "Think about it, doesn't it?"
+ },
+ {
+  "id": 357,
+  "text": "Right?"
+ },
+ {
+  "id": 358,
+  "text": "Well, this is definitely not as simple as you think"
+ },
+ {
+  "id": 359,
+  "text": "Why is that? Think about it"
+ },
+ {
+  "id": 360,
+  "text": "So where does the problem come from?"
+ },
+ {
+  "id": 361,
+  "text": "Well,"
+ },
+ {
+  "id": 362,
+  "text": "if the caller and the callee"
+ },
+ {
+  "id": 363,
+  "text": "are both written by you,"
+ },
+ {
+  "id": 364,
+  "text": "then of course there's no problem at all."
+ },
+ {
+  "id": 365,
+  "text": "You don't need any convention whatsoever."
+ },
+ {
+  "id": 366,
+  "text": "You don't need an agreement with yourself."
+ },
+ {
+  "id": 367,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 368,
+  "text": "But in most cases,"
+ },
+ {
+  "id": 369,
+  "text": "the function you write may be used by someone else,"
+ },
+ {
+  "id": 370,
+  "text": "right?"
+ },
+ {
+  "id": 371,
+  "text": "That means the caller and the callee"
+ },
+ {
+  "id": 372,
+  "text": "may not be the same person."
+ },
+ {
+  "id": 373,
+  "text": "And that's when you need a convention."
+ },
+ {
+  "id": 374,
+  "text": "You see what I mean?"
+ },
+ {
+  "id": 375,
+  "text": "Everyone has to follow one uniform rule"
+ },
+ {
+  "id": 376,
+  "text": "for where you put your parameters,"
+ },
+ {
+  "id": 377,
+  "text": "where you put your return value,"
+ },
+ {
+  "id": 378,
+  "text": "and where you put your return address."
+ },
+ {
+  "id": 379,
+  "text": "And this way,"
+ },
+ {
+  "id": 380,
+  "text": "The function you write is handed over for others to use,"
+ },
+ {
+  "id": 381,
+  "text": "so that other people can use it too."
+ },
+ {
+  "id": 382,
+  "text": "Similarly, when the compiler"
+ },
+ {
+  "id": 383,
+  "text": "generates machine code,"
+ },
+ {
+  "id": 384,
+  "text": "it also has to follow this convention when generating where your"
+ },
+ {
+  "id": 385,
+  "text": "call parameters and return values are placed,"
+ },
+ {
+  "id": 386,
+  "text": "and how return parameters are handled."
+ },
+ {
+  "id": 387,
+  "text": "This is a kind of convention."
+ },
+ {
+  "id": 388,
+  "text": "So, as part of our standard,"
+ },
+ {
+  "id": 389,
+  "text": "in our assembly,"
+ },
+ {
+  "id": 390,
+  "text": "apart from defining these assembly instructions,"
+ },
+ {
+  "id": 391,
+  "text": "we also define this part about the calling convention."
+ },
+ {
+  "id": 392,
+  "text": "This is also part of the specification."
+ },
+ {
+  "id": 393,
+  "text": "As for this whole programming convention,"
+ },
+ {
+  "id": 394,
+  "text": "as we will see later,"
+ },
+ {
+  "id": 395,
+  "text": "we can briefly summarize it into about three parts."
+ },
+ {
+  "id": 396,
+  "text": "One is the programming convention for registers,"
+ },
+ {
+  "id": 397,
+  "text": "that is, how we use these registers."
+ },
+ {
+  "id": 398,
+  "text": "We have 32"
+ },
+ {
+  "id": 399,
+  "text": "— for example, RISC-V has 32 registers."
+ },
+ {
+  "id": 400,
+  "text": "you can't just use them however you like"
+ },
+ {
+  "id": 401,
+  "text": "This is the programming convention for registers."
+ },
+ {
+  "id": 402,
+  "text": "The second one"
+ },
+ {
+  "id": 403,
+  "text": "is about"
+ },
+ {
+  "id": 404,
+  "text": "the programming convention for function call and return instructions."
+ },
+ {
+  "id": 405,
+  "text": "That is, when we do function calls,"
+ },
+ {
+  "id": 406,
+  "text": "the most critical parts are a function call instruction"
+ },
+ {
+  "id": 407,
+  "text": "and a function return instruction."
+ },
+ {
+  "id": 408,
+  "text": "How we should use these two instructions"
+ },
+ {
+  "id": 409,
+  "text": "also follows conventions,"
+ },
+ {
+  "id": 410,
+  "text": "and there are requirements for them too."
+ },
+ {
+  "id": 411,
+  "text": "That's the second point."
+ },
+ {
+  "id": 412,
+  "text": "The third point is this:"
+ },
+ {
+  "id": 413,
+  "text": "when we implement a function,"
+ },
+ {
+  "id": 414,
+  "text": "say I implement a function for others to use,"
+ },
+ {
+  "id": 415,
+  "text": "there are also requirements for how that function is implemented."
+ },
+ {
+  "id": 416,
+  "text": "What this function"
+ },
+ {
+  "id": 417,
+  "text": "should do,"
+ },
+ {
+  "id": 418,
+  "text": "certain aspects of it,"
+ },
+ {
+  "id": 419,
+  "text": "we have specific requirements for."
+ },
+ {
+  "id": 420,
+  "text": "So,"
+ },
+ {
+  "id": 421,
+  "text": "once we've grasped these three parts,"
+ },
+ {
+  "id": 422,
+  "text": "basically"
+ },
+ {
+  "id": 423,
+  "text": "the programming convention part"
+ },
+ {
+  "id": 424,
+  "text": "will be clear to us."
+ },
+ {
+  "id": 425,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 426,
+  "text": "First, let's look at part one,"
+ },
+ {
+  "id": 427,
+  "text": "which is about"
+ },
+ {
+  "id": 428,
+  "text": "the programming conventions for registers."
+ },
+ {
+  "id": 429,
+  "text": "Let's take a look at this table."
+ },
+ {
+  "id": 430,
+  "text": "This table,"
+ },
+ {
+  "id": 431,
+  "text": "that is to say,"
+ },
+ {
+  "id": 432,
+  "text": "first, what is the first concept?"
+ },
+ {
+  "id": 433,
+  "text": "First, as we know,"
+ },
+ {
+  "id": 434,
+  "text": "our registers,"
+ },
+ {
+  "id": 435,
+  "text": "in RISC-V,"
+ },
+ {
+  "id": 436,
+  "text": "the general-purpose registers,"
+ },
+ {
+  "id": 437,
+  "text": "there are 32 of them in total."
+ },
+ {
+  "id": 438,
+  "text": "Now, what did we talk about earlier?"
+ },
+ {
+  "id": 439,
+  "text": "x0, x1, x2"
+ },
+ {
+  "id": 440,
+  "text": "This is one kind of it."
+ },
+ {
+  "id": 441,
+  "text": "In other words, in the spec,"
+ },
+ {
+  "id": 442,
+  "text": "the name defined for this register,"
+ },
+ {
+  "id": 443,
+  "text": "think of it as a standardized name."
+ },
+ {
+  "id": 444,
+  "text": "You can think of it as its real name."
+ },
+ {
+  "id": 445,
+  "text": "For example, my real name is Wang Chen,"
+ },
+ {
+  "id": 446,
+  "text": "right?"
+ },
+ {
+  "id": 447,
+  "text": "That's my real name."
+ },
+ {
+  "id": 448,
+  "text": "This is the real name defined in the spec."
+ },
+ {
+  "id": 449,
+  "text": "But when we program,"
+ },
+ {
+  "id": 450,
+  "text": "since we have this concept of convention,"
+ },
+ {
+  "id": 451,
+  "text": "because we often use this register,"
+ },
+ {
+  "id": 452,
+  "text": "to do a certain thing,"
+ },
+ {
+  "id": 453,
+  "text": "we've gotten used to,"
+ },
+ {
+  "id": 454,
+  "text": "not using numbers to represent it,"
+ },
+ {
+  "id": 455,
+  "text": "because numbers don't convey any meaning."
+ },
+ {
+  "id": 456,
+  "text": "We give it an alias."
+ },
+ {
+  "id": 457,
+  "text": "This alias,"
+ },
+ {
+  "id": 458,
+  "text": "is a name with a certain meaning."
+ },
+ {
+  "id": 459,
+  "text": "Do you get what I mean?"
+ },
+ {
+  "id": 460,
+  "text": "Of course, it seems I don't have any aliases yet."
+ },
+ {
+  "id": 461,
+  "text": "This lets me give it a nickname."
+ },
+ {
+  "id": 462,
+  "text": "I can give it an alias."
+ },
+ {
+  "id": 463,
+  "text": "This is called an alias."
+ },
+ {
+  "id": 464,
+  "text": "And this is called the programming name."
+ },
+ {
+  "id": 465,
+  "text": "That is, when we're programming,"
+ },
+ {
+  "id": 466,
+  "text": "we actually habitually write this name."
+ },
+ {
+  "id": 467,
+  "text": "That is to say, in your code,"
+ },
+ {
+  "id": 468,
+  "text": "for example, this one,"
+ },
+ {
+  "id": 469,
+  "text": "this X0 register,"
+ },
+ {
+  "id": 470,
+  "text": "it has an alias called zero."
+ },
+ {
+  "id": 471,
+  "text": "So when you write code,"
+ },
+ {
+  "id": 472,
+  "text": "writing either of these two — the assembler recognizes both."
+ },
+ {
+  "id": 473,
+  "text": "Everyone gets what I mean, right?"
+ },
+ {
+  "id": 474,
+  "text": "It recognizes both."
+ },
+ {
+  "id": 475,
+  "text": "But,"
+ },
+ {
+  "id": 476,
+  "text": "more often, perhaps,"
+ },
+ {
+  "id": 477,
+  "text": "sometimes when you look at code written by other people,"
+ },
+ {
+  "id": 478,
+  "text": "more people prefer to use this name zero,"
+ },
+ {
+  "id": 479,
+  "text": "simply because it has a specific meaning in this context."
+ },
+ {
+  "id": 480,
+  "text": "So why does x0 express a certain meaning?"
+ },
+ {
+  "id": 481,
+  "text": "When you read it, it's always 0."
+ },
+ {
+  "id": 482,
+  "text": "Writing into it is completely meaningless."
+ },
+ {
+  "id": 483,
+  "text": "You see what I mean."
+ },
+ {
+  "id": 484,
+  "text": "So we give it a real"
+ },
+ {
+  "id": 485,
+  "text": "common name, calling it zero,"
+ },
+ {
+  "id": 486,
+  "text": "to represent it."
+ },
+ {
+  "id": 487,
+  "text": "That's the idea."
+ },
+ {
+  "id": 488,
+  "text": "When we write programs,"
+ },
+ {
+  "id": 489,
+  "text": "I actually recommend using these programming names,"
+ },
+ {
+  "id": 490,
+  "text": "because it's easier to understand that way."
+ },
+ {
+  "id": 491,
+  "text": "Writing those numbers instead is harder to follow."
+ },
+ {
+  "id": 492,
+  "text": "Keep that in mind."
+ },
+ {
+  "id": 493,
+  "text": "So these are their programming names."
+ },
+ {
+  "id": 494,
+  "text": "As for exactly why they're called these names,"
+ },
+ {
+  "id": 495,
+  "text": "for example, why it's called ra,"
+ },
+ {
+  "id": 496,
+  "text": "of course, a lot of them are abbreviations."
+ },
+ {
+  "id": 497,
+  "text": "Later, when we go through the conventions and explain them,"
+ },
+ {
+  "id": 498,
+  "text": "we'll get a deeper understanding of why they're named this way."
+ },
+ {
+  "id": 499,
+  "text": "And there's one more thing to understand"
+ },
+ {
+  "id": 500,
+  "text": "That is, who is responsible during a function call"
+ },
+ {
+  "id": 501,
+  "text": "for maintaining these registers."
+ },
+ {
+  "id": 502,
+  "text": "So when we go through the introduction,"
+ },
+ {
+  "id": 503,
+  "text": "we'll walk you through that as well."
+ },
+ {
+  "id": 504,
+  "text": "Let's first take a look at"
+ },
+ {
+  "id": 505,
+  "text": "the first one, X0."
+ },
+ {
+  "id": 506,
+  "text": "We already talked about X0 just now,"
+ },
+ {
+  "id": 507,
+  "text": "so we won't go into it."
+ },
+ {
+  "id": 508,
+  "text": "Because it's very special,"
+ },
+ {
+  "id": 509,
+  "text": "we gave it a name, zero."
+ },
+ {
+  "id": 510,
+  "text": "Now, it"
+ },
+ {
+  "id": 511,
+  "text": "doesn't really have a specific use"
+ },
+ {
+  "id": 512,
+  "text": "during function calls,"
+ },
+ {
+  "id": 513,
+  "text": "so we don't consider"
+ },
+ {
+  "id": 514,
+  "text": "the issue of freely maintaining this register"
+ },
+ {
+  "id": 515,
+  "text": "during function calls for it."
+ },
+ {
+  "id": 516,
+  "text": "So this NA here means"
+ },
+ {
+  "id": 517,
+  "text": "not considered,"
+ },
+ {
+  "id": 518,
+  "text": "not relevant,"
+ },
+ {
+  "id": 519,
+  "text": "Not available."
+ },
+ {
+  "id": 520,
+  "text": "That's what it means."
+ },
+ {
+  "id": 521,
+  "text": "Let's go over it."
+ },
+ {
+  "id": 522,
+  "text": "Okay."
+ },
+ {
+  "id": 523,
+  "text": "So the next register is a very important one."
+ },
+ {
+  "id": 524,
+  "text": "This register, x1,"
+ },
+ {
+  "id": 525,
+  "text": "its alias is ra."
+ },
+ {
+  "id": 526,
+  "text": "We say it's actually used to hold the function's"
+ },
+ {
+  "id": 527,
+  "text": "This wording doesn't seem quite accurate."
+ },
+ {
+  "id": 528,
+  "text": "It's not called storing the return"
+ },
+ {
+  "id": 529,
+  "text": "It should be storing the value of the function's return address."
+ },
+ {
+  "id": 530,
+  "text": "Please note this."
+ },
+ {
+  "id": 531,
+  "text": "You can go back and correct this."
+ },
+ {
+  "id": 532,
+  "text": "It should be storing the return value of the function address"
+ },
+ {
+  "id": 533,
+  "text": "the value of the address."
+ },
+ {
+  "id": 534,
+  "text": "Storing the return value of the function address."
+ },
+ {
+  "id": 535,
+  "text": "In English, we call it the return address,"
+ },
+ {
+  "id": 536,
+  "text": "which actually expresses the meaning more accurately."
+ },
+ {
+  "id": 537,
+  "text": "So ra is actually the abbreviation for return address."
+ },
+ {
+  "id": 538,
+  "text": "ra, an abbreviation for return address."
+ },
+ {
+  "id": 539,
+  "text": "It's actually what we just talked about"
+ },
+ {
+  "id": 540,
+  "text": "when that function returns,"
+ },
+ {
+  "id": 541,
+  "text": "the next address it is going to execute,"
+ },
+ {
+  "id": 542,
+  "text": "the address specified as the next one."
+ },
+ {
+  "id": 543,
+  "text": "Do you still get what I mean?"
+ },
+ {
+  "id": 544,
+  "text": "So,"
+ },
+ {
+  "id": 545,
+  "text": "why do we call it caller here?"
+ },
+ {
+  "id": 546,
+  "text": "It means that,"
+ },
+ {
+  "id": 547,
+  "text": "it says that,"
+ },
+ {
+  "id": 548,
+  "text": "it is the person who calls the function,"
+ },
+ {
+  "id": 549,
+  "text": "who maintains this"
+ },
+ {
+  "id": 550,
+  "text": "content of this register."
+ },
+ {
+  "id": 551,
+  "text": "So what does that mean?"
+ },
+ {
+  "id": 552,
+  "text": "It means that,"
+ },
+ {
+  "id": 553,
+  "text": "when, say, function A"
+ },
+ {
+  "id": 554,
+  "text": "calls function B,"
+ },
+ {
+  "id": 555,
+  "text": "this function B is the callee."
+ },
+ {
+  "id": 556,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 557,
+  "text": "That just shows that the callee may, inside"
+ },
+ {
+  "id": 558,
+  "text": "its own function,"
+ },
+ {
+  "id": 559,
+  "text": "change the value of this ra."
+ },
+ {
+  "id": 560,
+  "text": "So this callee,"
+ },
+ {
+  "id": 561,
+  "text": "this function A,"
+ },
+ {
+  "id": 562,
+  "text": "will need to,"
+ },
+ {
+  "id": 563,
+  "text": "say if sometimes it might"
+ },
+ {
+  "id": 564,
+  "text": "possibly, this callee"
+ },
+ {
+  "id": 565,
+  "text": "might want to use this value,"
+ },
+ {
+  "id": 566,
+  "text": "then you'll have to figure out a way"
+ },
+ {
+  "id": 567,
+  "text": "to save this value yourself."
+ },
+ {
+  "id": 568,
+  "text": "So,"
+ },
+ {
+  "id": 569,
+  "text": "we define it as"
+ },
+ {
+  "id": 570,
+  "text": "the callee being responsible for maintaining"
+ },
+ {
+  "id": 571,
+  "text": "the value in this register."
+ },
+ {
+  "id": 572,
+  "text": "We'll come back to this concept"
+ },
+ {
+  "id": 573,
+  "text": "when we talk about the assembly code"
+ },
+ {
+  "id": 574,
+  "text": "and look at it again then."
+ },
+ {
+  "id": 575,
+  "text": "You'll probably understand it more deeply by then."
+ },
+ {
+  "id": 576,
+  "text": "For now, let's just remember this conclusion."
+ },
+ {
+  "id": 577,
+  "text": "Alright, so the second one is called x2."
+ },
+ {
+  "id": 578,
+  "text": "As for x2,"
+ },
+ {
+  "id": 579,
+  "text": "we call it sp."
+ },
+ {
+  "id": 580,
+  "text": "What does SP mean?"
+ },
+ {
+  "id": 581,
+  "text": "It stands for Stack Pointer."
+ },
+ {
+  "id": 582,
+  "text": "That's the stack pointer we talked about earlier."
+ },
+ {
+  "id": 583,
+  "text": "When we push onto and pop off the stack,"
+ },
+ {
+  "id": 584,
+  "text": "we're essentially moving this stack pointer."
+ },
+ {
+  "id": 585,
+  "text": "So we often use this register"
+ },
+ {
+  "id": 586,
+  "text": "to hold the stack pointer."
+ },
+ {
+  "id": 587,
+  "text": "That's why,"
+ },
+ {
+  "id": 588,
+  "text": "we named it SP."
+ },
+ {
+  "id": 589,
+  "text": "Now, who is responsible for maintaining it?"
+ },
+ {
+  "id": 590,
+  "text": "We say it's the callee function,"
+ },
+ {
+  "id": 591,
+  "text": "meaning that inside the called sub-function,"
+ },
+ {
+  "id": 592,
+  "text": "we maintain this stack."
+ },
+ {
+  "id": 593,
+  "text": "Because as we know, popping and pushing"
+ },
+ {
+  "id": 594,
+  "text": "are actually done inside the sub-function."
+ },
+ {
+  "id": 595,
+  "text": "In a moment, again through examples,"
+ },
+ {
+  "id": 596,
+  "text": "we'll gain a deeper understanding of this concept."
+ },
+ {
+  "id": 597,
+  "text": "Next up,"
+ },
+ {
+  "id": 598,
+  "text": "there's a group of registers,"
+ },
+ {
+  "id": 599,
+  "text": "namely x5 to x7."
+ },
+ {
+  "id": 600,
+  "text": "from x8 to x31"
+ },
+ {
+  "id": 601,
+  "text": "how many registers is that in total?"
+ },
+ {
+  "id": 602,
+  "text": "5 to 7"
+ },
+ {
+  "id": 603,
+  "text": "5, 6, 7, that's 3 of them"
+ },
+ {
+  "id": 604,
+  "text": "28, 29, 30, 31"
+ },
+ {
+  "id": 605,
+  "text": "that's 4 of them"
+ },
+ {
+  "id": 606,
+  "text": "4 plus 3 gives us 7 in total"
+ },
+ {
+  "id": 607,
+  "text": "these 7 registers"
+ },
+ {
+  "id": 608,
+  "text": "we call them"
+ },
+ {
+  "id": 609,
+  "text": "temporary registers"
+ },
+ {
+  "id": 610,
+  "text": "so the ones starting with t"
+ },
+ {
+  "id": 611,
+  "text": "so the registers here"
+ },
+ {
+  "id": 612,
+  "text": "their alias is t"
+ },
+ {
+  "id": 613,
+  "text": "t followed by a number"
+ },
+ {
+  "id": 614,
+  "text": "now this t"
+ },
+ {
+  "id": 615,
+  "text": "we say it actually is"
+ },
+ {
+  "id": 616,
+  "text": "you can think of it this way"
+ },
+ {
+  "id": 617,
+  "text": "these temporary registers"
+ },
+ {
+  "id": 618,
+  "text": "temporary relative to whom?"
+ },
+ {
+  "id": 619,
+  "text": "they are temporary relative to the caller"
+ },
+ {
+  "id": 620,
+  "text": "That is to say, for these registers,"
+ },
+ {
+  "id": 621,
+  "text": "in this calling convention,"
+ },
+ {
+  "id": 622,
+  "text": "when function A calls function B,"
+ },
+ {
+  "id": 623,
+  "text": "for example, when it calls function B,"
+ },
+ {
+  "id": 624,
+  "text": "inside function B,"
+ },
+ {
+  "id": 625,
+  "text": "it's basically our convention that"
+ },
+ {
+  "id": 626,
+  "text": "in this function B,"
+ },
+ {
+  "id": 627,
+  "text": "you're allowed to freely use these temporary registers."
+ },
+ {
+  "id": 628,
+  "text": "Now, suppose this function A"
+ },
+ {
+  "id": 629,
+  "text": "also uses these t registers,"
+ },
+ {
+  "id": 630,
+  "text": "because once it enters this function,"
+ },
+ {
+  "id": 631,
+  "text": "these registers might get overwritten."
+ },
+ {
+  "id": 632,
+  "text": "You see what I mean, right?"
+ },
+ {
+  "id": 633,
+  "text": "So that means, if my function A"
+ },
+ {
+  "id": 634,
+  "text": "uses these registers internally,"
+ },
+ {
+  "id": 635,
+  "text": "then before you call the function,"
+ },
+ {
+  "id": 636,
+  "text": "you need to take these registers yourself,"
+ },
+ {
+  "id": 637,
+  "text": "and before you make the call as the caller,"
+ },
+ {
+  "id": 638,
+  "text": "you need to save their values."
+ },
+ {
+  "id": 639,
+  "text": "And then, when this function returns,"
+ },
+ {
+  "id": 640,
+  "text": "You just need to restore them yourself and that's it."
+ },
+ {
+  "id": 641,
+  "text": "That is to say, these temporary registers,"
+ },
+ {
+  "id": 642,
+  "text": "in calls, in these functions,"
+ },
+ {
+  "id": 643,
+  "text": "will get overwritten."
+ },
+ {
+  "id": 644,
+  "text": "That's what's meant by temporary registers."
+ },
+ {
+  "id": 645,
+  "text": "So what does this so-called saving"
+ },
+ {
+  "id": 646,
+  "text": "mean, think about it."
+ },
+ {
+  "id": 647,
+  "text": "Where do we save them to?"
+ },
+ {
+  "id": 648,
+  "text": "Where else"
+ },
+ {
+  "id": 649,
+  "text": "can we use to hold register values?"
+ },
+ {
+  "id": 650,
+  "text": "Well, of course they're still saved in the function stack."
+ },
+ {
+  "id": 651,
+  "text": "Right?"
+ },
+ {
+  "id": 652,
+  "text": "Saved in whose function stack?"
+ },
+ {
+  "id": 653,
+  "text": "Well, of course they're saved by the caller,"
+ },
+ {
+  "id": 654,
+  "text": "since the caller does the saving,"
+ },
+ {
+  "id": 655,
+  "text": "then the caller saves them in its own stack."
+ },
+ {
+  "id": 656,
+  "text": "So that's the idea of temporary registers."
+ },
+ {
+  "id": 657,
+  "text": "Next,"
+ },
+ {
+  "id": 658,
+  "text": "we have what are called saved registers."
+ },
+ {
+  "id": 659,
+  "text": "As for saved registers,"
+ },
+ {
+  "id": 660,
+  "text": "It's the opposite of that one"
+ },
+ {
+  "id": 661,
+  "text": "It's called S saved"
+ },
+ {
+  "id": 662,
+  "text": "Saved means"
+ },
+ {
+  "id": 663,
+  "text": "These all start with S"
+ },
+ {
+  "id": 664,
+  "text": "So for these registers"
+ },
+ {
+  "id": 665,
+  "text": "it's the caller who is responsible for maintaining them"
+ },
+ {
+  "id": 666,
+  "text": "So what that means is"
+ },
+ {
+  "id": 667,
+  "text": "when you call"
+ },
+ {
+  "id": 668,
+  "text": "say this function A"
+ },
+ {
+  "id": 669,
+  "text": "again, let's say A calls B"
+ },
+ {
+  "id": 670,
+  "text": "A calls B"
+ },
+ {
+  "id": 671,
+  "text": "Suppose A uses this register S0"
+ },
+ {
+  "id": 672,
+  "text": "Let me give an example"
+ },
+ {
+  "id": 673,
+  "text": "Say it uses the register S0"
+ },
+ {
+  "id": 674,
+  "text": "So when A calls B"
+ },
+ {
+  "id": 675,
+  "text": "actually, B"
+ },
+ {
+  "id": 676,
+  "text": "can always be guaranteed that"
+ },
+ {
+  "id": 677,
+  "text": "when B returns"
+ },
+ {
+  "id": 678,
+  "text": "the value in S0 is unchanged"
+ },
+ {
+  "id": 679,
+  "text": "That's what we call a saved register"
+ },
+ {
+  "id": 680,
+  "text": "So, since everyone thinks"
+ },
+ {
+  "id": 681,
+  "text": "if B wants to guarantee that the value in S0"
+ },
+ {
+  "id": 682,
+  "text": "stays the same before and after the call,"
+ },
+ {
+  "id": 683,
+  "text": "then one approach is this:"
+ },
+ {
+  "id": 684,
+  "text": "you just never use this S0 register inside B."
+ },
+ {
+  "id": 685,
+  "text": "Does that sound right?"
+ },
+ {
+  "id": 686,
+  "text": "But that's impossible,"
+ },
+ {
+  "id": 687,
+  "text": "because you might still need to use this S0 register."
+ },
+ {
+  "id": 688,
+  "text": "There are only so many registers—"
+ },
+ {
+  "id": 689,
+  "text": "thirty-something might not be enough."
+ },
+ {
+  "id": 690,
+  "text": "So if you do need to use it, what can you do?"
+ },
+ {
+  "id": 691,
+  "text": "What does B have to do?"
+ },
+ {
+  "id": 692,
+  "text": "Since it's the one responsible for preserving it,"
+ },
+ {
+  "id": 693,
+  "text": "then you find a way to, before using it,"
+ },
+ {
+  "id": 694,
+  "text": "save this S0 register onto the stack first,"
+ },
+ {
+  "id": 695,
+  "text": "and then start using S0."
+ },
+ {
+  "id": 696,
+  "text": "After you're done with it, before returning,"
+ },
+ {
+  "id": 697,
+  "text": "there's one more thing you have to do—what is it?"
+ },
+ {
+  "id": 698,
+  "text": "You restore this S0 back from the stack."
+ },
+ {
+  "id": 699,
+  "text": "Think about it—does that make sense?"
+ },
+ {
+  "id": 700,
+  "text": "restore it."
+ },
+ {
+  "id": 701,
+  "text": "So after it's restored,"
+ },
+ {
+  "id": 702,
+  "text": "when we return,"
+ },
+ {
+  "id": 703,
+  "text": "from A's perspective,"
+ },
+ {
+  "id": 704,
+  "text": "from A's point of view,"
+ },
+ {
+  "id": 705,
+  "text": "the value of s0 hasn't changed at all, right?"
+ },
+ {
+  "id": 706,
+  "text": "Think about it — isn't that the idea?"
+ },
+ {
+  "id": 707,
+  "text": "This is what's called"
+ },
+ {
+  "id": 708,
+  "text": "So for the s registers,"
+ },
+ {
+  "id": 709,
+  "text": "it's the callee that guarantees their values are preserved."
+ },
+ {
+  "id": 710,
+  "text": "So make sure you understand this,"
+ },
+ {
+  "id": 711,
+  "text": "that's the concept."
+ },
+ {
+  "id": 712,
+  "text": "Compared with the t registers, it's basically the opposite arrangement."
+ },
+ {
+  "id": 713,
+  "text": "Then there are also the argument registers,"
+ },
+ {
+  "id": 714,
+  "text": "the argument registers,"
+ },
+ {
+  "id": 715,
+  "text": "meaning the arguments."
+ },
+ {
+  "id": 716,
+  "text": "So these registers,"
+ },
+ {
+  "id": 717,
+  "text": "they all start with a,"
+ },
+ {
+  "id": 718,
+  "text": "they're used when we pass parameters,"
+ },
+ {
+  "id": 719,
+  "text": "when calling a function, we need to pass parameters."
+ },
+ {
+  "id": 720,
+  "text": "So for RISC-V,"
+ },
+ {
+  "id": 721,
+  "text": "it recommends that you"
+ },
+ {
+  "id": 722,
+  "text": "just pass the parameters directly in the registers,"
+ },
+ {
+  "id": 723,
+  "text": "passing them through the registers"
+ },
+ {
+  "id": 724,
+  "text": "because that's the most efficient,"
+ },
+ {
+  "id": 725,
+  "text": "the fastest way."
+ },
+ {
+  "id": 726,
+  "text": "So that's why we"
+ },
+ {
+  "id": 727,
+  "text": "use a0 through a7,"
+ },
+ {
+  "id": 728,
+  "text": "which adds up to"
+ },
+ {
+  "id": 729,
+  "text": "8 registers you can use."
+ },
+ {
+  "id": 730,
+  "text": "In other words, you can fully make use of"
+ },
+ {
+  "id": 731,
+  "text": "8 registers to pass parameters."
+ },
+ {
+  "id": 732,
+  "text": "Then when returning,"
+ },
+ {
+  "id": 733,
+  "text": "the return value can also be placed"
+ },
+ {
+  "id": 734,
+  "text": "into the two registers a0 and a1."
+ },
+ {
+  "id": 735,
+  "text": "That's what it means."
+ },
+ {
+  "id": 736,
+  "text": "Now similarly,"
+ },
+ {
+  "id": 737,
+  "text": "since these registers are used for passing parameters,"
+ },
+ {
+  "id": 738,
+  "text": "that means"
+ },
+ {
+  "id": 739,
+  "text": "for the caller,"
+ },
+ {
+  "id": 740,
+  "text": "Actually, the value in this register"
+ },
+ {
+  "id": 741,
+  "text": "might get changed."
+ },
+ {
+  "id": 742,
+  "text": "So if you want to"
+ },
+ {
+  "id": 743,
+  "text": "use it again after using it once,"
+ },
+ {
+  "id": 744,
+  "text": "you have to maintain it yourself."
+ },
+ {
+  "id": 745,
+  "text": "So it is maintained by the caller."
+ },
+ {
+  "id": 746,
+  "text": "Now, through this convention,"
+ },
+ {
+  "id": 747,
+  "text": "what advantage can you see?"
+ },
+ {
+  "id": 748,
+  "text": "I'm essentially saying that"
+ },
+ {
+  "id": 749,
+  "text": "some registers are volatile before the call,"
+ },
+ {
+  "id": 750,
+  "text": "they can change,"
+ },
+ {
+  "id": 751,
+  "text": "while some registers"
+ },
+ {
+  "id": 752,
+  "text": "stay unchanged after the call,"
+ },
+ {
+  "id": 753,
+  "text": "right?"
+ },
+ {
+  "id": 754,
+  "text": "So"
+ },
+ {
+  "id": 755,
+  "text": "the point is to achieve"
+ },
+ {
+  "id": 756,
+  "text": "what kind of effect?"
+ },
+ {
+  "id": 757,
+  "text": "If you didn't have this rule,"
+ },
+ {
+  "id": 758,
+  "text": "to guarantee that this register"
+ },
+ {
+  "id": 759,
+  "text": "is preserved during use,"
+ },
+ {
+  "id": 760,
+  "text": "always"
+ },
+ {
+  "id": 761,
+  "text": "and never get disturbed"
+ },
+ {
+  "id": 762,
+  "text": "one of the dumbest approaches would be this:"
+ },
+ {
+  "id": 763,
+  "text": "when function A"
+ },
+ {
+  "id": 764,
+  "text": "calls function B,"
+ },
+ {
+  "id": 765,
+  "text": "I save every single register,"
+ },
+ {
+  "id": 766,
+  "text": "all of them,"
+ },
+ {
+  "id": 767,
+  "text": "right? Of course, whether that's the way..."
+ },
+ {
+  "id": 768,
+  "text": "and then,"
+ },
+ {
+  "id": 769,
+  "text": "and then,"
+ },
+ {
+  "id": 770,
+  "text": "when exiting the function,"
+ },
+ {
+  "id": 771,
+  "text": "I restore all those registers"
+ },
+ {
+  "id": 772,
+  "text": "back out again."
+ },
+ {
+  "id": 773,
+  "text": "Actually, this can also achieve"
+ },
+ {
+  "id": 774,
+  "text": "the same effect."
+ },
+ {
+  "id": 775,
+  "text": "But as you all know,"
+ },
+ {
+  "id": 776,
+  "text": "the efficiency is far too low,"
+ },
+ {
+  "id": 777,
+  "text": "because we have so many registers."
+ },
+ {
+  "id": 778,
+  "text": "If every time you call a function,"
+ },
+ {
+  "id": 779,
+  "text": "you save all the registers..."
+ },
+ {
+  "id": 780,
+  "text": "and restore them again on the way out"
+ },
+ {
+  "id": 781,
+  "text": "that is way too inefficient"
+ },
+ {
+  "id": 782,
+  "text": "Think about it, isn't it"
+ },
+ {
+  "id": 783,
+  "text": "So we simply settle on a convention"
+ },
+ {
+  "id": 784,
+  "text": "that is, there is a set of registers"
+ },
+ {
+  "id": 785,
+  "text": "that you don't have to worry about"
+ },
+ {
+  "id": 786,
+  "text": "and some registers that you must handle"
+ },
+ {
+  "id": 787,
+  "text": "And that way"
+ },
+ {
+  "id": 788,
+  "text": "we improve the efficiency of"
+ },
+ {
+  "id": 789,
+  "text": "function calls as much as possible"
+ },
+ {
+  "id": 790,
+  "text": "Similarly"
+ },
+ {
+  "id": 791,
+  "text": "with this standard in place"
+ },
+ {
+  "id": 792,
+  "text": "we also reached what we talked about earlier"
+ },
+ {
+  "id": 793,
+  "text": "we solved the problem we mentioned earlier"
+ },
+ {
+  "id": 794,
+  "text": "namely, the generality of functions"
+ },
+ {
+  "id": 795,
+  "text": "Because this way"
+ },
+ {
+  "id": 796,
+  "text": "as long as everyone follows this convention"
+ },
+ {
+  "id": 797,
+  "text": "a function of yours"
+ },
+ {
+  "id": 798,
+  "text": "whether you wrote it or I wrote it"
+ },
+ {
+  "id": 799,
+  "text": "can be handed over to anyone to use"
+ },
+ {
+  "id": 800,
+  "text": "So if we all follow this convention,"
+ },
+ {
+  "id": 801,
+  "text": "things won't get messy."
+ },
+ {
+  "id": 802,
+  "text": "So this register convention,"
+ },
+ {
+  "id": 803,
+  "text": "that's basically the idea."
+ },
+ {
+  "id": 804,
+  "text": "And now you also understand"
+ },
+ {
+  "id": 805,
+  "text": "why these names start with a,"
+ },
+ {
+  "id": 806,
+  "text": "why some start with s and some with t."
+ },
+ {
+  "id": 807,
+  "text": "They actually carry meaning."
+ },
+ {
+  "id": 808,
+  "text": "Later, when we write code,"
+ },
+ {
+  "id": 809,
+  "text": "we'll try to use these programming names as much as possible."
+ },
+ {
+  "id": 810,
+  "text": "They are also called ABI names."
+ },
+ {
+  "id": 811,
+  "text": "As for the ABI,"
+ },
+ {
+  "id": 812,
+  "text": "the concept,"
+ },
+ {
+  "id": 813,
+  "text": "just get a general understanding of it."
+ },
+ {
+  "id": 814,
+  "text": "I won't go into it in detail here."
+ },
+ {
+  "id": 815,
+  "text": "Alright,"
+ },
+ {
+  "id": 816,
+  "text": "so first of all, the first thing we mentioned is,"
+ },
+ {
+  "id": 817,
+  "text": "the first aspect of the convention is the register convention."
+ },
+ {
+  "id": 818,
+  "text": "The second aspect,"
+ },
+ {
+  "id": 819,
+  "text": "is what happens when we talk about function calls."
+ },
+ {
+  "id": 820,
+  "text": "When it comes to function jumps and returns,"
+ },
+ {
+  "id": 821,
+  "text": "in terms of instruction encoding,"
+ },
+ {
+  "id": 822,
+  "text": "actually, combining this with what we just talked about,"
+ },
+ {
+  "id": 823,
+  "text": "the convention on these registers,"
+ },
+ {
+  "id": 824,
+  "text": "we can do the same thing here,"
+ },
+ {
+  "id": 825,
+  "text": "and define part of the convention for its call instructions as well."
+ },
+ {
+  "id": 826,
+  "text": "Let's take a look at what this convention is."
+ },
+ {
+  "id": 827,
+  "text": "Actually, we've already covered some of it earlier."
+ },
+ {
+  "id": 828,
+  "text": "For example,"
+ },
+ {
+  "id": 829,
+  "text": "as you can see,"
+ },
+ {
+  "id": 830,
+  "text": "this actually involves some pseudo-instructions."
+ },
+ {
+  "id": 831,
+  "text": "Because pseudo-instructions were also proposed"
+ },
+ {
+  "id": 832,
+  "text": "for the sake of making things more convenient for us to use."
+ },
+ {
+  "id": 833,
+  "text": "You see,"
+ },
+ {
+  "id": 834,
+  "text": "instructions like this JAR instruction,"
+ },
+ {
+  "id": 835,
+  "text": "it is actually a pseudo-instruction."
+ },
+ {
+  "id": 836,
+  "text": "It actually uses"
+ },
+ {
+  "id": 837,
+  "text": "the register convention we defined earlier."
+ },
+ {
+  "id": 838,
+  "text": "Didn't we just agree that x1"
+ },
+ {
+  "id": 839,
+  "text": "Didn't we just agree on X1?"
+ },
+ {
+  "id": 840,
+  "text": "That's what we call ra, right?"
+ },
+ {
+  "id": 841,
+  "text": "Think about it, isn't that so?"
+ },
+ {
+  "id": 842,
+  "text": "So we actually agreed on X1 as the convention"
+ },
+ {
+  "id": 843,
+  "text": "to save the return address"
+ },
+ {
+  "id": 844,
+  "text": "and we'll never just use it casually again"
+ },
+ {
+  "id": 845,
+  "text": "Unlike before, when we used it however we liked"
+ },
+ {
+  "id": 846,
+  "text": "Before we had this convention,"
+ },
+ {
+  "id": 847,
+  "text": "we used X5,"
+ },
+ {
+  "id": 848,
+  "text": "right?"
+ },
+ {
+  "id": 849,
+  "text": "In that example."
+ },
+ {
+  "id": 850,
+  "text": "Now, what I'm saying is,"
+ },
+ {
+  "id": 851,
+  "text": "since we've all agreed to use X1,"
+ },
+ {
+  "id": 852,
+  "text": "in our code,"
+ },
+ {
+  "id": 853,
+  "text": "we shouldn't keep writing X1 explicitly every single time."
+ },
+ {
+  "id": 854,
+  "text": "So we defined a"
+ },
+ {
+  "id": 855,
+  "text": "pseudo-instruction, the ret instruction."
+ },
+ {
+  "id": 856,
+  "text": "For this instruction,"
+ },
+ {
+  "id": 857,
+  "text": "notice that it doesn't specify"
+ },
+ {
+  "id": 858,
+  "text": "an rd here."
+ },
+ {
+  "id": 859,
+  "text": "If rd isn't specified,"
+ },
+ {
+  "id": 860,
+  "text": "So what's actually implied"
+ },
+ {
+  "id": 861,
+  "text": "is the use of x1."
+ },
+ {
+  "id": 862,
+  "text": "So from now on, when we code,"
+ },
+ {
+  "id": 863,
+  "text": "when we write our programs,"
+ },
+ {
+  "id": 864,
+  "text": "we should try to use the call instruction,"
+ },
+ {
+  "id": 865,
+  "text": "which by convention uses x1"
+ },
+ {
+  "id": 866,
+  "text": "to save the return address."
+ },
+ {
+  "id": 867,
+  "text": "That's one point."
+ },
+ {
+  "id": 868,
+  "text": "The second one is this:"
+ },
+ {
+  "id": 869,
+  "text": "as we just mentioned,"
+ },
+ {
+  "id": 870,
+  "text": "this kind is called"
+ },
+ {
+  "id": 871,
+  "text": "a non-returning function call."
+ },
+ {
+  "id": 872,
+  "text": "That is, as we just agreed,"
+ },
+ {
+  "id": 873,
+  "text": "x0"
+ },
+ {
+  "id": 874,
+  "text": "is zero,"
+ },
+ {
+  "id": 875,
+  "text": "a special address,"
+ },
+ {
+  "id": 876,
+  "text": "a special register."
+ },
+ {
+  "id": 877,
+  "text": "So as long as you put"
+ },
+ {
+  "id": 878,
+  "text": "the return address in there, it can't actually hold"
+ },
+ {
+  "id": 879,
+  "text": "any return address at all."
+ },
+ {
+  "id": 880,
+  "text": "So since that's the case,"
+ },
+ {
+  "id": 881,
+  "text": "from now on we'll just"
+ },
+ {
+  "id": 882,
+  "text": "not write it out so long and wordy."
+ },
+ {
+  "id": 883,
+  "text": "We'll just write a J."
+ },
+ {
+  "id": 884,
+  "text": "JR just represents this kind of"
+ },
+ {
+  "id": 885,
+  "text": "equivalent effect."
+ },
+ {
+  "id": 886,
+  "text": "That's the second type."
+ },
+ {
+  "id": 887,
+  "text": "Then there's also a third type,"
+ },
+ {
+  "id": 888,
+  "text": "which is — didn't we just say"
+ },
+ {
+  "id": 889,
+  "text": "we have some long jumps?"
+ },
+ {
+  "id": 890,
+  "text": "You remember, right?"
+ },
+ {
+  "id": 891,
+  "text": "So for long jumps,"
+ },
+ {
+  "id": 892,
+  "text": "because long jumps,"
+ },
+ {
+  "id": 893,
+  "text": "long jumps mainly use these instructions."
+ },
+ {
+  "id": 894,
+  "text": "And because a long jump"
+ },
+ {
+  "id": 895,
+  "text": "itself also implicitly uses X1,"
+ },
+ {
+  "id": 896,
+  "text": "or rather, the tail call."
+ },
+ {
+  "id": 897,
+  "text": "A tail call — you can imagine"
+ },
+ {
+  "id": 898,
+  "text": "what a tail call is."
+ },
+ {
+  "id": 899,
+  "text": "A tail call is, in English, called a tail"
+ },
+ {
+  "id": 900,
+  "text": "Say function A calls function B,"
+ },
+ {
+  "id": 901,
+  "text": "and function B calls function C."
+ },
+ {
+  "id": 902,
+  "text": "Then this function C doesn't call any function."
+ },
+ {
+  "id": 903,
+  "text": "So in the end, this"
+ },
+ {
+  "id": 904,
+  "text": "step where B calls C,"
+ },
+ {
+  "id": 905,
+  "text": "we call that a tail call."
+ },
+ {
+  "id": 906,
+  "text": "You get what I mean, right?"
+ },
+ {
+  "id": 907,
+  "text": "In English, it's usually called tail"
+ },
+ {
+  "id": 908,
+  "text": "— basically the last call."
+ },
+ {
+  "id": 909,
+  "text": "Because this function C can never go on to call function D."
+ },
+ {
+  "id": 910,
+  "text": "You get what I mean."
+ },
+ {
+  "id": 911,
+  "text": "So this kind is called a tail call."
+ },
+ {
+  "id": 912,
+  "text": "Now what about A calling B?"
+ },
+ {
+  "id": 913,
+  "text": "That's not a tail call,"
+ },
+ {
+  "id": 914,
+  "text": "because after it calls B,"
+ },
+ {
+  "id": 915,
+  "text": "B will still go on to call C."
+ },
+ {
+  "id": 916,
+  "text": "That kind of thing."
+ },
+ {
+  "id": 917,
+  "text": "So that step is not called a tail call."
+ },
+ {
+  "id": 918,
+  "text": "That's called a regular call."
+ },
+ {
+  "id": 919,
+  "text": "So that's what a tail call means."
+ },
+ {
+  "id": 920,
+  "text": "A pseudo call means that"
+ },
+ {
+  "id": 921,
+  "text": "it can no longer save this"
+ },
+ {
+  "id": 922,
+  "text": "because after B calls C,"
+ },
+ {
+  "id": 923,
+  "text": "C will just"
+ },
+ {
+  "id": 924,
+  "text": "C will just"
+ },
+ {
+  "id": 925,
+  "text": "Right,"
+ },
+ {
+  "id": 926,
+  "text": "it won't go on to call D anymore."
+ },
+ {
+  "id": 927,
+  "text": "So we don't need to save this"
+ },
+ {
+  "id": 928,
+  "text": "final return address again."
+ },
+ {
+  "id": 929,
+  "text": "So here we can just use x0."
+ },
+ {
+  "id": 930,
+  "text": "Okay, that's"
+ },
+ {
+  "id": 931,
+  "text": "another group of"
+ },
+ {
+  "id": 932,
+  "text": "commonly used ones."
+ },
+ {
+  "id": 933,
+  "text": "Now the last one"
+ },
+ {
+  "id": 934,
+  "text": "concerns returning from a function."
+ },
+ {
+  "id": 935,
+  "text": "Because we also agreed that"
+ },
+ {
+  "id": 936,
+  "text": "x1 holds this return address,"
+ },
+ {
+  "id": 937,
+  "text": "so we don't need to"
+ },
+ {
+  "id": 938,
+  "text": "write it out in such a long-winded way."
+ },
+ {
+  "id": 939,
+  "text": "We can just use one"
+ },
+ {
+  "id": 940,
+  "text": "Simply put, the pseudo-instruction"
+ },
+ {
+  "id": 941,
+  "text": "ret is the return instruction,"
+ },
+ {
+  "id": 942,
+  "text": "used to indicate a return."
+ },
+ {
+  "id": 943,
+  "text": "Of course, this is not the return of the C language."
+ },
+ {
+  "id": 944,
+  "text": "This is the return pseudo-instruction in assembly."
+ },
+ {
+  "id": 945,
+  "text": "Now, this kind of thing"
+ },
+ {
+  "id": 946,
+  "text": "involves function jumps,"
+ },
+ {
+  "id": 947,
+  "text": "and it's a programming convention."
+ },
+ {
+  "id": 948,
+  "text": "That is, from now on,"
+ },
+ {
+  "id": 949,
+  "text": "we should try our best to use this"
+ },
+ {
+  "id": 950,
+  "text": "set of instructions"
+ },
+ {
+  "id": 951,
+  "text": "to write function calls and returns."
+ },
+ {
+  "id": 952,
+  "text": "Just so you're aware of this."
+ },
+ {
+  "id": 953,
+  "text": "Now, the ones we use most often"
+ },
+ {
+  "id": 954,
+  "text": "are call and return,"
+ },
+ {
+  "id": 955,
+  "text": "which are used a lot."
+ },
+ {
+  "id": 956,
+  "text": "That's it."
+ },
+ {
+  "id": 957,
+  "text": "Now, regarding this thing,"
+ },
+ {
+  "id": 958,
+  "text": "let's take another look at the effect."
+ },
+ {
+  "id": 959,
+  "text": "We've made a simple animated diagram for you."
+ },
+ {
+  "id": 960,
+  "text": "Let's take a look at how this works."
+ },
+ {
+  "id": 961,
+  "text": "For example, suppose we now have"
+ },
+ {
+  "id": 962,
+  "text": "the caller on the left"
+ },
+ {
+  "id": 963,
+  "text": "and the callee on the right."
+ },
+ {
+  "id": 964,
+  "text": "Let's look at this function process,"
+ },
+ {
+  "id": 965,
+  "text": "and take another look at this."
+ },
+ {
+  "id": 966,
+  "text": "That is to say, once this programming convention is in place,"
+ },
+ {
+  "id": 967,
+  "text": "the function's invocation"
+ },
+ {
+  "id": 968,
+  "text": "how does the function call actually take place?"
+ },
+ {
+  "id": 969,
+  "text": "Suppose our caller"
+ },
+ {
+  "id": 970,
+  "text": "starts executing instruction i,"
+ },
+ {
+  "id": 971,
+  "text": "then moves down to i+1, the second instruction,"
+ },
+ {
+  "id": 972,
+  "text": "and then further down,"
+ },
+ {
+  "id": 973,
+  "text": "this instruction starts making a call."
+ },
+ {
+  "id": 974,
+  "text": "Now we know that this call"
+ },
+ {
+  "id": 975,
+  "text": "already has a specific meaning."
+ },
+ {
+  "id": 976,
+  "text": "According to our programming convention,"
+ },
+ {
+  "id": 977,
+  "text": "what is it equivalent to?"
+ },
+ {
+  "id": 978,
+  "text": "Think back to what we just covered,"
+ },
+ {
+  "id": 979,
+  "text": "it is actually equivalent to a long jump."
+ },
+ {
+  "id": 980,
+  "text": "As for this long jump,"
+ },
+ {
+  "id": 981,
+  "text": "we don't care about AUIPC."
+ },
+ {
+  "id": 982,
+  "text": "What we mainly care about is the second instruction below,"
+ },
+ {
+  "id": 983,
+  "text": "which is JLR."
+ },
+ {
+  "id": 984,
+  "text": "As for JLR,"
+ },
+ {
+  "id": 985,
+  "text": "its target,"
+ },
+ {
+  "id": 986,
+  "text": "its return address is,"
+ },
+ {
+  "id": 987,
+  "text": "by convention, saved in x1."
+ },
+ {
+  "id": 988,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 989,
+  "text": "Now, x1,"
+ },
+ {
+  "id": 990,
+  "text": "as we said, has an alias called ra."
+ },
+ {
+  "id": 991,
+  "text": "So what it does inside is,"
+ },
+ {
+  "id": 992,
+  "text": "what operation does it perform?"
+ },
+ {
+  "id": 993,
+  "text": "It takes its next address,"
+ },
+ {
+  "id": 994,
+  "text": "that is, the address of this instruction, ra + m,"
+ },
+ {
+  "id": 995,
+  "text": "and saves it in"
+ },
+ {
+  "id": 996,
+  "text": "x1."
+ },
+ {
+  "id": 997,
+  "text": "We've now agreed on this:"
+ },
+ {
+  "id": 998,
+  "text": "it goes in x1."
+ },
+ {
+  "id": 999,
+  "text": "Don't put it in any other register."
+ },
+ {
+  "id": 1000,
+  "text": "Then it violates the convention."
+ },
+ {
+  "id": 1001,
+  "text": "If that's the case, code like yours"
+ },
+ {
+  "id": 1002,
+  "text": "may not interoperate when given to others."
+ },
+ {
+  "id": 1003,
+  "text": "Please keep that in mind."
+ },
+ {
+  "id": 1004,
+  "text": "So, this way,"
+ },
+ {
+  "id": 1005,
+  "text": "we take this"
+ },
+ {
+  "id": 1006,
+  "text": "address of the I plus M instruction"
+ },
+ {
+  "id": 1007,
+  "text": "and put it into this register."
+ },
+ {
+  "id": 1008,
+  "text": "What's stored inside it"
+ },
+ {
+  "id": 1009,
+  "text": "is exactly the address of the I plus M instruction."
+ },
+ {
+  "id": 1010,
+  "text": "Please pay attention to this."
+ },
+ {
+  "id": 1011,
+  "text": "Then,"
+ },
+ {
+  "id": 1012,
+  "text": "as you all know,"
+ },
+ {
+  "id": 1013,
+  "text": "what happens next?"
+ },
+ {
+  "id": 1014,
+  "text": "This call instruction"
+ },
+ {
+  "id": 1015,
+  "text": "is nothing more than a jump."
+ },
+ {
+  "id": 1016,
+  "text": "It just jumps into this call."
+ },
+ {
+  "id": 1017,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1018,
+  "text": "And then inside the call,"
+ },
+ {
+  "id": 1019,
+  "text": "it starts executing one by one"
+ },
+ {
+  "id": 1020,
+  "text": "So our PC"
+ },
+ {
+  "id": 1021,
+  "text": "starts executing from here"
+ },
+ {
+  "id": 1022,
+  "text": "and then the PC just keeps executing"
+ },
+ {
+  "id": 1023,
+  "text": "j plus 1"
+ },
+ {
+  "id": 1024,
+  "text": "j plus 2"
+ },
+ {
+  "id": 1025,
+  "text": "this is very simple"
+ },
+ {
+  "id": 1026,
+  "text": "and then at the end"
+ },
+ {
+  "id": 1027,
+  "text": "we call return"
+ },
+ {
+  "id": 1028,
+  "text": "now when we write code"
+ },
+ {
+  "id": 1029,
+  "text": "we just call return to go back"
+ },
+ {
+  "id": 1030,
+  "text": "no need to write those complicated instructions anymore"
+ },
+ {
+  "id": 1031,
+  "text": "this instruction"
+ },
+ {
+  "id": 1032,
+  "text": "what is this instruction equivalent to"
+ },
+ {
+  "id": 1033,
+  "text": "it is equivalent to the jr instruction"
+ },
+ {
+  "id": 1034,
+  "text": "x0 and 0"
+ },
+ {
+  "id": 1035,
+  "text": "parenthesis x1"
+ },
+ {
+  "id": 1036,
+  "text": "this is also a convention here"
+ },
+ {
+  "id": 1037,
+  "text": "because the convention is x1"
+ },
+ {
+  "id": 1038,
+  "text": "and what does that tell us"
+ },
+ {
+  "id": 1039,
+  "text": "it jumps based on the value in here"
+ },
+ {
+  "id": 1040,
+  "text": "It jumps there."
+ },
+ {
+  "id": 1041,
+  "text": "You get what I mean, right?"
+ },
+ {
+  "id": 1042,
+  "text": "So, based on the calculation method we just used,"
+ },
+ {
+  "id": 1043,
+  "text": "it actually jumps to"
+ },
+ {
+  "id": 1044,
+  "text": "the location of this instruction."
+ },
+ {
+  "id": 1045,
+  "text": "So it definitely jumps here."
+ },
+ {
+  "id": 1046,
+  "text": "Then the PC comes back,"
+ },
+ {
+  "id": 1047,
+  "text": "and once it returns, the process is complete."
+ },
+ {
+  "id": 1048,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1049,
+  "text": "So from this example, we can see that"
+ },
+ {
+  "id": 1050,
+  "text": "from now on, when we write code,"
+ },
+ {
+  "id": 1051,
+  "text": "we should always use call"
+ },
+ {
+  "id": 1052,
+  "text": "and these pseudo-instructions to implement it."
+ },
+ {
+  "id": 1053,
+  "text": "So why can these pseudo-instructions"
+ },
+ {
+  "id": 1054,
+  "text": "implement this process?"
+ },
+ {
+  "id": 1055,
+  "text": "The reason is simply that"
+ },
+ {
+  "id": 1056,
+  "text": "they follow our programming convention,"
+ },
+ {
+  "id": 1057,
+  "text": "our programming convention—"
+ },
+ {
+  "id": 1058,
+  "text": "the calling convention for function calls."
+ },
+ {
+  "id": 1059,
+  "text": "This is the calling convention for function calls."
+ },
+ {
+  "id": 1060,
+  "text": "That is the second aspect."
+ },
+ {
+  "id": 1061,
+  "text": "Now, the third aspect is this:"
+ },
+ {
+  "id": 1062,
+  "text": "Ultimately, we need to write a function."
+ },
+ {
+  "id": 1063,
+  "text": "So how should we write this function?"
+ },
+ {
+  "id": 1064,
+  "text": "When we write this function,"
+ },
+ {
+  "id": 1065,
+  "text": "there are actually some conventions to follow."
+ },
+ {
+  "id": 1066,
+  "text": "Please pay attention to this."
+ },
+ {
+  "id": 1067,
+  "text": "Of course,"
+ },
+ {
+  "id": 1068,
+  "text": "as for this part of the content,"
+ },
+ {
+  "id": 1069,
+  "text": "when we write C code,"
+ },
+ {
+  "id": 1070,
+  "text": "we actually don't pay much attention to it."
+ },
+ {
+  "id": 1071,
+  "text": "Why is that?"
+ },
+ {
+  "id": 1072,
+  "text": "Because this part is actually handled for us by the assembler."
+ },
+ {
+  "id": 1073,
+  "text": "Since this follows a standard convention,"
+ },
+ {
+  "id": 1074,
+  "text": "all assemblers will, at the beginning and end of our code,"
+ },
+ {
+  "id": 1075,
+  "text": "insert some special instructions for us."
+ },
+ {
+  "id": 1076,
+  "text": "These special instructions are actually related to operations like pushing onto and popping off the stack."
+ },
+ {
+  "id": 1077,
+  "text": "You can't see any of this when we write C code."
+ },
+ {
+  "id": 1078,
+  "text": "This is the concept of automation."
+ },
+ {
+  "id": 1079,
+  "text": "That is, all this 'automatic' stuff doesn't really mean the program executes itself automatically."
+ },
+ {
+  "id": 1080,
+  "text": "It's just that these operations you perform are actually some instructions generated for you by the assembler,"
+ },
+ {
+  "id": 1081,
+  "text": "inserted into your code."
+ },
+ {
+  "id": 1082,
+  "text": "You all get what I mean, right?"
+ },
+ {
+  "id": 1083,
+  "text": "Let's take a look at"
+ },
+ {
+  "id": 1084,
+  "text": "this programming convention,"
+ },
+ {
+  "id": 1085,
+  "text": "what exactly it does."
+ },
+ {
+  "id": 1086,
+  "text": "So when we write a function,"
+ },
+ {
+  "id": 1087,
+  "text": "actually we only need to write the function body itself."
+ },
+ {
+  "id": 1088,
+  "text": "This process of insertion,"
+ },
+ {
+  "id": 1089,
+  "text": "actually, inserting things at the front and at the back,"
+ },
+ {
+  "id": 1090,
+  "text": "what exactly does that do?"
+ },
+ {
+  "id": 1091,
+  "text": "Let's look at this diagram together."
+ },
+ {
+  "id": 1092,
+  "text": "So first, at the beginning of the function,"
+ },
+ {
+  "id": 1093,
+  "text": "our assembler will help us"
+ },
+ {
+  "id": 1094,
+  "text": "insert some special push instructions"
+ },
+ {
+  "id": 1095,
+  "text": "and some special save instructions."
+ },
+ {
+  "id": 1096,
+  "text": "What does it do?"
+ },
+ {
+  "id": 1097,
+  "text": "At the beginning of the function,"
+ },
+ {
+  "id": 1098,
+  "text": "this prologue,"
+ },
+ {
+  "id": 1099,
+  "text": "which is also a term from specifications and the literature,"
+ },
+ {
+  "id": 1100,
+  "text": "Just so everyone gets the idea,"
+ },
+ {
+  "id": 1101,
+  "text": "what is it trying to express?"
+ },
+ {
+  "id": 1102,
+  "text": "It's a bit like..."
+ },
+ {
+  "id": 1103,
+  "text": "I actually looked this word up,"
+ },
+ {
+  "id": 1104,
+  "text": "I pronounce it 'prologue'."
+ },
+ {
+  "id": 1105,
+  "text": "It's probably called 'prologue'."
+ },
+ {
+  "id": 1106,
+  "text": "Not entirely sure that's accurate,"
+ },
+ {
+  "id": 1107,
+  "text": "but it's kind of like... what is it like?"
+ },
+ {
+  "id": 1108,
+  "text": "It's like when a play is performed,"
+ },
+ {
+  "id": 1109,
+  "text": "when the stage opens up,"
+ },
+ {
+  "id": 1110,
+  "text": "we say there are some people who come out first to warm up the crowd."
+ },
+ {
+  "id": 1111,
+  "text": "You understand what I mean,"
+ },
+ {
+  "id": 1112,
+  "text": "anyone seen this kind of thing, or whatever?"
+ },
+ {
+  "id": 1113,
+  "text": "That is, before the main character appears,"
+ },
+ {
+  "id": 1114,
+  "text": "there will be some extras,"
+ },
+ {
+  "id": 1115,
+  "text": "running around in front carrying flags."
+ },
+ {
+  "id": 1116,
+  "text": "Get what I mean?"
+ },
+ {
+  "id": 1117,
+  "text": "Warm up the place first."
+ },
+ {
+  "id": 1118,
+  "text": "This kind of thing might also be called a prologue."
+ },
+ {
+  "id": 1119,
+  "text": "That is, a kind of... before getting into the main content."
+ },
+ {
+  "id": 1120,
+  "text": "The kind of process described earlier"
+ },
+ {
+  "id": 1121,
+  "text": "Well, this process is what we call the prologue."
+ },
+ {
+  "id": 1122,
+  "text": "So what does it actually do?"
+ },
+ {
+  "id": 1123,
+  "text": "First, it says it will decrease the value of SP."
+ },
+ {
+  "id": 1124,
+  "text": "Do you know what decreasing the value of SP actually means?"
+ },
+ {
+  "id": 1125,
+  "text": "What exactly is SP?"
+ },
+ {
+  "id": 1126,
+  "text": "As we mentioned earlier,"
+ },
+ {
+  "id": 1127,
+  "text": "SP is a register."
+ },
+ {
+  "id": 1128,
+  "text": "This register is actually x-something."
+ },
+ {
+  "id": 1129,
+  "text": "Is it x1?"
+ },
+ {
+  "id": 1130,
+  "text": "It's x2, right?"
+ },
+ {
+  "id": 1131,
+  "text": "x2 is actually SP."
+ },
+ {
+  "id": 1132,
+  "text": "SP is in fact the stack pointer."
+ },
+ {
+  "id": 1133,
+  "text": "So when we decrease this stack pointer,"
+ },
+ {
+  "id": 1134,
+  "text": "think about what that means."
+ },
+ {
+  "id": 1135,
+  "text": "Look at the diagram on the right."
+ },
+ {
+  "id": 1136,
+  "text": "It's essentially taking this"
+ },
+ {
+  "id": 1137,
+  "text": "and pushing the stack further down."
+ },
+ {
+  "id": 1138,
+  "text": "Do you follow what I mean?"
+ },
+ {
+  "id": 1139,
+  "text": "After pushing the stack,"
+ },
+ {
+  "id": 1140,
+  "text": "It actually sets up"
+ },
+ {
+  "id": 1141,
+  "text": "You can think of it this way, conceptually"
+ },
+ {
+  "id": 1142,
+  "text": "It's like, for this function,"
+ },
+ {
+  "id": 1143,
+  "text": "it sets up a stack frame for the function."
+ },
+ {
+  "id": 1144,
+  "text": "So what is this stack frame used for?"
+ },
+ {
+  "id": 1145,
+  "text": "It's used to save some registers,"
+ },
+ {
+  "id": 1146,
+  "text": "and to save and define some local variables."
+ },
+ {
+  "id": 1147,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1148,
+  "text": "So decreasing the value of SP"
+ },
+ {
+  "id": 1149,
+  "text": "is essentially setting up a stack frame for the function,"
+ },
+ {
+  "id": 1150,
+  "text": "and then based on"
+ },
+ {
+  "id": 1151,
+  "text": "which SAVE registers are used in this function,"
+ },
+ {
+  "id": 1152,
+  "text": "and how many local variables there are,"
+ },
+ {
+  "id": 1153,
+  "text": "that much stack space is allocated."
+ },
+ {
+  "id": 1154,
+  "text": "Now, let's go back over this statement."
+ },
+ {
+  "id": 1155,
+  "text": "What did we mean earlier by SAVE registers?"
+ },
+ {
+  "id": 1156,
+  "text": "SAVE registers."
+ },
+ {
+  "id": 1157,
+  "text": "Let's go back to that table from just now."
+ },
+ {
+  "id": 1158,
+  "text": "When you look at this on your own,"
+ },
+ {
+  "id": 1159,
+  "text": "refer to this table along with it."
+ },
+ {
+  "id": 1160,
+  "text": "SAVE registers"
+ },
+ {
+  "id": 1161,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 1162,
+  "text": "By convention,"
+ },
+ {
+  "id": 1163,
+  "text": "what are save registers?"
+ },
+ {
+  "id": 1164,
+  "text": "It means the call has to guarantee"
+ },
+ {
+  "id": 1165,
+  "text": "the values of these registers"
+ },
+ {
+  "id": 1166,
+  "text": "Put plainly,"
+ },
+ {
+  "id": 1167,
+  "text": "for the caller,"
+ },
+ {
+  "id": 1168,
+  "text": "the values in these save registers"
+ },
+ {
+  "id": 1169,
+  "text": "before and after the call"
+ },
+ {
+  "id": 1170,
+  "text": "must be guaranteed to remain unchanged."
+ },
+ {
+  "id": 1171,
+  "text": "Now, for"
+ },
+ {
+  "id": 1172,
+  "text": "the called function,"
+ },
+ {
+  "id": 1173,
+  "text": "how do you make sure these registers"
+ },
+ {
+  "id": 1174,
+  "text": "stay the same before and after the call?"
+ },
+ {
+  "id": 1175,
+  "text": "Well, the only way is to do what?"
+ },
+ {
+  "id": 1176,
+  "text": "Don't you have to take these save registers"
+ },
+ {
+  "id": 1177,
+  "text": "and save them?"
+ },
+ {
+  "id": 1178,
+  "text": "Right?"
+ },
+ {
+  "id": 1179,
+  "text": "Whether you use them or not,"
+ },
+ {
+  "id": 1180,
+  "text": "Of course, if you optimize it better,"
+ },
+ {
+  "id": 1181,
+  "text": "you can detect it,"
+ },
+ {
+  "id": 1182,
+  "text": "meaning if it's not used, then don't save it."
+ },
+ {
+  "id": 1183,
+  "text": "And if it is used, then you save it."
+ },
+ {
+  "id": 1184,
+  "text": "But maybe you don't want to worry about that,"
+ },
+ {
+  "id": 1185,
+  "text": "so no matter what,"
+ },
+ {
+  "id": 1186,
+  "text": "following this convention,"
+ },
+ {
+  "id": 1187,
+  "text": "you just save these save registers and that's it."
+ },
+ {
+  "id": 1188,
+  "text": "Then before coming out,"
+ },
+ {
+  "id": 1189,
+  "text": "before returning,"
+ },
+ {
+  "id": 1190,
+  "text": "just restore them again and that's it."
+ },
+ {
+  "id": 1191,
+  "text": "Right?"
+ },
+ {
+  "id": 1192,
+  "text": "So about the save registers,"
+ },
+ {
+  "id": 1193,
+  "text": "let's get a feel for what this means."
+ },
+ {
+  "id": 1194,
+  "text": "That is, we take the save registers,"
+ },
+ {
+  "id": 1195,
+  "text": "based on the save registers used in the function."
+ },
+ {
+  "id": 1196,
+  "text": "So in principle, according to which ones you used,"
+ },
+ {
+  "id": 1197,
+  "text": "if you used them,"
+ },
+ {
+  "id": 1198,
+  "text": "then you save them."
+ },
+ {
+  "id": 1199,
+  "text": "If you didn't use them,"
+ },
+ {
+  "id": 1200,
+  "text": "Actually, you could also skip saving them."
+ },
+ {
+  "id": 1201,
+  "text": "This is also something that can improve efficiency."
+ },
+ {
+  "id": 1202,
+  "text": "This is something for everyone to think about and get a feel for."
+ },
+ {
+  "id": 1203,
+  "text": "This so-called saving of the save registers,"
+ },
+ {
+  "id": 1204,
+  "text": "what does saving it mean, exactly?"
+ },
+ {
+  "id": 1205,
+  "text": "Now, as for local variables,"
+ },
+ {
+  "id": 1206,
+  "text": "that is, suppose I define one inside a function,"
+ },
+ {
+  "id": 1207,
+  "text": "a local variable called a."
+ },
+ {
+  "id": 1208,
+  "text": "So where does this a live?"
+ },
+ {
+  "id": 1209,
+  "text": "Actually, it also goes on the stack."
+ },
+ {
+  "id": 1210,
+  "text": "You also have to allocate space for it."
+ },
+ {
+  "id": 1211,
+  "text": "Right?"
+ },
+ {
+  "id": 1212,
+  "text": "Of course, you — earlier on,"
+ },
+ {
+  "id": 1213,
+  "text": "on the right side,"
+ },
+ {
+  "id": 1214,
+  "text": "as you move this down,"
+ },
+ {
+  "id": 1215,
+  "text": "when laying out this stack frame,"
+ },
+ {
+  "id": 1216,
+  "text": "it's actually been worked out ahead of time,"
+ },
+ {
+  "id": 1217,
+  "text": "how much space this needs to allocate."
+ },
+ {
+  "id": 1218,
+  "text": "This is at the compilation stage,"
+ },
+ {
+  "id": 1219,
+  "text": "and it has actually already been computed for you."
+ },
+ {
+  "id": 1220,
+  "text": "First, pull it down."
+ },
+ {
+  "id": 1221,
+  "text": "Then we start putting things into it."
+ },
+ {
+  "id": 1222,
+  "text": "That's essentially how it's set up."
+ },
+ {
+  "id": 1223,
+  "text": "Then,"
+ },
+ {
+  "id": 1224,
+  "text": "The second step is to save the saved registers"
+ },
+ {
+  "id": 1225,
+  "text": "onto the stack."
+ },
+ {
+  "id": 1226,
+  "text": "We covered this earlier."
+ },
+ {
+  "id": 1227,
+  "text": "Third,"
+ },
+ {
+  "id": 1228,
+  "text": "if the function will still call"
+ },
+ {
+  "id": 1229,
+  "text": "Pay attention here."
+ },
+ {
+  "id": 1230,
+  "text": "If the function will still call"
+ },
+ {
+  "id": 1231,
+  "text": "other functions, what does that tell us?"
+ },
+ {
+  "id": 1232,
+  "text": "It means this function is not a leaf function."
+ },
+ {
+  "id": 1233,
+  "text": "It will still call new functions."
+ },
+ {
+  "id": 1234,
+  "text": "So since it's going to call new functions,"
+ },
+ {
+  "id": 1235,
+  "text": "why do we have to save the ra register"
+ },
+ {
+  "id": 1236,
+  "text": "as well?"
+ },
+ {
+  "id": 1237,
+  "text": "This is exactly what we talked about earlier,"
+ },
+ {
+  "id": 1238,
+  "text": "the usage of the ra register."
+ },
+ {
+  "id": 1239,
+  "text": "Let's review it again."
+ },
+ {
+  "id": 1240,
+  "text": "The use of this RA register,"
+ },
+ {
+  "id": 1241,
+  "text": "as for the RA register,"
+ },
+ {
+  "id": 1242,
+  "text": "how did we put it just now?"
+ },
+ {
+  "id": 1243,
+  "text": "Who is responsible during a function call"
+ },
+ {
+  "id": 1244,
+  "text": "for maintaining these registers?"
+ },
+ {
+  "id": 1245,
+  "text": "We said it is the caller who maintains them."
+ },
+ {
+  "id": 1246,
+  "text": "So the caller here,"
+ },
+ {
+  "id": 1247,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1248,
+  "text": "who was the caller in what we just saw?"
+ },
+ {
+  "id": 1249,
+  "text": "Let me go back again."
+ },
+ {
+  "id": 1250,
+  "text": "Too slow."
+ },
+ {
+  "id": 1251,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1252,
+  "text": "if a function also calls other functions,"
+ },
+ {
+  "id": 1253,
+  "text": "that is, if this current function, this function,"
+ },
+ {
+  "id": 1254,
+  "text": "also calls other functions,"
+ },
+ {
+  "id": 1255,
+  "text": "then isn't this function the caller?"
+ },
+ {
+  "id": 1256,
+  "text": "Do you still get what I mean?"
+ },
+ {
+  "id": 1257,
+  "text": "Suppose this function,"
+ },
+ {
+  "id": 1258,
+  "text": "if it also calls other functions,"
+ },
+ {
+  "id": 1259,
+  "text": "that is, if this function also calls other functions,"
+ },
+ {
+  "id": 1260,
+  "text": "So this function, is it the caller?"
+ },
+ {
+  "id": 1261,
+  "text": "If it also calls other functions,"
+ },
+ {
+  "id": 1262,
+  "text": "then this register must be saved."
+ },
+ {
+  "id": 1263,
+  "text": "Think about why."
+ },
+ {
+  "id": 1264,
+  "text": "Because we know this function,"
+ },
+ {
+  "id": 1265,
+  "text": "suppose this function is called by another function,"
+ },
+ {
+  "id": 1266,
+  "text": "then this function A,"
+ },
+ {
+  "id": 1267,
+  "text": "suppose function A called this function,"
+ },
+ {
+  "id": 1268,
+  "text": "then after function A calls function,"
+ },
+ {
+  "id": 1269,
+  "text": "before it calls this function,"
+ },
+ {
+  "id": 1270,
+  "text": "it must have put in the ra register,"
+ },
+ {
+  "id": 1271,
+  "text": "its return address."
+ },
+ {
+  "id": 1272,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 1273,
+  "text": "Then if this function of mine calls a new function,"
+ },
+ {
+  "id": 1274,
+  "text": "calls C,"
+ },
+ {
+  "id": 1275,
+  "text": "then suppose this is B,"
+ },
+ {
+  "id": 1276,
+  "text": "suppose this B calls C again,"
+ },
+ {
+  "id": 1277,
+  "text": "then when calling C,"
+ },
+ {
+  "id": 1278,
+  "text": "we know that when calling C,"
+ },
+ {
+  "id": 1279,
+  "text": "it will definitely overwrite the value in the ra register"
+ },
+ {
+  "id": 1280,
+  "text": "change it to its return address"
+ },
+ {
+  "id": 1281,
+  "text": "think about it, right?"
+ },
+ {
+  "id": 1282,
+  "text": "Now, if it modifies this value,"
+ },
+ {
+  "id": 1283,
+  "text": "then the next time it returns and wants to go back to A,"
+ },
+ {
+  "id": 1284,
+  "text": "it won't be able to get back."
+ },
+ {
+  "id": 1285,
+  "text": "That's the problem we'd run into."
+ },
+ {
+  "id": 1286,
+  "text": "So, given that this is the case,"
+ },
+ {
+  "id": 1287,
+  "text": "since I've determined that this function,"
+ },
+ {
+  "id": 1288,
+  "text": "if B is going to call C,"
+ },
+ {
+  "id": 1289,
+  "text": "then I need to take the original value in ra,"
+ },
+ {
+  "id": 1290,
+  "text": "that is, the original return address of A,"
+ },
+ {
+  "id": 1291,
+  "text": "and do what with it?"
+ },
+ {
+  "id": 1292,
+  "text": "Save it."
+ },
+ {
+  "id": 1293,
+  "text": "Before my function returns,"
+ },
+ {
+  "id": 1294,
+  "text": "I just restore it, and that's it."
+ },
+ {
+  "id": 1295,
+  "text": "That's the idea."
+ },
+ {
+  "id": 1296,
+  "text": "So if this function is going to call other functions,"
+ },
+ {
+  "id": 1297,
+  "text": "we need to take the value of ra,"
+ },
+ {
+  "id": 1298,
+  "text": "what's actually stored in here is essentially,"
+ },
+ {
+  "id": 1299,
+  "text": "the return address value of function A."
+ },
+ {
+  "id": 1300,
+  "text": "the value of this A function"
+ },
+ {
+  "id": 1301,
+  "text": "we save it"
+ },
+ {
+  "id": 1302,
+  "text": "and then later return it"
+ },
+ {
+  "id": 1303,
+  "text": "and just restore it, and that's it"
+ },
+ {
+  "id": 1304,
+  "text": "So this is"
+ },
+ {
+  "id": 1305,
+  "text": "basically, before our function actually executes,"
+ },
+ {
+  "id": 1306,
+  "text": "there's actually a lot of work to be done."
+ },
+ {
+  "id": 1307,
+  "text": "And this work is also part of our convention."
+ },
+ {
+  "id": 1308,
+  "text": "Now, next, let's look at the function epilogue."
+ },
+ {
+  "id": 1309,
+  "text": "The epilogue is basically the reverse of this process."
+ },
+ {
+  "id": 1310,
+  "text": "A reverse operation."
+ },
+ {
+  "id": 1311,
+  "text": "The first step of the reverse operation is to restore what was temporarily saved."
+ },
+ {
+  "id": 1312,
+  "text": "Because we saved these things"
+ },
+ {
+  "id": 1313,
+  "text": "earlier,"
+ },
+ {
+  "id": 1314,
+  "text": "and since we saved them,"
+ },
+ {
+  "id": 1315,
+  "text": "we restore them."
+ },
+ {
+  "id": 1316,
+  "text": "After restoring them,"
+ },
+ {
+  "id": 1317,
+  "text": "with respect to the caller of this function,"
+ },
+ {
+  "id": 1318,
+  "text": "A,"
+ },
+ {
+  "id": 1319,
+  "text": "it's as if nothing has changed."
+ },
+ {
+  "id": 1320,
+  "text": "Right?"
+ },
+ {
+  "id": 1321,
+  "text": "And at the same time, if needed,"
+ },
+ {
+  "id": 1322,
+  "text": "restore the saved ra from the stack."
+ },
+ {
+  "id": 1323,
+  "text": "And what we mean by \"if needed\" is exactly this,"
+ },
+ {
+  "id": 1324,
+  "text": "that is, if there is a call,"
+ },
+ {
+  "id": 1325,
+  "text": "if there was no call,"
+ },
+ {
+  "id": 1326,
+  "text": "then actually nothing gets saved."
+ },
+ {
+  "id": 1327,
+  "text": "If nothing is saved, then there is no need to restore it."
+ },
+ {
+  "id": 1328,
+  "text": "So these two things correspond to each other."
+ },
+ {
+  "id": 1329,
+  "text": "Then the last step,"
+ },
+ {
+  "id": 1330,
+  "text": "step three, increase sp."
+ },
+ {
+  "id": 1331,
+  "text": "Now, what we mean by increasing sp,"
+ },
+ {
+  "id": 1332,
+  "text": "you can imagine,"
+ },
+ {
+  "id": 1333,
+  "text": "is that we are about to pop."
+ },
+ {
+  "id": 1334,
+  "text": "We are going to deallocate the stack frame."
+ },
+ {
+  "id": 1335,
+  "text": "Then the call uses ret to return."
+ },
+ {
+  "id": 1336,
+  "text": "This ret is exactly what we talked about earlier,"
+ },
+ {
+  "id": 1337,
+  "text": "a standard function call."
+ },
+ {
+  "id": 1338,
+  "text": "And that finally achieves this kind of effect."
+ },
+ {
+  "id": 1339,
+  "text": "So this involves"
+ },
+ {
+  "id": 1340,
+  "text": "That is to say, the called function,"
+ },
+ {
+  "id": 1341,
+  "text": "that is, this function of ours,"
+ },
+ {
+  "id": 1342,
+  "text": "say A calls B,"
+ },
+ {
+  "id": 1343,
+  "text": "calls a function,"
+ },
+ {
+  "id": 1344,
+  "text": "then inside this function,"
+ },
+ {
+  "id": 1345,
+  "text": "actually, around the function body,"
+ },
+ {
+  "id": 1346,
+  "text": "before the function body and after the function body,"
+ },
+ {
+  "id": 1347,
+  "text": "there are some standard operations"
+ },
+ {
+  "id": 1348,
+  "text": "that we need to do."
+ },
+ {
+  "id": 1349,
+  "text": "This part of the work,"
+ },
+ {
+  "id": 1350,
+  "text": "we normally don't see it,"
+ },
+ {
+  "id": 1351,
+  "text": "but that doesn't mean it doesn't exist."
+ },
+ {
+  "id": 1352,
+  "text": "It's actually done for us by the compiler."
+ },
+ {
+  "id": 1353,
+  "text": "But,"
+ },
+ {
+  "id": 1354,
+  "text": "today,"
+ },
+ {
+  "id": 1355,
+  "text": "we're going to try writing it ourselves."
+ },
+ {
+  "id": 1356,
+  "text": "Suppose you had to implement it — how would you do it?"
+ },
+ {
+  "id": 1357,
+  "text": "to deepen your impression of this process."
+ },
+ {
+  "id": 1358,
+  "text": "So basically, that covers everything about function calling conventions,"
+ },
+ {
+  "id": 1359,
+  "text": "I've now introduced it all to you."
+ },
+ {
+  "id": 1360,
+  "text": "So let's go through some exercises"
+ },
+ {
+  "id": 1361,
+  "text": "to see how this actually works in practice."
+ },
+ {
+  "id": 1362,
+  "text": "Next, we'll walk you through"
+ },
+ {
+  "id": 1363,
+  "text": "a quick look at"
+ },
+ {
+  "id": 1364,
+  "text": "these two examples here."
+ },
+ {
+  "id": 1365,
+  "text": "One is ccleaf,"
+ },
+ {
+  "id": 1366,
+  "text": "and the other is called ccnested."
+ },
+ {
+  "id": 1367,
+  "text": "Now, this one,"
+ },
+ {
+  "id": 1368,
+  "text": "basically, leaf,"
+ },
+ {
+  "id": 1369,
+  "text": "means this is a leaf call,"
+ },
+ {
+  "id": 1370,
+  "text": "that is, a leaf call,"
+ },
+ {
+  "id": 1371,
+  "text": "the concept of a leaf call."
+ },
+ {
+  "id": 1372,
+  "text": "As for nested,"
+ },
+ {
+  "id": 1373,
+  "text": "it means a"
+ },
+ {
+  "id": 1374,
+  "text": "non-leaf call, essentially."
+ },
+ {
+  "id": 1375,
+  "text": "Now, ccleaf,"
+ },
+ {
+  "id": 1376,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1377,
+  "text": "what exactly is a leaf call?"
+ },
+ {
+  "id": 1378,
+  "text": "Let's take a look at this example."
+ },
+ {
+  "id": 1379,
+  "text": "If we write it in C,"
+ },
+ {
+  "id": 1380,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1381,
+  "text": "suppose you look at this start function,"
+ },
+ {
+  "id": 1382,
+  "text": "it calls this square function,"
+ },
+ {
+  "id": 1383,
+  "text": "just to compute a square,"
+ },
+ {
+  "id": 1384,
+  "text": "a times a."
+ },
+ {
+  "id": 1385,
+  "text": "So after it calls this square function,"
+ },
+ {
+  "id": 1386,
+  "text": "this function won't call anything else."
+ },
+ {
+  "id": 1387,
+  "text": "In other words, after this call,"
+ },
+ {
+  "id": 1388,
+  "text": "this function,"
+ },
+ {
+  "id": 1389,
+  "text": "the square function, won't call any new functions."
+ },
+ {
+  "id": 1390,
+  "text": "Of course, isn't that right?"
+ },
+ {
+  "id": 1391,
+  "text": "This kind is called a leaf call,"
+ },
+ {
+  "id": 1392,
+  "text": "or a pseudo-call."
+ },
+ {
+  "id": 1393,
+  "text": "Now let's take a look."
+ },
+ {
+  "id": 1394,
+  "text": "Now, following this calling convention,"
+ },
+ {
+  "id": 1395,
+  "text": "how do we write this?"
+ },
+ {
+  "id": 1396,
+  "text": "rather than just writing it however we please."
+ },
+ {
+  "id": 1397,
+  "text": "And this,"
+ },
+ {
+  "id": 1398,
+  "text": "also involves what we talked about earlier, passing arguments,"
+ },
+ {
+  "id": 1399,
+  "text": "because this function,"
+ },
+ {
+  "id": 1400,
+  "text": "We said it also takes a number of arguments."
+ },
+ {
+  "id": 1401,
+  "text": "So, as for the arguments we just mentioned,"
+ },
+ {
+  "id": 1402,
+  "text": "which registers do we use to pass them?"
+ },
+ {
+  "id": 1403,
+  "text": "According to our convention,"
+ },
+ {
+  "id": 1404,
+  "text": "we first use a0 to pass the first argument,"
+ },
+ {
+  "id": 1405,
+  "text": "a1 for the second argument,"
+ },
+ {
+  "id": 1406,
+  "text": "right?"
+ },
+ {
+  "id": 1407,
+  "text": "What if that's not enough?"
+ },
+ {
+  "id": 1408,
+  "text": "We can also use these,"
+ },
+ {
+  "id": 1409,
+  "text": "a2 through a7,"
+ },
+ {
+  "id": 1410,
+  "text": "right?"
+ },
+ {
+  "id": 1411,
+  "text": "So what about a function,"
+ },
+ {
+  "id": 1412,
+  "text": "returning its return value?"
+ },
+ {
+  "id": 1413,
+  "text": "That's also"
+ },
+ {
+  "id": 1414,
+  "text": "according to the convention,"
+ },
+ {
+  "id": 1415,
+  "text": "that is, the return value"
+ },
+ {
+  "id": 1416,
+  "text": "is preferably put"
+ },
+ {
+  "id": 1417,
+  "text": "in a register to be returned,"
+ },
+ {
+  "id": 1418,
+  "text": "so we also"
+ },
+ {
+  "id": 1419,
+  "text": "put it in a0 first."
+ },
+ {
+  "id": 1420,
+  "text": "Then we put A1's in."
+ },
+ {
+  "id": 1421,
+  "text": "It works like this."
+ },
+ {
+  "id": 1422,
+  "text": "If it exceeds that,"
+ },
+ {
+  "id": 1423,
+  "text": "we might have to"
+ },
+ {
+  "id": 1424,
+  "text": "use some other technique."
+ },
+ {
+  "id": 1425,
+  "text": "For now,"
+ },
+ {
+  "id": 1426,
+  "text": "let's set that aside."
+ },
+ {
+  "id": 1427,
+  "text": "Let's take a look at"
+ },
+ {
+  "id": 1428,
+  "text": "this code."
+ },
+ {
+  "id": 1429,
+  "text": "This one"
+ },
+ {
+  "id": 1430,
+  "text": "is in our"
+ },
+ {
+  "id": 1431,
+  "text": "ccleaf."
+ },
+ {
+  "id": 1432,
+  "text": "cc is short for call conversion."
+ },
+ {
+  "id": 1433,
+  "text": "Let's first take a look."
+ },
+ {
+  "id": 1434,
+  "text": "So we'll just dive right in."
+ },
+ {
+  "id": 1435,
+  "text": "How does this reflect"
+ },
+ {
+  "id": 1436,
+  "text": "the programming conventions we just talked about?"
+ },
+ {
+  "id": 1437,
+  "text": "First, note that this program executes"
+ },
+ {
+  "id": 1438,
+  "text": "starting from the start function."
+ },
+ {
+  "id": 1439,
+  "text": "And that function"
+ },
+ {
+  "id": 1440,
+  "text": "Before this function,"
+ },
+ {
+  "id": 1441,
+  "text": "first we see"
+ },
+ {
+  "id": 1442,
+  "text": "we did a few things."
+ },
+ {
+  "id": 1443,
+  "text": "Below this code,"
+ },
+ {
+  "id": 1444,
+  "text": "we first have a piece of logic here."
+ },
+ {
+  "id": 1445,
+  "text": "Now, this logic,"
+ },
+ {
+  "id": 1446,
+  "text": "let me explain it to you."
+ },
+ {
+  "id": 1447,
+  "text": "From its comments,"
+ },
+ {
+  "id": 1448,
+  "text": "we can see"
+ },
+ {
+  "id": 1449,
+  "text": "what we are actually defining here,"
+ },
+ {
+  "id": 1450,
+  "text": "this region,"
+ },
+ {
+  "id": 1451,
+  "text": "this region doesn't actually hold instructions,"
+ },
+ {
+  "id": 1452,
+  "text": "what's placed here is actually,"
+ },
+ {
+  "id": 1453,
+  "text": "you can think of it as a stack area."
+ },
+ {
+  "id": 1454,
+  "text": "We actually defined a stack."
+ },
+ {
+  "id": 1455,
+  "text": "A stack is just a piece of memory,"
+ },
+ {
+  "id": 1456,
+  "text": "right everyone?"
+ },
+ {
+  "id": 1457,
+  "text": "Since we need to make function calls,"
+ },
+ {
+  "id": 1458,
+  "text": "we must have a stack,"
+ },
+ {
+  "id": 1459,
+  "text": "which means we must use memory."
+ },
+ {
+  "id": 1460,
+  "text": "This memory here"
+ },
+ {
+  "id": 1461,
+  "text": "is defined statically"
+ },
+ {
+  "id": 1462,
+  "text": "What we actually did was make use of this"
+ },
+ {
+  "id": 1463,
+  "text": "directive"
+ },
+ {
+  "id": 1464,
+  "text": "that is, a directive in the assembly instructions"
+ },
+ {
+  "id": 1465,
+  "text": "to tell the compiler, when generating the executable program,"
+ },
+ {
+  "id": 1466,
+  "text": "to add roughly 10 words for us here"
+ },
+ {
+  "id": 1467,
+  "text": "10 words"
+ },
+ {
+  "id": 1468,
+  "text": "One Dword is 4 bytes"
+ },
+ {
+  "id": 1469,
+  "text": "so that's 40 bytes in total"
+ },
+ {
+  "id": 1470,
+  "text": "You can compile this code and then"
+ },
+ {
+  "id": 1471,
+  "text": "take a look at the last 40 bytes of it"
+ },
+ {
+  "id": 1472,
+  "text": "which is actually used to hold the stack area"
+ },
+ {
+  "id": 1473,
+  "text": "The part before it is used for the instructions"
+ },
+ {
+  "id": 1474,
+  "text": "So before the function is actually executed,"
+ },
+ {
+  "id": 1475,
+  "text": "that is, while our start function is executing,"
+ },
+ {
+  "id": 1476,
+  "text": "this is where it really starts running,"
+ },
+ {
+  "id": 1477,
+  "text": "before it actually executes below,"
+ },
+ {
+  "id": 1478,
+  "text": "we first have a step of operation doing what?"
+ },
+ {
+  "id": 1479,
+  "text": "We're actually preparing a key parameter for the stack"
+ },
+ {
+  "id": 1480,
+  "text": "That is, when we push and pop on the stack"
+ },
+ {
+  "id": 1481,
+  "text": "we're actually operating on a stack pointer the whole time"
+ },
+ {
+  "id": 1482,
+  "text": "Right?"
+ },
+ {
+  "id": 1483,
+  "text": "Now, this stack pointer"
+ },
+ {
+  "id": 1484,
+  "text": "we need to give it an initial value"
+ },
+ {
+  "id": 1485,
+  "text": "We assign this stack pointer through the la instruction"
+ },
+ {
+  "id": 1486,
+  "text": "As we talked about earlier,"
+ },
+ {
+  "id": 1487,
+  "text": "what is la used for?"
+ },
+ {
+  "id": 1488,
+  "text": "It's used to load an address"
+ },
+ {
+  "id": 1489,
+  "text": "load address"
+ },
+ {
+  "id": 1490,
+  "text": "That is, it takes an address"
+ },
+ {
+  "id": 1491,
+  "text": "and loads it into the sp register"
+ },
+ {
+  "id": 1492,
+  "text": "And this address"
+ },
+ {
+  "id": 1493,
+  "text": "is stack end"
+ },
+ {
+  "id": 1494,
+  "text": "So what does that mean?"
+ },
+ {
+  "id": 1495,
+  "text": "It means that"
+ },
+ {
+  "id": 1496,
+  "text": "this stack end"
+ },
+ {
+  "id": 1497,
+  "text": "is what we defined below just now,"
+ },
+ {
+  "id": 1498,
+  "text": "the stack's what,"
+ },
+ {
+  "id": 1499,
+  "text": "the stack's end position"
+ },
+ {
+  "id": 1500,
+  "text": "What does this mean?"
+ },
+ {
+  "id": 1501,
+  "text": "It means that,"
+ },
+ {
+  "id": 1502,
+  "text": "we basically, let's say,"
+ },
+ {
+  "id": 1503,
+  "text": "this stack of ours,"
+ },
+ {
+  "id": 1504,
+  "text": "we defined a stack area, right,"
+ },
+ {
+  "id": 1505,
+  "text": "and at the top of this stack area,"
+ },
+ {
+  "id": 1506,
+  "text": "according to its definition,"
+ },
+ {
+  "id": 1507,
+  "text": "this side is start stack,"
+ },
+ {
+  "id": 1508,
+  "text": "the stack we just defined is what,"
+ },
+ {
+  "id": 1509,
+  "text": "it's start, right?"
+ },
+ {
+  "id": 1510,
+  "text": "start,"
+ },
+ {
+  "id": 1511,
+  "text": "this character is written a bit ugly,"
+ },
+ {
+  "id": 1512,
+  "text": "over here is the end of the stack,"
+ },
+ {
+  "id": 1513,
+  "text": "on top is where we put our instructions,"
+ },
+ {
+  "id": 1514,
+  "text": "this block down here is the stack area,"
+ },
+ {
+  "id": 1515,
+  "text": "so for this stack area,"
+ },
+ {
+  "id": 1516,
+  "text": "at the very beginning, we set the sp register,"
+ },
+ {
+  "id": 1517,
+  "text": "to point where?"
+ },
+ {
+  "id": 1518,
+  "text": "It points to stack end,"
+ },
+ {
+  "id": 1519,
+  "text": "which means this stack of ours at the very beginning"
+ },
+ {
+  "id": 1520,
+  "text": "Our stack currently grows from low to high."
+ },
+ {
+  "id": 1521,
+  "text": "When we drew the diagram just now,"
+ },
+ {
+  "id": 1522,
+  "text": "the stack was drawn upside down,"
+ },
+ {
+  "id": 1523,
+  "text": "with low addresses at the top"
+ },
+ {
+  "id": 1524,
+  "text": "and high addresses at the bottom."
+ },
+ {
+  "id": 1525,
+  "text": "What we actually do is"
+ },
+ {
+  "id": 1526,
+  "text": "prepare the stack to grow toward"
+ },
+ {
+  "id": 1527,
+  "text": "the top, so when we push onto the stack, we push it upward."
+ },
+ {
+  "id": 1528,
+  "text": "So we set the stack pointer"
+ },
+ {
+  "id": 1529,
+  "text": "to point at the high-address region of memory from the start."
+ },
+ {
+  "id": 1530,
+  "text": "That's exactly the effect that instruction had just now."
+ },
+ {
+  "id": 1531,
+  "text": "Let me explain this to you."
+ },
+ {
+  "id": 1532,
+  "text": "That's what stack_end means."
+ },
+ {
+  "id": 1533,
+  "text": "Okay, so"
+ },
+ {
+  "id": 1534,
+  "text": "this instruction here"
+ },
+ {
+  "id": 1535,
+  "text": "gets the stack pointer ready."
+ },
+ {
+  "id": 1536,
+  "text": "It effectively prepares this stack area."
+ },
+ {
+  "id": 1537,
+  "text": "Once the stack is ready,"
+ },
+ {
+  "id": 1538,
+  "text": "we start executing our instructions."
+ },
+ {
+  "id": 1539,
+  "text": "Now, this one is first"
+ },
+ {
+  "id": 1540,
+  "text": "put the value 3 into the register a0."
+ },
+ {
+  "id": 1541,
+  "text": "You can see here, what we're writing now"
+ },
+ {
+  "id": 1542,
+  "text": "uses the aliases for all the register names,"
+ },
+ {
+  "id": 1543,
+  "text": "all of them use their ABI names."
+ },
+ {
+  "id": 1544,
+  "text": "a0 — what is a0 here?"
+ },
+ {
+  "id": 1545,
+  "text": "It's actually the parameter, right?"
+ },
+ {
+  "id": 1546,
+  "text": "Based on this code earlier,"
+ },
+ {
+  "id": 1547,
+  "text": "we can see that that's exactly what it means."
+ },
+ {
+  "id": 1548,
+  "text": "In other words, we pass this value 3 as an argument —"
+ },
+ {
+  "id": 1549,
+  "text": "when passing arguments, we put 3 into a0 first."
+ },
+ {
+  "id": 1550,
+  "text": "According to the convention,"
+ },
+ {
+  "id": 1551,
+  "text": "a0 is used to pass the first argument."
+ },
+ {
+  "id": 1552,
+  "text": "And then, once we've set up this 3,"
+ },
+ {
+  "id": 1553,
+  "text": "once it's in place,"
+ },
+ {
+  "id": 1554,
+  "text": "we go ahead and call callSquare."
+ },
+ {
+  "id": 1555,
+  "text": "So callSquare is essentially calling a function."
+ },
+ {
+  "id": 1556,
+  "text": "Now, this function,"
+ },
+ {
+  "id": 1557,
+  "text": "the function name is actually this function's"
+ },
+ {
+  "id": 1558,
+  "text": "starting address,"
+ },
+ {
+  "id": 1559,
+  "text": "so from here is really where the function begins."
+ },
+ {
+  "id": 1560,
+  "text": "So what's happening up front?"
+ },
+ {
+  "id": 1561,
+  "text": "We take this stack"
+ },
+ {
+  "id": 1562,
+  "text": "addi sp, sp, -8"
+ },
+ {
+  "id": 1563,
+  "text": "The -8 basically means subtraction."
+ },
+ {
+  "id": 1564,
+  "text": "Now, as we just said about the stack,"
+ },
+ {
+  "id": 1565,
+  "text": "high addresses are at the bottom"
+ },
+ {
+  "id": 1566,
+  "text": "and low addresses are at the top."
+ },
+ {
+  "id": 1567,
+  "text": "Subtracting 8 moves the stack pointer up."
+ },
+ {
+  "id": 1568,
+  "text": "Right?"
+ },
+ {
+  "id": 1569,
+  "text": "And moving it up"
+ },
+ {
+  "id": 1570,
+  "text": "is basically opening up space on the stack, isn't it?"
+ },
+ {
+  "id": 1571,
+  "text": "That is in fact pushing onto the stack."
+ },
+ {
+  "id": 1572,
+  "text": "Think about it — isn't that right?"
+ },
+ {
+  "id": 1573,
+  "text": "After pushing onto the stack,"
+ },
+ {
+  "id": 1574,
+  "text": "we then save s0 and s1."
+ },
+ {
+  "id": 1575,
+  "text": "Why is that?"
+ },
+ {
+  "id": 1576,
+  "text": "Because as we mentioned earlier,"
+ },
+ {
+  "id": 1577,
+  "text": "in the code that comes after this,"
+ },
+ {
+  "id": 1578,
+  "text": "we deliberately use registers like s0 and s1."
+ },
+ {
+  "id": 1579,
+  "text": "So for the register s0,"
+ },
+ {
+  "id": 1580,
+  "text": "As we mentioned earlier,"
+ },
+ {
+  "id": 1581,
+  "text": "who is responsible for preserving its invariants?"
+ },
+ {
+  "id": 1582,
+  "text": "It's the callee that preserves its invariants."
+ },
+ {
+  "id": 1583,
+  "text": "So what that means is, with this function,"
+ },
+ {
+  "id": 1584,
+  "text": "inside this function,"
+ },
+ {
+  "id": 1585,
+  "text": "it has to preserve these variables,"
+ },
+ {
+  "id": 1586,
+  "text": "preserve the invariants of these registers."
+ },
+ {
+  "id": 1587,
+  "text": "So first it puts them onto the stack."
+ },
+ {
+  "id": 1588,
+  "text": "sw is store word,"
+ },
+ {
+  "id": 1589,
+  "text": "taking the value in this register"
+ },
+ {
+  "id": 1590,
+  "text": "and saving it"
+ },
+ {
+  "id": 1591,
+  "text": "into the stack."
+ },
+ {
+  "id": 1592,
+  "text": "We won't belabor this meaning here."
+ },
+ {
+  "id": 1593,
+  "text": "Go back and, together with what we covered earlier,"
+ },
+ {
+  "id": 1594,
+  "text": "all this instruction stuff,"
+ },
+ {
+  "id": 1595,
+  "text": "take a look at it yourselves."
+ },
+ {
+  "id": 1596,
+  "text": "Basically, this just saves s0."
+ },
+ {
+  "id": 1597,
+  "text": "And then below that,"
+ },
+ {
+  "id": 1598,
+  "text": "it goes and executes this square,"
+ },
+ {
+  "id": 1599,
+  "text": "doing the multiplication."
+ },
+ {
+  "id": 1600,
+  "text": "Because a0"
+ },
+ {
+  "id": 1601,
+  "text": "has already been saved."
+ },
+ {
+  "id": 1602,
+  "text": "What's in a0 is our parameter."
+ },
+ {
+  "id": 1603,
+  "text": "Then, we take a0"
+ },
+ {
+  "id": 1604,
+  "text": "and with a move instruction,"
+ },
+ {
+  "id": 1605,
+  "text": "we move a0 into s0 first."
+ },
+ {
+  "id": 1606,
+  "text": "Then,"
+ },
+ {
+  "id": 1607,
+  "text": "we perform a multiplication on s0."
+ },
+ {
+  "id": 1608,
+  "text": "Here,"
+ },
+ {
+  "id": 1609,
+  "text": "we use a MUL instruction."
+ },
+ {
+  "id": 1610,
+  "text": "We haven't covered the MUL instruction before."
+ },
+ {
+  "id": 1611,
+  "text": "It actually belongs to that"
+ },
+ {
+  "id": 1612,
+  "text": "multiplication extension, the one that does multiplication."
+ },
+ {
+  "id": 1613,
+  "text": "It simply means"
+ },
+ {
+  "id": 1614,
+  "text": "taking s0 and s0,"
+ },
+ {
+  "id": 1615,
+  "text": "multiplying the values in the two registers,"
+ },
+ {
+  "id": 1616,
+  "text": "and saving the result into s1."
+ },
+ {
+  "id": 1617,
+  "text": "Very simple."
+ },
+ {
+  "id": 1618,
+  "text": "Then,"
+ },
+ {
+  "id": 1619,
+  "text": "why does the next one..."
+ },
+ {
+  "id": 1620,
+  "text": "We also need to move this result"
+ },
+ {
+  "id": 1621,
+  "text": "back into a0."
+ },
+ {
+  "id": 1622,
+  "text": "This is where returning comes in."
+ },
+ {
+  "id": 1623,
+  "text": "Follow me?"
+ },
+ {
+  "id": 1624,
+  "text": "We said that"
+ },
+ {
+  "id": 1625,
+  "text": "the effect of our square function here"
+ },
+ {
+  "id": 1626,
+  "text": "is to take the result"
+ },
+ {
+  "id": 1627,
+  "text": "the value of a times a, and return it."
+ },
+ {
+  "id": 1628,
+  "text": "And when we return it,"
+ },
+ {
+  "id": 1629,
+  "text": "we pass the return value through a0."
+ },
+ {
+  "id": 1630,
+  "text": "That's by convention."
+ },
+ {
+  "id": 1631,
+  "text": "It's not something we just made up."
+ },
+ {
+  "id": 1632,
+  "text": "By convention,"
+ },
+ {
+  "id": 1633,
+  "text": "we simply store the result"
+ },
+ {
+  "id": 1634,
+  "text": "in a0, and that's it."
+ },
+ {
+  "id": 1635,
+  "text": "And finally,"
+ },
+ {
+  "id": 1636,
+  "text": "our function here"
+ },
+ {
+  "id": 1637,
+  "text": "— this is actually the body of the function."
+ },
+ {
+  "id": 1638,
+  "text": "So actually, right here,"
+ },
+ {
+  "id": 1639,
+  "text": "and before that,"
+ },
+ {
+  "id": 1640,
+  "text": "It's basically a prolog."
+ },
+ {
+  "id": 1641,
+  "text": "And then after that comes the epilog."
+ },
+ {
+  "id": 1642,
+  "text": "So the epilog is the counterpart"
+ },
+ {
+  "id": 1643,
+  "text": "of the prolog."
+ },
+ {
+  "id": 1644,
+  "text": "Now, over here,"
+ },
+ {
+  "id": 1645,
+  "text": "we don't need the compiler to generate it for us,"
+ },
+ {
+  "id": 1646,
+  "text": "because over here"
+ },
+ {
+  "id": 1647,
+  "text": "we are writing assembly directly,"
+ },
+ {
+  "id": 1648,
+  "text": "without the step"
+ },
+ {
+  "id": 1649,
+  "text": "of converting C code into assembly."
+ },
+ {
+  "id": 1650,
+  "text": "So our assembler,"
+ },
+ {
+  "id": 1651,
+  "text": "well, it simply"
+ },
+ {
+  "id": 1652,
+  "text": "does not take part in"
+ },
+ {
+  "id": 1653,
+  "text": "building this code."
+ },
+ {
+  "id": 1654,
+  "text": "If it were C,"
+ },
+ {
+  "id": 1655,
+  "text": "we would have the compiler help us"
+ },
+ {
+  "id": 1656,
+  "text": "build this prolog and epilog."
+ },
+ {
+  "id": 1657,
+  "text": "But we write it ourselves."
+ },
+ {
+  "id": 1658,
+  "text": "Writing it ourselves,"
+ },
+ {
+  "id": 1659,
+  "text": "we then just go along with this"
+ },
+ {
+  "id": 1660,
+  "text": "they correspond to each other"
+ },
+ {
+  "id": 1661,
+  "text": "over here"
+ },
+ {
+  "id": 1662,
+  "text": "we just saved them earlier"
+ },
+ {
+  "id": 1663,
+  "text": "saved with sw"
+ },
+ {
+  "id": 1664,
+  "text": "so now we restore them first with lw"
+ },
+ {
+  "id": 1665,
+  "text": "that is, taking the values in memory"
+ },
+ {
+  "id": 1666,
+  "text": "and saving them back into our registers"
+ },
+ {
+  "id": 1667,
+  "text": "right?"
+ },
+ {
+  "id": 1668,
+  "text": "restoring them back"
+ },
+ {
+  "id": 1669,
+  "text": "loading them back"
+ },
+ {
+  "id": 1670,
+  "text": "so after loading them back"
+ },
+ {
+  "id": 1671,
+  "text": "what is this step doing?"
+ },
+ {
+  "id": 1672,
+  "text": "because earlier we pushed the stack down by one stack frame"
+ },
+ {
+  "id": 1673,
+  "text": "which is subtracting 8"
+ },
+ {
+  "id": 1674,
+  "text": "so over here we have to restore the stack"
+ },
+ {
+  "id": 1675,
+  "text": "that is, add 8"
+ },
+ {
+  "id": 1676,
+  "text": "see that?"
+ },
+ {
+  "id": 1677,
+  "text": "so this way"
+ },
+ {
+  "id": 1678,
+  "text": "when this function returns"
+ },
+ {
+  "id": 1679,
+  "text": "you can all step through it"
+ },
+ {
+  "id": 1680,
+  "text": "I won't debug this live right here."
+ },
+ {
+  "id": 1681,
+  "text": "I'll just walk through it."
+ },
+ {
+  "id": 1682,
+  "text": "You can take a look."
+ },
+ {
+  "id": 1683,
+  "text": "This stack has been restored to its original value."
+ },
+ {
+  "id": 1684,
+  "text": "So we achieved the intended effect."
+ },
+ {
+  "id": 1685,
+  "text": "Now, after coming back,"
+ },
+ {
+  "id": 1686,
+  "text": "after we come back,"
+ },
+ {
+  "id": 1687,
+  "text": "over here,"
+ },
+ {
+  "id": 1688,
+  "text": "down below,"
+ },
+ {
+  "id": 1689,
+  "text": "we obviously need to execute a return."
+ },
+ {
+  "id": 1690,
+  "text": "After the return,"
+ },
+ {
+  "id": 1691,
+  "text": "let's look at the effect of the return."
+ },
+ {
+  "id": 1692,
+  "text": "Because when we did the call,"
+ },
+ {
+  "id": 1693,
+  "text": "we took the return address,"
+ },
+ {
+  "id": 1694,
+  "text": "which is actually the address of this instruction,"
+ },
+ {
+  "id": 1695,
+  "text": "and put it where?"
+ },
+ {
+  "id": 1696,
+  "text": "Which register was it saved in?"
+ },
+ {
+  "id": 1697,
+  "text": "According to the convention,"
+ },
+ {
+  "id": 1698,
+  "text": "when we do a call, it is saved in"
+ },
+ {
+  "id": 1699,
+  "text": "the X1 register."
+ },
+ {
+  "id": 1700,
+  "text": "It's stored in ra, right?"
+ },
+ {
+  "id": 1701,
+  "text": "So when we return,"
+ },
+ {
+  "id": 1702,
+  "text": "the return actually goes based on ra."
+ },
+ {
+  "id": 1703,
+  "text": "So we return back,"
+ },
+ {
+  "id": 1704,
+  "text": "and when we return,"
+ },
+ {
+  "id": 1705,
+  "text": "we of course return to this position."
+ },
+ {
+  "id": 1706,
+  "text": "So we exit this function,"
+ },
+ {
+  "id": 1707,
+  "text": "and execution continues from here."
+ },
+ {
+  "id": 1708,
+  "text": "That's the whole process."
+ },
+ {
+  "id": 1709,
+  "text": "And this process is a standard way of writing code."
+ },
+ {
+  "id": 1710,
+  "text": "It's not just written arbitrarily."
+ },
+ {
+  "id": 1711,
+  "text": "Why is it written this way?"
+ },
+ {
+  "id": 1712,
+  "text": "The reason, based on that function call earlier,"
+ },
+ {
+  "id": 1713,
+  "text": "has already been explained to you."
+ },
+ {
+  "id": 1714,
+  "text": "Now, here,"
+ },
+ {
+  "id": 1715,
+  "text": "since it's a pseudo call,"
+ },
+ {
+  "id": 1716,
+  "text": "you can see that"
+ },
+ {
+  "id": 1717,
+  "text": "during the pseudo call,"
+ },
+ {
+  "id": 1718,
+  "text": "we actually don't save ra,"
+ },
+ {
+  "id": 1719,
+  "text": "when pushing to the stack."
+ },
+ {
+  "id": 1720,
+  "text": "Because inside this square function,"
+ },
+ {
+  "id": 1721,
+  "text": "we won't call any new functions again."
+ },
+ {
+  "id": 1722,
+  "text": "Note that,"
+ },
+ {
+  "id": 1723,
+  "text": "and correspondingly,"
+ },
+ {
+  "id": 1724,
+  "text": "there's that nested example."
+ },
+ {
+  "id": 1725,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 1726,
+  "text": "So this function,"
+ },
+ {
+  "id": 1727,
+  "text": "it goes like this."
+ },
+ {
+  "id": 1728,
+  "text": "That is,"
+ },
+ {
+  "id": 1729,
+  "text": "it,"
+ },
+ {
+  "id": 1730,
+  "text": "it will,"
+ },
+ {
+  "id": 1731,
+  "text": "this start function,"
+ },
+ {
+  "id": 1732,
+  "text": "will call aabb."
+ },
+ {
+  "id": 1733,
+  "text": "aabb, in fact, is basically,"
+ },
+ {
+  "id": 1734,
+  "text": "it implements what?"
+ },
+ {
+  "id": 1735,
+  "text": "It's a squared plus b squared."
+ },
+ {
+  "id": 1736,
+  "text": "However,"
+ },
+ {
+  "id": 1737,
+  "text": "this function is not a leaf call,"
+ },
+ {
+  "id": 1738,
+  "text": "because inside this function,"
+ },
+ {
+  "id": 1739,
+  "text": "it goes and calls the square function again."
+ },
+ {
+  "id": 1740,
+  "text": "The square function"
+ },
+ {
+  "id": 1741,
+  "text": "is a pseudo-call."
+ },
+ {
+  "id": 1742,
+  "text": "What we mainly care about here is how to write this AABB function."
+ },
+ {
+  "id": 1743,
+  "text": "In this example, we mainly care about how to write AABB."
+ },
+ {
+  "id": 1744,
+  "text": "It's not a pseudo-call."
+ },
+ {
+  "id": 1745,
+  "text": "So let's look at the difference between it and the square function we just saw."
+ },
+ {
+  "id": 1746,
+  "text": "Get a feel for the difference in"
+ },
+ {
+  "id": 1747,
+  "text": "programming convention and writing style between pseudo-call and non-pseudo-call functions."
+ },
+ {
+  "id": 1748,
+  "text": "So we won't go over this square function now,"
+ },
+ {
+  "id": 1749,
+  "text": "because the way it's written is the same as in the previous example."
+ },
+ {
+  "id": 1750,
+  "text": "We'll mainly look at the AABB function."
+ },
+ {
+  "id": 1751,
+  "text": "So for the AABB function,"
+ },
+ {
+  "id": 1752,
+  "text": "let's take a look."
+ },
+ {
+  "id": 1753,
+  "text": "First, let's look at"
+ },
+ {
+  "id": 1754,
+  "text": "this is"
+ },
+ {
+  "id": 1755,
+  "text": "the start function"
+ },
+ {
+  "id": 1756,
+  "text": "calling the aabb function,"
+ },
+ {
+  "id": 1757,
+  "text": "since it has two parameters,"
+ },
+ {
+  "id": 1758,
+  "text": "you can see that"
+ },
+ {
+  "id": 1759,
+  "text": "it actually uses"
+ },
+ {
+  "id": 1760,
+  "text": "They are saved in a0 and a1."
+ },
+ {
+  "id": 1761,
+  "text": "Right?"
+ },
+ {
+  "id": 1762,
+  "text": "By convention,"
+ },
+ {
+  "id": 1763,
+  "text": "a0 holds the first argument,"
+ },
+ {
+  "id": 1764,
+  "text": "and a1 holds"
+ },
+ {
+  "id": 1765,
+  "text": "the fourth argument."
+ },
+ {
+  "id": 1766,
+  "text": "So this call,"
+ },
+ {
+  "id": 1767,
+  "text": "it's still the same,"
+ },
+ {
+  "id": 1768,
+  "text": "it jumps,"
+ },
+ {
+  "id": 1769,
+  "text": "and then,"
+ },
+ {
+  "id": 1770,
+  "text": "it starts calling this function, ABB."
+ },
+ {
+  "id": 1771,
+  "text": "Now this function,"
+ },
+ {
+  "id": 1772,
+  "text": "you can see the difference compared to the one over here."
+ },
+ {
+  "id": 1773,
+  "text": "Besides saving s0 through s2,"
+ },
+ {
+  "id": 1774,
+  "text": "what else do you see it saving?"
+ },
+ {
+  "id": 1775,
+  "text": "ra."
+ },
+ {
+  "id": 1776,
+  "text": "Why does it need to save ra here?"
+ },
+ {
+  "id": 1777,
+  "text": "Think about it."
+ },
+ {
+  "id": 1778,
+  "text": "Based on what we explained earlier,"
+ },
+ {
+  "id": 1779,
+  "text": "because this function"
+ },
+ {
+  "id": 1780,
+  "text": "AABB"
+ },
+ {
+  "id": 1781,
+  "text": "inside it, it will also call"
+ },
+ {
+  "id": 1782,
+  "text": "square"
+ },
+ {
+  "id": 1783,
+  "text": "JR"
+ },
+ {
+  "id": 1784,
+  "text": "of course, here what's used is JR"
+ },
+ {
+  "id": 1785,
+  "text": "what JR reflects is that"
+ },
+ {
+  "id": 1786,
+  "text": "it's a pseudo-call"
+ },
+ {
+  "id": 1787,
+  "text": "it won't come back again"
+ },
+ {
+  "id": 1788,
+  "text": "so, this function"
+ },
+ {
+  "id": 1789,
+  "text": "because it will still call JR"
+ },
+ {
+  "id": 1790,
+  "text": "as for JR"
+ },
+ {
+  "id": 1791,
+  "text": "this instruction will go and modify"
+ },
+ {
+  "id": 1792,
+  "text": "the RA register"
+ },
+ {
+  "id": 1793,
+  "text": "everyone, pay attention"
+ },
+ {
+  "id": 1794,
+  "text": "so, in order to guarantee"
+ },
+ {
+  "id": 1795,
+  "text": "because if we say"
+ },
+ {
+  "id": 1796,
+  "text": "if you don't save this RA"
+ },
+ {
+  "id": 1797,
+  "text": "just think about it"
+ },
+ {
+  "id": 1798,
+  "text": "when this instruction runs"
+ },
+ {
+  "id": 1799,
+  "text": "it will have modified this RA register"
+ },
+ {
+  "id": 1800,
+  "text": "Then it got changed to"
+ },
+ {
+  "id": 1801,
+  "text": "it got changed to its own"
+ },
+ {
+  "id": 1802,
+  "text": "address of this instruction"
+ },
+ {
+  "id": 1803,
+  "text": "Right?"
+ },
+ {
+  "id": 1804,
+  "text": "Because it is this instruction's"
+ },
+ {
+  "id": 1805,
+  "text": "the address of the next instruction, right?"
+ },
+ {
+  "id": 1806,
+  "text": "Now, if"
+ },
+ {
+  "id": 1807,
+  "text": "you don't save this RA,"
+ },
+ {
+  "id": 1808,
+  "text": "relatively speaking,"
+ },
+ {
+  "id": 1809,
+  "text": "that is, if you"
+ },
+ {
+  "id": 1810,
+  "text": "don't restore this RA here,"
+ },
+ {
+  "id": 1811,
+  "text": "then when you do this return,"
+ },
+ {
+  "id": 1812,
+  "text": "it won't be able to jump back."
+ },
+ {
+  "id": 1813,
+  "text": "Think about it, isn't that so?"
+ },
+ {
+  "id": 1814,
+  "text": "It just won't be able to jump back."
+ },
+ {
+  "id": 1815,
+  "text": "Jump back to our"
+ },
+ {
+  "id": 1816,
+  "text": "the position after"
+ },
+ {
+  "id": 1817,
+  "text": "this start function,"
+ },
+ {
+  "id": 1818,
+  "text": "this problem will occur."
+ },
+ {
+  "id": 1819,
+  "text": "So let's think about it ourselves."
+ },
+ {
+  "id": 1820,
+  "text": "That is to say, why we"
+ },
+ {
+  "id": 1821,
+  "text": "save ra here."
+ },
+ {
+  "id": 1822,
+  "text": "In other words, the difference between this AABB function"
+ },
+ {
+  "id": 1823,
+  "text": "and that tail-call function we just looked at,"
+ },
+ {
+  "id": 1824,
+  "text": "the Square function,"
+ },
+ {
+  "id": 1825,
+  "text": "is this: look at this function here,"
+ },
+ {
+  "id": 1826,
+  "text": "it doesn't need to save ra,"
+ },
+ {
+  "id": 1827,
+  "text": "while this one does save ra."
+ },
+ {
+  "id": 1828,
+  "text": "That's the reason for it."
+ },
+ {
+  "id": 1829,
+  "text": "I'll leave this for you to look at on your own back home,"
+ },
+ {
+  "id": 1830,
+  "text": "so I won't say more about it here."
+ },
+ {
+  "id": 1831,
+  "text": "The program is very simple,"
+ },
+ {
+  "id": 1832,
+  "text": "what it implements is very simple in itself."
+ },
+ {
+  "id": 1833,
+  "text": "The main point is through these two examples,"
+ },
+ {
+  "id": 1834,
+  "text": "get a feel for it:"
+ },
+ {
+  "id": 1835,
+  "text": "now that we have these calling conventions,"
+ },
+ {
+  "id": 1836,
+  "text": "how do we write a standard"
+ },
+ {
+  "id": 1837,
+  "text": "RISC-V assembly function?"
+ },
+ {
+  "id": 1838,
+  "text": "This is the content of this chapter"
+ },
+ {
+  "id": 1839,
+  "text": "that we want everyone to really master."
+ },
+ {
+  "id": 1840,
+  "text": "Now, for these two examples,"
+ },
+ {
+  "id": 1841,
+  "text": "I won't debug them right here"
+ },
+ {
+  "id": 1842,
+  "text": "to show you the result."
+ },
+ {
+  "id": 1843,
+  "text": "Based on what we just covered in class,"
+ },
+ {
+  "id": 1844,
+  "text": "especially the calling convention,"
+ },
+ {
+  "id": 1845,
+  "text": "the use of these registers,"
+ },
+ {
+  "id": 1846,
+  "text": "the use of function instructions,"
+ },
+ {
+  "id": 1847,
+  "text": "and also the callee's"
+ },
+ {
+  "id": 1848,
+  "text": "prologue and epilogue,"
+ },
+ {
+  "id": 1849,
+  "text": "and the way the call is written,"
+ },
+ {
+  "id": 1850,
+  "text": "go debug it yourselves,"
+ },
+ {
+  "id": 1851,
+  "text": "and trace through"
+ },
+ {
+  "id": 1852,
+  "text": "the execution of this function,"
+ },
+ {
+  "id": 1853,
+  "text": "and get familiar with the"
+ },
+ {
+  "id": 1854,
+  "text": "concepts of the calling convention."
+ },
+ {
+  "id": 1855,
+  "text": "As for 5-8,"
+ },
+ {
+  "id": 1856,
+  "text": "that's also left for you to do on your own at home."
+ }
+]

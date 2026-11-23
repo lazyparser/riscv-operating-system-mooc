@@ -1,0 +1,4618 @@
+[
+ {
+  "id": 0,
+  "text": "All right, let's continue."
+ },
+ {
+  "id": 1,
+  "text": "So far, we've mainly been introducing some basic concepts of computer organization and instruction set architecture."
+ },
+ {
+  "id": 2,
+  "text": "From here on, we're mainly getting you prepared for the hands-on work of developing an operating system later on."
+ },
+ {
+  "id": 3,
+  "text": "So, Chapter 3,"
+ },
+ {
+  "id": 4,
+  "text": "is mainly about some concepts related to compiling and linking."
+ },
+ {
+  "id": 5,
+  "text": "Let's take a look together."
+ },
+ {
+  "id": 6,
+  "text": "For this part,"
+ },
+ {
+  "id": 7,
+  "text": "we'll split it into two main sections."
+ },
+ {
+  "id": 8,
+  "text": "One is an introduction to GCC."
+ },
+ {
+  "id": 9,
+  "text": "And the second part"
+ },
+ {
+  "id": 10,
+  "text": "will introduce some concepts related to the ELF file format."
+ },
+ {
+  "id": 11,
+  "text": "Let's look at the first part first."
+ },
+ {
+  "id": 12,
+  "text": "For GCC, we'll start with a brief overview."
+ },
+ {
+  "id": 13,
+  "text": "First, what exactly is GCC?"
+ },
+ {
+  "id": 14,
+  "text": "Second, we'll look at its command-line syntax."
+ },
+ {
+  "id": 15,
+  "text": "Third, we'll mainly cover its execution steps,"
+ },
+ {
+  "id": 16,
+  "text": "as well as the file types involved."
+ },
+ {
+  "id": 17,
+  "text": "Now, some of you may have already"
+ },
+ {
+  "id": 18,
+  "text": "seen some of this content before,"
+ },
+ {
+  "id": 19,
+  "text": "so you can also treat it as a review and go through it together."
+ },
+ {
+  "id": 20,
+  "text": "So GCC,"
+ },
+ {
+  "id": 21,
+  "text": "as we say, is actually an abbreviation for the GNU Compiler Collection."
+ },
+ {
+  "id": 22,
+  "text": "And GNU,"
+ },
+ {
+  "id": 23,
+  "text": "as we know, is actually a"
+ },
+ {
+  "id": 24,
+  "text": "organization for open-source free software."
+ },
+ {
+  "id": 25,
+  "text": "Under this organization,"
+ },
+ {
+  "id": 26,
+  "text": "it has developed a lot of tools."
+ },
+ {
+  "id": 27,
+  "text": "GCC is one of them."
+ },
+ {
+  "id": 28,
+  "text": "Now GCC,"
+ },
+ {
+  "id": 29,
+  "text": "it is actually a"
+ },
+ {
+  "id": 30,
+  "text": "since it's called a Compiler Collection,"
+ },
+ {
+  "id": 31,
+  "text": "what it really means is that"
+ },
+ {
+  "id": 32,
+  "text": "it is a collection of compilers."
+ },
+ {
+  "id": 33,
+  "text": "Collection just means a set."
+ },
+ {
+  "id": 34,
+  "text": "And since it's a collection of compilers,"
+ },
+ {
+  "id": 35,
+  "text": "that means it actually"
+ },
+ {
+  "id": 36,
+  "text": "supports the compilation and linking of many programming languages."
+ },
+ {
+  "id": 37,
+  "text": "So this,"
+ },
+ {
+  "id": 38,
+  "text": "these programming languages,"
+ },
+ {
+  "id": 39,
+  "text": "the most important one is C."
+ },
+ {
+  "id": 40,
+  "text": "Originally, it mainly supported C."
+ },
+ {
+  "id": 41,
+  "text": "Then later on,"
+ },
+ {
+  "id": 42,
+  "text": "it was gradually expanded,"
+ },
+ {
+  "id": 43,
+  "text": "and it came to support many languages."
+ },
+ {
+  "id": 44,
+  "text": "So not only can it support multiple languages,"
+ },
+ {
+  "id": 45,
+  "text": "it can also support multiple architectures."
+ },
+ {
+  "id": 46,
+  "text": "For example, X86, ARM,"
+ },
+ {
+  "id": 47,
+  "text": "and also including our"
+ },
+ {
+  "id": 48,
+  "text": "that is, it will support"
+ },
+ {
+  "id": 49,
+  "text": "the RISC-V architecture that we use."
+ },
+ {
+  "id": 50,
+  "text": "Right now, GCC already supports it fairly well."
+ },
+ {
+  "id": 51,
+  "text": "So later on,"
+ },
+ {
+  "id": 52,
+  "text": "when we compile and link our programs,"
+ },
+ {
+  "id": 53,
+  "text": "what we use is actually this GCC development toolchain."
+ },
+ {
+  "id": 54,
+  "text": "Now,"
+ },
+ {
+  "id": 55,
+  "text": "this GCC toolchain,"
+ },
+ {
+  "id": 56,
+  "text": "is mainly installed and runs on Windows"
+ },
+ {
+  "id": 57,
+  "text": "No, sorry, I misspoke."
+ },
+ {
+  "id": 58,
+  "text": "It mainly runs on systems like Linux,"
+ },
+ {
+  "id": 59,
+  "text": "which are called UNIX-like operating systems."
+ },
+ {
+  "id": 60,
+  "text": "The so-called UNIX-like systems,"
+ },
+ {
+  "id": 61,
+  "text": "that is to say, these operating systems"
+ },
+ {
+  "id": 62,
+  "text": "have essentially all imitated the early"
+ },
+ {
+  "id": 63,
+  "text": "interactive interface of this UNIX."
+ },
+ {
+  "id": 64,
+  "text": "And GCC, I should say,"
+ },
+ {
+  "id": 65,
+  "text": "is currently also, on these operating systems,"
+ },
+ {
+  "id": 66,
+  "text": "you could say, a rather official standard,"
+ },
+ {
+  "id": 67,
+  "text": "a standard,"
+ },
+ {
+  "id": 68,
+  "text": "and it's used quite a lot."
+ },
+ {
+  "id": 69,
+  "text": "Now, as for this compiler,"
+ },
+ {
+  "id": 70,
+  "text": "let me digress for a moment,"
+ },
+ {
+  "id": 71,
+  "text": "that is, after our environment is set up,"
+ },
+ {
+  "id": 72,
+  "text": "uh,"
+ },
+ {
+  "id": 73,
+  "text": "well, uh,"
+ },
+ {
+  "id": 74,
+  "text": "you,"
+ },
+ {
+  "id": 75,
+  "text": "that is to say,"
+ },
+ {
+  "id": 76,
+  "text": "some of you came back and asked me,"
+ },
+ {
+  "id": 77,
+  "text": "saying that thing is put at,"
+ },
+ {
+  "id": 78,
+  "text": "how do you do it?"
+ },
+ {
+  "id": 79,
+  "text": "That is, after we install it,"
+ },
+ {
+  "id": 80,
+  "text": "you can just take it"
+ },
+ {
+  "id": 81,
+  "text": "For example, there's an archive file"
+ },
+ {
+  "id": 82,
+  "text": "tools"
+ },
+ {
+  "id": 83,
+  "text": "and you can download it"
+ },
+ {
+  "id": 84,
+  "text": "It's an archive called tools"
+ },
+ {
+  "id": 85,
+  "text": "After you extract the archive,"
+ },
+ {
+  "id": 86,
+  "text": "what you get is actually inside this Tools directory"
+ },
+ {
+  "id": 87,
+  "text": "Inside this directory,"
+ },
+ {
+  "id": 88,
+  "text": "we actually have two subdirectories"
+ },
+ {
+  "id": 89,
+  "text": "One is the GCC directory"
+ },
+ {
+  "id": 90,
+  "text": "and the other is the QML directory"
+ },
+ {
+  "id": 91,
+  "text": "Our build tools are placed under the GCC directory"
+ },
+ {
+  "id": 92,
+  "text": "So all you need to do is add this path to your"
+ },
+ {
+  "id": 93,
+  "text": "bashrc file"
+ },
+ {
+  "id": 94,
+  "text": "or your profile file,"
+ },
+ {
+  "id": 95,
+  "text": "and then you'll be able to find these tools"
+ },
+ {
+  "id": 96,
+  "text": "Let me just mention that briefly."
+ },
+ {
+  "id": 97,
+  "text": "Now let's quickly review how to use GCC."
+ },
+ {
+  "id": 98,
+  "text": "The GCC commands"
+ },
+ {
+  "id": 99,
+  "text": "are all command-line based"
+ },
+ {
+  "id": 100,
+  "text": "Its command line,"
+ },
+ {
+  "id": 101,
+  "text": "it's called GCC followed by an option."
+ },
+ {
+  "id": 102,
+  "text": "The options are the ones listed below,"
+ },
+ {
+  "id": 103,
+  "text": "options that start with a dash."
+ },
+ {
+  "id": 104,
+  "text": "And then you just follow it with the input files you want to compile."
+ },
+ {
+  "id": 105,
+  "text": "Now, do you all still remember these options?"
+ },
+ {
+  "id": 106,
+  "text": "Let me just ask you quickly."
+ },
+ {
+  "id": 107,
+  "text": "Do you remember what -E is used for?"
+ },
+ {
+  "id": 108,
+  "text": "Let's recall this in passing."
+ },
+ {
+  "id": 109,
+  "text": "What is it used for?"
+ },
+ {
+  "id": 110,
+  "text": "It's used for preprocessing, right?"
+ },
+ {
+  "id": 111,
+  "text": "What do we mean by preprocessing?"
+ },
+ {
+  "id": 112,
+  "text": "It means that, for example,"
+ },
+ {
+  "id": 113,
+  "text": "taking C programming as an example,"
+ },
+ {
+  "id": 114,
+  "text": "at the beginning of C code there are a lot of things,"
+ },
+ {
+  "id": 115,
+  "text": "things starting with a hash mark, like include,"
+ },
+ {
+  "id": 116,
+  "text": "define, and so on."
+ },
+ {
+  "id": 117,
+  "text": "We call it macro assembly,"
+ },
+ {
+  "id": 118,
+  "text": "not macro assembly,"
+ },
+ {
+  "id": 119,
+  "text": "it's macros, right?"
+ },
+ {
+  "id": 120,
+  "text": "So preprocessing, then,"
+ },
+ {
+  "id": 121,
+  "text": "is really just taking those macro definitions"
+ },
+ {
+  "id": 122,
+  "text": "and turning them into what?"
+ },
+ {
+  "id": 123,
+  "text": "Turning them into standard C code, that's all there is to it."
+ },
+ {
+  "id": 124,
+  "text": "Now, GCC is the most widely used one."
+ },
+ {
+  "id": 125,
+  "text": "And as we say, it's compile without linking,"
+ },
+ {
+  "id": 126,
+  "text": "right?"
+ },
+ {
+  "id": 127,
+  "text": "So-called compiling,"
+ },
+ {
+  "id": 128,
+  "text": "basically means turning this C code into what?"
+ },
+ {
+  "id": 129,
+  "text": "Into machine instructions,"
+ },
+ {
+  "id": 130,
+  "text": "right?"
+ },
+ {
+  "id": 131,
+  "text": "Yeah."
+ },
+ {
+  "id": 132,
+  "text": "That's compile only."
+ },
+ {
+  "id": 133,
+  "text": "Uh,"
+ },
+ {
+  "id": 134,
+  "text": "the idea behind linking,"
+ },
+ {
+  "id": 135,
+  "text": "basically is that when we finally want to generate an executable program,"
+ },
+ {
+  "id": 136,
+  "text": "we need to take it,"
+ },
+ {
+  "id": 137,
+  "text": "take this .o file you've generated,"
+ },
+ {
+  "id": 138,
+  "text": "which is machine instructions,"
+ },
+ {
+  "id": 139,
+  "text": "and link it together with some library files"
+ },
+ {
+  "id": 140,
+  "text": "to link them together"
+ },
+ {
+  "id": 141,
+  "text": "that's the concept of linking"
+ },
+ {
+  "id": 142,
+  "text": "and this capital S"
+ },
+ {
+  "id": 143,
+  "text": "-S, do you remember what that is?"
+ },
+ {
+  "id": 144,
+  "text": "the capital S"
+ },
+ {
+  "id": 145,
+  "text": "the capital S means generate assembly"
+ },
+ {
+  "id": 146,
+  "text": "right?"
+ },
+ {
+  "id": 147,
+  "text": "So what that means is, earlier on when we wrote"
+ },
+ {
+  "id": 148,
+  "text": "the lowercase c,"
+ },
+ {
+  "id": 149,
+  "text": "we were actually skipping this step."
+ },
+ {
+  "id": 150,
+  "text": "But this step is"
+ },
+ {
+  "id": 151,
+  "text": "actually something that still needs to happen."
+ },
+ {
+  "id": 152,
+  "text": "Because the whole process is really"
+ },
+ {
+  "id": 153,
+  "text": "first turning the C into assembly,"
+ },
+ {
+  "id": 154,
+  "text": "and then turning that into machine instructions."
+ },
+ {
+  "id": 155,
+  "text": "Right?"
+ },
+ {
+  "id": 156,
+  "text": "This, we covered in our very first class,"
+ },
+ {
+  "id": 157,
+  "text": "when we talked about the evolution of programming languages,"
+ },
+ {
+  "id": 158,
+  "text": "almost like the evolution of humankind."
+ },
+ {
+  "id": 159,
+  "text": "This is actually the process of human evolution."
+ },
+ {
+  "id": 160,
+  "text": "Actually, from the time you develop as an embryo"
+ },
+ {
+  "id": 161,
+  "text": "to becoming a small child,"
+ },
+ {
+  "id": 162,
+  "text": "you go through a process like that too."
+ },
+ {
+  "id": 163,
+  "text": "And our compiler works the same way."
+ },
+ {
+  "id": 164,
+  "text": "In a single step of yours,"
+ },
+ {
+  "id": 165,
+  "text": "it actually still contains all these steps."
+ },
+ {
+  "id": 166,
+  "text": "Now, -o specifies the output file,"
+ },
+ {
+  "id": 167,
+  "text": "directing it to a filename you choose yourself."
+ },
+ {
+  "id": 168,
+  "text": "The o stands for output,"
+ },
+ {
+  "id": 169,
+  "text": "right?"
+ },
+ {
+  "id": 170,
+  "text": "Now this"
+ },
+ {
+  "id": 171,
+  "text": "-g flag,"
+ },
+ {
+  "id": 172,
+  "text": "as you'll see later on,"
+ },
+ {
+  "id": 173,
+  "text": "means that if you want to do debugging,"
+ },
+ {
+  "id": 174,
+  "text": "you must add -g"
+ },
+ {
+  "id": 175,
+  "text": "at compile time."
+ },
+ {
+  "id": 176,
+  "text": "That way,"
+ },
+ {
+  "id": 177,
+  "text": "it will include some debugging support information"
+ },
+ {
+  "id": 178,
+  "text": "in the generated file."
+ },
+ {
+  "id": 179,
+  "text": "So our program,"
+ },
+ {
+  "id": 180,
+  "text": "only then can you debug"
+ },
+ {
+  "id": 181,
+  "text": "otherwise you can't"
+ },
+ {
+  "id": 182,
+  "text": "Now what about -v?"
+ },
+ {
+  "id": 183,
+  "text": "It means verbose."
+ },
+ {
+  "id": 184,
+  "text": "In other words, during execution, it can"
+ },
+ {
+  "id": 185,
+  "text": "display some of the detailed steps"
+ },
+ {
+  "id": 186,
+  "text": "as it goes along."
+ },
+ {
+  "id": 187,
+  "text": "These options are the commonly used ones,"
+ },
+ {
+  "id": 188,
+  "text": "and I hope you all master them thoroughly."
+ },
+ {
+  "id": 189,
+  "text": "So as a whole, when we"
+ },
+ {
+  "id": 190,
+  "text": "run a GCC command,"
+ },
+ {
+  "id": 191,
+  "text": "what actually happens behind the scenes?"
+ },
+ {
+  "id": 192,
+  "text": "Well, we need to understand"
+ },
+ {
+  "id": 193,
+  "text": "some of the basic concepts"
+ },
+ {
+  "id": 194,
+  "text": "about compilation, assembly, and linking."
+ },
+ {
+  "id": 195,
+  "text": "So we can actually go through this process,"
+ },
+ {
+  "id": 196,
+  "text": "and we can take a quick look at it."
+ },
+ {
+  "id": 197,
+  "text": "Let me see if there's a ready-made program here."
+ },
+ {
+  "id": 198,
+  "text": "Let me check if there's anything here."
+ },
+ {
+  "id": 199,
+  "text": "If not, we'll just write a simple one."
+ },
+ {
+  "id": 200,
+  "text": "Let's simply create a"
+ },
+ {
+  "id": 201,
+  "text": "the simplest hello."
+ },
+ {
+  "id": 202,
+  "text": "Writing this now should still be"
+ },
+ {
+  "id": 203,
+  "text": "since for this course,"
+ },
+ {
+  "id": 204,
+  "text": "C is a basic requirement,"
+ },
+ {
+  "id": 205,
+  "text": "we won't say much more about it here."
+ },
+ {
+  "id": 206,
+  "text": "So,"
+ },
+ {
+  "id": 207,
+  "text": "suppose we write a"
+ },
+ {
+  "id": 208,
+  "text": "simple hello world"
+ },
+ {
+  "id": 209,
+  "text": "in this demo directory."
+ },
+ {
+  "id": 210,
+  "text": "Now, we say,"
+ },
+ {
+  "id": 211,
+  "text": "with GCC, for example, if I want to compile this thing,"
+ },
+ {
+  "id": 212,
+  "text": "we just type gcc,"
+ },
+ {
+  "id": 213,
+  "text": "hello.c,"
+ },
+ {
+  "id": 214,
+  "text": "and that's it."
+ },
+ {
+  "id": 215,
+  "text": "And then by default it will generate"
+ },
+ {
+  "id": 216,
+  "text": "an executable program called a.out, right?"
+ },
+ {
+  "id": 217,
+  "text": "If we specify -o,"
+ },
+ {
+  "id": 218,
+  "text": "But, if we"
+ },
+ {
+  "id": 219,
+  "text": "want to see the detailed process,"
+ },
+ {
+  "id": 220,
+  "text": "Actually, it's very simple. We can"
+ },
+ {
+  "id": 221,
+  "text": "at compile time,"
+ },
+ {
+  "id": 222,
+  "text": "add a"
+ },
+ {
+  "id": 223,
+  "text": "-v"
+ },
+ {
+  "id": 224,
+  "text": "So after adding -v,"
+ },
+ {
+  "id": 225,
+  "text": "you can see that it will output"
+ },
+ {
+  "id": 226,
+  "text": "all the detailed information"
+ },
+ {
+  "id": 227,
+  "text": "about the compilation process."
+ },
+ {
+  "id": 228,
+  "text": "Now, this detailed process"
+ },
+ {
+  "id": 229,
+  "text": "actually contains what"
+ },
+ {
+  "id": 230,
+  "text": "I want to show you in this diagram,"
+ },
+ {
+  "id": 231,
+  "text": "namely the entire compilation process."
+ },
+ {
+  "id": 232,
+  "text": "So the first step,"
+ },
+ {
+  "id": 233,
+  "text": "we call it preprocessing."
+ },
+ {
+  "id": 234,
+  "text": "That is, it's equivalent to saying"
+ },
+ {
+  "id": 235,
+  "text": "for this"
+ },
+ {
+  "id": 236,
+  "text": "for this .c file,"
+ },
+ {
+  "id": 237,
+  "text": "we add a -E, this"
+ },
+ {
+  "id": 238,
+  "text": "-E option,"
+ },
+ {
+  "id": 239,
+  "text": "and it will run the preprocessing step,"
+ },
+ {
+  "id": 240,
+  "text": "to execute"
+ },
+ {
+  "id": 241,
+  "text": "all of the things in here"
+ },
+ {
+  "id": 242,
+  "text": "that start with a hash sign —"
+ },
+ {
+  "id": 243,
+  "text": "the C preprocessor directives —"
+ },
+ {
+  "id": 244,
+  "text": "and turn them into C code."
+ },
+ {
+  "id": 245,
+  "text": "Now, here we've added a -o,"
+ },
+ {
+  "id": 246,
+  "text": "and by adding this -o here,"
+ },
+ {
+  "id": 247,
+  "text": "we're actually specifying that we"
+ },
+ {
+  "id": 248,
+  "text": "output a file with the .i suffix,"
+ },
+ {
+  "id": 249,
+  "text": "a file with the same name."
+ },
+ {
+  "id": 250,
+  "text": "Now, as you all know,"
+ },
+ {
+  "id": 251,
+  "text": "once this file is generated,"
+ },
+ {
+  "id": 252,
+  "text": "after adding this -E option,"
+ },
+ {
+  "id": 253,
+  "text": "what ends up in the generated file"
+ },
+ {
+  "id": 254,
+  "text": "has essentially had all the preprocessor directives removed,"
+ },
+ {
+  "id": 255,
+  "text": "so what's left in the .i file is one hundred percent pure C code."
+ },
+ {
+  "id": 256,
+  "text": "That is essentially how it works."
+ },
+ {
+  "id": 257,
+  "text": "Now, at this point,"
+ },
+ {
+  "id": 258,
+  "text": "our next step"
+ },
+ {
+  "id": 259,
+  "text": "is really what we call the compilation stage."
+ },
+ {
+  "id": 260,
+  "text": "Now, in the preprocessing step earlier,"
+ },
+ {
+  "id": 261,
+  "text": "it's actually done by a program called cc1."
+ },
+ {
+  "id": 262,
+  "text": "It's a small program that's part of the GCC development package."
+ },
+ {
+  "id": 263,
+  "text": "This compilation step,"
+ },
+ {
+  "id": 264,
+  "text": "it's carried out by the cc1 program."
+ },
+ {
+  "id": 265,
+  "text": "Now, besides doing the preprocessing,"
+ },
+ {
+  "id": 266,
+  "text": "cc1 also performs the actual compilation process for us."
+ },
+ {
+  "id": 267,
+  "text": "So the compilation process is basically taking C code,"
+ },
+ {
+  "id": 268,
+  "text": "and converting it into assembly language."
+ },
+ {
+  "id": 269,
+  "text": "So we can also run this command on its own,"
+ },
+ {
+  "id": 270,
+  "text": "to see the effect."
+ },
+ {
+  "id": 271,
+  "text": "Now, this process,"
+ },
+ {
+  "id": 272,
+  "text": "essentially across these steps,"
+ },
+ {
+  "id": 273,
+  "text": "what's generated at this point is assembly language."
+ },
+ {
+  "id": 274,
+  "text": "So once we have the assembly,"
+ },
+ {
+  "id": 275,
+  "text": "the next step is to"
+ },
+ {
+  "id": 276,
+  "text": "turn that assembly language into machine instructions."
+ },
+ {
+  "id": 277,
+  "text": "Now, this step of producing machine instructions"
+ },
+ {
+  "id": 278,
+  "text": "is done by a program called as,"
+ },
+ {
+  "id": 279,
+  "text": "which is the assembler."
+ },
+ {
+  "id": 280,
+  "text": "So the last step,"
+ },
+ {
+  "id": 281,
+  "text": "we said we generated this .o file,"
+ },
+ {
+  "id": 282,
+  "text": "but it still can't be executed directly."
+ },
+ {
+  "id": 283,
+  "text": "If we want this program to run,"
+ },
+ {
+  "id": 284,
+  "text": "we actually still need to link this .o together with some"
+ },
+ {
+  "id": 285,
+  "text": "standard libraries."
+ },
+ {
+  "id": 286,
+  "text": "And this linking,"
+ },
+ {
+  "id": 287,
+  "text": "is actually carried out by another program"
+ },
+ {
+  "id": 288,
+  "text": "called ld."
+ },
+ {
+  "id": 289,
+  "text": "And only then,"
+ },
+ {
+  "id": 290,
+  "text": "an executable program is produced."
+ },
+ {
+  "id": 291,
+  "text": "In other words, this whole..."
+ },
+ {
+  "id": 292,
+  "text": "when I type a gcc,"
+ },
+ {
+  "id": 293,
+  "text": "what actually happens behind it is"
+ },
+ {
+  "id": 294,
+  "text": "such a complex process."
+ },
+ {
+  "id": 295,
+  "text": "And this complex process,"
+ },
+ {
+  "id": 296,
+  "text": "we can actually see it in what we just"
+ },
+ {
+  "id": 297,
+  "text": "showed you."
+ },
+ {
+  "id": 298,
+  "text": "Take a careful look at this process,"
+ },
+ {
+  "id": 299,
+  "text": "and you can actually see this process taking place."
+ },
+ {
+  "id": 300,
+  "text": "Where is it?"
+ },
+ {
+  "id": 301,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 302,
+  "text": "Let me find it."
+ },
+ {
+  "id": 303,
+  "text": "Here I see an AS."
+ },
+ {
+  "id": 304,
+  "text": "And AS is what we just talked about,"
+ },
+ {
+  "id": 305,
+  "text": "this assembly thing."
+ },
+ {
+  "id": 306,
+  "text": "Let's redirect this into a file."
+ },
+ {
+  "id": 307,
+  "text": "That's all there is."
+ },
+ {
+  "id": 308,
+  "text": "This doesn't seem very clear."
+ },
+ {
+  "id": 309,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 310,
+  "text": "It should be visible here."
+ },
+ {
+  "id": 311,
+  "text": "Add -v."
+ },
+ {
+  "id": 312,
+  "text": "AS"
+ },
+ {
+  "id": 313,
+  "text": "this one"
+ },
+ {
+  "id": 314,
+  "text": "at least it just"
+ },
+ {
+  "id": 315,
+  "text": "See, AS generated this .s file."
+ },
+ {
+  "id": 316,
+  "text": "Now, this .s file,"
+ },
+ {
+  "id": 317,
+  "text": "it should have been generated in one of the earlier steps."
+ },
+ {
+  "id": 318,
+  "text": "Let me find it."
+ },
+ {
+  "id": 319,
+  "text": "Can we see it?"
+ },
+ {
+  "id": 320,
+  "text": "Here,"
+ },
+ {
+  "id": 321,
+  "text": "you can see"
+ },
+ {
+  "id": 322,
+  "text": "its first step actually calls cc."
+ },
+ {
+  "id": 323,
+  "text": "Do you see that?"
+ },
+ {
+  "id": 324,
+  "text": "Right?"
+ },
+ {
+  "id": 325,
+  "text": "This cc, on its side,"
+ },
+ {
+  "id": 326,
+  "text": "will generate a"
+ },
+ {
+  "id": 327,
+  "text": "it generates a temporary file,"
+ },
+ {
+  "id": 328,
+  "text": "called a .s file."
+ },
+ {
+  "id": 329,
+  "text": "Now, this generated .s file,"
+ },
+ {
+  "id": 330,
+  "text": "this process actually contains"
+ },
+ {
+  "id": 331,
+  "text": "what we call preprocessing and compilation."
+ },
+ {
+  "id": 332,
+  "text": "Then, after generating this .s file,"
+ },
+ {
+  "id": 333,
+  "text": "it takes this .s file,"
+ },
+ {
+  "id": 334,
+  "text": "and continues by calling the as command,"
+ },
+ {
+  "id": 335,
+  "text": "right?"
+ },
+ {
+  "id": 336,
+  "text": "This as command,"
+ },
+ {
+  "id": 337,
+  "text": "is what we call the assembly stage."
+ },
+ {
+  "id": 338,
+  "text": "Now, what will it actually generate?"
+ },
+ {
+  "id": 339,
+  "text": "After -o, what does it output?"
+ },
+ {
+  "id": 340,
+  "text": "It outputs a .o file."
+ },
+ {
+  "id": 341,
+  "text": "This .o file is actually a"
+ },
+ {
+  "id": 342,
+  "text": "file containing machine code instructions."
+ },
+ {
+  "id": 343,
+  "text": "Now, for the last step,"
+ },
+ {
+  "id": 344,
+  "text": "you can see it actually will"
+ },
+ {
+  "id": 345,
+  "text": "go on to call which program?"
+ },
+ {
+  "id": 346,
+  "text": "For the last step, it actually calls a"
+ },
+ {
+  "id": 347,
+  "text": "program called collect2."
+ },
+ {
+  "id": 348,
+  "text": "If any of you are interested in looking into this program,"
+ },
+ {
+  "id": 349,
+  "text": "what it actually does internally is wrap"
+ },
+ {
+  "id": 350,
+  "text": "our LD program,"
+ },
+ {
+  "id": 351,
+  "text": "that is, the linker."
+ },
+ {
+  "id": 352,
+  "text": "Inside it,"
+ },
+ {
+  "id": 353,
+  "text": "you can see it actually will take"
+ },
+ {
+  "id": 354,
+  "text": "the .o file we just generated,"
+ },
+ {
+  "id": 355,
+  "text": "and our .o file,"
+ },
+ {
+  "id": 356,
+  "text": "and our .o file,"
+ },
+ {
+  "id": 357,
+  "text": "what was it called again just now?"
+ },
+ {
+  "id": 358,
+  "text": "Where did it go?"
+ },
+ {
+  "id": 359,
+  "text": "There's quite a lot of typing here."
+ },
+ {
+  "id": 360,
+  "text": "I can't seem to see it."
+ },
+ {
+  "id": 361,
+  "text": "The .o file should be right up here."
+ },
+ {
+  "id": 362,
+  "text": "Here it is."
+ },
+ {
+  "id": 363,
+  "text": "This .o file is actually down here."
+ },
+ {
+  "id": 364,
+  "text": "It's just a part of what's inside it."
+ },
+ {
+  "id": 365,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 366,
+  "text": "Here."
+ },
+ {
+  "id": 367,
+  "text": "It actually does something this complex,"
+ },
+ {
+  "id": 368,
+  "text": "such a"
+ },
+ {
+  "id": 369,
+  "text": "an operation."
+ },
+ {
+  "id": 370,
+  "text": "Let's copy it out and take a look."
+ },
+ {
+  "id": 371,
+  "text": "So in this process,"
+ },
+ {
+  "id": 372,
+  "text": "you can see"
+ },
+ {
+  "id": 373,
+  "text": "for this collection2 program,"
+ },
+ {
+  "id": 374,
+  "text": "it actually"
+ },
+ {
+  "id": 375,
+  "text": "the .o file should be here."
+ },
+ {
+  "id": 376,
+  "text": "Right here."
+ },
+ {
+  "id": 377,
+  "text": "The one generated after our compilation,"
+ },
+ {
+  "id": 378,
+  "text": "that .o file is actually in this spot."
+ },
+ {
+  "id": 379,
+  "text": "The font might be a bit small."
+ },
+ {
+  "id": 380,
+  "text": "Can everyone still see it clearly?"
+ },
+ {
+  "id": 381,
+  "text": "I won't adjust it now."
+ },
+ {
+  "id": 382,
+  "text": "If you're interested,"
+ },
+ {
+  "id": 383,
+  "text": "you can go back and take a look yourselves."
+ },
+ {
+  "id": 384,
+  "text": "The thing is, this .o file, actually,"
+ },
+ {
+  "id": 385,
+  "text": "the .o file we generate,"
+ },
+ {
+  "id": 386,
+  "text": "it's right here."
+ },
+ {
+  "id": 387,
+  "text": "But during the linking process,"
+ },
+ {
+  "id": 388,
+  "text": "it actually links in a lot of other library files."
+ },
+ {
+  "id": 389,
+  "text": "For example, as you can see,"
+ },
+ {
+  "id": 390,
+  "text": "it specifies a lot of these .o files here."
+ },
+ {
+  "id": 391,
+  "text": "These .o files,"
+ },
+ {
+  "id": 392,
+  "text": "they're actually standard libraries that come with our GCC."
+ },
+ {
+  "id": 393,
+  "text": "So these standard library files,"
+ },
+ {
+  "id": 394,
+  "text": "along with our program's .o files,"
+ },
+ {
+  "id": 395,
+  "text": "get assembled together."
+ },
+ {
+  "id": 396,
+  "text": "That's how our executable program is finally produced."
+ },
+ {
+  "id": 397,
+  "text": "That's actually the process."
+ },
+ {
+  "id": 398,
+  "text": "So throughout the whole GCC process,"
+ },
+ {
+  "id": 399,
+  "text": "a very complex process actually takes place."
+ },
+ {
+  "id": 400,
+  "text": "You can take a look at this when you get back"
+ },
+ {
+  "id": 401,
+  "text": "Now, sometimes"
+ },
+ {
+  "id": 402,
+  "text": "we might want to break this process down"
+ },
+ {
+  "id": 403,
+  "text": "and inspect the assembly code generated along the way"
+ },
+ {
+  "id": 404,
+  "text": "and the machine instructions"
+ },
+ {
+  "id": 405,
+  "text": "In that case, you might need to run these commands individually"
+ },
+ {
+  "id": 406,
+  "text": "to generate those assembly instructions and machine instructions yourself"
+ },
+ {
+  "id": 407,
+  "text": "These are the main execution steps of GCC"
+ },
+ {
+  "id": 408,
+  "text": "As for the file types mainly involved in GCC"
+ },
+ {
+  "id": 409,
+  "text": "we already saw some of them earlier"
+ },
+ {
+  "id": 410,
+  "text": "That is to say, it may involve some"
+ },
+ {
+  "id": 411,
+  "text": "for example, different files"
+ },
+ {
+  "id": 412,
+  "text": "are distinguished by their filename extensions"
+ },
+ {
+  "id": 413,
+  "text": "If it is .c,"
+ },
+ {
+  "id": 414,
+  "text": "it is a C language source file"
+ },
+ {
+  "id": 415,
+  "text": "If it is .cc or .cpp"
+ },
+ {
+  "id": 416,
+  "text": "or .cxx"
+ },
+ {
+  "id": 417,
+  "text": "then it is probably"
+ },
+ {
+  "id": 418,
+  "text": "it should be a C++ source file"
+ },
+ {
+  "id": 419,
+  "text": "The .i file I just showed you"
+ },
+ {
+  "id": 420,
+  "text": "This one in here is the preprocessed source file."
+ },
+ {
+  "id": 421,
+  "text": "Now, what about the ones with a lowercase s and an uppercase S suffix?"
+ },
+ {
+  "id": 422,
+  "text": "Those are both assembly language files."
+ },
+ {
+  "id": 423,
+  "text": "Now, some of you might ask,"
+ },
+ {
+  "id": 424,
+  "text": "why are assembly files split into"
+ },
+ {
+  "id": 425,
+  "text": "a lowercase s suffix and an uppercase S suffix?"
+ },
+ {
+  "id": 426,
+  "text": "Well, here's the thing:"
+ },
+ {
+  "id": 427,
+  "text": "if the suffix is an uppercase S,"
+ },
+ {
+  "id": 428,
+  "text": "then generally that kind of assembly file"
+ },
+ {
+  "id": 429,
+  "text": "actually also contains"
+ },
+ {
+  "id": 430,
+  "text": "preprocessor directives,"
+ },
+ {
+  "id": 431,
+  "text": "for instance things that start with a hash sign."
+ },
+ {
+  "id": 432,
+  "text": "Whereas this .s file only contains"
+ },
+ {
+  "id": 433,
+  "text": "100% pure assembly instructions,"
+ },
+ {
+  "id": 434,
+  "text": "that's how it works."
+ },
+ {
+  "id": 435,
+  "text": "Then .h and .o, I won't go into those."
+ },
+ {
+  "id": 436,
+  "text": "Object files."
+ },
+ {
+  "id": 437,
+  "text": "Then there's also the common .a,"
+ },
+ {
+  "id": 438,
+  "text": "which is a static library file."
+ },
+ {
+  "id": 439,
+  "text": "It's short for archive: .a."
+ },
+ {
+  "id": 440,
+  "text": "So .so is shared object"
+ },
+ {
+  "id": 441,
+  "text": "meaning shared library."
+ },
+ {
+  "id": 442,
+  "text": "So a shared library file"
+ },
+ {
+  "id": 443,
+  "text": "is actually somewhat similar to"
+ },
+ {
+  "id": 444,
+  "text": "a dynamic library on Windows."
+ },
+ {
+  "id": 445,
+  "text": "So the executable file,"
+ },
+ {
+  "id": 446,
+  "text": "by default, is called a.out."
+ },
+ {
+  "id": 447,
+  "text": "Of course, we can also specify an executable file ourselves."
+ },
+ {
+  "id": 448,
+  "text": "These are some of the common file types we see in GCC."
+ },
+ {
+  "id": 449,
+  "text": "So just now, what I showed you was"
+ },
+ {
+  "id": 450,
+  "text": "just the compile and link process for a single source file."
+ },
+ {
+  "id": 451,
+  "text": "Now, if your project is more complex,"
+ },
+ {
+  "id": 452,
+  "text": "and maybe contains multiple source files,"
+ },
+ {
+  "id": 453,
+  "text": "then the build process,"
+ },
+ {
+  "id": 454,
+  "text": "compared to before, is slightly different."
+ },
+ {
+  "id": 455,
+  "text": "It's just that you need to run this process"
+ },
+ {
+  "id": 456,
+  "text": "for each individual C file separately,"
+ },
+ {
+  "id": 457,
+  "text": "so for each .c file,"
+ },
+ {
+  "id": 458,
+  "text": "the process is actually the same as before."
+ },
+ {
+  "id": 459,
+  "text": "So for each .c file,"
+ },
+ {
+  "id": 460,
+  "text": "Each one will produce its own .o file."
+ },
+ {
+  "id": 461,
+  "text": "Then, at the end, through linking,"
+ },
+ {
+  "id": 462,
+  "text": "we string together all the .o files and some standard libraries,"
+ },
+ {
+  "id": 463,
+  "text": "and that forms an executable file."
+ },
+ {
+  "id": 464,
+  "text": "So, when you have multiple source files,"
+ },
+ {
+  "id": 465,
+  "text": "the overall process is roughly like this:"
+ },
+ {
+  "id": 466,
+  "text": "for each source file, we generate one .o file."
+ },
+ {
+  "id": 467,
+  "text": "First, we compile,"
+ },
+ {
+  "id": 468,
+  "text": "producing a .o file."
+ },
+ {
+  "id": 469,
+  "text": "And then,"
+ },
+ {
+  "id": 470,
+  "text": "finally,"
+ },
+ {
+  "id": 471,
+  "text": "we use gcc,"
+ },
+ {
+  "id": 472,
+  "text": "and this command,"
+ },
+ {
+  "id": 473,
+  "text": "as you know,"
+ },
+ {
+  "id": 474,
+  "text": "what is it actually doing behind the scenes?"
+ },
+ {
+  "id": 475,
+  "text": "What is it doing here?"
+ },
+ {
+  "id": 476,
+  "text": "It is actually doing the linking."
+ },
+ {
+  "id": 477,
+  "text": "Right?"
+ },
+ {
+  "id": 478,
+  "text": "Earlier,"
+ },
+ {
+  "id": 479,
+  "text": "because we included a"
+ },
+ {
+  "id": 480,
+  "text": "The -c flag tells the compiler"
+ },
+ {
+  "id": 481,
+  "text": "so over here,"
+ },
+ {
+  "id": 482,
+  "text": "it only compiles"
+ },
+ {
+  "id": 483,
+  "text": "and does not link."
+ },
+ {
+  "id": 484,
+  "text": "So what it produces"
+ },
+ {
+  "id": 485,
+  "text": "is a .o file,"
+ },
+ {
+  "id": 486,
+  "text": "an object file."
+ },
+ {
+  "id": 487,
+  "text": "These are all basic concepts,"
+ },
+ {
+  "id": 488,
+  "text": "and I think"
+ },
+ {
+  "id": 489,
+  "text": "if you all"
+ },
+ {
+  "id": 490,
+  "text": "have worked on Linux"
+ },
+ {
+  "id": 491,
+  "text": "or, let's say,"
+ },
+ {
+  "id": 492,
+  "text": "used it for a while,"
+ },
+ {
+  "id": 493,
+  "text": "none of this should be a big problem."
+ },
+ {
+  "id": 494,
+  "text": "As for GCC,"
+ },
+ {
+  "id": 495,
+  "text": "we'll just quickly go over it and stop here."
+ },
+ {
+  "id": 496,
+  "text": "Now, in the work that comes next,"
+ },
+ {
+  "id": 497,
+  "text": "we will actually need to"
+ },
+ {
+  "id": 498,
+  "text": "often analyze"
+ },
+ {
+  "id": 499,
+  "text": "the things we generate — that is,"
+ },
+ {
+  "id": 500,
+  "text": "The contents inside a.out or .o files"
+ },
+ {
+  "id": 501,
+  "text": "Now, these files"
+ },
+ {
+  "id": 502,
+  "text": "actually, as we say,"
+ },
+ {
+  "id": 503,
+  "text": "they all have their own format."
+ },
+ {
+  "id": 504,
+  "text": "They are not just simple files."
+ },
+ {
+  "id": 505,
+  "text": "This format"
+ },
+ {
+  "id": 506,
+  "text": "is called the ELF format."
+ },
+ {
+  "id": 507,
+  "text": "So what exactly is the ELF format?"
+ },
+ {
+  "id": 508,
+  "text": "And what is the specific built-in concrete form of this format?"
+ },
+ {
+  "id": 509,
+  "text": "And how do we handle this kind of ELF file?"
+ },
+ {
+  "id": 510,
+  "text": "In this chapter,"
+ },
+ {
+  "id": 511,
+  "text": "we will give you an introduction."
+ },
+ {
+  "id": 512,
+  "text": "Now, the word ELF,"
+ },
+ {
+  "id": 513,
+  "text": "as a matter of fact, is the abbreviation of these three words,"
+ },
+ {
+  "id": 514,
+  "text": "that is, executable linkable format."
+ },
+ {
+  "id": 515,
+  "text": "And translated into Chinese,"
+ },
+ {
+  "id": 516,
+  "text": "it means it is an executable,"
+ },
+ {
+  "id": 517,
+  "text": "linkable format."
+ },
+ {
+  "id": 518,
+  "text": "Right?"
+ },
+ {
+  "id": 519,
+  "text": "We, for these files,"
+ },
+ {
+  "id": 520,
+  "text": "All we're really doing is linking"
+ },
+ {
+  "id": 521,
+  "text": "or running them."
+ },
+ {
+  "id": 522,
+  "text": "So in short, it's called ELF."
+ },
+ {
+  "id": 523,
+  "text": "So it is, on all the"
+ },
+ {
+  "id": 524,
+  "text": "UNIX-like systems, a kind of"
+ },
+ {
+  "id": 525,
+  "text": "standard format for binary files."
+ },
+ {
+  "id": 526,
+  "text": "It's extremely important."
+ },
+ {
+  "id": 527,
+  "text": "You could say it's a"
+ },
+ {
+  "id": 528,
+  "text": "very fundamental concept in our computer"
+ },
+ {
+  "id": 529,
+  "text": "industry."
+ },
+ {
+  "id": 530,
+  "text": "So this,"
+ },
+ {
+  "id": 531,
+  "text": "on our UNIX systems,"
+ },
+ {
+  "id": 532,
+  "text": "including Linux systems,"
+ },
+ {
+  "id": 533,
+  "text": "its ELF format,"
+ },
+ {
+  "id": 534,
+  "text": "there are mainly four kinds of files"
+ },
+ {
+  "id": 535,
+  "text": "that all use this format."
+ },
+ {
+  "id": 536,
+  "text": "So let me also mention this here."
+ },
+ {
+  "id": 537,
+  "text": "First, the ones generated during the compilation process"
+ },
+ {
+  "id": 538,
+  "text": "we just did -- those .o files,"
+ },
+ {
+  "id": 539,
+  "text": "we sometimes also call them object files."
+ },
+ {
+  "id": 540,
+  "text": "right, the object file."
+ },
+ {
+  "id": 541,
+  "text": "And in this ERF... I mean this standard specification,"
+ },
+ {
+  "id": 542,
+  "text": "we actually call it a relocatable file,"
+ },
+ {
+  "id": 543,
+  "text": "called relook... er,"
+ },
+ {
+  "id": 544,
+  "text": "how do you pronounce this word?"
+ },
+ {
+  "id": 545,
+  "text": "a relocatable file."
+ },
+ {
+  "id": 546,
+  "text": "And what relocation mainly means,"
+ },
+ {
+  "id": 547,
+  "text": "is that there are certain addresses"
+ },
+ {
+  "id": 548,
+  "text": "that during the compilation process,"
+ },
+ {
+  "id": 549,
+  "text": "can't be fully determined right away."
+ },
+ {
+  "id": 550,
+  "text": "They need to be worked out during linking,"
+ },
+ {
+  "id": 551,
+  "text": "and that address gets pinned down there."
+ },
+ {
+  "id": 552,
+  "text": "That's the idea behind it."
+ },
+ {
+  "id": 553,
+  "text": "We probably won't go into detail on this here,"
+ },
+ {
+  "id": 554,
+  "text": "but if you're interested,"
+ },
+ {
+  "id": 555,
+  "text": "you can go read some books."
+ },
+ {
+  "id": 556,
+  "text": "For example, I'd recommend,"
+ },
+ {
+  "id": 557,
+  "text": "let's see, there's a book called"
+ },
+ {
+  "id": 558,
+  "text": "The Craftsmanship of Programmers,"
+ },
+ {
+  "id": 559,
+  "text": "which is specifically about compiling and linking."
+ },
+ {
+  "id": 560,
+  "text": "You can go and take a look."
+ },
+ {
+  "id": 561,
+  "text": "Then the executable file we generate,"
+ },
+ {
+  "id": 562,
+  "text": "say a.out,"
+ },
+ {
+  "id": 563,
+  "text": "this a.out,"
+ },
+ {
+  "id": 564,
+  "text": "the executable file also belongs to,"
+ },
+ {
+  "id": 565,
+  "text": "it uses the ELF file format."
+ },
+ {
+  "id": 566,
+  "text": "And then there are .so files,"
+ },
+ {
+  "id": 567,
+  "text": "which are what we call shared library files."
+ },
+ {
+  "id": 568,
+  "text": "This file,"
+ },
+ {
+  "id": 569,
+  "text": "it can, at run time,"
+ },
+ {
+  "id": 570,
+  "text": "be dynamically linked,"
+ },
+ {
+  "id": 571,
+  "text": "unlike before, where we generally,"
+ },
+ {
+  "id": 572,
+  "text": "the most common is static linking."
+ },
+ {
+  "id": 573,
+  "text": "It can, at run time,"
+ },
+ {
+  "id": 574,
+  "text": "be linked with executable files."
+ },
+ {
+  "id": 575,
+  "text": "And these shared library files,"
+ },
+ {
+  "id": 576,
+  "text": "also use the ELF file format."
+ },
+ {
+  "id": 577,
+  "text": "And the last type,"
+ },
+ {
+  "id": 578,
+  "text": "is the .ko file."
+ },
+ {
+  "id": 579,
+  "text": "I don't know if any of you have come across this file."
+ },
+ {
+  "id": 580,
+  "text": "That is to say, when"
+ },
+ {
+  "id": 581,
+  "text": "for example, a program crashes,"
+ },
+ {
+  "id": 582,
+  "text": "it might"
+ },
+ {
+  "id": 583,
+  "text": "Of course, this requires us to configure it in the system."
+ },
+ {
+  "id": 584,
+  "text": "By default, it's not generated."
+ },
+ {
+  "id": 585,
+  "text": "But once you've configured it,"
+ },
+ {
+  "id": 586,
+  "text": "you can specify that when a program crashes,"
+ },
+ {
+  "id": 587,
+  "text": "it can generate a core dump file."
+ },
+ {
+  "id": 588,
+  "text": "Now, inside this core dump file,"
+ },
+ {
+  "id": 589,
+  "text": "it contains a lot of information from the time the program crashed—"
+ },
+ {
+  "id": 590,
+  "text": "on-site environment details,"
+ },
+ {
+  "id": 591,
+  "text": "which can help us figure out what exactly"
+ },
+ {
+  "id": 592,
+  "text": "happened on the system when the program crashed."
+ },
+ {
+  "id": 593,
+  "text": "Now, this kind of core dump file"
+ },
+ {
+  "id": 594,
+  "text": "uses the ELF file format."
+ },
+ {
+  "id": 595,
+  "text": "So that's why this ELF file format"
+ },
+ {
+  "id": 596,
+  "text": "is extremely important."
+ },
+ {
+  "id": 597,
+  "text": "If you are"
+ },
+ {
+  "id": 598,
+  "text": "optimizing programs,"
+ },
+ {
+  "id": 599,
+  "text": "debugging and troubleshooting them,"
+ },
+ {
+  "id": 600,
+  "text": "Some of the more complicated problems,"
+ },
+ {
+  "id": 601,
+  "text": "they may involve"
+ },
+ {
+  "id": 602,
+  "text": "okay,"
+ },
+ {
+  "id": 603,
+  "text": "this,"
+ },
+ {
+  "id": 604,
+  "text": "this basic concept."
+ },
+ {
+  "id": 605,
+  "text": "So what does this ERF file format actually look like?"
+ },
+ {
+  "id": 606,
+  "text": "We've drawn a diagram here"
+ },
+ {
+  "id": 607,
+  "text": "for everyone."
+ },
+ {
+  "id": 608,
+  "text": "You can take a look at it."
+ },
+ {
+  "id": 609,
+  "text": "This ERF file,"
+ },
+ {
+  "id": 610,
+  "text": "first of all,"
+ },
+ {
+  "id": 611,
+  "text": "it"
+ },
+ {
+  "id": 612,
+  "text": "if you just use VI"
+ },
+ {
+  "id": 613,
+  "text": "or a text editor to open it,"
+ },
+ {
+  "id": 614,
+  "text": "you won't be able to read it clearly,"
+ },
+ {
+  "id": 615,
+  "text": "because it's a binary format."
+ },
+ {
+  "id": 616,
+  "text": "But it actually does have a structure."
+ },
+ {
+  "id": 617,
+  "text": "The first part of it is called the file header."
+ },
+ {
+  "id": 618,
+  "text": "Inside this file header,"
+ },
+ {
+  "id": 619,
+  "text": "it contains some basic information about the ERF file."
+ },
+ {
+  "id": 620,
+  "text": "For example, this program —"
+ },
+ {
+  "id": 621,
+  "text": "which architecture is this file meant to run on?"
+ },
+ {
+  "id": 622,
+  "text": "Because as we know,"
+ },
+ {
+  "id": 623,
+  "text": "with different architectures,"
+ },
+ {
+  "id": 624,
+  "text": "the information inside this ELF,"
+ },
+ {
+  "id": 625,
+  "text": "it could be different."
+ },
+ {
+  "id": 626,
+  "text": "So it needs to, in this header,"
+ },
+ {
+  "id": 627,
+  "text": "interpret that information."
+ },
+ {
+  "id": 628,
+  "text": "This is the header."
+ },
+ {
+  "id": 629,
+  "text": "And then there's some version number information,"
+ },
+ {
+  "id": 630,
+  "text": "all in this place."
+ },
+ {
+  "id": 631,
+  "text": "Now, right after the ELF file header,"
+ },
+ {
+  "id": 632,
+  "text": "in the part below it,"
+ },
+ {
+  "id": 633,
+  "text": "there's something called"
+ },
+ {
+  "id": 634,
+  "text": "the Program Head Tail."
+ },
+ {
+  "id": 635,
+  "text": "We'll talk about this later."
+ },
+ {
+  "id": 636,
+  "text": "Let's first look at the main body in the middle,"
+ },
+ {
+  "id": 637,
+  "text": "which is the white part."
+ },
+ {
+  "id": 638,
+  "text": "This part,"
+ },
+ {
+  "id": 639,
+  "text": "it's a series of one after another..."
+ },
+ {
+  "id": 640,
+  "text": "We call it"
+ },
+ {
+  "id": 641,
+  "text": "a section"
+ },
+ {
+  "id": 642,
+  "text": "for example, this one of ours,"
+ },
+ {
+  "id": 643,
+  "text": "what's placed inside it is"
+ },
+ {
+  "id": 644,
+  "text": "different types of content."
+ },
+ {
+  "id": 645,
+  "text": "For example, .txt,"
+ },
+ {
+  "id": 646,
+  "text": "inside this one,"
+ },
+ {
+  "id": 647,
+  "text": "it holds a bunch of"
+ },
+ {
+  "id": 648,
+  "text": "program instructions —"
+ },
+ {
+  "id": 649,
+  "text": "that is, the executable program"
+ },
+ {
+  "id": 650,
+  "text": "is placed right here."
+ },
+ {
+  "id": 651,
+  "text": "init, well,"
+ },
+ {
+  "id": 652,
+  "text": "is probably used for"
+ },
+ {
+  "id": 653,
+  "text": "some initialization instructions."
+ },
+ {
+  "id": 654,
+  "text": "data, well,"
+ },
+ {
+  "id": 655,
+  "text": "probably holds some"
+ },
+ {
+  "id": 656,
+  "text": "data —"
+ },
+ {
+  "id": 657,
+  "text": "for instance, some of the things we"
+ },
+ {
+  "id": 658,
+  "text": "define in the program,"
+ },
+ {
+  "id": 659,
+  "text": "global variables."
+ },
+ {
+  "id": 660,
+  "text": "It's placed right here."
+ },
+ {
+  "id": 661,
+  "text": "These concepts."
+ },
+ {
+  "id": 662,
+  "text": "I don't know if everyone..."
+ },
+ {
+  "id": 663,
+  "text": "Whether there was a course earlier..."
+ },
+ {
+  "id": 664,
+  "text": "Whether this was covered..."
+ },
+ {
+  "id": 665,
+  "text": "Whether this was covered before..."
+ },
+ {
+  "id": 666,
+  "text": "This part of the content."
+ },
+ {
+  "id": 667,
+  "text": "It was covered, right?"
+ },
+ {
+  "id": 668,
+  "text": "If you've covered it..."
+ },
+ {
+  "id": 669,
+  "text": "It'll probably sound a bit easier to follow."
+ },
+ {
+  "id": 670,
+  "text": "For us here..."
+ },
+ {
+  "id": 671,
+  "text": "Since we're going through it quite fast..."
+ },
+ {
+  "id": 672,
+  "text": "So this..."
+ },
+ {
+  "id": 673,
+  "text": "So in this file of ours..."
+ },
+ {
+  "id": 674,
+  "text": "What sections are actually in it?"
+ },
+ {
+  "id": 675,
+  "text": "It's actually through..."
+ },
+ {
+  "id": 676,
+  "text": "The blue part at the end here..."
+ },
+ {
+  "id": 677,
+  "text": "which is called the section head table..."
+ },
+ {
+  "id": 678,
+  "text": "that it's described."
+ },
+ {
+  "id": 679,
+  "text": "As for my blue line here..."
+ },
+ {
+  "id": 680,
+  "text": "It basically expresses the idea that"
+ },
+ {
+  "id": 681,
+  "text": "if we look at"
+ },
+ {
+  "id": 682,
+  "text": "the section header table,"
+ },
+ {
+  "id": 683,
+  "text": "we can find out"
+ },
+ {
+  "id": 684,
+  "text": "what sections exist"
+ },
+ {
+  "id": 685,
+  "text": "in this file,"
+ },
+ {
+  "id": 686,
+  "text": "what each of these sections"
+ },
+ {
+  "id": 687,
+  "text": "means,"
+ },
+ {
+  "id": 688,
+  "text": "how big each of them is,"
+ },
+ {
+  "id": 689,
+  "text": "and where it is located."
+ },
+ {
+  "id": 690,
+  "text": "All of this is described in the section header table."
+ },
+ {
+  "id": 691,
+  "text": "So, we can think of it this way:"
+ },
+ {
+  "id": 692,
+  "text": "this section header table,"
+ },
+ {
+  "id": 693,
+  "text": "this part,"
+ },
+ {
+  "id": 694,
+  "text": "actually describes,"
+ },
+ {
+  "id": 695,
+  "text": "describes the contents of this file from a linking perspective,"
+ },
+ {
+  "id": 696,
+  "text": "because linking involves this part of the content."
+ },
+ {
+  "id": 697,
+  "text": "Now, these parts,"
+ },
+ {
+  "id": 698,
+  "text": "we call them sections one by one,"
+ },
+ {
+  "id": 699,
+  "text": "which is the concept of a section."
+ },
+ {
+  "id": 700,
+  "text": "In Chinese, we call it a section."
+ },
+ {
+  "id": 701,
+  "text": "OK, so now let's come back to"
+ },
+ {
+  "id": 702,
+  "text": "what we were just talking about,"
+ },
+ {
+  "id": 703,
+  "text": "this red part at the front,"
+ },
+ {
+  "id": 704,
+  "text": "which is the program header table."
+ },
+ {
+  "id": 705,
+  "text": "What information is it actually used to hold?"
+ },
+ {
+  "id": 706,
+  "text": "And why do we need to introduce"
+ },
+ {
+  "id": 707,
+  "text": "this program header table?"
+ },
+ {
+  "id": 708,
+  "text": "Well, it's actually a kind of..."
+ },
+ {
+  "id": 709,
+  "text": "what we call..."
+ },
+ {
+  "id": 710,
+  "text": "it actually describes a"
+ },
+ {
+  "id": 711,
+  "text": "concept called the run-time view."
+ },
+ {
+  "id": 712,
+  "text": "So what is the run-time view?"
+ },
+ {
+  "id": 713,
+  "text": "It means that when we..."
+ },
+ {
+  "id": 714,
+  "text": "the file we ultimately generate,"
+ },
+ {
+  "id": 715,
+  "text": "we know that this file,"
+ },
+ {
+  "id": 716,
+  "text": "let's say it's an executable file,"
+ },
+ {
+  "id": 717,
+  "text": "then this file,"
+ },
+ {
+  "id": 718,
+  "text": "when we finally run it,"
+ },
+ {
+  "id": 719,
+  "text": "it has to be loaded somewhere first, right?"
+ },
+ {
+  "id": 720,
+  "text": "loaded into memory"
+ },
+ {
+  "id": 721,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 722,
+  "text": "So during loading,"
+ },
+ {
+  "id": 723,
+  "text": "these sections,"
+ },
+ {
+  "id": 724,
+  "text": "if we don't distinguish between them"
+ },
+ {
+  "id": 725,
+  "text": "and just load them one by one,"
+ },
+ {
+  "id": 726,
+  "text": "that is, load each of them in separately,"
+ },
+ {
+  "id": 727,
+  "text": "that could introduce a problem."
+ },
+ {
+  "id": 728,
+  "text": "What problem?"
+ },
+ {
+  "id": 729,
+  "text": "Well, as we know, our operating system,"
+ },
+ {
+  "id": 730,
+  "text": "when loading these sections of ours,"
+ },
+ {
+  "id": 731,
+  "text": "in general,"
+ },
+ {
+  "id": 732,
+  "text": "will align them to a certain width."
+ },
+ {
+  "id": 733,
+  "text": "What does width alignment mean?"
+ },
+ {
+  "id": 734,
+  "text": "For example, if it aligns them at 4K,"
+ },
+ {
+  "id": 735,
+  "text": "then"
+ },
+ {
+  "id": 736,
+  "text": "that means,"
+ },
+ {
+  "id": 737,
+  "text": "say this .txt section,"
+ },
+ {
+  "id": 738,
+  "text": "say it takes up 40 bytes,"
+ },
+ {
+  "id": 739,
+  "text": "it will still occupy a 4K-sized region."
+ },
+ {
+  "id": 740,
+  "text": "for the rest of it,"
+ },
+ {
+  "id": 741,
+  "text": "it won't put anything else in there."
+ },
+ {
+  "id": 742,
+  "text": "Then the next section, say init,"
+ },
+ {
+  "id": 743,
+  "text": "it might have to start being laid out from the next 4K byte position."
+ },
+ {
+  "id": 744,
+  "text": "So think about it."
+ },
+ {
+  "id": 745,
+  "text": "So, you see,"
+ },
+ {
+  "id": 746,
+  "text": "in that case,"
+ },
+ {
+  "id": 747,
+  "text": "if we always do it this way,"
+ },
+ {
+  "id": 748,
+  "text": "then when these are put into memory,"
+ },
+ {
+  "id": 749,
+  "text": "even though my file is not big,"
+ },
+ {
+  "id": 750,
+  "text": "once it gets unpacked into memory,"
+ },
+ {
+  "id": 751,
+  "text": "it might take up a lot of memory."
+ },
+ {
+  "id": 752,
+  "text": "That's quite a waste."
+ },
+ {
+  "id": 753,
+  "text": "Do you all get what I mean?"
+ },
+ {
+  "id": 754,
+  "text": "So what do we do?"
+ },
+ {
+  "id": 755,
+  "text": "Well, when we actually load it into"
+ },
+ {
+  "id": 756,
+  "text": "memory to run it,"
+ },
+ {
+  "id": 757,
+  "text": "we actually take these sections"
+ },
+ {
+  "id": 758,
+  "text": "and merge them together,"
+ },
+ {
+  "id": 759,
+  "text": "and when we merge them,"
+ },
+ {
+  "id": 760,
+  "text": "these sections are merged based on their attributes"
+ },
+ {
+  "id": 761,
+  "text": "For example, we will see that"
+ },
+ {
+  "id": 762,
+  "text": "in both the text section and the init section,"
+ },
+ {
+  "id": 763,
+  "text": "what's stored is executable program instructions."
+ },
+ {
+  "id": 764,
+  "text": "So we can put them together."
+ },
+ {
+  "id": 765,
+  "text": "Think about it, doesn't that make sense?"
+ },
+ {
+  "id": 766,
+  "text": "So by putting them together,"
+ },
+ {
+  "id": 767,
+  "text": "we merge them."
+ },
+ {
+  "id": 768,
+  "text": "This curly brace means they are merged together."
+ },
+ {
+  "id": 769,
+  "text": "After merging them,"
+ },
+ {
+  "id": 770,
+  "text": "we call the result a"
+ },
+ {
+  "id": 771,
+  "text": "segment—that is, a segment."
+ },
+ {
+  "id": 772,
+  "text": "When we actually load it into memory,"
+ },
+ {
+  "id": 773,
+  "text": "the loading is done in units of segments."
+ },
+ {
+  "id": 774,
+  "text": "Each segment may contain one or more sections."
+ },
+ {
+  "id": 775,
+  "text": "The main purpose,"
+ },
+ {
+  "id": 776,
+  "text": "as I just mentioned, is to save memory."
+ },
+ {
+  "id": 777,
+  "text": "Otherwise, the wasted space in between would be far too large."
+ },
+ {
+  "id": 778,
+  "text": "So, that's why we"
+ },
+ {
+  "id": 779,
+  "text": "take this pro"
+ },
+ {
+  "id": 780,
+  "text": "Which of these sections go together"
+ },
+ {
+  "id": 781,
+  "text": "how big each of these grouped segments should be"
+ },
+ {
+  "id": 782,
+  "text": "how much space they take up"
+ },
+ {
+  "id": 783,
+  "text": "and exactly where they get loaded"
+ },
+ {
+  "id": 784,
+  "text": "The description of all this information"
+ },
+ {
+  "id": 785,
+  "text": "is all specified in the program head table"
+ },
+ {
+  "id": 786,
+  "text": "Now, in this table,"
+ },
+ {
+  "id": 787,
+  "text": "we call it the run view"
+ },
+ {
+  "id": 788,
+  "text": "and that's exactly what it means"
+ },
+ {
+  "id": 789,
+  "text": "It's because the information described in here"
+ },
+ {
+  "id": 790,
+  "text": "is only used at runtime"
+ },
+ {
+  "id": 791,
+  "text": "if you see what I mean"
+ },
+ {
+  "id": 792,
+  "text": "That's why it's called the run view"
+ },
+ {
+  "id": 793,
+  "text": "So, our entire ELF file"
+ },
+ {
+  "id": 794,
+  "text": "consists of these major parts"
+ },
+ {
+  "id": 795,
+  "text": "and they each have their own meaning"
+ },
+ {
+  "id": 796,
+  "text": "Now, things like segments and sections,"
+ },
+ {
+  "id": 797,
+  "text": "we'll run into them a lot later on"
+ },
+ {
+  "id": 798,
+  "text": "In particular, I think when you run programs,"
+ },
+ {
+  "id": 799,
+  "text": "you'll often run into the famous segment fault"
+ },
+ {
+  "id": 800,
+  "text": "Now you know why it's called a segment fault"
+ },
+ {
+  "id": 801,
+  "text": "instead of a section fault"
+ },
+ {
+  "id": 802,
+  "text": "Why is that?"
+ },
+ {
+  "id": 803,
+  "text": "Because when you get an error"
+ },
+ {
+  "id": 804,
+  "text": "a failure in memory"
+ },
+ {
+  "id": 805,
+  "text": "he understands what I mean"
+ },
+ {
+  "id": 806,
+  "text": "So this is"
+ },
+ {
+  "id": 807,
+  "text": "All of these things"
+ },
+ {
+  "id": 808,
+  "text": "come from these basic concepts"
+ },
+ {
+  "id": 809,
+  "text": "So"
+ },
+ {
+  "id": 810,
+  "text": "this is the"
+ },
+ {
+  "id": 811,
+  "text": "basic format of ELF"
+ },
+ {
+  "id": 812,
+  "text": "and it's a key focus of our study"
+ },
+ {
+  "id": 813,
+  "text": "As for more detailed content"
+ },
+ {
+  "id": 814,
+  "text": "you can probably go and check some reference books"
+ },
+ {
+  "id": 815,
+  "text": "Now these ELF file formats"
+ },
+ {
+  "id": 816,
+  "text": "when it comes to these files,"
+ },
+ {
+  "id": 817,
+  "text": "if you asked us to manually"
+ },
+ {
+  "id": 818,
+  "text": "analyze the contents ourselves"
+ },
+ {
+  "id": 819,
+  "text": "it would be extremely tedious"
+ },
+ {
+  "id": 820,
+  "text": "So GNU also provides"
+ },
+ {
+  "id": 821,
+  "text": "a matching set of related tool programs."
+ },
+ {
+  "id": 822,
+  "text": "And these tool programs"
+ },
+ {
+  "id": 823,
+  "text": "are all bundled together in one toolkit"
+ },
+ {
+  "id": 824,
+  "text": "called Binutils."
+ },
+ {
+  "id": 825,
+  "text": "It is actually"
+ },
+ {
+  "id": 826,
+  "text": "bin, b-i-n-u-t-i-l-s,"
+ },
+ {
+  "id": 827,
+  "text": "which is actually an abbreviation of two words."
+ },
+ {
+  "id": 828,
+  "text": "So \"bin\" stands for binary,"
+ },
+ {
+  "id": 829,
+  "text": "as we know, that means binary files,"
+ },
+ {
+  "id": 830,
+  "text": "right?"
+ },
+ {
+  "id": 831,
+  "text": "U-t-i-l-s stands for utilities,"
+ },
+ {
+  "id": 832,
+  "text": "meaning tools."
+ },
+ {
+  "id": 833,
+  "text": "So the full name of this software"
+ },
+ {
+  "id": 834,
+  "text": "is actually Binary Utilities,"
+ },
+ {
+  "id": 835,
+  "text": "that is, binary tool programs."
+ },
+ {
+  "id": 836,
+  "text": "Inside here is really a software toolkit,"
+ },
+ {
+  "id": 837,
+  "text": "which contains a lot of small programs."
+ },
+ {
+  "id": 838,
+  "text": "Each of these small programs has its own specific purpose,"
+ },
+ {
+  "id": 839,
+  "text": "and we will touch on them later."
+ },
+ {
+  "id": 840,
+  "text": "So let me also introduce to you here"
+ },
+ {
+  "id": 841,
+  "text": "some of the commonly used ones"
+ },
+ {
+  "id": 842,
+  "text": "For example, AR,"
+ },
+ {
+  "id": 843,
+  "text": "which we also often use, is called TAR,"
+ },
+ {
+  "id": 844,
+  "text": "which is actually pretty much the same as AR."
+ },
+ {
+  "id": 845,
+  "text": "Then archiving is just packaging,"
+ },
+ {
+  "id": 846,
+  "text": "it's packaging, right?"
+ },
+ {
+  "id": 847,
+  "text": "For example, when we want to generate a static library,"
+ },
+ {
+  "id": 848,
+  "text": "we need to use this little program AR."
+ },
+ {
+  "id": 849,
+  "text": "Then AS we talked about earlier,"
+ },
+ {
+  "id": 850,
+  "text": "AS and LD are actually in the binutils toolkit,"
+ },
+ {
+  "id": 851,
+  "text": "not inside the GCC installation."
+ },
+ {
+  "id": 852,
+  "text": "Please take note of this,"
+ },
+ {
+  "id": 853,
+  "text": "because GCC actually calls the ones in there indirectly afterwards."
+ },
+ {
+  "id": 854,
+  "text": "Then this OBJCOPY,"
+ },
+ {
+  "id": 855,
+  "text": "and OBJDUMP are used for file format conversion and displaying contents."
+ },
+ {
+  "id": 856,
+  "text": "We use OBJCOPY quite a lot,"
+ },
+ {
+  "id": 857,
+  "text": "and we will use this objdump extensively."
+ },
+ {
+  "id": 858,
+  "text": "As for readelf,"
+ },
+ {
+  "id": 859,
+  "text": "it will also be used quite a bit."
+ },
+ {
+  "id": 860,
+  "text": "What it does is let us look at an ELF file"
+ },
+ {
+  "id": 861,
+  "text": "whether it's a .o file"
+ },
+ {
+  "id": 862,
+  "text": "or a .out file"
+ },
+ {
+  "id": 863,
+  "text": "To see the detailed information inside it"
+ },
+ {
+  "id": 864,
+  "text": "we use this program to look at it"
+ },
+ {
+  "id": 865,
+  "text": "Later we can show you a demo"
+ },
+ {
+  "id": 866,
+  "text": "of some basic uses of these tools"
+ },
+ {
+  "id": 867,
+  "text": "Let us show you"
+ },
+ {
+  "id": 868,
+  "text": "the basic usage of this one"
+ },
+ {
+  "id": 869,
+  "text": "And perhaps along the way"
+ },
+ {
+  "id": 870,
+  "text": "we can walk you through a small exercise"
+ },
+ {
+  "id": 871,
+  "text": "You can take a look"
+ },
+ {
+  "id": 872,
+  "text": "In the code that you downloaded"
+ },
+ {
+  "id": 873,
+  "text": "there is an exercise"
+ },
+ {
+  "id": 874,
+  "text": "including when we assign homework later"
+ },
+ {
+  "id": 875,
+  "text": "it will all be in this exercise"
+ },
+ {
+  "id": 876,
+  "text": "Under the slides directory"
+ },
+ {
+  "id": 877,
+  "text": "Under this slides directory"
+ },
+ {
+  "id": 878,
+  "text": "there is one called exercises"
+ },
+ {
+  "id": 879,
+  "text": "the exercises PDF"
+ },
+ {
+  "id": 880,
+  "text": "You can go ahead and open it and take a look."
+ },
+ {
+  "id": 881,
+  "text": "The exercises for our corresponding chapters"
+ },
+ {
+  "id": 882,
+  "text": "are right down here."
+ },
+ {
+  "id": 883,
+  "text": "It's a PDF file."
+ },
+ {
+  "id": 884,
+  "text": "For example, in Chapter 3,"
+ },
+ {
+  "id": 885,
+  "text": "there are some exercises over here."
+ },
+ {
+  "id": 886,
+  "text": "So now let's go through them together,"
+ },
+ {
+  "id": 887,
+  "text": "and do a quick run-through of Exercise 3.1."
+ },
+ {
+  "id": 888,
+  "text": "So let's"
+ },
+ {
+  "id": 889,
+  "text": "basically get familiar"
+ },
+ {
+  "id": 890,
+  "text": "with using these tools."
+ },
+ {
+  "id": 891,
+  "text": "So first, let's"
+ },
+ {
+  "id": 892,
+  "text": "write a simple"
+ },
+ {
+  "id": 893,
+  "text": "program file that prints hello."
+ },
+ {
+  "id": 894,
+  "text": "I think I've already written this one."
+ },
+ {
+  "id": 895,
+  "text": "I'll just put it right there."
+ },
+ {
+  "id": 896,
+  "text": "And then,"
+ },
+ {
+  "id": 897,
+  "text": "if we want to natively compile the source file,"
+ },
+ {
+  "id": 898,
+  "text": "to generate an object file targeting x86 instructions,"
+ },
+ {
+  "id": 899,
+  "text": "well, what do we mean by native compilation?"
+ },
+ {
+  "id": 900,
+  "text": "We'll come back to that later."
+ },
+ {
+  "id": 901,
+  "text": "For now, let's not worry about it."
+ },
+ {
+  "id": 902,
+  "text": "Anyway, we know that"
+ },
+ {
+  "id": 903,
+  "text": "at least for now, if you haven't done much"
+ },
+ {
+  "id": 904,
+  "text": "embedded development,"
+ },
+ {
+  "id": 905,
+  "text": "you've probably just run GCC locally."
+ },
+ {
+  "id": 906,
+  "text": "Now, that's called native compilation."
+ },
+ {
+  "id": 907,
+  "text": "So if we want to do native compilation,"
+ },
+ {
+  "id": 908,
+  "text": "we know that if we're going to do native compilation,"
+ },
+ {
+  "id": 909,
+  "text": "how do we actually do it?"
+ },
+ {
+  "id": 910,
+  "text": "Based on the concepts we covered earlier,"
+ },
+ {
+  "id": 911,
+  "text": "let me close this first."
+ },
+ {
+  "id": 912,
+  "text": "Don't save."
+ },
+ {
+  "id": 913,
+  "text": "So, I now have this hello.c here."
+ },
+ {
+  "id": 914,
+  "text": "Now I want to..."
+ },
+ {
+  "id": 915,
+  "text": "What we're going to do now is,"
+ },
+ {
+  "id": 916,
+  "text": "let's all follow along and get familiar with the process together."
+ },
+ {
+  "id": 917,
+  "text": "If you want to do a local build to generate"
+ },
+ {
+  "id": 918,
+  "text": "the object file for it,"
+ },
+ {
+  "id": 919,
+  "text": "what does it tell us if we want to generate an object file?"
+ },
+ {
+  "id": 920,
+  "text": "We just compile"
+ },
+ {
+  "id": 921,
+  "text": "but don't link, right?"
+ },
+ {
+  "id": 922,
+  "text": "So how should we do that?"
+ },
+ {
+  "id": 923,
+  "text": "Don't we just run gcc -c"
+ },
+ {
+  "id": 924,
+  "text": "hello.c and that's it?"
+ },
+ {
+  "id": 925,
+  "text": "Isn't that right?"
+ },
+ {
+  "id": 926,
+  "text": "Once you hit enter,"
+ },
+ {
+  "id": 927,
+  "text": "by default it generates a .o file with the same name."
+ },
+ {
+  "id": 928,
+  "text": "Of course, you can also specify the one you generate."
+ },
+ {
+  "id": 929,
+  "text": "If we write it out in full, it should look like this."
+ },
+ {
+  "id": 930,
+  "text": "Right?"
+ },
+ {
+  "id": 931,
+  "text": "Of course, you can leave it out too."
+ },
+ {
+  "id": 932,
+  "text": "If you leave it out,"
+ },
+ {
+  "id": 933,
+  "text": "it defaults to the same name."
+ },
+ {
+  "id": 934,
+  "text": "If you want to change the name,"
+ },
+ {
+  "id": 935,
+  "text": "say you insist on calling it hh.o,"
+ },
+ {
+  "id": 936,
+  "text": "then you write it like this."
+ },
+ {
+  "id": 937,
+  "text": "Isn't that right?"
+ },
+ {
+  "id": 938,
+  "text": "I won't write this out."
+ },
+ {
+  "id": 939,
+  "text": "So this way,"
+ },
+ {
+  "id": 940,
+  "text": "we've generated a hello.o"
+ },
+ {
+  "id": 941,
+  "text": "Now, as we know, what's contained in this hello.o"
+ },
+ {
+  "id": 942,
+  "text": "is definitely all machine instructions,"
+ },
+ {
+  "id": 943,
+  "text": "right?"
+ },
+ {
+  "id": 944,
+  "text": "So let's say we now want to"
+ },
+ {
+  "id": 945,
+  "text": "do what?"
+ },
+ {
+  "id": 946,
+  "text": "The next step is"
+ },
+ {
+  "id": 947,
+  "text": "for us to look at the file header information of hello.o."
+ },
+ {
+  "id": 948,
+  "text": "What do I mean by file header information?"
+ },
+ {
+  "id": 949,
+  "text": "It's what we just looked at,"
+ },
+ {
+  "id": 950,
+  "text": "the green-colored part,"
+ },
+ {
+  "id": 951,
+  "text": "meaning we look at this part of the content."
+ },
+ {
+  "id": 952,
+  "text": "What method should we use to look at it?"
+ },
+ {
+  "id": 953,
+  "text": "If I asked you to look at it,"
+ },
+ {
+  "id": 954,
+  "text": "can anyone tell me?"
+ },
+ {
+  "id": 955,
+  "text": "Are you still familiar with this part?"
+ },
+ {
+  "id": 956,
+  "text": "I don't have your name list here."
+ },
+ {
+  "id": 957,
+  "text": "As for the name list,"
+ },
+ {
+  "id": 958,
+  "text": "next time I'll ask you for a name list,"
+ },
+ {
+  "id": 959,
+  "text": "so that I can call you by name."
+ },
+ {
+  "id": 960,
+  "text": "Can anyone step up and tell me bravely?"
+ },
+ {
+  "id": 961,
+  "text": "It's very simple."
+ },
+ {
+  "id": 962,
+  "text": "Which tool would you normally use to look at it?"
+ },
+ {
+  "id": 963,
+  "text": "Some of you are saying objdump, right?"
+ },
+ {
+  "id": 964,
+  "text": "Actually, using objdump..."
+ },
+ {
+  "id": 965,
+  "text": "they still don't use readelf,"
+ },
+ {
+  "id": 966,
+  "text": "because the name readelf is too... readelf-y,"
+ },
+ {
+  "id": 967,
+  "text": "it's read-elf,"
+ },
+ {
+  "id": 968,
+  "text": "it just means to read it, right?"
+ },
+ {
+  "id": 969,
+  "text": "Everyone, go ahead and give it a try."
+ },
+ {
+  "id": 970,
+  "text": "Actually, readelf's viewing capability"
+ },
+ {
+  "id": 971,
+  "text": "is a bit stronger than objdump's."
+ },
+ {
+  "id": 972,
+  "text": "Otherwise,"
+ },
+ {
+  "id": 973,
+  "text": "why would we have objdump"
+ },
+ {
+  "id": 974,
+  "text": "and then make another readelf?"
+ },
+ {
+  "id": 975,
+  "text": "Now, with this readelf,"
+ },
+ {
+  "id": 976,
+  "text": "we want to look at the header."
+ },
+ {
+  "id": 977,
+  "text": "For the header,"
+ },
+ {
+  "id": 978,
+  "text": "if you're not familiar with it,"
+ },
+ {
+  "id": 979,
+  "text": "you can also use the man pages."
+ },
+ {
+  "id": 980,
+  "text": "take a look at this thing"
+ },
+ {
+  "id": 981,
+  "text": "there will definitely be"
+ },
+ {
+  "id": 982,
+  "text": "detailed content introduced on there"
+ },
+ {
+  "id": 983,
+  "text": "so I won't walk you through it here"
+ },
+ {
+  "id": 984,
+  "text": "then reader1lf"
+ },
+ {
+  "id": 985,
+  "text": "followed by -h"
+ },
+ {
+  "id": 986,
+  "text": "h stands for head"
+ },
+ {
+  "id": 987,
+  "text": "it's an abbreviation, right?"
+ },
+ {
+  "id": 988,
+  "text": "here it doesn't mean help"
+ },
+ {
+  "id": 989,
+  "text": "then we follow it with hello.o"
+ },
+ {
+  "id": 990,
+  "text": "and you see this header"
+ },
+ {
+  "id": 991,
+  "text": "all the information inside gets printed out"
+ },
+ {
+  "id": 992,
+  "text": "but if you just go and"
+ },
+ {
+  "id": 993,
+  "text": "use vi to look at hello.o"
+ },
+ {
+  "id": 994,
+  "text": "you'll see a bunch of garbage characters in there"
+ },
+ {
+  "id": 995,
+  "text": "you won't be able to make sense of what's inside"
+ },
+ {
+  "id": 996,
+  "text": "you all know that, right?"
+ },
+ {
+  "id": 997,
+  "text": "so we definitely have to use this tool to look at it"
+ },
+ {
+  "id": 998,
+  "text": "now in here, as you can see"
+ },
+ {
+  "id": 999,
+  "text": "it tells us some information"
+ },
+ {
+  "id": 1000,
+  "text": "First up is magic."
+ },
+ {
+  "id": 1001,
+  "text": "Magic is called magic number."
+ },
+ {
+  "id": 1002,
+  "text": "This magic number,"
+ },
+ {
+  "id": 1003,
+  "text": "honestly, it's not of much use."
+ },
+ {
+  "id": 1004,
+  "text": "Its main purpose is just to"
+ },
+ {
+  "id": 1005,
+  "text": "basically,"
+ },
+ {
+  "id": 1006,
+  "text": "give this ELF file,"
+ },
+ {
+  "id": 1007,
+  "text": "give it a special marker"
+ },
+ {
+  "id": 1008,
+  "text": "to distinguish it from other files."
+ },
+ {
+  "id": 1009,
+  "text": "It doesn't really carry much meaning."
+ },
+ {
+  "id": 1010,
+  "text": "It's not very meaningful to us."
+ },
+ {
+  "id": 1011,
+  "text": "Then class tells us the file type."
+ },
+ {
+  "id": 1012,
+  "text": "We can see it's"
+ },
+ {
+  "id": 1013,
+  "text": "ELF 64-bit,"
+ },
+ {
+  "id": 1014,
+  "text": "which means it's a 64-bit file."
+ },
+ {
+  "id": 1015,
+  "text": "I won't go into the rest in detail."
+ },
+ {
+  "id": 1016,
+  "text": "As you can see, it gives a lot of information inside."
+ },
+ {
+  "id": 1017,
+  "text": "Now for our next step,"
+ },
+ {
+  "id": 1018,
+  "text": "we want to take a look at its section header table."
+ },
+ {
+  "id": 1019,
+  "text": "What is a section header table?"
+ },
+ {
+  "id": 1020,
+  "text": "That is, this part in blue,"
+ },
+ {
+  "id": 1021,
+  "text": "this blue part,"
+ },
+ {
+  "id": 1022,
+  "text": "we know what kind of information it describes."
+ },
+ {
+  "id": 1023,
+  "text": "It's a link view,"
+ },
+ {
+  "id": 1024,
+  "text": "describing what's used for linking."
+ },
+ {
+  "id": 1025,
+  "text": "When doing local linking,"
+ },
+ {
+  "id": 1026,
+  "text": "how many sections are there inside,"
+ },
+ {
+  "id": 1027,
+  "text": "right?"
+ },
+ {
+  "id": 1028,
+  "text": "What is each section called,"
+ },
+ {
+  "id": 1029,
+  "text": "and where are these sections located?"
+ },
+ {
+  "id": 1030,
+  "text": "It's basically that kind of stuff."
+ },
+ {
+  "id": 1031,
+  "text": "So how do we look at this linking,"
+ },
+ {
+  "id": 1032,
+  "text": "the linking?"
+ },
+ {
+  "id": 1033,
+  "text": "Well, we have a..."
+ },
+ {
+  "id": 1034,
+  "text": "let me clear this first."
+ },
+ {
+  "id": 1035,
+  "text": "S just stands for section."
+ },
+ {
+  "id": 1036,
+  "text": "You see, it's just a bunch of stuff like this."
+ },
+ {
+  "id": 1037,
+  "text": "But when you look at it this way,"
+ },
+ {
+  "id": 1038,
+  "text": "it's rather hard to read,"
+ },
+ {
+  "id": 1039,
+  "text": "because it wraps a line over."
+ },
+ {
+  "id": 1040,
+  "text": "It makes sure the overall width isn't too wide."
+ },
+ {
+  "id": 1041,
+  "text": "Now sometimes this looks a bit uncomfortable to us."
+ },
+ {
+  "id": 1042,
+  "text": "So we can add one over here."
+ },
+ {
+  "id": 1043,
+  "text": "Add a W."
+ },
+ {
+  "id": 1044,
+  "text": "And then it looks comfortable."
+ },
+ {
+  "id": 1045,
+  "text": "It's actually the same thing."
+ },
+ {
+  "id": 1046,
+  "text": "It's really just making it wider."
+ },
+ {
+  "id": 1047,
+  "text": "W just means wide."
+ },
+ {
+  "id": 1048,
+  "text": "Now you can see,"
+ },
+ {
+  "id": 1049,
+  "text": "what it actually lets you see is,"
+ },
+ {
+  "id": 1050,
+  "text": "you can see, in our entire file,"
+ },
+ {
+  "id": 1051,
+  "text": "how many sections there are."
+ },
+ {
+  "id": 1052,
+  "text": "Sections with text."
+ },
+ {
+  "id": 1053,
+  "text": "Over here is the section name."
+ },
+ {
+  "id": 1054,
+  "text": "The section number."
+ },
+ {
+  "id": 1055,
+  "text": "And then the section type."
+ },
+ {
+  "id": 1056,
+  "text": "It will tell you what these sections are."
+ },
+ {
+  "id": 1057,
+  "text": "For example, this thing,"
+ },
+ {
+  "id": 1058,
+  "text": "it says PROG."
+ },
+ {
+  "id": 1059,
+  "text": "It's actually PROGBITS."
+ },
+ {
+  "id": 1060,
+  "text": "That is, programmed bits."
+ },
+ {
+  "id": 1061,
+  "text": "Which basically means it is an executable program."
+ },
+ {
+  "id": 1062,
+  "text": "That is actually what it means."
+ },
+ {
+  "id": 1063,
+  "text": "And this is the relocatable stuff."
+ },
+ {
+  "id": 1064,
+  "text": "If any of you are interested, you can go take a look."
+ },
+ {
+  "id": 1065,
+  "text": "I won't say more about it."
+ },
+ {
+  "id": 1066,
+  "text": "Then there are some address information inside it,"
+ },
+ {
+  "id": 1067,
+  "text": "the size,"
+ },
+ {
+  "id": 1068,
+  "text": "and some flags inside to mark"
+ },
+ {
+  "id": 1069,
+  "text": "some special purposes of these sections."
+ },
+ {
+  "id": 1070,
+  "text": "So we can take a look at that."
+ },
+ {
+  "id": 1071,
+  "text": "Then we can also"
+ },
+ {
+  "id": 1072,
+  "text": "and then,"
+ },
+ {
+  "id": 1073,
+  "text": "finally,"
+ },
+ {
+  "id": 1074,
+  "text": "let's do a quick exercise."
+ },
+ {
+  "id": 1075,
+  "text": "For example, suppose we want to look at the disassembly."
+ },
+ {
+  "id": 1076,
+  "text": "Suppose we want to look at,"
+ },
+ {
+  "id": 1077,
+  "text": "because there might be some scenarios,"
+ },
+ {
+  "id": 1078,
+  "text": "for instance, when you are programming,"
+ },
+ {
+  "id": 1079,
+  "text": "you only have an executable program in hand."
+ },
+ {
+  "id": 1080,
+  "text": "But if you want to know"
+ },
+ {
+  "id": 1081,
+  "text": "what exactly is going on inside this,"
+ },
+ {
+  "id": 1082,
+  "text": "then in fact,"
+ },
+ {
+  "id": 1083,
+  "text": "if you can get the source code,"
+ },
+ {
+  "id": 1084,
+  "text": "you can see very clearly"
+ },
+ {
+  "id": 1085,
+  "text": "how it works."
+ },
+ {
+  "id": 1086,
+  "text": "Of course, if you can't get the source code,"
+ },
+ {
+  "id": 1087,
+  "text": "you only have the assembly,"
+ },
+ {
+  "id": 1088,
+  "text": "then you just have to look at the assembly."
+ },
+ {
+  "id": 1089,
+  "text": "Right?"
+ },
+ {
+  "id": 1090,
+  "text": "Reading assembly is pretty painful."
+ },
+ {
+  "id": 1091,
+  "text": "But if you can get the source code,"
+ },
+ {
+  "id": 1092,
+  "text": "we'll be able to see the correspondence between the assembly and the C code,"
+ },
+ {
+  "id": 1093,
+  "text": "and that's much better."
+ },
+ {
+  "id": 1094,
+  "text": "So if we want to disassemble it,"
+ },
+ {
+  "id": 1095,
+  "text": "first we need to be able to take that program"
+ },
+ {
+  "id": 1096,
+  "text": "and add a -g flag to it."
+ },
+ {
+  "id": 1097,
+  "text": "Let's delete this hello first,"
+ },
+ {
+  "id": 1098,
+  "text": "because this one doesn't have debug information."
+ },
+ {
+  "id": 1099,
+  "text": "So we need to add a -g to this."
+ },
+ {
+  "id": 1100,
+  "text": "I wrote that wrong."
+ },
+ {
+  "id": 1101,
+  "text": "The key thing is that we need to put a flag here, and that's it."
+ },
+ {
+  "id": 1102,
+  "text": "That way it includes the debug information."
+ },
+ {
+  "id": 1103,
+  "text": "So compiling this is still the same as before."
+ },
+ {
+  "id": 1104,
+  "text": "Now, what we want to look at next is,"
+ },
+ {
+  "id": 1105,
+  "text": "to look at the return value,"
+ },
+ {
+  "id": 1106,
+  "text": "we'll use the objdump command."
+ },
+ {
+  "id": 1107,
+  "text": "So for this objdump command,"
+ },
+ {
+  "id": 1108,
+  "text": "we pass it a -s and then"
+ },
+ {
+  "id": 1109,
+  "text": "for the .o file,"
+ },
+ {
+  "id": 1110,
+  "text": "you probably still want to"
+ },
+ {
+  "id": 1111,
+  "text": "just press Enter first, it might be too long."
+ },
+ {
+  "id": 1112,
+  "text": "It can show you"
+ },
+ {
+  "id": 1113,
+  "text": "as you can see,"
+ },
+ {
+  "id": 1114,
+  "text": "in this case, it will actually show"
+ },
+ {
+  "id": 1115,
+  "text": "its binary,"
+ },
+ {
+  "id": 1116,
+  "text": "over here is the return value, it writes out"
+ },
+ {
+  "id": 1117,
+  "text": "the corresponding assembly instructions."
+ },
+ {
+  "id": 1118,
+  "text": "On the right side here, those are actually the assembly instructions."
+ },
+ {
+  "id": 1119,
+  "text": "At the same time,"
+ },
+ {
+  "id": 1120,
+  "text": "and with -s, we can still"
+ },
+ {
+  "id": 1121,
+  "text": "because if we get the source code,"
+ },
+ {
+  "id": 1122,
+  "text": "we can actually map the source code correspondence"
+ },
+ {
+  "id": 1123,
+  "text": "and get it"
+ },
+ {
+  "id": 1124,
+  "text": "that is, essentially, these two statements below,"
+ },
+ {
+  "id": 1125,
+  "text": "they are actually"
+ },
+ {
+  "id": 1126,
+  "text": "corresponding to this printf statement,"
+ },
+ {
+  "id": 1127,
+  "text": "and on the right are its assembly instructions,"
+ },
+ {
+  "id": 1128,
+  "text": "right?"
+ },
+ {
+  "id": 1129,
+  "text": "So this is to say,"
+ },
+ {
+  "id": 1130,
+  "text": "I'll just give you a brief demonstration of these,"
+ },
+ {
+  "id": 1131,
+  "text": "so you get a feel for how these binary tools are used."
+ },
+ {
+  "id": 1132,
+  "text": "Now, as for compilation and linking,"
+ },
+ {
+  "id": 1133,
+  "text": "we went through that a bit quickly."
+ },
+ {
+  "id": 1134,
+  "text": "But if you really learn compilation and linking well,"
+ },
+ {
+  "id": 1135,
+  "text": "there are actually a lot of benefits."
+ },
+ {
+  "id": 1136,
+  "text": "I won't go on and on about it here."
+ },
+ {
+  "id": 1137,
+  "text": "If you have a bit of programming experience,"
+ },
+ {
+  "id": 1138,
+  "text": "you should already appreciate that."
+ },
+ {
+  "id": 1139,
+  "text": "That is to say, these things"
+ },
+ {
+  "id": 1140,
+  "text": "Although we don't cover it much in this course"
+ },
+ {
+  "id": 1141,
+  "text": "and including at some schools, the coursework"
+ },
+ {
+  "id": 1142,
+  "text": "doesn't go into this area much either,"
+ },
+ {
+  "id": 1143,
+  "text": "but in actual work,"
+ },
+ {
+  "id": 1144,
+  "text": "understanding ELF and the concepts around compilation and linking"
+ },
+ {
+  "id": 1145,
+  "text": "is really a huge help when it comes to debugging your programs"
+ },
+ {
+  "id": 1146,
+  "text": "and optimizing your programs."
+ },
+ {
+  "id": 1147,
+  "text": "It genuinely makes a big difference."
+ },
+ {
+  "id": 1148,
+  "text": "It also helps a lot with writing programs that are stronger"
+ },
+ {
+  "id": 1149,
+  "text": "more robust,"
+ },
+ {
+  "id": 1150,
+  "text": "and more resilient."
+ },
+ {
+  "id": 1151,
+  "text": "It's really quite useful for that too."
+ },
+ {
+  "id": 1152,
+  "text": "So that's it for compilation and linking"
+ },
+ {
+  "id": 1153,
+  "text": "— we've covered it quickly for now."
+ }
+]

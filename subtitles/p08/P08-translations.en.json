@@ -1,0 +1,5718 @@
+[
+ {
+  "id": 0,
+  "text": "Now let's move on to the second part of these assembly instructions, the instruction overview."
+ },
+ {
+  "id": 1,
+  "text": "Your class is 45 minutes long, right?"
+ },
+ {
+  "id": 2,
+  "text": "Let me check, since we ran a bit over earlier, we'll cover a bit first, and we'll try to let everyone take a break around the 45-minute mark."
+ },
+ {
+  "id": 3,
+  "text": "So let's take a look at this overview of assembly instructions — that is, an overview of RISC-V assembly instructions."
+ },
+ {
+  "id": 4,
+  "text": "Now, when we talk about assembly instructions,"
+ },
+ {
+  "id": 5,
+  "text": "first we need to understand"
+ },
+ {
+  "id": 6,
+  "text": "the concept of the objects that assembly instructions operate on."
+ },
+ {
+  "id": 7,
+  "text": "This is actually a bit similar to what we discussed earlier."
+ },
+ {
+  "id": 8,
+  "text": "Remember in our first class,"
+ },
+ {
+  "id": 9,
+  "text": "when we were designing our own set of assembly instructions,"
+ },
+ {
+  "id": 10,
+  "text": "we also talked about the concept of an operand."
+ },
+ {
+  "id": 11,
+  "text": "That is what's called OPERAND."
+ },
+ {
+  "id": 12,
+  "text": "The idea of OPCODE and OPERAND."
+ },
+ {
+  "id": 13,
+  "text": "What we're talking about here is the OPERAND concept."
+ },
+ {
+  "id": 14,
+  "text": "Now, these operands,"
+ },
+ {
+  "id": 15,
+  "text": "we can divide them into two main categories."
+ },
+ {
+  "id": 16,
+  "text": "Two main categories."
+ },
+ {
+  "id": 17,
+  "text": "The first category is registers."
+ },
+ {
+  "id": 18,
+  "text": "Because as we know, the basic objects operated on in these instructions"
+ },
+ {
+  "id": 19,
+  "text": "are really the most fundamental ones: registers."
+ },
+ {
+  "id": 20,
+  "text": "Right?"
+ },
+ {
+  "id": 21,
+  "text": "So, on this point,"
+ },
+ {
+  "id": 22,
+  "text": "we"
+ },
+ {
+  "id": 23,
+  "text": "please note, because we"
+ },
+ {
+  "id": 24,
+  "text": "in this lecture,"
+ },
+ {
+  "id": 25,
+  "text": "we've also noted here,"
+ },
+ {
+  "id": 26,
+  "text": "that for this course,"
+ },
+ {
+  "id": 27,
+  "text": "this part"
+ },
+ {
+  "id": 28,
+  "text": "will mainly only cover"
+ },
+ {
+  "id": 29,
+  "text": "the general-purpose registers of RV32i."
+ },
+ {
+  "id": 30,
+  "text": "That is, there are actually other registers too,"
+ },
+ {
+  "id": 31,
+  "text": "but since we have limited time,"
+ },
+ {
+  "id": 32,
+  "text": "we can't go into all of them."
+ },
+ {
+  "id": 33,
+  "text": "Later on, we may also use some"
+ },
+ {
+  "id": 34,
+  "text": "registers for privileged instructions."
+ },
+ {
+  "id": 35,
+  "text": "When we use them later,"
+ },
+ {
+  "id": 36,
+  "text": "we'll cover them then."
+ },
+ {
+  "id": 37,
+  "text": "Here we only talk about RB32i."
+ },
+ {
+  "id": 38,
+  "text": "Recall this concept,"
+ },
+ {
+  "id": 39,
+  "text": "which was covered in the last two lectures."
+ },
+ {
+  "id": 40,
+  "text": "What does RV32i mean?"
+ },
+ {
+  "id": 41,
+  "text": "We're professionals now."
+ },
+ {
+  "id": 42,
+  "text": "I can't keep treating you like"
+ },
+ {
+  "id": 43,
+  "text": "beginners who know nothing"
+ },
+ {
+  "id": 44,
+  "text": "when we discuss these topics."
+ },
+ {
+  "id": 45,
+  "text": "From now on, when I mention RV32i,"
+ },
+ {
+  "id": 46,
+  "text": "I won't explain it."
+ },
+ {
+  "id": 47,
+  "text": "The moment you see RV32i,"
+ },
+ {
+  "id": 48,
+  "text": "you should know what it is."
+ },
+ {
+  "id": 49,
+  "text": "It's the 32-bit RISC-V machine's"
+ },
+ {
+  "id": 50,
+  "text": "integer instruction set."
+ },
+ {
+  "id": 51,
+  "text": "Do you follow what I mean?"
+ },
+ {
+  "id": 52,
+  "text": "Because as we covered before,"
+ },
+ {
+  "id": 53,
+  "text": "the design of this RISC-V instruction set"
+ },
+ {
+  "id": 54,
+  "text": "is based on a modular concept."
+ },
+ {
+  "id": 55,
+  "text": "Remember that?"
+ },
+ {
+  "id": 56,
+  "text": "Each letter stands for one module of the instruction set."
+ },
+ {
+  "id": 57,
+  "text": "We're only focusing on this part here,"
+ },
+ {
+  "id": 58,
+  "text": "because this is the base instruction set,"
+ },
+ {
+  "id": 59,
+  "text": "and the integer instruction set is that base instruction set."
+ },
+ {
+  "id": 60,
+  "text": "That is to say, once you understand these instruction sets,"
+ },
+ {
+  "id": 61,
+  "text": "basically, for ordinary programs,"
+ },
+ {
+  "id": 62,
+  "text": "you should be able to read and understand them."
+ },
+ {
+  "id": 63,
+  "text": "So let's keep this point in mind."
+ },
+ {
+  "id": 64,
+  "text": "Now, for this integer instruction set,"
+ },
+ {
+  "id": 65,
+  "text": "it defines 32 general-purpose registers,"
+ },
+ {
+  "id": 66,
+  "text": "named X0 to X31,"
+ },
+ {
+  "id": 67,
+  "text": "with numbering assigned to them."
+ },
+ {
+  "id": 68,
+  "text": "As we go through these things,"
+ },
+ {
+  "id": 69,
+  "text": "we should take a look at this,"
+ },
+ {
+  "id": 70,
+  "text": "and I'll walk you through the manual."
+ },
+ {
+  "id": 71,
+  "text": "Because later, when you actually go out to work,"
+ },
+ {
+  "id": 72,
+  "text": "knowing how to look things up in a manual is one of the most basic skills."
+ },
+ {
+  "id": 73,
+  "text": "This is a skill,"
+ },
+ {
+  "id": 74,
+  "text": "not really special knowledge."
+ },
+ {
+  "id": 75,
+  "text": "No matter which manual you need to consult,"
+ },
+ {
+  "id": 76,
+  "text": "you really have to know how to look things up."
+ },
+ {
+  "id": 77,
+  "text": "You need to have this yourself; when what you get in school,"
+ },
+ {
+  "id": 78,
+  "text": "may no longer be enough to meet everyone's needs,"
+ },
+ {
+  "id": 79,
+  "text": "then everyone has to master this skill on their own."
+ },
+ {
+  "id": 80,
+  "text": "you can learn on your own"
+ },
+ {
+  "id": 81,
+  "text": "Now, as for this manual,"
+ },
+ {
+  "id": 82,
+  "text": "as we just mentioned,"
+ },
+ {
+  "id": 83,
+  "text": "there's this thing called"
+ },
+ {
+  "id": 84,
+  "text": "everyone can follow along"
+ },
+ {
+  "id": 85,
+  "text": "and take a look at it together with me"
+ },
+ {
+  "id": 86,
+  "text": "under the reference directory,"
+ },
+ {
+  "id": 87,
+  "text": "under this reference directory,"
+ },
+ {
+  "id": 88,
+  "text": "there is one called"
+ },
+ {
+  "id": 89,
+  "text": "Risk 5 Spec 2019-1213."
+ },
+ {
+  "id": 90,
+  "text": "This is currently the latest"
+ },
+ {
+  "id": 91,
+  "text": "unprivileged instruction set for Risk 5."
+ },
+ {
+  "id": 92,
+  "text": "As we mentioned earlier,"
+ },
+ {
+  "id": 93,
+  "text": "its instruction set is split into two volumes,"
+ },
+ {
+  "id": 94,
+  "text": "one is the unprivileged instruction set,"
+ },
+ {
+  "id": 95,
+  "text": "and the other is the privileged instruction set."
+ },
+ {
+  "id": 96,
+  "text": "The privileged instruction set"
+ },
+ {
+  "id": 97,
+  "text": "will come up a lot later when we develop the operating system,"
+ },
+ {
+  "id": 98,
+  "text": "we'll be dealing with it extensively,"
+ },
+ {
+  "id": 99,
+  "text": "and we'll go through it together then."
+ },
+ {
+  "id": 100,
+  "text": "Let's open this instruction set first"
+ },
+ {
+  "id": 101,
+  "text": "Let's open it with that one"
+ },
+ {
+  "id": 102,
+  "text": "Opening this one might look a bit uncomfortable"
+ },
+ {
+  "id": 103,
+  "text": "You can all take a look at this"
+ },
+ {
+  "id": 104,
+  "text": "This spec is"
+ },
+ {
+  "id": 105,
+  "text": "What we'll spend a lot of time studying in this class and later on"
+ },
+ {
+  "id": 106,
+  "text": "this"
+ },
+ {
+  "id": 107,
+  "text": "We'll spend a lot of time studying it"
+ },
+ {
+  "id": 108,
+  "text": "a spec"
+ },
+ {
+  "id": 109,
+  "text": "So this spec,"
+ },
+ {
+  "id": 110,
+  "text": "it's Volume 1,"
+ },
+ {
+  "id": 111,
+  "text": "unprivileged RSA"
+ },
+ {
+  "id": 112,
+  "text": "We've already covered the concept of RSA,"
+ },
+ {
+  "id": 113,
+  "text": "right?"
+ },
+ {
+  "id": 114,
+  "text": "So"
+ },
+ {
+  "id": 115,
+  "text": "the thing I just talked about,"
+ },
+ {
+  "id": 116,
+  "text": "the concept of registers,"
+ },
+ {
+  "id": 117,
+  "text": "you can look up in many places."
+ },
+ {
+  "id": 118,
+  "text": "So"
+ },
+ {
+  "id": 119,
+  "text": "we're"
+ },
+ {
+  "id": 120,
+  "text": "As for this chapter,"
+ },
+ {
+  "id": 121,
+  "text": "let me just say a few words."
+ },
+ {
+  "id": 122,
+  "text": "For this book,"
+ },
+ {
+  "id": 123,
+  "text": "its first chapter is the introduction."
+ },
+ {
+  "id": 124,
+  "text": "That covers some basics,"
+ },
+ {
+  "id": 125,
+  "text": "an introduction to the RISC-V instruction set,"
+ },
+ {
+  "id": 126,
+  "text": "the basic concepts."
+ },
+ {
+  "id": 127,
+  "text": "And then below that,"
+ },
+ {
+  "id": 128,
+  "text": "it actually follows the modules,"
+ },
+ {
+  "id": 129,
+  "text": "that is, one instruction set"
+ },
+ {
+  "id": 130,
+  "text": "module by module,"
+ },
+ {
+  "id": 131,
+  "text": "introducing them to you one by one."
+ },
+ {
+  "id": 132,
+  "text": "For example, RV32I,"
+ },
+ {
+  "id": 133,
+  "text": "this RV32I,"
+ },
+ {
+  "id": 134,
+  "text": "this basic integer instruction set,"
+ },
+ {
+  "id": 135,
+  "text": "is right here,"
+ },
+ {
+  "id": 136,
+  "text": "covered in this chapter."
+ },
+ {
+  "id": 137,
+  "text": "The focus of this course, actually,"
+ },
+ {
+  "id": 138,
+  "text": "is mainly to learn"
+ },
+ {
+  "id": 139,
+  "text": "the instructions in this chapter."
+ },
+ {
+  "id": 140,
+  "text": "You still remember what RV32E means, right?"
+ },
+ {
+  "id": 141,
+  "text": "I already covered that earlier."
+ },
+ {
+  "id": 142,
+  "text": "Right?"
+ },
+ {
+  "id": 143,
+  "text": "So I won't go into it again here."
+ },
+ {
+  "id": 144,
+  "text": "Now, for this RV32E instruction set,"
+ },
+ {
+  "id": 145,
+  "text": "let me take a look."
+ },
+ {
+  "id": 146,
+  "text": "So you see there's a diagram here,"
+ },
+ {
+  "id": 147,
+  "text": "did everyone notice it?"
+ },
+ {
+  "id": 148,
+  "text": "This diagram."
+ },
+ {
+  "id": 149,
+  "text": "What this diagram is actually telling us"
+ },
+ {
+  "id": 150,
+  "text": "is some of the basic instructions it supports,"
+ },
+ {
+  "id": 151,
+  "text": "the basic registers."
+ },
+ {
+  "id": 152,
+  "text": "X0 to X31,"
+ },
+ {
+  "id": 153,
+  "text": "a total of 32 registers."
+ },
+ {
+  "id": 154,
+  "text": "These are its general-purpose registers."
+ },
+ {
+  "id": 155,
+  "text": "Now, whatever it says here as X-Lens on the diagram,"
+ },
+ {
+  "id": 156,
+  "text": "pay attention to this."
+ },
+ {
+  "id": 157,
+  "text": "So what is this X-Lens?"
+ },
+ {
+  "id": 158,
+  "text": "It actually refers to..."
+ },
+ {
+  "id": 159,
+  "text": "It is actually a variable"
+ },
+ {
+  "id": 160,
+  "text": "You could say the spec defines XLEN"
+ },
+ {
+  "id": 161,
+  "text": "Which essentially means"
+ },
+ {
+  "id": 162,
+  "text": "it can be 32 or 64"
+ },
+ {
+  "id": 163,
+  "text": "or even 128"
+ },
+ {
+  "id": 164,
+  "text": "Do you follow what I mean?"
+ },
+ {
+  "id": 165,
+  "text": "That is, on different"
+ },
+ {
+  "id": 166,
+  "text": "say, 64-bit machines"
+ },
+ {
+  "id": 167,
+  "text": "the width of these registers"
+ },
+ {
+  "id": 168,
+  "text": "is 64 bits"
+ },
+ {
+  "id": 169,
+  "text": "On 32-bit machines,"
+ },
+ {
+  "id": 170,
+  "text": "the width of these registers is 32 bits"
+ },
+ {
+  "id": 171,
+  "text": "This differs from case to case"
+ },
+ {
+  "id": 172,
+  "text": "Now let me emphasize one more time:"
+ },
+ {
+  "id": 173,
+  "text": "from here on, including the exercises later,"
+ },
+ {
+  "id": 174,
+  "text": "everything is based on a 32-bit CPU"
+ },
+ {
+  "id": 175,
+  "text": "a RISC-V 32 CPU"
+ },
+ {
+  "id": 176,
+  "text": "So whenever you see these registers,"
+ },
+ {
+  "id": 177,
+  "text": "you should immediately picture in your mind"
+ },
+ {
+  "id": 178,
+  "text": "what they look like"
+ },
+ {
+  "id": 179,
+  "text": "a storage space that is 32 bits wide"
+ },
+ {
+  "id": 180,
+  "text": "see what I mean"
+ },
+ {
+  "id": 181,
+  "text": "That's exactly what X-Lens means"
+ },
+ {
+  "id": 182,
+  "text": "Its bits start counting from 0"
+ },
+ {
+  "id": 183,
+  "text": "which is the lowest bit"
+ },
+ {
+  "id": 184,
+  "text": "The rightmost one is called the least significant bit"
+ },
+ {
+  "id": 185,
+  "text": "and the leftmost one is the most significant bit"
+ },
+ {
+  "id": 186,
+  "text": "So this rightmost bit,"
+ },
+ {
+  "id": 187,
+  "text": "that's bit 0"
+ },
+ {
+  "id": 188,
+  "text": "and the second one is bit 1"
+ },
+ {
+  "id": 189,
+  "text": "and as you go further left, it gets higher and higher"
+ },
+ {
+  "id": 190,
+  "text": "Then subtract 1"
+ },
+ {
+  "id": 191,
+  "text": "you all understand what that means, right?"
+ },
+ {
+  "id": 192,
+  "text": "That's just 31"
+ },
+ {
+  "id": 193,
+  "text": "Right?"
+ },
+ {
+  "id": 194,
+  "text": "Okay, this one,"
+ },
+ {
+  "id": 195,
+  "text": "let me briefly go over this diagram"
+ },
+ {
+  "id": 196,
+  "text": "How should you read it?"
+ },
+ {
+  "id": 197,
+  "text": "x0 is a very special register"
+ },
+ {
+  "id": 198,
+  "text": "called zero"
+ },
+ {
+  "id": 199,
+  "text": "meaning that this register"
+ },
+ {
+  "id": 200,
+  "text": "Now, this register,"
+ },
+ {
+  "id": 201,
+  "text": "this register,"
+ },
+ {
+  "id": 202,
+  "text": "so we actually don't"
+ },
+ {
+  "id": 203,
+  "text": "you can't perform write operations on it."
+ },
+ {
+  "id": 204,
+  "text": "If you read this register,"
+ },
+ {
+  "id": 205,
+  "text": "what you read out will always be 0."
+ },
+ {
+  "id": 206,
+  "text": "Please note that"
+ },
+ {
+  "id": 207,
+  "text": "this is a special register."
+ },
+ {
+  "id": 208,
+  "text": "As for the other registers,"
+ },
+ {
+  "id": 209,
+  "text": "they are all readable and writable."
+ },
+ {
+  "id": 210,
+  "text": "And then,"
+ },
+ {
+  "id": 211,
+  "text": "if you look at the bottom of this diagram,"
+ },
+ {
+  "id": 212,
+  "text": "we also mentioned this earlier,"
+ },
+ {
+  "id": 213,
+  "text": "it brings up a register called PC."
+ },
+ {
+  "id": 214,
+  "text": "Now, please note that"
+ },
+ {
+  "id": 215,
+  "text": "for this register,"
+ },
+ {
+  "id": 216,
+  "text": "in RISC-V,"
+ },
+ {
+  "id": 217,
+  "text": "it only tells you that"
+ },
+ {
+  "id": 218,
+  "text": "internally I have this kind of register,"
+ },
+ {
+  "id": 219,
+  "text": "but this register"
+ },
+ {
+  "id": 220,
+  "text": "You cannot access it."
+ },
+ {
+  "id": 221,
+  "text": "It is actually used"
+ },
+ {
+  "id": 222,
+  "text": "internally to store what"
+ },
+ {
+  "id": 223,
+  "text": "the PC, right?"
+ },
+ {
+  "id": 224,
+  "text": "That is, the position where the program is currently executing"
+ },
+ {
+  "id": 225,
+  "text": "which instruction — that concept,"
+ },
+ {
+  "id": 226,
+  "text": "meaning Program Counter."
+ },
+ {
+  "id": 227,
+  "text": "But note that this register,"
+ },
+ {
+  "id": 228,
+  "text": "we actually cannot access it directly."
+ },
+ {
+  "id": 229,
+  "text": "So how do we get the current program's"
+ },
+ {
+  "id": 230,
+  "text": "PC value?"
+ },
+ {
+  "id": 231,
+  "text": "We have a special method to do that later."
+ },
+ {
+  "id": 232,
+  "text": "When we get to it later,"
+ },
+ {
+  "id": 233,
+  "text": "I'll bring it up again."
+ },
+ {
+  "id": 234,
+  "text": "This figure,"
+ },
+ {
+  "id": 235,
+  "text": "it's really just talking about this thing."
+ },
+ {
+  "id": 236,
+  "text": "This is what we call"
+ },
+ {
+  "id": 237,
+  "text": "the 32 registers,"
+ },
+ {
+  "id": 238,
+  "text": "and then,"
+ },
+ {
+  "id": 239,
+  "text": "the second point, please note"
+ },
+ {
+  "id": 240,
+  "text": "When it comes to registers, that is,"
+ },
+ {
+  "id": 241,
+  "text": "our HAT,"
+ },
+ {
+  "id": 242,
+  "text": "please note,"
+ },
+ {
+  "id": 243,
+  "text": "from now on we will use"
+ },
+ {
+  "id": 244,
+  "text": "the terminology we covered earlier,"
+ },
+ {
+  "id": 245,
+  "text": "and we don't call it a CPU."
+ },
+ {
+  "id": 246,
+  "text": "Because when we say CPU,"
+ },
+ {
+  "id": 247,
+  "text": "or concepts like Core,"
+ },
+ {
+  "id": 248,
+  "text": "that can be ambiguous."
+ },
+ {
+  "id": 249,
+  "text": "We talked about this earlier."
+ },
+ {
+  "id": 250,
+  "text": "I think you understand what I mean."
+ },
+ {
+  "id": 251,
+  "text": "In our RiskFile,"
+ },
+ {
+  "id": 252,
+  "text": "there is a concept called HUD."
+ },
+ {
+  "id": 253,
+  "text": "But actually,"
+ },
+ {
+  "id": 254,
+  "text": "it is really a kind of,"
+ },
+ {
+  "id": 255,
+  "text": "you can think of it as a kind of,"
+ },
+ {
+  "id": 256,
+  "text": "the smallest unit of execution in a processor."
+ },
+ {
+  "id": 257,
+  "text": "So this thing,"
+ },
+ {
+  "id": 258,
+  "text": "is actually a bit like"
+ },
+ {
+  "id": 259,
+  "text": "the traditional concept of a CPU."
+ },
+ {
+  "id": 260,
+  "text": "But compared to the CPU concept,"
+ },
+ {
+  "id": 261,
+  "text": "it's already a bit different."
+ },
+ {
+  "id": 262,
+  "text": "So when it performs this"
+ },
+ {
+  "id": 263,
+  "text": "arithmetic and logic operation,"
+ },
+ {
+  "id": 264,
+  "text": "its operand data"
+ },
+ {
+  "id": 265,
+  "text": "must come directly from registers."
+ },
+ {
+  "id": 266,
+  "text": "This concept"
+ },
+ {
+  "id": 267,
+  "text": "should also be easy to understand,"
+ },
+ {
+  "id": 268,
+  "text": "because right at the beginning we talked about"
+ },
+ {
+  "id": 269,
+  "text": "this computer"
+ },
+ {
+  "id": 270,
+  "text": "this architecture,"
+ },
+ {
+  "id": 271,
+  "text": "when we discussed this model, we mentioned that"
+ },
+ {
+  "id": 272,
+  "text": "data moves up level by level,"
+ },
+ {
+  "id": 273,
+  "text": "from the hard disk to memory,"
+ },
+ {
+  "id": 274,
+  "text": "and then on to registers."
+ },
+ {
+  "id": 275,
+  "text": "Remember this concept?"
+ },
+ {
+  "id": 276,
+  "text": "Our arithmetic logic unit,"
+ },
+ {
+  "id": 277,
+  "text": "when it does any operations,"
+ },
+ {
+  "id": 278,
+  "text": "from the perspective of"
+ },
+ {
+  "id": 279,
+  "text": "the CPU,"
+ },
+ {
+  "id": 280,
+  "text": "Inside it,"
+ },
+ {
+  "id": 281,
+  "text": "what can it access directly?"
+ },
+ {
+  "id": 282,
+  "text": "Only those registers."
+ },
+ {
+  "id": 283,
+  "text": "It cannot,"
+ },
+ {
+  "id": 284,
+  "text": "it won't go directly and..."
+ },
+ {
+  "id": 285,
+  "text": "for this..."
+ },
+ {
+  "id": 286,
+  "text": "that is, take data from memory"
+ },
+ {
+  "id": 287,
+  "text": "and directly operate on it."
+ },
+ {
+  "id": 288,
+  "text": "Before it can compute,"
+ },
+ {
+  "id": 289,
+  "text": "it can only..."
+ },
+ {
+  "id": 290,
+  "text": "if the data is outside,"
+ },
+ {
+  "id": 291,
+  "text": "it can only load it from memory"
+ },
+ {
+  "id": 292,
+  "text": "first into what?"
+ },
+ {
+  "id": 293,
+  "text": "Into the registers."
+ },
+ {
+  "id": 294,
+  "text": "Only then can its processing unit"
+ },
+ {
+  "id": 295,
+  "text": "take the data from the registers"
+ },
+ {
+  "id": 296,
+  "text": "and process it."
+ },
+ {
+  "id": 297,
+  "text": "After the data is processed,"
+ },
+ {
+  "id": 298,
+  "text": "it is also placed into the registers first."
+ },
+ {
+  "id": 299,
+  "text": "Do you all understand what I mean?"
+ },
+ {
+  "id": 300,
+  "text": "And if you want to save it,"
+ },
+ {
+  "id": 301,
+  "text": "it can only be moved out"
+ },
+ {
+  "id": 302,
+  "text": "from the registers"
+ },
+ {
+  "id": 303,
+  "text": "and put somewhere else."
+ },
+ {
+  "id": 304,
+  "text": "So when we..."
+ },
+ {
+  "id": 305,
+  "text": "the instructions for these operations,"
+ },
+ {
+  "id": 306,
+  "text": "it's the same story."
+ },
+ {
+  "id": 307,
+  "text": "In the instructions you work with,"
+ },
+ {
+  "id": 308,
+  "text": "when you perform operations,"
+ },
+ {
+  "id": 309,
+  "text": "if you want to do arithmetic or logic,"
+ },
+ {
+  "id": 310,
+  "text": "addition, subtraction, multiplication, division,"
+ },
+ {
+  "id": 311,
+  "text": "you can only"
+ },
+ {
+  "id": 312,
+  "text": "fetch data from the registers,"
+ },
+ {
+  "id": 313,
+  "text": "and then..."
+ },
+ {
+  "id": 314,
+  "text": "the result can only go back into the registers."
+ },
+ {
+  "id": 315,
+  "text": "That's what it means."
+ },
+ {
+  "id": 316,
+  "text": "So that's the stuff related to registers."
+ },
+ {
+  "id": 317,
+  "text": "Now, besides operating on registers,"
+ },
+ {
+  "id": 318,
+  "text": "our instructions also need to be able to operate on memory,"
+ },
+ {
+  "id": 319,
+  "text": "because, as I just mentioned,"
+ },
+ {
+  "id": 320,
+  "text": "Your data ultimately still has to be fetched in from outside."
+ },
+ {
+  "id": 321,
+  "text": "You have to move the data from memory into the registers first."
+ },
+ {
+  "id": 322,
+  "text": "So for moving data back and forth between registers and memory,"
+ },
+ {
+  "id": 323,
+  "text": "for these read, write, and move operations,"
+ },
+ {
+  "id": 324,
+  "text": "there are also some special instructions to handle them."
+ },
+ {
+  "id": 325,
+  "text": "So memory is also something that our instructions"
+ },
+ {
+  "id": 326,
+  "text": "operate on as a basic object."
+ },
+ {
+  "id": 327,
+  "text": "Now, when it comes to operating on memory,"
+ },
+ {
+  "id": 328,
+  "text": "there are a few concepts you should pay attention to."
+ },
+ {
+  "id": 329,
+  "text": "That is, for read and write operations,"
+ },
+ {
+  "id": 330,
+  "text": "for accesses,"
+ },
+ {
+  "id": 331,
+  "text": "what is the basic unit?"
+ },
+ {
+  "id": 332,
+  "text": "It's the byte."
+ },
+ {
+  "id": 333,
+  "text": "This concept should be very simple."
+ },
+ {
+  "id": 334,
+  "text": "That is, when we read data,"
+ },
+ {
+  "id": 335,
+  "text": "we read it one byte at a time."
+ },
+ {
+  "id": 336,
+  "text": "Each byte"
+ },
+ {
+  "id": 337,
+  "text": "actually implies a concept,"
+ },
+ {
+  "id": 338,
+  "text": "which is that every byte has an address."
+ },
+ {
+  "id": 339,
+  "text": "That is, when we've been learning high-level languages,"
+ },
+ {
+  "id": 340,
+  "text": "we keep saying a pointer points to that address"
+ },
+ {
+  "id": 341,
+  "text": "now, strictly speaking, that address"
+ },
+ {
+  "id": 342,
+  "text": "corresponds to the concept of a single byte"
+ },
+ {
+  "id": 343,
+  "text": "every byte has an address"
+ },
+ {
+  "id": 344,
+  "text": "every byte has an address"
+ },
+ {
+  "id": 345,
+  "text": "right?"
+ },
+ {
+  "id": 346,
+  "text": "that's what it means"
+ },
+ {
+  "id": 347,
+  "text": "so for our RV32,"
+ },
+ {
+  "id": 348,
+  "text": "that is, for our 32-bit machine,"
+ },
+ {
+  "id": 349,
+  "text": "the memory space it can access,"
+ },
+ {
+  "id": 350,
+  "text": "how many bytes can it access at most?"
+ },
+ {
+  "id": 351,
+  "text": "how many bytes can it access?"
+ },
+ {
+  "id": 352,
+  "text": "it's 2 to the power of 32"
+ },
+ {
+  "id": 353,
+  "text": "and if you convert that,"
+ },
+ {
+  "id": 354,
+  "text": "that's 4G"
+ },
+ {
+  "id": 355,
+  "text": "so this is the basic concept"
+ },
+ {
+  "id": 356,
+  "text": "of operands"
+ },
+ {
+  "id": 357,
+  "text": "what we just talked about was"
+ },
+ {
+  "id": 358,
+  "text": "the assembly,"
+ },
+ {
+  "id": 359,
+  "text": "the assembly instructions we operate on in RISC-V"
+ },
+ {
+  "id": 360,
+  "text": "some basic objects."
+ },
+ {
+  "id": 361,
+  "text": "Now, next, let's take a look"
+ },
+ {
+  "id": 362,
+  "text": "at assembly instructions,"
+ },
+ {
+  "id": 363,
+  "text": "the concept of their so-called encoding format."
+ },
+ {
+  "id": 364,
+  "text": "Now, this concept of encoding format"
+ },
+ {
+  "id": 365,
+  "text": "actually, earlier on,"
+ },
+ {
+  "id": 366,
+  "text": "when I gave you some introductory overview,"
+ },
+ {
+  "id": 367,
+  "text": "talking about the mini computer,"
+ },
+ {
+  "id": 368,
+  "text": "when we designed an assembly instruction ourselves,"
+ },
+ {
+  "id": 369,
+  "text": "we actually mentioned this concept back then too."
+ },
+ {
+  "id": 370,
+  "text": "Think back for a moment."
+ },
+ {
+  "id": 371,
+  "text": "Remember when we got to that page,"
+ },
+ {
+  "id": 372,
+  "text": "the assembly instruction we designed,"
+ },
+ {
+  "id": 373,
+  "text": "we even said at the time,"
+ },
+ {
+  "id": 374,
+  "text": "just for show,"
+ },
+ {
+  "id": 375,
+  "text": "we actually came up with two instruction formats."
+ },
+ {
+  "id": 376,
+  "text": "Actually, that is related to this concept here."
+ },
+ {
+  "id": 377,
+  "text": "That is to say, these"
+ },
+ {
+  "id": 378,
+  "text": "assembly instructions of ours,"
+ },
+ {
+  "id": 379,
+  "text": "because we know that for assembly instructions,"
+ },
+ {
+  "id": 380,
+  "text": "It ultimately still corresponds to"
+ },
+ {
+  "id": 381,
+  "text": "being translated into those machine instructions."
+ },
+ {
+  "id": 382,
+  "text": "Now, inside that machine instruction,"
+ },
+ {
+  "id": 383,
+  "text": "every single"
+ },
+ {
+  "id": 384,
+  "text": "32-bit word,"
+ },
+ {
+  "id": 385,
+  "text": "those bytes,"
+ },
+ {
+  "id": 386,
+  "text": "those contents,"
+ },
+ {
+  "id": 387,
+  "text": "actually carry different meanings."
+ },
+ {
+  "id": 388,
+  "text": "So let's"
+ },
+ {
+  "id": 389,
+  "text": "go over the basic concepts once more."
+ },
+ {
+  "id": 390,
+  "text": "Next,"
+ },
+ {
+  "id": 391,
+  "text": "we're going to"
+ },
+ {
+  "id": 392,
+  "text": "take a closer look at this."
+ },
+ {
+  "id": 393,
+  "text": "So here,"
+ },
+ {
+  "id": 394,
+  "text": "for RISC-V,"
+ },
+ {
+  "id": 395,
+  "text": "we mainly mean this"
+ },
+ {
+  "id": 396,
+  "text": "basic"
+ },
+ {
+  "id": 397,
+  "text": "integer instruction set,"
+ },
+ {
+  "id": 398,
+  "text": "it has six encoding formats in total,"
+ },
+ {
+  "id": 399,
+  "text": "called the R, I, S, B, U, and J types respectively."
+ },
+ {
+  "id": 400,
+  "text": "What exactly it is,"
+ },
+ {
+  "id": 401,
+  "text": "we'll take a look when we get there."
+ },
+ {
+  "id": 402,
+  "text": "So overall, we can see"
+ },
+ {
+  "id": 403,
+  "text": "what kinds of concepts are involved here."
+ },
+ {
+  "id": 404,
+  "text": "First, this involves the question of instruction length."
+ },
+ {
+  "id": 405,
+  "text": "In the specification,"
+ },
+ {
+  "id": 406,
+  "text": "there is a technical term"
+ },
+ {
+  "id": 407,
+  "text": "called capital-I ILEN1,"
+ },
+ {
+  "id": 408,
+  "text": "a name like a variable."
+ },
+ {
+  "id": 409,
+  "text": "You can look it up; it's in the specification."
+ },
+ {
+  "id": 410,
+  "text": "It is actually used to refer to"
+ },
+ {
+  "id": 411,
+  "text": "the length of the instructions"
+ },
+ {
+  "id": 412,
+  "text": "under different processors."
+ },
+ {
+  "id": 413,
+  "text": "So for now,"
+ },
+ {
+  "id": 414,
+  "text": "that is to say,"
+ },
+ {
+  "id": 415,
+  "text": "for us,"
+ },
+ {
+  "id": 416,
+  "text": "we mainly target RV32I,"
+ },
+ {
+  "id": 417,
+  "text": "which is to say, for 32-bit machines,"
+ },
+ {
+  "id": 418,
+  "text": "the length of its instructions"
+ },
+ {
+  "id": 419,
+  "text": "is 32 bits."
+ },
+ {
+  "id": 420,
+  "text": "So what does that mean?"
+ },
+ {
+  "id": 421,
+  "text": "It means how big one instruction is."
+ },
+ {
+  "id": 422,
+  "text": "We usually tend to use bytes."
+ },
+ {
+  "id": 423,
+  "text": "So 32 bits is how many bytes?"
+ },
+ {
+  "id": 424,
+  "text": "That's 4 bytes."
+ },
+ {
+  "id": 425,
+  "text": "Right?"
+ },
+ {
+  "id": 426,
+  "text": "So one instruction is just 4 bytes."
+ },
+ {
+  "id": 427,
+  "text": "So that's actually quite convenient for us to parse."
+ },
+ {
+  "id": 428,
+  "text": "I mean, once you get a machine instruction file,"
+ },
+ {
+  "id": 429,
+  "text": "say you're asked to do disassembly,"
+ },
+ {
+  "id": 430,
+  "text": "how do you actually pull out the instructions one by one?"
+ },
+ {
+  "id": 431,
+  "text": "You just start from the beginning,"
+ },
+ {
+  "id": 432,
+  "text": "4 bytes at a time,"
+ },
+ {
+  "id": 433,
+  "text": "take them out 4 bytes at a time."
+ },
+ {
+  "id": 434,
+  "text": "That's basically the idea."
+ },
+ {
+  "id": 435,
+  "text": "Now this..."
+ },
+ {
+  "id": 436,
+  "text": "But some cases may not be like that."
+ },
+ {
+  "id": 437,
+  "text": "For instance, when the compressed extension is supported,"
+ },
+ {
+  "id": 438,
+  "text": "an instruction may be just 16 bytes --"
+ },
+ {
+  "id": 439,
+  "text": "I mean 16 bits."
+ },
+ {
+  "id": 440,
+  "text": "That is, half."
+ },
+ {
+  "id": 441,
+  "text": "So under this situation,"
+ },
+ {
+  "id": 442,
+  "text": "our course will not discuss it."
+ },
+ {
+  "id": 443,
+  "text": "Because what we mainly talk about is"
+ },
+ {
+  "id": 444,
+  "text": "the uncompressed case."
+ },
+ {
+  "id": 445,
+  "text": "Now the second concept-related point,"
+ },
+ {
+  "id": 446,
+  "text": "that is the issue of instruction alignment."
+ },
+ {
+  "id": 447,
+  "text": "What do we mean by the issue of instruction alignment?"
+ },
+ {
+  "id": 448,
+  "text": "Well, we know that this instruction,"
+ },
+ {
+  "id": 449,
+  "text": "normally it sits on the hard drive as a file,"
+ },
+ {
+  "id": 450,
+  "text": "and when it is executed,"
+ },
+ {
+  "id": 451,
+  "text": "we need to take it from the hard drive and do what with it?"
+ },
+ {
+  "id": 452,
+  "text": "First, as the first step, read it to where first?"
+ },
+ {
+  "id": 453,
+  "text": "First load it into memory."
+ },
+ {
+  "id": 454,
+  "text": "Right?"
+ },
+ {
+  "id": 455,
+  "text": "So the so-called issue of alignment,"
+ },
+ {
+  "id": 456,
+  "text": "actually refers to, inside memory,"
+ },
+ {
+  "id": 457,
+  "text": "this machine instruction,"
+ },
+ {
+  "id": 458,
+  "text": "the address value of the position where it is placed,"
+ },
+ {
+  "id": 459,
+  "text": "right?"
+ },
+ {
+  "id": 460,
+  "text": "For example, let's say it's 32-bit aligned."
+ },
+ {
+  "id": 461,
+  "text": "Then its size is four bytes."
+ },
+ {
+  "id": 462,
+  "text": "Its address is always a multiple of four bytes."
+ },
+ {
+  "id": 463,
+  "text": "Its address is definitely 4, 8, 12,"
+ },
+ {
+  "id": 464,
+  "text": "something like that."
+ },
+ {
+  "id": 465,
+  "text": "You get what I mean?"
+ },
+ {
+  "id": 466,
+  "text": "That's what we call alignment."
+ },
+ {
+  "id": 467,
+  "text": "If things get misaligned,"
+ },
+ {
+  "id": 468,
+  "text": "it may cause the program to behave abnormally."
+ },
+ {
+  "id": 469,
+  "text": "So this is actually specified in the specification too."
+ },
+ {
+  "id": 470,
+  "text": "That is, when you load it,"
+ },
+ {
+  "id": 471,
+  "text": "you must load it into memory at an aligned address."
+ },
+ {
+  "id": 472,
+  "text": "The so-called instruction alignment is this concept."
+ },
+ {
+  "id": 473,
+  "text": "That is, it's loaded at an address where..."
+ },
+ {
+  "id": 474,
+  "text": "The so-called alignment here is 32 bits."
+ },
+ {
+  "id": 475,
+  "text": "In practice, that means the address it's loaded to"
+ },
+ {
+  "id": 476,
+  "text": "must be a multiple of 4."
+ },
+ {
+  "id": 477,
+  "text": "Of course, we probably don't care much about this process."
+ },
+ {
+  "id": 478,
+  "text": "This is probably handled when the program runs,"
+ },
+ {
+  "id": 479,
+  "text": "and for us, it's really just hitting the Enter key."
+ },
+ {
+  "id": 480,
+  "text": "But in this process, the loading process,"
+ },
+ {
+  "id": 481,
+  "text": "is actually done for you by the system."
+ },
+ {
+  "id": 482,
+  "text": "That's the second concept."
+ },
+ {
+  "id": 483,
+  "text": "Now the third one is,"
+ },
+ {
+  "id": 484,
+  "text": "when we talk about an instruction,"
+ },
+ {
+  "id": 485,
+  "text": "what you get is four bytes,"
+ },
+ {
+  "id": 486,
+  "text": "and those four bytes are 32 bits."
+ },
+ {
+  "id": 487,
+  "text": "So these are bits,"
+ },
+ {
+  "id": 488,
+  "text": "and those 32 bits actually carry meaning."
+ },
+ {
+  "id": 489,
+  "text": "So we take these 32 bits,"
+ },
+ {
+  "id": 490,
+  "text": "and depending on the encoding format of the instruction,"
+ },
+ {
+  "id": 491,
+  "text": "we divide them into different fields."
+ },
+ {
+  "id": 492,
+  "text": "As you can see up here, look,"
+ },
+ {
+  "id": 493,
+  "text": "this is a table, right?"
+ },
+ {
+  "id": 494,
+  "text": "For example, this one,"
+ },
+ {
+  "id": 495,
+  "text": "for example, we have,"
+ },
+ {
+  "id": 496,
+  "text": "this R-type,"
+ },
+ {
+  "id": 497,
+  "text": "for the R-type,"
+ },
+ {
+  "id": 498,
+  "text": "this is basically like,"
+ },
+ {
+  "id": 499,
+  "text": "that's one instruction."
+ },
+ {
+  "id": 500,
+  "text": "So for this instruction"
+ },
+ {
+  "id": 501,
+  "text": "we can see it's split into many parts"
+ },
+ {
+  "id": 502,
+  "text": "divided into many parts like this"
+ },
+ {
+  "id": 503,
+  "text": "this is the concept of fields"
+ },
+ {
+  "id": 504,
+  "text": "each part is called a field"
+ },
+ {
+  "id": 505,
+  "text": "each field has a different meaning"
+ },
+ {
+  "id": 506,
+  "text": "we'll look at this carefully later"
+ },
+ {
+  "id": 507,
+  "text": "when we cover each instruction format"
+ },
+ {
+  "id": 508,
+  "text": "we'll talk about what it means"
+ },
+ {
+  "id": 509,
+  "text": "what exactly this thing is"
+ },
+ {
+  "id": 510,
+  "text": "why do we need to understand this?"
+ },
+ {
+  "id": 511,
+  "text": "Well, it's because we sometimes need to look things up in the manual"
+ },
+ {
+  "id": 512,
+  "text": "we need to look things up"
+ },
+ {
+  "id": 513,
+  "text": "For example, when you get"
+ },
+ {
+  "id": 514,
+  "text": "because in our low-level development"
+ },
+ {
+  "id": 515,
+  "text": "we often have to deal with"
+ },
+ {
+  "id": 516,
+  "text": "analyzing situations in memory"
+ },
+ {
+  "id": 517,
+  "text": "Unlike high-level programmers, who may not care much about this"
+ },
+ {
+  "id": 518,
+  "text": "high-level programmers are probably more focused on"
+ },
+ {
+  "id": 519,
+  "text": "business logic issues"
+ },
+ {
+  "id": 520,
+  "text": "But in low-level development, we tend to focus more on"
+ },
+ {
+  "id": 521,
+  "text": "the hardware, for example, some things in memory"
+ },
+ {
+  "id": 522,
+  "text": "that we dig into bit by bit,"
+ },
+ {
+  "id": 523,
+  "text": "and sometimes you run into this kind of situation."
+ },
+ {
+  "id": 524,
+  "text": "So just try to get a feel for"
+ },
+ {
+  "id": 525,
+  "text": "how this differs from developing in high-level languages."
+ },
+ {
+  "id": 526,
+  "text": "Now, since we're going to dig into the state in memory,"
+ },
+ {
+  "id": 527,
+  "text": "you definitely need to know"
+ },
+ {
+  "id": 528,
+  "text": "what each field in memory actually is."
+ },
+ {
+  "id": 529,
+  "text": "As for these specific fields"
+ },
+ {
+  "id": 530,
+  "text": "and exactly what they mean,"
+ },
+ {
+  "id": 531,
+  "text": "of course, that's all in the manual,"
+ },
+ {
+  "id": 532,
+  "text": "and we'll take a look at it together in a bit."
+ },
+ {
+  "id": 533,
+  "text": "So first, we know"
+ },
+ {
+  "id": 534,
+  "text": "it's divided into different fields,"
+ },
+ {
+  "id": 535,
+  "text": "and for each instruction,"
+ },
+ {
+  "id": 536,
+  "text": "exactly, for example,"
+ },
+ {
+  "id": 537,
+  "text": "is it used for addition,"
+ },
+ {
+  "id": 538,
+  "text": "or is it used for subtraction,"
+ },
+ {
+  "id": 539,
+  "text": "or is it used for something else?"
+ },
+ {
+  "id": 540,
+  "text": "So that's the concept of instruction types."
+ },
+ {
+  "id": 541,
+  "text": "Now, about these instruction types,"
+ },
+ {
+  "id": 542,
+  "text": "let's actually mention one thing,"
+ },
+ {
+  "id": 543,
+  "text": "which is that this opcode field alone"
+ },
+ {
+  "id": 544,
+  "text": "cannot uniquely determine"
+ },
+ {
+  "id": 545,
+  "text": "the type of this instruction."
+ },
+ {
+  "id": 546,
+  "text": "This is probably a bit different"
+ },
+ {
+  "id": 547,
+  "text": "from the concept we had back then"
+ },
+ {
+  "id": 548,
+  "text": "in that simple"
+ },
+ {
+  "id": 549,
+  "text": "mini computer design."
+ },
+ {
+  "id": 550,
+  "text": "There's a slight difference."
+ },
+ {
+  "id": 551,
+  "text": "This opcode field,"
+ },
+ {
+  "id": 552,
+  "text": "this opcode thing,"
+ },
+ {
+  "id": 553,
+  "text": "cannot uniquely determine"
+ },
+ {
+  "id": 554,
+  "text": "whether this is an add instruction"
+ },
+ {
+  "id": 555,
+  "text": "or some kind of subtraction instruction."
+ },
+ {
+  "id": 556,
+  "text": "In fact, it's determined through"
+ },
+ {
+  "id": 557,
+  "text": "the opcode and"
+ },
+ {
+  "id": 558,
+  "text": "what was mentioned here just now,"
+ },
+ {
+  "id": 559,
+  "text": "function3,"
+ },
+ {
+  "id": 560,
+  "text": "function"
+ },
+ {
+  "id": 561,
+  "text": "this funct"
+ },
+ {
+  "id": 562,
+  "text": "These are all terms from the specification."
+ },
+ {
+  "id": 563,
+  "text": "I copied them out."
+ },
+ {
+  "id": 564,
+  "text": "Of course, I need to explain them to you."
+ },
+ {
+  "id": 565,
+  "text": "funct is actually short for function."
+ },
+ {
+  "id": 566,
+  "text": "function"
+ },
+ {
+  "id": 567,
+  "text": "meaning"
+ },
+ {
+  "id": 568,
+  "text": "As for 3 and 7,"
+ },
+ {
+  "id": 569,
+  "text": "what they actually mean is"
+ },
+ {
+  "id": 570,
+  "text": "this field"
+ },
+ {
+  "id": 571,
+  "text": "this field"
+ },
+ {
+  "id": 572,
+  "text": "occupies how many bits."
+ },
+ {
+  "id": 573,
+  "text": "7 means it occupies 7 bits."
+ },
+ {
+  "id": 574,
+  "text": "You see what I mean?"
+ },
+ {
+  "id": 575,
+  "text": "3 means it occupies 3 bits."
+ },
+ {
+  "id": 576,
+  "text": "Look at this."
+ },
+ {
+  "id": 577,
+  "text": "It writes 12 here,"
+ },
+ {
+  "id": 578,
+  "text": "what does 14 mean?"
+ },
+ {
+  "id": 579,
+  "text": "It means it occupies"
+ },
+ {
+  "id": 580,
+  "text": "Bits 12 to 14"
+ },
+ {
+  "id": 581,
+  "text": "12, 13, 14"
+ },
+ {
+  "id": 582,
+  "text": "3 bits"
+ },
+ {
+  "id": 583,
+  "text": "That's what it means."
+ },
+ {
+  "id": 584,
+  "text": "So when you read the manual in the future,"
+ },
+ {
+  "id": 585,
+  "text": "you should be able to understand it."
+ },
+ {
+  "id": 586,
+  "text": "So all of these,"
+ },
+ {
+  "id": 587,
+  "text": "these three fields together,"
+ },
+ {
+  "id": 588,
+  "text": "ultimately determine"
+ },
+ {
+  "id": 589,
+  "text": "what exactly this instruction is used for."
+ },
+ {
+  "id": 590,
+  "text": "There is actually a concept here."
+ },
+ {
+  "id": 591,
+  "text": "Let's take a quick look."
+ },
+ {
+  "id": 592,
+  "text": "This diagram"
+ },
+ {
+  "id": 593,
+  "text": "is a summary of the instruction types."
+ },
+ {
+  "id": 594,
+  "text": "Let's go through it together."
+ },
+ {
+  "id": 595,
+  "text": "Where exactly in the manual"
+ },
+ {
+  "id": 596,
+  "text": "Let's keep talking,"
+ },
+ {
+  "id": 597,
+  "text": "and look at the manual at the same time."
+ },
+ {
+  "id": 598,
+  "text": "So this,"
+ },
+ {
+  "id": 599,
+  "text": "in our specification,"
+ },
+ {
+  "id": 600,
+  "text": "Where does it talk about"
+ },
+ {
+  "id": 601,
+  "text": "some of the instruction encoding formats,"
+ },
+ {
+  "id": 602,
+  "text": "these encoding format issues? Well,"
+ },
+ {
+  "id": 603,
+  "text": "it actually"
+ },
+ {
+  "id": 604,
+  "text": "at the very end,"
+ },
+ {
+  "id": 605,
+  "text": "in this chapter at the back,"
+ },
+ {
+  "id": 606,
+  "text": "it serves as a summary chapter,"
+ },
+ {
+  "id": 607,
+  "text": "listing them all out for you."
+ },
+ {
+  "id": 608,
+  "text": "You can scroll down to"
+ },
+ {
+  "id": 609,
+  "text": "here, there's a section called, this part is called"
+ },
+ {
+  "id": 610,
+  "text": "RV32/64G."
+ },
+ {
+  "id": 611,
+  "text": "Do you all know what this G means?"
+ },
+ {
+  "id": 612,
+  "text": "You still remember, right?"
+ },
+ {
+  "id": 613,
+  "text": "As we go along, let's also quickly review."
+ },
+ {
+  "id": 614,
+  "text": "G is an abbreviation standing for IMAFD and so on."
+ },
+ {
+  "id": 615,
+  "text": "You still remember, right?"
+ },
+ {
+  "id": 616,
+  "text": "It's actually not a specific module."
+ },
+ {
+  "id": 617,
+  "text": "It's actually an abbreviation covering many modules."
+ },
+ {
+  "id": 618,
+  "text": "So this instruction set listing,"
+ },
+ {
+  "id": 619,
+  "text": "is actually talking about"
+ },
+ {
+  "id": 620,
+  "text": "its instruction format"
+ },
+ {
+  "id": 621,
+  "text": "this chapter"
+ },
+ {
+  "id": 622,
+  "text": "we've reached this chapter"
+ },
+ {
+  "id": 623,
+  "text": "let's take a look"
+ },
+ {
+  "id": 624,
+  "text": "it's chapter 24"
+ },
+ {
+  "id": 625,
+  "text": "you may want to flip through this chapter later"
+ },
+ {
+  "id": 626,
+  "text": "this chapter is actually about"
+ },
+ {
+  "id": 627,
+  "text": "some formats of the instruction set"
+ },
+ {
+  "id": 628,
+  "text": "let me just briefly mention a few things"
+ },
+ {
+  "id": 629,
+  "text": "for example, what is this figure showing"
+ },
+ {
+  "id": 630,
+  "text": "what is it about"
+ },
+ {
+  "id": 631,
+  "text": "it is about"
+ },
+ {
+  "id": 632,
+  "text": "the basic OPCODE mapping relationship"
+ },
+ {
+  "id": 633,
+  "text": "actually, it was originally about"
+ },
+ {
+  "id": 634,
+  "text": "it is actually about"
+ },
+ {
+  "id": 635,
+  "text": "our"
+ },
+ {
+  "id": 636,
+  "text": "OPCODE"
+ },
+ {
+  "id": 637,
+  "text": "let's go back to this figure"
+ },
+ {
+  "id": 638,
+  "text": "our OPCODE"
+ },
+ {
+  "id": 639,
+  "text": "this field"
+ },
+ {
+  "id": 640,
+  "text": "This FIELD"
+ },
+ {
+  "id": 641,
+  "text": "takes up how many bits?"
+ },
+ {
+  "id": 642,
+  "text": "Let's count."
+ },
+ {
+  "id": 643,
+  "text": "0 to 6, how many bits is that?"
+ },
+ {
+  "id": 644,
+  "text": "7 bits."
+ },
+ {
+  "id": 645,
+  "text": "Right?"
+ },
+ {
+  "id": 646,
+  "text": "It actually"
+ },
+ {
+  "id": 647,
+  "text": "matches the table we just saw."
+ },
+ {
+  "id": 648,
+  "text": "That table was really about these 7 bits,"
+ },
+ {
+  "id": 649,
+  "text": "how they are organized,"
+ },
+ {
+  "id": 650,
+  "text": "and what meaning they represent"
+ },
+ {
+  "id": 651,
+  "text": "when they take on different values."
+ },
+ {
+  "id": 652,
+  "text": "That's what it actually means."
+ },
+ {
+  "id": 653,
+  "text": "So"
+ },
+ {
+  "id": 654,
+  "text": "in this specification,"
+ },
+ {
+  "id": 655,
+  "text": "what does this diagram mean?"
+ },
+ {
+  "id": 656,
+  "text": "Let's take a look at it together."
+ },
+ {
+  "id": 657,
+  "text": "It actually looks a bit like our..."
+ },
+ {
+  "id": 658,
+  "text": "It is a table,"
+ },
+ {
+  "id": 659,
+  "text": "just like our class schedule."
+ },
+ {
+  "id": 660,
+  "text": "the same kind of thing"
+ },
+ {
+  "id": 661,
+  "text": "What is it actually talking about?"
+ },
+ {
+  "id": 662,
+  "text": "It's saying that,"
+ },
+ {
+  "id": 663,
+  "text": "first of all, we need to know that"
+ },
+ {
+  "id": 664,
+  "text": "for this OPC"
+ },
+ {
+  "id": 665,
+  "text": "map,"
+ },
+ {
+  "id": 666,
+  "text": "bit 0 and bit 1"
+ },
+ {
+  "id": 667,
+  "text": "are always 11."
+ },
+ {
+  "id": 668,
+  "text": "If you look it up"
+ },
+ {
+  "id": 669,
+  "text": "in that memory,"
+ },
+ {
+  "id": 670,
+  "text": "when you go and check,"
+ },
+ {
+  "id": 671,
+  "text": "these two bits are definitely 11."
+ },
+ {
+  "id": 672,
+  "text": "And then,"
+ },
+ {
+  "id": 673,
+  "text": "below that,"
+ },
+ {
+  "id": 674,
+  "text": "what it's actually talking about is,"
+ },
+ {
+  "id": 675,
+  "text": "apart from these two bits,"
+ },
+ {
+  "id": 676,
+  "text": "how many bits are left?"
+ },
+ {
+  "id": 677,
+  "text": "There were seven bits in total just now,"
+ },
+ {
+  "id": 678,
+  "text": "so taking away these two leaves five bits, right?"
+ },
+ {
+  "id": 679,
+  "text": "What should these five bits be?"
+ },
+ {
+  "id": 680,
+  "text": "This part is 0 and 1."
+ },
+ {
+  "id": 681,
+  "text": "Then the remaining five bits go from 2 up to what?"
+ },
+ {
+  "id": 682,
+  "text": "Up to 6."
+ },
+ {
+  "id": 683,
+  "text": "Think about it — isn't that right?"
+ },
+ {
+  "id": 684,
+  "text": "So as you can see, this is 2 through 6."
+ },
+ {
+  "id": 685,
+  "text": "Now this one is actually talking about bits 2 through 4."
+ },
+ {
+  "id": 686,
+  "text": "That is, three bits of values."
+ },
+ {
+  "id": 687,
+  "text": "And this one is actually about..."
+ },
+ {
+  "id": 688,
+  "text": "I mean, its rows are talking about bits 2 through 4."
+ },
+ {
+  "id": 689,
+  "text": "And its columns..."
+ },
+ {
+  "id": 690,
+  "text": "what are they about?"
+ },
+ {
+  "id": 691,
+  "text": "Bits 5 and 6."
+ },
+ {
+  "id": 692,
+  "text": "Now later on, we'll..."
+ },
+ {
+  "id": 693,
+  "text": "that is to say..."
+ },
+ {
+  "id": 694,
+  "text": "For example, let's take an example."
+ },
+ {
+  "id": 695,
+  "text": "Let's scroll down."
+ },
+ {
+  "id": 696,
+  "text": "This table of ours..."
+ },
+ {
+  "id": 697,
+  "text": "we'll come back to it in a bit."
+ },
+ {
+  "id": 698,
+  "text": "So just scrolling down..."
+ },
+ {
+  "id": 699,
+  "text": "here we have a summary table."
+ },
+ {
+  "id": 700,
+  "text": "This is actually the"
+ },
+ {
+  "id": 701,
+  "text": "encoding format we just went through on the slides,"
+ },
+ {
+  "id": 702,
+  "text": "the one that shows"
+ },
+ {
+  "id": 703,
+  "text": "the six types"
+ },
+ {
+  "id": 704,
+  "text": "in a table."
+ },
+ {
+  "id": 705,
+  "text": "Now, below that,"
+ },
+ {
+  "id": 706,
+  "text": "we have the instruction format."
+ },
+ {
+  "id": 707,
+  "text": "For example, let's take a look,"
+ },
+ {
+  "id": 708,
+  "text": "say there's an instruction,"
+ },
+ {
+  "id": 709,
+  "text": "like an addition instruction,"
+ },
+ {
+  "id": 710,
+  "text": "which is the first one we'll cover later,"
+ },
+ {
+  "id": 711,
+  "text": "the add instruction."
+ },
+ {
+  "id": 712,
+  "text": "The add instruction."
+ },
+ {
+  "id": 713,
+  "text": "Now, for this add instruction,"
+ },
+ {
+  "id": 714,
+  "text": "its opcode"
+ },
+ {
+  "id": 715,
+  "text": "is already written here:"
+ },
+ {
+  "id": 716,
+  "text": "011 0011."
+ },
+ {
+  "id": 717,
+  "text": "So where does this value come from?"
+ },
+ {
+  "id": 718,
+  "text": "Where does this value come from?"
+ },
+ {
+  "id": 719,
+  "text": "We actually covered it just now."
+ },
+ {
+  "id": 720,
+  "text": "For this instruction,"
+ },
+ {
+  "id": 721,
+  "text": "the lowest two bits are 11."
+ },
+ {
+  "id": 722,
+  "text": "You see that, right?"
+ },
+ {
+  "id": 723,
+  "text": "Look at these lowest two bits,"
+ },
+ {
+  "id": 724,
+  "text": "aren't they all 11?"
+ },
+ {
+  "id": 725,
+  "text": "I won't draw them out."
+ },
+ {
+  "id": 726,
+  "text": "These lowest two bits are just 11."
+ },
+ {
+  "id": 727,
+  "text": "So what we really care about,"
+ },
+ {
+  "id": 728,
+  "text": "is that upper part, these 5 bits."
+ },
+ {
+  "id": 729,
+  "text": "For add, the upper 5 bits,"
+ },
+ {
+  "id": 730,
+  "text": "this 0111,"
+ },
+ {
+  "id": 731,
+  "text": "where do these 5 bits come from?"
+ },
+ {
+  "id": 732,
+  "text": "These 5 bits,"
+ },
+ {
+  "id": 733,
+  "text": "we split them into two parts,"
+ },
+ {
+  "id": 734,
+  "text": "because just now, based on"
+ },
+ {
+  "id": 735,
+  "text": "the table above, what did we see?"
+ },
+ {
+  "id": 736,
+  "text": "It actually is,"
+ },
+ {
+  "id": 737,
+  "text": "the table above tells us,"
+ },
+ {
+  "id": 738,
+  "text": "the table above tells us,"
+ },
+ {
+  "id": 739,
+  "text": "these 5 bits are,"
+ },
+ {
+  "id": 740,
+  "text": "2 to 4 form one group"
+ },
+ {
+  "id": 741,
+  "text": "5 and 6"
+ },
+ {
+  "id": 742,
+  "text": "form another group"
+ },
+ {
+  "id": 743,
+  "text": "Do you all see it?"
+ },
+ {
+  "id": 744,
+  "text": "So,"
+ },
+ {
+  "id": 745,
+  "text": "So, given this situation,"
+ },
+ {
+  "id": 746,
+  "text": "then for the value we just had,"
+ },
+ {
+  "id": 747,
+  "text": "for this add instruction,"
+ },
+ {
+  "id": 748,
+  "text": "we need to take this thing,"
+ },
+ {
+  "id": 749,
+  "text": "and split it into what?"
+ },
+ {
+  "id": 750,
+  "text": "Split it into two parts,"
+ },
+ {
+  "id": 751,
+  "text": "separating it right here"
+ },
+ {
+  "id": 752,
+  "text": "On the left are bits 5 and 6"
+ },
+ {
+  "id": 753,
+  "text": "which is 1,"
+ },
+ {
+  "id": 754,
+  "text": "which is 10001"
+ },
+ {
+  "id": 755,
+  "text": "So where does this value come from?"
+ },
+ {
+  "id": 756,
+  "text": "Let's look up this table above"
+ },
+ {
+  "id": 757,
+  "text": "for this thing"
+ },
+ {
+  "id": 758,
+  "text": "10001"
+ },
+ {
+  "id": 759,
+  "text": "That is to say,"
+ },
+ {
+  "id": 760,
+  "text": "Let's first look at the top two bits, 01"
+ },
+ {
+  "id": 761,
+  "text": "01 — do we know who that is?"
+ },
+ {
+  "id": 762,
+  "text": "That's it."
+ },
+ {
+  "id": 763,
+  "text": "Right?"
+ },
+ {
+  "id": 764,
+  "text": "Then let's look at the remaining three bits."
+ },
+ {
+  "id": 765,
+  "text": "Just turn it sideways."
+ },
+ {
+  "id": 766,
+  "text": "Turn it sideways and look."
+ },
+ {
+  "id": 767,
+  "text": "What is it?"
+ },
+ {
+  "id": 768,
+  "text": "01 what?"
+ },
+ {
+  "id": 769,
+  "text": "01100, isn't it?"
+ },
+ {
+  "id": 770,
+  "text": "I think it's 01100."
+ },
+ {
+  "id": 771,
+  "text": "So the 100 is this one."
+ },
+ {
+  "id": 772,
+  "text": "So this is actually the thing."
+ },
+ {
+  "id": 773,
+  "text": "So all these OP-type"
+ },
+ {
+  "id": 774,
+  "text": "instructions,"
+ },
+ {
+  "id": 775,
+  "text": "the encoding is actually"
+ },
+ {
+  "id": 776,
+  "text": "just 01100."
+ },
+ {
+  "id": 777,
+  "text": "So the add instruction"
+ },
+ {
+  "id": 778,
+  "text": "actually belongs to this OP type,"
+ },
+ {
+  "id": 779,
+  "text": "the most basic operations."
+ },
+ {
+  "id": 780,
+  "text": "We'll get to that later,"
+ },
+ {
+  "id": 781,
+  "text": "and then we'll come back and look at it again."
+ },
+ {
+  "id": 782,
+  "text": "The point is, we need to learn how to read this table."
+ },
+ {
+  "id": 783,
+  "text": "Of course, the way I'm explaining it,"
+ },
+ {
+  "id": 784,
+  "text": "since this is probably your first time seeing it,"
+ },
+ {
+  "id": 785,
+  "text": "you might not be fully comfortable with it right away."
+ },
+ {
+  "id": 786,
+  "text": "That's fine — we have the recordings."
+ },
+ {
+  "id": 787,
+  "text": "Later on, when you"
+ },
+ {
+  "id": 788,
+  "text": "actually need to use this, go back and watch the recording,"
+ },
+ {
+  "id": 789,
+  "text": "and you'll probably understand what I'm talking about now."
+ },
+ {
+  "id": 790,
+  "text": "This is maybe one of"
+ },
+ {
+  "id": 791,
+  "text": "the benefits of having these screen recordings,"
+ },
+ {
+  "id": 792,
+  "text": "at this point."
+ },
+ {
+  "id": 793,
+  "text": "This is just to give you a feel for it,"
+ },
+ {
+  "id": 794,
+  "text": "that is, how"
+ },
+ {
+  "id": 795,
+  "text": "we look things up in this table."
+ },
+ {
+  "id": 796,
+  "text": "Later on, when we get to the actual commands,"
+ },
+ {
+  "id": 797,
+  "text": "we'll still need to refer back to it."
+ },
+ {
+  "id": 798,
+  "text": "So what's the point of looking up these tables?"
+ },
+ {
+  "id": 799,
+  "text": "Well, if you really end up"
+ },
+ {
+  "id": 800,
+  "text": "When you're doing this kind of low-level development,"
+ },
+ {
+  "id": 801,
+  "text": "I keep stressing that"
+ },
+ {
+  "id": 802,
+  "text": "you will go byte by byte,"
+ },
+ {
+  "id": 803,
+  "text": "bit by bit, to check the memory."
+ },
+ {
+  "id": 804,
+  "text": "So what these things mean,"
+ },
+ {
+  "id": 805,
+  "text": "that's what this document tells you."
+ },
+ {
+  "id": 806,
+  "text": "You need to know how to read it."
+ },
+ {
+  "id": 807,
+  "text": "There's no way we can"
+ },
+ {
+  "id": 808,
+  "text": "cover all of this later on"
+ },
+ {
+  "id": 809,
+  "text": "and explain it to you bit by bit,"
+ },
+ {
+  "id": 810,
+  "text": "because you just can't memorize all of it."
+ },
+ {
+  "id": 811,
+  "text": "When you need it, just look it up — that's enough."
+ },
+ {
+  "id": 812,
+  "text": "You understand what I mean?"
+ },
+ {
+  "id": 813,
+  "text": "This is a kind of skill."
+ },
+ {
+  "id": 814,
+  "text": "Okay, so that was"
+ },
+ {
+  "id": 815,
+  "text": "a quick feel for"
+ },
+ {
+  "id": 816,
+  "text": "this so-called"
+ },
+ {
+  "id": 817,
+  "text": "concept of FUNCT and OPCODE encoding."
+ },
+ {
+  "id": 818,
+  "text": "And the last one,"
+ },
+ {
+  "id": 819,
+  "text": "something else related to the encoding format,"
+ },
+ {
+  "id": 820,
+  "text": "Something everyone should understand"
+ },
+ {
+  "id": 821,
+  "text": "The RISC-V specification"
+ },
+ {
+  "id": 822,
+  "text": "specifies that instructions in memory"
+ },
+ {
+  "id": 823,
+  "text": "are laid out in little-endian order."
+ },
+ {
+  "id": 824,
+  "text": "I don't know if you've covered this concept before."
+ },
+ {
+  "id": 825,
+  "text": "A lot of you probably know"
+ },
+ {
+  "id": 826,
+  "text": "what little-endian and big-endian mean."
+ },
+ {
+  "id": 827,
+  "text": "Where did you actually learn about that?"
+ },
+ {
+  "id": 828,
+  "text": "You come across it when doing network programming."
+ },
+ {
+  "id": 829,
+  "text": "Remember Socket?"
+ },
+ {
+  "id": 830,
+  "text": "We talked about that."
+ },
+ {
+  "id": 831,
+  "text": "Things like network byte order,"
+ },
+ {
+  "id": 832,
+  "text": "host byte order,"
+ },
+ {
+  "id": 833,
+  "text": "little-endian, big-endian."
+ },
+ {
+  "id": 834,
+  "text": "Remember those concepts?"
+ },
+ {
+  "id": 835,
+  "text": "Actually, the earliest origin of this"
+ },
+ {
+  "id": 836,
+  "text": "is right here."
+ },
+ {
+  "id": 837,
+  "text": "That is to say, it's really"
+ },
+ {
+  "id": 838,
+  "text": "what we call"
+ },
+ {
+  "id": 839,
+  "text": "the concept of host byte order."
+ },
+ {
+  "id": 840,
+  "text": "Little-endian."
+ },
+ {
+  "id": 841,
+  "text": "Now, for those of you who aren't familiar with it,"
+ },
+ {
+  "id": 842,
+  "text": "no problem."
+ },
+ {
+  "id": 843,
+  "text": "We'll go over it for you here."
+ },
+ {
+  "id": 844,
+  "text": "Let's review it once more."
+ },
+ {
+  "id": 845,
+  "text": "Because later, when we look at memory,"
+ },
+ {
+  "id": 846,
+  "text": "you need to pay attention to this."
+ },
+ {
+  "id": 847,
+  "text": "Otherwise, what you see will just be a mess."
+ },
+ {
+  "id": 848,
+  "text": "So what is little-endian?"
+ },
+ {
+  "id": 849,
+  "text": "First, we need to understand a concept"
+ },
+ {
+  "id": 850,
+  "text": "called host byte order."
+ },
+ {
+  "id": 851,
+  "text": "So what is host byte order?"
+ },
+ {
+  "id": 852,
+  "text": "We define it,"
+ },
+ {
+  "id": 853,
+  "text": "let's just read it through once,"
+ },
+ {
+  "id": 854,
+  "text": "and then we'll explain it."
+ },
+ {
+  "id": 855,
+  "text": "That is to say,"
+ },
+ {
+  "id": 856,
+  "text": "when we discuss host byte order,"
+ },
+ {
+  "id": 857,
+  "text": "or let's just say directly,"
+ },
+ {
+  "id": 858,
+  "text": "when we discuss the concept of byte order,"
+ },
+ {
+  "id": 859,
+  "text": "we're definitely talking about what exactly?"
+ },
+ {
+  "id": 860,
+  "text": "it must be about a multi-byte integer"
+ },
+ {
+  "id": 861,
+  "text": "rather than a single-byte integer"
+ },
+ {
+  "id": 862,
+  "text": "what do I mean by a single-byte integer"
+ },
+ {
+  "id": 863,
+  "text": "I mean the 8-bit kind"
+ },
+ {
+  "id": 864,
+  "text": "like a character, that kind of thing"
+ },
+ {
+  "id": 865,
+  "text": "you follow, right?"
+ },
+ {
+  "id": 866,
+  "text": "a character takes up 8 bits, doesn't it?"
+ },
+ {
+  "id": 867,
+  "text": "and that's an integer too"
+ },
+ {
+  "id": 868,
+  "text": "in a computer,"
+ },
+ {
+  "id": 869,
+  "text": "for this kind of single-byte integer"
+ },
+ {
+  "id": 870,
+  "text": "there's really no concept of endianness"
+ },
+ {
+  "id": 871,
+  "text": "because it's just one byte to begin with"
+ },
+ {
+  "id": 872,
+  "text": "what order could there be?"
+ },
+ {
+  "id": 873,
+  "text": "what ordering issue could there be?"
+ },
+ {
+  "id": 874,
+  "text": "right?"
+ },
+ {
+  "id": 875,
+  "text": "that is to say, as soon as you're dealing with"
+ },
+ {
+  "id": 876,
+  "text": "a multi-byte integer"
+ },
+ {
+  "id": 877,
+  "text": "which ones are multi-byte integers?"
+ },
+ {
+  "id": 878,
+  "text": "a short,"
+ },
+ {
+  "id": 879,
+  "text": "an int"
+ },
+ {
+  "id": 880,
+  "text": "A long,"
+ },
+ {
+  "id": 881,
+  "text": "this kind of thing,"
+ },
+ {
+  "id": 882,
+  "text": "you still need to understand it."
+ },
+ {
+  "id": 883,
+  "text": "A short just takes up a couple of bytes."
+ },
+ {
+  "id": 884,
+  "text": "Usually a short,"
+ },
+ {
+  "id": 885,
+  "text": "takes up two bytes,"
+ },
+ {
+  "id": 886,
+  "text": "right?"
+ },
+ {
+  "id": 887,
+  "text": "An int is probably generally just"
+ },
+ {
+  "id": 888,
+  "text": "four bytes."
+ },
+ {
+  "id": 889,
+  "text": "For a long, it depends on"
+ },
+ {
+  "id": 890,
+  "text": "the specific"
+ },
+ {
+  "id": 891,
+  "text": "configuration and so on."
+ },
+ {
+  "id": 892,
+  "text": "So,"
+ },
+ {
+  "id": 893,
+  "text": "first of all, I want to emphasize that,"
+ },
+ {
+  "id": 894,
+  "text": "that is to say,"
+ },
+ {
+  "id": 895,
+  "text": "when you discuss byte order,"
+ },
+ {
+  "id": 896,
+  "text": "it must be a multi-byte integer;"
+ },
+ {
+  "id": 897,
+  "text": "otherwise, don't worry about byte order at all."
+ },
+ {
+  "id": 898,
+  "text": "Now, when it comes to this"
+ },
+ {
+  "id": 899,
+  "text": "instruction,"
+ },
+ {
+  "id": 900,
+  "text": "Why does endianness come into play here?"
+ },
+ {
+  "id": 901,
+  "text": "Because as we just mentioned"
+ },
+ {
+  "id": 902,
+  "text": "how many bytes does an instruction take up?"
+ },
+ {
+  "id": 903,
+  "text": "It takes up 4 bytes"
+ },
+ {
+  "id": 904,
+  "text": "so it's already more than one byte, right?"
+ },
+ {
+  "id": 905,
+  "text": "This raises the question of how these 4 bytes"
+ },
+ {
+  "id": 906,
+  "text": "are laid out in memory."
+ },
+ {
+  "id": 907,
+  "text": "I think you get what I mean."
+ },
+ {
+  "id": 908,
+  "text": "So this is the problem we need to discuss."
+ },
+ {
+  "id": 909,
+  "text": "Now, as we said,"
+ },
+ {
+  "id": 910,
+  "text": "once we understand the basic concept of endianness,"
+ },
+ {
+  "id": 911,
+  "text": "we can say there are two types."
+ },
+ {
+  "id": 912,
+  "text": "One is called big-endian,"
+ },
+ {
+  "id": 913,
+  "text": "and the other is called little-endian."
+ },
+ {
+  "id": 914,
+  "text": "Big-endian is called Big Ending,"
+ },
+ {
+  "id": 915,
+  "text": "and little-endian is called Little Ending."
+ },
+ {
+  "id": 916,
+  "text": "This is in the documentation."
+ },
+ {
+  "id": 917,
+  "text": "We should know these English terms as well,"
+ },
+ {
+  "id": 918,
+  "text": "since we need to understand this stuff."
+ },
+ {
+  "id": 919,
+  "text": "Now, regarding the host byte order we just mentioned"
+ },
+ {
+  "id": 920,
+  "text": "The concept of host byte order"
+ },
+ {
+  "id": 921,
+  "text": "may not be mentioned directly in the specification,"
+ },
+ {
+  "id": 922,
+  "text": "but in practice it is what we call the endianness issue."
+ },
+ {
+  "id": 923,
+  "text": "Now, this endianness,"
+ },
+ {
+  "id": 924,
+  "text": "it is related to the type of CPU."
+ },
+ {
+  "id": 925,
+  "text": "Different CPUs"
+ },
+ {
+  "id": 926,
+  "text": "will have different byte order conventions."
+ },
+ {
+  "id": 927,
+  "text": "So,"
+ },
+ {
+  "id": 928,
+  "text": "in our specification,"
+ },
+ {
+  "id": 929,
+  "text": "when we talk about the RISC-V specification,"
+ },
+ {
+  "id": 930,
+  "text": "it also has to make a corresponding provision for this."
+ },
+ {
+  "id": 931,
+  "text": "So here,"
+ },
+ {
+  "id": 932,
+  "text": "what it stipulates is that,"
+ },
+ {
+  "id": 933,
+  "text": "by default, it is little-endian."
+ },
+ {
+  "id": 934,
+  "text": "Note this carefully:"
+ },
+ {
+  "id": 935,
+  "text": "by default, it is little-endian."
+ },
+ {
+  "id": 936,
+  "text": "Now, exactly what is big-endian,"
+ },
+ {
+  "id": 937,
+  "text": "and what is little-endian?"
+ },
+ {
+  "id": 938,
+  "text": "Do you still remember"
+ },
+ {
+  "id": 939,
+  "text": "this concept?"
+ },
+ {
+  "id": 940,
+  "text": "Can you explain it in your own words?"
+ },
+ {
+  "id": 941,
+  "text": "For this question,"
+ },
+ {
+  "id": 942,
+  "text": "I still don't have a name list,"
+ },
+ {
+  "id": 943,
+  "text": "so I'll just pick someone at random."
+ },
+ {
+  "id": 944,
+  "text": "Let's see,"
+ },
+ {
+  "id": 945,
+  "text": "one of the girls in the second row,"
+ },
+ {
+  "id": 946,
+  "text": "I'll just pick any one of you."
+ },
+ {
+  "id": 947,
+  "text": "There are two of you in green,"
+ },
+ {
+  "id": 948,
+  "text": "two in blue,"
+ },
+ {
+  "id": 949,
+  "text": "right?"
+ },
+ {
+  "id": 950,
+  "text": "Never mind,"
+ },
+ {
+  "id": 951,
+  "text": "let's go with the one in blue."
+ },
+ {
+  "id": 952,
+  "text": "The student in blue,"
+ },
+ {
+  "id": 953,
+  "text": "that shouldn't be ambiguous, right?"
+ },
+ {
+  "id": 954,
+  "text": "The one in blue,"
+ },
+ {
+  "id": 955,
+  "text": "that girl there,"
+ },
+ {
+  "id": 956,
+  "text": "little-endian,"
+ },
+ {
+  "id": 957,
+  "text": "big-endian,"
+ },
+ {
+  "id": 958,
+  "text": "do you still remember them?"
+ },
+ {
+  "id": 959,
+  "text": "Like, if we say"
+ },
+ {
+  "id": 960,
+  "text": "asking you to explain"
+ },
+ {
+  "id": 961,
+  "text": "what big-endian and little-endian byte order mean"
+ },
+ {
+  "id": 962,
+  "text": "Can any of you explain it?"
+ },
+ {
+  "id": 963,
+  "text": "Hmm,"
+ },
+ {
+  "id": 964,
+  "text": "roughly right."
+ },
+ {
+  "id": 965,
+  "text": "And little-endian is the reverse of that,"
+ },
+ {
+  "id": 966,
+  "text": "right?"
+ },
+ {
+  "id": 967,
+  "text": "It seems everyone has learned this before."
+ },
+ {
+  "id": 968,
+  "text": "So on our side,"
+ },
+ {
+  "id": 969,
+  "text": "we don't need to explain it too much."
+ },
+ {
+  "id": 970,
+  "text": "Let's just take a quick look at this diagram."
+ },
+ {
+  "id": 971,
+  "text": "It's really just illustrating"
+ },
+ {
+  "id": 972,
+  "text": "what that student"
+ },
+ {
+  "id": 973,
+  "text": "just said,"
+ },
+ {
+  "id": 974,
+  "text": "that is to say,"
+ },
+ {
+  "id": 975,
+  "text": "say we have a number"
+ },
+ {
+  "id": 976,
+  "text": "over here, this is actually a"
+ },
+ {
+  "id": 977,
+  "text": "we specifically took an example of one"
+ },
+ {
+  "id": 978,
+  "text": "that takes up four bytes in memory,"
+ },
+ {
+  "id": 979,
+  "text": "an integer like that"
+ },
+ {
+  "id": 980,
+  "text": "As for this integer,"
+ },
+ {
+  "id": 981,
+  "text": "we humans usually write it in decimal,"
+ },
+ {
+  "id": 982,
+  "text": "for example, a 2874."
+ },
+ {
+  "id": 983,
+  "text": "How large is this number?"
+ },
+ {
+  "id": 984,
+  "text": "ones, tens, hundreds, thousands, ten-thousands,"
+ },
+ {
+  "id": 985,
+  "text": "hundred-thousands, millions, ten-millions, hundred-millions."
+ },
+ {
+  "id": 986,
+  "text": "It's two hundred eighty-seven million..."
+ },
+ {
+  "id": 987,
+  "text": "Following our human habit,"
+ },
+ {
+  "id": 988,
+  "text": "we write it from the high digits down to the low digits."
+ },
+ {
+  "id": 989,
+  "text": "That's what we say, right?"
+ },
+ {
+  "id": 990,
+  "text": "Two hundred eighty-seven million..."
+ },
+ {
+  "id": 991,
+  "text": "Isn't this from high digits to low digits?"
+ },
+ {
+  "id": 992,
+  "text": "Then the left side, we call it,"
+ },
+ {
+  "id": 993,
+  "text": "numerically speaking, the high-order bits of the data."
+ },
+ {
+  "id": 994,
+  "text": "And the right side is called the low-order bits of the data."
+ },
+ {
+  "id": 995,
+  "text": "Now, the computer,"
+ },
+ {
+  "id": 996,
+  "text": "of course, it doesn't like this kind of thing."
+ },
+ {
+  "id": 997,
+  "text": "When the computer represents numbers,"
+ },
+ {
+  "id": 998,
+  "text": "it wants to convert them into binary."
+ },
+ {
+  "id": 999,
+  "text": "So below here, it's been converted into a binary"
+ },
+ {
+  "id": 1000,
+  "text": "So what about binary?"
+ },
+ {
+  "id": 1001,
+  "text": "It also has the concepts of high bits and low bits."
+ },
+ {
+  "id": 1002,
+  "text": "So in the end,"
+ },
+ {
+  "id": 1003,
+  "text": "when we're programming,"
+ },
+ {
+  "id": 1004,
+  "text": "we actually prefer to use hexadecimal to represent things."
+ },
+ {
+  "id": 1005,
+  "text": "Right?"
+ },
+ {
+  "id": 1006,
+  "text": "Now, converting it to hexadecimal,"
+ },
+ {
+  "id": 1007,
+  "text": "you might wonder why I picked such a strange value."
+ },
+ {
+  "id": 1008,
+  "text": "It's because when converted to hexadecimal,"
+ },
+ {
+  "id": 1009,
+  "text": "it becomes a very nice-looking number,"
+ },
+ {
+  "id": 1010,
+  "text": "11223344."
+ },
+ {
+  "id": 1011,
+  "text": "Right?"
+ },
+ {
+  "id": 1012,
+  "text": "Now, the 11,"
+ },
+ {
+  "id": 1013,
+  "text": "we consider it the high part,"
+ },
+ {
+  "id": 1014,
+  "text": "sitting in the high-order portion,"
+ },
+ {
+  "id": 1015,
+  "text": "the high-order 8 bits."
+ },
+ {
+  "id": 1016,
+  "text": "The 44 is the low 8 bits."
+ },
+ {
+  "id": 1017,
+  "text": "So once this number is given to you,"
+ },
+ {
+  "id": 1018,
+  "text": "a question immediately comes up,"
+ },
+ {
+  "id": 1019,
+  "text": "namely, when it's in memory,"
+ },
+ {
+  "id": 1020,
+  "text": "How do we store it?"
+ },
+ {
+  "id": 1021,
+  "text": "Because we know that"
+ },
+ {
+  "id": 1022,
+  "text": "to store these 32 bits"
+ },
+ {
+  "id": 1023,
+  "text": "of data,"
+ },
+ {
+  "id": 1024,
+  "text": "we can,"
+ },
+ {
+  "id": 1025,
+  "text": "since storage is byte-based,"
+ },
+ {
+  "id": 1026,
+  "text": "split it into four chunks to store."
+ },
+ {
+  "id": 1027,
+  "text": "Then for each chunk,"
+ },
+ {
+  "id": 1028,
+  "text": "one byte like this,"
+ },
+ {
+  "id": 1029,
+  "text": "so it comes down to where"
+ },
+ {
+  "id": 1030,
+  "text": "this one byte"
+ },
+ {
+  "id": 1031,
+  "text": "is placed."
+ },
+ {
+  "id": 1032,
+  "text": "Now, a student just explained this,"
+ },
+ {
+  "id": 1033,
+  "text": "using big-endian as the example,"
+ },
+ {
+  "id": 1034,
+  "text": "to explain it to everyone."
+ },
+ {
+  "id": 1035,
+  "text": "What is big-endian?"
+ },
+ {
+  "id": 1036,
+  "text": "Big-endian means that"
+ },
+ {
+  "id": 1037,
+  "text": "the 'big' in big-endian refers to the high-order bits,"
+ },
+ {
+  "id": 1038,
+  "text": "you see what I mean,"
+ },
+ {
+  "id": 1039,
+  "text": "and the low-order bits are little-endian."
+ },
+ {
+  "id": 1040,
+  "text": "So what about big endian?"
+ },
+ {
+  "id": 1041,
+  "text": "It means the high-order data part,"
+ },
+ {
+  "id": 1042,
+  "text": "that is, what we call this"
+ },
+ {
+  "id": 1043,
+  "text": "high-order data part."
+ },
+ {
+  "id": 1044,
+  "text": "Suppose when we lay things out in memory,"
+ },
+ {
+  "id": 1045,
+  "text": "we always lay them out from low to high."
+ },
+ {
+  "id": 1046,
+  "text": "Assuming we always lay them out"
+ },
+ {
+  "id": 1047,
+  "text": "from low to high,"
+ },
+ {
+  "id": 1048,
+  "text": "that is, when laying them out,"
+ },
+ {
+  "id": 1049,
+  "text": "assuming we always lay them out from low to high,"
+ },
+ {
+  "id": 1050,
+  "text": "then so-called big endian"
+ },
+ {
+  "id": 1051,
+  "text": "means its high-order part"
+ },
+ {
+  "id": 1052,
+  "text": "goes into the low byte first."
+ },
+ {
+  "id": 1053,
+  "text": "So the high-order part, look, 11 goes into where?"
+ },
+ {
+  "id": 1054,
+  "text": "It goes into the byte at address A."
+ },
+ {
+  "id": 1055,
+  "text": "And the following addresses are A+1 and A+2, right?"
+ },
+ {
+  "id": 1056,
+  "text": "Because, as we said, memory"
+ },
+ {
+  "id": 1057,
+  "text": "is laid out in units of bytes."
+ },
+ {
+  "id": 1058,
+  "text": "So the high-order byte goes into the low byte first."
+ },
+ {
+  "id": 1059,
+  "text": "And as for little endian,"
+ },
+ {
+  "id": 1060,
+  "text": "That is, the low bits go into the low byte first."
+ },
+ {
+  "id": 1061,
+  "text": "If you keep this rule in mind,"
+ },
+ {
+  "id": 1062,
+  "text": "it should be very easy to understand"
+ },
+ {
+  "id": 1063,
+  "text": "what we call"
+ },
+ {
+  "id": 1064,
+  "text": "the concepts of big-endian and little-endian."
+ },
+ {
+  "id": 1065,
+  "text": "Then later on,"
+ },
+ {
+  "id": 1066,
+  "text": "you'll also be doing it in reverse."
+ },
+ {
+  "id": 1067,
+  "text": "For example, say I give you a chunk of memory,"
+ },
+ {
+  "id": 1068,
+  "text": "and the data in this memory is"
+ },
+ {
+  "id": 1069,
+  "text": "let's say,"
+ },
+ {
+  "id": 1070,
+  "text": "because in your future work,"
+ },
+ {
+  "id": 1071,
+  "text": "it's often the other way around."
+ },
+ {
+  "id": 1072,
+  "text": "That is, you look at the memory first,"
+ },
+ {
+  "id": 1073,
+  "text": "and what's stored in the memory is"
+ },
+ {
+  "id": 1074,
+  "text": "because from the low address to the high address of the memory,"
+ },
+ {
+  "id": 1075,
+  "text": "the data you see is 1122334,"
+ },
+ {
+  "id": 1076,
+  "text": "and then I'm going to ask you,"
+ },
+ {
+  "id": 1077,
+  "text": "what value does this data represent? It's the reverse."
+ },
+ {
+  "id": 1078,
+  "text": "In that case,"
+ },
+ {
+  "id": 1079,
+  "text": "at that point,"
+ },
+ {
+  "id": 1080,
+  "text": "Before you answer that question,"
+ },
+ {
+  "id": 1081,
+  "text": "the first thing you should do is ask,"
+ },
+ {
+  "id": 1082,
+  "text": "for example, say I'm the interviewer,"
+ },
+ {
+  "id": 1083,
+  "text": "and I ask you,"
+ },
+ {
+  "id": 1084,
+  "text": "given this block of memory,"
+ },
+ {
+  "id": 1085,
+  "text": "tell me what the value inside it is."
+ },
+ {
+  "id": 1086,
+  "text": "Can you answer that directly?"
+ },
+ {
+  "id": 1087,
+  "text": "If you answer directly, you lose."
+ },
+ {
+  "id": 1088,
+  "text": "You should ask him first,"
+ },
+ {
+  "id": 1089,
+  "text": "you should ask back,"
+ },
+ {
+  "id": 1090,
+  "text": "what kind of CPU is this?"
+ },
+ {
+  "id": 1091,
+  "text": "What is its byte order?"
+ },
+ {
+  "id": 1092,
+  "text": "He understands what I mean by that."
+ },
+ {
+  "id": 1093,
+  "text": "So once the question gets to this point,"
+ },
+ {
+  "id": 1094,
+  "text": "I reckon the examiner won't ask any further."
+ },
+ {
+  "id": 1095,
+  "text": "Because he'll figure you understand it."
+ },
+ {
+  "id": 1096,
+  "text": "Now, as for our Risk5,"
+ },
+ {
+  "id": 1097,
+  "text": "it is little-endian,"
+ },
+ {
+  "id": 1098,
+  "text": "so you need to interpret it in little-endian order."
+ },
+ {
+  "id": 1099,
+  "text": "And when you read it,"
+ },
+ {
+  "id": 1100,
+  "text": "For example, suppose"
+ },
+ {
+  "id": 1101,
+  "text": "that this is little-endian"
+ },
+ {
+  "id": 1102,
+  "text": "what value do you think this data is?"
+ },
+ {
+  "id": 1103,
+  "text": "Because we know little-endian"
+ },
+ {
+  "id": 1104,
+  "text": "puts the low byte into the low address first"
+ },
+ {
+  "id": 1105,
+  "text": "so when laying it out"
+ },
+ {
+  "id": 1106,
+  "text": "this 11 definitely goes in the low bits of the data"
+ },
+ {
+  "id": 1107,
+  "text": "then 22 above it, then higher and higher"
+ },
+ {
+  "id": 1108,
+  "text": "So if this block of data"
+ },
+ {
+  "id": 1109,
+  "text": "is in a RISC-V machine environment,"
+ },
+ {
+  "id": 1110,
+  "text": "then the data is actually like this"
+ },
+ {
+  "id": 1111,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 1112,
+  "text": "Basically, you just need to be able to read it both ways"
+ },
+ {
+  "id": 1113,
+  "text": "That's what's meant by big-endian and little-endian for humans"
+ },
+ {
+  "id": 1114,
+  "text": "So why is it called big-endian and little-endian?"
+ },
+ {
+  "id": 1115,
+  "text": "Actually, the picture here is the big end and little end of an egg"
+ },
+ {
+  "id": 1116,
+  "text": "It's really just saying that"
+ },
+ {
+  "id": 1117,
+  "text": "when you eat a boiled egg"
+ },
+ {
+  "id": 1118,
+  "text": "you know how you crack the egg"
+ },
+ {
+  "id": 1119,
+  "text": "is your habit big-endian or little-endian?"
+ },
+ {
+  "id": 1120,
+  "text": "Your habit is to strike the big end first,"
+ },
+ {
+  "id": 1121,
+  "text": "or the small end first?"
+ },
+ {
+  "id": 1122,
+  "text": "What's your habit?"
+ },
+ {
+  "id": 1123,
+  "text": "My habit is definitely to strike the big end first."
+ },
+ {
+  "id": 1124,
+  "text": "Once you strike it, you set it down."
+ },
+ {
+  "id": 1125,
+  "text": "Can it stand up?"
+ },
+ {
+  "id": 1126,
+  "text": "That's the more fun version."
+ },
+ {
+  "id": 1127,
+  "text": "Let me tell everyone about it."
+ },
+ {
+  "id": 1128,
+  "text": "It's about big-endian and little-endian byte order."
+ },
+ {
+  "id": 1129,
+  "text": "Now, we know that in RISC-V,"
+ },
+ {
+  "id": 1130,
+  "text": "the instructions in memory,"
+ },
+ {
+  "id": 1131,
+  "text": "they use little-endian byte order."
+ },
+ {
+  "id": 1132,
+  "text": "Just keep this page open."
+ },
+ {
+  "id": 1133,
+  "text": "Later, when we"
+ },
+ {
+  "id": 1134,
+  "text": "do some exercises ourselves,"
+ },
+ {
+  "id": 1135,
+  "text": "we'll go back and look at this."
+ },
+ {
+  "id": 1136,
+  "text": "So, regarding this,"
+ },
+ {
+  "id": 1137,
+  "text": "this encoding format,"
+ },
+ {
+  "id": 1138,
+  "text": "the basic concepts in these things,"
+ },
+ {
+  "id": 1139,
+  "text": "we'll just cover them on this slide."
+ },
+ {
+  "id": 1140,
+  "text": "That's really what all this is about."
+ },
+ {
+  "id": 1141,
+  "text": "So now,"
+ },
+ {
+  "id": 1142,
+  "text": "next let's take a look at"
+ },
+ {
+  "id": 1143,
+  "text": "some of these specific encoding formats."
+ },
+ {
+  "id": 1144,
+  "text": "As we said, there are six encoding formats."
+ },
+ {
+  "id": 1145,
+  "text": "So what is this thing called RISBUG?"
+ },
+ {
+  "id": 1146,
+  "text": "What does each letter mean?"
+ },
+ {
+  "id": 1147,
+  "text": "Later, when we get to the specific instructions,"
+ },
+ {
+  "id": 1148,
+  "text": "we'll go through them again."
+ },
+ {
+  "id": 1149,
+  "text": "For now, we just want you to get the general idea,"
+ },
+ {
+  "id": 1150,
+  "text": "for example,"
+ },
+ {
+  "id": 1151,
+  "text": "if someone asks you what R is,"
+ },
+ {
+  "id": 1152,
+  "text": "well, we know"
+ },
+ {
+  "id": 1153,
+  "text": "it's actually an English abbreviation."
+ },
+ {
+  "id": 1154,
+  "text": "Once you remember the abbreviation,"
+ },
+ {
+  "id": 1155,
+  "text": "you'll probably find it easier to understand"
+ },
+ {
+  "id": 1156,
+  "text": "what this instruction format"
+ },
+ {
+  "id": 1157,
+  "text": "roughly looks like."
+ },
+ {
+  "id": 1158,
+  "text": "So R,"
+ },
+ {
+  "id": 1159,
+  "text": "it stands for"
+ },
+ {
+  "id": 1160,
+  "text": "it's actually an abbreviation of the word register"
+ },
+ {
+  "id": 1161,
+  "text": "so where does its characteristic show up"
+ },
+ {
+  "id": 1162,
+  "text": "pay attention here"
+ },
+ {
+  "id": 1163,
+  "text": "in its instructions"
+ },
+ {
+  "id": 1164,
+  "text": "in its format"
+ },
+ {
+  "id": 1165,
+  "text": "it has three fields"
+ },
+ {
+  "id": 1166,
+  "text": "all used to hold registers"
+ },
+ {
+  "id": 1167,
+  "text": "by these code names"
+ },
+ {
+  "id": 1168,
+  "text": "like RS"
+ },
+ {
+  "id": 1169,
+  "text": "and look,"
+ },
+ {
+  "id": 1170,
+  "text": "RD"
+ },
+ {
+  "id": 1171,
+  "text": "now this D here"
+ },
+ {
+  "id": 1172,
+  "text": "note this carefully"
+ },
+ {
+  "id": 1173,
+  "text": "this RD here"
+ },
+ {
+  "id": 1174,
+  "text": "means that this D"
+ },
+ {
+  "id": 1175,
+  "text": "comes from the English"
+ },
+ {
+  "id": 1176,
+  "text": "abbreviation of destination"
+ },
+ {
+  "id": 1177,
+  "text": "you all know what destination means"
+ },
+ {
+  "id": 1178,
+  "text": "it's the target"
+ },
+ {
+  "id": 1179,
+  "text": "target in the usual English sense"
+ },
+ {
+  "id": 1180,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 1181,
+  "text": "It means that the final computed result"
+ },
+ {
+  "id": 1182,
+  "text": "will be placed into this register."
+ },
+ {
+  "id": 1183,
+  "text": "Do you all understand what I mean?"
+ },
+ {
+  "id": 1184,
+  "text": "When we designed that mini CPU earlier,"
+ },
+ {
+  "id": 1185,
+  "text": "we also"
+ },
+ {
+  "id": 1186,
+  "text": "when doing addition,"
+ },
+ {
+  "id": 1187,
+  "text": "didn't we also take that computed result"
+ },
+ {
+  "id": 1188,
+  "text": "and put it into register 1?"
+ },
+ {
+  "id": 1189,
+  "text": "Right?"
+ },
+ {
+  "id": 1190,
+  "text": "Adding two registers together"
+ },
+ {
+  "id": 1191,
+  "text": "and putting the result into register 1."
+ },
+ {
+  "id": 1192,
+  "text": "You can go back and review that."
+ },
+ {
+  "id": 1193,
+  "text": "So this rd,"
+ },
+ {
+  "id": 1194,
+  "text": "it's used to hold the final result"
+ },
+ {
+  "id": 1195,
+  "text": "in that register."
+ },
+ {
+  "id": 1196,
+  "text": "rs"
+ },
+ {
+  "id": 1197,
+  "text": "what does the s mean?"
+ },
+ {
+  "id": 1198,
+  "text": "The s comes from the English word 'source'."
+ },
+ {
+  "id": 1199,
+  "text": "Source, the origin"
+ },
+ {
+  "id": 1200,
+  "text": "still understand"
+ },
+ {
+  "id": 1201,
+  "text": "source"
+ },
+ {
+  "id": 1202,
+  "text": "then it means it"
+ },
+ {
+  "id": 1203,
+  "text": "for example, if I want to do addition"
+ },
+ {
+  "id": 1204,
+  "text": "when doing addition"
+ },
+ {
+  "id": 1205,
+  "text": "A plus B equals C"
+ },
+ {
+  "id": 1206,
+  "text": "then A and B are the source"
+ },
+ {
+  "id": 1207,
+  "text": "and C is the destination"
+ },
+ {
+  "id": 1208,
+  "text": "so this"
+ },
+ {
+  "id": 1209,
+  "text": "once you see this, you know"
+ },
+ {
+  "id": 1210,
+  "text": "what this RS ultimately means"
+ },
+ {
+  "id": 1211,
+  "text": "and then finally when it becomes"
+ },
+ {
+  "id": 1212,
+  "text": "that assembly instruction"
+ },
+ {
+  "id": 1213,
+  "text": "we have a correspondence with this"
+ },
+ {
+  "id": 1214,
+  "text": "now this register"
+ },
+ {
+  "id": 1215,
+  "text": "please note"
+ },
+ {
+  "id": 1216,
+  "text": "each register generally occupies"
+ },
+ {
+  "id": 1217,
+  "text": "they are all the same"
+ },
+ {
+  "id": 1218,
+  "text": "each one, if inside it"
+ },
+ {
+  "id": 1219,
+  "text": "needs to indicate a register"
+ },
+ {
+  "id": 1220,
+  "text": "It generally takes one register"
+ },
+ {
+  "id": 1221,
+  "text": "and uses 5 bits."
+ },
+ {
+  "id": 1222,
+  "text": "Now think about it,"
+ },
+ {
+  "id": 1223,
+  "text": "why 5 bits?"
+ },
+ {
+  "id": 1224,
+  "text": "It's actually related to"
+ },
+ {
+  "id": 1225,
+  "text": "what we learned earlier."
+ },
+ {
+  "id": 1226,
+  "text": "What do 5 bits mean?"
+ },
+ {
+  "id": 1227,
+  "text": "It means this:"
+ },
+ {
+  "id": 1228,
+  "text": "the range it can express"
+ },
+ {
+  "id": 1229,
+  "text": "for registers is 32."
+ },
+ {
+  "id": 1230,
+  "text": "Right?"
+ },
+ {
+  "id": 1231,
+  "text": "We mentioned earlier,"
+ },
+ {
+  "id": 1232,
+  "text": "how many general-purpose registers are there?"
+ },
+ {
+  "id": 1233,
+  "text": "32."
+ },
+ {
+  "id": 1234,
+  "text": "That's exactly the reason."
+ },
+ {
+  "id": 1235,
+  "text": "It won't waste a single extra bit,"
+ },
+ {
+  "id": 1236,
+  "text": "nor will it be short one."
+ },
+ {
+  "id": 1237,
+  "text": "Because at this level,"
+ },
+ {
+  "id": 1238,
+  "text": "you have to carefully study"
+ },
+ {
+  "id": 1239,
+  "text": "how to design every single bit."
+ },
+ {
+  "id": 1240,
+  "text": "The people who designed the spec"
+ },
+ {
+  "id": 1241,
+  "text": "definitely thought through"
+ },
+ {
+  "id": 1242,
+  "text": "every single bit"
+ },
+ {
+  "id": 1243,
+  "text": "nothing is wasted"
+ },
+ {
+  "id": 1244,
+  "text": "So this is the R type"
+ },
+ {
+  "id": 1245,
+  "text": "meaning that in this instruction"
+ },
+ {
+  "id": 1246,
+  "text": "three registers are involved"
+ },
+ {
+  "id": 1247,
+  "text": "its operands"
+ },
+ {
+  "id": 1248,
+  "text": "involve three registers"
+ },
+ {
+  "id": 1249,
+  "text": "This is also a characteristic of RISC-V,"
+ },
+ {
+  "id": 1250,
+  "text": "a feature of this reduced instruction set"
+ },
+ {
+  "id": 1251,
+  "text": "meaning that in a single instruction"
+ },
+ {
+  "id": 1252,
+  "text": "you can involve up to three registers"
+ },
+ {
+  "id": 1253,
+  "text": "And the more registers involved,"
+ },
+ {
+  "id": 1254,
+  "text": "as you can imagine"
+ },
+ {
+  "id": 1255,
+  "text": "the more powerful the operation"
+ },
+ {
+  "id": 1256,
+  "text": "can relatively be"
+ },
+ {
+  "id": 1257,
+  "text": "because operating on registers is faster"
+ },
+ {
+  "id": 1258,
+  "text": "Then the second type is called I"
+ },
+ {
+  "id": 1259,
+  "text": "I stands for"
+ },
+ {
+  "id": 1260,
+  "text": "This I does not mean integer."
+ },
+ {
+  "id": 1261,
+  "text": "This I means immediate."
+ },
+ {
+  "id": 1262,
+  "text": "Immediate translated into Chinese is called an immediate value."
+ },
+ {
+  "id": 1263,
+  "text": "That means in this instruction,"
+ },
+ {
+  "id": 1264,
+  "text": "it carries a"
+ },
+ {
+  "id": 1265,
+  "text": "uses this limited number of bits"
+ },
+ {
+  "id": 1266,
+  "text": "to represent an integer,"
+ },
+ {
+  "id": 1267,
+  "text": "to represent an integer."
+ },
+ {
+  "id": 1268,
+  "text": "Look at this."
+ },
+ {
+  "id": 1269,
+  "text": "For example, its"
+ },
+ {
+  "id": 1270,
+  "text": "in this I-type format,"
+ },
+ {
+  "id": 1271,
+  "text": "compared with the R-type,"
+ },
+ {
+  "id": 1272,
+  "text": "what is the difference?"
+ },
+ {
+  "id": 1273,
+  "text": "You can take a look."
+ },
+ {
+  "id": 1274,
+  "text": "It has opcode,"
+ },
+ {
+  "id": 1275,
+  "text": "it has rd,"
+ },
+ {
+  "id": 1276,
+  "text": "it has rs1."
+ },
+ {
+  "id": 1277,
+  "text": "There is rs1,"
+ },
+ {
+  "id": 1278,
+  "text": "but this rs1"
+ },
+ {
+  "id": 1279,
+  "text": "is no longer present here."
+ },
+ {
+  "id": 1280,
+  "text": "That is to say, it's missing one register,"
+ },
+ {
+  "id": 1281,
+  "text": "but,"
+ },
+ {
+  "id": 1282,
+  "text": "it uses a chunk of content"
+ },
+ {
+  "id": 1283,
+  "text": "to represent an immediate value."
+ },
+ {
+  "id": 1284,
+  "text": "This immediate value takes up 12 bits."
+ },
+ {
+  "id": 1285,
+  "text": "How large a range of integers can 12 bits express? You can work that out when you get back."
+ },
+ {
+  "id": 1286,
+  "text": "This is the immediate type."
+ },
+ {
+  "id": 1287,
+  "text": "This is the immediate type."
+ },
+ {
+  "id": 1288,
+  "text": "Then there's the store type."
+ },
+ {
+  "id": 1289,
+  "text": "We'll just go over this quickly later."
+ },
+ {
+  "id": 1290,
+  "text": "We'll talk about it when we get there."
+ },
+ {
+  "id": 1291,
+  "text": "Store is used to store data,"
+ },
+ {
+  "id": 1292,
+  "text": "that is, it's an instruction we use later to access memory."
+ },
+ {
+  "id": 1293,
+  "text": "B stands for branch."
+ },
+ {
+  "id": 1294,
+  "text": "Branch, as you can guess, is actually related to jumping."
+ },
+ {
+  "id": 1295,
+  "text": "Conditional branching."
+ },
+ {
+  "id": 1296,
+  "text": "U stands for upper."
+ },
+ {
+  "id": 1297,
+  "text": "Next comes jump."
+ },
+ {
+  "id": 1298,
+  "text": "We won't go into this one for now."
+ },
+ {
+  "id": 1299,
+  "text": "We'll look at it when we get to it."
+ },
+ {
+  "id": 1300,
+  "text": "This is what's called the encoding format."
+ },
+ {
+  "id": 1301,
+  "text": "So,"
+ },
+ {
+  "id": 1302,
+  "text": "as the wrap-up for this little section,"
+ },
+ {
+  "id": 1303,
+  "text": "we're essentially giving you an overview."
+ },
+ {
+  "id": 1304,
+  "text": "And since it's an overview,"
+ },
+ {
+  "id": 1305,
+  "text": "we should also take a quick look at"
+ },
+ {
+  "id": 1306,
+  "text": "which ones we'll be learning later on,"
+ },
+ {
+  "id": 1307,
+  "text": "these assembly instructions."
+ },
+ {
+  "id": 1308,
+  "text": "This table of ours,"
+ },
+ {
+  "id": 1309,
+  "text": "I've just put together a simple list for you."
+ },
+ {
+  "id": 1310,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1311,
+  "text": "for ours,"
+ },
+ {
+  "id": 1312,
+  "text": "actually, if you go and look at the spec,"
+ },
+ {
+  "id": 1313,
+  "text": "the ones we need to learn,"
+ },
+ {
+  "id": 1314,
+  "text": "the instructions the spec lists out for us,"
+ },
+ {
+  "id": 1315,
+  "text": "there are actually more than just these."
+ },
+ {
+  "id": 1316,
+  "text": "Our space is limited,"
+ },
+ {
+  "id": 1317,
+  "text": "so we'll only cover these ones for you."
+ },
+ {
+  "id": 1318,
+  "text": "Now, these instructions,"
+ },
+ {
+  "id": 1319,
+  "text": "we've grouped into several major categories."
+ },
+ {
+  "id": 1320,
+  "text": "category by category for you"
+ },
+ {
+  "id": 1321,
+  "text": "including arithmetic instructions,"
+ },
+ {
+  "id": 1322,
+  "text": "logical instructions,"
+ },
+ {
+  "id": 1323,
+  "text": "shift instructions,"
+ },
+ {
+  "id": 1324,
+  "text": "memory load and store instructions,"
+ },
+ {
+  "id": 1325,
+  "text": "and branch and jump instructions."
+ },
+ {
+  "id": 1326,
+  "text": "These categories,"
+ },
+ {
+  "id": 1327,
+  "text": "basically, these five major categories,"
+ },
+ {
+  "id": 1328,
+  "text": "five major categories."
+ },
+ {
+  "id": 1329,
+  "text": "If you have a basic grasp of these five categories"
+ },
+ {
+  "id": 1330,
+  "text": "of instructions,"
+ },
+ {
+  "id": 1331,
+  "text": "then when you go and look at some"
+ },
+ {
+  "id": 1332,
+  "text": "ordinary assembly code,"
+ },
+ {
+  "id": 1333,
+  "text": "you should have no problem with it."
+ },
+ {
+  "id": 1334,
+  "text": "I think you should have no problem with it."
+ },
+ {
+  "id": 1335,
+  "text": "And learning assembly instructions is the same way,"
+ },
+ {
+  "id": 1336,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1337,
+  "text": "you know, when you say,"
+ },
+ {
+  "id": 1338,
+  "text": "\"Oh, assembly is too hard to write,"
+ },
+ {
+  "id": 1339,
+  "text": "it's too difficult for us to learn.\""
+ },
+ {
+  "id": 1340,
+  "text": "Actually, you don't need to worry."
+ },
+ {
+  "id": 1341,
+  "text": "Because in most of your future work,"
+ },
+ {
+  "id": 1342,
+  "text": "when it comes to assembly instructions,"
+ },
+ {
+  "id": 1343,
+  "text": "compared to writing,"
+ },
+ {
+  "id": 1344,
+  "text": "pages and pages of assembly instructions,"
+ },
+ {
+  "id": 1345,
+  "text": "the chances are actually not that many."
+ },
+ {
+  "id": 1346,
+  "text": "Actually, most of the time,"
+ },
+ {
+  "id": 1347,
+  "text": "as long as you can understand"
+ },
+ {
+  "id": 1348,
+  "text": "some short snippets of assembly instructions,"
+ },
+ {
+  "id": 1349,
+  "text": "that's already enough."
+ },
+ {
+  "id": 1350,
+  "text": "You all understand what I mean, right?"
+ },
+ {
+  "id": 1351,
+  "text": "So,"
+ },
+ {
+  "id": 1352,
+  "text": "in other words, we don't have to be like high-level"
+ },
+ {
+  "id": 1353,
+  "text": "languages such as C,"
+ },
+ {
+  "id": 1354,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1355,
+  "text": "for example, writing a few thousand lines a day,"
+ },
+ {
+  "id": 1356,
+  "text": "which for some students doesn't seem to be a problem."
+ },
+ {
+  "id": 1357,
+  "text": "But at the assembly level, writing code like that,"
+ },
+ {
+  "id": 1358,
+  "text": "that's simply a joke."
+ },
+ {
+  "id": 1359,
+  "text": "That is to say, writing thousands of lines of assembly a day,"
+ },
+ {
+  "id": 1360,
+  "text": "I said this guy must be"
+ },
+ {
+  "id": 1361,
+  "text": "joking."
+ },
+ {
+  "id": 1362,
+  "text": "What he wrote must have problems."
+ },
+ {
+  "id": 1363,
+  "text": "This..."
+ },
+ {
+  "id": 1364,
+  "text": "Sometimes some of you may have heard"
+ },
+ {
+  "id": 1365,
+  "text": "some people say,"
+ },
+ {
+  "id": 1366,
+  "text": "there are programmers like this,"
+ },
+ {
+  "id": 1367,
+  "text": "he says he only writes a few lines of code a day."
+ },
+ {
+  "id": 1368,
+  "text": "That's possible,"
+ },
+ {
+  "id": 1369,
+  "text": "because he just..."
+ },
+ {
+  "id": 1370,
+  "text": "for example, he just wrote a few lines of code in assembly."
+ },
+ {
+  "id": 1371,
+  "text": "That is also possible."
+ },
+ {
+  "id": 1372,
+  "text": "Okay, so we've roughly divided instructions into these categories."
+ },
+ {
+  "id": 1373,
+  "text": "As for the specific instructions,"
+ },
+ {
+  "id": 1374,
+  "text": "we'll look at them later."
+ },
+ {
+  "id": 1375,
+  "text": "So besides what we just talked about,"
+ },
+ {
+  "id": 1376,
+  "text": "these are called instructions, which is instruction."
+ },
+ {
+  "id": 1377,
+  "text": "The instructions we talked about earlier,"
+ },
+ {
+  "id": 1378,
+  "text": "so besides instructions,"
+ },
+ {
+  "id": 1379,
+  "text": "we said in our specification"
+ },
+ {
+  "id": 1380,
+  "text": "It also defines the corresponding thing called pseudo-instruction."
+ },
+ {
+  "id": 1381,
+  "text": "We covered this concept earlier."
+ },
+ {
+  "id": 1382,
+  "text": "The concept of a pseudo-instruction."
+ },
+ {
+  "id": 1383,
+  "text": "So if you look at this table, this pseudo-instruction."
+ },
+ {
+  "id": 1384,
+  "text": "This column, that is, is the pseudo-instruction."
+ },
+ {
+  "id": 1385,
+  "text": "A pseudo-instruction is actually what's called a base instruction here."
+ },
+ {
+  "id": 1386,
+  "text": "That is, one pseudo-instruction may correspond to multiple base instructions."
+ },
+ {
+  "id": 1387,
+  "text": "As we just said, otherwise why call it a pseudo-instruction?"
+ },
+ {
+  "id": 1388,
+  "text": "There is no actual machine instruction that corresponds to it."
+ },
+ {
+  "id": 1389,
+  "text": "In reality, it gets translated into real basic machine instructions."
+ },
+ {
+  "id": 1390,
+  "text": "That's what a pseudo-instruction is."
+ },
+ {
+  "id": 1391,
+  "text": "Now, the related table of pseudo-instructions."
+ },
+ {
+  "id": 1392,
+  "text": "This table here."
+ },
+ {
+  "id": 1393,
+  "text": "Is actually not from the specification."
+ },
+ {
+  "id": 1394,
+  "text": "The actual specification."
+ },
+ {
+  "id": 1395,
+  "text": "You can go take a look at it."
+ },
+ {
+  "id": 1396,
+  "text": "In our"
+ },
+ {
+  "id": 1397,
+  "text": "Chapter 25 of the specification we just mentioned."
+ },
+ {
+  "id": 1398,
+  "text": "Ah."
+ },
+ {
+  "id": 1399,
+  "text": "Chapter 25."
+ },
+ {
+  "id": 1400,
+  "text": "Chapter 25 is called the RISC-V"
+ },
+ {
+  "id": 1401,
+  "text": "uh"
+ },
+ {
+  "id": 1402,
+  "text": "Assembly Programming"
+ },
+ {
+  "id": 1403,
+  "text": "Handbook, handbook."
+ },
+ {
+  "id": 1404,
+  "text": "It's a very small"
+ },
+ {
+  "id": 1405,
+  "text": "uh,"
+ },
+ {
+  "id": 1406,
+  "text": "tiny little booklet."
+ },
+ {
+  "id": 1407,
+  "text": "In it,"
+ },
+ {
+  "id": 1408,
+  "text": "it simply lists some"
+ },
+ {
+  "id": 1409,
+  "text": "uh,"
+ },
+ {
+  "id": 1410,
+  "text": "commonly used"
+ },
+ {
+  "id": 1411,
+  "text": "pseudo-instructions."
+ },
+ {
+  "id": 1412,
+  "text": "As you can see here, there are commonly used pseudo-instructions"
+ },
+ {
+  "id": 1413,
+  "text": "and their corresponding basic instructions, the mapping between them."
+ },
+ {
+  "id": 1414,
+  "text": "Later on, when you need to look up a pseudo-instruction,"
+ },
+ {
+  "id": 1415,
+  "text": "you can look it up here."
+ },
+ {
+  "id": 1416,
+  "text": "This is basically an overview of the pseudo-instructions."
+ },
+ {
+  "id": 1417,
+  "text": "Later, when we talk about instructions,"
+ },
+ {
+  "id": 1418,
+  "text": "we'll also cover some commonly used pseudo-instructions along the way."
+ },
+ {
+  "id": 1419,
+  "text": "So that basically covers the overview of instructions."
+ },
+ {
+  "id": 1420,
+  "text": "That's all I'll cover for that part."
+ },
+ {
+  "id": 1421,
+  "text": "Now, next up,"
+ },
+ {
+  "id": 1422,
+  "text": "we're going to start the detailed instruction walkthrough."
+ },
+ {
+  "id": 1423,
+  "text": "For the material that follows,"
+ },
+ {
+  "id": 1424,
+  "text": "you'll probably need to work through it as we go along,"
+ },
+ {
+  "id": 1425,
+  "text": "doing some exercises along the way."
+ },
+ {
+  "id": 1426,
+  "text": "Otherwise,"
+ },
+ {
+  "id": 1427,
+  "text": "it'll get pretty dry to learn."
+ },
+ {
+  "id": 1428,
+  "text": "So make sure you have your computer up and running."
+ }
+]

@@ -1,0 +1,3202 @@
+[
+ {
+  "id": 0,
+  "text": "We still have some time this morning, let's refresh our memory. We've only covered the first category of instructions so far."
+ },
+ {
+  "id": 1,
+  "text": "Now, the second commonly used category is logic operation instructions."
+ },
+ {
+  "id": 2,
+  "text": "As for logic operations, they actually show up in C as well — that's AND, OR, NOT, essentially AND, OR, NOT."
+ },
+ {
+  "id": 3,
+  "text": "Because in practice we've found that, apart from operations like addition and subtraction, these AND, OR, NOT operations are actually quite useful when programming."
+ },
+ {
+  "id": 4,
+  "text": "I'm not sure if any of you,"
+ },
+ {
+  "id": 5,
+  "text": "in your programming experience so far,"
+ },
+ {
+  "id": 6,
+  "text": "these AND, OR, NOT operations,"
+ },
+ {
+  "id": 7,
+  "text": "in what scenarios have you used them?"
+ },
+ {
+  "id": 8,
+  "text": "Does anything come to mind?"
+ },
+ {
+  "id": 9,
+  "text": "Probably in high-level languages,"
+ },
+ {
+  "id": 10,
+  "text": "these scenarios don't come up very often."
+ },
+ {
+  "id": 11,
+  "text": "But we can't rule out that languages like Java"
+ },
+ {
+  "id": 12,
+  "text": "do provide these operations."
+ },
+ {
+  "id": 13,
+  "text": "However, in the exercises that follow,"
+ },
+ {
+  "id": 14,
+  "text": "including low-level development,"
+ },
+ {
+  "id": 15,
+  "text": "for this kind of work,"
+ },
+ {
+  "id": 16,
+  "text": "since we often operate on binary data,"
+ },
+ {
+  "id": 17,
+  "text": "when we manipulate binary data"
+ },
+ {
+  "id": 18,
+  "text": "directly,"
+ },
+ {
+  "id": 19,
+  "text": "then these AND, OR, NOT operations"
+ },
+ {
+  "id": 20,
+  "text": "they are still used very frequently"
+ },
+ {
+  "id": 21,
+  "text": "so you should still understand them"
+ },
+ {
+  "id": 22,
+  "text": "so what about AND, OR, and NOT?"
+ },
+ {
+  "id": 23,
+  "text": "we should note that in RISC-V"
+ },
+ {
+  "id": 24,
+  "text": "please pay attention here"
+ },
+ {
+  "id": 25,
+  "text": "in the RISC-V instruction set"
+ },
+ {
+  "id": 26,
+  "text": "it provides AND, which is the AND operation"
+ },
+ {
+  "id": 27,
+  "text": "and OR, the OR operation"
+ },
+ {
+  "id": 28,
+  "text": "but it does not directly provide"
+ },
+ {
+  "id": 29,
+  "text": "the NOT operation"
+ },
+ {
+  "id": 30,
+  "text": "that is, in C-like terms"
+ },
+ {
+  "id": 31,
+  "text": "the exclamation mark operation"
+ },
+ {
+  "id": 32,
+  "text": "bitwise negation"
+ },
+ {
+  "id": 33,
+  "text": "it does not directly provide that operation"
+ },
+ {
+  "id": 34,
+  "text": "but it provides another operation instead"
+ },
+ {
+  "id": 35,
+  "text": "namely XOR"
+ },
+ {
+  "id": 36,
+  "text": "XOR"
+ },
+ {
+  "id": 37,
+  "text": "that is, XOR"
+ },
+ {
+  "id": 38,
+  "text": "please note this"
+ },
+ {
+  "id": 39,
+  "text": "the point is, this XOR operation"
+ },
+ {
+  "id": 40,
+  "text": "We actually translate it into Chinese as 'load-reserved', or LR."
+ },
+ {
+  "id": 41,
+  "text": "As for LR,"
+ },
+ {
+  "id": 42,
+  "text": "do you still remember which symbol we use for it in C?"
+ },
+ {
+  "id": 43,
+  "text": "It's that arrow pointing up, right?"
+ },
+ {
+  "id": 44,
+  "text": "I think so."
+ },
+ {
+  "id": 45,
+  "text": "Isn't it?"
+ },
+ {
+  "id": 46,
+  "text": "That is to say,"
+ },
+ {
+  "id": 47,
+  "text": "LR is directly provided"
+ },
+ {
+  "id": 48,
+  "text": "by the base instructions."
+ },
+ {
+  "id": 49,
+  "text": "Now, as for the concept of SC,"
+ },
+ {
+  "id": 50,
+  "text": "let's take a quick look at it here."
+ },
+ {
+  "id": 51,
+  "text": "What does it mean?"
+ },
+ {
+  "id": 52,
+  "text": "SC in English,"
+ },
+ {
+  "id": 53,
+  "text": "it's actually 'exclusive'."
+ },
+ {
+  "id": 54,
+  "text": "'OR' means 'or'."
+ },
+ {
+  "id": 55,
+  "text": "It means 'or', which is the store operation."
+ },
+ {
+  "id": 56,
+  "text": "What 'exclusive' actually expresses,"
+ },
+ {
+  "id": 57,
+  "text": "is an exclusive store."
+ },
+ {
+  "id": 58,
+  "text": "It's also a kind of store operation,"
+ },
+ {
+  "id": 59,
+  "text": "but it's an exclusive store."
+ },
+ {
+  "id": 60,
+  "text": "So what do we mean by an exclusive operation?"
+ },
+ {
+  "id": 61,
+  "text": "Let me explain that for you later."
+ },
+ {
+  "id": 62,
+  "text": "That is, when two"
+ },
+ {
+  "id": 63,
+  "text": "Because all of these"
+ },
+ {
+  "id": 64,
+  "text": "logic operations"
+ },
+ {
+  "id": 65,
+  "text": "work bit by bit."
+ },
+ {
+  "id": 66,
+  "text": "In other words,"
+ },
+ {
+  "id": 67,
+  "text": "if the two bit values"
+ },
+ {
+  "id": 68,
+  "text": "are different,"
+ },
+ {
+  "id": 69,
+  "text": "that is 1, right?"
+ },
+ {
+  "id": 70,
+  "text": "Different."
+ },
+ {
+  "id": 71,
+  "text": "Then the result is 0."
+ },
+ {
+  "id": 72,
+  "text": "So what you get is"
+ },
+ {
+  "id": 73,
+  "text": "the effect of OR."
+ },
+ {
+  "id": 74,
+  "text": "As we know,"
+ },
+ {
+  "id": 75,
+  "text": "OR means that"
+ },
+ {
+  "id": 76,
+  "text": "when the two are the same,"
+ },
+ {
+  "id": 77,
+  "text": "the result becomes 1."
+ },
+ {
+  "id": 78,
+  "text": "Isn't that right?"
+ },
+ {
+  "id": 79,
+  "text": "So this one works the other way around."
+ },
+ {
+  "id": 80,
+  "text": "It takes two bit values,"
+ },
+ {
+  "id": 81,
+  "text": "and if they are different,"
+ },
+ {
+  "id": 82,
+  "text": "it sets the result to 1."
+ },
+ {
+  "id": 83,
+  "text": "If the two bit values"
+ },
+ {
+  "id": 84,
+  "text": "are the same,"
+ },
+ {
+  "id": 85,
+  "text": "the result is 0."
+ },
+ {
+  "id": 86,
+  "text": "That's the concept of XOR."
+ },
+ {
+  "id": 87,
+  "text": "This is something you need to understand first."
+ },
+ {
+  "id": 88,
+  "text": "Now, some of you might ask,"
+ },
+ {
+  "id": 89,
+  "text": "that is to say,"
+ },
+ {
+  "id": 90,
+  "text": "for the NOT operation,"
+ },
+ {
+  "id": 91,
+  "text": "how do we implement it?"
+ },
+ {
+  "id": 92,
+  "text": "Well, in RISC-V,"
+ },
+ {
+  "id": 93,
+  "text": "the NOT operation"
+ },
+ {
+  "id": 94,
+  "text": "is actually implemented through XOR."
+ },
+ {
+  "id": 95,
+  "text": "This is its instruction format."
+ },
+ {
+  "id": 96,
+  "text": "It doesn't provide a new instruction format."
+ },
+ {
+  "id": 97,
+  "text": "As for this NOT operation,"
+ },
+ {
+  "id": 98,
+  "text": "RISC-V actually provides a"
+ },
+ {
+  "id": 99,
+  "text": "pseudo-instruction called NOT."
+ },
+ {
+  "id": 100,
+  "text": "This NOT instruction"
+ },
+ {
+  "id": 101,
+  "text": "as an instruction,"
+ },
+ {
+  "id": 102,
+  "text": "is actually equivalent to what?"
+ },
+ {
+  "id": 103,
+  "text": "It's equivalent to this operation"
+ },
+ {
+  "id": 104,
+  "text": "equivalent to this"
+ },
+ {
+  "id": 105,
+  "text": "Think about it,"
+ },
+ {
+  "id": 106,
+  "text": "why does it achieve this effect?"
+ },
+ {
+  "id": 107,
+  "text": "Its actual effect"
+ },
+ {
+  "id": 108,
+  "text": "what it actually means is,"
+ },
+ {
+  "id": 109,
+  "text": "take a number"
+ },
+ {
+  "id": 110,
+  "text": "take a"
+ },
+ {
+  "id": 111,
+  "text": "take a"
+ },
+ {
+  "id": 112,
+  "text": "take the number in a register,"
+ },
+ {
+  "id": 113,
+  "text": "XOR it with -1,"
+ },
+ {
+  "id": 114,
+  "text": "and put the result into rd"
+ },
+ {
+  "id": 115,
+  "text": "— that is, negate it."
+ },
+ {
+  "id": 116,
+  "text": "Now think about why."
+ },
+ {
+  "id": 117,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 118,
+  "text": "Let's give an example."
+ },
+ {
+  "id": 119,
+  "text": "For instance,"
+ },
+ {
+  "id": 120,
+  "text": "Let me give a simple example."
+ },
+ {
+  "id": 121,
+  "text": "Say we have"
+ },
+ {
+  "id": 122,
+  "text": "an original number that is"
+ },
+ {
+  "id": 123,
+  "text": "10101010."
+ },
+ {
+  "id": 124,
+  "text": "Suppose we originally have a number like this."
+ },
+ {
+  "id": 125,
+  "text": "This number,"
+ },
+ {
+  "id": 126,
+  "text": "we might initially put it in"
+ },
+ {
+  "id": 127,
+  "text": "rs here."
+ },
+ {
+  "id": 128,
+  "text": "Now, what is this -1 actually?"
+ },
+ {
+  "id": 129,
+  "text": "How is -1 represented in a computer?"
+ },
+ {
+  "id": 130,
+  "text": "It's all ones."
+ },
+ {
+  "id": 131,
+  "text": "Right?"
+ },
+ {
+  "id": 132,
+  "text": "It's all ones."
+ },
+ {
+  "id": 133,
+  "text": "So,"
+ },
+ {
+  "id": 134,
+  "text": "so what this thing does,"
+ },
+ {
+  "id": 135,
+  "text": "is it takes these two numbers,"
+ },
+ {
+  "id": 136,
+  "text": "this is -1,"
+ },
+ {
+  "id": 137,
+  "text": "this is negative one,"
+ },
+ {
+  "id": 138,
+  "text": "and performs an XOR operation on the two numbers."
+ },
+ {
+  "id": 139,
+  "text": "Now, what result do we get from this XOR operation?"
+ },
+ {
+  "id": 140,
+  "text": "So what did our definition just say?"
+ },
+ {
+  "id": 141,
+  "text": "XOR means that"
+ },
+ {
+  "id": 142,
+  "text": "if the two bit values are different, you get 1,"
+ },
+ {
+  "id": 143,
+  "text": "and if they're the same, you get 0."
+ },
+ {
+  "id": 144,
+  "text": "Right?"
+ },
+ {
+  "id": 145,
+  "text": "Now look at what happens here."
+ },
+ {
+  "id": 146,
+  "text": "0 and 1 — we know that 1 has this property:"
+ },
+ {
+  "id": 147,
+  "text": "that is, what's the characteristic of 1?"
+ },
+ {
+  "id": 148,
+  "text": "Well, for any number, if it's 0,"
+ },
+ {
+  "id": 149,
+  "text": "0 and 1 are definitely not the same."
+ },
+ {
+  "id": 150,
+  "text": "Since they're not the same,"
+ },
+ {
+  "id": 151,
+  "text": "you take 1."
+ },
+ {
+  "id": 152,
+  "text": "If they were the same, you'd take 0."
+ },
+ {
+  "id": 153,
+  "text": "So you see, this is basically flipped, right?"
+ },
+ {
+  "id": 154,
+  "text": "Right?"
+ },
+ {
+  "id": 155,
+  "text": "This one, I'm not going to do it one by one."
+ },
+ {
+  "id": 156,
+  "text": "Basically, it has to do with this:"
+ },
+ {
+  "id": 157,
+  "text": "all of these 0 and 1 bits,"
+ },
+ {
+  "id": 158,
+  "text": "when XORed with 1,"
+ },
+ {
+  "id": 159,
+  "text": "actually produce an effect where"
+ },
+ {
+  "id": 160,
+  "text": "It just gives you the inverted result."
+ },
+ {
+  "id": 161,
+  "text": "So we actually don't need"
+ },
+ {
+  "id": 162,
+  "text": "a dedicated instruction just to do negation."
+ },
+ {
+  "id": 163,
+  "text": "We only need to use the XOR instruction"
+ },
+ {
+  "id": 164,
+  "text": "to replace it, and that's it."
+ },
+ {
+  "id": 165,
+  "text": "This once again shows"
+ },
+ {
+  "id": 166,
+  "text": "how RISC-V"
+ },
+ {
+  "id": 167,
+  "text": "is all about saving wherever it can."
+ },
+ {
+  "id": 168,
+  "text": "When designing instructions,"
+ },
+ {
+  "id": 169,
+  "text": "it won't add a whole instruction"
+ },
+ {
+  "id": 170,
+  "text": "just for one function."
+ },
+ {
+  "id": 171,
+  "text": "If an existing instruction can do the job,"
+ },
+ {
+  "id": 172,
+  "text": "it just uses the existing instruction instead."
+ },
+ {
+  "id": 173,
+  "text": "And the benefit for us"
+ },
+ {
+  "id": 174,
+  "text": "is that"
+ },
+ {
+  "id": 175,
+  "text": "a lot of the time, we only have to master"
+ },
+ {
+  "id": 176,
+  "text": "a very small set of instructions."
+ },
+ {
+  "id": 177,
+  "text": "But on the other hand,"
+ },
+ {
+  "id": 178,
+  "text": "it may ask more of you,"
+ },
+ {
+  "id": 179,
+  "text": "and that is this:"
+ },
+ {
+  "id": 180,
+  "text": "That is to say, at the very least,"
+ },
+ {
+  "id": 181,
+  "text": "you need to have some understanding of this instruction,"
+ },
+ {
+  "id": 182,
+  "text": "otherwise you won't know"
+ },
+ {
+  "id": 183,
+  "text": "that you should use this instruction to replace it."
+ },
+ {
+  "id": 184,
+  "text": "Right, everyone?"
+ },
+ {
+  "id": 185,
+  "text": "So this"
+ },
+ {
+  "id": 186,
+  "text": "reflects"
+ },
+ {
+  "id": 187,
+  "text": "a certain philosophy in the RISC-V design."
+ },
+ {
+  "id": 188,
+  "text": "These are what we call logical instructions."
+ },
+ {
+  "id": 189,
+  "text": "This is XORI here,"
+ },
+ {
+  "id": 190,
+  "text": "and of course, over here it's ORI."
+ },
+ {
+  "id": 191,
+  "text": "Just so you're aware of these."
+ },
+ {
+  "id": 192,
+  "text": "As for the related exercises,"
+ },
+ {
+  "id": 193,
+  "text": "you can take a look at them after class."
+ },
+ {
+  "id": 194,
+  "text": "These two exercises,"
+ },
+ {
+  "id": 195,
+  "text": "we won't go over them in class either."
+ },
+ {
+  "id": 196,
+  "text": "So what we just covered was logical operations."
+ },
+ {
+  "id": 197,
+  "text": "Now, when we're processing binary data,"
+ },
+ {
+  "id": 198,
+  "text": "another thing we use very often is the shift operation,"
+ },
+ {
+  "id": 199,
+  "text": "shifting left and shifting right."
+ },
+ {
+  "id": 200,
+  "text": "This kind of thing is also used a lot in C, right? Let's all pay attention here. That is to say, in RISC-V, its machine instructions — the shift operations it provides fall into two major categories."
+ },
+ {
+  "id": 201,
+  "text": "One category is called logical shift."
+ },
+ {
+  "id": 202,
+  "text": "The other is called arithmetic shift."
+ },
+ {
+  "id": 203,
+  "text": "Let's first take a look at what a logical shift is."
+ },
+ {
+  "id": 204,
+  "text": "So for logical shifts, we can see they're divided into two groups."
+ },
+ {
+  "id": 205,
+  "text": "The way I've written it here, it's actually split into two groups."
+ },
+ {
+  "id": 206,
+  "text": "One group has an 'i' appended to it, which means that instruction will actually carry an immediate value."
+ },
+ {
+  "id": 207,
+  "text": "The other one has no immediate value, and operates using three registers — that is, the value to be shifted"
+ },
+ {
+  "id": 208,
+  "text": "Let's take a look first at"
+ },
+ {
+  "id": 209,
+  "text": "what logical shift means."
+ },
+ {
+  "id": 210,
+  "text": "So for logical shifts,"
+ },
+ {
+  "id": 211,
+  "text": "you can see they're divided into two groups."
+ },
+ {
+  "id": 212,
+  "text": "The way I've written it here"
+ },
+ {
+  "id": 213,
+  "text": "splits them into two groups."
+ },
+ {
+  "id": 214,
+  "text": "One group has an \"i\" attached,"
+ },
+ {
+  "id": 215,
+  "text": "which means that in these instructions"
+ },
+ {
+  "id": 216,
+  "text": "there is actually an immediate value"
+ },
+ {
+  "id": 217,
+  "text": "while the other group has no immediate value."
+ },
+ {
+  "id": 218,
+  "text": "It operates with three registers."
+ },
+ {
+  "id": 219,
+  "text": "That is, the shift amount"
+ },
+ {
+  "id": 220,
+  "text": "is expressed by putting it into this register."
+ },
+ {
+  "id": 221,
+  "text": "And this one,"
+ },
+ {
+  "id": 222,
+  "text": "actually specifies the number of bits directly through the immediate."
+ },
+ {
+  "id": 223,
+  "text": "Now, it's divided into left shift and right shift."
+ },
+ {
+  "id": 224,
+  "text": "So, logically speaking,"
+ },
+ {
+  "id": 225,
+  "text": "it's divided into two types: left shift and right shift."
+ },
+ {
+  "id": 226,
+  "text": "The left shift is 'left'"
+ },
+ {
+  "id": 227,
+  "text": "and this side is 'right'"
+ },
+ {
+  "id": 228,
+  "text": "which is the right shift."
+ },
+ {
+  "id": 229,
+  "text": "Actually, these are just abbreviations of these letters,"
+ },
+ {
+  "id": 230,
+  "text": "like 'shift left logical'"
+ },
+ {
+  "id": 231,
+  "text": "which means logical left shift."
+ },
+ {
+  "id": 232,
+  "text": "It's completely reversed compared to how we Chinese say it."
+ },
+ {
+  "id": 233,
+  "text": "Foreigners' word order is totally different from ours."
+ },
+ {
+  "id": 234,
+  "text": "Foreigners' word order,"
+ },
+ {
+  "id": 235,
+  "text": "our word order is completely different from theirs."
+ },
+ {
+  "id": 236,
+  "text": "We Chinese flip it and say 'logical left shift'."
+ },
+ {
+  "id": 237,
+  "text": "Foreigners say 'shift left logical'."
+ },
+ {
+  "id": 238,
+  "text": "It's completely reversed."
+ },
+ {
+  "id": 239,
+  "text": "So, this one"
+ },
+ {
+  "id": 240,
+  "text": "But we still need to get used to how it's used,"
+ },
+ {
+  "id": 241,
+  "text": "otherwise you won't remember this command."
+ },
+ {
+  "id": 242,
+  "text": "SLL is a bit of a tongue twister,"
+ },
+ {
+  "id": 243,
+  "text": "this SLL command."
+ },
+ {
+  "id": 244,
+  "text": "Why is it called a logical left shift?"
+ },
+ {
+  "id": 245,
+  "text": "That's where the name comes from."
+ },
+ {
+  "id": 246,
+  "text": "Now the principle is very simple."
+ },
+ {
+  "id": 247,
+  "text": "It's just left shift and right shift,"
+ },
+ {
+  "id": 248,
+  "text": "taking that data"
+ },
+ {
+  "id": 249,
+  "text": "and shifting it left or right bit by bit."
+ },
+ {
+  "id": 250,
+  "text": "But here's something to pay attention to."
+ },
+ {
+  "id": 251,
+  "text": "A logical shift"
+ },
+ {
+  "id": 252,
+  "text": "has one characteristic,"
+ },
+ {
+  "id": 253,
+  "text": "and that is, as you know,"
+ },
+ {
+  "id": 254,
+  "text": "whether you're shifting left or shifting right,"
+ },
+ {
+  "id": 255,
+  "text": "when you shift a piece of data over,"
+ },
+ {
+  "id": 256,
+  "text": "say, to the left,"
+ },
+ {
+  "id": 257,
+  "text": "the position on the right becomes empty,"
+ },
+ {
+  "id": 258,
+  "text": "and new data has to be filled in."
+ },
+ {
+  "id": 259,
+  "text": "Think about it — isn't that right?"
+ },
+ {
+  "id": 260,
+  "text": "If we shift to the right,"
+ },
+ {
+  "id": 261,
+  "text": "the high bits become empty,"
+ },
+ {
+  "id": 262,
+  "text": "so we have to fill in data for those high bits."
+ },
+ {
+  "id": 263,
+  "text": "Now, for a logical shift,"
+ },
+ {
+  "id": 264,
+  "text": "the rule is"
+ },
+ {
+  "id": 265,
+  "text": "that the filling is always done with 0s."
+ },
+ {
+  "id": 266,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 267,
+  "text": "Let's take a simple example."
+ },
+ {
+  "id": 268,
+  "text": "That is,"
+ },
+ {
+  "id": 269,
+  "text": "suppose we now have..."
+ },
+ {
+  "id": 270,
+  "text": "let's say we have 8 bits."
+ },
+ {
+  "id": 271,
+  "text": "Because the number is too long,"
+ },
+ {
+  "id": 272,
+  "text": "it might look a bit messy."
+ },
+ {
+  "id": 273,
+  "text": "Suppose we have this data now,"
+ },
+ {
+  "id": 274,
+  "text": "000100."
+ },
+ {
+  "id": 275,
+  "text": "Suppose we now want to shift it to the right."
+ },
+ {
+  "id": 276,
+  "text": "Let's say I now take this 1"
+ },
+ {
+  "id": 277,
+  "text": "and shift it to the right."
+ },
+ {
+  "id": 278,
+  "text": "So shifting it to the right,"
+ },
+ {
+  "id": 279,
+  "text": "because as we know,"
+ },
+ {
+  "id": 280,
+  "text": "So where does this 1 go? It ends up right here."
+ },
+ {
+  "id": 281,
+  "text": "Think about it — right? Right here."
+ },
+ {
+  "id": 282,
+  "text": "So what about the 0s on the right here?"
+ },
+ {
+  "id": 283,
+  "text": "They get pushed out."
+ },
+ {
+  "id": 284,
+  "text": "Nothing much to say about that."
+ },
+ {
+  "id": 285,
+  "text": "So what's left here?"
+ },
+ {
+  "id": 286,
+  "text": "There were originally 4 zeros,"
+ },
+ {
+  "id": 287,
+  "text": "and now there are only 3 zeros."
+ },
+ {
+  "id": 288,
+  "text": "Now over here,"
+ },
+ {
+  "id": 289,
+  "text": "these 3 zeros over here,"
+ },
+ {
+  "id": 290,
+  "text": "naturally follow this 1,"
+ },
+ {
+  "id": 291,
+  "text": "and shift to the right."
+ },
+ {
+  "id": 292,
+  "text": "So over here,"
+ },
+ {
+  "id": 293,
+  "text": "it's of course 3 zeros."
+ },
+ {
+  "id": 294,
+  "text": "And here,"
+ },
+ {
+  "id": 295,
+  "text": "one bit gets freed up,"
+ },
+ {
+  "id": 296,
+  "text": "because after it shifts right,"
+ },
+ {
+  "id": 297,
+  "text": "what we're talking about right now is a right shift,"
+ },
+ {
+  "id": 298,
+  "text": "a shift to the right."
+ },
+ {
+  "id": 299,
+  "text": "Shifting to the right."
+ },
+ {
+  "id": 300,
+  "text": "So with a right shift,"
+ },
+ {
+  "id": 301,
+  "text": "this side needs to be filled in."
+ },
+ {
+  "id": 302,
+  "text": "That filling in is exactly this concept."
+ },
+ {
+  "id": 303,
+  "text": "So with a logical shift,"
+ },
+ {
+  "id": 304,
+  "text": "note that"
+ },
+ {
+  "id": 305,
+  "text": "when filling in,"
+ },
+ {
+  "id": 306,
+  "text": "everything is filled with 0."
+ },
+ {
+  "id": 307,
+  "text": "That's what it means."
+ },
+ {
+  "id": 308,
+  "text": "This is called a logical shift."
+ },
+ {
+  "id": 309,
+  "text": "And shifting left works the same way."
+ },
+ {
+  "id": 310,
+  "text": "This is called a logical shift."
+ },
+ {
+  "id": 311,
+  "text": "We use logical shifts all the time."
+ },
+ {
+  "id": 312,
+  "text": "I wonder if any of you"
+ },
+ {
+  "id": 313,
+  "text": "have used, say, C to program,"
+ },
+ {
+  "id": 314,
+  "text": "you'll actually still use this kind of thing."
+ },
+ {
+  "id": 315,
+  "text": "So what do we often use these shifts for?"
+ },
+ {
+  "id": 316,
+  "text": "Have you thought about some scenarios?"
+ },
+ {
+  "id": 317,
+  "text": "For example, we often need to"
+ },
+ {
+  "id": 318,
+  "text": "let's take a simple example."
+ },
+ {
+  "id": 319,
+  "text": "Say I have two 8-bit numbers now."
+ },
+ {
+  "id": 320,
+  "text": "Now I want to piece it together into a 16-bit number"
+ },
+ {
+  "id": 321,
+  "text": "What do we do? Well, maybe we take the high part of that,"
+ },
+ {
+  "id": 322,
+  "text": "well, maybe we take the high part of that,"
+ },
+ {
+  "id": 323,
+  "text": "Since we need to build that high-order number,"
+ },
+ {
+  "id": 324,
+  "text": "we have to shift the low-order number to the left,"
+ },
+ {
+  "id": 325,
+  "text": "shift it left by 8 bits, and it becomes the 8 bits of the high part, right?"
+ },
+ {
+  "id": 326,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 327,
+  "text": "This kind of thing is a left shift."
+ },
+ {
+  "id": 328,
+  "text": "We often right shift,"
+ },
+ {
+  "id": 329,
+  "text": "and we use it in this kind of scenario."
+ },
+ {
+  "id": 330,
+  "text": "This is logical shift."
+ },
+ {
+  "id": 331,
+  "text": "Now, opposite to that,"
+ },
+ {
+  "id": 332,
+  "text": "there is something called arithmetic shift."
+ },
+ {
+  "id": 333,
+  "text": "Arithmetic shift and logical shift"
+ },
+ {
+  "id": 334,
+  "text": "are somewhat different."
+ },
+ {
+  "id": 335,
+  "text": "First of all, arithmetic shift"
+ },
+ {
+  "id": 336,
+  "text": "only has arithmetic right shift,"
+ },
+ {
+  "id": 337,
+  "text": "there is no arithmetic left shift."
+ },
+ {
+  "id": 338,
+  "text": "Please note that."
+ },
+ {
+  "id": 339,
+  "text": "Also, what exactly is arithmetic shift?"
+ },
+ {
+  "id": 340,
+  "text": "Arithmetic shift means that"
+ },
+ {
+  "id": 341,
+  "text": "unlike a logical shift,"
+ },
+ {
+  "id": 342,
+  "text": "which just fills everything with 0 regardless,"
+ },
+ {
+  "id": 343,
+  "text": "it operates based on your sign bit."
+ },
+ {
+  "id": 344,
+  "text": "Let me give you an example."
+ },
+ {
+  "id": 345,
+  "text": "Say, for instance, at this position from just now,"
+ },
+ {
+  "id": 346,
+  "text": "this 1,"
+ },
+ {
+  "id": 347,
+  "text": "for this number,"
+ },
+ {
+  "id": 348,
+  "text": "we know where its sign bit is."
+ },
+ {
+  "id": 349,
+  "text": "The sign bit is usually just"
+ },
+ {
+  "id": 350,
+  "text": "the most significant bit."
+ },
+ {
+  "id": 351,
+  "text": "Suppose it is 0."
+ },
+ {
+  "id": 352,
+  "text": "OK."
+ },
+ {
+  "id": 353,
+  "text": "Then if it's a,"
+ },
+ {
+  "id": 354,
+  "text": "just like the arithmetic right shift we saw earlier,"
+ },
+ {
+  "id": 355,
+  "text": "if the most significant bit is 0,"
+ },
+ {
+  "id": 356,
+  "text": "then it will pad with 0."
+ },
+ {
+  "id": 357,
+  "text": "But suppose what we have here is not,"
+ },
+ {
+  "id": 358,
+  "text": "not 0,"
+ },
+ {
+  "id": 359,
+  "text": "and suppose there is a 1 here instead."
+ },
+ {
+  "id": 360,
+  "text": "So think about what effect that produces."
+ },
+ {
+  "id": 361,
+  "text": "What gets filled in here is"
+ },
+ {
+  "id": 362,
+  "text": "no longer 0,"
+ },
+ {
+  "id": 363,
+  "text": "but what?"
+ },
+ {
+  "id": 364,
+  "text": "It's 1."
+ },
+ {
+  "id": 365,
+  "text": "So actually, after the right shift,"
+ },
+ {
+  "id": 366,
+  "text": "you end up with something like this."
+ },
+ {
+  "id": 367,
+  "text": "This 1,"
+ },
+ {
+  "id": 368,
+  "text": "this 1,"
+ },
+ {
+  "id": 369,
+  "text": "this 1 actually got shifted over from this side."
+ },
+ {
+  "id": 370,
+  "text": "Everyone with me?"
+ },
+ {
+  "id": 371,
+  "text": "But how did this 1 get in here?"
+ },
+ {
+  "id": 372,
+  "text": "This is exactly what arithmetic right shift shifts in."
+ },
+ {
+  "id": 373,
+  "text": "Because during an arithmetic right shift,"
+ },
+ {
+  "id": 374,
+  "text": "it sees that you originally had a 1 over here,"
+ },
+ {
+  "id": 375,
+  "text": "so what I shift in is a 1."
+ },
+ {
+  "id": 376,
+  "text": "Follow what I mean?"
+ },
+ {
+  "id": 377,
+  "text": "If this side were 0,"
+ },
+ {
+  "id": 378,
+  "text": "then this side would become 0."
+ },
+ {
+  "id": 379,
+  "text": "That is arithmetic right shift."
+ },
+ {
+  "id": 380,
+  "text": "It actually comes down to the idea of a sign bit."
+ },
+ {
+  "id": 381,
+  "text": "That is to say, with arithmetic right shift,"
+ },
+ {
+  "id": 382,
+  "text": "it fills in the bits based on your sign bit."
+ },
+ {
+  "id": 383,
+  "text": "Now, some of you might ask,"
+ },
+ {
+  "id": 384,
+  "text": "why do we say"
+ },
+ {
+  "id": 385,
+  "text": "here there is only arithmetic..."
+ },
+ {
+  "id": 386,
+  "text": "with arithmetic, why is there only right shift"
+ },
+ {
+  "id": 387,
+  "text": "and no left shift?"
+ },
+ {
+  "id": 388,
+  "text": "Just now, that logical shift,"
+ },
+ {
+  "id": 389,
+  "text": "as you can see, had"
+ },
+ {
+  "id": 390,
+  "text": "both left shift and right shift."
+ },
+ {
+  "id": 391,
+  "text": "Logical shift."
+ },
+ {
+  "id": 392,
+  "text": "Arithmetic right shift."
+ },
+ {
+  "id": 393,
+  "text": "Why is there no left shift?"
+ },
+ {
+  "id": 394,
+  "text": "Think it through."
+ },
+ {
+  "id": 395,
+  "text": "These things are all very simple."
+ },
+ {
+  "id": 396,
+  "text": "It's really not that hard."
+ },
+ {
+  "id": 397,
+  "text": "Think about it."
+ },
+ {
+  "id": 398,
+  "text": "What effect would a left shift have?"
+ },
+ {
+  "id": 399,
+  "text": "It would shift your most significant bit right out."
+ },
+ {
+  "id": 400,
+  "text": "Get what I mean?"
+ },
+ {
+  "id": 401,
+  "text": "If the highest bit gets shifted away,"
+ },
+ {
+  "id": 402,
+  "text": "then as far as it's concerned,"
+ },
+ {
+  "id": 403,
+  "text": "it loses that meaning."
+ },
+ {
+  "id": 404,
+  "text": "The sign bit is gone."
+ },
+ {
+  "id": 405,
+  "text": "Get what I mean?"
+ },
+ {
+  "id": 406,
+  "text": "So for arithmetic operations,"
+ },
+ {
+  "id": 407,
+  "text": "we would never do a right shift or a left shift,"
+ },
+ {
+  "id": 408,
+  "text": "Pay attention here."
+ },
+ {
+  "id": 409,
+  "text": "This is the difference between arithmetic shift and logical shift."
+ },
+ {
+  "id": 410,
+  "text": "Pay attention here."
+ },
+ {
+  "id": 411,
+  "text": "So what can arithmetic shift be used for?"
+ },
+ {
+  "id": 412,
+  "text": "Well, with arithmetic shift,"
+ },
+ {
+  "id": 413,
+  "text": "for example, let me give you an example."
+ },
+ {
+  "id": 414,
+  "text": "Say I have a number called negative 4,"
+ },
+ {
+  "id": 415,
+  "text": "and I want to divide it by 2."
+ },
+ {
+  "id": 416,
+  "text": "What method can we use to do that?"
+ },
+ {
+  "id": 417,
+  "text": "Actually, we could use the dumbest way,"
+ },
+ {
+  "id": 418,
+  "text": "which is to use the division instruction."
+ },
+ {
+  "id": 419,
+  "text": "Because we haven't covered the multiplication instruction here."
+ },
+ {
+  "id": 420,
+  "text": "We do have the trigger instruction"
+ },
+ {
+  "id": 421,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 422,
+  "text": "There's the DIV trigger instruction"
+ },
+ {
+  "id": 423,
+  "text": "We could use the trigger instruction to implement it, of course"
+ },
+ {
+  "id": 424,
+  "text": "But we can actually implement it with arithmetic shift"
+ },
+ {
+  "id": 425,
+  "text": "Because as we said, shifting to the right"
+ },
+ {
+  "id": 426,
+  "text": "is actually equivalent to division"
+ },
+ {
+  "id": 427,
+  "text": "Why?"
+ },
+ {
+  "id": 428,
+  "text": "Let me give you an example"
+ },
+ {
+  "id": 429,
+  "text": "Like we just said,"
+ },
+ {
+  "id": 430,
+  "text": "let's keep it short,"
+ },
+ {
+  "id": 431,
+  "text": "suppose this is a number,"
+ },
+ {
+  "id": 432,
+  "text": "4, let's say,"
+ },
+ {
+  "id": 433,
+  "text": "the number 4,"
+ },
+ {
+  "id": 434,
+  "text": "if we shift it right by one bit,"
+ },
+ {
+  "id": 435,
+  "text": "what does it become?"
+ },
+ {
+  "id": 436,
+  "text": "It becomes 2."
+ },
+ {
+  "id": 437,
+  "text": "See that?"
+ },
+ {
+  "id": 438,
+  "text": "Hasn't it just been divided by 2?"
+ },
+ {
+  "id": 439,
+  "text": "Now, similarly,"
+ },
+ {
+  "id": 440,
+  "text": "If there's a sign bit,"
+ },
+ {
+  "id": 441,
+  "text": "it will still reach the same"
+ },
+ {
+  "id": 442,
+  "text": "so for negative four,"
+ },
+ {
+  "id": 443,
+  "text": "it becomes negative two."
+ },
+ {
+  "id": 444,
+  "text": "Now, logical left shift,"
+ },
+ {
+  "id": 445,
+  "text": "logical left shift,"
+ },
+ {
+  "id": 446,
+  "text": "actually, I forgot to mention this earlier,"
+ },
+ {
+  "id": 447,
+  "text": "logical left shift,"
+ },
+ {
+  "id": 448,
+  "text": "can actually also be used"
+ },
+ {
+  "id": 449,
+  "text": "as a kind of multiplication."
+ },
+ {
+  "id": 450,
+  "text": "Left shift is actually equivalent to multiplication."
+ },
+ {
+  "id": 451,
+  "text": "However,"
+ },
+ {
+  "id": 452,
+  "text": "with this logical left shift,"
+ },
+ {
+  "id": 453,
+  "text": "when doing multiplication,"
+ },
+ {
+  "id": 454,
+  "text": "everyone should note that"
+ },
+ {
+  "id": 455,
+  "text": "it can actually only support"
+ },
+ {
+  "id": 456,
+  "text": "multiplication of positive numbers."
+ },
+ {
+  "id": 457,
+  "text": "After left shifting a negative number,"
+ },
+ {
+  "id": 458,
+  "text": "its sign bit gets shifted out,"
+ },
+ {
+  "id": 459,
+  "text": "and it's lost."
+ },
+ {
+  "id": 460,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 461,
+  "text": "So actually, when implementing this complex multiplication,"
+ },
+ {
+  "id": 462,
+  "text": "you can't do it purely through logic operations."
+ },
+ {
+  "id": 463,
+  "text": "Keep that in mind."
+ },
+ {
+  "id": 464,
+  "text": "And also,"
+ },
+ {
+  "id": 465,
+  "text": "using this shifting approach,"
+ },
+ {
+  "id": 466,
+  "text": "compared to using dedicated multiply and divide instructions,"
+ },
+ {
+  "id": 467,
+  "text": "it's actually more efficient."
+ },
+ {
+  "id": 468,
+  "text": "If you have a lot of these shifting operations,"
+ },
+ {
+  "id": 469,
+  "text": "using shifts is actually better."
+ },
+ {
+  "id": 470,
+  "text": "You can write your own C code for multiplication and division,"
+ },
+ {
+  "id": 471,
+  "text": "then use GCC to generate the machine instructions,"
+ },
+ {
+  "id": 472,
+  "text": "and you'll see that the compiler"
+ },
+ {
+  "id": 473,
+  "text": "actually performs optimizations."
+ },
+ {
+  "id": 474,
+  "text": "It will use"
+ },
+ {
+  "id": 475,
+  "text": "it will try to use shift instructions instead of these"
+ },
+ {
+  "id": 476,
+  "text": "multiply and divide instructions."
+ },
+ {
+  "id": 477,
+  "text": "Keep that in mind."
+ },
+ {
+  "id": 478,
+  "text": "So that's the shift instructions."
+ },
+ {
+  "id": 479,
+  "text": "They're used quite a lot."
+ },
+ {
+  "id": 480,
+  "text": "Now, for the related exercises for this,"
+ },
+ {
+  "id": 481,
+  "text": "I'll just list them here."
+ },
+ {
+  "id": 482,
+  "text": "You can work through them on your own when you get back."
+ },
+ {
+  "id": 483,
+  "text": "In class,"
+ },
+ {
+  "id": 484,
+  "text": "if we did it this way,"
+ },
+ {
+  "id": 485,
+  "text": "doing one and writing one,"
+ },
+ {
+  "id": 486,
+  "text": "if we did one and wrote one up,"
+ },
+ {
+  "id": 487,
+  "text": "I reckon it would probably,"
+ },
+ {
+  "id": 488,
+  "text": "take a lot of class sessions"
+ },
+ {
+  "id": 489,
+  "text": "just to get through this part."
+ },
+ {
+  "id": 490,
+  "text": "Because assembly is actually,"
+ },
+ {
+  "id": 491,
+  "text": "a course in its own right,"
+ },
+ {
+  "id": 492,
+  "text": "offered as a dedicated class."
+ },
+ {
+  "id": 493,
+  "text": "What we're really doing here is,"
+ },
+ {
+  "id": 494,
+  "text": "as part of RISC-V,"
+ },
+ {
+  "id": 495,
+  "text": "giving you a quick run-through."
+ },
+ {
+  "id": 496,
+  "text": "So time is still pretty tight."
+ },
+ {
+  "id": 497,
+  "text": "Now, this exercise 5.4,"
+ },
+ {
+  "id": 498,
+  "text": "is also meant as homework practice."
+ },
+ {
+  "id": 499,
+  "text": "It's the one I've highlighted here."
+ },
+ {
+  "id": 500,
+  "text": "If it's the practice exercises,"
+ },
+ {
+  "id": 501,
+  "text": "the practice part,"
+ },
+ {
+  "id": 502,
+  "text": "we actually don't provide the source code."
+ },
+ {
+  "id": 503,
+  "text": "So treat those as exercises to do at home."
+ },
+ {
+  "id": 504,
+  "text": "Basically, after we finish a chapter,"
+ },
+ {
+  "id": 505,
+  "text": "the related exercises,"
+ },
+ {
+  "id": 506,
+  "text": "you can all go back and work on them."
+ },
+ {
+  "id": 507,
+  "text": "Now let me see how much time is left."
+ },
+ {
+  "id": 508,
+  "text": "I'll probably finish the load and store instructions."
+ },
+ {
+  "id": 509,
+  "text": "That's about all we can cover today."
+ },
+ {
+  "id": 510,
+  "text": "So besides what we just talked about,"
+ },
+ {
+  "id": 511,
+  "text": "this addition, subtraction, addition, subtraction,"
+ },
+ {
+  "id": 512,
+  "text": "and then logical operations,"
+ },
+ {
+  "id": 513,
+  "text": "AND, OR, NOT, left shift, right shift, arithmetic and logical,"
+ },
+ {
+  "id": 514,
+  "text": "besides these shift operations,"
+ },
+ {
+  "id": 515,
+  "text": "we also have another operation that's performed frequently,"
+ },
+ {
+  "id": 516,
+  "text": "and that's reading and writing to memory."
+ },
+ {
+  "id": 517,
+  "text": "As we mentioned earlier,"
+ },
+ {
+  "id": 518,
+  "text": "all the ones like addition, subtraction, multiplication, division,"
+ },
+ {
+  "id": 519,
+  "text": "the shift instructions"
+ },
+ {
+  "id": 520,
+  "text": "It can only operate on registers directly."
+ },
+ {
+  "id": 521,
+  "text": "But what's in the registers,"
+ },
+ {
+  "id": 522,
+  "text": "in general,"
+ },
+ {
+  "id": 523,
+  "text": "we always need to read it in from memory."
+ },
+ {
+  "id": 524,
+  "text": "Now, the concept of reading,"
+ },
+ {
+  "id": 525,
+  "text": "is called a load."
+ },
+ {
+  "id": 526,
+  "text": "Note this carefully,"
+ },
+ {
+  "id": 527,
+  "text": "this English terminology,"
+ },
+ {
+  "id": 528,
+  "text": "load and store."
+ },
+ {
+  "id": 529,
+  "text": "Load actually means bringing something in."
+ },
+ {
+  "id": 530,
+  "text": "It's loading something in."
+ },
+ {
+  "id": 531,
+  "text": "From your perspective,"
+ },
+ {
+  "id": 532,
+  "text": "you're looking at it from the CPU's point of view."
+ },
+ {
+  "id": 533,
+  "text": "Do you understand what I mean?"
+ },
+ {
+  "id": 534,
+  "text": "Store, on the other hand, means storing something out."
+ },
+ {
+  "id": 535,
+  "text": "It's the concept of sending something out."
+ },
+ {
+  "id": 536,
+  "text": "So it's a concept of writing."
+ },
+ {
+  "id": 537,
+  "text": "I've marked this with colors here."
+ },
+ {
+  "id": 538,
+  "text": "When you look at this diagram,"
+ },
+ {
+  "id": 539,
+  "text": "try to understand these concepts."
+ },
+ {
+  "id": 540,
+  "text": "To make it easier for everyone to remember this instruction,"
+ },
+ {
+  "id": 541,
+  "text": "the abbreviation,"
+ },
+ {
+  "id": 542,
+  "text": "is L and store."
+ },
+ {
+  "id": 543,
+  "text": "L and S."
+ },
+ {
+  "id": 544,
+  "text": "Now, one thing to note,"
+ },
+ {
+  "id": 545,
+  "text": "that is,"
+ },
+ {
+  "id": 546,
+  "text": "taking load as an example,"
+ },
+ {
+  "id": 547,
+  "text": "for reading,"
+ },
+ {
+  "id": 548,
+  "text": "and writing is the same,"
+ },
+ {
+  "id": 549,
+  "text": "there are actually some variations."
+ },
+ {
+  "id": 550,
+  "text": "As you can see,"
+ },
+ {
+  "id": 551,
+  "text": "it can"
+ },
+ {
+  "id": 552,
+  "text": "it can"
+ },
+ {
+  "id": 553,
+  "text": "read byte by byte,"
+ },
+ {
+  "id": 554,
+  "text": "or it can"
+ },
+ {
+  "id": 555,
+  "text": "read two bytes at a time."
+ },
+ {
+  "id": 556,
+  "text": "That is, the meaning of"
+ },
+ {
+  "id": 557,
+  "text": "B, H, and W here,"
+ },
+ {
+  "id": 558,
+  "text": "which stand for byte,"
+ },
+ {
+  "id": 559,
+  "text": "half word, and word."
+ },
+ {
+  "id": 560,
+  "text": "We need to have this concept."
+ },
+ {
+  "id": 561,
+  "text": "byte is a byte"
+ },
+ {
+  "id": 562,
+  "text": "and word is"
+ },
+ {
+  "id": 563,
+  "text": "four bytes"
+ },
+ {
+  "id": 564,
+  "text": "half word is"
+ },
+ {
+  "id": 565,
+  "text": "half of four bytes"
+ },
+ {
+  "id": 566,
+  "text": "right?"
+ },
+ {
+  "id": 567,
+  "text": "So that's two bytes."
+ },
+ {
+  "id": 568,
+  "text": "And the abbreviations"
+ },
+ {
+  "id": 569,
+  "text": "are B, H, and W."
+ },
+ {
+  "id": 570,
+  "text": "Just understand it this way."
+ },
+ {
+  "id": 571,
+  "text": "This is L."
+ },
+ {
+  "id": 572,
+  "text": "This is divided into three groups."
+ },
+ {
+  "id": 573,
+  "text": "At the same time,"
+ },
+ {
+  "id": 574,
+  "text": "for these three groups,"
+ },
+ {
+  "id": 575,
+  "text": "there's also something else, that is,"
+ },
+ {
+  "id": 576,
+  "text": "look here,"
+ },
+ {
+  "id": 577,
+  "text": "there are some variations."
+ },
+ {
+  "id": 578,
+  "text": "For example, there's a U here."
+ },
+ {
+  "id": 579,
+  "text": "So let's take this one as an example."
+ },
+ {
+  "id": 580,
+  "text": "Let's distinguish this."
+ },
+ {
+  "id": 581,
+  "text": "What's the idea behind this U versus not having a U?"
+ },
+ {
+  "id": 582,
+  "text": "I mean, if it's..."
+ },
+ {
+  "id": 583,
+  "text": "What's the concept here?"
+ },
+ {
+  "id": 584,
+  "text": "What issue comes up when you want to read the value in?"
+ },
+ {
+  "id": 585,
+  "text": "So we know how wide our internal registers are, right?"
+ },
+ {
+  "id": 586,
+  "text": "Our internal registers are 32 bits."
+ },
+ {
+  "id": 587,
+  "text": "Right?"
+ },
+ {
+  "id": 588,
+  "text": "But now, take LB for example."
+ },
+ {
+  "id": 589,
+  "text": "When you do the read at this point, how much data are you reading?"
+ },
+ {
+  "id": 590,
+  "text": "You're reading one byte."
+ },
+ {
+  "id": 591,
+  "text": "That is to say, your register is four bytes wide."
+ },
+ {
+  "id": 592,
+  "text": "But what you read is just one byte."
+ },
+ {
+  "id": 593,
+  "text": "So here's the issue."
+ },
+ {
+  "id": 594,
+  "text": "Once you read that one byte in,"
+ },
+ {
+  "id": 595,
+  "text": "in that register of yours,"
+ },
+ {
+  "id": 596,
+  "text": "what do you put in the remaining three bytes?"
+ },
+ {
+  "id": 597,
+  "text": "You see what I mean?"
+ },
+ {
+  "id": 598,
+  "text": "For example, this register here,"
+ },
+ {
+  "id": 599,
+  "text": "it's four bytes wide."
+ },
+ {
+  "id": 600,
+  "text": "What we read in is only one byte."
+ },
+ {
+  "id": 601,
+  "text": "Now, that byte,"
+ },
+ {
+  "id": 602,
+  "text": "we generally put it in the low bits,"
+ },
+ {
+  "id": 603,
+  "text": "and that's pretty much it."
+ },
+ {
+  "id": 604,
+  "text": "But now there's one issue,"
+ },
+ {
+  "id": 605,
+  "text": "which is what to put in the upper three bytes of the register,"
+ },
+ {
+  "id": 606,
+  "text": "the question of what goes there."
+ },
+ {
+  "id": 607,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 608,
+  "text": "There are two cases here."
+ },
+ {
+  "id": 609,
+  "text": "One is called sign extension,"
+ },
+ {
+  "id": 610,
+  "text": "and the other is called zero extension."
+ },
+ {
+  "id": 611,
+  "text": "We covered these concepts earlier."
+ },
+ {
+  "id": 612,
+  "text": "What is sign extension?"
+ },
+ {
+  "id": 613,
+  "text": "It means that if the byte you read in here,"
+ },
+ {
+  "id": 614,
+  "text": "this byte,"
+ },
+ {
+  "id": 615,
+  "text": "has a most significant bit of 1,"
+ },
+ {
+  "id": 616,
+  "text": "then what does sign extension mean?"
+ },
+ {
+  "id": 617,
+  "text": "All the upper bits become 1s, right?"
+ },
+ {
+  "id": 618,
+  "text": "Still following me?"
+ },
+ {
+  "id": 619,
+  "text": "Extend according to the sign bit."
+ },
+ {
+  "id": 620,
+  "text": "If it's 0, then everything is 0."
+ },
+ {
+  "id": 621,
+  "text": "This is called sign extension."
+ },
+ {
+  "id": 622,
+  "text": "But if you add a 'u' here,"
+ },
+ {
+  "id": 623,
+  "text": "then it becomes"
+ },
+ {
+  "id": 624,
+  "text": "actually unsigned extension."
+ },
+ {
+  "id": 625,
+  "text": "Unsigned extension means zero extension."
+ },
+ {
+  "id": 626,
+  "text": "Zero extension means that"
+ },
+ {
+  "id": 627,
+  "text": "no matter what the preceding byte's"
+ },
+ {
+  "id": 628,
+  "text": "most significant bit is, 1 or 0,"
+ },
+ {
+  "id": 629,
+  "text": "the upper bits are all cleared to zero."
+ },
+ {
+  "id": 630,
+  "text": "That's the effect we achieve."
+ },
+ {
+  "id": 631,
+  "text": "This actually maps to our C language"
+ },
+ {
+  "id": 632,
+  "text": "in a way that is basically like"
+ },
+ {
+  "id": 633,
+  "text": "somewhat similar to"
+ },
+ {
+  "id": 634,
+  "text": "the concept of unsigned and signed numbers."
+ },
+ {
+  "id": 635,
+  "text": "Take a moment to let that sink in."
+ },
+ {
+  "id": 636,
+  "text": "And then,"
+ },
+ {
+  "id": 637,
+  "text": "when it performs the operation,"
+ },
+ {
+  "id": 638,
+  "text": "note that it works like this:"
+ },
+ {
+  "id": 639,
+  "text": "that is to say,"
+ },
+ {
+  "id": 640,
+  "text": "It goes by this rs1"
+ },
+ {
+  "id": 641,
+  "text": "the value in this register"
+ },
+ {
+  "id": 642,
+  "text": "its value"
+ },
+ {
+  "id": 643,
+  "text": "that is to say, since you are going to memory to read"
+ },
+ {
+  "id": 644,
+  "text": "then this memory of yours,"
+ },
+ {
+  "id": 645,
+  "text": "this address in memory,"
+ },
+ {
+  "id": 646,
+  "text": "you definitely have to tell the computer."
+ },
+ {
+  "id": 647,
+  "text": "So how is this memory address computed?"
+ },
+ {
+  "id": 648,
+  "text": "It is obtained by rs1 plus an immediate value."
+ },
+ {
+  "id": 649,
+  "text": "Because it uses the I-type format."
+ },
+ {
+  "id": 650,
+  "text": "You can imagine that since it is I-type,"
+ },
+ {
+  "id": 651,
+  "text": "in this instruction,"
+ },
+ {
+  "id": 652,
+  "text": "one part holds a 12-bit immediate value."
+ },
+ {
+  "id": 653,
+  "text": "This immediate value represents this offset here."
+ },
+ {
+  "id": 654,
+  "text": "So it actually takes the value in this register,"
+ },
+ {
+  "id": 655,
+  "text": "adds this immediate value,"
+ },
+ {
+  "id": 656,
+  "text": "and finally gets an address."
+ },
+ {
+  "id": 657,
+  "text": "Then, based on this address,"
+ },
+ {
+  "id": 658,
+  "text": "it goes to memory to fetch that byte."
+ },
+ {
+  "id": 659,
+  "text": "That is actually how the process works."
+ },
+ {
+  "id": 660,
+  "text": "So, everyone,"
+ },
+ {
+  "id": 661,
+  "text": "this shouldn't give you too much trouble."
+ },
+ {
+  "id": 662,
+  "text": "Now, when we talk about offset addressing,"
+ },
+ {
+  "id": 663,
+  "text": "I've listed a few examples here."
+ },
+ {
+  "id": 664,
+  "text": "Take a moment to get familiar with them."
+ },
+ {
+  "id": 665,
+  "text": "And at the same time,"
+ },
+ {
+  "id": 666,
+  "text": "also,"
+ },
+ {
+  "id": 667,
+  "text": "notice this address range."
+ },
+ {
+  "id": 668,
+  "text": "Why is it this one?"
+ },
+ {
+  "id": 669,
+  "text": "It's also because of this immediate value,"
+ },
+ {
+  "id": 670,
+  "text": "which is 12 bits wide."
+ },
+ {
+  "id": 671,
+  "text": "There's one more thing"
+ },
+ {
+  "id": 672,
+  "text": "I want you to pay attention to,"
+ },
+ {
+  "id": 673,
+  "text": "and that is,"
+ },
+ {
+  "id": 674,
+  "text": "there's a question here,"
+ },
+ {
+  "id": 675,
+  "text": "let me ask you,"
+ },
+ {
+  "id": 676,
+  "text": "I want to ask everyone,"
+ },
+ {
+  "id": 677,
+  "text": "just look at this,"
+ },
+ {
+  "id": 678,
+  "text": "LBU, LBU,"
+ },
+ {
+  "id": 679,
+  "text": "LHU, LHU."
+ },
+ {
+  "id": 680,
+  "text": "But then,"
+ },
+ {
+  "id": 681,
+  "text": "why isn't there something like an LWU?"
+ },
+ {
+  "id": 682,
+  "text": "Think about why."
+ },
+ {
+  "id": 683,
+  "text": "This is actually something we covered earlier,"
+ },
+ {
+  "id": 684,
+  "text": "based on what we explained to you before,"
+ },
+ {
+  "id": 685,
+  "text": "about why we do sign extension and zero extension."
+ },
+ {
+  "id": 686,
+  "text": "I think everyone should get what I mean."
+ },
+ {
+  "id": 687,
+  "text": "A register is four bytes,"
+ },
+ {
+  "id": 688,
+  "text": "and if you load a word,"
+ },
+ {
+  "id": 689,
+  "text": "what does that mean?"
+ },
+ {
+  "id": 690,
+  "text": "A word is also four bytes,"
+ },
+ {
+  "id": 691,
+  "text": "so the data in memory,"
+ },
+ {
+  "id": 692,
+  "text": "when loaded in,"
+ },
+ {
+  "id": 693,
+  "text": "exactly fills up one register, right?"
+ },
+ {
+  "id": 694,
+  "text": "Think about it, isn't that the case?"
+ },
+ {
+  "id": 695,
+  "text": "Do we still need to extend?"
+ },
+ {
+  "id": 696,
+  "text": "No extension needed,"
+ },
+ {
+  "id": 697,
+  "text": "naturally."
+ },
+ {
+  "id": 698,
+  "text": "Right?"
+ },
+ {
+  "id": 699,
+  "text": "So these"
+ },
+ {
+  "id": 700,
+  "text": "As you study,"
+ },
+ {
+  "id": 701,
+  "text": "ask yourself these questions"
+ },
+ {
+  "id": 702,
+  "text": "— a few whys."
+ },
+ {
+  "id": 703,
+  "text": "It may give us a deeper understanding"
+ },
+ {
+  "id": 704,
+  "text": "of the design of this instruction set."
+ },
+ {
+  "id": 705,
+  "text": "That is to say,"
+ },
+ {
+  "id": 706,
+  "text": "for LW, there is no LWU,"
+ },
+ {
+  "id": 707,
+  "text": "and the reason is that sign extension isn't needed."
+ },
+ {
+  "id": 708,
+  "text": "So this example,"
+ },
+ {
+  "id": 709,
+  "text": "you can go back and match it up yourselves,"
+ },
+ {
+  "id": 710,
+  "text": "and see the effect of this sign extension."
+ },
+ {
+  "id": 711,
+  "text": "Now for writes,"
+ },
+ {
+  "id": 712,
+  "text": "it's relatively simple."
+ },
+ {
+  "id": 713,
+  "text": "For writes, there are only B, H, and W,"
+ },
+ {
+  "id": 714,
+  "text": "with no sign extension."
+ },
+ {
+  "id": 715,
+  "text": "There's no distinction between unsigned writes and signed writes —"
+ },
+ {
+  "id": 716,
+  "text": "store instructions don't distinguish them."
+ },
+ {
+  "id": 717,
+  "text": "Now think about why that is."
+ },
+ {
+  "id": 718,
+  "text": "This is also something worth understanding — why."
+ },
+ {
+  "id": 719,
+  "text": "Everyone think about why."
+ },
+ {
+  "id": 720,
+  "text": "Because this is actually the reverse of the process we just talked about."
+ },
+ {
+  "id": 721,
+  "text": "You know this."
+ },
+ {
+  "id": 722,
+  "text": "For example, take a byte — one byte."
+ },
+ {
+  "id": 723,
+  "text": "Think about it."
+ },
+ {
+  "id": 724,
+  "text": "Inside the register there are 4 bytes."
+ },
+ {
+  "id": 725,
+  "text": "Outside there is only 1 byte."
+ },
+ {
+  "id": 726,
+  "text": "Now you want to put this thing out."
+ },
+ {
+  "id": 727,
+  "text": "This is not reading it in."
+ },
+ {
+  "id": 728,
+  "text": "Do you understand what I mean?"
+ },
+ {
+  "id": 729,
+  "text": "Since you're putting it out,"
+ },
+ {
+  "id": 730,
+  "text": "the CPU will naturally just fill in its low-order byte"
+ },
+ {
+  "id": 731,
+  "text": "and that's it."
+ },
+ {
+  "id": 732,
+  "text": "There's no such thing as a concept of extension here at all."
+ },
+ {
+  "id": 733,
+  "text": "Do you understand what I mean?"
+ },
+ {
+  "id": 734,
+  "text": "So naturally, there is no extension issue."
+ },
+ {
+  "id": 735,
+  "text": "So when writing out,"
+ },
+ {
+  "id": 736,
+  "text": "you don't need to worry about this sign extension issue."
+ },
+ {
+  "id": 737,
+  "text": "So when you write instructions,"
+ },
+ {
+  "id": 738,
+  "text": "if you know the reason behind this,"
+ },
+ {
+  "id": 739,
+  "text": "it may help you understand it better."
+ },
+ {
+  "id": 740,
+  "text": "Now, its instruction format"
+ },
+ {
+  "id": 741,
+  "text": "is a new instruction format"
+ },
+ {
+  "id": 742,
+  "text": "called S-type."
+ },
+ {
+  "id": 743,
+  "text": "The S here stands for store"
+ },
+ {
+  "id": 744,
+  "text": "— it just means store."
+ },
+ {
+  "id": 745,
+  "text": "That's where the name comes from."
+ },
+ {
+  "id": 746,
+  "text": "Now, some of you might wonder,"
+ },
+ {
+  "id": 747,
+  "text": "why does this immediate look so odd?"
+ },
+ {
+  "id": 748,
+  "text": "Look at this immediate —"
+ },
+ {
+  "id": 749,
+  "text": "when it's actually stored in the instruction,"
+ },
+ {
+  "id": 750,
+  "text": "it's split apart, as you can see."
+ },
+ {
+  "id": 751,
+  "text": "5 bits are placed here,"
+ },
+ {
+  "id": 752,
+  "text": "and here you have bits 5 to 11,"
+ },
+ {
+  "id": 753,
+  "text": "which is 7 bits."
+ },
+ {
+  "id": 754,
+  "text": "Why not just put these two parts together?"
+ },
+ {
+  "id": 755,
+  "text": "Well, honestly,"
+ },
+ {
+  "id": 756,
+  "text": "when they designed the spec,"
+ },
+ {
+  "id": 757,
+  "text": "there must have been a reason."
+ },
+ {
+  "id": 758,
+  "text": "And that reason probably has little to do with software."
+ },
+ {
+  "id": 759,
+  "text": "It's entirely because, possibly, at the lower level..."
+ },
+ {
+  "id": 760,
+  "text": "From a hardware design perspective,"
+ },
+ {
+  "id": 761,
+  "text": "it comes down to a decoding efficiency issue."
+ },
+ {
+  "id": 762,
+  "text": "As for the reason, we don't need to worry about it."
+ },
+ {
+  "id": 763,
+  "text": "When we write, when we write assembly,"
+ },
+ {
+  "id": 764,
+  "text": "we actually don't pay attention to the specific"
+ },
+ {
+  "id": 765,
+  "text": "arrangement inside this."
+ },
+ {
+  "id": 766,
+  "text": "But when decoding,"
+ },
+ {
+  "id": 767,
+  "text": "when you disassemble,"
+ },
+ {
+  "id": 768,
+  "text": "you might need to consider this issue."
+ },
+ {
+  "id": 769,
+  "text": "So, as for memory reads and writes,"
+ },
+ {
+  "id": 770,
+  "text": "we'll stop here for today."
+ },
+ {
+  "id": 771,
+  "text": "Then there are still some conditional branches"
+ },
+ {
+  "id": 772,
+  "text": "and jump instructions."
+ },
+ {
+  "id": 773,
+  "text": "We probably won't have time to cover those today."
+ },
+ {
+  "id": 774,
+  "text": "We'll cover them in the next class."
+ },
+ {
+  "id": 775,
+  "text": "As for the assembly instruction part of the content,"
+ },
+ {
+  "id": 776,
+  "text": "you'll notice that"
+ },
+ {
+  "id": 777,
+  "text": "compared to the earlier material,"
+ },
+ {
+  "id": 778,
+  "text": "it's definitely a bit more dry."
+ },
+ {
+  "id": 779,
+  "text": "Because especially when doing the exercises,"
+ },
+ {
+  "id": 780,
+  "text": "It's also a bit different from writing in a high-level language."
+ },
+ {
+  "id": 781,
+  "text": "But because in this course of ours,"
+ },
+ {
+  "id": 782,
+  "text": "in this course,"
+ },
+ {
+  "id": 783,
+  "text": "in the end we'll be writing some cutting-edge stuff,"
+ },
+ {
+  "id": 784,
+  "text": "low-level development."
+ },
+ {
+  "id": 785,
+  "text": "That means at the very least you need to be able to read it."
+ },
+ {
+  "id": 786,
+  "text": "You get what I mean, right?"
+ },
+ {
+  "id": 787,
+  "text": "If I give you a piece of assembly,"
+ },
+ {
+  "id": 788,
+  "text": "you should at least be able to roughly understand it,"
+ },
+ {
+  "id": 789,
+  "text": "and then make some small modifications."
+ },
+ {
+  "id": 790,
+  "text": "That's probably about all we'll ask of you."
+ },
+ {
+  "id": 791,
+  "text": "Writing large blocks of it,"
+ },
+ {
+  "id": 792,
+  "text": "you won't need to do."
+ },
+ {
+  "id": 793,
+  "text": "But,"
+ },
+ {
+  "id": 794,
+  "text": "as long as you have the basic concepts down,"
+ },
+ {
+  "id": 795,
+  "text": "and can read it, that's fine."
+ },
+ {
+  "id": 796,
+  "text": "OK."
+ },
+ {
+  "id": 797,
+  "text": "So that's it for today's class."
+ },
+ {
+  "id": 798,
+  "text": "All right?"
+ },
+ {
+  "id": 799,
+  "text": "Thank you, everyone."
+ }
+]

@@ -1,0 +1,8018 @@
+[
+ {
+  "id": 0,
+  "text": "Next, let's talk about the thing you care most about: a brief history of the RISC-V instruction set architecture, along with its current state of development and key features."
+ },
+ {
+  "id": 1,
+  "text": "And then finally,"
+ },
+ {
+  "id": 2,
+  "text": "we'll take this instruction set architecture"
+ },
+ {
+  "id": 3,
+  "text": "and cover some of its basic concepts,"
+ },
+ {
+  "id": 4,
+  "text": "which are mainly just our"
+ },
+ {
+  "id": 5,
+  "text": "things from that spec,"
+ },
+ {
+  "id": 6,
+  "text": "some of the points in the"
+ },
+ {
+  "id": 7,
+  "text": "standard that are more important,"
+ },
+ {
+  "id": 8,
+  "text": "I'll briefly go over them with you first."
+ },
+ {
+  "id": 9,
+  "text": "As for the details later,"
+ },
+ {
+  "id": 10,
+  "text": "in, in later courses,"
+ },
+ {
+  "id": 11,
+  "text": "I will bring them up to you again."
+ },
+ {
+  "id": 12,
+  "text": "Now, when we talk about this instruction set architecture,"
+ },
+ {
+  "id": 13,
+  "text": "it's fair to say it has been developed for many years,"
+ },
+ {
+  "id": 14,
+  "text": "right, many years."
+ },
+ {
+  "id": 15,
+  "text": "Now,"
+ },
+ {
+  "id": 16,
+  "text": "with so many instruction set architectures out there today,"
+ },
+ {
+  "id": 17,
+  "text": "we should say they are actually all,"
+ },
+ {
+  "id": 18,
+  "text": "they should all be said to be the intellectual property of these companies,"
+ },
+ {
+  "id": 19,
+  "text": "rather than being open."
+ },
+ {
+  "id": 20,
+  "text": "So,"
+ },
+ {
+  "id": 21,
+  "text": "so as you know,"
+ },
+ {
+  "id": 22,
+  "text": "we're now at this point where,"
+ },
+ {
+  "id": 23,
+  "text": "from the software side of things,"
+ },
+ {
+  "id": 24,
+  "text": "in our software industry,"
+ },
+ {
+  "id": 25,
+  "text": "in our software industry,"
+ },
+ {
+  "id": 26,
+  "text": "these days this kind of"
+ },
+ {
+  "id": 27,
+  "text": "idea of free and open source,"
+ },
+ {
+  "id": 28,
+  "text": "has now become"
+ },
+ {
+  "id": 29,
+  "text": "more and more intense,"
+ },
+ {
+  "id": 30,
+  "text": "more and more intense,"
+ },
+ {
+  "id": 31,
+  "text": "wouldn't you say?"
+ },
+ {
+  "id": 32,
+  "text": "Now, this,"
+ },
+ {
+  "id": 33,
+  "text": "for example, if we look at the software industry,"
+ },
+ {
+  "id": 34,
+  "text": "this open source concept,"
+ },
+ {
+  "id": 35,
+  "text": "what kind of state is this development in?"
+ },
+ {
+  "id": 36,
+  "text": "Take operating systems, for example,"
+ },
+ {
+  "id": 37,
+  "text": "let's break it down along a few dimensions,"
+ },
+ {
+  "id": 38,
+  "text": "one is: are the standards open?"
+ },
+ {
+  "id": 39,
+  "text": "and another is: is the implementation open source?"
+ },
+ {
+  "id": 40,
+  "text": "So what are the necessary ones that correspond to this"
+ },
+ {
+  "id": 41,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 42,
+  "text": "For example, take the operating system."
+ },
+ {
+  "id": 43,
+  "text": "As for the operating system,"
+ },
+ {
+  "id": 44,
+  "text": "we know that for standards like this,"
+ },
+ {
+  "id": 45,
+  "text": "there are open ones, all of them"
+ },
+ {
+  "id": 46,
+  "text": "POSIX, they're all open standards."
+ },
+ {
+  "id": 47,
+  "text": "Right?"
+ },
+ {
+  "id": 48,
+  "text": "And in terms of implementations,"
+ },
+ {
+  "id": 49,
+  "text": "things like Linux and FreeBSD,"
+ },
+ {
+  "id": 50,
+  "text": "those go without saying."
+ },
+ {
+  "id": 51,
+  "text": "Then what about closed source?"
+ },
+ {
+  "id": 52,
+  "text": "Well, of course, Windows is the representative."
+ },
+ {
+  "id": 53,
+  "text": "Now, with Windows, we know,"
+ },
+ {
+  "id": 54,
+  "text": "Microsoft is also embracing open source now."
+ },
+ {
+  "id": 55,
+  "text": "Right?"
+ },
+ {
+  "id": 56,
+  "text": "Then, as for compilers,"
+ },
+ {
+  "id": 57,
+  "text": "for instance, the standards,"
+ },
+ {
+  "id": 58,
+  "text": "which are really the languages,"
+ },
+ {
+  "id": 59,
+  "text": "the programming languages."
+ },
+ {
+  "id": 60,
+  "text": "So, C,"
+ },
+ {
+  "id": 61,
+  "text": "on the compiler side, GCC,"
+ },
+ {
+  "id": 62,
+  "text": "and these LLVM..."
+ },
+ {
+  "id": 63,
+  "text": "LLVM, I don't know if you all"
+ },
+ {
+  "id": 64,
+  "text": "have any classmates who've looked into it."
+ },
+ {
+  "id": 65,
+  "text": "I mean, you all probably use GCC quite a bit,"
+ },
+ {
+  "id": 66,
+  "text": "right?"
+ },
+ {
+  "id": 67,
+  "text": "Of course, our course also focuses mainly on GCC,"
+ },
+ {
+  "id": 68,
+  "text": "but when it comes to the LLVM compiler,"
+ },
+ {
+  "id": 69,
+  "text": "it has this momentum of coming from behind."
+ },
+ {
+  "id": 70,
+  "text": "Perhaps in the near future,"
+ },
+ {
+  "id": 71,
+  "text": "it's quite likely that it will overtake GCC."
+ },
+ {
+  "id": 72,
+  "text": "But that's hard to say."
+ },
+ {
+  "id": 73,
+  "text": "Right now, the development abroad, including in the industry,"
+ },
+ {
+  "id": 74,
+  "text": "is still very rapid."
+ },
+ {
+  "id": 75,
+  "text": "Now, all of these are open source."
+ },
+ {
+  "id": 76,
+  "text": "As for this open source..."
+ },
+ {
+  "id": 77,
+  "text": "on my side, what I mainly look at"
+ },
+ {
+  "id": 78,
+  "text": "is that there are these specific manufacturers,"
+ },
+ {
+  "id": 79,
+  "text": "for example, Intel."
+ },
+ {
+  "id": 80,
+  "text": "compilers that they developed themselves."
+ },
+ {
+  "id": 81,
+  "text": "Actually, if any of you have been exposed to this,"
+ },
+ {
+  "id": 82,
+  "text": "if you've used some of these Intel"
+ },
+ {
+  "id": 83,
+  "text": "or ARM IDE development tools,"
+ },
+ {
+  "id": 84,
+  "text": "the editing underneath is actually built on these."
+ },
+ {
+  "id": 85,
+  "text": "Then databases, and so on and so forth."
+ },
+ {
+  "id": 86,
+  "text": "That goes without saying."
+ },
+ {
+  "id": 87,
+  "text": "Now, what we mainly want to point out here,"
+ },
+ {
+  "id": 88,
+  "text": "is that when it comes to instruction set architectures,"
+ },
+ {
+  "id": 89,
+  "text": "what is the state of open source at the hardware level?"
+ },
+ {
+  "id": 90,
+  "text": "What does that actually look like?"
+ },
+ {
+  "id": 91,
+  "text": "Well, before RISC-V and these things came along,"
+ },
+ {
+  "id": 92,
+  "text": "instruction sets like X86,"
+ },
+ {
+  "id": 93,
+  "text": "and ARM,"
+ },
+ {
+  "id": 94,
+  "text": "were actually not open."
+ },
+ {
+  "id": 95,
+  "text": "X86 goes without saying,"
+ },
+ {
+  "id": 96,
+  "text": "because only Intel and AMD make X86 chips."
+ },
+ {
+  "id": 97,
+  "text": "As for ARM,"
+ },
+ {
+  "id": 98,
+  "text": "they grant you a license,"
+ },
+ {
+  "id": 99,
+  "text": "but you can't just modify it however you want."
+ },
+ {
+  "id": 100,
+  "text": "Everyone get that?"
+ },
+ {
+  "id": 101,
+  "text": "Take Huawei for example."
+ },
+ {
+  "id": 102,
+  "text": "It bought that instruction set license,"
+ },
+ {
+  "id": 103,
+  "text": "and after buying it,"
+ },
+ {
+  "id": 104,
+  "text": "what you can actually do on top of it"
+ },
+ {
+  "id": 105,
+  "text": "is fairly limited."
+ },
+ {
+  "id": 106,
+  "text": "ARM will stipulate"
+ },
+ {
+  "id": 107,
+  "text": "that you cannot touch these things."
+ },
+ {
+  "id": 108,
+  "text": "So,"
+ },
+ {
+  "id": 109,
+  "text": "mainly because these things"
+ },
+ {
+  "id": 110,
+  "text": "are not completely open and free,"
+ },
+ {
+  "id": 111,
+  "text": "how should instruction set architectures develop?"
+ },
+ {
+  "id": 112,
+  "text": "They will actually move toward freedom and openness."
+ },
+ {
+  "id": 113,
+  "text": "Well, RISC-V starts from exactly this idea"
+ },
+ {
+  "id": 114,
+  "text": "and introduces an instruction set architecture."
+ },
+ {
+  "id": 115,
+  "text": "Now let's take a look at the historical development of RISC-V."
+ },
+ {
+  "id": 116,
+  "text": "I've actually pronounced RISC-V quite a few times already,"
+ },
+ {
+  "id": 117,
+  "text": "and now you all need to know how to say it too."
+ },
+ {
+  "id": 118,
+  "text": "It's 'RISC-V' — don't spell it out letter by letter every time,"
+ },
+ {
+  "id": 119,
+  "text": "that would just be too nerdy."
+ },
+ {
+  "id": 120,
+  "text": "It actually has its own pronunciation."
+ },
+ {
+  "id": 121,
+  "text": "On its official website,"
+ },
+ {
+  "id": 122,
+  "text": "in the standard,"
+ },
+ {
+  "id": 123,
+  "text": "it explicitly states"
+ },
+ {
+  "id": 124,
+  "text": "that this is how it should be pronounced."
+ },
+ {
+  "id": 125,
+  "text": "Since it's a standard,"
+ },
+ {
+  "id": 126,
+  "text": "everyone should just stick to the unified pronunciation."
+ },
+ {
+  "id": 127,
+  "text": "It's called risk,"
+ },
+ {
+  "id": 128,
+  "text": "that is, risk five."
+ },
+ {
+  "id": 129,
+  "text": "But it doesn't mean that risk."
+ },
+ {
+  "id": 130,
+  "text": "We know risk means adventure in English,"
+ },
+ {
+  "id": 131,
+  "text": "right?"
+ },
+ {
+  "id": 132,
+  "text": "It's just how it's pronounced."
+ },
+ {
+  "id": 133,
+  "text": "You say risk five."
+ },
+ {
+  "id": 134,
+  "text": "Now, since this is the V,"
+ },
+ {
+  "id": 135,
+  "text": "we know it represents the concept of 5 in Roman numerals,"
+ },
+ {
+  "id": 136,
+  "text": "right?"
+ },
+ {
+  "id": 137,
+  "text": "So this five really does mean five."
+ },
+ {
+  "id": 138,
+  "text": "So actually, it really is,"
+ },
+ {
+  "id": 139,
+  "text": "this standardized architecture,"
+ },
+ {
+  "id": 140,
+  "text": "It is actually considered to have developed into the fifth generation."
+ },
+ {
+  "id": 141,
+  "text": "But it wasn't until the fifth generation"
+ },
+ {
+  "id": 142,
+  "text": "that it was released publicly,"
+ },
+ {
+  "id": 143,
+  "text": "as an open-source international standard."
+ },
+ {
+  "id": 144,
+  "text": "So it took this 'Five'"
+ },
+ {
+  "id": 145,
+  "text": "and made it part of the name of this instruction set architecture."
+ },
+ {
+  "id": 146,
+  "text": "That's how it is."
+ },
+ {
+  "id": 147,
+  "text": "So where did this instruction set architecture come from?"
+ },
+ {
+  "id": 148,
+  "text": "Well, as you can see,"
+ },
+ {
+  "id": 149,
+  "text": "it was developed inside a university again."
+ },
+ {
+  "id": 150,
+  "text": "From this, we can also roughly see"
+ },
+ {
+  "id": 151,
+  "text": "why the basic science in the United States,"
+ },
+ {
+  "id": 152,
+  "text": "as it develops,"
+ },
+ {
+  "id": 153,
+  "text": "we say is quite impressive,"
+ },
+ {
+  "id": 154,
+  "text": "is mainly because their education is quite strong."
+ },
+ {
+  "id": 155,
+  "text": "Have you noticed?"
+ },
+ {
+  "id": 156,
+  "text": "These more famous instruction set architectures,"
+ },
+ {
+  "id": 157,
+  "text": "the instruction set architectures we talked about earlier,"
+ },
+ {
+  "id": 158,
+  "text": "many of them came out of universities."
+ },
+ {
+  "id": 159,
+  "text": "For example,"
+ },
+ {
+  "id": 160,
+  "text": "What's this called?"
+ },
+ {
+  "id": 161,
+  "text": "That one."
+ },
+ {
+  "id": 162,
+  "text": "A few of the ones I just mentioned in here,"
+ },
+ {
+  "id": 163,
+  "text": "for example, this one,"
+ },
+ {
+  "id": 164,
+  "text": "this SPARC,"
+ },
+ {
+  "id": 165,
+  "text": "and then that MIPS,"
+ },
+ {
+  "id": 166,
+  "text": "RISC."
+ },
+ {
+  "id": 167,
+  "text": "These are actually all just"
+ },
+ {
+  "id": 168,
+  "text": "research results from university professors,"
+ },
+ {
+  "id": 169,
+  "text": "and then turned into products."
+ },
+ {
+  "id": 170,
+  "text": "Instruction architectures like Intel's,"
+ },
+ {
+  "id": 171,
+  "text": "even though they're very popular now,"
+ },
+ {
+  "id": 172,
+  "text": "back in the day, among these,"
+ },
+ {
+  "id": 173,
+  "text": "if you look at it from within the industry,"
+ },
+ {
+  "id": 174,
+  "text": "it was actually considered a pretty low-end architecture."
+ },
+ {
+  "id": 175,
+  "text": "It's just that its market success was better."
+ },
+ {
+  "id": 176,
+  "text": "You all get what I mean, right?"
+ },
+ {
+  "id": 177,
+  "text": "But technically speaking,"
+ },
+ {
+  "id": 178,
+  "text": "it's really still these things"
+ },
+ {
+  "id": 179,
+  "text": "that came out of academia."
+ },
+ {
+  "id": 180,
+  "text": "Its design is a bit more elegant and refined."
+ },
+ {
+  "id": 181,
+  "text": "Now, this project"
+ },
+ {
+  "id": 182,
+  "text": "actually originated from"
+ },
+ {
+  "id": 183,
+  "text": "the University of California, Berkeley."
+ },
+ {
+  "id": 184,
+  "text": "That school, as you know,"
+ },
+ {
+  "id": 185,
+  "text": "is also very famous."
+ },
+ {
+  "id": 186,
+  "text": "Earlier we mentioned"
+ },
+ {
+  "id": 187,
+  "text": "Stanford University."
+ },
+ {
+  "id": 188,
+  "text": "These are all classic top-tier universities in the United States,"
+ },
+ {
+  "id": 189,
+  "text": "and they are also the schools"
+ },
+ {
+  "id": 190,
+  "text": "that are particularly strong in computer science and the computing industry in the US."
+ },
+ {
+  "id": 191,
+  "text": "So this,"
+ },
+ {
+  "id": 192,
+  "text": "it actually started back in 2010,"
+ },
+ {
+  "id": 193,
+  "text": "at their university,"
+ },
+ {
+  "id": 194,
+  "text": "when"
+ },
+ {
+  "id": 195,
+  "text": "some faculty in the computer science school,"
+ },
+ {
+  "id": 196,
+  "text": "they wanted to offer some"
+ },
+ {
+  "id": 197,
+  "text": "foundational courses,"
+ },
+ {
+  "id": 198,
+  "text": "for example, courses like compiler construction,"
+ },
+ {
+  "id": 199,
+  "text": "computer organization, and so on."
+ },
+ {
+  "id": 200,
+  "text": "So, as we all know, when it comes to this course,"
+ },
+ {
+  "id": 201,
+  "text": "just lecturing on theory is actually very dry."
+ },
+ {
+  "id": 202,
+  "text": "That's something we also have to overcome,"
+ },
+ {
+  "id": 203,
+  "text": "meaning there definitely has to be a hands-on component."
+ },
+ {
+  "id": 204,
+  "text": "And the instructors here are quite impressive."
+ },
+ {
+  "id": 205,
+  "text": "They didn't just grab something off the shelf,"
+ },
+ {
+  "id": 206,
+  "text": "because of course they did their research first."
+ },
+ {
+  "id": 207,
+  "text": "They wanted to use some of the CPUs"
+ },
+ {
+  "id": 208,
+  "text": "that are popular on the market,"
+ },
+ {
+  "id": 209,
+  "text": "to teach the students."
+ },
+ {
+  "id": 210,
+  "text": "So at the time, they did some research,"
+ },
+ {
+  "id": 211,
+  "text": "listing the resources, for example,"
+ },
+ {
+  "id": 212,
+  "text": "like x86, ARM,"
+ },
+ {
+  "id": 213,
+  "text": "but they found that each had some problems."
+ },
+ {
+  "id": 214,
+  "text": "What problems, you ask?"
+ },
+ {
+  "id": 215,
+  "text": "Take x86,"
+ },
+ {
+  "id": 216,
+  "text": "by the year 2010,"
+ },
+ {
+  "id": 217,
+  "text": "it had already become very complex,"
+ },
+ {
+  "id": 218,
+  "text": "because it has a huge number of instructions."
+ },
+ {
+  "id": 219,
+  "text": "As we know,"
+ },
+ {
+  "id": 220,
+  "text": "What kind of instruction set architecture is x86?"
+ },
+ {
+  "id": 221,
+  "text": "It's a complex instruction set architecture,"
+ },
+ {
+  "id": 222,
+  "text": "a classic example of one."
+ },
+ {
+  "id": 223,
+  "text": "So it has a huge number of instructions,"
+ },
+ {
+  "id": 224,
+  "text": "over 1000 instructions."
+ },
+ {
+  "id": 225,
+  "text": "Now think about how we'd teach that in class."
+ },
+ {
+  "id": 226,
+  "text": "There's just no way, right?"
+ },
+ {
+  "id": 227,
+  "text": "Cover too little, and it's not enough."
+ },
+ {
+  "id": 228,
+  "text": "Cover too much, and the students simply"
+ },
+ {
+  "id": 229,
+  "text": "can't finish it all in a single semester."
+ },
+ {
+  "id": 230,
+  "text": "So there's no way we can use this thing."
+ },
+ {
+  "id": 231,
+  "text": "Of course, there's also the IP issue,"
+ },
+ {
+  "id": 232,
+  "text": "that is, the intellectual property issue,"
+ },
+ {
+  "id": 233,
+  "text": "because some of it might require paying fees and so on."
+ },
+ {
+  "id": 234,
+  "text": "Now, ARM has the same problem,"
+ },
+ {
+  "id": 235,
+  "text": "a similar one."
+ },
+ {
+  "id": 236,
+  "text": "And as you know, with ARM,"
+ },
+ {
+  "id": 237,
+  "text": "back in 2010,"
+ },
+ {
+  "id": 238,
+  "text": "there was another very serious problem:"
+ },
+ {
+  "id": 239,
+  "text": "it still didn't support 64-bit."
+ },
+ {
+  "id": 240,
+  "text": "Actually, as everyone knows, the ARM chip"
+ },
+ {
+  "id": 241,
+  "text": "is so popular now,"
+ },
+ {
+  "id": 242,
+  "text": "but it's really something that came along later."
+ },
+ {
+  "id": 243,
+  "text": "Like around 2010,"
+ },
+ {
+  "id": 244,
+  "text": "which really wasn't that many years ago,"
+ },
+ {
+  "id": 245,
+  "text": "before that, about 10 years ago,"
+ },
+ {
+  "id": 246,
+  "text": "it only supported 32-bit."
+ },
+ {
+  "id": 247,
+  "text": "Because back then, for phones and such,"
+ },
+ {
+  "id": 248,
+  "text": "32-bit was enough."
+ },
+ {
+  "id": 249,
+  "text": "But of course now 64-bit has come along,"
+ },
+ {
+  "id": 250,
+  "text": "so these popular ones on the market,"
+ },
+ {
+  "id": 251,
+  "text": "these existing architectures, just don't work."
+ },
+ {
+  "id": 252,
+  "text": "That's a real headache."
+ },
+ {
+  "id": 253,
+  "text": "So these professors are obviously pretty awesome."
+ },
+ {
+  "id": 254,
+  "text": "They said, if you can't use them, what do you do?"
+ },
+ {
+  "id": 255,
+  "text": "Just build one yourself."
+ },
+ {
+  "id": 256,
+  "text": "That's where they really show their backbone."
+ },
+ {
+  "id": 257,
+  "text": "Now, of course,"
+ },
+ {
+  "id": 258,
+  "text": "their development didn't just happen"
+ },
+ {
+  "id": 259,
+  "text": "like, they decided to do it and it was done."
+ },
+ {
+  "id": 260,
+  "text": "Actually, since they're called RISC-V,"
+ },
+ {
+  "id": 261,
+  "text": "that tells you they actually started early on,"
+ },
+ {
+  "id": 262,
+  "text": "and had already laid the groundwork for many years."
+ },
+ {
+  "id": 263,
+  "text": "You see what I mean, right?"
+ },
+ {
+  "id": 264,
+  "text": "All of this foundation,"
+ },
+ {
+  "id": 265,
+  "text": "especially this kind of foundation,"
+ },
+ {
+  "id": 266,
+  "text": "this kind of foundational industry,"
+ },
+ {
+  "id": 267,
+  "text": "is definitely not something you can"
+ },
+ {
+  "id": 268,
+  "text": "just throw money at and build overnight."
+ },
+ {
+  "id": 269,
+  "text": "This thing,"
+ },
+ {
+  "id": 270,
+  "text": "at UC Berkeley,"
+ },
+ {
+  "id": 271,
+  "text": "they were actually working on this as early as the 1980s,"
+ },
+ {
+  "id": 272,
+  "text": "the early 1980s, around 1981 or so."
+ },
+ {
+  "id": 273,
+  "text": "They were already envisioning this kind of"
+ },
+ {
+  "id": 274,
+  "text": "Of course, it was very simple back then."
+ },
+ {
+  "id": 275,
+  "text": "Gen one, gen two, gen three, gen four,"
+ },
+ {
+  "id": 276,
+  "text": "and it kept evolving until"
+ },
+ {
+  "id": 277,
+  "text": "in 2011,"
+ },
+ {
+  "id": 278,
+  "text": "they had developed the fifth generation."
+ },
+ {
+  "id": 279,
+  "text": "They felt it was pure enough"
+ },
+ {
+  "id": 280,
+  "text": "it could be used for teaching purposes,"
+ },
+ {
+  "id": 281,
+  "text": "it could be presented to the world."
+ },
+ {
+  "id": 282,
+  "text": "So he only did it"
+ },
+ {
+  "id": 283,
+  "text": "— of course, as he tells it,"
+ },
+ {
+  "id": 284,
+  "text": "it only took him three months,"
+ },
+ {
+  "id": 285,
+  "text": "basically one summer vacation."
+ },
+ {
+  "id": 286,
+  "text": "A few teachers from their teaching and research office,"
+ },
+ {
+  "id": 287,
+  "text": "along with their students,"
+ },
+ {
+  "id": 288,
+  "text": "managed to build this thing."
+ },
+ {
+  "id": 289,
+  "text": "But in reality, as we say,"
+ },
+ {
+  "id": 290,
+  "text": "it had actually been developed over many years."
+ },
+ {
+  "id": 291,
+  "text": "It is the crystallization of the knowledge of those who came before."
+ },
+ {
+  "id": 292,
+  "text": "So,"
+ },
+ {
+  "id": 293,
+  "text": "that's why it's called RISC-V,"
+ },
+ {
+  "id": 294,
+  "text": "and that's where the name comes from."
+ },
+ {
+  "id": 295,
+  "text": "As for its key people,"
+ },
+ {
+  "id": 296,
+  "text": "these are of course some of the big names of RISC-V."
+ },
+ {
+  "id": 297,
+  "text": "If any of you are interested later on,"
+ },
+ {
+  "id": 298,
+  "text": "in getting involved in the community,"
+ },
+ {
+  "id": 299,
+  "text": "they are still very active in it."
+ },
+ {
+  "id": 300,
+  "text": "So,"
+ },
+ {
+  "id": 301,
+  "text": "one of them has what looks like an East Asian face,"
+ },
+ {
+  "id": 302,
+  "text": "but I have a feeling he might be Korean."
+ },
+ {
+  "id": 303,
+  "text": "I don't know the details, I don't know where he's from."
+ },
+ {
+  "id": 304,
+  "text": "I never looked into it."
+ },
+ {
+  "id": 305,
+  "text": "But this person is definitely Asian."
+ },
+ {
+  "id": 306,
+  "text": "The rest are all professors from these universities."
+ },
+ {
+  "id": 307,
+  "text": "Now, their roles have also changed somewhat."
+ },
+ {
+  "id": 308,
+  "text": "As we know, RISC-V later established a foundation."
+ },
+ {
+  "id": 309,
+  "text": "If you're interested, you can go to the official RISC-V website and take a look."
+ },
+ {
+  "id": 310,
+  "text": "This foundation,"
+ },
+ {
+  "id": 311,
+  "text": "this foundation,"
+ },
+ {
+  "id": 312,
+  "text": "the reason we say it can stay open"
+ },
+ {
+  "id": 313,
+  "text": "and free,"
+ },
+ {
+  "id": 314,
+  "text": "the key reason really is that"
+ },
+ {
+  "id": 315,
+  "text": "it is not held in the hands of a single company."
+ },
+ {
+  "id": 316,
+  "text": "You see what I mean, right?"
+ },
+ {
+  "id": 317,
+  "text": "Once it's in the hands of a single company or enterprise,"
+ },
+ {
+  "id": 318,
+  "text": "as we know, it becomes a matter of money."
+ },
+ {
+  "id": 319,
+  "text": "And to avoid that problem,"
+ },
+ {
+  "id": 320,
+  "text": "They actually set up a"
+ },
+ {
+  "id": 321,
+  "text": "non-profit foundation"
+ },
+ {
+  "id": 322,
+  "text": "called the RISC-V Foundation."
+ },
+ {
+  "id": 323,
+  "text": "This is the foundation's website,"
+ },
+ {
+  "id": 324,
+  "text": "so if you're interested, you can take a look."
+ },
+ {
+  "id": 325,
+  "text": "What they did was"
+ },
+ {
+  "id": 326,
+  "text": "essentially they contributed all of their intellectual property"
+ },
+ {
+  "id": 327,
+  "text": "to the foundation."
+ },
+ {
+  "id": 328,
+  "text": "So it's all open source,"
+ },
+ {
+  "id": 329,
+  "text": "free for everyone to use"
+ },
+ {
+  "id": 330,
+  "text": "and to modify."
+ },
+ {
+  "id": 331,
+  "text": "And uh,"
+ },
+ {
+  "id": 332,
+  "text": "there are no license fees at all."
+ },
+ {
+  "id": 333,
+  "text": "You can basically do whatever you want with it."
+ },
+ {
+  "id": 334,
+  "text": "Now, uh,"
+ },
+ {
+  "id": 335,
+  "text": "as we just said, it's a set of standards,"
+ },
+ {
+  "id": 336,
+  "text": "so it's not turned into a product."
+ },
+ {
+  "id": 337,
+  "text": "You see what I mean?"
+ },
+ {
+  "id": 338,
+  "text": "It's not a foundation that makes chips."
+ },
+ {
+  "id": 339,
+  "text": "It only maintains this set of standards."
+ },
+ {
+  "id": 340,
+  "text": "This standard is released publicly,"
+ },
+ {
+  "id": 341,
+  "text": "so all the vendors,"
+ },
+ {
+  "id": 342,
+  "text": "including individual developers like you, can build on this standard"
+ },
+ {
+  "id": 343,
+  "text": "to develop your own chips."
+ },
+ {
+  "id": 344,
+  "text": "So that is RISC-V's"
+ },
+ {
+  "id": 345,
+  "text": "appeal."
+ },
+ {
+  "id": 346,
+  "text": "And the instruction architecture it has designed,"
+ },
+ {
+  "id": 347,
+  "text": "you could say it targets"
+ },
+ {
+  "id": 348,
+  "text": "all kinds of application scenarios,"
+ },
+ {
+  "id": 349,
+  "text": "including microcontrollers,"
+ },
+ {
+  "id": 350,
+  "text": "that is, down to the tiny chips in your wearable devices,"
+ },
+ {
+  "id": 351,
+  "text": "or supercomputers—"
+ },
+ {
+  "id": 352,
+  "text": "its design has actually taken all of these into account."
+ },
+ {
+  "id": 353,
+  "text": "So its prospects are very broad."
+ },
+ {
+  "id": 354,
+  "text": "Over here on the right, I've excerpted"
+ },
+ {
+  "id": 355,
+  "text": "the definition of RISC-V from the RISC-V Foundation's official website."
+ },
+ {
+  "id": 356,
+  "text": "Actually, everything I just said,"
+ },
+ {
+  "id": 357,
+  "text": "it's pretty much the same idea."
+ },
+ {
+  "id": 358,
+  "text": "You can go read the original text yourselves,"
+ },
+ {
+  "id": 359,
+  "text": "and get a sense of this foundation."
+ },
+ {
+  "id": 360,
+  "text": "Why did they set up this foundation?"
+ },
+ {
+  "id": 361,
+  "text": "This explains what this whole RISC-V thing is, this concept."
+ },
+ {
+  "id": 362,
+  "text": "So this RISC-V..."
+ },
+ {
+  "id": 363,
+  "text": "It came out of the university back in 2010."
+ },
+ {
+  "id": 364,
+  "text": "It has been developing up to now, so it's been about ten years or so."
+ },
+ {
+  "id": 365,
+  "text": "Right, ten years."
+ },
+ {
+  "id": 366,
+  "text": "And over these ten years,"
+ },
+ {
+  "id": 367,
+  "text": "with the establishment of the foundation,"
+ },
+ {
+  "id": 368,
+  "text": "including many companies that have also gradually started shifting toward this"
+ },
+ {
+  "id": 369,
+  "text": "this, this standard,"
+ },
+ {
+  "id": 370,
+  "text": "gradually investing in it."
+ },
+ {
+  "id": 371,
+  "text": "So this whole RISC-V ecosystem,"
+ },
+ {
+  "id": 372,
+  "text": "its growth has been very rapid."
+ },
+ {
+  "id": 373,
+  "text": "Now, this is also excerpted"
+ },
+ {
+  "id": 374,
+  "text": "from some consulting firms online,"
+ },
+ {
+  "id": 375,
+  "text": "their market analysis of it."
+ },
+ {
+  "id": 376,
+  "text": "As you can see,"
+ },
+ {
+  "id": 377,
+  "text": "the market development is still quite attractive."
+ },
+ {
+  "id": 378,
+  "text": "It says that by 2025,"
+ },
+ {
+  "id": 379,
+  "text": "they say this market will consume..."
+ },
+ {
+  "id": 380,
+  "text": "62.4 billion CPU cores"
+ },
+ {
+  "id": 381,
+  "text": "Why is this number so huge?"
+ },
+ {
+  "id": 382,
+  "text": "Well, you can probably understand"
+ },
+ {
+  "id": 383,
+  "text": "it mainly comes from"
+ },
+ {
+  "id": 384,
+  "text": "the consumer market side of things,"
+ },
+ {
+  "id": 385,
+  "text": "where the volume is just enormous."
+ },
+ {
+  "id": 386,
+  "text": "Take your little phone,"
+ },
+ {
+  "id": 387,
+  "text": "a small router,"
+ },
+ {
+  "id": 388,
+  "text": "some tiny device,"
+ },
+ {
+  "id": 389,
+  "text": "even a little pair of earphones at home,"
+ },
+ {
+  "id": 390,
+  "text": "and inside there's a small chip."
+ },
+ {
+  "id": 391,
+  "text": "You see what I mean?"
+ },
+ {
+  "id": 392,
+  "text": "So the shipment volume is absolutely massive."
+ },
+ {
+  "id": 393,
+  "text": "That's why he said"
+ },
+ {
+  "id": 394,
+  "text": "there will be 62.4 billion of them in 2025."
+ },
+ {
+  "id": 395,
+  "text": "Now, some of you might say,"
+ },
+ {
+  "id": 396,
+  "text": "Wow, 62.4 billion? That's so many."
+ },
+ {
+  "id": 397,
+  "text": "That feels almost impossible."
+ },
+ {
+  "id": 398,
+  "text": "In fact, this number,"
+ },
+ {
+  "id": 399,
+  "text": "for the consumer market,"
+ },
+ {
+  "id": 400,
+  "text": "It's really not that big a deal"
+ },
+ {
+  "id": 401,
+  "text": "So this market segmentation"
+ },
+ {
+  "id": 402,
+  "text": "is used in many industries"
+ },
+ {
+  "id": 403,
+  "text": "You can see that its growth"
+ },
+ {
+  "id": 404,
+  "text": "is still very rapid"
+ },
+ {
+  "id": 405,
+  "text": "So participating in this,"
+ },
+ {
+  "id": 406,
+  "text": "after this foundation was established,"
+ },
+ {
+  "id": 407,
+  "text": "having just a foundation alone"
+ },
+ {
+  "id": 408,
+  "text": "really doesn't amount to much"
+ },
+ {
+  "id": 409,
+  "text": "What matters mainly is the ecosystem"
+ },
+ {
+  "id": 410,
+  "text": "That is to say, worldwide there need to be"
+ },
+ {
+  "id": 411,
+  "text": "actual manufacturers"
+ },
+ {
+  "id": 412,
+  "text": "and all kinds of players getting involved"
+ },
+ {
+  "id": 413,
+  "text": "Now, through everyone's efforts,"
+ },
+ {
+  "id": 414,
+  "text": "the membership of this foundation has grown"
+ },
+ {
+  "id": 415,
+  "text": "This is a relatively recent set of figures:"
+ },
+ {
+  "id": 416,
+  "text": "it already exceeds 700"
+ },
+ {
+  "id": 417,
+  "text": "across 50 countries worldwide"
+ },
+ {
+  "id": 418,
+  "text": "And as for China,"
+ },
+ {
+  "id": 419,
+  "text": "its participation is actually very strong"
+ },
+ {
+  "id": 420,
+  "text": "We know that our country places a lot of importance on this chip industry,"
+ },
+ {
+  "id": 421,
+  "text": "on this whole thing,"
+ },
+ {
+  "id": 422,
+  "text": "and ever since some unpleasant things happened,"
+ },
+ {
+  "id": 423,
+  "text": "our country has been putting"
+ },
+ {
+  "id": 424,
+  "text": "a lot of investment into these choke-point technologies,"
+ },
+ {
+  "id": 425,
+  "text": "a very large amount of investment."
+ },
+ {
+  "id": 426,
+  "text": "And chips are one of them."
+ },
+ {
+  "id": 427,
+  "text": "Now, can we just go and buy,"
+ },
+ {
+  "id": 428,
+  "text": "that is, buy something like ARM?"
+ },
+ {
+  "id": 429,
+  "text": "We know that actually there would be a lot of problems,"
+ },
+ {
+  "id": 430,
+  "text": "not just commercial problems,"
+ },
+ {
+  "id": 431,
+  "text": "but also that the government of that country would actually have control over it."
+ },
+ {
+  "id": 432,
+  "text": "But with RISC-V,"
+ },
+ {
+  "id": 433,
+  "text": "it has one advantage,"
+ },
+ {
+  "id": 434,
+  "text": "which is that it is owned by a foundation,"
+ },
+ {
+  "id": 435,
+  "text": "and as you know, that foundation seems to have moved its headquarters to a neutral country,"
+ },
+ {
+  "id": 436,
+  "text": "right?"
+ },
+ {
+  "id": 437,
+  "text": "Actually, that's precisely to avoid this kind of problem,"
+ },
+ {
+  "id": 438,
+  "text": "that is, to avoid being controlled by a company or a government."
+ },
+ {
+  "id": 439,
+  "text": "So in our view,"
+ },
+ {
+  "id": 440,
+  "text": "That is to say, if we can get involved"
+ },
+ {
+  "id": 441,
+  "text": "and help grow it into something big,"
+ },
+ {
+  "id": 442,
+  "text": "then this kind of chokepoint risk in the future"
+ },
+ {
+  "id": 443,
+  "text": "I can't say it would be completely gone,"
+ },
+ {
+  "id": 444,
+  "text": "but at least it would be much smaller."
+ },
+ {
+  "id": 445,
+  "text": "The key is that you have to be able to get involved."
+ },
+ {
+  "id": 446,
+  "text": "You have to be able to — I mean, it's not just about"
+ },
+ {
+  "id": 447,
+  "text": "taking part; you have to take part"
+ },
+ {
+  "id": 448,
+  "text": "in particular by getting involved in setting these kinds of standards,"
+ },
+ {
+  "id": 449,
+  "text": "and so on."
+ },
+ {
+  "id": 450,
+  "text": "Only then can you have"
+ },
+ {
+  "id": 451,
+  "text": "— that is, only then can you control it, right?"
+ },
+ {
+  "id": 452,
+  "text": "So this,"
+ },
+ {
+  "id": 453,
+  "text": "its development status is roughly like this."
+ },
+ {
+  "id": 454,
+  "text": "You can all get familiar with it."
+ },
+ {
+  "id": 455,
+  "text": "Now, next,"
+ },
+ {
+  "id": 456,
+  "text": "everything before this was just some introduction,"
+ },
+ {
+  "id": 457,
+  "text": "just a bit of introduction,"
+ },
+ {
+  "id": 458,
+  "text": "so you know what it's all about."
+ },
+ {
+  "id": 459,
+  "text": "What RISC-V is like."
+ },
+ {
+  "id": 460,
+  "text": "So next,"
+ },
+ {
+  "id": 461,
+  "text": "let's take a closer look"
+ },
+ {
+  "id": 462,
+  "text": "at some things about"
+ },
+ {
+  "id": 463,
+  "text": "this instruction set."
+ },
+ {
+  "id": 464,
+  "text": "First,"
+ },
+ {
+  "id": 465,
+  "text": "let me highlight"
+ },
+ {
+  "id": 466,
+  "text": "its characteristics for you."
+ },
+ {
+  "id": 467,
+  "text": "So when we talk about the features of RISC-V,"
+ },
+ {
+  "id": 468,
+  "text": "this is really also a summary of what came before,"
+ },
+ {
+  "id": 469,
+  "text": "and it also sets the stage for what comes next."
+ },
+ {
+  "id": 470,
+  "text": "They can be boiled down to a few points."
+ },
+ {
+  "id": 471,
+  "text": "First, it's extremely simple."
+ },
+ {
+  "id": 472,
+  "text": "Why do we say the instruction set is designed to be very simple?"
+ },
+ {
+  "id": 473,
+  "text": "This was one of the original design goals."
+ },
+ {
+  "id": 474,
+  "text": "Because as you know, RISC-V"
+ },
+ {
+  "id": 475,
+  "text": "came along relatively late,"
+ },
+ {
+  "id": 476,
+  "text": "so in its overall design,"
+ },
+ {
+  "id": 477,
+  "text": "it actually drew on a lot of the"
+ },
+ {
+  "id": 478,
+  "text": "design experience and lessons from earlier instruction sets."
+ },
+ {
+  "id": 479,
+  "text": "Now, those earlier lessons,"
+ },
+ {
+  "id": 480,
+  "text": "The typical complaints are that it's too complicated,"
+ },
+ {
+  "id": 481,
+  "text": "too massive,"
+ },
+ {
+  "id": 482,
+  "text": "hard to use, and so on."
+ },
+ {
+  "id": 483,
+  "text": "So its design is extremely simple."
+ },
+ {
+  "id": 484,
+  "text": "As for the entire specification text,"
+ },
+ {
+  "id": 485,
+  "text": "if you go and read it,"
+ },
+ {
+  "id": 486,
+  "text": "you'll find it really doesn't have that many pages in total."
+ },
+ {
+  "id": 487,
+  "text": "Unlike, say, Intel,"
+ },
+ {
+  "id": 488,
+  "text": "or ARM manuals."
+ },
+ {
+  "id": 489,
+  "text": "I don't know if any of you have read them,"
+ },
+ {
+  "id": 490,
+  "text": "but if you go out and work in the future,"
+ },
+ {
+  "id": 491,
+  "text": "doing something that deals with this stuff,"
+ },
+ {
+  "id": 492,
+  "text": "you'll definitely have to read those kinds of specification manuals."
+ },
+ {
+  "id": 493,
+  "text": "Now, those specification manuals,"
+ },
+ {
+  "id": 494,
+  "text": "like Intel's, run to thousands and thousands of pages."
+ },
+ {
+  "id": 495,
+  "text": "Reading through them once will cost you your life."
+ },
+ {
+  "id": 496,
+  "text": "Of course, you have to go over them again and again."
+ },
+ {
+  "id": 497,
+  "text": "You probably can't read them all at once,"
+ },
+ {
+  "id": 498,
+  "text": "but this RISC-V specification manual,"
+ },
+ {
+  "id": 499,
+  "text": "it's very small."
+ },
+ {
+  "id": 500,
+  "text": "we'll talk about that later"
+ },
+ {
+  "id": 501,
+  "text": "that is to say, it's only a few hundred pages in total"
+ },
+ {
+  "id": 502,
+  "text": "so it's designed to be very simple"
+ },
+ {
+  "id": 503,
+  "text": "which makes it well suited for teaching"
+ },
+ {
+  "id": 504,
+  "text": "a very good choice for that"
+ },
+ {
+  "id": 505,
+  "text": "next, its layering is very clear"
+ },
+ {
+  "id": 506,
+  "text": "by clear, I mean"
+ },
+ {
+  "id": 507,
+  "text": "it mainly comes down to the concept of privilege levels inside"
+ },
+ {
+  "id": 508,
+  "text": "we'll cover that in more detail later"
+ },
+ {
+  "id": 509,
+  "text": "the design is layered"
+ },
+ {
+  "id": 510,
+  "text": "and then"
+ },
+ {
+  "id": 511,
+  "text": "the third feature is modularity"
+ },
+ {
+  "id": 512,
+  "text": "modularity means"
+ },
+ {
+  "id": 513,
+  "text": "there is a core instruction set"
+ },
+ {
+  "id": 514,
+  "text": "plus some extension instruction sets"
+ },
+ {
+  "id": 515,
+  "text": "that's the approach it uses"
+ },
+ {
+  "id": 516,
+  "text": "so where exactly does this modularity show up"
+ },
+ {
+  "id": 517,
+  "text": "we'll cover that later as well"
+ },
+ {
+  "id": 518,
+  "text": "the fourth main feature"
+ },
+ {
+  "id": 519,
+  "text": "is that it's relatively stable"
+ },
+ {
+  "id": 520,
+  "text": "This stability, in my understanding, actually still comes from the fact that"
+ },
+ {
+  "id": 521,
+  "text": "my understanding of it is still that it"
+ },
+ {
+  "id": 522,
+  "text": "came out relatively late"
+ },
+ {
+  "id": 523,
+  "text": "it drew lessons from the experience of its predecessors"
+ },
+ {
+  "id": 524,
+  "text": "so the design it came up with"
+ },
+ {
+  "id": 525,
+  "text": "that doesn't mean that Intel"
+ },
+ {
+  "id": 526,
+  "text": "deliberately wanted to make it this way"
+ },
+ {
+  "id": 527,
+  "text": "think about it, right?"
+ },
+ {
+  "id": 528,
+  "text": "But why did Intel"
+ },
+ {
+  "id": 529,
+  "text": "make privilege level changes so complicated?"
+ },
+ {
+  "id": 530,
+  "text": "It's really still for historical reasons,"
+ },
+ {
+  "id": 531,
+  "text": "because a company like Intel,"
+ },
+ {
+  "id": 532,
+  "text": "these old-school processor companies,"
+ },
+ {
+  "id": 533,
+  "text": "their entire company's development history"
+ },
+ {
+  "id": 534,
+  "text": "is the history of CPU development."
+ },
+ {
+  "id": 535,
+  "text": "You see what I mean?"
+ },
+ {
+  "id": 536,
+  "text": "It was the first to eat crab — the pioneer,"
+ },
+ {
+  "id": 537,
+  "text": "it waded across the river by feeling the stones."
+ },
+ {
+  "id": 538,
+  "text": "Now, with RISC-V,"
+ },
+ {
+  "id": 539,
+  "text": "the reason it can be stable"
+ },
+ {
+  "id": 540,
+  "text": "Actually, it's still because he"
+ },
+ {
+  "id": 541,
+  "text": "took in and absorbed the experience and lessons"
+ },
+ {
+  "id": 542,
+  "text": "of his predecessor."
+ },
+ {
+  "id": 543,
+  "text": "So, in practice, he just"
+ },
+ {
+  "id": 544,
+  "text": "once he came out,"
+ },
+ {
+  "id": 545,
+  "text": "the things he changed were relatively few."
+ },
+ {
+  "id": 546,
+  "text": "Unlike Intel,"
+ },
+ {
+  "id": 547,
+  "text": "which improves things every year."
+ },
+ {
+  "id": 548,
+  "text": "Why does it need to improve?"
+ },
+ {
+  "id": 549,
+  "text": "Because it's still developing,"
+ },
+ {
+  "id": 550,
+  "text": "right?"
+ },
+ {
+  "id": 551,
+  "text": "Right now, the instruction-level features"
+ },
+ {
+  "id": 552,
+  "text": "are actually, relatively speaking,"
+ },
+ {
+  "id": 553,
+  "text": "already relatively stable."
+ },
+ {
+  "id": 554,
+  "text": "And so that,"
+ },
+ {
+  "id": 555,
+  "text": "of course, as we said,"
+ },
+ {
+  "id": 556,
+  "text": "stability is also one of its advantages."
+ },
+ {
+  "id": 557,
+  "text": "Now, the fourth point,"
+ },
+ {
+  "id": 558,
+  "text": "is community-driven development."
+ },
+ {
+  "id": 559,
+  "text": "As for community-driven development,"
+ },
+ {
+  "id": 560,
+  "text": "So it's really about"
+ },
+ {
+  "id": 561,
+  "text": "right now it's an open standard"
+ },
+ {
+  "id": 562,
+  "text": "that everyone can participate in"
+ },
+ {
+  "id": 563,
+  "text": "that kind of thing"
+ },
+ {
+  "id": 564,
+  "text": "rather than a single company"
+ },
+ {
+  "id": 565,
+  "text": "calling all the shots"
+ },
+ {
+  "id": 566,
+  "text": "That's really"
+ },
+ {
+  "id": 567,
+  "text": "one of the defining features of RISC-V"
+ },
+ {
+  "id": 568,
+  "text": "So, more concretely,"
+ },
+ {
+  "id": 569,
+  "text": "let's take a look now"
+ },
+ {
+  "id": 570,
+  "text": "First of all, later on in this course,"
+ },
+ {
+  "id": 571,
+  "text": "since we're going to study this instruction set standard,"
+ },
+ {
+  "id": 572,
+  "text": "we definitely need to know"
+ },
+ {
+  "id": 573,
+  "text": "where to download it from"
+ },
+ {
+  "id": 574,
+  "text": "I've already posted the link for you all"
+ },
+ {
+  "id": 575,
+  "text": "so you can go and download it"
+ },
+ {
+  "id": 576,
+  "text": "Actually, of course, that official document"
+ },
+ {
+  "id": 577,
+  "text": "I've already downloaded it to this"
+ },
+ {
+  "id": 578,
+  "text": "which is for this course of ours"
+ },
+ {
+  "id": 579,
+  "text": "because this version keeps changing"
+ },
+ {
+  "id": 580,
+  "text": "Of course, it hasn't changed in a long time."
+ },
+ {
+  "id": 581,
+  "text": "As for the set of tools we use for programming and development afterwards,"
+ },
+ {
+  "id": 582,
+  "text": "what we use is the version listed right here."
+ },
+ {
+  "id": 583,
+  "text": "Actually, the whole instruction set is split into, you could say, two parts or two volumes."
+ },
+ {
+  "id": 584,
+  "text": "One volume is called the unprivileged instructions."
+ },
+ {
+  "id": 585,
+  "text": "That is what is written here as unprivileged,"
+ },
+ {
+  "id": 586,
+  "text": "meaning the unprivileged instructions."
+ },
+ {
+  "id": 587,
+  "text": "And then there is the second volume,"
+ },
+ {
+  "id": 588,
+  "text": "which is called the privileged instructions."
+ },
+ {
+  "id": 589,
+  "text": "Neither of them is very big."
+ },
+ {
+  "id": 590,
+  "text": "For the unprivileged instructions,"
+ },
+ {
+  "id": 591,
+  "text": "it's probably only around 200 pages,"
+ },
+ {
+  "id": 592,
+  "text": "around 200 pages."
+ },
+ {
+  "id": 593,
+  "text": "If you..."
+ },
+ {
+  "id": 594,
+  "text": "you probably don't have that concept yet,"
+ },
+ {
+  "id": 595,
+  "text": "but if you're interested later on,"
+ },
+ {
+  "id": 596,
+  "text": "and take a look at the ARM manual,"
+ },
+ {
+  "id": 597,
+  "text": "you'll realize that 200 pages"
+ },
+ {
+  "id": 598,
+  "text": "is actually a very small number."
+ },
+ {
+  "id": 599,
+  "text": "As for the privileged instructions,"
+ },
+ {
+  "id": 600,
+  "text": "It's probably only about 90 pages."
+ },
+ {
+  "id": 601,
+  "text": "So it's a very small booklet."
+ },
+ {
+  "id": 602,
+  "text": "For students who are just getting started,"
+ },
+ {
+  "id": 603,
+  "text": "it might still take some time to read through."
+ },
+ {
+  "id": 604,
+  "text": "But if you already have a little"
+ },
+ {
+  "id": 605,
+  "text": "development experience in this area,"
+ },
+ {
+  "id": 606,
+  "text": "and you go read these two booklets,"
+ },
+ {
+  "id": 607,
+  "text": "you'll find that they're actually"
+ },
+ {
+  "id": 608,
+  "text": "quite easy to get through."
+ },
+ {
+  "id": 609,
+  "text": "Now, these two manuals,"
+ },
+ {
+  "id": 610,
+  "text": "we'll be referring back to them often later on,"
+ },
+ {
+  "id": 611,
+  "text": "and showing them to you."
+ },
+ {
+  "id": 612,
+  "text": "This..."
+ },
+ {
+  "id": 613,
+  "text": "this reflects its simplicity."
+ },
+ {
+  "id": 614,
+  "text": "So next,"
+ },
+ {
+  "id": 615,
+  "text": "before we start learning the instruction set,"
+ },
+ {
+  "id": 616,
+  "text": "there are some basic concepts"
+ },
+ {
+  "id": 617,
+  "text": "I need to explain to you first."
+ },
+ {
+  "id": 618,
+  "text": "Otherwise,"
+ },
+ {
+  "id": 619,
+  "text": "some of the terminology..."
+ },
+ {
+  "id": 620,
+  "text": "Actually, that is"
+ },
+ {
+  "id": 621,
+  "text": "Otherwise, as we go on later,"
+ },
+ {
+  "id": 622,
+  "text": "you might not know what these mean."
+ },
+ {
+  "id": 623,
+  "text": "First of all,"
+ },
+ {
+  "id": 624,
+  "text": "we should talk about the concept of the instruction set naming format."
+ },
+ {
+  "id": 625,
+  "text": "Because we'll be seeing these"
+ },
+ {
+  "id": 626,
+  "text": "things a lot later on,"
+ },
+ {
+  "id": 627,
+  "text": "things like RV32,"
+ },
+ {
+  "id": 628,
+  "text": "RMAR,"
+ },
+ {
+  "id": 629,
+  "text": "RV64GC,"
+ },
+ {
+  "id": 630,
+  "text": "what exactly are these?"
+ },
+ {
+  "id": 631,
+  "text": "So I want to explain to you"
+ },
+ {
+  "id": 632,
+  "text": "what this is."
+ },
+ {
+  "id": 633,
+  "text": "So actually,"
+ },
+ {
+  "id": 634,
+  "text": "it is a kind of naming format for it."
+ },
+ {
+  "id": 635,
+  "text": "Now, this naming format,"
+ },
+ {
+  "id": 636,
+  "text": "we can break it down into a few parts."
+ },
+ {
+  "id": 637,
+  "text": "Roughly three parts."
+ },
+ {
+  "id": 638,
+  "text": "Let's read it."
+ },
+ {
+  "id": 639,
+  "text": "The first two, RV"
+ },
+ {
+  "id": 640,
+  "text": "Actually, it's a kind of prefix."
+ },
+ {
+  "id": 641,
+  "text": "The prefix is an abbreviation."
+ },
+ {
+  "id": 642,
+  "text": "It's the abbreviation of RISC-V."
+ },
+ {
+  "id": 643,
+  "text": "The abbreviation of RISC-V."
+ },
+ {
+  "id": 644,
+  "text": "You see, RV, we know, stands for RISC-V."
+ },
+ {
+  "id": 645,
+  "text": "And then,"
+ },
+ {
+  "id": 646,
+  "text": "after that,"
+ },
+ {
+  "id": 647,
+  "text": "the second part,"
+ },
+ {
+  "id": 648,
+  "text": "it is followed by a number."
+ },
+ {
+  "id": 649,
+  "text": "32, 64, 128."
+ },
+ {
+  "id": 650,
+  "text": "This is the concept of the instruction set's word width that we talked about earlier."
+ },
+ {
+  "id": 651,
+  "text": "That concept of word width."
+ },
+ {
+  "id": 652,
+  "text": "We just said this word width,"
+ },
+ {
+  "id": 653,
+  "text": "what does it represent?"
+ },
+ {
+  "id": 654,
+  "text": "It's that this processor,"
+ },
+ {
+  "id": 655,
+  "text": "its registers,"
+ },
+ {
+  "id": 656,
+  "text": "the width of its general-purpose registers,"
+ },
+ {
+  "id": 657,
+  "text": "is 32 bits,"
+ },
+ {
+  "id": 658,
+  "text": "64 bits, or 128 bits."
+ },
+ {
+  "id": 659,
+  "text": "Now, the third part,"
+ },
+ {
+  "id": 660,
+  "text": "is a string of these letters"
+ },
+ {
+  "id": 661,
+  "text": "the string of letters ABCD"
+ },
+ {
+  "id": 662,
+  "text": "now, this string of letters"
+ },
+ {
+  "id": 663,
+  "text": "actually has meaning"
+ },
+ {
+  "id": 664,
+  "text": "it actually refers to"
+ },
+ {
+  "id": 665,
+  "text": "this"
+ },
+ {
+  "id": 666,
+  "text": "a collection of its modules"
+ },
+ {
+  "id": 667,
+  "text": "because as we just mentioned"
+ },
+ {
+  "id": 668,
+  "text": "this RISC-V instruction set"
+ },
+ {
+  "id": 669,
+  "text": "has one feature"
+ },
+ {
+  "id": 670,
+  "text": "it is modular"
+ },
+ {
+  "id": 671,
+  "text": "each module"
+ },
+ {
+  "id": 672,
+  "text": "is represented by a letter"
+ },
+ {
+  "id": 673,
+  "text": "to denote it"
+ },
+ {
+  "id": 674,
+  "text": "for example, what does I stand for"
+ },
+ {
+  "id": 675,
+  "text": "what does M stand for"
+ },
+ {
+  "id": 676,
+  "text": "what does A stand for"
+ },
+ {
+  "id": 677,
+  "text": "we will cover these later on"
+ },
+ {
+  "id": 678,
+  "text": "so, everyone"
+ },
+ {
+  "id": 679,
+  "text": "when you look at this kind of stuff in the future"
+ },
+ {
+  "id": 680,
+  "text": "When it comes to this codename,"
+ },
+ {
+  "id": 681,
+  "text": "you just need to analyze it this way."
+ },
+ {
+  "id": 682,
+  "text": "So this next example"
+ },
+ {
+  "id": 683,
+  "text": "is actually simple for us."
+ },
+ {
+  "id": 684,
+  "text": "Now we already know"
+ },
+ {
+  "id": 685,
+  "text": "roughly what it means."
+ },
+ {
+  "id": 686,
+  "text": "Basically, it's like this:"
+ },
+ {
+  "id": 687,
+  "text": "the RISC-V, the 32-bit RISC-V,"
+ },
+ {
+  "id": 688,
+  "text": "supports the I module,"
+ },
+ {
+  "id": 689,
+  "text": "the M module, and the A module."
+ },
+ {
+  "id": 690,
+  "text": "You all get that, right?"
+ },
+ {
+  "id": 691,
+  "text": "In other words,"
+ },
+ {
+  "id": 692,
+  "text": "say you get a certain chip,"
+ },
+ {
+  "id": 693,
+  "text": "and since this chip is customized,"
+ },
+ {
+  "id": 694,
+  "text": "it can be customized,"
+ },
+ {
+  "id": 695,
+  "text": "then this chip"
+ },
+ {
+  "id": 696,
+  "text": "will definitely tell you in the manual"
+ },
+ {
+  "id": 697,
+  "text": "what kind of support this chip"
+ },
+ {
+  "id": 698,
+  "text": "provides in terms of capabilities."
+ },
+ {
+  "id": 699,
+  "text": "And from that, you can basically tell"
+ },
+ {
+  "id": 700,
+  "text": "that is, it's a 32-bit chip"
+ },
+ {
+  "id": 701,
+  "text": "which features does it support"
+ },
+ {
+  "id": 702,
+  "text": "and how many modules is it made up of"
+ },
+ {
+  "id": 703,
+  "text": "you get what I mean"
+ },
+ {
+  "id": 704,
+  "text": "that's what the codename means"
+ },
+ {
+  "id": 705,
+  "text": "so the first few parts are fine"
+ },
+ {
+  "id": 706,
+  "text": "but what exactly do these letters and numbers, like IMA, mean"
+ },
+ {
+  "id": 707,
+  "text": "this brings us to"
+ },
+ {
+  "id": 708,
+  "text": "its so-called modular design"
+ },
+ {
+  "id": 709,
+  "text": "as we just said"
+ },
+ {
+  "id": 710,
+  "text": "one design feature of its whole instruction set"
+ },
+ {
+  "id": 711,
+  "text": "is that it's modular"
+ },
+ {
+  "id": 712,
+  "text": "so what does modular mean"
+ },
+ {
+  "id": 713,
+  "text": "well, when it comes to"
+ },
+ {
+  "id": 714,
+  "text": "the development of computer instruction sets in general"
+ },
+ {
+  "id": 715,
+  "text": "there are actually a few typical design approaches"
+ },
+ {
+  "id": 716,
+  "text": "one is called incremental ISA"
+ },
+ {
+  "id": 717,
+  "text": "now, the incremental ISA"
+ },
+ {
+  "id": 718,
+  "text": "is our traditional design approach"
+ },
+ {
+  "id": 719,
+  "text": "what is incremental ISA"
+ },
+ {
+  "id": 720,
+  "text": "It's really a form of version iteration."
+ },
+ {
+  "id": 721,
+  "text": "Let me give you an example."
+ },
+ {
+  "id": 722,
+  "text": "Say I design an instruction set."
+ },
+ {
+  "id": 723,
+  "text": "For instance, the Intel instruction set."
+ },
+ {
+  "id": 724,
+  "text": "Then my first-generation instruction set"
+ },
+ {
+  "id": 725,
+  "text": "might look like this in this diagram."
+ },
+ {
+  "id": 726,
+  "text": "The early Intel x86 instruction set"
+ },
+ {
+  "id": 727,
+  "text": "was designed back in 1978."
+ },
+ {
+  "id": 728,
+  "text": "At that time, its instruction set was still relatively simple,"
+ },
+ {
+  "id": 729,
+  "text": "because the market demands back then were also quite simple."
+ },
+ {
+  "id": 730,
+  "text": "It only supported 80 instructions."
+ },
+ {
+  "id": 731,
+  "text": "Then later on,"
+ },
+ {
+  "id": 732,
+  "text": "for example, when we got to the 1980s,"
+ },
+ {
+  "id": 733,
+  "text": "around 1988 or so,"
+ },
+ {
+  "id": 734,
+  "text": "they said our version needed to be upgraded,"
+ },
+ {
+  "id": 735,
+  "text": "from version 1.0 to version 2.0."
+ },
+ {
+  "id": 736,
+  "text": "Then 80 instructions might no longer be enough,"
+ },
+ {
+  "id": 737,
+  "text": "so I might need to expand some instructions."
+ },
+ {
+  "id": 738,
+  "text": "Think about it — isn't that the idea?"
+ },
+ {
+  "id": 739,
+  "text": "And what it actually expanded"
+ },
+ {
+  "id": 740,
+  "text": "Just like when we write code,"
+ },
+ {
+  "id": 741,
+  "text": "once this version is upgraded,"
+ },
+ {
+  "id": 742,
+  "text": "there is something we call"
+ },
+ {
+  "id": 743,
+  "text": "Have any of you heard of"
+ },
+ {
+  "id": 744,
+  "text": "this thing called"
+ },
+ {
+  "id": 745,
+  "text": "the concept of compatibility?"
+ },
+ {
+  "id": 746,
+  "text": "Because this second version of mine"
+ },
+ {
+  "id": 747,
+  "text": "cannot just"
+ },
+ {
+  "id": 748,
+  "text": "I can't just say that once I make a second version,"
+ },
+ {
+  "id": 749,
+  "text": "I completely throw away the"
+ },
+ {
+  "id": 750,
+  "text": "first version."
+ },
+ {
+  "id": 751,
+  "text": "That's impossible."
+ },
+ {
+  "id": 752,
+  "text": "Do you all know why?"
+ },
+ {
+  "id": 753,
+  "text": "Because your customers"
+ },
+ {
+  "id": 754,
+  "text": "are not so easy to"
+ },
+ {
+  "id": 755,
+  "text": "just follow along and make changes with you."
+ },
+ {
+  "id": 756,
+  "text": "For example, the customers of your first version"
+ },
+ {
+  "id": 757,
+  "text": "have already gotten used to"
+ },
+ {
+  "id": 758,
+  "text": "those 80 instructions"
+ },
+ {
+  "id": 759,
+  "text": "when writing programs."
+ },
+ {
+  "id": 760,
+  "text": "Imagine you suddenly say that a second version comes out"
+ },
+ {
+  "id": 761,
+  "text": "and say those 80 instructions I had before"
+ },
+ {
+  "id": 762,
+  "text": "are no longer supported at all"
+ },
+ {
+  "id": 763,
+  "text": "and I've come up with a whole new set of instructions"
+ },
+ {
+  "id": 764,
+  "text": "then those customers"
+ },
+ {
+  "id": 765,
+  "text": "would just lose their minds"
+ },
+ {
+  "id": 766,
+  "text": "You all get what I'm saying, right?"
+ },
+ {
+  "id": 767,
+  "text": "So what do we do?"
+ },
+ {
+  "id": 768,
+  "text": "I can only say"
+ },
+ {
+  "id": 769,
+  "text": "when I'm building a product"
+ },
+ {
+  "id": 770,
+  "text": "it has to work like this"
+ },
+ {
+  "id": 771,
+  "text": "That is to say,"
+ },
+ {
+  "id": 772,
+  "text": "my first version has 80 instructions"
+ },
+ {
+  "id": 773,
+  "text": "and then for my second version,"
+ },
+ {
+  "id": 774,
+  "text": "I add new ones"
+ },
+ {
+  "id": 775,
+  "text": "so maybe there are 140 instructions"
+ },
+ {
+  "id": 776,
+  "text": "and when designing those 140 instructions, what's required?"
+ },
+ {
+  "id": 777,
+  "text": "They have to be compatible with the previous 80 instructions"
+ },
+ {
+  "id": 778,
+  "text": "Do you still understand what I mean?"
+ },
+ {
+  "id": 779,
+  "text": "By compatible, I mean"
+ },
+ {
+  "id": 780,
+  "text": "all those programs written by the original customers"
+ },
+ {
+  "id": 781,
+  "text": "programs written on the old CPU"
+ },
+ {
+  "id": 782,
+  "text": "still have to be able to run on your new CPU"
+ },
+ {
+  "id": 783,
+  "text": "that's the only way the customer will keep playing along with you"
+ },
+ {
+  "id": 784,
+  "text": "Do you understand what I mean?"
+ },
+ {
+  "id": 785,
+  "text": "This approach is called the incremental design approach."
+ },
+ {
+  "id": 786,
+  "text": "This is also a traditional approach."
+ },
+ {
+  "id": 787,
+  "text": "An approach that's easy to think of."
+ },
+ {
+  "id": 788,
+  "text": "So this..."
+ },
+ {
+  "id": 789,
+  "text": "You see this Intel chip here"
+ },
+ {
+  "id": 790,
+  "text": "actually starting from 1978"
+ },
+ {
+  "id": 791,
+  "text": "all the way up to now"
+ },
+ {
+  "id": 792,
+  "text": "this instruction set"
+ },
+ {
+  "id": 793,
+  "text": "take a look at this picture — it's pretty scary"
+ },
+ {
+  "id": 794,
+  "text": "more than 1300 instructions have already been added"
+ },
+ {
+  "id": 795,
+  "text": "because with this..."
+ },
+ {
+  "id": 796,
+  "text": "what do you call it"
+ },
+ {
+  "id": 797,
+  "text": "this design approach of complex instruction sets"
+ },
+ {
+  "id": 798,
+  "text": "you add one instruction"
+ },
+ {
+  "id": 799,
+  "text": "add one feature, add one"
+ },
+ {
+  "id": 800,
+  "text": "So the instruction set keeps growing."
+ },
+ {
+  "id": 801,
+  "text": "But in fact, you'll notice"
+ },
+ {
+  "id": 802,
+  "text": "that even its latest CPU instructions"
+ },
+ {
+  "id": 803,
+  "text": "are still compatible with the instructions from 1978."
+ },
+ {
+  "id": 804,
+  "text": "They are actually still compatible."
+ },
+ {
+  "id": 805,
+  "text": "That's honestly a pretty scary thing."
+ },
+ {
+  "id": 806,
+  "text": "I think you see what I mean."
+ },
+ {
+  "id": 807,
+  "text": "For a company like Intel,"
+ },
+ {
+  "id": 808,
+  "text": "its development teams"
+ },
+ {
+  "id": 809,
+  "text": "have a really painful time of it."
+ },
+ {
+  "id": 810,
+  "text": "Why?"
+ },
+ {
+  "id": 811,
+  "text": "Because essentially, you're carrying"
+ },
+ {
+  "id": 812,
+  "text": "that burden and moving forward one step at a time."
+ },
+ {
+  "id": 813,
+  "text": "Because all these early designs"
+ },
+ {
+  "id": 814,
+  "text": "still have to be preserved in the new designs."
+ },
+ {
+  "id": 815,
+  "text": "They have to be kept."
+ },
+ {
+  "id": 816,
+  "text": "So if you go and study"
+ },
+ {
+  "id": 817,
+  "text": "x86,"
+ },
+ {
+  "id": 818,
+  "text": "looking at some of that code,"
+ },
+ {
+  "id": 819,
+  "text": "you'll find that it preserves a lot of old stuff."
+ },
+ {
+  "id": 820,
+  "text": "and you don't know."
+ },
+ {
+  "id": 821,
+  "text": "It can be really hard to figure out why these things are even there."
+ },
+ {
+  "id": 822,
+  "text": "It's for historical reasons."
+ },
+ {
+  "id": 823,
+  "text": "Because it has to stay compatible,"
+ },
+ {
+  "id": 824,
+  "text": "what we call backward compatibility."
+ },
+ {
+  "id": 825,
+  "text": "This is the traditional approach called incremental design."
+ },
+ {
+  "id": 826,
+  "text": "Now, as you know, this incremental approach brings about a really bad thing,"
+ },
+ {
+  "id": 827,
+  "text": "and what is that?"
+ },
+ {
+  "id": 828,
+  "text": "The learning cost for people coming after keeps going up,"
+ },
+ {
+  "id": 829,
+  "text": "because when you're learning a new instruction set,"
+ },
+ {
+  "id": 830,
+  "text": "you still have to take the old instructions"
+ },
+ {
+  "id": 831,
+  "text": "that are still there,"
+ },
+ {
+  "id": 832,
+  "text": "you can't just start over."
+ },
+ {
+  "id": 833,
+  "text": "But as we were saying,"
+ },
+ {
+  "id": 834,
+  "text": "when RISC-V was being designed,"
+ },
+ {
+  "id": 835,
+  "text": "it took this problem into account."
+ },
+ {
+  "id": 836,
+  "text": "Of course, partly because it"
+ },
+ {
+  "id": 837,
+  "text": "came along later,"
+ },
+ {
+  "id": 838,
+  "text": "so it"
+ },
+ {
+  "id": 839,
+  "text": "doesn't have that historical baggage."
+ },
+ {
+  "id": 840,
+  "text": "You see what I mean, right?"
+ },
+ {
+  "id": 841,
+  "text": "It can be designed entirely from scratch."
+ },
+ {
+  "id": 842,
+  "text": "It can be designed to be more modular."
+ },
+ {
+  "id": 843,
+  "text": "It adopts this modular approach."
+ },
+ {
+  "id": 844,
+  "text": "So what do we mean by a modular approach?"
+ },
+ {
+  "id": 845,
+  "text": "What it means is,"
+ },
+ {
+  "id": 846,
+  "text": "it only defines one basic instruction set,"
+ },
+ {
+  "id": 847,
+  "text": "one module of the instruction set,"
+ },
+ {
+  "id": 848,
+  "text": "called the base integer instruction set."
+ },
+ {
+  "id": 849,
+  "text": "As for all the other features,"
+ },
+ {
+  "id": 850,
+  "text": "they are added entirely through extensions."
+ },
+ {
+  "id": 851,
+  "text": "And this base integer instruction set,"
+ },
+ {
+  "id": 852,
+  "text": "remains unchanged."
+ },
+ {
+  "id": 853,
+  "text": "That is to say, as the spec evolves later on,"
+ },
+ {
+  "id": 854,
+  "text": "its base instruction set stays the same."
+ },
+ {
+  "id": 855,
+  "text": "So if you want to add new features,"
+ },
+ {
+  "id": 856,
+  "text": "you do it the way you would with plugins."
+ },
+ {
+  "id": 857,
+  "text": "In software, it's somewhat like this plugin concept."
+ },
+ {
+  "id": 858,
+  "text": "The main program itself basically doesn't change."
+ },
+ {
+  "id": 859,
+  "text": "Now, for the people designing the CPU,"
+ },
+ {
+  "id": 860,
+  "text": "So it's relatively"
+ },
+ {
+  "id": 861,
+  "text": "like piling up modules like plugins."
+ },
+ {
+  "id": 862,
+  "text": "So this design,"
+ },
+ {
+  "id": 863,
+  "text": "it's possible that my CPU here,"
+ },
+ {
+  "id": 864,
+  "text": "no matter how things develop,"
+ },
+ {
+  "id": 865,
+  "text": "maybe I won't need those new modules."
+ },
+ {
+  "id": 866,
+  "text": "So my CPU,"
+ },
+ {
+  "id": 867,
+  "text": "that is to say,"
+ },
+ {
+  "id": 868,
+  "text": "ten years from now,"
+ },
+ {
+  "id": 869,
+  "text": "maybe my CPU"
+ },
+ {
+  "id": 870,
+  "text": "still only needs to support 80 instructions."
+ },
+ {
+  "id": 871,
+  "text": "You see what I mean."
+ },
+ {
+  "id": 872,
+  "text": "Whereas your new CPU"
+ },
+ {
+  "id": 873,
+  "text": "might just stack things on."
+ },
+ {
+  "id": 874,
+  "text": "So for my new CPU,"
+ },
+ {
+  "id": 875,
+  "text": "adding some modules,"
+ },
+ {
+  "id": 876,
+  "text": "stacking them on like plugins is all it takes."
+ },
+ {
+  "id": 877,
+  "text": "So that way, it can be relatively"
+ },
+ {
+  "id": 878,
+  "text": "better than a purely incremental approach."
+ },
+ {
+  "id": 879,
+  "text": "That is the idea of modularity."
+ },
+ {
+  "id": 880,
+  "text": "So specifically speaking,"
+ },
+ {
+  "id": 881,
+  "text": "the RISC-V instruction set"
+ },
+ {
+  "id": 882,
+  "text": "is made up of"
+ },
+ {
+  "id": 883,
+  "text": "a base integer instruction set"
+ },
+ {
+  "id": 884,
+  "text": "plus multiple optional extension instruction sets."
+ },
+ {
+  "id": 885,
+  "text": "This base integer instruction set,"
+ },
+ {
+  "id": 886,
+  "text": "according to the specification,"
+ },
+ {
+  "id": 887,
+  "text": "is mandatory to implement."
+ },
+ {
+  "id": 888,
+  "text": "What does mandatory to implement mean?"
+ },
+ {
+  "id": 889,
+  "text": "It means no matter what kind of CPU you design,"
+ },
+ {
+  "id": 890,
+  "text": "the instructions required by this instruction set"
+ },
+ {
+  "id": 891,
+  "text": "must be implemented."
+ },
+ {
+  "id": 892,
+  "text": "You can't say I only implement the extension parts"
+ },
+ {
+  "id": 893,
+  "text": "without implementing this side."
+ },
+ {
+  "id": 894,
+  "text": "That won't work."
+ },
+ {
+  "id": 895,
+  "text": "So this base instruction set"
+ },
+ {
+  "id": 896,
+  "text": "is actually the integer instruction set,"
+ },
+ {
+  "id": 897,
+  "text": "the most fundamental stuff for us,"
+ },
+ {
+  "id": 898,
+  "text": "for example, what we'll talk about later,"
+ },
+ {
+  "id": 899,
+  "text": "like addition, subtraction, that kind of stuff, logical operations."
+ },
+ {
+  "id": 900,
+  "text": "This kind of thing."
+ },
+ {
+  "id": 901,
+  "text": "These are absolutely required."
+ },
+ {
+  "id": 902,
+  "text": "Once these instructions are defined, they are locked in for good."
+ },
+ {
+  "id": 903,
+  "text": "We will never extend them again."
+ },
+ {
+  "id": 904,
+  "text": "Now, this base instruction set,"
+ },
+ {
+  "id": 905,
+  "text": "strictly speaking,"
+ },
+ {
+  "id": 906,
+  "text": "is actually divided into four kinds."
+ },
+ {
+  "id": 907,
+  "text": "We already talked about what these code names mean earlier,"
+ },
+ {
+  "id": 908,
+  "text": "and you can probably figure it out yourselves."
+ },
+ {
+  "id": 909,
+  "text": "Two of them are 32-bit,"
+ },
+ {
+  "id": 910,
+  "text": "one is 64-bit, and one is 128-bit."
+ },
+ {
+  "id": 911,
+  "text": "Now, as you know, the I here actually stands for what?"
+ },
+ {
+  "id": 912,
+  "text": "We call it the base integer instruction set."
+ },
+ {
+  "id": 913,
+  "text": "Integer — isn't it integer?"
+ },
+ {
+  "id": 914,
+  "text": "Right?"
+ },
+ {
+  "id": 915,
+  "text": "Its first letter is I, isn't it?"
+ },
+ {
+  "id": 916,
+  "text": "Right?"
+ },
+ {
+  "id": 917,
+  "text": "So when you see this from now on,"
+ },
+ {
+  "id": 918,
+  "text": "32i actually refers to,"
+ },
+ {
+  "id": 919,
+  "text": "the 32-bit base integer instruction set."
+ },
+ {
+  "id": 920,
+  "text": "So suppose I pick up a CPU and say"
+ },
+ {
+  "id": 921,
+  "text": "it supports RV32i."
+ },
+ {
+  "id": 922,
+  "text": "That means this CPU only supports what?"
+ },
+ {
+  "id": 923,
+  "text": "The basic integer instruction set."
+ },
+ {
+  "id": 924,
+  "text": "What about E, then?"
+ },
+ {
+  "id": 925,
+  "text": "E is actually a subset of 32i."
+ },
+ {
+  "id": 926,
+  "text": "E is actually the abbreviation of the English word 'embed'."
+ },
+ {
+  "id": 927,
+  "text": "You all should know 'embed', right?"
+ },
+ {
+  "id": 928,
+  "text": "Embed."
+ },
+ {
+  "id": 929,
+  "text": "Embedded."
+ },
+ {
+  "id": 930,
+  "text": "What does 'embedded' mean?"
+ },
+ {
+  "id": 931,
+  "text": "Embedded systems, right?"
+ },
+ {
+  "id": 932,
+  "text": "Embedded systems."
+ },
+ {
+  "id": 933,
+  "text": "E stands for embedded systems."
+ },
+ {
+  "id": 934,
+  "text": "Now, this E is actually built on the 32-bit i"
+ },
+ {
+  "id": 935,
+  "text": "integer instruction set, with some"
+ },
+ {
+  "id": 936,
+  "text": "optimizations."
+ },
+ {
+  "id": 937,
+  "text": "For example, it has fewer registers."
+ },
+ {
+  "id": 938,
+  "text": "It's well suited for making small wearable devices,"
+ },
+ {
+  "id": 939,
+  "text": "embedded devices."
+ },
+ {
+  "id": 940,
+  "text": "Then there's RV64A and RV128A."
+ },
+ {
+  "id": 941,
+  "text": "I won't go into those."
+ },
+ {
+  "id": 942,
+  "text": "Now, one thing to keep in mind at the same time."
+ },
+ {
+  "id": 943,
+  "text": "That is, there's actually a compatibility aspect here."
+ },
+ {
+  "id": 944,
+  "text": "There's a small compatibility issue on this side."
+ },
+ {
+  "id": 945,
+  "text": "That is, the 64-bit version is compatible with the 32-bit one."
+ },
+ {
+  "id": 946,
+  "text": "The 128-bit version is also compatible with both 64-bit and 32-bit."
+ },
+ {
+  "id": 947,
+  "text": "So there is a bit of compatibility involved."
+ },
+ {
+  "id": 948,
+  "text": "What that actually means is,"
+ },
+ {
+  "id": 949,
+  "text": "if what you're building"
+ },
+ {
+  "id": 950,
+  "text": "is a chip that's RV64I,"
+ },
+ {
+  "id": 951,
+  "text": "then something you compiled as 32-bit,"
+ },
+ {
+  "id": 952,
+  "text": "a 32I program,"
+ },
+ {
+  "id": 953,
+  "text": "can still run on the 64-bit version."
+ },
+ {
+  "id": 954,
+  "text": "I hope you see what I mean here."
+ },
+ {
+  "id": 955,
+  "text": "That's what this compatibility means."
+ },
+ {
+  "id": 956,
+  "text": "These are the basic integer instructions."
+ },
+ {
+  "id": 957,
+  "text": "Now, as for the optional parts, there are quite a few."
+ },
+ {
+  "id": 958,
+  "text": "By optional modules, I mean there are many of them."
+ },
+ {
+  "id": 959,
+  "text": "I've just listed a few here."
+ },
+ {
+  "id": 960,
+  "text": "That is to say, for example, M, A, F."
+ },
+ {
+  "id": 961,
+  "text": "This M stands for"
+ },
+ {
+  "id": 962,
+  "text": "the instructions that support multiplication and division."
+ },
+ {
+  "id": 963,
+  "text": "It's short for multiplication."
+ },
+ {
+  "id": 964,
+  "text": "Then A stands for atomic instructions."
+ },
+ {
+  "id": 965,
+  "text": "Now these atomic instructions,"
+ },
+ {
+  "id": 966,
+  "text": "basically there are some instructions"
+ },
+ {
+  "id": 967,
+  "text": "that involve the concept of atomic operations."
+ },
+ {
+  "id": 968,
+  "text": "We should come across some of them later."
+ },
+ {
+  "id": 969,
+  "text": "We will come across some of them."
+ },
+ {
+  "id": 970,
+  "text": "Then F is float,"
+ },
+ {
+  "id": 971,
+  "text": "meaning 32-bit floating-point instructions."
+ },
+ {
+  "id": 972,
+  "text": "D is double."
+ },
+ {
+  "id": 973,
+  "text": "Those of you who have learned C"
+ },
+ {
+  "id": 974,
+  "text": "should understand this too."
+ },
+ {
+  "id": 975,
+  "text": "float, double,"
+ },
+ {
+  "id": 976,
+  "text": "the idea is actually very similar."
+ },
+ {
+  "id": 977,
+  "text": "That is, this kind of floating-point computation,"
+ },
+ {
+  "id": 978,
+  "text": "we don't provide it as a base instruction."
+ },
+ {
+  "id": 979,
+  "text": "It's provided as an extension instruction."
+ },
+ {
+  "id": 980,
+  "text": "And then there is another one"
+ },
+ {
+  "id": 981,
+  "text": "called compressed instructions."
+ },
+ {
+  "id": 982,
+  "text": "Now, for compressed instructions,"
+ },
+ {
+  "id": 983,
+  "text": "as we just mentioned,"
+ },
+ {
+  "id": 984,
+  "text": "if you don't compress them,"
+ },
+ {
+  "id": 985,
+  "text": "the standard 32"
+ },
+ {
+  "id": 986,
+  "text": "whether it's 32-bit"
+ },
+ {
+  "id": 987,
+  "text": "or 64-bit,"
+ },
+ {
+  "id": 988,
+  "text": "the length of each instruction"
+ },
+ {
+  "id": 989,
+  "text": "as we covered earlier,"
+ },
+ {
+  "id": 990,
+  "text": "is 32 bits in RISC-V."
+ },
+ {
+  "id": 991,
+  "text": "But as you know,"
+ },
+ {
+  "id": 992,
+  "text": "some embedded systems"
+ },
+ {
+  "id": 993,
+  "text": "have fairly small memory,"
+ },
+ {
+  "id": 994,
+  "text": "and they want the program to be a bit smaller."
+ },
+ {
+  "id": 995,
+  "text": "So we can support what's called a compressed instruction set."
+ },
+ {
+  "id": 996,
+  "text": "With the compressed instruction set,"
+ },
+ {
+  "id": 997,
+  "text": "each instruction is only half the size of the standard 32-bit one,"
+ },
+ {
+  "id": 998,
+  "text": "so one instruction is 16 bits."
+ },
+ {
+  "id": 999,
+  "text": "That makes the program smaller."
+ },
+ {
+  "id": 1000,
+  "text": "Think about it, isn't that the case?"
+ },
+ {
+  "id": 1001,
+  "text": "So this is what we call compressed"
+ },
+ {
+  "id": 1002,
+  "text": "that's what it means, the compressed instruction set"
+ },
+ {
+  "id": 1003,
+  "text": "Then there are many others"
+ },
+ {
+  "id": 1004,
+  "text": "a lot has been extended"
+ },
+ {
+  "id": 1005,
+  "text": "in this ongoing process of defining the standard"
+ },
+ {
+  "id": 1006,
+  "text": "But no matter how it's defined"
+ },
+ {
+  "id": 1007,
+  "text": "its base instruction set remains unchanged"
+ },
+ {
+  "id": 1008,
+  "text": "So relatively speaking, it's a bit more stable"
+ },
+ {
+  "id": 1009,
+  "text": "Now, for us programmers"
+ },
+ {
+  "id": 1010,
+  "text": "that's actually quite friendly"
+ },
+ {
+  "id": 1011,
+  "text": "meaning what you learn today"
+ },
+ {
+  "id": 1012,
+  "text": "might still be usable ten years from now"
+ },
+ {
+  "id": 1013,
+  "text": "You understand what I mean, right?"
+ },
+ {
+  "id": 1014,
+  "text": "Otherwise, it would be painful"
+ },
+ {
+  "id": 1015,
+  "text": "So to wrap up, there's a special letter called G"
+ },
+ {
+  "id": 1016,
+  "text": "This G is not a kind of"
+ },
+ {
+  "id": 1017,
+  "text": "is not a special instruction set"
+ },
+ {
+  "id": 1018,
+  "text": "it's actually a general term"
+ },
+ {
+  "id": 1019,
+  "text": "It actually means"
+ },
+ {
+  "id": 1020,
+  "text": "as specified in its specification,"
+ },
+ {
+  "id": 1021,
+  "text": "this G"
+ },
+ {
+  "id": 1022,
+  "text": "is actually equal to IMFD."
+ },
+ {
+  "id": 1023,
+  "text": "Now, IMFD, as you know,"
+ },
+ {
+  "id": 1024,
+  "text": "is really just these things:"
+ },
+ {
+  "id": 1025,
+  "text": "it's the integer instruction set —"
+ },
+ {
+  "id": 1026,
+  "text": "it supports integer operations,"
+ },
+ {
+  "id": 1027,
+  "text": "multiplication operations,"
+ },
+ {
+  "id": 1028,
+  "text": "atomic operations,"
+ },
+ {
+  "id": 1029,
+  "text": "floating-point operations,"
+ },
+ {
+  "id": 1030,
+  "text": "and double-precision floating-point operations."
+ },
+ {
+  "id": 1031,
+  "text": "If this CPU"
+ },
+ {
+  "id": 1032,
+  "text": "supports these operations,"
+ },
+ {
+  "id": 1033,
+  "text": "then when you write it out, you can make it a bit shorter:"
+ },
+ {
+  "id": 1034,
+  "text": "just use G to stand in for them."
+ },
+ {
+  "id": 1035,
+  "text": "Now that we understand this,"
+ },
+ {
+  "id": 1036,
+  "text": "when we look again at"
+ },
+ {
+  "id": 1037,
+  "text": "these special symbols,"
+ },
+ {
+  "id": 1038,
+  "text": "there probably shouldn't be any obstacle for you anymore."
+ },
+ {
+  "id": 1039,
+  "text": "So if later on you see"
+ },
+ {
+  "id": 1040,
+  "text": "The specification has some articles that"
+ },
+ {
+  "id": 1041,
+  "text": "mention things like RV32I."
+ },
+ {
+  "id": 1042,
+  "text": "Now, think about it yourself and explain what it means."
+ },
+ {
+  "id": 1043,
+  "text": "Is it just"
+ },
+ {
+  "id": 1044,
+  "text": "a so-called most basic one?"
+ },
+ {
+  "id": 1045,
+  "text": "The RISC-V experiment is really just what?"
+ },
+ {
+  "id": 1046,
+  "text": "It's 32-bit,"
+ },
+ {
+  "id": 1047,
+  "text": "and it only supports what?"
+ },
+ {
+  "id": 1048,
+  "text": "The integer instruction set."
+ },
+ {
+  "id": 1049,
+  "text": "There are only a few dozen instructions."
+ },
+ {
+  "id": 1050,
+  "text": "So,"
+ },
+ {
+  "id": 1051,
+  "text": "when we cover instructions later,"
+ },
+ {
+  "id": 1052,
+  "text": "we'll mainly be talking about these integer instructions,"
+ },
+ {
+  "id": 1053,
+  "text": "because these are the basic instructions."
+ },
+ {
+  "id": 1054,
+  "text": "Once we've mastered the basic instructions,"
+ },
+ {
+  "id": 1055,
+  "text": "there are some extension parts"
+ },
+ {
+  "id": 1056,
+  "text": "that you can read through on your own."
+ },
+ {
+  "id": 1057,
+  "text": "So,"
+ },
+ {
+  "id": 1058,
+  "text": "RV32IMAC,"
+ },
+ {
+  "id": 1059,
+  "text": "read this one yourself."
+ },
+ {
+  "id": 1060,
+  "text": "So you can understand this CPU"
+ },
+ {
+  "id": 1061,
+  "text": "If a CPU"
+ },
+ {
+  "id": 1062,
+  "text": "says it supports this,"
+ },
+ {
+  "id": 1063,
+  "text": "then everyone knows"
+ },
+ {
+  "id": 1064,
+  "text": "which instruction features it supports."
+ },
+ {
+  "id": 1065,
+  "text": "What is this?"
+ },
+ {
+  "id": 1066,
+  "text": "I wrote it down here."
+ },
+ {
+  "id": 1067,
+  "text": "Then there's also RV64GC."
+ },
+ {
+  "id": 1068,
+  "text": "You should know that this G needs to be expanded."
+ },
+ {
+  "id": 1069,
+  "text": "What does G actually stand for?"
+ },
+ {
+  "id": 1070,
+  "text": "IMAFDC."
+ },
+ {
+  "id": 1071,
+  "text": "Like this C here,"
+ },
+ {
+  "id": 1072,
+  "text": "C is this."
+ },
+ {
+  "id": 1073,
+  "text": "Actually, G stands for this."
+ },
+ {
+  "id": 1074,
+  "text": "So this one,"
+ },
+ {
+  "id": 1075,
+  "text": "is its naming convention."
+ },
+ {
+  "id": 1076,
+  "text": "As a standard being established,"
+ },
+ {
+  "id": 1077,
+  "text": "this is a basic concept."
+ },
+ {
+  "id": 1078,
+  "text": "So everyone must master it."
+ },
+ {
+  "id": 1079,
+  "text": "And at the same time, it also reflects this"
+ },
+ {
+  "id": 1080,
+  "text": "This modular concept in RISC-V."
+ },
+ {
+  "id": 1081,
+  "text": "You can see it from here."
+ },
+ {
+  "id": 1082,
+  "text": "Now, next,"
+ },
+ {
+  "id": 1083,
+  "text": "the next concept we need to understand"
+ },
+ {
+  "id": 1084,
+  "text": "is the concept of general-purpose registers."
+ },
+ {
+  "id": 1085,
+  "text": "In this specification,"
+ },
+ {
+  "id": 1086,
+  "text": "when we interact with the processor,"
+ },
+ {
+  "id": 1087,
+  "text": "it's mainly about manipulating these registers,"
+ },
+ {
+  "id": 1088,
+  "text": "like flipping switches,"
+ },
+ {
+  "id": 1089,
+  "text": "to control the processor."
+ },
+ {
+  "id": 1090,
+  "text": "Now, for this processor,"
+ },
+ {
+  "id": 1091,
+  "text": "the specification defines several kinds of registers."
+ },
+ {
+  "id": 1092,
+  "text": "One of them is called the general-purpose register,"
+ },
+ {
+  "id": 1093,
+  "text": "which is also the most fundamental kind."
+ },
+ {
+  "id": 1094,
+  "text": "For these registers,"
+ },
+ {
+  "id": 1095,
+  "text": "there are 32 defined in total."
+ },
+ {
+  "id": 1096,
+  "text": "32 defined in total."
+ },
+ {
+  "id": 1097,
+  "text": "If you look over on the right side here,"
+ },
+ {
+  "id": 1098,
+  "text": "in this standard specification,"
+ },
+ {
+  "id": 1099,
+  "text": "each one has a code name."
+ },
+ {
+  "id": 1100,
+  "text": "One set is called x0 all the way to x31."
+ },
+ {
+  "id": 1101,
+  "text": "So that's 32 registers, right?"
+ },
+ {
+  "id": 1102,
+  "text": "Now these 32 registers,"
+ },
+ {
+  "id": 1103,
+  "text": "whether it's a 32-bit CPU,"
+ },
+ {
+  "id": 1104,
+  "text": "64-bit, or 128-bit, they're all the same."
+ },
+ {
+  "id": 1105,
+  "text": "If you want to support floating-point operations,"
+ },
+ {
+  "id": 1106,
+  "text": "then there are separate floating-point registers to use."
+ },
+ {
+  "id": 1107,
+  "text": "We won't cover those here for now."
+ },
+ {
+  "id": 1108,
+  "text": "Our focus is still on learning these,"
+ },
+ {
+  "id": 1109,
+  "text": "the most basic general-purpose registers — the 32 general-purpose registers."
+ },
+ {
+  "id": 1110,
+  "text": "Now, 32E — we talked about this earlier."
+ },
+ {
+  "id": 1111,
+  "text": "Now, everyone pay attention here."
+ },
+ {
+  "id": 1112,
+  "text": "In this diagram, from the specification,"
+ },
+ {
+  "id": 1113,
+  "text": "from the standard — that is, my reference 1,"
+ },
+ {
+  "id": 1114,
+  "text": "the reference 1 written earlier,"
+ },
+ {
+  "id": 1115,
+  "text": "it's from section 2.1 of the unprivileged instruction document."
+ },
+ {
+  "id": 1116,
+  "text": "This diagram was extracted from there."
+ },
+ {
+  "id": 1117,
+  "text": "In this diagram, besides the 32 general-purpose registers,"
+ },
+ {
+  "id": 1118,
+  "text": "it also draws a register called the PC register."
+ },
+ {
+  "id": 1119,
+  "text": "As we know, this PC,"
+ },
+ {
+  "id": 1120,
+  "text": "If you've studied assembly, or studied it on X86,"
+ },
+ {
+  "id": 1121,
+  "text": "we know that PC is the program counter"
+ },
+ {
+  "id": 1122,
+  "text": "— the register that holds the program pointer, right?"
+ },
+ {
+  "id": 1123,
+  "text": "On some other instruction architectures,"
+ },
+ {
+  "id": 1124,
+  "text": "we know that this PC register is exposed."
+ },
+ {
+  "id": 1125,
+  "text": "What do I mean by exposed?"
+ },
+ {
+  "id": 1126,
+  "text": "I mean that by writing assembly instructions,"
+ },
+ {
+  "id": 1127,
+  "text": "you can manipulate this register,"
+ },
+ {
+  "id": 1128,
+  "text": "reading it or writing it."
+ },
+ {
+  "id": 1129,
+  "text": "Have any of you done that?"
+ },
+ {
+  "id": 1130,
+  "text": "For example, when debugging a program,"
+ },
+ {
+  "id": 1131,
+  "text": "you might even modify the PC register,"
+ },
+ {
+  "id": 1132,
+  "text": "to make your program jump somewhere else."
+ },
+ {
+  "id": 1133,
+  "text": "Have you ever done anything like that?"
+ },
+ {
+  "id": 1134,
+  "text": "Maybe you haven't run into that situation yet."
+ },
+ {
+  "id": 1135,
+  "text": "But sometimes when we debug programs,"
+ },
+ {
+  "id": 1136,
+  "text": "we use little tricks like that."
+ },
+ {
+  "id": 1137,
+  "text": "However, in RISC-V, note that"
+ },
+ {
+  "id": 1138,
+  "text": "the PC register is not exposed."
+ },
+ {
+  "id": 1139,
+  "text": "Even though it's drawn here,"
+ },
+ {
+  "id": 1140,
+  "text": "Actually, when you're programming,"
+ },
+ {
+  "id": 1141,
+  "text": "remember that we can't access"
+ },
+ {
+  "id": 1142,
+  "text": "this PC register."
+ },
+ {
+  "id": 1143,
+  "text": "Of course, this thing definitely exists,"
+ },
+ {
+  "id": 1144,
+  "text": "because without it,"
+ },
+ {
+  "id": 1145,
+  "text": "the CPU simply couldn't run."
+ },
+ {
+  "id": 1146,
+  "text": "When I demonstrated this to you last class,"
+ },
+ {
+  "id": 1147,
+  "text": "you saw it, right?"
+ },
+ {
+  "id": 1148,
+  "text": "So then, why doesn't RISC-V"
+ },
+ {
+  "id": 1149,
+  "text": "expose the PC register"
+ },
+ {
+  "id": 1150,
+  "text": "for you to access?"
+ },
+ {
+  "id": 1151,
+  "text": "It's mainly because of certain"
+ },
+ {
+  "id": 1152,
+  "text": "issues in modern CPU design,"
+ },
+ {
+  "id": 1153,
+  "text": "specifically pipeline design issues."
+ },
+ {
+  "id": 1154,
+  "text": "That's more of an advanced topic,"
+ },
+ {
+  "id": 1155,
+  "text": "so we won't cover it here."
+ },
+ {
+  "id": 1156,
+  "text": "But the main thing to know is that"
+ },
+ {
+  "id": 1157,
+  "text": "this PC register"
+ },
+ {
+  "id": 1158,
+  "text": "is something we cannot access,"
+ },
+ {
+  "id": 1159,
+  "text": "but it does exist."
+ },
+ {
+  "id": 1160,
+  "text": "If you really want to get"
+ },
+ {
+  "id": 1161,
+  "text": "the value of this PC register,"
+ },
+ {
+  "id": 1162,
+  "text": "it is possible to go and read it,"
+ },
+ {
+  "id": 1163,
+  "text": "but when you read it,"
+ },
+ {
+  "id": 1164,
+  "text": "it is read in another special way."
+ },
+ {
+  "id": 1165,
+  "text": "Here,"
+ },
+ {
+  "id": 1166,
+  "text": "there may be some examples later,"
+ },
+ {
+  "id": 1167,
+  "text": "and I'll introduce them to you."
+ },
+ {
+  "id": 1168,
+  "text": "So that's one issue."
+ },
+ {
+  "id": 1169,
+  "text": "As for the rest,"
+ },
+ {
+  "id": 1170,
+  "text": "as for the rest,"
+ },
+ {
+  "id": 1171,
+  "text": "well, regarding registers,"
+ },
+ {
+  "id": 1172,
+  "text": "that is, the general-purpose registers,"
+ },
+ {
+  "id": 1173,
+  "text": "I'll stop the introduction here."
+ },
+ {
+  "id": 1174,
+  "text": "The next concept,"
+ },
+ {
+  "id": 1175,
+  "text": "once we finish this part,"
+ },
+ {
+  "id": 1176,
+  "text": "this second lecture will be"
+ },
+ {
+  "id": 1177,
+  "text": "a bit longer,"
+ },
+ {
+  "id": 1178,
+  "text": "and we'll cover the material on Risk5"
+ },
+ {
+  "id": 1179,
+  "text": "as a whole."
+ },
+ {
+  "id": 1180,
+  "text": "So the next one is,"
+ },
+ {
+  "id": 1181,
+  "text": "these are actually all basic concepts"
+ },
+ {
+  "id": 1182,
+  "text": "extracted from the spec."
+ },
+ {
+  "id": 1183,
+  "text": "If you want to read the spec in the future,"
+ },
+ {
+  "id": 1184,
+  "text": "hopefully this will help you"
+ },
+ {
+  "id": 1185,
+  "text": "when you read it later on."
+ },
+ {
+  "id": 1186,
+  "text": "Now, in this RISC-V spec,"
+ },
+ {
+  "id": 1187,
+  "text": "it also mentions a concept"
+ },
+ {
+  "id": 1188,
+  "text": "called the hart concept."
+ },
+ {
+  "id": 1189,
+  "text": "You'll often see this term mentioned in various places."
+ },
+ {
+  "id": 1190,
+  "text": "So what is a hart?"
+ },
+ {
+  "id": 1191,
+  "text": "Well, this word is actually"
+ },
+ {
+  "id": 1192,
+  "text": "a term coined within"
+ },
+ {
+  "id": 1193,
+  "text": "the RISC-V spec itself."
+ },
+ {
+  "id": 1194,
+  "text": "In the English language,"
+ },
+ {
+  "id": 1195,
+  "text": "you won't find this word in a dictionary."
+ },
+ {
+  "id": 1196,
+  "text": "It's not a real English word."
+ },
+ {
+  "id": 1197,
+  "text": "It actually stands for"
+ },
+ {
+  "id": 1198,
+  "text": "what we wrote later on,"
+ },
+ {
+  "id": 1199,
+  "text": "a Hardware Thread,"
+ },
+ {
+  "id": 1200,
+  "text": "It takes the first three letters of Hardware"
+ },
+ {
+  "id": 1201,
+  "text": "and the first letter of Thread"
+ },
+ {
+  "id": 1202,
+  "text": "and puts them together into this word."
+ },
+ {
+  "id": 1203,
+  "text": "Now, translated into Chinese,"
+ },
+ {
+  "id": 1204,
+  "text": "it's called the hardware thread concept."
+ },
+ {
+  "id": 1205,
+  "text": "And this concept is very important."
+ },
+ {
+  "id": 1206,
+  "text": "Why?"
+ },
+ {
+  "id": 1207,
+  "text": "What do we mean by hardware thread?"
+ },
+ {
+  "id": 1208,
+  "text": "Let me explain that to you."
+ },
+ {
+  "id": 1209,
+  "text": "Now, as you know,"
+ },
+ {
+  "id": 1210,
+  "text": "on our processors,"
+ },
+ {
+  "id": 1211,
+  "text": "in the early days,"
+ },
+ {
+  "id": 1212,
+  "text": "it was generally the processor concept,"
+ },
+ {
+  "id": 1213,
+  "text": "the CPU, right?"
+ },
+ {
+  "id": 1214,
+  "text": "Of course, in some documents,"
+ },
+ {
+  "id": 1215,
+  "text": "you'll also see the concept of a core,"
+ },
+ {
+  "id": 1216,
+  "text": "the concept of a CPU core."
+ },
+ {
+  "id": 1217,
+  "text": "But they all really refer to the concept of the CPU."
+ },
+ {
+  "id": 1218,
+  "text": "Now, when we say CPU,"
+ },
+ {
+  "id": 1219,
+  "text": "in the early days of the CPU,"
+ },
+ {
+  "id": 1220,
+  "text": "Inside a CPU,"
+ },
+ {
+  "id": 1221,
+  "text": "it can only execute instructions one at a time, sequentially."
+ },
+ {
+  "id": 1222,
+  "text": "As for the CPU's execution process,"
+ },
+ {
+  "id": 1223,
+  "text": "we demonstrated it to you in the last class."
+ },
+ {
+  "id": 1224,
+  "text": "You remember, right?"
+ },
+ {
+  "id": 1225,
+  "text": "There's a CU unit, the control unit."
+ },
+ {
+  "id": 1226,
+  "text": "Instruction by instruction, what is this process called?"
+ },
+ {
+  "id": 1227,
+  "text": "First, fetch."
+ },
+ {
+  "id": 1228,
+  "text": "The first step is called fetch."
+ },
+ {
+  "id": 1229,
+  "text": "What's the second step called?"
+ },
+ {
+  "id": 1230,
+  "text": "It's called decode, right?"
+ },
+ {
+  "id": 1231,
+  "text": "Then the third step is execute."
+ },
+ {
+  "id": 1232,
+  "text": "It does this over and over again."
+ },
+ {
+  "id": 1233,
+  "text": "It's like a wheel spinning there."
+ },
+ {
+  "id": 1234,
+  "text": "So since it keeps repeating this,"
+ },
+ {
+  "id": 1235,
+  "text": "you can actually imagine it as,"
+ },
+ {
+  "id": 1236,
+  "text": "essentially a stream of instructions,"
+ },
+ {
+  "id": 1237,
+  "text": "right?"
+ },
+ {
+  "id": 1238,
+  "text": "executing one after another."
+ },
+ {
+  "id": 1239,
+  "text": "So it becomes — there's only one CPU in there."
+ },
+ {
+  "id": 1240,
+  "text": "So generally, if there's only one CU, or control unit,"
+ },
+ {
+  "id": 1241,
+  "text": "there's only one instruction stream being executed in there, right?"
+ },
+ {
+  "id": 1242,
+  "text": "Isn't that the case?"
+ },
+ {
+  "id": 1243,
+  "text": "That's exactly how early CPUs used to work."
+ },
+ {
+  "id": 1244,
+  "text": "But as hardware has developed,"
+ },
+ {
+  "id": 1245,
+  "text": "you get a situation like this:"
+ },
+ {
+  "id": 1246,
+  "text": "I buy a machine that comes with just one CPU,"
+ },
+ {
+  "id": 1247,
+  "text": "but inside that CPU,"
+ },
+ {
+  "id": 1248,
+  "text": "the spec sheet will tell you"
+ },
+ {
+  "id": 1249,
+  "text": "there are two execution streams in there."
+ },
+ {
+  "id": 1250,
+  "text": "Has anyone heard of this concept?"
+ },
+ {
+  "id": 1251,
+  "text": "On Intel chips, for instance,"
+ },
+ {
+  "id": 1252,
+  "text": "there's this thing called hyper-threading."
+ },
+ {
+  "id": 1253,
+  "text": "You've heard of it?"
+ },
+ {
+  "id": 1254,
+  "text": "The concept of Hyper-Threading."
+ },
+ {
+  "id": 1255,
+  "text": "Right?"
+ },
+ {
+  "id": 1256,
+  "text": "So if you open up"
+ },
+ {
+  "id": 1257,
+  "text": "the Task Manager,"
+ },
+ {
+  "id": 1258,
+  "text": "say you bought one"
+ },
+ {
+  "id": 1259,
+  "text": "that's advertised as 8 cores"
+ },
+ {
+  "id": 1260,
+  "text": "or a 16-core"
+ },
+ {
+  "id": 1261,
+  "text": "CPU when it comes back,"
+ },
+ {
+  "id": 1262,
+  "text": "but if you open"
+ },
+ {
+  "id": 1263,
+  "text": "the Task Manager"
+ },
+ {
+  "id": 1264,
+  "text": "and once you open it,"
+ },
+ {
+  "id": 1265,
+  "text": "if you take a look,"
+ },
+ {
+  "id": 1266,
+  "text": "the actual"
+ },
+ {
+  "id": 1267,
+  "text": "hardware processors inside"
+ },
+ {
+  "id": 1268,
+  "text": "are actually halved."
+ },
+ {
+  "id": 1269,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1270,
+  "text": "Intel's design approach"
+ },
+ {
+  "id": 1271,
+  "text": "means that"
+ },
+ {
+  "id": 1272,
+  "text": "within what it claims as one core,"
+ },
+ {
+  "id": 1273,
+  "text": "it can run at the same time"
+ },
+ {
+  "id": 1274,
+  "text": "two execution streams."
+ },
+ {
+  "id": 1275,
+  "text": "This is one of its hardware designs."
+ },
+ {
+  "id": 1276,
+  "text": "This is a concept on modern processors."
+ },
+ {
+  "id": 1277,
+  "text": "Now, once this thing was introduced,"
+ },
+ {
+  "id": 1278,
+  "text": "it led to a conceptual confusion for us,"
+ },
+ {
+  "id": 1279,
+  "text": "which is that before, when we talked about one core,"
+ },
+ {
+  "id": 1280,
+  "text": "There's only one execution stream inside a core."
+ },
+ {
+  "id": 1281,
+  "text": "And then there's no room for confusion."
+ },
+ {
+  "id": 1282,
+  "text": "But now, another concept has been introduced."
+ },
+ {
+  "id": 1283,
+  "text": "Namely, having two execution streams inside one core."
+ },
+ {
+  "id": 1284,
+  "text": "That does cause confusion."
+ },
+ {
+  "id": 1285,
+  "text": "Think about it, doesn't it?"
+ },
+ {
+  "id": 1286,
+  "text": "So he understands what I mean by this."
+ },
+ {
+  "id": 1287,
+  "text": "So when RISC-V was defining its specification,"
+ },
+ {
+  "id": 1288,
+  "text": "precisely to avoid this confusion,"
+ },
+ {
+  "id": 1289,
+  "text": "because using the terms core or CPU"
+ },
+ {
+  "id": 1290,
+  "text": "can easily mix up these concepts,"
+ },
+ {
+  "id": 1291,
+  "text": "they introduced a new abstract concept"
+ },
+ {
+  "id": 1292,
+  "text": "called a hart."
+ },
+ {
+  "id": 1293,
+  "text": "That is, they took the concept of an execution stream"
+ },
+ {
+  "id": 1294,
+  "text": "and fully abstracted it into something called a hart."
+ },
+ {
+  "id": 1295,
+  "text": "You can think of it as just a"
+ },
+ {
+  "id": 1296,
+  "text": "one hart is essentially a virtual CPU."
+ },
+ {
+  "id": 1297,
+  "text": "He understands."
+ },
+ {
+  "id": 1298,
+  "text": "But in reality, inside an actual processor,"
+ },
+ {
+  "id": 1299,
+  "text": "there may be two harts."
+ },
+ {
+  "id": 1300,
+  "text": "This is possible."
+ },
+ {
+  "id": 1301,
+  "text": "And each hart here,"
+ },
+ {
+  "id": 1302,
+  "text": "is an independent execution concept."
+ },
+ {
+  "id": 1303,
+  "text": "That is, this passage is taken from the specification."
+ },
+ {
+  "id": 1304,
+  "text": "Please go read this passage."
+ },
+ {
+  "id": 1305,
+  "text": "What concept is he emphasizing?"
+ },
+ {
+  "id": 1306,
+  "text": "He says, from the perspective of software"
+ },
+ {
+  "id": 1307,
+  "text": "running in a given execution environment,"
+ },
+ {
+  "id": 1308,
+  "text": "that is, from the perspective of software programming,"
+ },
+ {
+  "id": 1309,
+  "text": "what is a hart?"
+ },
+ {
+  "id": 1310,
+  "text": "A hart is a resource."
+ },
+ {
+  "id": 1311,
+  "text": "This is a very abstract concept,"
+ },
+ {
+  "id": 1312,
+  "text": "isn't it?"
+ },
+ {
+  "id": 1313,
+  "text": "He doesn't say it's a CPU or anything like that."
+ },
+ {
+  "id": 1314,
+  "text": "It's just a kind of resource."
+ },
+ {
+  "id": 1315,
+  "text": "This thing is an object,"
+ },
+ {
+  "id": 1316,
+  "text": "and what is it?"
+ },
+ {
+  "id": 1317,
+  "text": "It can autonomously fetch and execute instructions."
+ },
+ {
+  "id": 1318,
+  "text": "That is, this object,"
+ },
+ {
+  "id": 1319,
+  "text": "what does it mean that it can autonomously do so?"
+ },
+ {
+  "id": 1320,
+  "text": "It expresses this sense of autonomy,"
+ },
+ {
+  "id": 1321,
+  "text": "an independent concept, free from interference."
+ },
+ {
+  "id": 1322,
+  "text": "Do you follow what I mean?"
+ },
+ {
+  "id": 1323,
+  "text": "In other words, it's an abstract resource,"
+ },
+ {
+  "id": 1324,
+  "text": "a resource that can independently fetch"
+ },
+ {
+  "id": 1325,
+  "text": "We covered this concept in class."
+ },
+ {
+  "id": 1326,
+  "text": "Fetch means fetching instructions,"
+ },
+ {
+  "id": 1327,
+  "text": "right?"
+ },
+ {
+  "id": 1328,
+  "text": "And execute"
+ },
+ {
+  "id": 1329,
+  "text": "go fetch and execute these instructions."
+ },
+ {
+  "id": 1330,
+  "text": "Isn't this"
+ },
+ {
+  "id": 1331,
+  "text": "what we just talked about,"
+ },
+ {
+  "id": 1332,
+  "text": "this execution stream?"
+ },
+ {
+  "id": 1333,
+  "text": "These are two independent execution streams."
+ },
+ {
+  "id": 1334,
+  "text": "Do you follow what I mean here?"
+ },
+ {
+  "id": 1335,
+  "text": "Just picture it as"
+ },
+ {
+  "id": 1336,
+  "text": "two independent cores."
+ },
+ {
+  "id": 1337,
+  "text": "Of course, it's called a hart,"
+ },
+ {
+  "id": 1338,
+  "text": "not a core."
+ },
+ {
+  "id": 1339,
+  "text": "It's called a hart."
+ },
+ {
+  "id": 1340,
+  "text": "Just imagine it"
+ },
+ {
+  "id": 1341,
+  "text": "as the things we'll talk about later"
+ },
+ {
+  "id": 1342,
+  "text": "actually a hard..."
+ },
+ {
+  "id": 1343,
+  "text": "you can imagine it"
+ },
+ {
+  "id": 1344,
+  "text": "as a CPU running independently"
+ },
+ {
+  "id": 1345,
+  "text": "It represents an independent, running stream of instructions"
+ },
+ {
+  "id": 1346,
+  "text": "Like that"
+ },
+ {
+  "id": 1347,
+  "text": "maybe that makes it a bit easier to understand"
+ },
+ {
+  "id": 1348,
+  "text": "So this is the concept of a hart introduced in the specification"
+ },
+ {
+  "id": 1349,
+  "text": "This concept is very important"
+ },
+ {
+  "id": 1350,
+  "text": "it comes up everywhere"
+ },
+ {
+  "id": 1351,
+  "text": "If you confuse it with what we usually call a CPU or processor,"
+ },
+ {
+  "id": 1352,
+  "text": "it may cause you some trouble"
+ },
+ {
+  "id": 1353,
+  "text": "So here"
+ },
+ {
+  "id": 1354,
+  "text": "I want to emphasize it"
+ },
+ {
+  "id": 1355,
+  "text": "Now that we have this concept of a hart,"
+ },
+ {
+  "id": 1356,
+  "text": "we won't use the term processor from now on"
+ },
+ {
+  "id": 1357,
+  "text": "And what I mean is,"
+ },
+ {
+  "id": 1358,
+  "text": "in all the specifications,"
+ },
+ {
+  "id": 1359,
+  "text": "they only use the term hart."
+ },
+ {
+  "id": 1360,
+  "text": "without mentioning the concept of a processor,"
+ },
+ {
+  "id": 1361,
+  "text": "because it's possible that the processor we get back,"
+ },
+ {
+  "id": 1362,
+  "text": "might have several execution streams"
+ },
+ {
+  "id": 1363,
+  "text": "running at the same time."
+ },
+ {
+  "id": 1364,
+  "text": "So to avoid this problem,"
+ },
+ {
+  "id": 1365,
+  "text": "ok,"
+ },
+ {
+  "id": 1366,
+  "text": "this is the concept of hart,"
+ },
+ {
+  "id": 1367,
+  "text": "and it's what we want you to grasp."
+ },
+ {
+  "id": 1368,
+  "text": "Ok."
+ },
+ {
+  "id": 1369,
+  "text": "Now,"
+ },
+ {
+  "id": 1370,
+  "text": "there's another fairly important concept"
+ },
+ {
+  "id": 1371,
+  "text": "called privilege level."
+ },
+ {
+  "id": 1372,
+  "text": "This is also something we mentioned just now."
+ },
+ {
+  "id": 1373,
+  "text": "We said RISC-V,"
+ },
+ {
+  "id": 1374,
+  "text": "its specification,"
+ },
+ {
+  "id": 1375,
+  "text": "it defines a layered concept."
+ },
+ {
+  "id": 1376,
+  "text": "This concept,"
+ },
+ {
+  "id": 1377,
+  "text": "well, the layered concept,"
+ },
+ {
+  "id": 1378,
+  "text": "is actually relatively"
+ },
+ {
+  "id": 1379,
+  "text": "easy to understand."
+ },
+ {
+  "id": 1380,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1381,
+  "text": "what is this thing similar to?"
+ },
+ {
+  "id": 1382,
+  "text": "Those of you who have studied Linux,"
+ },
+ {
+  "id": 1383,
+  "text": "we know that in Linux"
+ },
+ {
+  "id": 1384,
+  "text": "there's often this thing,"
+ },
+ {
+  "id": 1385,
+  "text": "and it's been taught before,"
+ },
+ {
+  "id": 1386,
+  "text": "called kernel mode and user mode."
+ },
+ {
+  "id": 1387,
+  "text": "Do you understand it?"
+ },
+ {
+  "id": 1388,
+  "text": "Did a teacher ever cover this in class?"
+ },
+ {
+  "id": 1389,
+  "text": "User mode and kernel mode,"
+ },
+ {
+  "id": 1390,
+  "text": "what exactly is the concept?"
+ },
+ {
+  "id": 1391,
+  "text": "Did anyone tie it to the hardware"
+ },
+ {
+  "id": 1392,
+  "text": "and explain this concept to you?"
+ },
+ {
+  "id": 1393,
+  "text": "That would make it easier to understand"
+ },
+ {
+  "id": 1394,
+  "text": "what the concept of user mode and kernel mode"
+ },
+ {
+  "id": 1395,
+  "text": "really is."
+ },
+ {
+  "id": 1396,
+  "text": "Now, in RISC-V,"
+ },
+ {
+  "id": 1397,
+  "text": "these privilege levels,"
+ },
+ {
+  "id": 1398,
+  "text": "they're actually related to that user mode"
+ },
+ {
+  "id": 1399,
+  "text": "and kernel mode."
+ },
+ {
+  "id": 1400,
+  "text": "It's not that they're somewhat related."
+ },
+ {
+  "id": 1401,
+  "text": "They are very strongly related."
+ },
+ {
+  "id": 1402,
+  "text": "So, we say,"
+ },
+ {
+  "id": 1403,
+  "text": "in hardware,"
+ },
+ {
+  "id": 1404,
+  "text": "what it means is that when you design a CPU,"
+ },
+ {
+  "id": 1405,
+  "text": "you have to provide three levels."
+ },
+ {
+  "id": 1406,
+  "text": "You can think of it as a switch."
+ },
+ {
+  "id": 1407,
+  "text": "Flip it one way and you're in user mode."
+ },
+ {
+  "id": 1408,
+  "text": "Flip it the other way and it's called"
+ },
+ {
+  "id": 1409,
+  "text": "the three states it defines,"
+ },
+ {
+  "id": 1410,
+  "text": "called user mode,"
+ },
+ {
+  "id": 1411,
+  "text": "supervisor mode, and machine mode."
+ },
+ {
+  "id": 1412,
+  "text": "So, flip the switch one way and it's user mode."
+ },
+ {
+  "id": 1413,
+  "text": "Put the switch in the middle and it's supervisor mode."
+ },
+ {
+  "id": 1414,
+  "text": "Flip it further down and it's machine mode."
+ },
+ {
+  "id": 1415,
+  "text": "You can understand it as something like that."
+ },
+ {
+  "id": 1416,
+  "text": "So,"
+ },
+ {
+  "id": 1417,
+  "text": "to give an analogy,"
+ },
+ {
+  "id": 1418,
+  "text": "for a system like Linux, an operating system like ours,"
+ },
+ {
+  "id": 1419,
+  "text": "when you run in what we call user mode,"
+ },
+ {
+  "id": 1420,
+  "text": "which actually tells us that our CPU is running in the user mode on top of this"
+ },
+ {
+  "id": 1421,
+  "text": "the switch is set to user mode"
+ },
+ {
+  "id": 1422,
+  "text": "and when we enter the kernel, which mode do we run in?"
+ },
+ {
+  "id": 1423,
+  "text": "actually, we run in supervisor mode"
+ },
+ {
+  "id": 1424,
+  "text": "machine mode is actually a higher level than supervisor mode"
+ },
+ {
+  "id": 1425,
+  "text": "in terms of privilege, from top to bottom"
+ },
+ {
+  "id": 1426,
+  "text": "the level gets stronger and higher"
+ },
+ {
+  "id": 1427,
+  "text": "so this, uh, machine mode, you can understand it as"
+ },
+ {
+  "id": 1428,
+  "text": "uh"
+ },
+ {
+  "id": 1429,
+  "text": "it's called machine mode, right"
+ },
+ {
+  "id": 1430,
+  "text": "it's called machine mode. Uh, what is machine mode exactly?"
+ },
+ {
+  "id": 1431,
+  "text": "uh"
+ },
+ {
+  "id": 1432,
+  "text": "if any of you have studied, uh..."
+ },
+ {
+  "id": 1433,
+  "text": "because some of you may have seen that x86 standard"
+ },
+ {
+  "id": 1434,
+  "text": "x86, haven't you..."
+ },
+ {
+  "id": 1435,
+  "text": "you've..."
+ },
+ {
+  "id": 1436,
+  "text": "I mean, you've come across this concept"
+ },
+ {
+  "id": 1437,
+  "text": "called real mode and protected mode"
+ },
+ {
+  "id": 1438,
+  "text": "there's also this concept"
+ },
+ {
+  "id": 1439,
+  "text": "basically, what it means is that we..."
+ },
+ {
+  "id": 1440,
+  "text": "This Intel chip,"
+ },
+ {
+  "id": 1441,
+  "text": "during boot, works like this."
+ },
+ {
+  "id": 1442,
+  "text": "Once it powers on,"
+ },
+ {
+  "id": 1443,
+  "text": "the first thing it enters is real mode."
+ },
+ {
+  "id": 1444,
+  "text": "What is real mode?"
+ },
+ {
+  "id": 1445,
+  "text": "When it's in real mode,"
+ },
+ {
+  "id": 1446,
+  "text": "the virtual address doesn't take effect."
+ },
+ {
+  "id": 1447,
+  "text": "We've talked about this concept before."
+ },
+ {
+  "id": 1448,
+  "text": "When you were learning Linux,"
+ },
+ {
+  "id": 1449,
+  "text": "regarding that virtual address,"
+ },
+ {
+  "id": 1450,
+  "text": "when we talked about that kind of concept,"
+ },
+ {
+  "id": 1451,
+  "text": "we covered a similar idea."
+ },
+ {
+  "id": 1452,
+  "text": "That is, Intel's chips,"
+ },
+ {
+  "id": 1453,
+  "text": "as soon as they power on,"
+ },
+ {
+  "id": 1454,
+  "text": "actually enter what's called real mode."
+ },
+ {
+  "id": 1455,
+  "text": "In real mode,"
+ },
+ {
+  "id": 1456,
+  "text": "virtual addresses don't work."
+ },
+ {
+  "id": 1457,
+  "text": "The addresses we access at that point,"
+ },
+ {
+  "id": 1458,
+  "text": "they're all physical addresses."
+ },
+ {
+  "id": 1459,
+  "text": "Remember this concept?"
+ },
+ {
+  "id": 1460,
+  "text": "Then when the program runs to a certain state,"
+ },
+ {
+  "id": 1461,
+  "text": "after you modify one of the CPU's registers,"
+ },
+ {
+  "id": 1462,
+  "text": "the CPU jumps to what's called"
+ },
+ {
+  "id": 1463,
+  "text": "protected mode."
+ },
+ {
+  "id": 1464,
+  "text": "Once you're in protected mode,"
+ },
+ {
+  "id": 1465,
+  "text": "there's this thing called the MMU that gets turned on."
+ },
+ {
+  "id": 1466,
+  "text": "You've probably heard that term before, right?"
+ },
+ {
+  "id": 1467,
+  "text": "If you've forgotten, go back and search for it."
+ },
+ {
+  "id": 1468,
+  "text": "I'm just using it as an example."
+ },
+ {
+  "id": 1469,
+  "text": "Actually, RISC-V is very similar to this concept."
+ },
+ {
+  "id": 1470,
+  "text": "That is, when you first power on,"
+ },
+ {
+  "id": 1471,
+  "text": "our RISC-V processor,"
+ },
+ {
+  "id": 1472,
+  "text": "it runs in machine mode,"
+ },
+ {
+  "id": 1473,
+  "text": "which is the most core mode."
+ },
+ {
+  "id": 1474,
+  "text": "This mode is mandatory to implement."
+ },
+ {
+  "id": 1475,
+  "text": "It's somewhat similar to x86's"
+ },
+ {
+  "id": 1476,
+  "text": "real mode,"
+ },
+ {
+  "id": 1477,
+  "text": "it's just that people use different names for it."
+ },
+ {
+  "id": 1478,
+  "text": "And when running in machine mode,"
+ },
+ {
+  "id": 1479,
+  "text": "virtual addresses are not enabled."
+ },
+ {
+  "id": 1480,
+  "text": "everything runs in physical addresses"
+ },
+ {
+  "id": 1481,
+  "text": "in the code you access,"
+ },
+ {
+  "id": 1482,
+  "text": "the addresses written there"
+ },
+ {
+  "id": 1483,
+  "text": "are all the actual corresponding physical addresses."
+ },
+ {
+  "id": 1484,
+  "text": "Then,"
+ },
+ {
+  "id": 1485,
+  "text": "there is a way to"
+ },
+ {
+  "id": 1486,
+  "text": "jump to supervisor type."
+ },
+ {
+  "id": 1487,
+  "text": "After it's in supervisor type,"
+ },
+ {
+  "id": 1488,
+  "text": "it's essentially like entering protected mode."
+ },
+ {
+  "id": 1489,
+  "text": "Then virtual addresses are enabled,"
+ },
+ {
+  "id": 1490,
+  "text": "and at that point the addresses it accesses"
+ },
+ {
+  "id": 1491,
+  "text": "are all handled as virtual addresses."
+ },
+ {
+  "id": 1492,
+  "text": "Now as for user type,"
+ },
+ {
+  "id": 1493,
+  "text": "it's actually somewhat similar to what"
+ },
+ {
+  "id": 1494,
+  "text": "we talked about in Linux,"
+ },
+ {
+  "id": 1495,
+  "text": "which is user mode."
+ },
+ {
+  "id": 1496,
+  "text": "So these three modes it defines"
+ },
+ {
+  "id": 1497,
+  "text": "actually serve a layered protection role,"
+ },
+ {
+  "id": 1498,
+  "text": "which is quite similar to the concept"
+ },
+ {
+  "id": 1499,
+  "text": "found in other chips."
+ },
+ {
+  "id": 1500,
+  "text": "So this is the concept of"
+ },
+ {
+  "id": 1501,
+  "text": "privilege levels in RISC-V."
+ },
+ {
+  "id": 1502,
+  "text": "Now, besides these three levels,"
+ },
+ {
+  "id": 1503,
+  "text": "there is also one called Debug mode."
+ },
+ {
+  "id": 1504,
+  "text": "What Debug mode means is"
+ },
+ {
+  "id": 1505,
+  "text": "it is used specifically for debugging the CPU."
+ },
+ {
+  "id": 1506,
+  "text": "This level has even higher privileges,"
+ },
+ {
+  "id": 1507,
+  "text": "but we don't use it in ordinary programming."
+ },
+ {
+  "id": 1508,
+  "text": "So I'll just mention it here and leave it at that."
+ },
+ {
+  "id": 1509,
+  "text": "Now, why do we bring up these three modes?"
+ },
+ {
+  "id": 1510,
+  "text": "The point is this:"
+ },
+ {
+  "id": 1511,
+  "text": "later on, when you look at a chip,"
+ },
+ {
+  "id": 1512,
+  "text": "it will often say"
+ },
+ {
+  "id": 1513,
+  "text": "this chip,"
+ },
+ {
+  "id": 1514,
+  "text": "for example, this chip only supports M-mode."
+ },
+ {
+  "id": 1515,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 1516,
+  "text": "It means that when you program on this chip,"
+ },
+ {
+  "id": 1517,
+  "text": "you can only access physical addresses."
+ },
+ {
+  "id": 1518,
+  "text": "You cannot enable virtual addresses,"
+ },
+ {
+  "id": 1519,
+  "text": "so you can't do processing using virtual addresses."
+ },
+ {
+  "id": 1520,
+  "text": "He understood what I meant."
+ },
+ {
+  "id": 1521,
+  "text": "Then what if it only supports M and U?"
+ },
+ {
+  "id": 1522,
+  "text": "That is to say, it does not support"
+ },
+ {
+  "id": 1523,
+  "text": "and likewise, it also does not support the MMU."
+ },
+ {
+  "id": 1524,
+  "text": "But it splits out one level"
+ },
+ {
+  "id": 1525,
+  "text": "M and U."
+ },
+ {
+  "id": 1526,
+  "text": "Then the most complete one"
+ },
+ {
+  "id": 1527,
+  "text": "supports all three of these levels."
+ },
+ {
+  "id": 1528,
+  "text": "So in our"
+ },
+ {
+  "id": 1529,
+  "text": "for example, a general-purpose"
+ },
+ {
+  "id": 1530,
+  "text": "chip inside a computer,"
+ },
+ {
+  "id": 1531,
+  "text": "it definitely has to support all three modes: M, S, and U."
+ },
+ {
+  "id": 1532,
+  "text": "Because only after the MMU is turned on"
+ },
+ {
+  "id": 1533,
+  "text": "and virtual addresses are supported,"
+ },
+ {
+  "id": 1534,
+  "text": "can we implement something like the concept of a process."
+ },
+ {
+  "id": 1535,
+  "text": "And what I mean is,"
+ },
+ {
+  "id": 1536,
+  "text": "the concept of a process"
+ },
+ {
+  "id": 1537,
+  "text": "can only be implemented"
+ },
+ {
+  "id": 1538,
+  "text": "after virtual addresses are enabled."
+ },
+ {
+  "id": 1539,
+  "text": "Otherwise, it simply cannot be done."
+ },
+ {
+  "id": 1540,
+  "text": "Of course,"
+ },
+ {
+  "id": 1541,
+  "text": "in order to implement this virtual address,"
+ },
+ {
+  "id": 1542,
+  "text": "you need hardware support like a special MMU,"
+ },
+ {
+  "id": 1543,
+  "text": "so the demands on the CPU design will be a bit higher."
+ },
+ {
+  "id": 1544,
+  "text": "For the operating system example"
+ },
+ {
+  "id": 1545,
+  "text": "we'll be doing for you later,"
+ },
+ {
+  "id": 1546,
+  "text": "since we have limited time,"
+ },
+ {
+  "id": 1547,
+  "text": "we won't get into virtual addresses."
+ },
+ {
+  "id": 1548,
+  "text": "So we,"
+ },
+ {
+  "id": 1549,
+  "text": "in practice, we'll"
+ },
+ {
+  "id": 1550,
+  "text": "only work in this mode,"
+ },
+ {
+  "id": 1551,
+  "text": "that is, we support M-mode and U-mode,"
+ },
+ {
+  "id": 1552,
+  "text": "two privilege levels."
+ },
+ {
+  "id": 1553,
+  "text": "So at least you'll get a feel for"
+ },
+ {
+  "id": 1554,
+  "text": "this user mode and,"
+ },
+ {
+  "id": 1555,
+  "text": "it's somewhat similar to kernel mode,"
+ },
+ {
+  "id": 1556,
+  "text": "because M is also a kind of kernel mode."
+ },
+ {
+  "id": 1557,
+  "text": "Think about it, isn't it?"
+ },
+ {
+  "id": 1558,
+  "text": "It's also operating in a kernel working mode."
+ },
+ {
+  "id": 1559,
+  "text": "So we say"
+ },
+ {
+  "id": 1560,
+  "text": "Why can it provide this kind of tiered protection?"
+ },
+ {
+  "id": 1561,
+  "text": "The key, actually, lies in"
+ },
+ {
+  "id": 1562,
+  "text": "the concept we're going to talk about next,"
+ },
+ {
+  "id": 1563,
+  "text": "which is that at different privilege levels,"
+ },
+ {
+  "id": 1564,
+  "text": "there is its own set of registers."
+ },
+ {
+  "id": 1565,
+  "text": "That is what truly achieves"
+ },
+ {
+  "id": 1566,
+  "text": "the effect of our tiered protection."
+ },
+ {
+  "id": 1567,
+  "text": "In other words, it's not just about flipping a switch over,"
+ },
+ {
+  "id": 1568,
+  "text": "saying we flip it over,"
+ },
+ {
+  "id": 1569,
+  "text": "flip it to user mode,"
+ },
+ {
+  "id": 1570,
+  "text": "or flip it to machine type,"
+ },
+ {
+  "id": 1571,
+  "text": "and that's it."
+ },
+ {
+  "id": 1572,
+  "text": "Not at all."
+ },
+ {
+  "id": 1573,
+  "text": "The real reason is that,"
+ },
+ {
+  "id": 1574,
+  "text": "from the CPU's point of view,"
+ },
+ {
+  "id": 1575,
+  "text": "at different privilege levels,"
+ },
+ {
+  "id": 1576,
+  "text": "it has its own independent set of registers,"
+ },
+ {
+  "id": 1577,
+  "text": "and these different registers,"
+ },
+ {
+  "id": 1578,
+  "text": "in different modes,"
+ },
+ {
+  "id": 1579,
+  "text": "cannot be accessed across each other."
+ },
+ {
+  "id": 1580,
+  "text": "For example, if I now take the CPU"
+ },
+ {
+  "id": 1581,
+  "text": "and flip that switch,"
+ },
+ {
+  "id": 1582,
+  "text": "switch it over to user mode,"
+ },
+ {
+  "id": 1583,
+  "text": "then those registers in M mode"
+ },
+ {
+  "id": 1584,
+  "text": "and the registers in supervisor mode"
+ },
+ {
+  "id": 1585,
+  "text": "it may no longer be able to access them."
+ },
+ {
+  "id": 1586,
+  "text": "Doesn't that give us a protection effect?"
+ },
+ {
+  "id": 1587,
+  "text": "Do you follow what I mean?"
+ },
+ {
+  "id": 1588,
+  "text": "This is what we call kernel mode and user mode."
+ },
+ {
+  "id": 1589,
+  "text": "Actually, the most core concept is right here."
+ },
+ {
+  "id": 1590,
+  "text": "Now, this set of registers,"
+ },
+ {
+  "id": 1591,
+  "text": "we call them"
+ },
+ {
+  "id": 1592,
+  "text": "Control Under Status Registers,"
+ },
+ {
+  "id": 1593,
+  "text": "that is, they're called"
+ },
+ {
+  "id": 1594,
+  "text": "or for short, CSR."
+ },
+ {
+  "id": 1595,
+  "text": "Later on,"
+ },
+ {
+  "id": 1596,
+  "text": "since we'll be writing an operating system,"
+ },
+ {
+  "id": 1597,
+  "text": "we'll be dealing with CSRs a lot."
+ },
+ {
+  "id": 1598,
+  "text": "If you're only writing"
+ },
+ {
+  "id": 1599,
+  "text": "ordinary user-space programs,"
+ },
+ {
+  "id": 1600,
+  "text": "In fact, in your code,"
+ },
+ {
+  "id": 1601,
+  "text": "there won't be any CSR register operations."
+ },
+ {
+  "id": 1602,
+  "text": "But since we need to work with the kernel,"
+ },
+ {
+  "id": 1603,
+  "text": "when we start writing the kernel,"
+ },
+ {
+  "id": 1604,
+  "text": "we will come across this stuff."
+ },
+ {
+  "id": 1605,
+  "text": "So I hope everyone takes the time to really understand this concept."
+ },
+ {
+  "id": 1606,
+  "text": "Now, here,"
+ },
+ {
+  "id": 1607,
+  "text": "as we just mentioned,"
+ },
+ {
+  "id": 1608,
+  "text": "at different levels,"
+ },
+ {
+  "id": 1609,
+  "text": "under different privilege levels,"
+ },
+ {
+  "id": 1610,
+  "text": "each one has its own corresponding set of registers."
+ },
+ {
+  "id": 1611,
+  "text": "That's what I just said,"
+ },
+ {
+  "id": 1612,
+  "text": "the U/S/M modes each have their own registers."
+ },
+ {
+  "id": 1613,
+  "text": "So here I've briefly listed them out for you."
+ },
+ {
+  "id": 1614,
+  "text": "This actually refers to the supervisor mode,"
+ },
+ {
+  "id": 1615,
+  "text": "which has its own independent set of registers."
+ },
+ {
+  "id": 1616,
+  "text": "And correspondingly, in machine mode,"
+ },
+ {
+  "id": 1617,
+  "text": "and in user mode,"
+ },
+ {
+  "id": 1618,
+  "text": "there are also their own registers."
+ },
+ {
+  "id": 1619,
+  "text": "But since space is limited here,"
+ },
+ {
+  "id": 1620,
+  "text": "I won't list them all here."
+ },
+ {
+  "id": 1621,
+  "text": "You can go and look them up yourselves."
+ },
+ {
+  "id": 1622,
+  "text": "Reference 2 is"
+ },
+ {
+  "id": 1623,
+  "text": "the spec we just mentioned."
+ },
+ {
+  "id": 1624,
+  "text": "Isn't it split into two parts?"
+ },
+ {
+  "id": 1625,
+  "text": "Split into two volumes?"
+ },
+ {
+  "id": 1626,
+  "text": "There's the upper volume and the lower volume."
+ },
+ {
+  "id": 1627,
+  "text": "The lower volume is the one about privilege levels."
+ },
+ {
+  "id": 1628,
+  "text": "In this spec,"
+ },
+ {
+  "id": 1629,
+  "text": "there's an introduction to the registers"
+ },
+ {
+  "id": 1630,
+  "text": "under each privilege level."
+ },
+ {
+  "id": 1631,
+  "text": "Go and take a look."
+ },
+ {
+  "id": 1632,
+  "text": "Each level has its own set,"
+ },
+ {
+  "id": 1633,
+  "text": "so this achieves"
+ },
+ {
+  "id": 1634,
+  "text": "the protective effect."
+ },
+ {
+  "id": 1635,
+  "text": "At the same time,"
+ },
+ {
+  "id": 1636,
+  "text": "you can see that"
+ },
+ {
+  "id": 1637,
+  "text": "a higher privilege level"
+ },
+ {
+  "id": 1638,
+  "text": "can access a lower one,"
+ },
+ {
+  "id": 1639,
+  "text": "but not the other way around."
+ },
+ {
+  "id": 1640,
+  "text": "That is to say, when your CPU"
+ },
+ {
+  "id": 1641,
+  "text": "is working in, say, M-mode,"
+ },
+ {
+  "id": 1642,
+  "text": "and M-mode is the highest privilege level,"
+ },
+ {
+  "id": 1643,
+  "text": "then when you're working in M-mode,"
+ },
+ {
+  "id": 1644,
+  "text": "you can access"
+ },
+ {
+  "id": 1645,
+  "text": "the registers of the lower privilege levels."
+ },
+ {
+  "id": 1646,
+  "text": "That's the concept of privilege."
+ },
+ {
+  "id": 1647,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 1648,
+  "text": "That's pretty easy to understand, right?"
+ },
+ {
+  "id": 1649,
+  "text": "But the reverse does not work."
+ },
+ {
+  "id": 1650,
+  "text": "So for a program running in user mode,"
+ },
+ {
+  "id": 1651,
+  "text": "if you try to force it inside a user-mode program,"
+ },
+ {
+  "id": 1652,
+  "text": "by writing an instruction that writes"
+ },
+ {
+  "id": 1653,
+  "text": "or reads a register from a higher privilege level,"
+ },
+ {
+  "id": 1654,
+  "text": "it will cause an exception."
+ },
+ {
+  "id": 1655,
+  "text": "That is, an exception will be raised,"
+ },
+ {
+  "id": 1656,
+  "text": "and your program will crash."
+ },
+ {
+  "id": 1657,
+  "text": "This is what provides the protection."
+ },
+ {
+  "id": 1658,
+  "text": "Now correspondingly, when it comes to operating the CSRs,"
+ },
+ {
+  "id": 1659,
+  "text": "those are another set of registers."
+ },
+ {
+  "id": 1660,
+  "text": "So for operating on this set of registers,"
+ },
+ {
+  "id": 1661,
+  "text": "there are dedicated instructions."
+ },
+ {
+  "id": 1662,
+  "text": "These instructions are also provided through extended instruction sets,"
+ },
+ {
+  "id": 1663,
+  "text": "that is, through the concept of modularization."
+ },
+ {
+  "id": 1664,
+  "text": "Now, between different instruction levels,"
+ },
+ {
+  "id": 1665,
+  "text": "you can switch."
+ },
+ {
+  "id": 1666,
+  "text": "What does this instruction switching mean?"
+ },
+ {
+  "id": 1667,
+  "text": "If you all"
+ },
+ {
+  "id": 1668,
+  "text": "actually, once you've learned that,"
+ },
+ {
+  "id": 1669,
+  "text": "you know how system calls are implemented."
+ },
+ {
+  "id": 1670,
+  "text": "What is a system call?"
+ },
+ {
+  "id": 1671,
+  "text": "A system call is when your user-mode program,"
+ },
+ {
+  "id": 1672,
+  "text": "the application running in user mode,"
+ },
+ {
+  "id": 1673,
+  "text": "needs to access something in kernel mode,"
+ },
+ {
+  "id": 1674,
+  "text": "right?"
+ },
+ {
+  "id": 1675,
+  "text": "Doesn't that involve a mode switch?"
+ },
+ {
+  "id": 1676,
+  "text": "So there are dedicated instructions"
+ },
+ {
+  "id": 1677,
+  "text": "that help us switch from one mode to another,"
+ },
+ {
+  "id": 1678,
+  "text": "or here, between different privilege levels."
+ },
+ {
+  "id": 1679,
+  "text": "Now, the e-call instruction and the e-break instruction"
+ },
+ {
+  "id": 1680,
+  "text": "That's exactly it."
+ },
+ {
+  "id": 1681,
+  "text": "Later on, when we get to system calls,"
+ },
+ {
+  "id": 1682,
+  "text": "we'll walk you through that implementation process."
+ },
+ {
+  "id": 1683,
+  "text": "So that's the concept of privilege levels"
+ },
+ {
+  "id": 1684,
+  "text": "and CSRs."
+ },
+ {
+  "id": 1685,
+  "text": "This is also something"
+ },
+ {
+  "id": 1686,
+  "text": "we want everyone to master — a key point."
+ },
+ {
+  "id": 1687,
+  "text": "Now we have the last two parts left,"
+ },
+ {
+  "id": 1688,
+  "text": "and once we finish them,"
+ },
+ {
+  "id": 1689,
+  "text": "we'll take a break."
+ },
+ {
+  "id": 1690,
+  "text": "One of those parts"
+ },
+ {
+  "id": 1691,
+  "text": "is memory protection."
+ },
+ {
+  "id": 1692,
+  "text": "Memory management and protection."
+ },
+ {
+  "id": 1693,
+  "text": "As we just mentioned,"
+ },
+ {
+  "id": 1694,
+  "text": "our RISC-V,"
+ },
+ {
+  "id": 1695,
+  "text": "the RISC-V instruction set specification,"
+ },
+ {
+  "id": 1696,
+  "text": "doesn't just define instructions."
+ },
+ {
+  "id": 1697,
+  "text": "It also defines a lot of other things."
+ },
+ {
+  "id": 1698,
+  "text": "Among them, memory management and protection"
+ },
+ {
+  "id": 1699,
+  "text": "is also part of its specification."
+ },
+ {
+  "id": 1700,
+  "text": "Now, as for this memory protection,"
+ },
+ {
+  "id": 1701,
+  "text": "in RISC-V it's divided into two kinds."
+ },
+ {
+  "id": 1702,
+  "text": "One is called physical memory protection,"
+ },
+ {
+  "id": 1703,
+  "text": "and the other is called virtual memory."
+ },
+ {
+  "id": 1704,
+  "text": "So basically, physical memory protection"
+ },
+ {
+  "id": 1705,
+  "text": "is a low-level memory management approach."
+ },
+ {
+  "id": 1706,
+  "text": "Virtual memory,"
+ },
+ {
+  "id": 1707,
+  "text": "you can think of it as a high-level memory management approach."
+ },
+ {
+  "id": 1708,
+  "text": "Because as we mentioned earlier,"
+ },
+ {
+  "id": 1709,
+  "text": "if you want to enable virtual memory,"
+ },
+ {
+  "id": 1710,
+  "text": "the CPU must support which privilege level?"
+ },
+ {
+  "id": 1711,
+  "text": "It must support that S privilege level."
+ },
+ {
+  "id": 1712,
+  "text": "Right?"
+ },
+ {
+  "id": 1713,
+  "text": "So it imposes higher demands on the CPU design."
+ },
+ {
+  "id": 1714,
+  "text": "But if I have some simple CPUs"
+ },
+ {
+  "id": 1715,
+  "text": "used in a relatively simple scenario,"
+ },
+ {
+  "id": 1716,
+  "text": "and I don't need to implement virtual addresses,"
+ },
+ {
+  "id": 1717,
+  "text": "then you don't need to implement that S mode."
+ },
+ {
+  "id": 1718,
+  "text": "But,"
+ },
+ {
+  "id": 1719,
+  "text": "suppose I also want to, in this simple scenario,"
+ },
+ {
+  "id": 1720,
+  "text": "if I can also provide some protection for memory,"
+ },
+ {
+  "id": 1721,
+  "text": "then I can adopt this approach."
+ },
+ {
+  "id": 1722,
+  "text": "It's called Physical Memory Protection, or PMP."
+ },
+ {
+  "id": 1723,
+  "text": "Physical Memory Protection,"
+ },
+ {
+  "id": 1724,
+  "text": "is relatively simple."
+ },
+ {
+  "id": 1725,
+  "text": "It actually doesn't protect memory using virtualization."
+ },
+ {
+  "id": 1726,
+  "text": "It's actually very simple."
+ },
+ {
+  "id": 1727,
+  "text": "That is, you can specify,"
+ },
+ {
+  "id": 1728,
+  "text": "for example, say this computer has a chunk of memory."
+ },
+ {
+  "id": 1729,
+  "text": "Suppose this chunk of memory is this large,"
+ },
+ {
+  "id": 1730,
+  "text": "say 64K."
+ },
+ {
+  "id": 1731,
+  "text": "Then for this 64K,"
+ },
+ {
+  "id": 1732,
+  "text": "I can divide up this 64K of memory."
+ },
+ {
+  "id": 1733,
+  "text": "For instance, this region,"
+ },
+ {
+  "id": 1734,
+  "text": "I'll call it Xon."
+ },
+ {
+  "id": 1735,
+  "text": "Xon means execute-only."
+ },
+ {
+  "id": 1736,
+  "text": "That is, I can put in here,"
+ },
+ {
+  "id": 1737,
+  "text": "put what?"
+ },
+ {
+  "id": 1738,
+  "text": "Put instructions."
+ },
+ {
+  "id": 1739,
+  "text": "By putting instructions,"
+ },
+ {
+  "id": 1740,
+  "text": "that is, the content in here"
+ },
+ {
+  "id": 1741,
+  "text": "I can load it into the CPU and execute it"
+ },
+ {
+  "id": 1742,
+  "text": "Do you understand what I mean by that?"
+ },
+ {
+  "id": 1743,
+  "text": "This is called executable"
+ },
+ {
+  "id": 1744,
+  "text": "Now what about RWX?"
+ },
+ {
+  "id": 1745,
+  "text": "It means the content in here"
+ },
+ {
+  "id": 1746,
+  "text": "can be read, written, and executed"
+ },
+ {
+  "id": 1747,
+  "text": "Now what about this lock?"
+ },
+ {
+  "id": 1748,
+  "text": "It means locked"
+ },
+ {
+  "id": 1749,
+  "text": "which effectively means it can no longer be used"
+ },
+ {
+  "id": 1750,
+  "text": "So in practice, that means"
+ },
+ {
+  "id": 1751,
+  "text": "In our programs, we often talk about what?"
+ },
+ {
+  "id": 1752,
+  "text": "read-only and writable"
+ },
+ {
+  "id": 1753,
+  "text": "This kind of access protection"
+ },
+ {
+  "id": 1754,
+  "text": "can be implemented at this level"
+ },
+ {
+  "id": 1755,
+  "text": "But under this approach,"
+ },
+ {
+  "id": 1756,
+  "text": "we are actually still accessing memory through physical addresses"
+ },
+ {
+  "id": 1757,
+  "text": "but it can already provide a certain level of memory protection"
+ },
+ {
+  "id": 1758,
+  "text": "Do you all understand what I mean?"
+ },
+ {
+  "id": 1759,
+  "text": "This is a simple form of memory management and protection"
+ },
+ {
+  "id": 1760,
+  "text": "So what about the more advanced approach?"
+ },
+ {
+  "id": 1761,
+  "text": "Of course, that means enabling virtual memory."
+ },
+ {
+  "id": 1762,
+  "text": "The concept of virtual memory,"
+ },
+ {
+  "id": 1763,
+  "text": "I won't say much about it here,"
+ },
+ {
+  "id": 1764,
+  "text": "because it's not a focus of our course."
+ },
+ {
+  "id": 1765,
+  "text": "In fact,"
+ },
+ {
+  "id": 1766,
+  "text": "if any of you have studied Linux,"
+ },
+ {
+  "id": 1767,
+  "text": "we know that an advanced operating system like Linux,"
+ },
+ {
+  "id": 1768,
+  "text": "it certainly has to implement virtual memory."
+ },
+ {
+  "id": 1769,
+  "text": "And the so-called concept of virtual memory,"
+ },
+ {
+  "id": 1770,
+  "text": "is that in your program,"
+ },
+ {
+  "id": 1771,
+  "text": "the addresses you access,"
+ },
+ {
+  "id": 1772,
+  "text": "are no longer physical addresses,"
+ },
+ {
+  "id": 1773,
+  "text": "but what?"
+ },
+ {
+  "id": 1774,
+  "text": "But virtual addresses."
+ },
+ {
+  "id": 1775,
+  "text": "After you've studied Linux,"
+ },
+ {
+  "id": 1776,
+  "text": "this concept should be fairly clear to you."
+ },
+ {
+  "id": 1777,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1778,
+  "text": "when it runs,"
+ },
+ {
+  "id": 1779,
+  "text": "between this virtual address and the physical address,"
+ },
+ {
+  "id": 1780,
+  "text": "Because in the end, the access that gets executed"
+ },
+ {
+  "id": 1781,
+  "text": "is still a physical address."
+ },
+ {
+  "id": 1782,
+  "text": "So who performs the conversion"
+ },
+ {
+  "id": 1783,
+  "text": "between these two?"
+ },
+ {
+  "id": 1784,
+  "text": "It is not implemented in software,"
+ },
+ {
+  "id": 1785,
+  "text": "but by a special piece of hardware,"
+ },
+ {
+  "id": 1786,
+  "text": "a dedicated module,"
+ },
+ {
+  "id": 1787,
+  "text": "namely the MMU."
+ },
+ {
+  "id": 1788,
+  "text": "But this MMU"
+ },
+ {
+  "id": 1789,
+  "text": "is built with special hardware mechanisms,"
+ },
+ {
+  "id": 1790,
+  "text": "which cost money to implement."
+ },
+ {
+  "id": 1791,
+  "text": "So if, from a cost perspective,"
+ },
+ {
+  "id": 1792,
+  "text": "you decide you don't want virtual memory,"
+ },
+ {
+  "id": 1793,
+  "text": "you can simply drop the MMU module,"
+ },
+ {
+  "id": 1794,
+  "text": "remove it entirely."
+ },
+ {
+  "id": 1795,
+  "text": "And in that case,"
+ },
+ {
+  "id": 1796,
+  "text": "your CPU doesn't need to support"
+ },
+ {
+  "id": 1797,
+  "text": "Supervisor mode either."
+ },
+ {
+  "id": 1798,
+  "text": "Alright."
+ },
+ {
+  "id": 1799,
+  "text": "Now, this thing about memory management and protection"
+ },
+ {
+  "id": 1800,
+  "text": "This is also a key point in the spec that must be covered."
+ },
+ {
+  "id": 1801,
+  "text": "So just get familiar with it."
+ },
+ {
+  "id": 1802,
+  "text": "And the last thing in our spec,"
+ },
+ {
+  "id": 1803,
+  "text": "we absolutely have to talk about,"
+ },
+ {
+  "id": 1804,
+  "text": "is that whenever you talk about any CPU's instruction set architecture,"
+ },
+ {
+  "id": 1805,
+  "text": "you can't get away from this topic."
+ },
+ {
+  "id": 1806,
+  "text": "That is, exception and interrupt handling."
+ },
+ {
+  "id": 1807,
+  "text": "Right?"
+ },
+ {
+  "id": 1808,
+  "text": "If any of you have studied anything related to operating systems,"
+ },
+ {
+  "id": 1809,
+  "text": "exceptions and interrupts are unavoidable."
+ },
+ {
+  "id": 1810,
+  "text": "So let's briefly touch on it here,"
+ },
+ {
+  "id": 1811,
+  "text": "since I'll go into more detail later,"
+ },
+ {
+  "id": 1812,
+  "text": "introducing exceptions and interrupts on RISC-V."
+ },
+ {
+  "id": 1813,
+  "text": "Now these two sentences are actually quoted from"
+ },
+ {
+  "id": 1814,
+  "text": "the spec."
+ },
+ {
+  "id": 1815,
+  "text": "That is, what counts as an exception,"
+ },
+ {
+  "id": 1816,
+  "text": "and what counts as an interrupt — there is a difference."
+ },
+ {
+  "id": 1817,
+  "text": "What do we say an exception is?"
+ },
+ {
+  "id": 1818,
+  "text": "Let's just look at the figure below."
+ },
+ {
+  "id": 1819,
+  "text": "What this figure shows is"
+ },
+ {
+  "id": 1820,
+  "text": "The difference between exceptions and interrupts"
+ },
+ {
+  "id": 1821,
+  "text": "So what does an exception mean?"
+ },
+ {
+  "id": 1822,
+  "text": "Let's look at the diagram on the left."
+ },
+ {
+  "id": 1823,
+  "text": "So let me give you a general idea of what an exception is."
+ },
+ {
+  "id": 1824,
+  "text": "Basically, over here on the program side, we have a program."
+ },
+ {
+  "id": 1825,
+  "text": "A program is made up of instructions one after another."
+ },
+ {
+  "id": 1826,
+  "text": "So our program might execute them one by one."
+ },
+ {
+  "id": 1827,
+  "text": "For example, when we reach this one,"
+ },
+ {
+  "id": 1828,
+  "text": "Let me erase this diagram for a moment."
+ },
+ {
+  "id": 1829,
+  "text": "Suppose we reach this instruction,"
+ },
+ {
+  "id": 1830,
+  "text": "that is, when my arrow points to this instruction."
+ },
+ {
+  "id": 1831,
+  "text": "For example, say this instruction does something like,"
+ },
+ {
+  "id": 1832,
+  "text": "I go and access memory that cannot be accessed."
+ },
+ {
+  "id": 1833,
+  "text": "For example, this one."
+ },
+ {
+  "id": 1834,
+  "text": "This piece of memory is read-only."
+ },
+ {
+  "id": 1835,
+  "text": "But I insist on writing into it."
+ },
+ {
+  "id": 1836,
+  "text": "I write something."
+ },
+ {
+  "id": 1837,
+  "text": "Now, everyone tell me,"
+ },
+ {
+  "id": 1838,
+  "text": "is this legal or not?"
+ },
+ {
+  "id": 1839,
+  "text": "It's definitely illegal."
+ },
+ {
+  "id": 1840,
+  "text": "So, everyone, think about it this way,"
+ },
+ {
+  "id": 1841,
+  "text": "so this thing,"
+ },
+ {
+  "id": 1842,
+  "text": "once you execute this instruction,"
+ },
+ {
+  "id": 1843,
+  "text": "the CPU"
+ },
+ {
+  "id": 1844,
+  "text": "it definitely knows,"
+ },
+ {
+  "id": 1845,
+  "text": "the CPU will, through some mechanism,"
+ },
+ {
+  "id": 1846,
+  "text": "tell you that"
+ },
+ {
+  "id": 1847,
+  "text": "this instruction of yours is an exception,"
+ },
+ {
+  "id": 1848,
+  "text": "that's actually what it means."
+ },
+ {
+  "id": 1849,
+  "text": "So,"
+ },
+ {
+  "id": 1850,
+  "text": "it will"
+ },
+ {
+  "id": 1851,
+  "text": "So how does the CPU tell you"
+ },
+ {
+  "id": 1852,
+  "text": "that this instruction caused an exception?"
+ },
+ {
+  "id": 1853,
+  "text": "It will take your current execution flow,"
+ },
+ {
+  "id": 1854,
+  "text": "and stop it,"
+ },
+ {
+  "id": 1855,
+  "text": "right?"
+ },
+ {
+  "id": 1856,
+  "text": "After stopping it,"
+ },
+ {
+  "id": 1857,
+  "text": "it will jump to a special address,"
+ },
+ {
+  "id": 1858,
+  "text": "to execute a special piece of code,"
+ },
+ {
+  "id": 1859,
+  "text": "this piece of execution"
+ },
+ {
+  "id": 1860,
+  "text": "We usually call it an exception handler."
+ },
+ {
+  "id": 1861,
+  "text": "This piece of code,"
+ },
+ {
+  "id": 1862,
+  "text": "normally,"
+ },
+ {
+  "id": 1863,
+  "text": "is written by yourself."
+ },
+ {
+  "id": 1864,
+  "text": "What do you want to do about this exception?"
+ },
+ {
+  "id": 1865,
+  "text": "How do you want to handle it?"
+ },
+ {
+  "id": 1866,
+  "text": "You can also choose not to write one."
+ },
+ {
+  "id": 1867,
+  "text": "If you don't write it,"
+ },
+ {
+  "id": 1868,
+  "text": "then the exception is effectively as if it never happened."
+ },
+ {
+  "id": 1869,
+  "text": "You get what I mean, right?"
+ },
+ {
+  "id": 1870,
+  "text": "So in general,"
+ },
+ {
+  "id": 1871,
+  "text": "we definitely want to handle the exception."
+ },
+ {
+  "id": 1872,
+  "text": "And after the handling is done,"
+ },
+ {
+  "id": 1873,
+  "text": "the CPU will go back to the instruction that just caused the exception,"
+ },
+ {
+  "id": 1874,
+  "text": "and run that instruction again."
+ },
+ {
+  "id": 1875,
+  "text": "This is a very key point about exceptions:"
+ },
+ {
+  "id": 1876,
+  "text": "after the exception handling is finished,"
+ },
+ {
+  "id": 1877,
+  "text": "it will go back to the instruction where the exception"
+ },
+ {
+  "id": 1878,
+  "text": "occurred,"
+ },
+ {
+  "id": 1879,
+  "text": "and execute that instruction again."
+ },
+ {
+  "id": 1880,
+  "text": "And then it continues to run."
+ },
+ {
+  "id": 1881,
+  "text": "As for why we do it this way,"
+ },
+ {
+  "id": 1882,
+  "text": "when we talk about exceptions later on,"
+ },
+ {
+  "id": 1883,
+  "text": "I'll explain that to you as well."
+ },
+ {
+  "id": 1884,
+  "text": "Right now, what we mainly want to do is"
+ },
+ {
+  "id": 1885,
+  "text": "briefly understand the difference between an exception and an interrupt."
+ },
+ {
+  "id": 1886,
+  "text": "But an interrupt works like this."
+ },
+ {
+  "id": 1887,
+  "text": "What does an interrupt mean?"
+ },
+ {
+  "id": 1888,
+  "text": "An interrupt means that"
+ },
+ {
+  "id": 1889,
+  "text": "when it is executing this instruction,"
+ },
+ {
+  "id": 1890,
+  "text": "an interrupt might occur."
+ },
+ {
+  "id": 1891,
+  "text": "Once this interrupt occurs,"
+ },
+ {
+  "id": 1892,
+  "text": "likewise, the CPU will take your"
+ },
+ {
+  "id": 1893,
+  "text": "current execution flow,"
+ },
+ {
+  "id": 1894,
+  "text": "and stop it,"
+ },
+ {
+  "id": 1895,
+  "text": "switching over to execute a"
+ },
+ {
+  "id": 1896,
+  "text": "new interrupt handler."
+ },
+ {
+  "id": 1897,
+  "text": "Then, after this interrupt handler has finished executing,"
+ },
+ {
+  "id": 1898,
+  "text": "it will also return,"
+ },
+ {
+  "id": 1899,
+  "text": "but when it returns,"
+ },
+ {
+  "id": 1900,
+  "text": "Now notice: does it return like before,"
+ },
+ {
+  "id": 1901,
+  "text": "going back to that earlier instruction and re-executing it?"
+ },
+ {
+  "id": 1902,
+  "text": "No."
+ },
+ {
+  "id": 1903,
+  "text": "It returns to the instruction after the one"
+ },
+ {
+  "id": 1904,
+  "text": "that was just interrupted, and executes that."
+ },
+ {
+  "id": 1905,
+  "text": "Now some of you might ask,"
+ },
+ {
+  "id": 1906,
+  "text": "why do we separate these two cases?"
+ },
+ {
+  "id": 1907,
+  "text": "Let me briefly explain."
+ },
+ {
+  "id": 1908,
+  "text": "What is an exception?"
+ },
+ {
+  "id": 1909,
+  "text": "What does an exception actually mean?"
+ },
+ {
+  "id": 1910,
+  "text": "An exception is essentially,"
+ },
+ {
+  "id": 1911,
+  "text": "a kind of problem triggered by your own program"
+ },
+ {
+  "id": 1912,
+  "text": "something going wrong."
+ },
+ {
+  "id": 1913,
+  "text": "Something went wrong."
+ },
+ {
+  "id": 1914,
+  "text": "And the CPU,"
+ },
+ {
+  "id": 1915,
+  "text": "in effect,"
+ },
+ {
+  "id": 1916,
+  "text": "when an exception occurs,"
+ },
+ {
+  "id": 1917,
+  "text": "gives you a chance to correct yourself."
+ },
+ {
+  "id": 1918,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 1919,
+  "text": "What do I mean by a chance to correct yourself?"
+ },
+ {
+  "id": 1920,
+  "text": "It will interrupt your program"
+ },
+ {
+  "id": 1921,
+  "text": "and make you run a recovery program."
+ },
+ {
+  "id": 1922,
+  "text": "This recovery program is our"
+ },
+ {
+  "id": 1923,
+  "text": "something you write yourself in this form,"
+ },
+ {
+  "id": 1924,
+  "text": "for example,"
+ },
+ {
+  "id": 1925,
+  "text": "let me give"
+ },
+ {
+  "id": 1926,
+  "text": "a more realistic example for everyone."
+ },
+ {
+  "id": 1927,
+  "text": "For example, you all know about the page fault exception, right?"
+ },
+ {
+  "id": 1928,
+  "text": "What is a page fault exception?"
+ },
+ {
+  "id": 1929,
+  "text": "Page4"
+ },
+ {
+  "id": 1930,
+  "text": "For instance, when swapping pages,"
+ },
+ {
+  "id": 1931,
+  "text": "you probably already understand this concept."
+ },
+ {
+  "id": 1932,
+  "text": "I'm just bringing it up as an example."
+ },
+ {
+  "id": 1933,
+  "text": "Let's take the simplest one."
+ },
+ {
+  "id": 1934,
+  "text": "Say I want to trigger a divide-by-zero exception."
+ },
+ {
+  "id": 1935,
+  "text": "For example, in this instruction,"
+ },
+ {
+  "id": 1936,
+  "text": "a division by zero is executed."
+ },
+ {
+  "id": 1937,
+  "text": "Once it detects this problem,"
+ },
+ {
+  "id": 1938,
+  "text": "it will go and run an exception handler,"
+ },
+ {
+  "id": 1939,
+  "text": "to deal with the problem caused by the division by zero."
+ },
+ {
+  "id": 1940,
+  "text": "and get it resolved."
+ },
+ {
+  "id": 1941,
+  "text": "And once it's resolved,"
+ },
+ {
+  "id": 1942,
+  "text": "you come back and I let you try it again."
+ },
+ {
+  "id": 1943,
+  "text": "Still with me?"
+ },
+ {
+  "id": 1944,
+  "text": "So when you try it again,"
+ },
+ {
+  "id": 1945,
+  "text": "as everyone knows, once you fix this problem,"
+ },
+ {
+  "id": 1946,
+  "text": "once it's fixed,"
+ },
+ {
+  "id": 1947,
+  "text": "isn't this instruction legal now?"
+ },
+ {
+  "id": 1948,
+  "text": "Think about it."
+ },
+ {
+  "id": 1949,
+  "text": "So after you execute it once more,"
+ },
+ {
+  "id": 1950,
+  "text": "it clears up the exception."
+ },
+ {
+  "id": 1951,
+  "text": "Cleared up."
+ },
+ {
+  "id": 1952,
+  "text": "And it just keeps running upward."
+ },
+ {
+  "id": 1953,
+  "text": "That's what an exception is."
+ },
+ {
+  "id": 1954,
+  "text": "So an exception returns to the current"
+ },
+ {
+  "id": 1955,
+  "text": "instruction that caused the exception,"
+ },
+ {
+  "id": 1956,
+  "text": "and lets you execute it again."
+ },
+ {
+  "id": 1957,
+  "text": "An interrupt, on the other hand, doesn't work that way."
+ },
+ {
+  "id": 1958,
+  "text": "What an interrupt means is,"
+ },
+ {
+  "id": 1959,
+  "text": "an interrupt,"
+ },
+ {
+  "id": 1960,
+  "text": "it's more of a"
+ },
+ {
+  "id": 1961,
+  "text": "for example, a peripheral"
+ },
+ {
+  "id": 1962,
+  "text": "notifying you that something has happened"
+ },
+ {
+  "id": 1963,
+  "text": "then when I execute the instruction"
+ },
+ {
+  "id": 1964,
+  "text": "I go and handle the request from this peripheral"
+ },
+ {
+  "id": 1965,
+  "text": "and once it's handled"
+ },
+ {
+  "id": 1966,
+  "text": "I go back to the next instruction"
+ },
+ {
+  "id": 1967,
+  "text": "and keep running"
+ },
+ {
+  "id": 1968,
+  "text": "so it's as if the interrupt never happened"
+ },
+ {
+  "id": 1969,
+  "text": "that's what an interrupt means"
+ },
+ {
+  "id": 1970,
+  "text": "an interrupt,"
+ },
+ {
+  "id": 1971,
+  "text": "it gives you this effect,"
+ },
+ {
+  "id": 1972,
+  "text": "that the occurrence of this interrupt"
+ },
+ {
+  "id": 1973,
+  "text": "is just like it never happened"
+ },
+ {
+  "id": 1974,
+  "text": "so it goes back to the next instruction"
+ },
+ {
+  "id": 1975,
+  "text": "and continues execution"
+ },
+ {
+  "id": 1976,
+  "text": "so for this program,"
+ },
+ {
+  "id": 1977,
+  "text": "it actually restores to its original state"
+ },
+ {
+  "id": 1978,
+  "text": "and keeps running on"
+ },
+ {
+  "id": 1979,
+  "text": "that's the difference between an exception and an interrupt"
+ },
+ {
+  "id": 1980,
+  "text": "So, combining the example I just gave you,"
+ },
+ {
+  "id": 1981,
+  "text": "and the two points I covered above,"
+ },
+ {
+  "id": 1982,
+  "text": "think it over again after class."
+ },
+ {
+  "id": 1983,
+  "text": "Now, for every instruction set architecture,"
+ },
+ {
+  "id": 1984,
+  "text": "it will define what happens when an exception occurs—"
+ },
+ {
+  "id": 1985,
+  "text": "what the CPU does,"
+ },
+ {
+  "id": 1986,
+  "text": "and what your program is supposed to do."
+ },
+ {
+  "id": 1987,
+  "text": "When an interrupt occurs,"
+ },
+ {
+  "id": 1988,
+  "text": "what the CPU does,"
+ },
+ {
+  "id": 1989,
+  "text": "and what your program does."
+ },
+ {
+  "id": 1990,
+  "text": "That's what the specification defines."
+ },
+ {
+  "id": 1991,
+  "text": "You all see what I mean, right?"
+ },
+ {
+  "id": 1992,
+  "text": "Now, how exactly is this defined on RISC-V?"
+ },
+ {
+  "id": 1993,
+  "text": "When we get to interrupts and exceptions later,"
+ },
+ {
+  "id": 1994,
+  "text": "I'll give you a more detailed introduction."
+ },
+ {
+  "id": 1995,
+  "text": "So, I should say that regarding the instruction set architecture,"
+ },
+ {
+  "id": 1996,
+  "text": "that is, the RISC-V instruction set architecture,"
+ },
+ {
+  "id": 1997,
+  "text": "a few of the more important points,"
+ },
+ {
+  "id": 1998,
+  "text": "I'll just highlight them for you here."
+ },
+ {
+  "id": 1999,
+  "text": "So, that's it for this lecture."
+ },
+ {
+  "id": 2000,
+  "text": "That ran a little over time"
+ },
+ {
+  "id": 2001,
+  "text": "I hope it will help you in your studies going forward"
+ },
+ {
+  "id": 2002,
+  "text": "Alright"
+ },
+ {
+  "id": 2003,
+  "text": "Let's take a short break first"
+ }
+]

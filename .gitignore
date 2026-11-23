@@ -2,3 +2,6 @@
 *.bin
 *.elf
 code/os/*/out/
+
+*.m4a
+*.wav

@@ -1,0 +1,5147 @@
+1
+00:00:00,620 --> 00:00:24,100
+Let's get started right away. Now we enter Chapter 1 of developing a small operating system. Of course, the whole course is Chapter 7, called HelloRVOS. As I mentioned earlier, RVOS is the name of our system, and we'll use it to refer to it from now on.
+
+2
+00:00:24,100 --> 00:00:27,450
+So for this part of the course,
+
+3
+00:00:27,450 --> 00:00:28,310
+in this chapter,
+
+4
+00:00:28,310 --> 00:00:31,650
+we mainly deal with system boot,
+
+5
+00:00:31,650 --> 00:00:34,130
+and we need to, for this operating system of ours,
+
+6
+00:00:34,130 --> 00:00:36,670
+for our operating system,
+
+7
+00:00:36,670 --> 00:00:38,510
+we need to be able to see a hello world,
+
+8
+00:00:38,510 --> 00:00:40,810
+of course, what we print is hello rbos,
+
+9
+00:00:40,810 --> 00:00:42,630
+that is, the first step is to get it printed out.
+
+10
+00:00:42,630 --> 00:00:45,270
+And of course, we print it out through the serial port.
+
+11
+00:00:45,270 --> 00:00:48,490
+We can see a most basic display process.
+
+12
+00:00:48,490 --> 00:00:51,990
+Now, these are our reference materials.
+
+13
+00:00:51,990 --> 00:00:53,570
+1 and 2,
+
+14
+00:00:53,570 --> 00:00:54,670
+these are all basic instructions.
+
+15
+00:00:54,670 --> 00:00:56,150
+As for the third part,
+
+16
+00:00:56,150 --> 00:00:58,010
+it mainly covers some serial port content.
+
+17
+00:00:58,010 --> 00:01:00,610
+It's a technical manual for our serial port.
+
+18
+00:01:00,610 --> 00:01:04,810
+We'll come back and look at it later when we get to that.
+
+19
+00:01:04,810 --> 00:01:09,630
+Let's first look at the first part, which is system boot.
+
+20
+00:01:09,630 --> 00:01:14,630
+As we said, for an operating system to run,
+
+21
+00:01:14,630 --> 00:01:16,090
+So the first part is
+
+22
+00:01:16,090 --> 00:01:17,230
+how to boot it up
+
+23
+00:01:17,230 --> 00:01:18,270
+how to boot up the hardware.
+
+24
+00:01:18,270 --> 00:01:21,370
+Now, since we need to talk about these boot concepts,
+
+25
+00:01:21,370 --> 00:01:22,990
+when it comes to the hardware,
+
+26
+00:01:22,990 --> 00:01:24,550
+we need to have some understanding of it.
+
+27
+00:01:24,550 --> 00:01:27,210
+Because if you don't understand the hardware,
+
+28
+00:01:27,210 --> 00:01:29,850
+you won't be able to develop low-level software.
+
+29
+00:01:29,850 --> 00:01:31,570
+So let's first take a look at
+
+30
+00:01:31,570 --> 00:01:32,610
+some basic concepts of the hardware.
+
+31
+00:01:32,610 --> 00:01:35,210
+Now, the concept of hart,
+
+32
+00:01:35,210 --> 00:01:37,030
+we've already mentioned to you before.
+
+33
+00:01:37,030 --> 00:01:38,010
+As you know now,
+
+34
+00:01:38,010 --> 00:01:39,970
+a hart is actually, you can think of it as a processor.
+
+35
+00:01:39,970 --> 00:01:43,670
+Inside this hart there are some registers and so on.
+
+36
+00:01:43,670 --> 00:01:45,510
+Of course, my diagram here isn't very accurate,
+
+37
+00:01:45,510 --> 00:01:47,310
+but the idea is basically this:
+
+38
+00:01:47,310 --> 00:01:49,130
+the hart we're talking about now,
+
+39
+00:01:49,130 --> 00:01:52,270
+in the RISC-V field that we're in,
+
+40
+00:01:52,270 --> 00:01:54,270
+it's essentially the concept of a processor.
+
+41
+00:01:54,270 --> 00:01:56,190
+So, when we talk about
+
+42
+00:01:56,190 --> 00:02:01,190
+the board we're working with,
+
+43
+00:02:01,190 --> 00:02:02,070
+this emulator,
+
+44
+00:02:02,070 --> 00:02:05,230
+inside it, it's actually made up of multiple harts.
+
+45
+00:02:05,230 --> 00:02:06,310
+It supports multiple harts.
+
+46
+00:02:06,310 --> 00:02:08,610
+Now, besides the processor,
+
+47
+00:02:08,610 --> 00:02:09,390
+there are also things like
+
+48
+00:02:09,390 --> 00:02:11,910
+memory,
+
+49
+00:02:11,910 --> 00:02:14,390
+and IO, which stands for input/output,
+
+50
+00:02:14,390 --> 00:02:15,810
+and various devices,
+
+51
+00:02:15,810 --> 00:02:17,050
+and so on. Down at the bottom,
+
+52
+00:02:17,050 --> 00:02:18,470
+you can think of these as peripherals.
+
+53
+00:02:18,470 --> 00:02:20,050
+Now, these peripherals,
+
+54
+00:02:20,050 --> 00:02:21,150
+as we know, on a computer,
+
+55
+00:02:21,150 --> 00:02:22,190
+are connected
+
+56
+00:02:22,190 --> 00:02:25,250
+to the processor through a bus,
+
+57
+00:02:25,250 --> 00:02:25,430
+right?
+
+58
+00:02:25,430 --> 00:02:28,410
+So let's separate them out,
+
+59
+00:02:28,410 --> 00:02:29,690
+to make things clearer.
+
+60
+00:02:29,690 --> 00:02:34,950
+So, in the end, we take the processor cores
+
+61
+00:02:34,950 --> 00:02:36,850
+plus some external devices
+
+62
+00:02:36,850 --> 00:02:39,050
+and then package it all up
+
+63
+00:02:39,050 --> 00:02:40,550
+so what's exposed to the outside
+
+64
+00:02:40,550 --> 00:02:42,030
+may just look like a single chip
+
+65
+00:02:42,030 --> 00:02:43,790
+So, on this chip,
+
+66
+00:02:43,790 --> 00:02:45,730
+in this embedded development of ours,
+
+67
+00:02:45,730 --> 00:02:47,990
+we often use a term called platform.
+
+68
+00:02:47,990 --> 00:02:50,750
+Of course, if we translate it directly, it's called 'platform'.
+
+69
+00:02:50,750 --> 00:02:52,870
+But in reality, it represents a kind of chip,
+
+70
+00:02:52,870 --> 00:02:55,290
+the concept of a chip,
+
+71
+00:02:55,290 --> 00:02:56,630
+or you could say a...
+
+72
+00:02:56,630 --> 00:02:57,410
+Why
+
+73
+00:02:57,410 --> 00:02:59,150
+is it called a platform?
+
+74
+00:02:59,150 --> 00:03:00,710
+Well, we can actually start from this,
+
+75
+00:03:00,710 --> 00:03:02,610
+from the development process of our processors,
+
+76
+00:03:02,610 --> 00:03:03,690
+and I'll briefly explain it to you.
+
+77
+00:03:03,690 --> 00:03:04,010
+That is,
+
+78
+00:03:04,010 --> 00:03:06,410
+if we look at the early days,
+
+79
+00:03:06,410 --> 00:03:07,490
+because there wasn't that kind of,
+
+80
+00:03:07,490 --> 00:03:09,930
+say, things like mobile phones or anything
+
+81
+00:03:09,930 --> 00:03:10,930
+Not that many.
+
+82
+00:03:10,930 --> 00:03:14,010
+The one we come into contact with most is the PC.
+
+83
+00:03:14,010 --> 00:03:15,390
+And a PC works the same way.
+
+84
+00:03:15,390 --> 00:03:17,590
+That is, it has one processor,
+
+85
+00:03:17,590 --> 00:03:17,930
+right?
+
+86
+00:03:17,930 --> 00:03:19,830
+And then, plus a lot of peripherals.
+
+87
+00:03:19,830 --> 00:03:20,890
+So this,
+
+88
+00:03:20,890 --> 00:03:23,230
+we call it a motherboard.
+
+89
+00:03:23,230 --> 00:03:27,210
+So this thing can be seen as a kind of platform concept.
+
+90
+00:03:27,210 --> 00:03:28,850
+Now, this thing,
+
+91
+00:03:28,850 --> 00:03:32,030
+we say that with the development of computers today,
+
+92
+00:03:32,030 --> 00:03:34,550
+these peripheral devices,
+
+93
+00:03:34,550 --> 00:03:36,310
+they are getting more and more integrated.
+
+94
+00:03:36,310 --> 00:03:37,250
+More and more integrated.
+
+95
+00:03:37,250 --> 00:03:38,630
+In the end,
+
+96
+00:03:38,630 --> 00:03:41,050
+you'll see that in some of the typical small boards today,
+
+97
+00:03:41,050 --> 00:03:44,110
+these highly integrated boards,
+
+98
+00:03:44,110 --> 00:03:46,370
+there are fewer and fewer peripheral components on them.
+
+99
+00:03:46,370 --> 00:03:49,450
+Of course, comparing the picture above with the one below,
+
+100
+00:03:49,450 --> 00:03:50,710
+see if you can spot the difference.
+
+101
+00:03:50,710 --> 00:03:52,330
+In other words, in the picture below,
+
+102
+00:03:52,330 --> 00:03:53,390
+apart from the big
+
+103
+00:03:53,390 --> 00:03:54,430
+black chip in the middle,
+
+104
+00:03:54,430 --> 00:03:57,070
+there are very few peripheral devices around it.
+
+105
+00:03:57,070 --> 00:03:57,690
+Have you noticed that?
+
+106
+00:03:57,690 --> 00:03:59,230
+So where did the peripherals go?
+
+107
+00:03:59,230 --> 00:04:01,110
+Actually, the peripherals haven't disappeared.
+
+108
+00:04:01,110 --> 00:04:02,990
+They've just been integrated at a higher level
+
+109
+00:04:02,990 --> 00:04:03,930
+onto this chip.
+
+110
+00:04:03,930 --> 00:04:05,050
+Do you understand what I mean?
+
+111
+00:04:05,050 --> 00:04:07,150
+Now, for this kind of chip,
+
+112
+00:04:07,150 --> 00:04:08,450
+we now
+
+113
+00:04:08,450 --> 00:04:10,170
+often, in the embedded industry,
+
+114
+00:04:10,170 --> 00:04:11,290
+call it
+
+115
+00:04:11,290 --> 00:04:12,890
+and you can see a term here,
+
+116
+00:04:12,890 --> 00:04:13,710
+which is called SoC.
+
+117
+00:04:13,710 --> 00:04:15,610
+It is actually
+
+118
+00:04:15,610 --> 00:04:17,530
+an abbreviation for System on Chip.
+
+119
+00:04:17,530 --> 00:04:19,190
+So what is System on Chip?
+
+120
+00:04:19,190 --> 00:04:22,150
+It means that an entire system has been put onto a single chip.
+
+121
+00:04:22,150 --> 00:04:23,130
+Understand what I mean by this.
+
+122
+00:04:23,130 --> 00:04:24,730
+Now, this thing,
+
+123
+00:04:24,730 --> 00:04:27,030
+the SoC is what we call the platform.
+
+124
+00:04:27,030 --> 00:04:29,750
+In practice, the term 'platform' usually refers to exactly this kind of thing.
+
+125
+00:04:29,750 --> 00:04:31,890
+It's a concept.
+
+126
+00:04:31,890 --> 00:04:35,310
+Now, our current emulator,
+
+127
+00:04:35,310 --> 00:04:37,370
+our QEMU virt,
+
+128
+00:04:37,370 --> 00:04:39,390
+this 'V-I-R-T' is actually 'virtual',
+
+129
+00:04:39,390 --> 00:04:40,250
+meaning the concept of virtual.
+
+130
+00:04:40,250 --> 00:04:42,350
+So on this QEMU emulator,
+
+131
+00:04:42,350 --> 00:04:45,930
+there's a simulated platform called 'virt'.
+
+132
+00:04:45,930 --> 00:04:47,170
+Similarly,
+
+133
+00:04:47,170 --> 00:04:49,650
+this thing also contains a lot of
+
+134
+00:04:49,650 --> 00:04:51,950
+it actually contains a lot of processor cores,
+
+135
+00:04:51,950 --> 00:04:53,890
+as well as some peripherals,
+
+136
+00:04:53,890 --> 00:04:56,270
+including memory.
+
+137
+00:04:56,270 --> 00:04:58,430
+ROM is read-only memory,
+
+138
+00:04:58,430 --> 00:05:01,050
+and DRAM is dynamic memory.
+
+139
+00:05:01,050 --> 00:05:02,690
+ROM means that,
+
+140
+00:05:02,690 --> 00:05:04,750
+after power-off, its contents are still retained.
+
+141
+00:05:04,750 --> 00:05:07,790
+RAM, on the other hand, loses everything when the power goes off.
+
+142
+00:05:07,790 --> 00:05:08,850
+When we usually talk about memory,
+
+143
+00:05:08,850 --> 00:05:10,230
+we mostly mean RAM.
+
+144
+00:05:10,230 --> 00:05:13,430
+ROM, you can think of it as a small storage chip,
+
+145
+00:05:13,430 --> 00:05:15,430
+something like a tiny hard drive.
+
+146
+00:05:15,430 --> 00:05:18,630
+Now, this QEMU
+
+147
+00:05:18,630 --> 00:05:20,010
+platform,
+
+148
+00:05:20,010 --> 00:05:21,590
+this virt platform,
+
+149
+00:05:21,590 --> 00:05:23,510
+has a total of 8 cores in it.
+
+150
+00:05:23,510 --> 00:05:24,790
+A total of 8 cores.
+
+151
+00:05:24,790 --> 00:05:28,970
+So first, everyone should get
+
+152
+00:05:28,970 --> 00:05:29,990
+a basic understanding of our hardware here.
+
+153
+00:05:29,990 --> 00:05:34,070
+Now, when we go and operate
+
+154
+00:05:34,070 --> 00:05:36,050
+on these components on top of it,
+
+155
+00:05:36,050 --> 00:05:37,090
+pay attention to one concept,
+
+156
+00:05:37,090 --> 00:05:39,610
+which is the concept of address mapping.
+
+157
+00:05:39,610 --> 00:05:40,570
+What does that mean?
+
+158
+00:05:40,570 --> 00:05:44,170
+It means that in the design of our hardware,
+
+159
+00:05:44,170 --> 00:05:47,050
+the currently popular kind of platform,
+
+160
+00:05:47,050 --> 00:05:49,570
+it maps all of these peripherals
+
+161
+00:05:49,570 --> 00:05:51,650
+What it operates on,
+
+162
+00:05:51,650 --> 00:05:52,750
+the objects of those operations,
+
+163
+00:05:52,750 --> 00:05:53,710
+we know that a peripheral,
+
+164
+00:05:53,710 --> 00:05:56,470
+say a processor,
+
+165
+00:05:56,470 --> 00:05:57,630
+or a controller,
+
+166
+00:05:57,630 --> 00:06:00,090
+may have some registers on it that need to be operated on.
+
+167
+00:06:00,090 --> 00:06:02,310
+These registers have all been assigned,
+
+168
+00:06:02,310 --> 00:06:03,250
+and when we access them,
+
+169
+00:06:03,250 --> 00:06:06,470
+in the past, each register
+
+170
+00:06:06,470 --> 00:06:08,410
+had its own separate address for access.
+
+171
+00:06:08,410 --> 00:06:11,450
+Now, all of these peripherals
+
+172
+00:06:11,450 --> 00:06:12,910
+have been given a unified addressing scheme.
+
+173
+00:06:12,910 --> 00:06:14,490
+These are physical addresses,
+
+174
+00:06:14,490 --> 00:06:15,730
+not virtual addresses.
+
+175
+00:06:15,730 --> 00:06:16,730
+A unified addressing.
+
+176
+00:06:16,730 --> 00:06:18,170
+So we can see that,
+
+177
+00:06:18,170 --> 00:06:19,110
+that is to say,
+
+178
+00:06:19,110 --> 00:06:20,230
+this structure,
+
+179
+00:06:20,230 --> 00:06:21,010
+actually comes from,
+
+180
+00:06:21,010 --> 00:06:22,470
+I was from the QML...
+
+181
+00:06:22,470 --> 00:06:23,910
+It was extracted from the original file,
+
+182
+00:06:23,910 --> 00:06:24,610
+cut out from there,
+
+183
+00:06:24,610 --> 00:06:26,010
+and what it actually shows is this:
+
+184
+00:06:26,010 --> 00:06:27,190
+all of its
+
+185
+00:06:27,190 --> 00:06:28,830
+on the platform,
+
+186
+00:06:28,830 --> 00:06:29,810
+the various peripherals involved,
+
+187
+00:06:29,810 --> 00:06:31,330
+such as the ROM,
+
+188
+00:06:31,330 --> 00:06:31,710
+right? And then,
+
+189
+00:06:31,710 --> 00:06:32,570
+and then
+
+190
+00:06:32,570 --> 00:06:34,230
+down here is the RAM.
+
+191
+00:06:34,230 --> 00:06:35,630
+In fact, there is a...
+
+192
+00:06:35,630 --> 00:06:36,450
+each peripheral,
+
+193
+00:06:36,450 --> 00:06:37,750
+it corresponds to
+
+194
+00:06:37,750 --> 00:06:39,110
+an address range.
+
+195
+00:06:39,110 --> 00:06:41,430
+Now, for the RAM,
+
+196
+00:06:41,430 --> 00:06:42,430
+this address range is straightforward,
+
+197
+00:06:42,430 --> 00:06:44,050
+meaning that its...
+
+198
+00:06:44,050 --> 00:06:45,490
+for example, for this RAM,
+
+199
+00:06:45,490 --> 00:06:47,190
+on the actual hardware,
+
+200
+00:06:47,190 --> 00:06:49,030
+it should be 128 megabytes in size.
+
+201
+00:06:49,030 --> 00:06:50,990
+a chunk of memory like this
+
+202
+00:06:50,990 --> 00:06:52,490
+so this 128 megabytes of memory
+
+203
+00:06:52,490 --> 00:06:53,610
+it is actually laid out in a unified way
+
+204
+00:06:53,610 --> 00:06:54,670
+in terms of how it's addressed
+
+205
+00:06:54,670 --> 00:06:55,970
+meaning its starting address
+
+206
+00:06:55,970 --> 00:06:56,970
+is 0x8000
+
+207
+00:06:56,970 --> 00:06:59,070
+and the end address is written like this
+
+208
+00:06:59,070 --> 00:06:59,750
+even though it says 0
+
+209
+00:06:59,750 --> 00:07:01,610
+in reality there is a range
+
+210
+00:07:01,610 --> 00:07:04,890
+it's 0x8000 plus 0x8000
+
+211
+00:07:04,890 --> 00:07:06,030
+plus 128 megabytes
+
+212
+00:07:06,030 --> 00:07:07,930
+roughly this kind of range
+
+213
+00:07:07,930 --> 00:07:08,930
+so every component
+
+214
+00:07:08,930 --> 00:07:10,970
+has a unified
+
+215
+00:07:10,970 --> 00:07:13,510
+physical address
+
+216
+00:07:13,510 --> 00:07:15,750
+mapping
+
+217
+00:07:15,750 --> 00:07:18,470
+you can just picture it like this
+
+218
+00:07:18,470 --> 00:07:20,030
+that is, all of our
+
+219
+00:07:20,030 --> 00:07:21,650
+physical addresses from 0 to
+
+220
+00:07:21,650 --> 00:07:24,550
+the highest address are allocated
+
+221
+00:07:24,550 --> 00:07:26,110
+allocated away in chunks,
+
+222
+00:07:26,110 --> 00:07:28,110
+for example, take this ROM chip:
+
+223
+00:07:28,110 --> 00:07:29,110
+it,
+
+224
+00:07:29,110 --> 00:07:31,630
+the storage space inside it,
+
+225
+00:07:31,630 --> 00:07:33,430
+it corresponds to the range
+
+226
+00:07:33,430 --> 00:07:35,850
+from Linux100 to Linux,
+
+227
+00:07:35,850 --> 00:07:38,150
+FF00 — that kind of range.
+
+228
+00:07:38,150 --> 00:07:40,070
+This range
+
+229
+00:07:40,070 --> 00:07:42,730
+is actually shown on this table here —
+
+230
+00:07:42,730 --> 00:07:44,050
+it has this one range.
+
+231
+00:07:44,050 --> 00:07:44,970
+And then,
+
+232
+00:07:44,970 --> 00:07:45,850
+the RAM
+
+233
+00:07:45,850 --> 00:07:47,190
+also has a range like that.
+
+234
+00:07:47,190 --> 00:07:50,470
+So 0x8800 up to that,
+
+235
+00:07:50,470 --> 00:07:52,170
+if you work it out,
+
+236
+00:07:52,170 --> 00:07:53,930
+this space is about 128 megabytes.
+
+237
+00:07:53,930 --> 00:07:56,150
+If I remember correctly,
+
+238
+00:07:56,150 --> 00:07:57,370
+you can go back and check,
+
+239
+00:07:57,370 --> 00:07:58,990
+a 128 megabyte range —
+
+240
+00:07:58,990 --> 00:08:02,610
+meaning it can only take a maximum of 128 megabytes of memory.
+
+241
+00:08:02,610 --> 00:08:03,910
+So it's basically like this.
+
+242
+00:08:03,910 --> 00:08:06,970
+Then all the address lines
+
+243
+00:08:06,970 --> 00:08:08,730
+are given a unified numbering
+
+244
+00:08:08,730 --> 00:08:09,790
+And this kind of address,
+
+245
+00:08:09,790 --> 00:08:11,310
+that's the concept of a physical address.
+
+246
+00:08:11,310 --> 00:08:13,630
+The concept of a physical address
+
+247
+00:08:13,630 --> 00:08:15,930
+is a fixed mapping
+
+248
+00:08:15,930 --> 00:08:17,430
+So later, when we want to access
+
+249
+00:08:17,430 --> 00:08:18,750
+these things,
+
+250
+00:08:18,750 --> 00:08:19,610
+we do it all through these addresses
+
+251
+00:08:19,610 --> 00:08:20,690
+to access these components.
+
+252
+00:08:20,690 --> 00:08:22,610
+This is something you all need to understand.
+
+253
+00:08:22,610 --> 00:08:25,410
+So right now,
+
+254
+00:08:25,410 --> 00:08:27,390
+we're mainly discussing
+
+255
+00:08:27,390 --> 00:08:28,750
+the system boot process.
+
+256
+00:08:28,750 --> 00:08:30,170
+Now, in the system boot process,
+
+257
+00:08:30,170 --> 00:08:31,490
+what's mainly involved is
+
+258
+00:08:31,490 --> 00:08:32,750
+the ROM component
+
+259
+00:08:32,750 --> 00:08:33,930
+and the RAM component.
+
+260
+00:08:33,930 --> 00:08:35,210
+So, as for everything else,
+
+261
+00:08:35,210 --> 00:08:35,930
+Let's set that aside for now
+
+262
+00:08:35,930 --> 00:08:41,530
+So how does this boot process
+
+263
+00:08:41,530 --> 00:08:42,770
+actually happen?
+
+264
+00:08:42,770 --> 00:08:45,830
+You can think of it this way:
+
+265
+00:08:45,830 --> 00:08:47,530
+when we power on
+
+266
+00:08:47,530 --> 00:08:48,870
+when we power on,
+
+267
+00:08:48,870 --> 00:08:50,710
+our CPU starts running, right?
+
+268
+00:08:50,710 --> 00:08:51,030
+Right?
+
+269
+00:08:51,030 --> 00:08:53,870
+Now, when our CPU starts running,
+
+270
+00:08:53,870 --> 00:08:55,950
+these are all things at the hardware level.
+
+271
+00:08:55,950 --> 00:08:56,910
+We can't see them from software.
+
+272
+00:08:56,910 --> 00:08:57,790
+On the hardware side,
+
+273
+00:08:57,790 --> 00:09:00,190
+first it will jump to
+
+274
+00:09:00,190 --> 00:09:02,710
+the address 0x00001000.
+
+275
+00:09:02,710 --> 00:09:06,460
+We know this address is actually
+
+276
+00:09:06,460 --> 00:09:08,540
+mapped to the ROM device,
+
+277
+00:09:08,540 --> 00:09:08,880
+right?
+
+278
+00:09:08,880 --> 00:09:09,960
+This ROM,
+
+279
+00:09:09,960 --> 00:09:11,440
+we say it's really just a
+
+280
+00:09:11,440 --> 00:09:13,360
+you can think of it as a small hard drive.
+
+281
+00:09:13,360 --> 00:09:16,320
+It stores a small piece of stuff inside.
+
+282
+00:09:16,320 --> 00:09:17,480
+This stuff,
+
+283
+00:09:17,480 --> 00:09:20,140
+after power is lost, it will not be lost.
+
+284
+00:09:20,140 --> 00:09:20,980
+It's always there at that location.
+
+285
+00:09:20,980 --> 00:09:21,680
+Every time you power on,
+
+286
+00:09:21,680 --> 00:09:24,120
+it will go to that location and execute the instructions inside.
+
+287
+00:09:24,120 --> 00:09:25,440
+Does everyone understand?
+
+288
+00:09:25,440 --> 00:09:26,420
+It's executing the instructions inside there.
+
+289
+00:09:26,420 --> 00:09:27,820
+So the instructions in there,
+
+290
+00:09:27,820 --> 00:09:30,020
+the stuff stored there, we call it
+
+291
+00:09:30,020 --> 00:09:31,200
+a kind of bootloader,
+
+292
+00:09:31,200 --> 00:09:32,340
+a bootstrapper, a boot loader.
+
+293
+00:09:32,340 --> 00:09:35,360
+At this point, what's inside is not our kernel yet,
+
+294
+00:09:35,360 --> 00:09:36,840
+because our kernel is over here.
+
+295
+00:09:36,840 --> 00:09:39,180
+So the instructions in this section
+
+296
+00:09:39,180 --> 00:09:41,260
+are hardwired into our chip,
+
+297
+00:09:41,260 --> 00:09:43,180
+they cannot be changed.
+
+298
+00:09:43,180 --> 00:09:45,760
+Then it starts running,
+
+299
+00:09:45,760 --> 00:09:46,640
+and while it's running,
+
+300
+00:09:46,640 --> 00:09:48,300
+the work it needs to do next
+
+301
+00:09:48,300 --> 00:09:51,920
+we can actually go and look at what's inside it
+
+302
+00:09:51,920 --> 00:09:53,660
+of course, since we're using a software simulation
+
+303
+00:09:53,660 --> 00:09:54,740
+take a look at this
+
+304
+00:09:54,740 --> 00:09:56,120
+if you're interested, you can go and take a look
+
+305
+00:09:56,120 --> 00:09:57,580
+at this source file, boot.c
+
+306
+00:09:57,580 --> 00:09:58,780
+it actually contains
+
+307
+00:09:58,780 --> 00:10:02,240
+a piece of assembly instructions from the bootloader
+
+308
+00:10:02,240 --> 00:10:03,920
+as for its main job
+
+309
+00:10:03,920 --> 00:10:06,160
+I won't explain it here
+
+310
+00:10:06,160 --> 00:10:07,340
+if you're interested, you can take a look yourself
+
+311
+00:10:07,340 --> 00:10:09,520
+the effect it actually achieves is that
+
+312
+00:10:09,520 --> 00:10:12,500
+after it gets our program running
+
+313
+00:10:12,500 --> 00:10:15,720
+it then jumps to the address 8000
+
+314
+00:10:15,720 --> 00:10:17,280
+to continue execution
+
+315
+00:10:17,280 --> 00:10:20,600
+of course, if this were real hardware
+
+316
+00:10:20,600 --> 00:10:21,600
+the bootloader
+
+317
+00:10:21,600 --> 00:10:23,020
+might do quite a bit more work
+
+318
+00:10:23,020 --> 00:10:25,240
+but since what we have here is a software emulator
+
+319
+00:10:25,240 --> 00:10:27,440
+it doesn't really do that much in there
+
+320
+00:10:27,440 --> 00:10:29,060
+strictly speaking
+
+321
+00:10:29,060 --> 00:10:30,260
+If it's hardware,
+
+322
+00:10:30,260 --> 00:10:31,760
+you can imagine this bootloader
+
+323
+00:10:31,760 --> 00:10:33,160
+actually has to do a few more things.
+
+324
+00:10:33,160 --> 00:10:36,640
+For example, it has to initialize the hardware,
+
+325
+00:10:36,640 --> 00:10:38,860
+and at the same time it probably needs to move things from the RAM
+
+326
+00:10:38,860 --> 00:10:41,660
+and copy the real code into this memory.
+
+327
+00:10:41,660 --> 00:10:42,180
+Of course, right?
+
+328
+00:10:42,180 --> 00:10:44,120
+Because this memory,
+
+329
+00:10:44,120 --> 00:10:46,120
+inside this memory, in fact,
+
+330
+00:10:46,120 --> 00:10:47,460
+there is nothing at the very beginning.
+
+331
+00:10:47,460 --> 00:10:48,380
+The real stuff,
+
+332
+00:10:48,380 --> 00:10:50,060
+it might be sitting on a hard disk outside,
+
+333
+00:10:50,060 --> 00:10:52,200
+or it might be on an SD card.
+
+334
+00:10:52,200 --> 00:10:53,740
+So when this thing needs to be loaded in,
+
+335
+00:10:53,740 --> 00:10:55,240
+who does this job?
+
+336
+00:10:55,240 --> 00:10:56,280
+Of course, it has to be done by
+
+337
+00:10:56,280 --> 00:10:58,320
+the bootloader and things like that.
+
+338
+00:10:58,320 --> 00:10:58,560
+Right?
+
+339
+00:10:58,560 --> 00:11:01,260
+But for our software simulator,
+
+340
+00:11:01,260 --> 00:11:02,280
+there is no such process.
+
+341
+00:11:02,280 --> 00:11:03,200
+But you have to understand,
+
+342
+00:11:03,200 --> 00:11:04,880
+the process is roughly like this.
+
+343
+00:11:04,880 --> 00:11:07,400
+It will also jump to this place to execute.
+
+344
+00:11:07,400 --> 00:11:09,700
+So we can see that
+
+345
+00:11:09,700 --> 00:11:12,740
+when we run the emulator,
+
+346
+00:11:12,740 --> 00:11:14,860
+combining that with our earlier use of QEMU,
+
+347
+00:11:14,860 --> 00:11:16,320
+in our QEMU command,
+
+348
+00:11:16,320 --> 00:11:17,160
+why do we include a
+
+349
+00:11:17,160 --> 00:11:18,500
+-kernel parameter,
+
+350
+00:11:18,500 --> 00:11:20,100
+followed by OS.EF?
+
+351
+00:11:20,100 --> 00:11:22,520
+This thing, OS.EF,
+
+352
+00:11:22,520 --> 00:11:24,700
+is actually what we compiled,
+
+353
+00:11:24,700 --> 00:11:25,820
+the code of this kernel.
+
+354
+00:11:25,820 --> 00:11:28,600
+Now, the -kernel option,
+
+355
+00:11:28,600 --> 00:11:31,380
+essentially tells our QEMU that
+
+356
+00:11:31,380 --> 00:11:33,340
+for our kernel, we just need
+
+357
+00:11:33,340 --> 00:11:37,080
+to load this thing.
+
+358
+00:11:37,080 --> 00:11:38,940
+Because when we actually run it,
+
+359
+00:11:38,940 --> 00:11:40,360
+it will jump there to execute.
+
+360
+00:11:40,360 --> 00:11:41,840
+So, at this point,
+
+361
+00:11:41,840 --> 00:11:42,680
+So what this actually tells us is,
+
+362
+00:11:42,680 --> 00:11:44,000
+once it jumps here to run,
+
+363
+00:11:44,000 --> 00:11:46,180
+then our kernel instructions,
+
+364
+00:11:46,180 --> 00:11:47,080
+which instructions are they?
+
+365
+00:11:47,080 --> 00:11:48,920
+then QEMU will automatically
+
+366
+00:11:48,920 --> 00:11:50,540
+take this portion of instructions
+
+367
+00:11:50,540 --> 00:11:52,960
+and load them into this address space,
+
+368
+00:11:52,960 --> 00:11:54,840
+and then it can continue running from there.
+
+369
+00:11:54,840 --> 00:11:56,220
+You see what I mean, everyone?
+
+370
+00:11:56,220 --> 00:11:57,500
+But this is entirely a
+
+371
+00:11:57,500 --> 00:11:59,040
+software simulation process.
+
+372
+00:11:59,040 --> 00:12:00,060
+With actual hardware,
+
+373
+00:12:00,060 --> 00:12:01,280
+of course it is the hardware that carries out
+
+374
+00:12:01,280 --> 00:12:02,720
+this loading work,
+
+375
+00:12:02,720 --> 00:12:03,720
+this boot work.
+
+376
+00:12:03,720 --> 00:12:05,840
+But in any case,
+
+377
+00:12:05,840 --> 00:12:07,460
+our program here,
+
+378
+00:12:07,460 --> 00:12:08,880
+as you can see,
+
+379
+00:12:08,880 --> 00:12:10,160
+it is the address 0x800,
+
+380
+00:12:10,160 --> 00:12:11,100
+and why is it so special?
+
+381
+00:12:11,100 --> 00:12:12,880
+This address is where we
+
+382
+00:12:12,880 --> 00:12:15,240
+everything we compile
+
+383
+00:12:15,240 --> 00:12:16,860
+the address of the kernel's first instruction
+
+384
+00:12:16,860 --> 00:12:17,880
+must be this address
+
+385
+00:12:17,880 --> 00:12:19,280
+the position of the first instruction
+
+386
+00:12:19,280 --> 00:12:19,820
+must be right here
+
+387
+00:12:19,820 --> 00:12:21,320
+because when it finally runs,
+
+388
+00:12:21,320 --> 00:12:22,880
+it jumps here to start executing
+
+389
+00:12:22,880 --> 00:12:24,240
+that's the idea
+
+390
+00:12:24,240 --> 00:12:26,380
+so this is also why we
+
+391
+00:12:26,380 --> 00:12:27,980
+why is it that when we link,
+
+392
+00:12:27,980 --> 00:12:31,000
+all these concepts tie together
+
+393
+00:12:31,000 --> 00:12:32,200
+this is what we talked about earlier
+
+394
+00:12:32,200 --> 00:12:33,340
+when we link,
+
+395
+00:12:33,340 --> 00:12:34,280
+why do we need to
+
+396
+00:12:34,280 --> 00:12:37,020
+including when we wrote that assembly earlier,
+
+397
+00:12:37,020 --> 00:12:38,560
+why do we need to at compile time
+
+398
+00:12:38,560 --> 00:12:39,240
+everyone go back and take another look
+
+399
+00:12:39,240 --> 00:12:40,580
+why use -Ttext?
+
+400
+00:12:40,580 --> 00:12:43,260
+it's really telling our linker
+
+401
+00:12:43,260 --> 00:12:45,280
+In the end, because ultimately
+
+402
+00:12:45,280 --> 00:12:46,380
+the address of every instruction
+
+403
+00:12:46,380 --> 00:12:47,100
+is determined by the linker
+
+404
+00:12:47,100 --> 00:12:48,560
+the linker does this for us
+
+405
+00:12:48,560 --> 00:12:48,820
+right?
+
+406
+00:12:48,820 --> 00:12:50,060
+Of course, what we use
+
+407
+00:12:50,060 --> 00:12:51,360
+right now is static linking.
+
+408
+00:12:51,360 --> 00:12:52,520
+So with a static linker,
+
+409
+00:12:52,520 --> 00:12:53,500
+when statically linking,
+
+410
+00:12:53,500 --> 00:12:54,420
+the linker has to decide
+
+411
+00:12:54,420 --> 00:12:55,680
+the address of every instruction,
+
+412
+00:12:55,680 --> 00:12:56,840
+and it always needs a
+
+413
+00:12:56,840 --> 00:12:58,060
+place where the addresses start from.
+
+414
+00:12:58,060 --> 00:12:59,240
+And this address,
+
+415
+00:12:59,240 --> 00:13:00,000
+this is what we tell it
+
+416
+00:13:00,000 --> 00:13:01,140
+through this command here.
+
+417
+00:13:01,140 --> 00:13:02,480
+So why is it 0x80000000?
+
+418
+00:13:02,480 --> 00:13:04,160
+Now you understand, right?
+
+419
+00:13:04,160 --> 00:13:06,800
+It's simply because our emulator
+
+420
+00:13:06,800 --> 00:13:07,880
+will place it at this location.
+
+421
+00:13:07,880 --> 00:13:09,180
+and execute it.
+
+422
+00:13:09,180 --> 00:13:10,780
+So we need to make this address
+
+423
+00:13:10,780 --> 00:13:12,000
+match up with that address.
+
+424
+00:13:12,000 --> 00:13:13,860
+So this value isn't something you just write arbitrarily.
+
+425
+00:13:13,860 --> 00:13:16,260
+Now, through this process,
+
+426
+00:13:16,260 --> 00:13:17,660
+on the one hand, you've understood
+
+427
+00:13:17,660 --> 00:13:19,940
+the whole boot process of our emulator,
+
+428
+00:13:19,940 --> 00:13:21,300
+and on the other hand, you've also learned
+
+429
+00:13:21,300 --> 00:13:23,780
+why, when we compile and link,
+
+430
+00:13:23,780 --> 00:13:25,220
+we have to specify this link address,
+
+431
+00:13:25,220 --> 00:13:27,280
+and how our QEMU
+
+432
+00:13:27,280 --> 00:13:29,280
+loads our kernel.
+
+433
+00:13:29,280 --> 00:13:30,160
+That's basically the whole process.
+
+434
+00:13:30,160 --> 00:13:34,100
+So the entire system boot process
+
+435
+00:13:34,100 --> 00:13:36,960
+is pretty much everything I wanted to cover for you.
+
+436
+00:13:36,960 --> 00:13:37,940
+At the same time,
+
+437
+00:13:37,940 --> 00:13:39,480
+I want to mention one more thing here,
+
+438
+00:13:39,480 --> 00:13:39,920
+which is that
+
+439
+00:13:39,920 --> 00:13:41,600
+since we have 8 cores,
+
+440
+00:13:41,600 --> 00:13:43,280
+you all understand, right?
+
+441
+00:13:43,280 --> 00:13:44,300
+We have 8 cores.
+
+442
+00:13:44,300 --> 00:13:45,700
+Each of these cores, after power-on,
+
+443
+00:13:45,700 --> 00:13:47,320
+these 8 cores run independently.
+
+444
+00:13:47,320 --> 00:13:48,160
+As we mentioned earlier,
+
+445
+00:13:48,160 --> 00:13:48,960
+what is a hart?
+
+446
+00:13:48,960 --> 00:13:49,980
+A hart means that
+
+447
+00:13:49,980 --> 00:13:51,620
+it can fetch and execute independently.
+
+448
+00:13:51,620 --> 00:13:53,180
+So each core
+
+449
+00:13:53,180 --> 00:13:54,520
+will repeat this process,
+
+450
+00:13:54,520 --> 00:13:55,600
+this boot process.
+
+451
+00:13:55,600 --> 00:13:57,360
+So this boot process
+
+452
+00:13:57,360 --> 00:13:58,720
+is actually 8 cores running at the same time.
+
+453
+00:13:58,720 --> 00:14:01,680
+As soon as power is on, they are all running simultaneously.
+
+454
+00:14:01,680 --> 00:14:03,020
+This is a concept we need to understand.
+
+455
+00:14:03,020 --> 00:14:06,000
+Once we understand these things,
+
+456
+00:14:06,000 --> 00:14:08,500
+these are hardware concepts.
+
+457
+00:14:08,500 --> 00:14:09,900
+Now what we mean is,
+
+458
+00:14:09,900 --> 00:14:10,900
+how do we use software?
+
+459
+00:14:10,900 --> 00:14:12,020
+By software, what we mean is,
+
+460
+00:14:12,020 --> 00:14:13,600
+the code that we've entered here.
+
+461
+00:14:13,600 --> 00:14:14,100
+How should we write it?
+
+462
+00:14:14,100 --> 00:14:15,880
+The code that we compile
+
+463
+00:14:15,880 --> 00:14:16,380
+How should it be written
+
+464
+00:14:16,380 --> 00:14:20,200
+to carry out the kernel initialization process?
+
+465
+00:14:20,200 --> 00:14:23,860
+So this is our boot program,
+
+466
+00:14:23,860 --> 00:14:25,040
+that is, the boot program of our kernel,
+
+467
+00:14:25,040 --> 00:14:26,560
+and the question of how to write it.
+
+468
+00:14:26,560 --> 00:14:28,520
+Now, our basic idea
+
+469
+00:14:28,520 --> 00:14:29,280
+is actually very simple.
+
+470
+00:14:29,280 --> 00:14:30,920
+As soon as it powers on,
+
+471
+00:14:30,920 --> 00:14:33,760
+for now, because of our course,
+
+472
+00:14:33,760 --> 00:14:35,800
+just to simplify
+
+473
+00:14:35,800 --> 00:14:37,480
+the difficulty of debugging and explaining,
+
+474
+00:14:37,480 --> 00:14:39,900
+we actually only want to support a single core.
+
+475
+00:14:39,900 --> 00:14:40,920
+That is to say, you can think of it this way,
+
+476
+00:14:40,920 --> 00:14:41,940
+in hardware,
+
+477
+00:14:41,940 --> 00:14:43,220
+although all 8 cores power on at the same time,
+
+478
+00:14:43,220 --> 00:14:43,620
+and run at the same time,
+
+479
+00:14:43,620 --> 00:14:45,180
+we only let one core operate.
+
+480
+00:14:45,180 --> 00:14:46,020
+You see what I mean?
+
+481
+00:14:46,020 --> 00:14:47,140
+The other seven cores,
+
+482
+00:14:47,140 --> 00:14:48,340
+we just let them
+
+483
+00:14:48,340 --> 00:14:49,300
+how should I put it,
+
+484
+00:14:49,300 --> 00:14:51,940
+keep them in a state where they're just idling,
+
+485
+00:14:51,940 --> 00:14:53,400
+not letting them run our program.
+
+486
+00:14:53,400 --> 00:14:54,260
+That's all we need.
+
+487
+00:14:54,260 --> 00:14:57,520
+This is one of our design principles.
+
+488
+00:14:57,520 --> 00:14:58,260
+Of course,
+
+489
+00:14:58,260 --> 00:15:00,200
+if you really want to get that core running,
+
+490
+00:15:00,200 --> 00:15:00,840
+that's also fine.
+
+491
+00:15:00,840 --> 00:15:03,120
+Right now, in order to simplify
+
+492
+00:15:03,120 --> 00:15:05,920
+our later explanations
+
+493
+00:15:05,920 --> 00:15:07,380
+and the learning of the material,
+
+494
+00:15:07,380 --> 00:15:08,520
+we'll keep this issue simple.
+
+495
+00:15:08,520 --> 00:15:09,880
+Even though there are eight cores in the hardware,
+
+496
+00:15:09,880 --> 00:15:11,020
+we'll only let one core run.
+
+497
+00:15:11,020 --> 00:15:11,660
+That's the idea.
+
+498
+00:15:11,660 --> 00:15:14,020
+Now, the basic setup is actually very simple.
+
+499
+00:15:14,020 --> 00:15:15,780
+That is, as we just talked about,
+
+500
+00:15:15,780 --> 00:15:17,340
+the meaning of the previous diagram is that
+
+501
+00:15:17,340 --> 00:15:18,380
+This boot process,
+
+502
+00:15:18,380 --> 00:15:19,640
+all eight cores are running at the same time,
+
+503
+00:15:19,640 --> 00:15:21,540
+so how do we make...
+
+504
+00:15:21,540 --> 00:15:22,560
+think about it this way:
+
+505
+00:15:22,560 --> 00:15:23,880
+our boot program,
+
+506
+00:15:23,880 --> 00:15:25,380
+the program we're going to write,
+
+507
+00:15:25,380 --> 00:15:26,020
+is executed once by every single
+
+508
+00:15:26,020 --> 00:15:28,080
+core — every core runs through it once.
+
+509
+00:15:28,080 --> 00:15:29,060
+Do you understand what I mean?
+
+510
+00:15:29,060 --> 00:15:31,240
+This logic,
+
+511
+00:15:31,240 --> 00:15:33,080
+every core will execute it once.
+
+512
+00:15:33,120 --> 00:15:34,000
+So what do we do?
+
+513
+00:15:34,000 --> 00:15:35,420
+Well, we can do this:
+
+514
+00:15:35,420 --> 00:15:37,580
+once this program starts running,
+
+515
+00:15:37,580 --> 00:15:38,940
+we can check,
+
+516
+00:15:38,940 --> 00:15:40,640
+say if there are eight cores,
+
+517
+00:15:40,640 --> 00:15:41,760
+then we can check whether this piece,
+
+518
+00:15:41,760 --> 00:15:43,580
+whether the core currently running this is the first core.
+
+519
+00:15:43,580 --> 00:15:44,800
+If it's the first core,
+
+520
+00:15:44,800 --> 00:15:46,220
+we let it continue on and execute the rest.
+
+521
+00:15:46,220 --> 00:15:49,700
+That is, it goes into our normal kernel processing logic,
+
+522
+00:15:49,700 --> 00:15:53,780
+but if it finds that it is not the first hart,
+
+523
+00:15:53,780 --> 00:15:55,320
+then we just enter a spin loop.
+
+524
+00:15:55,320 --> 00:15:57,760
+I don't know if everyone can still follow what I mean by this concept.
+
+525
+00:15:57,760 --> 00:15:59,760
+For example, suppose there are eight students in your row,
+
+526
+00:15:59,760 --> 00:16:00,760
+and you are the eight harts.
+
+527
+00:16:00,760 --> 00:16:01,680
+Among you,
+
+528
+00:16:01,680 --> 00:16:03,320
+we only let the first student
+
+529
+00:16:03,320 --> 00:16:05,920
+run our operating system code,
+
+530
+00:16:05,920 --> 00:16:07,740
+and the other seven students just spin.
+
+531
+00:16:07,740 --> 00:16:08,500
+So how do we do that?
+
+532
+00:16:08,500 --> 00:16:09,880
+Moreover, for all eight of you students,
+
+533
+00:16:09,880 --> 00:16:11,180
+as soon as each one powers on,
+
+534
+00:16:11,180 --> 00:16:12,180
+it will execute the boot logic.
+
+535
+00:16:12,180 --> 00:16:13,680
+Think about it.
+
+536
+00:16:13,680 --> 00:16:15,500
+Suppose the one on the far left,
+
+537
+00:16:15,500 --> 00:16:16,880
+you are the first student.
+
+538
+00:16:16,880 --> 00:16:18,260
+Then when you judge,
+
+539
+00:16:18,260 --> 00:16:20,120
+when you execute the boot logic,
+
+540
+00:16:20,120 --> 00:16:21,540
+you are able to read out
+
+541
+00:16:21,540 --> 00:16:23,500
+What this currently executes is
+
+542
+00:16:23,500 --> 00:16:25,000
+the code number of which core,
+
+543
+00:16:25,000 --> 00:16:25,980
+you see?
+
+544
+00:16:25,980 --> 00:16:26,440
+So the moment you look at it,
+
+545
+00:16:26,440 --> 00:16:27,640
+I am the first core.
+
+546
+00:16:27,640 --> 00:16:28,020
+OK,
+
+547
+00:16:28,020 --> 00:16:29,660
+then I won't spin idly.
+
+548
+00:16:29,660 --> 00:16:31,440
+I'll go off and do the real work.
+
+549
+00:16:31,440 --> 00:16:32,460
+So it goes into our
+
+550
+00:16:32,460 --> 00:16:33,720
+per-core logic.
+
+551
+00:16:33,720 --> 00:16:35,120
+Now, the second core,
+
+552
+00:16:35,120 --> 00:16:36,000
+if it is also executing
+
+553
+00:16:36,000 --> 00:16:36,740
+this piece of logic,
+
+554
+00:16:36,740 --> 00:16:37,860
+look at my core —
+
+555
+00:16:37,860 --> 00:16:39,360
+right now I am not the first core.
+
+556
+00:16:39,360 --> 00:16:40,800
+The first core's code number, say, is 0,
+
+557
+00:16:40,800 --> 00:16:41,920
+and my code number is 1.
+
+558
+00:16:41,920 --> 00:16:42,900
+So I am not equal to it.
+
+559
+00:16:42,900 --> 00:16:44,560
+Not being equal, I go off and spin idly.
+
+560
+00:16:44,560 --> 00:16:45,020
+Understand?
+
+561
+00:16:45,020 --> 00:16:46,720
+So what this achieves is
+
+562
+00:16:46,720 --> 00:16:47,740
+that the other seven cores
+
+563
+00:16:47,740 --> 00:16:48,700
+just spin idle the whole time,
+
+564
+00:16:48,700 --> 00:16:50,540
+and only one core runs.
+
+565
+00:16:50,540 --> 00:16:51,400
+This is our
+
+566
+00:16:51,400 --> 00:16:53,000
+current bootloader's
+
+567
+00:16:53,000 --> 00:16:54,260
+basic design idea.
+
+568
+00:16:54,260 --> 00:16:56,060
+As you read the code,
+
+569
+00:16:56,060 --> 00:16:56,960
+keep this concept in mind,
+
+570
+00:16:56,960 --> 00:16:58,000
+and you'll be fine.
+
+571
+00:16:58,000 --> 00:17:00,880
+Now the question becomes,
+
+572
+00:17:00,880 --> 00:17:02,260
+how do I figure out
+
+573
+00:17:02,260 --> 00:17:04,100
+whether the current
+
+574
+00:17:04,100 --> 00:17:06,500
+core is the first one?
+
+575
+00:17:06,500 --> 00:17:09,060
+And how to initialize,
+
+576
+00:17:09,060 --> 00:17:11,380
+and how to jump into the C execution environment?
+
+577
+00:17:11,380 --> 00:17:14,320
+Because for the large chunks of code that follow,
+
+578
+00:17:14,320 --> 00:17:15,320
+we definitely want to write them in C,
+
+579
+00:17:15,320 --> 00:17:15,920
+not in assembly,
+
+580
+00:17:15,920 --> 00:17:17,660
+since writing it in assembly is too complicated.
+
+581
+00:17:17,660 --> 00:17:20,520
+Now, the next two questions are actually fairly easy to solve.
+
+582
+00:17:20,520 --> 00:17:21,740
+Because the earlier material,
+
+583
+00:17:21,740 --> 00:17:22,740
+the relevant knowledge,
+
+584
+00:17:22,740 --> 00:17:24,640
+has actually all been covered before.
+
+585
+00:17:24,640 --> 00:17:25,400
+Right, everyone gets that?
+
+586
+00:17:25,400 --> 00:17:27,000
+But the trickiest part,
+
+587
+00:17:27,000 --> 00:17:27,660
+probably the first one,
+
+588
+00:17:27,660 --> 00:17:30,960
+is how to determine whether the current hart is the first one — this concept of 'hart'.
+
+589
+00:17:30,960 --> 00:17:33,880
+Let's focus on that question next.
+
+590
+00:17:33,880 --> 00:17:36,500
+That is, how to determine whether the current hart is the first one.
+
+591
+00:17:36,500 --> 00:17:42,080
+Now this involves some concepts that we didn't cover,
+
+592
+00:17:42,080 --> 00:17:44,200
+when we talked about the RISC-V architecture earlier,
+
+593
+00:17:44,200 --> 00:17:45,380
+some concepts we haven't discussed.
+
+594
+00:17:45,380 --> 00:17:48,100
+As we mentioned before,
+
+595
+00:17:48,100 --> 00:17:54,620
+besides the 32 general-purpose registers,
+
+596
+00:17:54,620 --> 00:17:56,700
+that is, x0 through x31,
+
+597
+00:17:56,700 --> 00:18:00,800
+for each privilege level, in fact,
+
+598
+00:18:00,800 --> 00:18:03,580
+we actually have our own set of specific registers.
+
+599
+00:18:03,580 --> 00:18:05,800
+Right now we have machine,
+
+600
+00:18:05,800 --> 00:18:06,720
+and we have user,
+
+601
+00:18:06,720 --> 00:18:07,840
+What supervisor
+
+602
+00:18:07,840 --> 00:18:08,460
+These modes.
+
+603
+00:18:08,460 --> 00:18:10,620
+Each mode has its own set of registers.
+
+604
+00:18:10,620 --> 00:18:12,860
+This set of registers
+
+605
+00:18:12,860 --> 00:18:15,940
+we call them control registers.
+
+606
+00:18:15,940 --> 00:18:18,440
+As for how we read
+
+607
+00:18:18,440 --> 00:18:21,160
+your hart ID,
+
+608
+00:18:21,160 --> 00:18:21,820
+this number,
+
+609
+00:18:21,820 --> 00:18:23,640
+it is actually read from these registers.
+
+610
+00:18:23,640 --> 00:18:24,380
+Does everyone understand?
+
+611
+00:18:24,380 --> 00:18:25,980
+These are some special registers,
+
+612
+00:18:25,980 --> 00:18:27,660
+called CSRs,
+
+613
+00:18:27,660 --> 00:18:29,080
+CSR for short.
+
+614
+00:18:29,080 --> 00:18:30,420
+Now for these registers,
+
+615
+00:18:30,420 --> 00:18:30,800
+we
+
+616
+00:18:30,800 --> 00:18:33,180
+we have also written it here,
+
+617
+00:18:33,180 --> 00:18:33,980
+that is, each level
+
+618
+00:18:33,980 --> 00:18:35,060
+has its own set.
+
+619
+00:18:35,060 --> 00:18:36,160
+And then,
+
+620
+00:18:36,160 --> 00:18:37,560
+at a higher privilege level,
+
+621
+00:18:37,560 --> 00:18:38,780
+it can access the lower level,
+
+622
+00:18:38,780 --> 00:18:39,900
+but not the other way around.
+
+623
+00:18:39,900 --> 00:18:40,360
+Right?
+
+624
+00:18:40,360 --> 00:18:41,980
+That's easy to understand,
+
+625
+00:18:41,980 --> 00:18:43,280
+since it's about access control.
+
+626
+00:18:43,280 --> 00:18:44,420
+In user mode,
+
+627
+00:18:44,420 --> 00:18:45,200
+of course you cannot access
+
+628
+00:18:45,200 --> 00:18:46,100
+registers of machine mode or
+
+629
+00:18:46,100 --> 00:18:47,460
+supervisor mode,
+
+630
+00:18:47,460 --> 00:18:47,780
+can you?
+
+631
+00:18:47,780 --> 00:18:48,960
+Just like user mode
+
+632
+00:18:48,960 --> 00:18:50,340
+cannot access kernel mode.
+
+633
+00:18:50,340 --> 00:18:50,580
+So,
+
+634
+00:18:50,580 --> 00:18:53,660
+how do we access these registers?
+
+635
+00:18:53,660 --> 00:18:55,780
+Well, there are special instructions.
+
+636
+00:18:55,780 --> 00:18:58,760
+These are not standard integer operation instructions.
+
+637
+00:18:58,760 --> 00:19:02,880
+They are a type of instruction called the CSR extension instructions.
+
+638
+00:19:02,880 --> 00:19:04,720
+We said that RISC-V's
+
+639
+00:19:04,720 --> 00:19:07,120
+instruction design is modular, right?
+
+640
+00:19:07,120 --> 00:19:08,940
+So for these special requirements,
+
+641
+00:19:08,940 --> 00:19:11,260
+It defines a set of special instructions
+
+642
+00:19:11,260 --> 00:19:12,780
+to carry out these operations.
+
+643
+00:19:12,780 --> 00:19:15,980
+When we implement these operations later,
+
+644
+00:19:15,980 --> 00:19:17,860
+we will mostly be dealing with
+
+645
+00:19:17,860 --> 00:19:21,040
+these privileged instructions and privileged registers.
+
+646
+00:19:21,040 --> 00:19:25,320
+So let's first look at
+
+647
+00:19:25,320 --> 00:19:26,200
+Machine mode,
+
+648
+00:19:26,200 --> 00:19:27,160
+because we know that
+
+649
+00:19:27,160 --> 00:19:28,800
+as soon as the power comes on,
+
+650
+00:19:28,800 --> 00:19:32,360
+the CPU runs in Machine mode by default.
+
+651
+00:19:32,360 --> 00:19:34,860
+It's a bit like the real mode in x86.
+
+652
+00:19:34,860 --> 00:19:39,100
+So what we need to focus on
+
+653
+00:19:39,100 --> 00:19:40,160
+is what happens right at power-on,
+
+654
+00:19:40,160 --> 00:19:41,580
+since we are currently in that power-on state.
+
+655
+00:19:41,580 --> 00:19:42,260
+At power-on,
+
+656
+00:19:42,260 --> 00:19:44,060
+how do we operate in Machine mode
+
+657
+00:19:44,060 --> 00:19:45,260
+to perform the relevant operations?
+
+658
+00:19:45,260 --> 00:19:47,060
+As for Machine mode,
+
+659
+00:19:47,060 --> 00:19:47,880
+the registers
+
+660
+00:19:47,880 --> 00:19:48,460
+are quite numerous.
+
+661
+00:19:48,460 --> 00:19:49,700
+You can see that it's listed here
+
+662
+00:19:49,700 --> 00:19:50,960
+in this specific
+
+663
+00:19:50,960 --> 00:19:52,040
+you can go and refer to it
+
+664
+00:19:52,040 --> 00:19:54,480
+Reference 2 is the privileged instructions
+
+665
+00:19:54,480 --> 00:19:57,180
+chapter 2.4 of that specification
+
+666
+00:19:57,180 --> 00:19:59,120
+this table in chapter 2
+
+667
+00:19:59,120 --> 00:20:00,740
+I've listed it right here
+
+668
+00:20:00,740 --> 00:20:02,060
+Now among them
+
+669
+00:20:02,060 --> 00:20:03,900
+look here, there are a bunch of
+
+670
+00:20:03,900 --> 00:20:05,540
+these Machine Information Registers
+
+671
+00:20:05,540 --> 00:20:06,420
+that is to say,
+
+672
+00:20:06,420 --> 00:20:10,200
+things about the CPU, like the Hart
+
+673
+00:20:10,200 --> 00:20:11,320
+and some ID values
+
+674
+00:20:11,320 --> 00:20:12,500
+can be read out from
+
+675
+00:20:12,500 --> 00:20:13,120
+these registers
+
+676
+00:20:13,120 --> 00:20:16,300
+Let's get a basic understanding first
+
+677
+00:20:16,300 --> 00:20:18,480
+we'll cover the details later
+
+678
+00:20:18,480 --> 00:20:20,360
+So the key point is,
+
+679
+00:20:20,360 --> 00:20:22,020
+how do we read these registers?
+
+680
+00:20:22,020 --> 00:20:22,720
+As we just mentioned,
+
+681
+00:20:22,720 --> 00:20:23,740
+These registers cannot be accessed
+
+682
+00:20:23,740 --> 00:20:24,720
+using the ones we talked about earlier,
+
+683
+00:20:24,720 --> 00:20:25,540
+the arithmetic instructions
+
+684
+00:20:25,540 --> 00:20:26,920
+and so on.
+
+685
+00:20:26,920 --> 00:20:29,020
+We have a set of special instructions
+
+686
+00:20:29,020 --> 00:20:30,740
+for accessing these special registers.
+
+687
+00:20:30,740 --> 00:20:31,940
+So here,
+
+688
+00:20:31,940 --> 00:20:33,160
+there are just a few of them,
+
+689
+00:20:33,160 --> 00:20:34,140
+like CSR,
+
+690
+00:20:34,140 --> 00:20:35,340
+RWCSRS.
+
+691
+00:20:35,340 --> 00:20:36,540
+And correspondingly,
+
+692
+00:20:36,540 --> 00:20:37,280
+there are also some
+
+693
+00:20:37,280 --> 00:20:39,440
+that can be accessed
+
+694
+00:20:39,440 --> 00:20:40,700
+using a bit-manipulation style.
+
+695
+00:20:40,700 --> 00:20:42,700
+We won't go into
+
+696
+00:20:42,700 --> 00:20:43,840
+the details here.
+
+697
+00:20:43,840 --> 00:20:44,860
+We mainly focus on
+
+698
+00:20:44,860 --> 00:20:45,640
+the ones we care about.
+
+699
+00:20:45,640 --> 00:20:46,460
+Two of them are especially relevant,
+
+700
+00:20:46,460 --> 00:20:47,900
+namely these two.
+
+701
+00:20:47,900 --> 00:20:50,890
+These two
+
+702
+00:20:50,890 --> 00:20:52,830
+These two instructions
+
+703
+00:20:52,830 --> 00:20:54,930
+Let's first take a look at
+
+704
+00:20:54,930 --> 00:20:56,670
+the CSRW instruction
+
+705
+00:20:56,670 --> 00:20:58,290
+This instruction
+
+706
+00:20:58,290 --> 00:20:59,550
+its full name is
+
+707
+00:20:59,550 --> 00:21:02,590
+Atomic Read Write CSR
+
+708
+00:21:02,590 --> 00:21:05,550
+So this RW
+
+709
+00:21:05,550 --> 00:21:06,650
+you can actually understand it as
+
+710
+00:21:06,650 --> 00:21:08,570
+the abbreviation for Read Write
+
+711
+00:21:08,570 --> 00:21:11,830
+And CSR is simply CSR,
+
+712
+00:21:11,830 --> 00:21:14,170
+Control and Status Register
+
+713
+00:21:14,170 --> 00:21:15,650
+Now here,
+
+714
+00:21:15,650 --> 00:21:17,070
+there is also an atomic operation
+
+715
+00:21:17,070 --> 00:21:18,590
+Atomic refers to the concept of an atomic operation
+
+716
+00:21:18,590 --> 00:21:20,530
+Let's take a look together at what this means
+
+717
+00:21:20,530 --> 00:21:23,170
+So this CSRW instruction
+
+718
+00:21:23,170 --> 00:21:24,250
+how does it actually work?
+
+719
+00:21:24,250 --> 00:21:25,790
+We have an explanation here
+
+720
+00:21:25,790 --> 00:21:27,110
+Let's all take a look at it together
+
+721
+00:21:27,110 --> 00:21:27,670
+That is to say,
+
+722
+00:21:27,670 --> 00:21:31,770
+it first reads the value in the CSR.
+
+723
+00:21:31,770 --> 00:21:33,150
+Because this instruction
+
+724
+00:21:33,150 --> 00:21:34,230
+its specification works like this:
+
+725
+00:21:34,230 --> 00:21:35,850
+RD CSR RS1
+
+726
+00:21:35,850 --> 00:21:38,190
+it first takes out the value in here,
+
+727
+00:21:38,190 --> 00:21:42,390
+and zero-extends it to the width of the XLEN bits.
+
+728
+00:21:42,390 --> 00:21:43,970
+This is easy to explain.
+
+729
+00:21:43,970 --> 00:21:45,830
+You've already seen this many times before.
+
+730
+00:21:45,830 --> 00:21:46,430
+What does zero-extension mean?
+
+731
+00:21:46,430 --> 00:21:48,270
+It means the missing bits are filled with zeros.
+
+732
+00:21:48,270 --> 00:21:49,470
+And then,
+
+733
+00:21:49,470 --> 00:21:50,410
+where is it written to?
+
+734
+00:21:50,410 --> 00:21:51,530
+It's written into RD.
+
+735
+00:21:51,530 --> 00:21:54,010
+It's written into RD.
+
+736
+00:21:54,010 --> 00:21:57,710
+Then the value in RS1 is written into the CSR.
+
+737
+00:21:57,710 --> 00:22:02,640
+How many steps is this?
+
+738
+00:22:02,640 --> 00:22:03,960
+This is two steps.
+
+739
+00:22:03,960 --> 00:22:05,660
+That is, the first step is to
+
+740
+00:22:05,660 --> 00:22:08,460
+move the content over here first.
+
+741
+00:22:08,460 --> 00:22:10,160
+Second step.
+
+742
+00:22:10,160 --> 00:22:13,340
+Move the content over here again.
+
+743
+00:22:13,340 --> 00:22:14,140
+Everyone gets it, right?
+
+744
+00:22:14,140 --> 00:22:15,680
+It's very simple—just these two steps.
+
+745
+00:22:15,680 --> 00:22:17,340
+But here's one thing to note.
+
+746
+00:22:17,340 --> 00:22:19,700
+The concept of atomic.
+
+747
+00:22:19,700 --> 00:22:20,480
+That is to say,
+
+748
+00:22:20,480 --> 00:22:23,720
+these two steps must be atomic.
+
+749
+00:22:23,720 --> 00:22:24,180
+What does that mean?
+
+750
+00:22:24,180 --> 00:22:26,300
+It means that these two steps,
+
+751
+00:22:26,300 --> 00:22:27,280
+the so-called atomicity,
+
+752
+00:22:27,280 --> 00:22:28,860
+means they are completed within a single instruction,
+
+753
+00:22:28,860 --> 00:22:30,460
+and cannot be interrupted.
+
+754
+00:22:30,460 --> 00:22:31,760
+This is what makes this instruction
+
+755
+00:22:31,760 --> 00:22:32,940
+slightly special.
+
+756
+00:22:32,940 --> 00:22:35,100
+It actually accomplishes the effect of two steps of
+
+757
+00:22:35,100 --> 00:22:36,300
+moving registers in one atomic operation.
+
+758
+00:22:36,300 --> 00:22:39,160
+Let me give a simple example.
+
+759
+00:22:39,160 --> 00:22:42,360
+For instance, here is an example,
+
+760
+00:22:42,360 --> 00:22:45,000
+say there's an example right here.
+
+761
+00:22:45,000 --> 00:22:46,520
+What does this mean?
+
+762
+00:22:46,520 --> 00:22:49,040
+This mscratch,
+
+763
+00:22:49,040 --> 00:22:51,900
+this is a code name for a CSR,
+
+764
+00:22:51,900 --> 00:22:53,220
+so it's a kind of
+
+765
+00:22:53,220 --> 00:22:55,060
+register we'll be using later on,
+
+766
+00:22:55,060 --> 00:22:56,280
+a CSR register.
+
+767
+00:22:56,280 --> 00:22:57,820
+Now, based on the explanation we just gave,
+
+768
+00:22:57,820 --> 00:22:58,860
+the effect it achieves is this:
+
+769
+00:22:58,860 --> 00:23:01,900
+first take the value inside mscratch
+
+770
+00:23:01,900 --> 00:23:04,580
+and put it into the t6 register,
+
+771
+00:23:04,580 --> 00:23:05,600
+which is a general-purpose register.
+
+772
+00:23:05,600 --> 00:23:06,840
+First do that,
+
+773
+00:23:06,840 --> 00:23:08,240
+and then take the value of t6
+
+774
+00:23:08,240 --> 00:23:09,800
+and put it back into here.
+
+775
+00:23:09,800 --> 00:23:12,260
+We can write the equivalent like this.
+
+776
+00:23:12,260 --> 00:23:13,200
+Now think about it — what effect
+
+777
+00:23:13,200 --> 00:23:14,360
+does this actually achieve?
+
+778
+00:23:14,360 --> 00:23:17,930
+It swaps the values
+
+779
+00:23:17,930 --> 00:23:18,750
+of the two registers.
+
+780
+00:23:18,750 --> 00:23:20,090
+Do you all understand what I mean?
+
+781
+00:23:20,090 --> 00:23:22,430
+But what we need to note is
+
+782
+00:23:22,430 --> 00:23:23,490
+this swap operation
+
+783
+00:23:23,490 --> 00:23:25,030
+is completed within a single atomic process
+
+784
+00:23:25,030 --> 00:23:26,610
+and cannot be interrupted
+
+785
+00:23:26,610 --> 00:23:28,230
+Its only difference is right here
+
+786
+00:23:28,230 --> 00:23:33,190
+Now, in the rd position
+
+787
+00:23:33,190 --> 00:23:35,330
+we can also place x0
+
+788
+00:23:35,330 --> 00:23:37,030
+We talked about x0 earlier
+
+789
+00:23:37,030 --> 00:23:38,690
+So if that is the case
+
+790
+00:23:38,690 --> 00:23:40,410
+then in fact,
+
+791
+00:23:40,410 --> 00:23:42,290
+the first step we just mentioned
+
+792
+00:23:42,290 --> 00:23:44,110
+becomes completely meaningless
+
+793
+00:23:44,110 --> 00:23:46,190
+Sometimes we use this
+
+794
+00:23:46,190 --> 00:23:47,010
+We will see it later
+
+795
+00:23:47,010 --> 00:23:49,990
+and when we do, we will go over it again
+
+796
+00:23:49,990 --> 00:23:54,520
+So this is our basic instruction
+
+797
+00:23:54,520 --> 00:23:55,860
+that is, CSRR
+
+798
+00:23:55,860 --> 00:23:57,440
+This is our basic instruction
+
+799
+00:23:57,440 --> 00:23:59,740
+Now, in common situations,
+
+800
+00:23:59,740 --> 00:24:00,980
+here comes another instruction
+
+801
+00:24:00,980 --> 00:24:02,400
+In the usual case,
+
+802
+00:24:02,400 --> 00:24:03,680
+we use this instruction to implement
+
+803
+00:24:03,680 --> 00:24:07,660
+a write operation to the CSRSR instruction
+
+804
+00:24:07,660 --> 00:24:09,460
+called CSRSR.
+
+805
+00:24:09,460 --> 00:24:10,720
+This is a pseudo-instruction,
+
+806
+00:24:10,720 --> 00:24:13,180
+and it is actually equivalent to writing it this way.
+
+807
+00:24:13,180 --> 00:24:14,580
+Now, think about this form,
+
+808
+00:24:14,580 --> 00:24:16,460
+here it writes to x0.
+
+809
+00:24:16,460 --> 00:24:18,440
+Based on what we just explained,
+
+810
+00:24:18,440 --> 00:24:19,940
+how is it actually implemented?
+
+811
+00:24:19,940 --> 00:24:22,720
+It writes this value over here,
+
+812
+00:24:22,720 --> 00:24:23,920
+that's the first step.
+
+813
+00:24:23,920 --> 00:24:26,300
+Then it brings this value back over,
+
+814
+00:24:26,300 --> 00:24:27,400
+that's the second step.
+
+815
+00:24:27,400 --> 00:24:28,400
+Right?
+
+816
+00:24:28,400 --> 00:24:30,240
+Now, as we covered just now,
+
+817
+00:24:30,240 --> 00:24:32,040
+if rd is x0,
+
+818
+00:24:32,040 --> 00:24:34,460
+the first step is actually meaningless.
+
+819
+00:24:34,460 --> 00:24:35,480
+You see what I mean?
+
+820
+00:24:35,480 --> 00:24:37,480
+So this first step
+
+821
+00:24:37,480 --> 00:24:39,460
+Actually, there won't be any
+
+822
+00:24:39,460 --> 00:24:40,880
+any activity at all
+
+823
+00:24:40,880 --> 00:24:43,640
+In fact, at the hardware level, it means that
+
+824
+00:24:43,640 --> 00:24:44,740
+it simply doesn't consume power
+
+825
+00:24:44,740 --> 00:24:45,700
+Put simply,
+
+826
+00:24:45,700 --> 00:24:47,920
+in this situation, it won't
+
+827
+00:24:47,920 --> 00:24:49,200
+it won't perform any action at all
+
+828
+00:24:49,200 --> 00:24:51,700
+It will only perform the second step,
+
+829
+00:24:51,700 --> 00:24:53,940
+writing RS into this
+
+830
+00:24:53,940 --> 00:24:55,120
+Now think about this effect:
+
+831
+00:24:55,120 --> 00:24:56,980
+isn't it essentially equivalent to
+
+832
+00:24:56,980 --> 00:24:58,900
+performing a write operation on this CSR, this special register
+
+833
+00:24:58,900 --> 00:24:59,960
+performing a write operation?
+
+834
+00:24:59,960 --> 00:25:00,540
+Don't you think so?
+
+835
+00:25:00,540 --> 00:25:02,840
+So this instruction
+
+836
+00:25:02,840 --> 00:25:04,240
+is actually what we frequently use
+
+837
+00:25:04,240 --> 00:25:06,760
+this command to write to a CSR register
+
+838
+00:25:06,760 --> 00:25:11,100
+This is what I want to
+
+839
+00:25:11,100 --> 00:25:12,420
+highlight for you as a key point
+
+840
+00:25:12,420 --> 00:25:13,420
+Of course, this instruction
+
+841
+00:25:13,420 --> 00:25:14,440
+It also has other uses,
+
+842
+00:25:14,440 --> 00:25:15,700
+and when we come to use it later,
+
+843
+00:25:15,700 --> 00:25:16,320
+we'll take another look.
+
+844
+00:25:16,320 --> 00:25:18,680
+So this is CSR RW,
+
+845
+00:25:18,680 --> 00:25:20,560
+and then there is another instruction
+
+846
+00:25:20,560 --> 00:25:22,140
+called CSRS.
+
+847
+00:25:22,140 --> 00:25:23,720
+Now, this one
+
+848
+00:25:23,720 --> 00:25:27,540
+is called Read and Set Bits in the CSR.
+
+849
+00:25:27,540 --> 00:25:29,780
+So let's take a look at the idea behind it.
+
+850
+00:25:29,780 --> 00:25:30,860
+What it means is,
+
+851
+00:25:30,860 --> 00:25:33,340
+it first reads out the value in the CSR,
+
+852
+00:25:33,340 --> 00:25:35,240
+and after extending it,
+
+853
+00:25:35,240 --> 00:25:35,760
+it writes it into rd.
+
+854
+00:25:35,760 --> 00:25:37,280
+In other words, there's nothing special here;
+
+855
+00:25:37,280 --> 00:25:38,100
+that's just how it works.
+
+856
+00:25:38,100 --> 00:25:39,180
+The first step does exactly this.
+
+857
+00:25:39,180 --> 00:25:41,220
+It's essentially just doing some zero-extension,
+
+858
+00:25:41,220 --> 00:25:42,900
+which is not our main focus here.
+
+859
+00:25:42,900 --> 00:25:43,980
+And then,
+
+860
+00:25:43,980 --> 00:25:44,980
+however,
+
+861
+00:25:44,980 --> 00:25:46,420
+For the next step,
+
+862
+00:25:46,420 --> 00:25:48,220
+it is different from the previous command.
+
+863
+00:25:48,220 --> 00:25:51,340
+It checks the bits of RC one by one,
+
+864
+00:25:51,340 --> 00:25:54,940
+and if a certain bit is 1,
+
+865
+00:25:54,940 --> 00:25:56,940
+it sets the corresponding bit in RC to 1.
+
+866
+00:25:56,940 --> 00:25:57,860
+That is to say,
+
+867
+00:25:57,860 --> 00:26:00,340
+it embodies this idea of setting a bit.
+
+868
+00:26:00,340 --> 00:26:01,880
+What does that mean?
+
+869
+00:26:01,880 --> 00:26:03,740
+You can think of it this way:
+
+870
+00:26:03,740 --> 00:26:04,560
+this part here,
+
+871
+00:26:04,560 --> 00:26:05,700
+it is essentially a,
+
+872
+00:26:05,700 --> 00:26:08,420
+it has the effect of a mask.
+
+873
+00:26:08,420 --> 00:26:09,880
+I don't know if you have encountered
+
+874
+00:26:09,880 --> 00:26:12,000
+this kind of thing in C,
+
+875
+00:26:12,000 --> 00:26:13,480
+the concept of a mask.
+
+876
+00:26:13,480 --> 00:26:16,440
+When we run commands,
+
+877
+00:26:16,440 --> 00:26:17,240
+there is this kind of concept,
+
+878
+00:26:17,240 --> 00:26:18,420
+that is, when you change the mode,
+
+879
+00:26:18,420 --> 00:26:20,400
+like 777, 666, 664,
+
+880
+00:26:20,400 --> 00:26:21,660
+you remember that mask concept, right?
+
+881
+00:26:21,660 --> 00:26:23,240
+There's a command called MUSK, right?
+
+882
+00:26:23,240 --> 00:26:26,300
+So it's basically like
+
+883
+00:26:26,300 --> 00:26:27,460
+let me explain it here
+
+884
+00:26:27,460 --> 00:26:28,940
+Basically, this is doing a mask operation
+
+885
+00:26:28,940 --> 00:26:29,940
+What does that mean?
+
+886
+00:26:29,940 --> 00:26:32,420
+It means that if a certain bit in this is 1,
+
+887
+00:26:32,420 --> 00:26:34,780
+then that bit will actually become 1,
+
+888
+00:26:34,780 --> 00:26:36,500
+meaning a certain bit in this register becomes 1.
+
+889
+00:26:36,500 --> 00:26:37,460
+If it's 0,
+
+890
+00:26:37,460 --> 00:26:39,740
+that bit actually stays unchanged.
+
+891
+00:26:39,740 --> 00:26:42,260
+So that's the effect it has.
+
+892
+00:26:42,260 --> 00:26:44,380
+Also, let me emphasize again:
+
+893
+00:26:44,380 --> 00:26:47,240
+these two steps are still carried out atomically.
+
+894
+00:26:47,240 --> 00:26:50,620
+Now, later on,
+
+895
+00:26:50,620 --> 00:26:52,200
+in our exercises,
+
+896
+00:26:52,200 --> 00:26:53,780
+we actually won't focus much on
+
+897
+00:26:53,780 --> 00:26:54,860
+this setting of bits.
+
+898
+00:26:54,860 --> 00:26:57,260
+When we use the CSRS command,
+
+899
+00:26:57,260 --> 00:26:58,640
+what we mostly want
+
+900
+00:26:58,640 --> 00:26:59,540
+is to use this command
+
+901
+00:26:59,540 --> 00:27:01,440
+Now, for CSR registers,
+
+902
+00:27:01,440 --> 00:27:02,660
+to perform a read operation,
+
+903
+00:27:02,660 --> 00:27:05,400
+let's take a look.
+
+904
+00:27:05,400 --> 00:27:07,840
+We actually have this
+
+905
+00:27:07,840 --> 00:27:08,640
+instruction
+
+906
+00:27:08,640 --> 00:27:10,360
+called CSRR.
+
+907
+00:27:10,360 --> 00:27:12,500
+The R stands for read,
+
+908
+00:27:12,500 --> 00:27:14,220
+which is just the opposite
+
+909
+00:27:14,220 --> 00:27:15,380
+of the write one we saw earlier.
+
+910
+00:27:15,380 --> 00:27:16,900
+Now, as we explained earlier,
+
+911
+00:27:16,900 --> 00:27:18,100
+it is actually equivalent to
+
+912
+00:27:18,100 --> 00:27:19,700
+taking the rs1 field,
+
+913
+00:27:19,700 --> 00:27:22,080
+and replacing it with x0.
+
+914
+00:27:22,080 --> 00:27:23,040
+So we know that,
+
+915
+00:27:23,040 --> 00:27:25,220
+what effect does it actually achieve?
+
+916
+00:27:25,220 --> 00:27:27,020
+As we explained earlier,
+
+917
+00:27:27,020 --> 00:27:28,420
+the first step is to take
+
+918
+00:27:28,420 --> 00:27:31,740
+the value in the register specified by this CSR instruction,
+
+919
+00:27:31,740 --> 00:27:33,860
+read it out, and put it into rd.
+
+920
+00:27:33,860 --> 00:27:36,080
+But here, since it's x0,
+
+921
+00:27:36,080 --> 00:27:36,840
+But for x0,
+
+922
+00:27:36,840 --> 00:27:37,900
+its value is simply 0.
+
+923
+00:27:37,900 --> 00:27:38,500
+Think about it —
+
+924
+00:27:38,500 --> 00:27:41,660
+if we use 0 as the mask to AND it,
+
+925
+00:27:41,660 --> 00:27:43,600
+will that actually affect
+
+926
+00:27:43,600 --> 00:27:45,020
+the contents of the CSR?
+
+927
+00:27:45,020 --> 00:27:47,460
+In fact, it will not cause any effect at all.
+
+928
+00:27:47,460 --> 00:27:48,040
+Right?
+
+929
+00:27:48,040 --> 00:27:50,200
+So this second step,
+
+930
+00:27:50,200 --> 00:27:52,340
+in effect, does nothing at all.
+
+931
+00:27:52,340 --> 00:27:54,060
+What we care about is here,
+
+932
+00:27:54,060 --> 00:27:55,420
+conversely, we care about its first step.
+
+933
+00:27:55,420 --> 00:27:57,760
+Now, what this step actually achieves
+
+934
+00:27:57,760 --> 00:28:00,120
+is that it takes the value in the CSR register,
+
+935
+00:28:00,120 --> 00:28:01,020
+reads it out,
+
+936
+00:28:01,020 --> 00:28:02,720
+and puts it into rd.
+
+937
+00:28:02,720 --> 00:28:04,380
+That's exactly the effect we get.
+
+938
+00:28:04,380 --> 00:28:06,620
+So we often use this instruction
+
+939
+00:28:06,620 --> 00:28:10,220
+to implement read operations on CSR instructions.
+
+940
+00:28:10,220 --> 00:28:31,280
+Now that we understand these two instructions,
+
+941
+00:28:31,280 --> 00:28:34,440
+So we can actually go ahead and do our thing
+
+942
+00:28:34,440 --> 00:28:36,180
+Because what we need to do next
+
+943
+00:28:36,180 --> 00:28:37,720
+is to figure out whether the current hart
+
+944
+00:28:37,720 --> 00:28:38,660
+is the first hart
+
+945
+00:28:38,660 --> 00:28:40,000
+Now, how do you think we should do that?
+
+946
+00:28:40,000 --> 00:28:41,800
+It basically comes down to, during execution
+
+947
+00:28:41,800 --> 00:28:43,140
+we first take this
+
+948
+00:28:43,140 --> 00:28:44,500
+there is a register
+
+949
+00:28:44,500 --> 00:28:45,500
+a CSR register
+
+950
+00:28:45,500 --> 00:28:47,400
+we read it out and take a look
+
+951
+00:28:47,400 --> 00:28:47,720
+right?
+
+952
+00:28:47,720 --> 00:28:48,960
+We definitely need to read it
+
+953
+00:28:48,960 --> 00:28:50,960
+Now, this register
+
+954
+00:28:50,960 --> 00:28:52,060
+is what we mentioned earlier
+
+955
+00:28:52,060 --> 00:28:55,700
+there is a special CSR register called the hart ID register
+
+956
+00:28:55,700 --> 00:28:59,440
+Its code name is mhartid
+
+957
+00:28:59,440 --> 00:29:03,500
+The m stands for Machine mode
+
+958
+00:29:03,500 --> 00:29:05,480
+This register is from Machine mode
+
+959
+00:29:05,480 --> 00:29:06,800
+the hart ID
+
+960
+00:29:06,800 --> 00:29:09,020
+So when we read this name
+
+961
+00:29:09,020 --> 00:29:10,780
+If we split it into three parts, it becomes easier to understand.
+
+962
+00:29:10,780 --> 00:29:14,640
+Now, as for this register,
+
+963
+00:29:14,640 --> 00:29:16,860
+it is read-only.
+
+964
+00:29:16,860 --> 00:29:20,860
+It holds the hart ID of the hart executing the current instruction.
+
+965
+00:29:20,860 --> 00:29:21,620
+Right?
+
+966
+00:29:21,620 --> 00:29:23,700
+So once we read it,
+
+967
+00:29:23,700 --> 00:29:24,660
+we can find out who we are.
+
+968
+00:29:24,660 --> 00:29:26,300
+In other words, reading it tells us who we are.
+
+969
+00:29:26,300 --> 00:29:28,000
+Do you all get what I mean?
+
+970
+00:29:28,000 --> 00:29:32,260
+Now, the specification states
+
+971
+00:29:32,260 --> 00:29:33,920
+that each hart ID must be unique,
+
+972
+00:29:33,920 --> 00:29:35,860
+and there must be one hart with ID 0.
+
+973
+00:29:35,860 --> 00:29:36,980
+So in general,
+
+974
+00:29:36,980 --> 00:29:38,800
+in our hardware implementation,
+
+975
+00:29:38,800 --> 00:29:41,140
+the first hart ID is 0.
+
+976
+00:29:41,140 --> 00:29:43,800
+There isn't much ambiguity about this.
+
+977
+00:29:43,800 --> 00:29:45,680
+Good.
+
+978
+00:29:45,680 --> 00:29:47,760
+So what we need to do now is
+
+979
+00:29:47,760 --> 00:29:48,480
+read it out,
+
+980
+00:29:48,480 --> 00:29:49,300
+and then check it.
+
+981
+00:29:49,300 --> 00:29:49,620
+Right?
+
+982
+00:29:49,620 --> 00:29:51,600
+So how do we implement this?
+
+983
+00:29:51,600 --> 00:29:53,760
+Of course, at this point, since
+
+984
+00:29:53,760 --> 00:29:56,180
+we haven't entered the C language programming environment yet,
+
+985
+00:29:56,180 --> 00:29:57,460
+we can only write it in assembly.
+
+986
+00:29:57,460 --> 00:29:58,920
+As we learned earlier,
+
+987
+00:29:58,920 --> 00:30:00,660
+the assembly syntax is very simple.
+
+988
+00:30:00,660 --> 00:30:02,440
+The logic in the previous part—
+
+989
+00:30:02,440 --> 00:30:06,760
+when our program starts running after power-on and
+
+990
+00:30:06,760 --> 00:30:08,420
+say, it jumps to our kernel,
+
+991
+00:30:08,420 --> 00:30:10,740
+at that NX8000 location,
+
+992
+00:30:10,740 --> 00:30:12,500
+it starts executing the first instruction.
+
+993
+00:30:12,500 --> 00:30:15,140
+And that instruction is this CSR instruction.
+
+994
+00:30:15,140 --> 00:30:16,740
+We talked earlier about what this instruction does.
+
+995
+00:30:16,740 --> 00:30:18,720
+It takes the value in that register
+
+996
+00:30:18,720 --> 00:30:21,480
+and reads it out into t0.
+
+997
+00:30:21,480 --> 00:30:21,720
+Right?
+
+998
+00:30:21,720 --> 00:30:24,000
+After reading it out,
+
+999
+00:30:24,000 --> 00:30:26,620
+our second statement here,
+
+1000
+00:30:26,620 --> 00:30:28,700
+actually isn't really related to this logic.
+
+1001
+00:30:28,700 --> 00:30:29,260
+Let's not go too fast for now.
+
+1002
+00:30:29,260 --> 00:30:31,480
+So next up is BNE.
+
+1003
+00:30:31,480 --> 00:30:32,080
+What does this mean?
+
+1004
+00:30:32,080 --> 00:30:32,880
+We covered this earlier.
+
+1005
+00:30:32,880 --> 00:30:33,300
+What is this doing?
+
+1006
+00:30:33,300 --> 00:30:34,960
+This is a branch instruction.
+
+1007
+00:30:34,960 --> 00:30:35,780
+What is it doing?
+
+1008
+00:30:35,780 --> 00:30:39,540
+It is checking the value in t0.
+
+1009
+00:30:39,540 --> 00:30:43,620
+If it's not equal to 0, it branches.
+
+1010
+00:30:43,620 --> 00:30:44,940
+That's what it means, right?
+
+1011
+00:30:44,940 --> 00:30:45,820
+Not equal.
+
+1012
+00:30:45,820 --> 00:30:48,380
+Branch if not equal to 0.
+
+1013
+00:30:48,380 --> 00:30:50,920
+That is, if it's not equal to 0, branch.
+
+1014
+00:30:50,920 --> 00:30:52,900
+Now for the first CPU, its value is 0.
+
+1015
+00:30:52,900 --> 00:30:54,580
+It is 0.
+
+1016
+00:30:54,580 --> 00:30:55,680
+So it does not branch.
+
+1017
+00:30:55,680 --> 00:30:56,800
+If it's anything else,
+
+1018
+00:30:56,800 --> 00:30:59,500
+it naturally branches to the PAC label.
+
+1019
+00:30:59,500 --> 00:30:59,740
+Isn't that right?
+
+1020
+00:30:59,740 --> 00:31:01,360
+Now as for the label,
+
+1021
+00:31:01,360 --> 00:31:02,360
+What we wrote here,
+
+1022
+00:31:02,360 --> 00:31:04,960
+what it actually jumps to is exactly this kind of logic.
+
+1023
+00:31:04,960 --> 00:31:07,140
+This piece of logic is just an infinite loop.
+
+1024
+00:31:07,140 --> 00:31:08,620
+That is to say,
+
+1025
+00:31:08,620 --> 00:31:10,060
+if I am not the first hart,
+
+1026
+00:31:10,060 --> 00:31:12,120
+then I'm sorry,
+
+1027
+00:31:12,120 --> 00:31:14,840
+all I can do is just spin there.
+
+1028
+00:31:14,840 --> 00:31:15,480
+And the others,
+
+1029
+00:31:15,480 --> 00:31:16,700
+and that first hart,
+
+1030
+00:31:16,700 --> 00:31:18,740
+it will execute this normal logic.
+
+1031
+00:31:18,740 --> 00:31:20,760
+This is the normal logic.
+
+1032
+00:31:20,760 --> 00:31:22,220
+The others just jump over here.
+
+1033
+00:31:22,220 --> 00:31:23,220
+And when they jump over here,
+
+1034
+00:31:23,220 --> 00:31:24,360
+it's again a loop.
+
+1035
+00:31:24,360 --> 00:31:26,740
+The loop just spins away frantically right there.
+
+1036
+00:31:26,740 --> 00:31:28,320
+It just jumps to itself, right?
+
+1037
+00:31:28,320 --> 00:31:30,240
+Isn't that an infinite loop?
+
+1038
+00:31:30,240 --> 00:31:31,020
+Right?
+
+1039
+00:31:31,020 --> 00:31:31,740
+It's just that,
+
+1040
+00:31:31,740 --> 00:31:33,000
+when we have the infinite loop,
+
+1041
+00:31:33,000 --> 00:31:34,620
+Everyone, take note here.
+
+1042
+00:31:34,620 --> 00:31:37,480
+We used a WFI instruction.
+
+1043
+00:31:37,480 --> 00:31:38,820
+This WFI instruction,
+
+1044
+00:31:38,820 --> 00:31:41,180
+is not the focus of our study.
+
+1045
+00:31:41,180 --> 00:31:43,080
+You can look it up on your own.
+
+1046
+00:31:43,080 --> 00:31:44,380
+What it actually does is
+
+1047
+00:31:44,380 --> 00:31:46,220
+put our CPU into a
+
+1048
+00:31:46,220 --> 00:31:48,180
+low-power sleep state.
+
+1049
+00:31:48,180 --> 00:31:48,660
+Because as you all know,
+
+1050
+00:31:48,660 --> 00:31:50,000
+if it just spins blindly,
+
+1051
+00:31:50,000 --> 00:31:50,980
+that consumes a lot of power.
+
+1052
+00:31:50,980 --> 00:31:51,760
+Think about it, isn't that true?
+
+1053
+00:31:51,760 --> 00:31:53,420
+If there were no
+
+1054
+00:31:53,420 --> 00:31:54,840
+if there were no
+
+1055
+00:31:54,840 --> 00:31:57,140
+if there were no
+
+1056
+00:31:57,140 --> 00:31:58,840
+WFI instruction here,
+
+1057
+00:31:58,840 --> 00:31:59,980
+without this,
+
+1058
+00:31:59,980 --> 00:32:01,140
+then it would just be spinning blindly.
+
+1059
+00:32:01,140 --> 00:32:02,220
+Spinning blindly like that,
+
+1060
+00:32:02,220 --> 00:32:03,460
+that would consume a lot of power.
+
+1061
+00:32:03,460 --> 00:32:04,840
+which is completely pointless
+
+1062
+00:32:04,840 --> 00:32:05,720
+and it just wastes power
+
+1063
+00:32:05,720 --> 00:32:07,560
+So after we added WFI,
+
+1064
+00:32:07,560 --> 00:32:09,540
+it actually enters a dormant state
+
+1065
+00:32:09,540 --> 00:32:12,080
+So it's not really spinning blindly
+
+1066
+00:32:12,080 --> 00:32:13,340
+It actually enters a dormant state
+
+1067
+00:32:13,340 --> 00:32:14,520
+What this means is
+
+1068
+00:32:14,520 --> 00:32:16,320
+unless there is an external interrupt to
+
+1069
+00:32:16,320 --> 00:32:17,860
+wake up this CPU,
+
+1070
+00:32:17,860 --> 00:32:19,500
+otherwise this CPU will enter a
+
+1071
+00:32:19,500 --> 00:32:20,700
+low-power sleep state
+
+1072
+00:32:20,700 --> 00:32:22,980
+So this achieves the effect we want
+
+1073
+00:32:22,980 --> 00:32:24,800
+So that's why we say here,
+
+1074
+00:32:24,800 --> 00:32:26,500
+calling it idle spinning is not entirely accurate
+
+1075
+00:32:26,500 --> 00:32:27,320
+We should say we let it
+
+1076
+00:32:27,320 --> 00:32:28,720
+if it's not the first CPU,
+
+1077
+00:32:28,720 --> 00:32:30,800
+we let it enter a dormant state
+
+1078
+00:32:30,800 --> 00:32:32,080
+a low-power dormant state
+
+1079
+00:32:32,080 --> 00:32:33,980
+That way,
+
+1080
+00:32:33,980 --> 00:32:35,460
+the basic logic of our leader program
+
+1081
+00:32:35,460 --> 00:32:36,500
+It's really that simple.
+
+1082
+00:32:36,500 --> 00:32:37,980
+But there are some concepts involved behind it,
+
+1083
+00:32:37,980 --> 00:32:39,760
+which we'll walk you through.
+
+1084
+00:32:39,760 --> 00:32:42,160
+Now, as for how to initialize,
+
+1085
+00:32:42,160 --> 00:32:43,280
+and how to jump into C,
+
+1086
+00:32:43,280 --> 00:32:44,160
+we won't cover that here.
+
+1087
+00:32:44,160 --> 00:32:46,660
+The earlier exercises actually already touched on that.
+
+1088
+00:32:46,660 --> 00:32:48,360
+If we look at the code ourselves, we should be able to understand it.
+
+1089
+00:32:48,360 --> 00:32:51,620
+So jumping to a function,
+
+1090
+00:32:51,620 --> 00:32:53,260
+that just means jumping into that function.
+
+1091
+00:32:53,260 --> 00:32:55,140
+Let's take a quick look over here at
+
+1092
+00:32:55,140 --> 00:32:55,800
+our code.
+
+1093
+00:32:55,800 --> 00:33:03,850
+As you can see,
+
+1094
+00:33:03,850 --> 00:33:07,170
+the code for this OS of ours,
+
+1095
+00:33:07,170 --> 00:33:09,030
+is kept separate from the ASM part.
+
+1096
+00:33:09,030 --> 00:33:10,470
+On our OS side,
+
+1097
+00:33:10,470 --> 00:33:11,950
+there are roughly a total of,
+
+1098
+00:33:11,950 --> 00:33:14,910
+11 exercises in total.
+
+1099
+00:33:14,910 --> 00:33:16,070
+Now, these 11 exercises,
+
+1100
+00:33:16,070 --> 00:33:18,310
+were actually designed in a special way.
+
+1101
+00:33:18,310 --> 00:33:20,230
+So each 01 is actually
+
+1102
+00:33:20,230 --> 00:33:21,870
+built on top of 00 as an
+
+1103
+00:33:21,870 --> 00:33:23,350
+iteration
+
+1104
+00:33:23,350 --> 00:33:26,430
+So they're really added on step by step
+
+1105
+00:33:26,430 --> 00:33:27,250
+and finally
+
+1106
+00:33:27,250 --> 00:33:29,090
+we reach this 11 step state
+
+1107
+00:33:29,090 --> 00:33:31,450
+So when you do the exercises
+
+1108
+00:33:31,450 --> 00:33:31,830
+you can also
+
+1109
+00:33:31,830 --> 00:33:35,410
+compare the two directories
+
+1110
+00:33:35,410 --> 00:33:37,790
+to see exactly what we changed at each step
+
+1111
+00:33:37,790 --> 00:33:39,510
+which helps your understanding
+
+1112
+00:33:39,510 --> 00:33:41,870
+After all, isn't this course called step by step?
+
+1113
+00:33:41,870 --> 00:33:42,450
+What does step by step mean?
+
+1114
+00:33:42,450 --> 00:33:44,910
+Well, what was changed at each step
+
+1115
+00:33:44,910 --> 00:33:46,650
+is something you can compare
+
+1116
+00:33:46,650 --> 00:33:48,010
+to understand what we actually did
+
+1117
+00:33:48,010 --> 00:33:50,850
+So this first step, the bootstrap, is really what it's all about
+
+1118
+00:33:50,850 --> 00:33:53,390
+We are at...
+
+1119
+00:33:53,390 --> 00:33:55,870
+Today we can probably only cover this much
+
+1120
+00:33:55,870 --> 00:33:56,510
+So this
+
+1121
+00:33:56,510 --> 00:33:59,050
+Now, in our code,
+
+1122
+00:33:59,050 --> 00:33:59,590
+you can see that
+
+1123
+00:33:59,590 --> 00:34:03,190
+our first little project is very simple,
+
+1124
+00:34:03,190 --> 00:34:04,390
+just four files.
+
+1125
+00:34:04,390 --> 00:34:05,710
+Among them, the makefile
+
+1126
+00:34:05,710 --> 00:34:07,270
+is our
+
+1127
+00:34:07,270 --> 00:34:09,190
+well, the makefile isn't really our source code.
+
+1128
+00:34:09,190 --> 00:34:09,930
+Actually, only
+
+1129
+00:34:09,930 --> 00:34:11,470
+for the core code,
+
+1130
+00:34:11,470 --> 00:34:12,330
+there is just
+
+1131
+00:34:12,330 --> 00:34:14,030
+one header file,
+
+1132
+00:34:14,030 --> 00:34:15,450
+plus one assembly file,
+
+1133
+00:34:15,450 --> 00:34:17,070
+plus one .c file.
+
+1134
+00:34:17,070 --> 00:34:19,570
+Now, this platform,
+
+1135
+00:34:19,570 --> 00:34:20,530
+this header file,
+
+1136
+00:34:20,530 --> 00:34:23,030
+we covered the concept of platform earlier.
+
+1137
+00:34:23,030 --> 00:34:24,110
+This header file
+
+1138
+00:34:24,110 --> 00:34:28,090
+is used to hold some platform-related
+
+1139
+00:34:28,090 --> 00:34:29,970
+hardware definitions.
+
+1140
+00:34:29,970 --> 00:34:32,010
+Right now this file is fairly small,
+
+1141
+00:34:32,010 --> 00:34:33,390
+Because right now, we don't involve that many things.
+
+1142
+00:34:33,390 --> 00:34:34,590
+We've only defined one thing.
+
+1143
+00:34:34,590 --> 00:34:36,750
+We've only defined what we just talked about.
+
+1144
+00:34:36,750 --> 00:34:38,910
+We said, how many CPUs are there on this platform?
+
+1145
+00:34:38,910 --> 00:34:40,530
+Eight. Just this little bit to go on.
+
+1146
+00:34:40,530 --> 00:34:41,570
+That's enough.
+
+1147
+00:34:41,570 --> 00:34:43,530
+Later on, we'll gradually expand this file.
+
+1148
+00:34:43,530 --> 00:34:47,390
+And then, this .s file,
+
+1149
+00:34:47,390 --> 00:34:49,030
+it's our
+
+1150
+00:34:49,030 --> 00:34:52,610
+starting address after power-on.
+
+1151
+00:34:52,610 --> 00:34:53,050
+It's all in here.
+
+1152
+00:34:53,050 --> 00:34:55,910
+The first line of code that runs is all in this place.
+
+1153
+00:34:55,910 --> 00:34:58,430
+Now, everything here is assembly.
+
+1154
+00:34:58,430 --> 00:35:00,150
+Now, everyone, pay attention.
+
+1155
+00:35:00,150 --> 00:35:01,990
+Our .S here uses an uppercase S.
+
+1156
+00:35:01,990 --> 00:35:04,130
+Now, why is it an uppercase S?
+
+1157
+00:35:04,130 --> 00:35:05,330
+Why not a lowercase s?
+
+1158
+00:35:05,330 --> 00:35:07,750
+As we mentioned before, the uppercase S,
+
+1159
+00:35:07,750 --> 00:35:09,950
+inside it, you can support this kind of thing.
+
+1160
+00:35:09,950 --> 00:35:10,490
+What's this called?
+
+1161
+00:35:10,490 --> 00:35:11,990
+Preprocessor directives.
+
+1162
+00:35:11,990 --> 00:35:14,590
+The lowercase .s file doesn't have any of these things.
+
+1163
+00:35:14,590 --> 00:35:15,510
+To make things easier for us,
+
+1164
+00:35:15,510 --> 00:35:18,730
+because we'll be using the macros defined in here.
+
+1165
+00:35:18,730 --> 00:35:20,950
+You can use macros in assembly too.
+
+1166
+00:35:20,950 --> 00:35:21,330
+See?
+
+1167
+00:35:21,330 --> 00:35:22,590
+It's very much like C.
+
+1168
+00:35:22,590 --> 00:35:26,570
+You'll notice that C and assembly really
+
+1169
+00:35:26,570 --> 00:35:28,750
+aren't that different.
+
+1170
+00:35:28,750 --> 00:35:31,770
+Now, this
+
+1171
+00:35:31,770 --> 00:35:35,750
+start.s is just the logic we had earlier.
+
+1172
+00:35:35,750 --> 00:35:37,690
+Now down here,
+
+1173
+00:35:37,690 --> 00:35:40,190
+stack here actually defines a stack region.
+
+1174
+00:35:40,190 --> 00:35:42,190
+This is very much like the earlier example.
+
+1175
+00:35:42,190 --> 00:35:43,250
+We won't say more about it.
+
+1176
+00:35:43,250 --> 00:35:44,970
+So in this code of ours,
+
+1177
+00:35:44,970 --> 00:35:46,750
+right at the beginning,
+
+1178
+00:35:46,750 --> 00:35:48,870
+there's a piece of logic down below
+
+1179
+00:35:48,870 --> 00:35:51,230
+that sets up this stack pointer,
+
+1180
+00:35:51,230 --> 00:35:51,710
+see?
+
+1181
+00:35:51,710 --> 00:35:53,590
+We've covered all of these earlier,
+
+1182
+00:35:53,590 --> 00:35:54,370
+so I won't say much about them.
+
+1183
+00:35:54,370 --> 00:35:55,490
+There are comments alongside,
+
+1184
+00:35:55,490 --> 00:35:57,010
+which are written fairly clearly.
+
+1185
+00:35:57,010 --> 00:35:58,470
+In case some of you can't see them clearly,
+
+1186
+00:35:58,470 --> 00:36:00,670
+so this piece of logic
+
+1187
+00:36:00,670 --> 00:36:02,410
+is exactly what we just talked about.
+
+1188
+00:36:02,410 --> 00:36:05,930
+We first read out the value of this m hat,
+
+1189
+00:36:05,930 --> 00:36:07,310
+and then,
+
+1190
+00:36:07,310 --> 00:36:11,270
+we compare this value against this 0,
+
+1191
+00:36:11,270 --> 00:36:14,750
+to decide whether we need to enter the Park state.
+
+1192
+00:36:14,750 --> 00:36:17,590
+So actually, this statement here,
+
+1193
+00:36:17,590 --> 00:36:19,110
+is nothing more than taking this T0 value,
+
+1194
+00:36:19,110 --> 00:36:20,770
+and saving it into a special TP,
+
+1195
+00:36:20,770 --> 00:36:22,570
+into this register,
+
+1196
+00:36:22,570 --> 00:36:24,210
+for use later on.
+
+1197
+00:36:24,210 --> 00:36:26,250
+We'll talk about it when we actually use it later.
+
+1198
+00:36:26,250 --> 00:36:28,050
+Let's just skip it for now.
+
+1199
+00:36:28,050 --> 00:36:31,630
+Then over here is the Park logic,
+
+1200
+00:36:31,630 --> 00:36:36,070
+and then we enter this FI sleep state.
+
+1201
+00:36:36,070 --> 00:36:37,970
+And we should know
+
+1202
+00:36:37,970 --> 00:36:40,450
+this code is executed by every CPU.
+
+1203
+00:36:40,450 --> 00:36:44,630
+So if you happen to be the first CPU,
+
+1204
+00:36:44,630 --> 00:36:45,310
+as we just said,
+
+1205
+00:36:45,310 --> 00:36:46,090
+for the first CPU,
+
+1206
+00:36:46,090 --> 00:36:48,330
+it will not enter the idle state.
+
+1207
+00:36:48,330 --> 00:36:50,110
+So it will execute
+
+1208
+00:36:50,110 --> 00:36:51,430
+the following part,
+
+1209
+00:36:51,430 --> 00:36:52,570
+that is, the following section,
+
+1210
+00:36:52,570 --> 00:36:53,730
+these few instructions,
+
+1211
+00:36:53,730 --> 00:36:55,590
+only the first CPU will run them.
+
+1212
+00:36:55,590 --> 00:36:57,190
+Can everyone understand this?
+
+1213
+00:36:57,190 --> 00:36:58,590
+Can you follow this?
+
+1214
+00:36:58,590 --> 00:37:00,130
+That is to say, the code below,
+
+1215
+00:37:00,130 --> 00:37:01,770
+only the first CPU can run it.
+
+1216
+00:37:01,770 --> 00:37:03,410
+That is, hart 0 will run it.
+
+1217
+00:37:03,410 --> 00:37:05,250
+What will it do?
+
+1218
+00:37:05,250 --> 00:37:05,790
+Only then will it,
+
+1219
+00:37:05,790 --> 00:37:07,790
+at this point it will go and execute
+
+1220
+00:37:07,790 --> 00:37:10,130
+the actual operations of this .text section.
+
+1221
+00:37:10,130 --> 00:37:11,450
+As for why it's written this way
+
+1222
+00:37:11,450 --> 00:37:13,190
+I'll leave that for you to look into on your own
+
+1223
+00:37:13,190 --> 00:37:14,210
+And then,
+
+1224
+00:37:14,210 --> 00:37:18,620
+get this stack pointer ready
+
+1225
+00:37:18,620 --> 00:37:19,660
+These three sections above
+
+1226
+00:37:19,660 --> 00:37:22,620
+are all just preparing this stack pointer
+
+1227
+00:37:22,620 --> 00:37:23,980
+And then,
+
+1228
+00:37:23,980 --> 00:37:24,520
+finally,
+
+1229
+00:37:24,520 --> 00:37:25,520
+with a jump instruction
+
+1230
+00:37:25,520 --> 00:37:27,160
+it jumps to start_kernel
+
+1231
+00:37:27,160 --> 00:37:28,300
+this function,
+
+1232
+00:37:28,300 --> 00:37:30,400
+to execute our kernel
+
+1233
+00:37:30,400 --> 00:37:31,800
+Basically, it's booting into
+
+1234
+00:37:31,800 --> 00:37:32,500
+our kernel
+
+1235
+00:37:32,500 --> 00:37:33,420
+Everyone follow me on that?
+
+1236
+00:37:33,420 --> 00:37:34,500
+At this point, our kernel
+
+1237
+00:37:34,500 --> 00:37:35,040
+basically,
+
+1238
+00:37:35,040 --> 00:37:35,740
+from here on out,
+
+1239
+00:37:35,740 --> 00:37:36,680
+actually, most of the code
+
+1240
+00:37:36,680 --> 00:37:38,920
+is written in C
+
+1241
+00:37:38,920 --> 00:37:40,520
+start_kernel is a C function.
+
+1242
+00:37:40,520 --> 00:37:45,210
+And the C part,
+
+1243
+00:37:45,210 --> 00:37:46,290
+is shown in a file
+
+1244
+00:37:46,290 --> 00:37:47,230
+called kernel.c,
+
+1245
+00:37:47,230 --> 00:37:49,050
+a source file like that.
+
+1246
+00:37:49,050 --> 00:37:50,010
+Right now in there
+
+1247
+00:37:50,010 --> 00:37:51,210
+what we implement is very simple,
+
+1248
+00:37:51,210 --> 00:37:52,310
+just a while loop,
+
+1249
+00:37:52,310 --> 00:37:53,870
+because at this point
+
+1250
+00:37:53,870 --> 00:37:54,770
+we can't really do anything yet.
+
+1251
+00:37:54,770 --> 00:37:56,450
+For now, the first step is simply to
+
+1252
+00:37:56,450 --> 00:37:57,730
+— that is to say, we —
+
+1253
+00:37:57,730 --> 00:37:58,990
+and the same goes for you later on,
+
+1254
+00:37:58,990 --> 00:38:00,030
+when you write a kernel yourself,
+
+1255
+00:38:00,030 --> 00:38:00,390
+it's the same idea.
+
+1256
+00:38:00,390 --> 00:38:00,830
+The first step
+
+1257
+00:38:00,830 --> 00:38:02,010
+is nothing more than getting
+
+1258
+00:38:02,010 --> 00:38:03,210
+your environment
+
+1259
+00:38:03,210 --> 00:38:04,290
+to run all the way to the
+
+1260
+00:38:04,290 --> 00:38:05,090
+first line of C code.
+
+1261
+00:38:05,090 --> 00:38:06,210
+As for when to stop doing that,
+
+1262
+00:38:06,210 --> 00:38:07,190
+well, at least your success
+
+1263
+00:38:07,190 --> 00:38:08,110
+has reached the first step,
+
+1264
+00:38:08,110 --> 00:38:09,430
+you can already see the light at the end of the tunnel.
+
+1265
+00:38:09,430 --> 00:38:10,250
+That is to say,
+
+1266
+00:38:10,250 --> 00:38:10,850
+suppose,
+
+1267
+00:38:10,850 --> 00:38:11,930
+later on we
+
+1268
+00:38:11,930 --> 00:38:12,690
+will of course add
+
+1269
+00:38:12,690 --> 00:38:13,790
+some debug prints here,
+
+1270
+00:38:13,790 --> 00:38:14,290
+that is to say,
+
+1271
+00:38:14,290 --> 00:38:16,710
+but right now we have
+
+1272
+00:38:16,710 --> 00:38:18,190
+a debugger that can step through it.
+
+1273
+00:38:18,190 --> 00:38:19,550
+If, when you single-step through it,
+
+1274
+00:38:19,550 --> 00:38:20,470
+you can get to this step,
+
+1275
+00:38:20,470 --> 00:38:22,870
+then it means you're basically able to,
+
+1276
+00:38:22,870 --> 00:38:24,690
+well, our kernel is now up and running,
+
+1277
+00:38:24,690 --> 00:38:26,430
+even though it's extremely, extremely simple.
+
+1278
+00:38:26,430 --> 00:38:29,390
+So basically,
+
+1279
+00:38:29,390 --> 00:38:31,870
+our first example,
+
+1280
+00:38:31,870 --> 00:38:33,270
+that's pretty much it.
+
+1281
+00:38:33,270 --> 00:38:37,970
+It looks like we're running a bit short on time to cover that today.
+
+1282
+00:38:37,970 --> 00:38:41,050
+There's quite a lot of material in the next part.
+
+1283
+00:38:41,050 --> 00:38:42,110
+I'd rather not break it up.
+
+1284
+00:38:42,110 --> 00:38:44,130
+Let's save it for the next class.
+
+1285
+00:38:44,130 --> 00:38:46,010
+Let's not interrupt it.
+
+1286
+00:38:46,010 --> 00:38:47,370
+Alright then.
+
+1287
+00:38:47,370 --> 00:38:48,890
+Maybe we should just stop here for today.

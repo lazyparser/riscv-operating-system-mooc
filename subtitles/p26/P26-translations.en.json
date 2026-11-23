@@ -1,0 +1,5582 @@
+[
+ {
+  "id": 0,
+  "text": "Alright, let's move into Chapter 16 of our course. This chapter is also the last chapter of this course for us. The topic of this chapter is called system calls. In fact, by working on this simple system, we'll introduce user mode and kernel mode — the kind of things you only find in real operating systems. We'll also see how, based on this kind of security protection, we can implement some"
+ },
+ {
+  "id": 1,
+  "text": "the concept of system calls."
+ },
+ {
+  "id": 2,
+  "text": "The content of this chapter"
+ },
+ {
+  "id": 3,
+  "text": "is mainly divided into these parts,"
+ },
+ {
+  "id": 4,
+  "text": "five parts in total."
+ },
+ {
+  "id": 5,
+  "text": "First,"
+ },
+ {
+  "id": 6,
+  "text": "I'll introduce to you"
+ },
+ {
+  "id": 7,
+  "text": "the concept of system modes —"
+ },
+ {
+  "id": 8,
+  "text": "user mode and kernel mode."
+ },
+ {
+  "id": 9,
+  "text": "Then,"
+ },
+ {
+  "id": 10,
+  "text": "we'll take a look at"
+ },
+ {
+  "id": 11,
+  "text": "how, with our system modes,"
+ },
+ {
+  "id": 12,
+  "text": "we can switch"
+ },
+ {
+  "id": 13,
+  "text": "between these system modes,"
+ },
+ {
+  "id": 14,
+  "text": "right?"
+ },
+ {
+  "id": 15,
+  "text": "And after that,"
+ },
+ {
+  "id": 16,
+  "text": "once we have this concept in place,"
+ },
+ {
+  "id": 17,
+  "text": "we can go ahead and implement"
+ },
+ {
+  "id": 18,
+  "text": "our own system calls."
+ },
+ {
+  "id": 19,
+  "text": "Now, the system call"
+ },
+ {
+  "id": 20,
+  "text": "What does this execution flow"
+ },
+ {
+  "id": 21,
+  "text": "look like?"
+ },
+ {
+  "id": 22,
+  "text": "And how does it pass parameters"
+ },
+ {
+  "id": 23,
+  "text": "between user mode and kernel mode?"
+ },
+ {
+  "id": 24,
+  "text": "And finally, I'll introduce to you"
+ },
+ {
+  "id": 25,
+  "text": "some concepts around how our system calls are wrapped."
+ },
+ {
+  "id": 26,
+  "text": "So,"
+ },
+ {
+  "id": 27,
+  "text": "as for the reference documentation,"
+ },
+ {
+  "id": 28,
+  "text": "we mainly rely on the basic specifications of our instruction set."
+ },
+ {
+  "id": 29,
+  "text": "Let's start with the first part,"
+ },
+ {
+  "id": 30,
+  "text": "which is the concept of user mode and kernel mode."
+ },
+ {
+  "id": 31,
+  "text": "Now, on this topic,"
+ },
+ {
+  "id": 32,
+  "text": "when we introduced the RISC-V instruction set specification earlier,"
+ },
+ {
+  "id": 33,
+  "text": "we actually already mentioned this concept."
+ },
+ {
+  "id": 34,
+  "text": "We also mentioned that"
+ },
+ {
+  "id": 35,
+  "text": "this RISC-V instruction set"
+ },
+ {
+  "id": 36,
+  "text": "can support our system"
+ },
+ {
+  "id": 37,
+  "text": "being implemented in these three typical application scenarios,"
+ },
+ {
+  "id": 38,
+  "text": "numbered one, two, and three."
+ },
+ {
+  "id": 39,
+  "text": "The first one, we said, is the simplest embedded system."
+ },
+ {
+  "id": 40,
+  "text": "So in that case,"
+ },
+ {
+  "id": 41,
+  "text": "it only needs to support one mode,"
+ },
+ {
+  "id": 42,
+  "text": "namely machine mode."
+ },
+ {
+  "id": 43,
+  "text": "Now, going a step further,"
+ },
+ {
+  "id": 44,
+  "text": "we can say we can support a"
+ },
+ {
+  "id": 45,
+  "text": "so-called secure"
+ },
+ {
+  "id": 46,
+  "text": "system with a certain degree of security,"
+ },
+ {
+  "id": 47,
+  "text": "an embedded system like that."
+ },
+ {
+  "id": 48,
+  "text": "So, if we want to implement this second kind,"
+ },
+ {
+  "id": 49,
+  "text": "that is, an embedded system with a certain degree of security,"
+ },
+ {
+  "id": 50,
+  "text": "then,"
+ },
+ {
+  "id": 51,
+  "text": "it must support at least"
+ },
+ {
+  "id": 52,
+  "text": "two modes,"
+ },
+ {
+  "id": 53,
+  "text": "namely machine mode and user mode."
+ },
+ {
+  "id": 54,
+  "text": "So, up to this point,"
+ },
+ {
+  "id": 55,
+  "text": "the system we have actually implemented,"
+ },
+ {
+  "id": 56,
+  "text": "is really just the first kind,"
+ },
+ {
+  "id": 57,
+  "text": "because in our current example,"
+ },
+ {
+  "id": 58,
+  "text": "all the code,"
+ },
+ {
+  "id": 59,
+  "text": "our mode"
+ },
+ {
+  "id": 60,
+  "text": "Actually, it has been running in machine mode all along."
+ },
+ {
+  "id": 61,
+  "text": "We never entered user mode."
+ },
+ {
+  "id": 62,
+  "text": "Right?"
+ },
+ {
+  "id": 63,
+  "text": "Now, the third one is this:"
+ },
+ {
+  "id": 64,
+  "text": "Of course, we haven't introduced"
+ },
+ {
+  "id": 65,
+  "text": "the supervisor mode either."
+ },
+ {
+  "id": 66,
+  "text": "In other words, the concept of virtual memory,"
+ },
+ {
+  "id": 67,
+  "text": "actually virtual addresses,"
+ },
+ {
+  "id": 68,
+  "text": "none of these concepts have been introduced."
+ },
+ {
+  "id": 69,
+  "text": "So, up to this point,"
+ },
+ {
+  "id": 70,
+  "text": "we've only implemented the first kind."
+ },
+ {
+  "id": 71,
+  "text": "Now, to implement this kind of"
+ },
+ {
+  "id": 72,
+  "text": "so-called secure embedded system,"
+ },
+ {
+  "id": 73,
+  "text": "we naturally need to be able to support"
+ },
+ {
+  "id": 74,
+  "text": "two different modes."
+ },
+ {
+  "id": 75,
+  "text": "Taking this diagram as an example,"
+ },
+ {
+  "id": 76,
+  "text": "it effectively means that"
+ },
+ {
+  "id": 77,
+  "text": "our program must be able to implement"
+ },
+ {
+  "id": 78,
+  "text": "the normal user-mode"
+ },
+ {
+  "id": 79,
+  "text": "user programs"
+ },
+ {
+  "id": 80,
+  "text": "We run in user mode."
+ },
+ {
+  "id": 81,
+  "text": "Then, whenever we need to execute some"
+ },
+ {
+  "id": 82,
+  "text": "kernel logic,"
+ },
+ {
+  "id": 83,
+  "text": "we switch the mode down to"
+ },
+ {
+  "id": 84,
+  "text": "the red part,"
+ },
+ {
+  "id": 85,
+  "text": "that is, into MachineTag to handle it."
+ },
+ {
+  "id": 86,
+  "text": "And then,"
+ },
+ {
+  "id": 87,
+  "text": "once the handling is done,"
+ },
+ {
+  "id": 88,
+  "text": "we switch back to user mode."
+ },
+ {
+  "id": 89,
+  "text": "If we can implement this approach,"
+ },
+ {
+  "id": 90,
+  "text": "it's essentially equivalent to"
+ },
+ {
+  "id": 91,
+  "text": "the second type he mentioned,"
+ },
+ {
+  "id": 92,
+  "text": "namely the secure embedded system,"
+ },
+ {
+  "id": 93,
+  "text": "in this kind of state."
+ },
+ {
+  "id": 94,
+  "text": "Now, in this situation,"
+ },
+ {
+  "id": 95,
+  "text": "we can actually do the same thing:"
+ },
+ {
+  "id": 96,
+  "text": "we can call this UserTag"
+ },
+ {
+  "id": 97,
+  "text": "user mode,"
+ },
+ {
+  "id": 98,
+  "text": "and our M-mode is our kernel mode."
+ },
+ {
+  "id": 99,
+  "text": "Like what we usually have in Linux,"
+ },
+ {
+  "id": 100,
+  "text": "When we say user mode, we mean that the kernel mode is what actually executes it"
+ },
+ {
+  "id": 101,
+  "text": "and kernel mode mainly refers to"
+ },
+ {
+  "id": 102,
+  "text": "the supervisor mode."
+ },
+ {
+  "id": 103,
+  "text": "So here, we can actually just"
+ },
+ {
+  "id": 104,
+  "text": "talk about the kernel mode as the machine mode."
+ },
+ {
+  "id": 105,
+  "text": "That is completely fine."
+ },
+ {
+  "id": 106,
+  "text": "So how do we"
+ },
+ {
+  "id": 107,
+  "text": "make our mode transition between two modes"
+ },
+ {
+  "id": 108,
+  "text": "instead of staying in just one?"
+ },
+ {
+  "id": 109,
+  "text": "So let us review"
+ },
+ {
+  "id": 110,
+  "text": "the examples we have done so far"
+ },
+ {
+  "id": 111,
+  "text": "and how they were implemented."
+ },
+ {
+  "id": 112,
+  "text": "That is to say, how did we"
+ },
+ {
+  "id": 113,
+  "text": "make sure that all of our code"
+ },
+ {
+  "id": 114,
+  "text": "stayed in the machine mode?"
+ },
+ {
+  "id": 115,
+  "text": "So for this,"
+ },
+ {
+  "id": 116,
+  "text": "we need to look back at"
+ },
+ {
+  "id": 117,
+  "text": "our earlier implementation."
+ },
+ {
+  "id": 118,
+  "text": "Now,"
+ },
+ {
+  "id": 119,
+  "text": "let me pull out this piece of code for you."
+ },
+ {
+  "id": 120,
+  "text": "That is, in the earlier part,"
+ },
+ {
+  "id": 121,
+  "text": "we may not have emphasized this enough,"
+ },
+ {
+  "id": 122,
+  "text": "which is to say,"
+ },
+ {
+  "id": 123,
+  "text": "you can go back and review"
+ },
+ {
+  "id": 124,
+  "text": "how we, in..."
+ },
+ {
+  "id": 125,
+  "text": "because from Chapter 8 onwards,"
+ },
+ {
+  "id": 126,
+  "text": "after this preemptive mode was introduced,"
+ },
+ {
+  "id": 127,
+  "text": "in fact, we basically..."
+ },
+ {
+  "id": 128,
+  "text": "this task scheduling,"
+ },
+ {
+  "id": 129,
+  "text": "this user task, in fact,"
+ },
+ {
+  "id": 130,
+  "text": "was finally settled in its current form"
+ },
+ {
+  "id": 131,
+  "text": "starting really from Chapter 8,"
+ },
+ {
+  "id": 132,
+  "text": "08, this preemptive..."
+ },
+ {
+  "id": 133,
+  "text": "starting from this point."
+ },
+ {
+  "id": 134,
+  "text": "Now, let's pay attention to this:"
+ },
+ {
+  "id": 135,
+  "text": "that is, at that time we,"
+ },
+ {
+  "id": 136,
+  "text": "in order to ensure that our..."
+ },
+ {
+  "id": 137,
+  "text": "all of this, the user-mode tasks,"
+ },
+ {
+  "id": 138,
+  "text": "as well as the kernel mode..."
+ },
+ {
+  "id": 139,
+  "text": "that is, our user..."
+ },
+ {
+  "id": 140,
+  "text": "User tasks,"
+ },
+ {
+  "id": 141,
+  "text": "the code of user tasks,"
+ },
+ {
+  "id": 142,
+  "text": "and the code in our kernel"
+ },
+ {
+  "id": 143,
+  "text": "all run in Machine mode."
+ },
+ {
+  "id": 144,
+  "text": "Actually, we have a piece of logic"
+ },
+ {
+  "id": 145,
+  "text": "that I don't know"
+ },
+ {
+  "id": 146,
+  "text": "if any of you have studied carefully."
+ },
+ {
+  "id": 147,
+  "text": "So let me bring it up for you again."
+ },
+ {
+  "id": 148,
+  "text": "That is, in start.s,"
+ },
+ {
+  "id": 149,
+  "text": "this file,"
+ },
+ {
+  "id": 150,
+  "text": "this assembly file,"
+ },
+ {
+  "id": 151,
+  "text": "which is our entry point,"
+ },
+ {
+  "id": 152,
+  "text": "inside this entry assembly code,"
+ },
+ {
+  "id": 153,
+  "text": "before we jump into the start kernel,"
+ },
+ {
+  "id": 154,
+  "text": "we actually have a piece of logic."
+ },
+ {
+  "id": 155,
+  "text": "So let's recall first,"
+ },
+ {
+  "id": 156,
+  "text": "that is, back then,"
+ },
+ {
+  "id": 157,
+  "text": "what did we do inside this start kernel?"
+ },
+ {
+  "id": 158,
+  "text": "This start kernel,"
+ },
+ {
+  "id": 159,
+  "text": "what did it do back then?"
+ },
+ {
+  "id": 160,
+  "text": "So in start_kernel,"
+ },
+ {
+  "id": 161,
+  "text": "following the program,"
+ },
+ {
+  "id": 162,
+  "text": "if we trace this code,"
+ },
+ {
+  "id": 163,
+  "text": "then we get to start_kernel."
+ },
+ {
+  "id": 164,
+  "text": "First, after entering start_kernel,"
+ },
+ {
+  "id": 165,
+  "text": "we call a function, schedule."
+ },
+ {
+  "id": 166,
+  "text": "And before that, there's all this dot dot dot stuff,"
+ },
+ {
+  "id": 167,
+  "text": "which is really just a lot of initialization logic."
+ },
+ {
+  "id": 168,
+  "text": "We won't go into that."
+ },
+ {
+  "id": 169,
+  "text": "So at the very beginning,"
+ },
+ {
+  "id": 170,
+  "text": "actually in this state,"
+ },
+ {
+  "id": 171,
+  "text": "up to this point,"
+ },
+ {
+  "id": 172,
+  "text": "we're still all in machine mode."
+ },
+ {
+  "id": 173,
+  "text": "Because right after boot,"
+ },
+ {
+  "id": 174,
+  "text": "it stays in machine mode."
+ },
+ {
+  "id": 175,
+  "text": "So then we,"
+ },
+ {
+  "id": 176,
+  "text": "finally,"
+ },
+ {
+  "id": 177,
+  "text": "call the schedule function."
+ },
+ {
+  "id": 178,
+  "text": "Now, this schedule function,"
+ },
+ {
+  "id": 179,
+  "text": "actually internally,"
+ },
+ {
+  "id": 180,
+  "text": "it will start"
+ },
+ {
+  "id": 181,
+  "text": "all of our user tasks"
+ },
+ {
+  "id": 182,
+  "text": "are actually started up inside this"
+ },
+ {
+  "id": 183,
+  "text": "So after we say they are started,"
+ },
+ {
+  "id": 184,
+  "text": "in fact, this"
+ },
+ {
+  "id": 185,
+  "text": "the one where start kernel resides,"
+ },
+ {
+  "id": 186,
+  "text": "this one we mentioned,"
+ },
+ {
+  "id": 187,
+  "text": "this is also a control flow,"
+ },
+ {
+  "id": 188,
+  "text": "and this control flow will actually no longer run."
+ },
+ {
+  "id": 189,
+  "text": "So the things below here"
+ },
+ {
+  "id": 190,
+  "text": "shouldn't be printed out,"
+ },
+ {
+  "id": 191,
+  "text": "which means the logic below"
+ },
+ {
+  "id": 192,
+  "text": "is actually never reached at all."
+ },
+ {
+  "id": 193,
+  "text": "So how do we go about starting"
+ },
+ {
+  "id": 194,
+  "text": "the very first"
+ },
+ {
+  "id": 195,
+  "text": "user task inside schedule?"
+ },
+ {
+  "id": 196,
+  "text": "We do it by calling switch2,"
+ },
+ {
+  "id": 197,
+  "text": "right?"
+ },
+ {
+  "id": 198,
+  "text": "You all still remember this,"
+ },
+ {
+  "id": 199,
+  "text": "this switch2"
+ },
+ {
+  "id": 200,
+  "text": "So with this logic,"
+ },
+ {
+  "id": 201,
+  "text": "what we ended up doing was"
+ },
+ {
+  "id": 202,
+  "text": "running through a bit of assembly logic,"
+ },
+ {
+  "id": 203,
+  "text": "switch2,"
+ },
+ {
+  "id": 204,
+  "text": "and in the end,"
+ },
+ {
+  "id": 205,
+  "text": "we actually used"
+ },
+ {
+  "id": 206,
+  "text": "the mret logic,"
+ },
+ {
+  "id": 207,
+  "text": "to enter"
+ },
+ {
+  "id": 208,
+  "text": "our first task at"
+ },
+ {
+  "id": 209,
+  "text": "its first instruction,"
+ },
+ {
+  "id": 210,
+  "text": "and start running from there."
+ },
+ {
+  "id": 211,
+  "text": "So now let's"
+ },
+ {
+  "id": 212,
+  "text": "go back to what we"
+ },
+ {
+  "id": 213,
+  "text": "just..."
+ },
+ {
+  "id": 214,
+  "text": "back to what we"
+ },
+ {
+  "id": 215,
+  "text": "just..."
+ },
+ {
+  "id": 216,
+  "text": "the earlier part,"
+ },
+ {
+  "id": 217,
+  "text": "this start function."
+ },
+ {
+  "id": 218,
+  "text": "What did we actually do in here?"
+ },
+ {
+  "id": 219,
+  "text": "Take a look at what we did in here."
+ },
+ {
+  "id": 220,
+  "text": "Right here,"
+ },
+ {
+  "id": 221,
+  "text": "we can actually see that"
+ },
+ {
+  "id": 222,
+  "text": "what it's really doing,"
+ },
+ {
+  "id": 223,
+  "text": "let me briefly walk you through"
+ },
+ {
+  "id": 224,
+  "text": "this piece of assembly."
+ },
+ {
+  "id": 225,
+  "text": "So what it actually does is,"
+ },
+ {
+  "id": 226,
+  "text": "first, it loads a value into the register t0,"
+ },
+ {
+  "id": 227,
+  "text": "assigns a value to it."
+ },
+ {
+  "id": 228,
+  "text": "And this value,"
+ },
+ {
+  "id": 229,
+  "text": "as we said, is actually produced by,"
+ },
+ {
+  "id": 230,
+  "text": "taking this 3,"
+ },
+ {
+  "id": 231,
+  "text": "which we know is actually 11 in binary,"
+ },
+ {
+  "id": 232,
+  "text": "left-shifted by 11 bits and 1 left-shifted by 17 bits,"
+ },
+ {
+  "id": 233,
+  "text": "and combining them to generate a value,"
+ },
+ {
+  "id": 234,
+  "text": "which is then put into t0."
+ },
+ {
+  "id": 235,
+  "text": "And then,"
+ },
+ {
+  "id": 236,
+  "text": "as for the CSR instruction,"
+ },
+ {
+  "id": 237,
+  "text": "it performs a CSR operation."
+ },
+ {
+  "id": 238,
+  "text": "We know what that does,"
+ },
+ {
+  "id": 239,
+  "text": "it reads this CSR register."
+ },
+ {
+  "id": 240,
+  "text": "It's really just taking mstatus,"
+ },
+ {
+  "id": 241,
+  "text": "the value of this control CSR register,"
+ },
+ {
+  "id": 242,
+  "text": "and reading it into a1,"
+ },
+ {
+  "id": 243,
+  "text": "and then"
+ },
+ {
+  "id": 244,
+  "text": "what do we do?"
+ },
+ {
+  "id": 245,
+  "text": "We do an OR operation,"
+ },
+ {
+  "id": 246,
+  "text": "taking the value in a1 and the value in t0,"
+ },
+ {
+  "id": 247,
+  "text": "so these two values,"
+ },
+ {
+  "id": 248,
+  "text": "we do an OR,"
+ },
+ {
+  "id": 249,
+  "text": "we do a bit-set operation,"
+ },
+ {
+  "id": 250,
+  "text": "and after doing the OR operation,"
+ },
+ {
+  "id": 251,
+  "text": "finally we take the result of the OR,"
+ },
+ {
+  "id": 252,
+  "text": "which is this t0,"
+ },
+ {
+  "id": 253,
+  "text": "and write it back into mstatus."
+ },
+ {
+  "id": 254,
+  "text": "This is the write operation."
+ },
+ {
+  "id": 255,
+  "text": "This is the read operation."
+ },
+ {
+  "id": 256,
+  "text": "So the effect this actually achieves,"
+ },
+ {
+  "id": 257,
+  "text": "is that"
+ },
+ {
+  "id": 258,
+  "text": "we are essentially modifying mstatus,"
+ },
+ {
+  "id": 259,
+  "text": "modifying this register."
+ },
+ {
+  "id": 260,
+  "text": "Set some of its bits"
+ },
+ {
+  "id": 261,
+  "text": "to turn them on"
+ },
+ {
+  "id": 262,
+  "text": "That's basically what it does"
+ },
+ {
+  "id": 263,
+  "text": "Now, what do these bits do?"
+ },
+ {
+  "id": 264,
+  "text": "We can refer to"
+ },
+ {
+  "id": 265,
+  "text": "our manual"
+ },
+ {
+  "id": 266,
+  "text": "regarding mstatus"
+ },
+ {
+  "id": 267,
+  "text": "the description of this register"
+ },
+ {
+  "id": 268,
+  "text": "This 3 shifted left by 11 bits"
+ },
+ {
+  "id": 269,
+  "text": "Actually, as you know"
+ },
+ {
+  "id": 270,
+  "text": "corresponds to the MPP bits"
+ },
+ {
+  "id": 271,
+  "text": "This 1 shifted left by 7 bits"
+ },
+ {
+  "id": 272,
+  "text": "actually corresponds to the MPIE bit"
+ },
+ {
+  "id": 273,
+  "text": "Now, as you know"
+ },
+ {
+  "id": 274,
+  "text": "what is the effect of setting these bits?"
+ },
+ {
+  "id": 275,
+  "text": "These MPP bits"
+ },
+ {
+  "id": 276,
+  "text": "let's recall what they mean"
+ },
+ {
+  "id": 277,
+  "text": "They represent, in machine mode,"
+ },
+ {
+  "id": 278,
+  "text": "the previous privilege level"
+ },
+ {
+  "id": 279,
+  "text": "So once its value is saved,"
+ },
+ {
+  "id": 280,
+  "text": "What effect will that have?"
+ },
+ {
+  "id": 281,
+  "text": "So let's go back to what we just said"
+ },
+ {
+  "id": 282,
+  "text": "about what happens with the mret instruction"
+ },
+ {
+  "id": 283,
+  "text": "This is a review"
+ },
+ {
+  "id": 284,
+  "text": "Once this mret instruction is executed,"
+ },
+ {
+  "id": 285,
+  "text": "based on what we introduced earlier,"
+ },
+ {
+  "id": 286,
+  "text": "we know that"
+ },
+ {
+  "id": 287,
+  "text": "it takes the value in MPP"
+ },
+ {
+  "id": 288,
+  "text": "to set the privilege level after mret,"
+ },
+ {
+  "id": 289,
+  "text": "this 'hot' privilege level,"
+ },
+ {
+  "id": 290,
+  "text": "so if we set it to 3,"
+ },
+ {
+  "id": 291,
+  "text": "we're actually setting both of those bits to 1."
+ },
+ {
+  "id": 292,
+  "text": "And after that,"
+ },
+ {
+  "id": 293,
+  "text": "we're back at the Machine level."
+ },
+ {
+  "id": 294,
+  "text": "So what that means is,"
+ },
+ {
+  "id": 295,
+  "text": "after this mret,"
+ },
+ {
+  "id": 296,
+  "text": "we know we return to,"
+ },
+ {
+  "id": 297,
+  "text": "we reach and enter into,"
+ },
+ {
+  "id": 298,
+  "text": "the instruction sequence of the first task."
+ },
+ {
+  "id": 299,
+  "text": "And at that point, the first task will definitely be"
+ },
+ {
+  "id": 300,
+  "text": "That is to say, it's basically like saying"
+ },
+ {
+  "id": 301,
+  "text": "keeping the first task still running"
+ },
+ {
+  "id": 302,
+  "text": "under Machine mode,"
+ },
+ {
+  "id": 303,
+  "text": "and that's actually what it means."
+ },
+ {
+  "id": 304,
+  "text": "And then,"
+ },
+ {
+  "id": 305,
+  "text": "this MPIE field,"
+ },
+ {
+  "id": 306,
+  "text": "is actually the interrupt enable bit"
+ },
+ {
+  "id": 307,
+  "text": "from the previous interrupt."
+ },
+ {
+  "id": 308,
+  "text": "So if we set it to 1,"
+ },
+ {
+  "id": 309,
+  "text": "it effectively means that we are"
+ },
+ {
+  "id": 310,
+  "text": "turning on the interrupt enable from before."
+ },
+ {
+  "id": 311,
+  "text": "Now, we know that at the time of MRET,"
+ },
+ {
+  "id": 312,
+  "text": "it will likewise, based on the value in this field,"
+ },
+ {
+  "id": 313,
+  "text": "restore the value of MIE."
+ },
+ {
+  "id": 314,
+  "text": "And we know MIE is used to"
+ },
+ {
+  "id": 315,
+  "text": "control whether interrupts are enabled or disabled."
+ },
+ {
+  "id": 316,
+  "text": "So, that means this instruction,"
+ },
+ {
+  "id": 317,
+  "text": "the setting here,"
+ },
+ {
+  "id": 318,
+  "text": "effectively ensures that"
+ },
+ {
+  "id": 319,
+  "text": "when it enters the user program,"
+ },
+ {
+  "id": 320,
+  "text": "for that task"
+ },
+ {
+  "id": 321,
+  "text": "it enabled interrupts again"
+ },
+ {
+  "id": 322,
+  "text": "enabled them again"
+ },
+ {
+  "id": 323,
+  "text": "So that's essentially what we did"
+ },
+ {
+  "id": 324,
+  "text": "Of course, what we care about"
+ },
+ {
+  "id": 325,
+  "text": "is actually over here"
+ },
+ {
+  "id": 326,
+  "text": "we're not particularly emphasizing"
+ },
+ {
+  "id": 327,
+  "text": "enabling and disabling interrupts here"
+ },
+ {
+  "id": 328,
+  "text": "What we mainly want to stress is this"
+ },
+ {
+  "id": 329,
+  "text": "that is, this thing"
+ },
+ {
+  "id": 330,
+  "text": "we're basically, so to speak,"
+ },
+ {
+  "id": 331,
+  "text": "ensuring that when we enter the user's task,"
+ },
+ {
+  "id": 332,
+  "text": "after the first task,"
+ },
+ {
+  "id": 333,
+  "text": "after mret,"
+ },
+ {
+  "id": 334,
+  "text": "our hart,"
+ },
+ {
+  "id": 335,
+  "text": "that is, the CPU's privilege level,"
+ },
+ {
+  "id": 336,
+  "text": "still remains in Machine mode"
+ },
+ {
+  "id": 337,
+  "text": "This is what we have so far"
+ },
+ {
+  "id": 338,
+  "text": "So our current system"
+ },
+ {
+  "id": 339,
+  "text": "is one where, whether it's a user program"
+ },
+ {
+  "id": 340,
+  "text": "or kernel code,"
+ },
+ {
+  "id": 341,
+  "text": "is actually running in Machine mode."
+ },
+ {
+  "id": 342,
+  "text": "That is how it is implemented."
+ },
+ {
+  "id": 343,
+  "text": "So now we are going to"
+ },
+ {
+  "id": 344,
+  "text": "make a change,"
+ },
+ {
+  "id": 345,
+  "text": "and the idea is this:"
+ },
+ {
+  "id": 346,
+  "text": "after entering the user program,"
+ },
+ {
+  "id": 347,
+  "text": "we want to move down from Machine mode"
+ },
+ {
+  "id": 348,
+  "text": "and return to user mode,"
+ },
+ {
+  "id": 349,
+  "text": "switch to user mode,"
+ },
+ {
+  "id": 350,
+  "text": "instead of staying in Machine mode."
+ },
+ {
+  "id": 351,
+  "text": "So how do we do it?"
+ },
+ {
+  "id": 352,
+  "text": "Actually, it is quite simple."
+ },
+ {
+  "id": 353,
+  "text": "As we know,"
+ },
+ {
+  "id": 354,
+  "text": "this register mstatus,"
+ },
+ {
+  "id": 355,
+  "text": "this register,"
+ },
+ {
+  "id": 356,
+  "text": "after power-on,"
+ },
+ {
+  "id": 357,
+  "text": "defaults to all zeros."
+ },
+ {
+  "id": 358,
+  "text": "That is to say,"
+ },
+ {
+  "id": 359,
+  "text": "as you know, the value of MPP"
+ },
+ {
+  "id": 360,
+  "text": "They start out as all zeros."
+ },
+ {
+  "id": 361,
+  "text": "If we don't change this value,"
+ },
+ {
+  "id": 362,
+  "text": "then after calling mret,"
+ },
+ {
+  "id": 363,
+  "text": "the new instruction,"
+ },
+ {
+  "id": 364,
+  "text": "when it runs, will read the value in here"
+ },
+ {
+  "id": 365,
+  "text": "to set the CPU's mode value."
+ },
+ {
+  "id": 366,
+  "text": "So if it's 0,"
+ },
+ {
+  "id": 367,
+  "text": "then 0 actually means user mode."
+ },
+ {
+  "id": 368,
+  "text": "So if we want"
+ },
+ {
+  "id": 369,
+  "text": "to enter the user program and"
+ },
+ {
+  "id": 370,
+  "text": "switch to user mode,"
+ },
+ {
+  "id": 371,
+  "text": "what we actually need to do"
+ },
+ {
+  "id": 372,
+  "text": "is simply not to set it to 11."
+ },
+ {
+  "id": 373,
+  "text": "Make sure that after the mret,"
+ },
+ {
+  "id": 374,
+  "text": "it will naturally enter user mode."
+ },
+ {
+  "id": 375,
+  "text": "Keep this in mind, everyone."
+ },
+ {
+  "id": 376,
+  "text": "So in our new code,"
+ },
+ {
+  "id": 377,
+  "text": "this is the old code,"
+ },
+ {
+  "id": 378,
+  "text": "and after we move into the new code,"
+ },
+ {
+  "id": 379,
+  "text": "which is in our 11-syscall,"
+ },
+ {
+  "id": 380,
+  "text": "Now, to make our user task"
+ },
+ {
+  "id": 381,
+  "text": "not stay in Machine mode,"
+ },
+ {
+  "id": 382,
+  "text": "but instead switch to User mode,"
+ },
+ {
+  "id": 383,
+  "text": "it's actually very simple —"
+ },
+ {
+  "id": 384,
+  "text": "just don't set the MPP bit."
+ },
+ {
+  "id": 385,
+  "text": "So you can see that in here,"
+ },
+ {
+  "id": 386,
+  "text": "at this point"
+ },
+ {
+  "id": 387,
+  "text": "in the new code,"
+ },
+ {
+  "id": 388,
+  "text": "we only turn on interrupts,"
+ },
+ {
+  "id": 389,
+  "text": "because interrupts still need to be enabled."
+ },
+ {
+  "id": 390,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 391,
+  "text": "When we run user tasks,"
+ },
+ {
+  "id": 392,
+  "text": "interrupts still have to be enabled,"
+ },
+ {
+  "id": 393,
+  "text": "because if they're not enabled,"
+ },
+ {
+  "id": 394,
+  "text": "interrupts can't come in,"
+ },
+ {
+  "id": 395,
+  "text": "and that obviously won't work,"
+ },
+ {
+  "id": 396,
+  "text": "right?"
+ },
+ {
+  "id": 397,
+  "text": "So here,"
+ },
+ {
+  "id": 398,
+  "text": "you just don't set this bit, and that's it."
+ },
+ {
+  "id": 399,
+  "text": "So after removing this,"
+ },
+ {
+  "id": 400,
+  "text": "In the new code,"
+ },
+ {
+  "id": 401,
+  "text": "why can we enter"
+ },
+ {
+  "id": 402,
+  "text": "this kernel mode,"
+ },
+ {
+  "id": 403,
+  "text": "why can we enter user mode? Well,"
+ },
+ {
+  "id": 404,
+  "text": "it's actually done through this."
+ },
+ {
+  "id": 405,
+  "text": "Let me explain that to you."
+ },
+ {
+  "id": 406,
+  "text": "Now let me show you."
+ },
+ {
+  "id": 407,
+  "text": "Once we have this user protection mode,"
+ },
+ {
+  "id": 408,
+  "text": "we need to understand that"
+ },
+ {
+  "id": 409,
+  "text": "once a user program is running in user mode,"
+ },
+ {
+  "id": 410,
+  "text": "then if it tries to access"
+ },
+ {
+  "id": 411,
+  "text": "resources that can only be accessed in kernel mode,"
+ },
+ {
+  "id": 412,
+  "text": "it will actually be restricted."
+ },
+ {
+  "id": 413,
+  "text": "Let's experience what this restriction looks like."
+ },
+ {
+  "id": 414,
+  "text": "We can open our Syscode code."
+ },
+ {
+  "id": 415,
+  "text": "We have"
+ },
+ {
+  "id": 416,
+  "text": "a user.c here,"
+ },
+ {
+  "id": 417,
+  "text": "this test program."
+ },
+ {
+  "id": 418,
+  "text": "Now, this test program,"
+ },
+ {
+  "id": 419,
+  "text": "as we can see here,"
+ },
+ {
+  "id": 420,
+  "text": "There is a piece of code like this."
+ },
+ {
+  "id": 421,
+  "text": "That is,"
+ },
+ {
+  "id": 422,
+  "text": "this"
+ },
+ {
+  "id": 423,
+  "text": "this macro here,"
+ },
+ {
+  "id": 424,
+  "text": "what we mean is,"
+ },
+ {
+  "id": 425,
+  "text": "inside this, we,"
+ },
+ {
+  "id": 426,
+  "text": "if this macro is enabled,"
+ },
+ {
+  "id": 427,
+  "text": "if it is defined,"
+ },
+ {
+  "id": 428,
+  "text": "it effectively means that,"
+ },
+ {
+  "id": 429,
+  "text": "we have added support for"
+ },
+ {
+  "id": 430,
+  "text": "this system call."
+ },
+ {
+  "id": 431,
+  "text": "So when we"
+ },
+ {
+  "id": 432,
+  "text": "just looked at this"
+ },
+ {
+  "id": 433,
+  "text": "sysstart.s,"
+ },
+ {
+  "id": 434,
+  "text": "let's take a look at"
+ },
+ {
+  "id": 435,
+  "text": "start.s,"
+ },
+ {
+  "id": 436,
+  "text": "right at this spot."
+ },
+ {
+  "id": 437,
+  "text": "If we have enabled this system call,"
+ },
+ {
+  "id": 438,
+  "text": "we will not set that MPP flag bit."
+ },
+ {
+  "id": 439,
+  "text": "Do you all see that?"
+ },
+ {
+  "id": 440,
+  "text": "Otherwise,"
+ },
+ {
+  "id": 441,
+  "text": "we would still go ahead and set it."
+ },
+ {
+  "id": 442,
+  "text": "And if we set it,"
+ },
+ {
+  "id": 443,
+  "text": "that means it still"
+ },
+ {
+  "id": 444,
+  "text": "won't switch down into user mode."
+ },
+ {
+  "id": 445,
+  "text": "So now,"
+ },
+ {
+  "id": 446,
+  "text": "let me show you something."
+ },
+ {
+  "id": 447,
+  "text": "What I mean is, right now we"
+ },
+ {
+  "id": 448,
+  "text": "want it to switch down into user mode."
+ },
+ {
+  "id": 449,
+  "text": "Let's take a look at how,"
+ },
+ {
+  "id": 450,
+  "text": "after switching down into user mode,"
+ },
+ {
+  "id": 451,
+  "text": "there are things"
+ },
+ {
+  "id": 452,
+  "text": "that can only be accessed in that mode,"
+ },
+ {
+  "id": 453,
+  "text": "things that only the kernel side can access,"
+ },
+ {
+  "id": 454,
+  "text": "and we can protect them."
+ },
+ {
+  "id": 455,
+  "text": "How do we protect them?"
+ },
+ {
+  "id": 456,
+  "text": "We can assume that right now we"
+ },
+ {
+  "id": 457,
+  "text": "just want to read,"
+ },
+ {
+  "id": 458,
+  "text": "to open this up,"
+ },
+ {
+  "id": 459,
+  "text": "and after you go back,"
+ },
+ {
+  "id": 460,
+  "text": "You can also follow along and practice with me."
+ },
+ {
+  "id": 461,
+  "text": "That is to say, suppose..."
+ },
+ {
+  "id": 462,
+  "text": "As we know, in the past,"
+ },
+ {
+  "id": 463,
+  "text": "our code would actually call this everywhere,"
+ },
+ {
+  "id": 464,
+  "text": "and that was no problem."
+ },
+ {
+  "id": 465,
+  "text": "Why?"
+ },
+ {
+  "id": 466,
+  "text": "Because this logic,"
+ },
+ {
+  "id": 467,
+  "text": "it actually reads mhartid,"
+ },
+ {
+  "id": 468,
+  "text": "a register in M-mode."
+ },
+ {
+  "id": 469,
+  "text": "Now, this register,"
+ },
+ {
+  "id": 470,
+  "text": "it can only be accessed in certain modes."
+ },
+ {
+  "id": 471,
+  "text": "In user mode, access is not allowed."
+ },
+ {
+  "id": 472,
+  "text": "But before,"
+ },
+ {
+  "id": 473,
+  "text": "it didn't matter."
+ },
+ {
+  "id": 474,
+  "text": "Because back then,"
+ },
+ {
+  "id": 475,
+  "text": "we never switched to user mode."
+ },
+ {
+  "id": 476,
+  "text": "So calling this function everywhere,"
+ },
+ {
+  "id": 477,
+  "text": "there were actually no restrictions at all."
+ },
+ {
+  "id": 478,
+  "text": "None whatsoever."
+ },
+ {
+  "id": 479,
+  "text": "Because we were always, in fact, at the highest privilege level."
+ },
+ {
+  "id": 480,
+  "text": "No restrictions at all."
+ },
+ {
+  "id": 481,
+  "text": "Now, as we know,"
+ },
+ {
+  "id": 482,
+  "text": "once we turn on that config syscall,"
+ },
+ {
+  "id": 483,
+  "text": "our user task,"
+ },
+ {
+  "id": 484,
+  "text": "starting from this instruction,"
+ },
+ {
+  "id": 485,
+  "text": "has actually already switched over,"
+ },
+ {
+  "id": 486,
+  "text": "already switched into user mode."
+ },
+ {
+  "id": 487,
+  "text": "So in user mode,"
+ },
+ {
+  "id": 488,
+  "text": "if you go and access this,"
+ },
+ {
+  "id": 489,
+  "text": "go and access this counter,"
+ },
+ {
+  "id": 490,
+  "text": "then that is definitely not allowed."
+ },
+ {
+  "id": 491,
+  "text": "So it will trigger an exception,"
+ },
+ {
+  "id": 492,
+  "text": "trigger an exception."
+ },
+ {
+  "id": 493,
+  "text": "Let's take a look,"
+ },
+ {
+  "id": 494,
+  "text": "and see if that is what happens."
+ },
+ {
+  "id": 495,
+  "text": "So let's turn this on."
+ },
+ {
+  "id": 496,
+  "text": "We don't worry about the rest below,"
+ },
+ {
+  "id": 497,
+  "text": "because once an exception is triggered,"
+ },
+ {
+  "id": 498,
+  "text": "inside the exception handler we will actually enter panic,"
+ },
+ {
+  "id": 499,
+  "text": "and it will actually just hang."
+ },
+ {
+  "id": 500,
+  "text": "So the program just can't keep running."
+ },
+ {
+  "id": 501,
+  "text": "As long as we see this exception triggered,"
+ },
+ {
+  "id": 502,
+  "text": "that proves what we said — that in user mode"
+ },
+ {
+  "id": 503,
+  "text": "access really is restricted."
+ },
+ {
+  "id": 504,
+  "text": "Let's run it."
+ },
+ {
+  "id": 505,
+  "text": "Everyone, look here — you see this spot?"
+ },
+ {
+  "id": 506,
+  "text": "Right after Task0 is created,"
+ },
+ {
+  "id": 507,
+  "text": "do we know why a synchronous exception is reported here?"
+ },
+ {
+  "id": 508,
+  "text": "It's actually because"
+ },
+ {
+  "id": 509,
+  "text": "we are, in the current mode,"
+ },
+ {
+  "id": 510,
+  "text": "actually already in User mode."
+ },
+ {
+  "id": 511,
+  "text": "So if in User mode you go and access that,"
+ },
+ {
+  "id": 512,
+  "text": "if in User mode you go and access this instruction,"
+ },
+ {
+  "id": 513,
+  "text": "access this register,"
+ },
+ {
+  "id": 514,
+  "text": "then it will definitely raise an exception."
+ },
+ {
+  "id": 515,
+  "text": "So this next line down will actually never be printed."
+ },
+ {
+  "id": 516,
+  "text": "Why?"
+ },
+ {
+  "id": 517,
+  "text": "Because once you go in there to access it,"
+ },
+ {
+  "id": 518,
+  "text": "it actually goes straight into the exception handling logic."
+ },
+ {
+  "id": 519,
+  "text": "And then it will oops."
+ },
+ {
+  "id": 520,
+  "text": "So this actually serves as a"
+ },
+ {
+  "id": 521,
+  "text": "to user mode,"
+ },
+ {
+  "id": 522,
+  "text": "some of our kernel-mode resources"
+ },
+ {
+  "id": 523,
+  "text": "are protected."
+ },
+ {
+  "id": 524,
+  "text": "This is what we call security,"
+ },
+ {
+  "id": 525,
+  "text": "which is reflected right here."
+ },
+ {
+  "id": 526,
+  "text": "Now, how do we implement"
+ },
+ {
+  "id": 527,
+  "text": "this user mode and kernel mode,"
+ },
+ {
+  "id": 528,
+  "text": "that is, how do we"
+ },
+ {
+  "id": 529,
+  "text": "switch out of user mode?"
+ },
+ {
+  "id": 530,
+  "text": "Actually, let me explain this to you here."
+ },
+ {
+  "id": 531,
+  "text": "It's this statement."
+ },
+ {
+  "id": 532,
+  "text": "Pay attention to this."
+ },
+ {
+  "id": 533,
+  "text": "Now, next we need to"
+ },
+ {
+  "id": 534,
+  "text": "there's a question,"
+ },
+ {
+  "id": 535,
+  "text": "which is, suppose we are in user mode,"
+ },
+ {
+  "id": 536,
+  "text": "suppose we are in user mode,"
+ },
+ {
+  "id": 537,
+  "text": "and we want to get the hart ID,"
+ },
+ {
+  "id": 538,
+  "text": "then what do we do?"
+ },
+ {
+  "id": 539,
+  "text": "Because we can't directly call"
+ },
+ {
+  "id": 540,
+  "text": "Calling it directly would cause an exception."
+ },
+ {
+  "id": 541,
+  "text": "So what do we do?"
+ },
+ {
+  "id": 542,
+  "text": "Well, this involves having to"
+ },
+ {
+  "id": 543,
+  "text": "that is, we have to further"
+ },
+ {
+  "id": 544,
+  "text": "wrap this thing up."
+ },
+ {
+  "id": 545,
+  "text": "Now, what do we mean by wrapping it up?"
+ },
+ {
+  "id": 546,
+  "text": "It really means providing system calls."
+ },
+ {
+  "id": 547,
+  "text": "And providing system calls means that"
+ },
+ {
+  "id": 548,
+  "text": "our kernel"
+ },
+ {
+  "id": 549,
+  "text": "takes this access,"
+ },
+ {
+  "id": 550,
+  "text": "this actual operation,"
+ },
+ {
+  "id": 551,
+  "text": "and wraps it inside a system call."
+ },
+ {
+  "id": 552,
+  "text": "Then, when a program in user mode"
+ },
+ {
+  "id": 553,
+  "text": "wants to access this thing,"
+ },
+ {
+  "id": 554,
+  "text": "what we actually do internally is"
+ },
+ {
+  "id": 555,
+  "text": "take this mode"
+ },
+ {
+  "id": 556,
+  "text": "and switch it,"
+ },
+ {
+  "id": 557,
+  "text": "actively switch it into Machine mode,"
+ },
+ {
+  "id": 558,
+  "text": "and only then can we access this HotID."
+ },
+ {
+  "id": 559,
+  "text": "Now, this process of actively switching"
+ },
+ {
+  "id": 560,
+  "text": "It is essentially a way of"
+ },
+ {
+  "id": 561,
+  "text": "actively triggering an exception"
+ },
+ {
+  "id": 562,
+  "text": "and this kind of exception"
+ },
+ {
+  "id": 563,
+  "text": "is what implements the switch between our system modes."
+ },
+ {
+  "id": 564,
+  "text": "And as for this mode switching,"
+ },
+ {
+  "id": 565,
+  "text": "we say it happens at these two points:"
+ },
+ {
+  "id": 566,
+  "text": "when switching from user mode to kernel mode,"
+ },
+ {
+  "id": 567,
+  "text": "we actually use a special"
+ },
+ {
+  "id": 568,
+  "text": "instruction called the ecall instruction to do it."
+ },
+ {
+  "id": 569,
+  "text": "We will introduce this ecall instruction to you later."
+ },
+ {
+  "id": 570,
+  "text": "In essence, it simply triggers an exception."
+ },
+ {
+  "id": 571,
+  "text": "And once the exception is triggered,"
+ },
+ {
+  "id": 572,
+  "text": "it enters the exception handling routine."
+ },
+ {
+  "id": 573,
+  "text": "And upon entering the exception handling routine,"
+ },
+ {
+  "id": 574,
+  "text": "it actually switches to machine mode"
+ },
+ {
+  "id": 575,
+  "text": "to handle this exception."
+ },
+ {
+  "id": 576,
+  "text": "Then, in machine mode,"
+ },
+ {
+  "id": 577,
+  "text": "it naturally can"
+ },
+ {
+  "id": 578,
+  "text": "— it is equivalent to entering kernel mode."
+ },
+ {
+  "id": 579,
+  "text": "Kernel mode."
+ },
+ {
+  "id": 580,
+  "text": "So in here,"
+ },
+ {
+  "id": 581,
+  "text": "we can access those privileged instructions,"
+ },
+ {
+  "id": 582,
+  "text": "and access those privileged registers."
+ },
+ {
+  "id": 583,
+  "text": "Then, once that's done,"
+ },
+ {
+  "id": 584,
+  "text": "since we need to return to user mode,"
+ },
+ {
+  "id": 585,
+  "text": "we need to make the return."
+ },
+ {
+  "id": 586,
+  "text": "When returning,"
+ },
+ {
+  "id": 587,
+  "text": "essentially we are making use of"
+ },
+ {
+  "id": 588,
+  "text": "the e-return that we learned about earlier,"
+ },
+ {
+  "id": 589,
+  "text": "to implement it."
+ },
+ {
+  "id": 590,
+  "text": "This one,"
+ },
+ {
+  "id": 591,
+  "text": "we've talked about this instruction before,"
+ },
+ {
+  "id": 592,
+  "text": "so I won't go into it again here."
+ },
+ {
+  "id": 593,
+  "text": "Let's focus on"
+ },
+ {
+  "id": 594,
+  "text": "this e-call instruction."
+ },
+ {
+  "id": 595,
+  "text": "The e-call instruction,"
+ },
+ {
+  "id": 596,
+  "text": "it is defined in the privilege specification,"
+ },
+ {
+  "id": 597,
+  "text": "right."
+ },
+ {
+  "id": 598,
+  "text": "So it is called"
+ },
+ {
+  "id": 599,
+  "text": "the so-called E-Call."
+ },
+ {
+  "id": 600,
+  "text": "That is, Environment"
+ },
+ {
+  "id": 601,
+  "text": "which means the environment call"
+ },
+ {
+  "id": 602,
+  "text": "the environment call is actually"
+ },
+ {
+  "id": 603,
+  "text": "what we specifically refer to as"
+ },
+ {
+  "id": 604,
+  "text": "it being that"
+ },
+ {
+  "id": 605,
+  "text": "full pipeline switch"
+ },
+ {
+  "id": 606,
+  "text": "so it actually belongs to a kind of"
+ },
+ {
+  "id": 607,
+  "text": "actively triggered exception"
+ },
+ {
+  "id": 608,
+  "text": "an actively triggered exception"
+ },
+ {
+  "id": 609,
+  "text": "so"
+ },
+ {
+  "id": 610,
+  "text": "after this actively triggered exception occurs,"
+ },
+ {
+  "id": 611,
+  "text": "depending on which call exception you trigger"
+ },
+ {
+  "id": 612,
+  "text": "at this point"
+ },
+ {
+  "id": 613,
+  "text": "when calling this E-Core,"
+ },
+ {
+  "id": 614,
+  "text": "when you currently call this E-Core,"
+ },
+ {
+  "id": 615,
+  "text": "the current value of"
+ },
+ {
+  "id": 616,
+  "text": "the privilege level"
+ },
+ {
+  "id": 617,
+  "text": "we distinguish different exception codes."
+ },
+ {
+  "id": 618,
+  "text": "You see, everyone, we have 8, 9, 11 here."
+ },
+ {
+  "id": 619,
+  "text": "So 8 actually means"
+ },
+ {
+  "id": 620,
+  "text": "If you make an environment call in user mode,"
+ },
+ {
+  "id": 621,
+  "text": "then the exception code triggered is 8."
+ },
+ {
+  "id": 622,
+  "text": "If it's triggered in S mode, it's 9."
+ },
+ {
+  "id": 623,
+  "text": "And if"
+ },
+ {
+  "id": 624,
+  "text": "if the environment call is made in some other modes,"
+ },
+ {
+  "id": 625,
+  "text": "then the exception code triggered is 11."
+ },
+ {
+  "id": 626,
+  "text": "So now,"
+ },
+ {
+  "id": 627,
+  "text": "since this exception is triggered in user mode,"
+ },
+ {
+  "id": 628,
+  "text": "it should be,"
+ },
+ {
+  "id": 629,
+  "text": "as you can probably guess, it corresponds to 8."
+ },
+ {
+  "id": 630,
+  "text": "Right?"
+ },
+ {
+  "id": 631,
+  "text": "You'll see it later in the code,"
+ },
+ {
+  "id": 632,
+  "text": "it's 8."
+ },
+ {
+  "id": 633,
+  "text": "So that's the second point."
+ },
+ {
+  "id": 634,
+  "text": "Now the third thing to note is that,"
+ },
+ {
+  "id": 635,
+  "text": "this is, after all, still the basic exception handling"
+ },
+ {
+  "id": 636,
+  "text": "we talked about earlier."
+ },
+ {
+  "id": 637,
+  "text": "So when an exception occurs,"
+ },
+ {
+  "id": 638,
+  "text": "we know the value in the EPC register,"
+ },
+ {
+  "id": 639,
+  "text": "it holds a return address."
+ },
+ {
+  "id": 640,
+  "text": "Now, one thing to pay attention to"
+ },
+ {
+  "id": 641,
+  "text": "if the exception is triggered by the 'yi' instruction"
+ },
+ {
+  "id": 642,
+  "text": "(the illegal instruction exception),"
+ },
+ {
+  "id": 643,
+  "text": "then what the EPC register holds"
+ },
+ {
+  "id": 644,
+  "text": "is the address of the 'yi' instruction itself,"
+ },
+ {
+  "id": 645,
+  "text": "that is, the address of that very instruction."
+ },
+ {
+  "id": 646,
+  "text": "So I want to remind you here,"
+ },
+ {
+  "id": 647,
+  "text": "and this is worth paying attention to,"
+ },
+ {
+  "id": 648,
+  "text": "that if you want execution to continue"
+ },
+ {
+  "id": 649,
+  "text": "after the exception is handled,"
+ },
+ {
+  "id": 650,
+  "text": "then we actually need to"
+ },
+ {
+  "id": 651,
+  "text": "modify the value of the EPC register"
+ },
+ {
+  "id": 652,
+  "text": "inside our exception handling logic."
+ },
+ {
+  "id": 653,
+  "text": "We need to change it"
+ },
+ {
+  "id": 654,
+  "text": "so it points to the next instruction to execute."
+ },
+ {
+  "id": 655,
+  "text": "Otherwise,"
+ },
+ {
+  "id": 656,
+  "text": "it will return to the current EPC,"
+ },
+ {
+  "id": 657,
+  "text": "and you will end up in an infinite loop."
+ },
+ {
+  "id": 658,
+  "text": "Keep that in mind."
+ },
+ {
+  "id": 659,
+  "text": "Keep that in mind."
+ },
+ {
+  "id": 660,
+  "text": "This is related to ECO,"
+ },
+ {
+  "id": 661,
+  "text": "an introduction to this command."
+ },
+ {
+  "id": 662,
+  "text": "So next,"
+ },
+ {
+  "id": 663,
+  "text": "let's take a look"
+ },
+ {
+  "id": 664,
+  "text": "at the execution flow"
+ },
+ {
+  "id": 665,
+  "text": "of this system call."
+ },
+ {
+  "id": 666,
+  "text": "Now, this"
+ },
+ {
+  "id": 667,
+  "text": "diagram here"
+ },
+ {
+  "id": 668,
+  "text": "is a fairly classic"
+ },
+ {
+  "id": 669,
+  "text": "system call flow."
+ },
+ {
+  "id": 670,
+  "text": "In fact, for any operating system,"
+ },
+ {
+  "id": 671,
+  "text": "the invocation process"
+ },
+ {
+  "id": 672,
+  "text": "is pretty much the same."
+ },
+ {
+  "id": 673,
+  "text": "It's just that"
+ },
+ {
+  "id": 674,
+  "text": "I tweaked it a bit"
+ },
+ {
+  "id": 675,
+  "text": "to fit our RISC-V,"
+ },
+ {
+  "id": 676,
+  "text": "into our current example here."
+ },
+ {
+  "id": 677,
+  "text": "So, for instance, right now, on the user side,"
+ },
+ {
+  "id": 678,
+  "text": "as we know, the user programs we write"
+ },
+ {
+  "id": 679,
+  "text": "effectively start from the left here."
+ },
+ {
+  "id": 680,
+  "text": "So we go call a function,"
+ },
+ {
+  "id": 681,
+  "text": "say this function."
+ },
+ {
+  "id": 682,
+  "text": "Of course, this function is written fairly generally."
+ },
+ {
+  "id": 683,
+  "text": "For example, what we're learning now,"
+ },
+ {
+  "id": 684,
+  "text": "those system calls in Linux,"
+ },
+ {
+  "id": 685,
+  "text": "say open, read, write,"
+ },
+ {
+  "id": 686,
+  "text": "they're all this kind of scenario."
+ },
+ {
+  "id": 687,
+  "text": "After you call this open,"
+ },
+ {
+  "id": 688,
+  "text": "after the function,"
+ },
+ {
+  "id": 689,
+  "text": "it will enter this open function."
+ },
+ {
+  "id": 690,
+  "text": "So inside this open function,"
+ },
+ {
+  "id": 691,
+  "text": "it does some logic."
+ },
+ {
+  "id": 692,
+  "text": "Of course, the most core part,"
+ },
+ {
+  "id": 693,
+  "text": "what we care about is that"
+ },
+ {
+  "id": 694,
+  "text": "internally it will definitely call an ecall,"
+ },
+ {
+  "id": 695,
+  "text": "because only by calling ecall"
+ },
+ {
+  "id": 696,
+  "text": "can it trigger this exception."
+ },
+ {
+  "id": 697,
+  "text": "Then this exception can eventually reach"
+ },
+ {
+  "id": 698,
+  "text": "switching this state from user mode"
+ },
+ {
+  "id": 699,
+  "text": "to kernel mode."
+ },
+ {
+  "id": 700,
+  "text": "Now after switching to kernel mode"
+ },
+ {
+  "id": 701,
+  "text": "we then enter our"
+ },
+ {
+  "id": 702,
+  "text": "unified — it still goes into our"
+ },
+ {
+  "id": 703,
+  "text": "this trap handler function"
+ },
+ {
+  "id": 704,
+  "text": "Now inside this trap handler function,"
+ },
+ {
+  "id": 705,
+  "text": "we can go ahead and do our"
+ },
+ {
+  "id": 706,
+  "text": "that is, at this point"
+ },
+ {
+  "id": 707,
+  "text": "for example, if we need to access some kernel"
+ },
+ {
+  "id": 708,
+  "text": "logic that can only be accessed in kernel mode,"
+ },
+ {
+  "id": 709,
+  "text": "then we implement it inside these functions"
+ },
+ {
+  "id": 710,
+  "text": "Now after the implementation is done,"
+ },
+ {
+  "id": 711,
+  "text": "we know that in the end we still have to return"
+ },
+ {
+  "id": 712,
+  "text": "And when returning,"
+ },
+ {
+  "id": 713,
+  "text": "essentially it's still calling mret"
+ },
+ {
+  "id": 714,
+  "text": "there's nothing much to say about that"
+ },
+ {
+  "id": 715,
+  "text": "because for this exception,"
+ },
+ {
+  "id": 716,
+  "text": "in the end it always calls mret"
+ },
+ {
+  "id": 717,
+  "text": "After mret,"
+ },
+ {
+  "id": 718,
+  "text": "then we come back"
+ },
+ {
+  "id": 719,
+  "text": "and after coming back,"
+ },
+ {
+  "id": 720,
+  "text": "the whole process is complete."
+ },
+ {
+  "id": 721,
+  "text": "In other words, the entire system call execution flow"
+ },
+ {
+  "id": 722,
+  "text": "actually works the same way."
+ },
+ {
+  "id": 723,
+  "text": "Now, at the same time, let me also mention here"
+ },
+ {
+  "id": 724,
+  "text": "that after this mret,"
+ },
+ {
+  "id": 725,
+  "text": "the mode"
+ },
+ {
+  "id": 726,
+  "text": "switches from kernel mode back to user mode."
+ },
+ {
+  "id": 727,
+  "text": "Because, as I mentioned earlier,"
+ },
+ {
+  "id": 728,
+  "text": "in the mret logic,"
+ },
+ {
+  "id": 729,
+  "text": "we actually make sure that"
+ },
+ {
+  "id": 730,
+  "text": "since with mstatus.MPP,"
+ },
+ {
+  "id": 731,
+  "text": "as long as the first time we enter"
+ },
+ {
+  "id": 732,
+  "text": "is in user mode,"
+ },
+ {
+  "id": 733,
+  "text": "this mstatus.MPP"
+ },
+ {
+  "id": 734,
+  "text": "will preserve the previous logic."
+ },
+ {
+  "id": 735,
+  "text": "The previous logic is user mode,"
+ },
+ {
+  "id": 736,
+  "text": "so when it returns,"
+ },
+ {
+  "id": 737,
+  "text": "it is still user mode."
+ },
+ {
+  "id": 738,
+  "text": "It returns to user mode."
+ },
+ {
+  "id": 739,
+  "text": "After that, there's no need to"
+ },
+ {
+  "id": 740,
+  "text": "We don't actively set it again, because as long as when it comes in"
+ },
+ {
+  "id": 741,
+  "text": "at the first time, we set MPP"
+ },
+ {
+  "id": 742,
+  "text": "to make sure it is zero, then later on"
+ },
+ {
+  "id": 743,
+  "text": "it will naturally be saved and restored again. I won't go into more detail on this."
+ },
+ {
+  "id": 744,
+  "text": "This actually belongs to"
+ },
+ {
+  "id": 745,
+  "text": "the unified handling logic part of this exception."
+ },
+ {
+  "id": 746,
+  "text": "If it's not clear, you can go back and look at our"
+ },
+ {
+  "id": 747,
+  "text": "lecture on trap and exception"
+ },
+ {
+  "id": 748,
+  "text": "and the relevant content in that chapter. Basically, this is it."
+ },
+ {
+  "id": 749,
+  "text": "Equo, on the other hand, will cause the mode to switch to kernel mode, and mReturn will switch the mode back."
+ },
+ {
+  "id": 750,
+  "text": "The mode will switch back."
+ },
+ {
+  "id": 751,
+  "text": "The mode will switch back."
+ },
+ {
+  "id": 752,
+  "text": "The mode will switch back."
+ },
+ {
+  "id": 753,
+  "text": "The mode will switch back."
+ },
+ {
+  "id": 754,
+  "text": "The mode will switch back."
+ },
+ {
+  "id": 755,
+  "text": "The mode will switch back."
+ },
+ {
+  "id": 756,
+  "text": "The mode will switch back."
+ },
+ {
+  "id": 757,
+  "text": "The mode will switch back."
+ },
+ {
+  "id": 758,
+  "text": "The mode will switch back."
+ },
+ {
+  "id": 759,
+  "text": "The mode will switch back."
+ },
+ {
+  "id": 760,
+  "text": "So this is one of the system calls,"
+ },
+ {
+  "id": 761,
+  "text": "the overall execution flow."
+ },
+ {
+  "id": 762,
+  "text": "Now, more specifically,"
+ },
+ {
+  "id": 763,
+  "text": "how does our code"
+ },
+ {
+  "id": 764,
+  "text": "actually get executed?"
+ },
+ {
+  "id": 765,
+  "text": "Let's take a look at it together."
+ },
+ {
+  "id": 766,
+  "text": "So the logic in our code"
+ },
+ {
+  "id": 767,
+  "text": "is designed like this."
+ },
+ {
+  "id": 768,
+  "text": "First, let me walk you through"
+ },
+ {
+  "id": 769,
+  "text": "the overall process of this code."
+ },
+ {
+  "id": 770,
+  "text": "We've added a few files,"
+ },
+ {
+  "id": 771,
+  "text": "for example, an assembly file called ucs.s."
+ },
+ {
+  "id": 772,
+  "text": "What's in there is actually the definitions of"
+ },
+ {
+  "id": 773,
+  "text": "our functions,"
+ },
+ {
+  "id": 774,
+  "text": "which you can basically think of as"
+ },
+ {
+  "id": 775,
+  "text": "these functions"
+ },
+ {
+  "id": 776,
+  "text": "essentially corresponding to this part,"
+ },
+ {
+  "id": 777,
+  "text": "this part here."
+ },
+ {
+  "id": 778,
+  "text": "When you look at this code,"
+ },
+ {
+  "id": 779,
+  "text": "it all looks quite similar, doesn't it?"
+ },
+ {
+  "id": 780,
+  "text": "called in one go"
+ },
+ {
+  "id": 781,
+  "text": "So these functions,"
+ },
+ {
+  "id": 782,
+  "text": "even though they are written in assembly,"
+ },
+ {
+  "id": 783,
+  "text": "are actually equivalent to this kind of"
+ },
+ {
+  "id": 784,
+  "text": "this logic, this part of it."
+ },
+ {
+  "id": 785,
+  "text": "Now this part"
+ },
+ {
+  "id": 786,
+  "text": "implements a call that runs everything in one go."
+ },
+ {
+  "id": 787,
+  "text": "And this one-shot call,"
+ },
+ {
+  "id": 788,
+  "text": "as we know, once it is made,"
+ },
+ {
+  "id": 789,
+  "text": "what it goes to is what we have seen"
+ },
+ {
+  "id": 790,
+  "text": "again and again before, which is"
+ },
+ {
+  "id": 791,
+  "text": "the trap vector inside N to S,"
+ },
+ {
+  "id": 792,
+  "text": "that is, our trap entry point."
+ },
+ {
+  "id": 793,
+  "text": "Now this entry point,"
+ },
+ {
+  "id": 794,
+  "text": "the process it goes through,"
+ },
+ {
+  "id": 795,
+  "text": "is not a simple function call."
+ },
+ {
+  "id": 796,
+  "text": "We use blue to indicate it."
+ },
+ {
+  "id": 797,
+  "text": "What it actually represents is triggering an exception."
+ },
+ {
+  "id": 798,
+  "text": "It actually represents triggering an exception."
+ },
+ {
+  "id": 799,
+  "text": "And inside this exception handler"
+ },
+ {
+  "id": 800,
+  "text": "The core thing is that it calls the trap handler."
+ },
+ {
+  "id": 801,
+  "text": "So the trap handler..."
+ },
+ {
+  "id": 802,
+  "text": "If we trace into this function,"
+ },
+ {
+  "id": 803,
+  "text": "we'll find that it actually ends up here."
+ },
+ {
+  "id": 804,
+  "text": "As for why it's 8, we explained that earlier."
+ },
+ {
+  "id": 805,
+  "text": "It's because we triggered the exception in user mode."
+ },
+ {
+  "id": 806,
+  "text": "We triggered the exception."
+ },
+ {
+  "id": 807,
+  "text": "So this trigger of ecall..."
+ },
+ {
+  "id": 808,
+  "text": "so the code value is 8."
+ },
+ {
+  "id": 809,
+  "text": "So inside 8,"
+ },
+ {
+  "id": 810,
+  "text": "inside the corresponding entry 8,"
+ },
+ {
+  "id": 811,
+  "text": "we actually call the kernel's syscall handler function."
+ },
+ {
+  "id": 812,
+  "text": "And then,"
+ },
+ {
+  "id": 813,
+  "text": "inside there,"
+ },
+ {
+  "id": 814,
+  "text": "based on some specific parameters,"
+ },
+ {
+  "id": 815,
+  "text": "we call the actual SysGetHID."
+ },
+ {
+  "id": 816,
+  "text": "Inside this,"
+ },
+ {
+  "id": 817,
+  "text": "it will access the earlier..."
+ },
+ {
+  "id": 818,
+  "text": "For example, just now we..."
+ },
+ {
+  "id": 819,
+  "text": "Taking the example we just used..."
+ },
+ {
+  "id": 820,
+  "text": "Then here we will go and"
+ },
+ {
+  "id": 821,
+  "text": "actually access that HotID of his"
+ },
+ {
+  "id": 822,
+  "text": "So in this situation,"
+ },
+ {
+  "id": 823,
+  "text": "since the access is done in Machine mode,"
+ },
+ {
+  "id": 824,
+  "text": "naturally there won't be any exception."
+ },
+ {
+  "id": 825,
+  "text": "Now, among these things,"
+ },
+ {
+  "id": 826,
+  "text": "they are actually all ordinary function calls."
+ },
+ {
+  "id": 827,
+  "text": "After returning,"
+ },
+ {
+  "id": 828,
+  "text": "please pay attention here."
+ },
+ {
+  "id": 829,
+  "text": "There is a key piece of logic here,"
+ },
+ {
+  "id": 830,
+  "text": "which is that at this point we need to"
+ },
+ {
+  "id": 831,
+  "text": "add 4 to returnPC."
+ },
+ {
+  "id": 832,
+  "text": "Why?"
+ },
+ {
+  "id": 833,
+  "text": "The reason is what we talked about earlier,"
+ },
+ {
+  "id": 834,
+  "text": "which is this equal function."
+ },
+ {
+  "id": 835,
+  "text": "After it triggers an exception and returns,"
+ },
+ {
+  "id": 836,
+  "text": "if we don't handle it specially,"
+ },
+ {
+  "id": 837,
+  "text": "its EPC actually saves"
+ },
+ {
+  "id": 838,
+  "text": "the equal instruction itself."
+ },
+ {
+  "id": 839,
+  "text": "So if we don't add 4,"
+ },
+ {
+  "id": 840,
+  "text": "Now, after the exception returns,"
+ },
+ {
+  "id": 841,
+  "text": "it will continue executing this equal instruction,"
+ },
+ {
+  "id": 842,
+  "text": "and then this loop starts happening all over again."
+ },
+ {
+  "id": 843,
+  "text": "Now that's not what we want to see,"
+ },
+ {
+  "id": 844,
+  "text": "because what we want is to move on to the next step."
+ },
+ {
+  "id": 845,
+  "text": "So we forcibly take this"
+ },
+ {
+  "id": 846,
+  "text": "MPC return PC and add 4 to it."
+ },
+ {
+  "id": 847,
+  "text": "We know, based on our code logic,"
+ },
+ {
+  "id": 848,
+  "text": "after this return PC returns,"
+ },
+ {
+  "id": 849,
+  "text": "it will go and modify the EPC register."
+ },
+ {
+  "id": 850,
+  "text": "Now, why add 4?"
+ },
+ {
+  "id": 851,
+  "text": "That's because one instruction is four bytes."
+ },
+ {
+  "id": 852,
+  "text": "Right."
+ },
+ {
+  "id": 853,
+  "text": "So after returning this way,"
+ },
+ {
+  "id": 854,
+  "text": "we know that this one,"
+ },
+ {
+  "id": 855,
+  "text": "it will not,"
+ },
+ {
+  "id": 856,
+  "text": "it will not,"
+ },
+ {
+  "id": 857,
+  "text": "it will no longer jump over here to execute."
+ },
+ {
+  "id": 858,
+  "text": "So on our side,"
+ },
+ {
+  "id": 859,
+  "text": "it will be able to continue moving forward."
+ },
+ {
+  "id": 860,
+  "text": "Right"
+ },
+ {
+  "id": 861,
+  "text": "over here"
+ },
+ {
+  "id": 862,
+  "text": "at this point it hasn't exited yet"
+ },
+ {
+  "id": 863,
+  "text": "so this return,"
+ },
+ {
+  "id": 864,
+  "text": "after mret returns,"
+ },
+ {
+  "id": 865,
+  "text": "it can continue moving forward"
+ },
+ {
+  "id": 866,
+  "text": "at this point,"
+ },
+ {
+  "id": 867,
+  "text": "it proceeds down to here"
+ },
+ {
+  "id": 868,
+  "text": "otherwise it would fall into an infinite loop at this equal branch"
+ },
+ {
+  "id": 869,
+  "text": "and that's not what we want to see"
+ },
+ {
+  "id": 870,
+  "text": "so this mret,"
+ },
+ {
+  "id": 871,
+  "text": "when it comes back,"
+ },
+ {
+  "id": 872,
+  "text": "is also shown with a blue line"
+ },
+ {
+  "id": 873,
+  "text": "because this is not a"
+ },
+ {
+  "id": 874,
+  "text": "ordinary function call either"
+ },
+ {
+  "id": 875,
+  "text": "because it involves a mode switch"
+ },
+ {
+  "id": 876,
+  "text": "because when it comes back from here,"
+ },
+ {
+  "id": 877,
+  "text": "the mode again goes from"
+ },
+ {
+  "id": 878,
+  "text": "supervisor mode back to user mode"
+ },
+ {
+  "id": 879,
+  "text": "so please pay attention to this"
+ },
+ {
+  "id": 880,
+  "text": "This is an actual"
+ },
+ {
+  "id": 881,
+  "text": "code execution process"
+ },
+ {
+  "id": 882,
+  "text": "that corresponds to the"
+ },
+ {
+  "id": 883,
+  "text": "flow we described above"
+ },
+ {
+  "id": 884,
+  "text": "Take a moment to get familiar with this"
+ },
+ {
+  "id": 885,
+  "text": "So once we have an overall understanding"
+ },
+ {
+  "id": 886,
+  "text": "of this execution flow,"
+ },
+ {
+  "id": 887,
+  "text": "there is still one problem we need to solve"
+ },
+ {
+  "id": 888,
+  "text": "and that is the issue of passing arguments in this function call"
+ },
+ {
+  "id": 889,
+  "text": "Because this process"
+ },
+ {
+  "id": 890,
+  "text": "is not an ordinary function call"
+ },
+ {
+  "id": 891,
+  "text": "So during this process,"
+ },
+ {
+  "id": 892,
+  "text": "similarly, because we"
+ },
+ {
+  "id": 893,
+  "text": "for example, when we call the open function system call,"
+ },
+ {
+  "id": 894,
+  "text": "we may still need to, at the user level,"
+ },
+ {
+  "id": 895,
+  "text": "pass some values into the kernel level"
+ },
+ {
+  "id": 896,
+  "text": "So how should we design"
+ },
+ {
+  "id": 897,
+  "text": "this passing process?"
+ },
+ {
+  "id": 898,
+  "text": "This is the fourth part we want to introduce to you"
+ },
+ {
+  "id": 899,
+  "text": "Now for this system call,"
+ },
+ {
+  "id": 900,
+  "text": "As we know, it is"
+ },
+ {
+  "id": 901,
+  "text": "actually the operating system's"
+ },
+ {
+  "id": 902,
+  "text": "set of interfaces provided to the outside world"
+ },
+ {
+  "id": 903,
+  "text": "So the system call's own"
+ },
+ {
+  "id": 904,
+  "text": "parameter-passing convention,"
+ },
+ {
+  "id": 905,
+  "text": "is in fact handled by different"
+ },
+ {
+  "id": 906,
+  "text": "operating systems themselves"
+ },
+ {
+  "id": 907,
+  "text": "through implementation-defined mechanisms."
+ },
+ {
+  "id": 908,
+  "text": "However,"
+ },
+ {
+  "id": 909,
+  "text": "to a certain extent, it must also follow"
+ },
+ {
+  "id": 910,
+  "text": "what we mentioned earlier,"
+ },
+ {
+  "id": 911,
+  "text": "the function calling convention."
+ },
+ {
+  "id": 912,
+  "text": "The function calling convention is fundamental."
+ },
+ {
+  "id": 913,
+  "text": "However,"
+ },
+ {
+  "id": 914,
+  "text": "the operating system can, on top of that,"
+ },
+ {
+  "id": 915,
+  "text": "on top of this function,"
+ },
+ {
+  "id": 916,
+  "text": "on top of the function calling convention,"
+ },
+ {
+  "id": 917,
+  "text": "on that foundation,"
+ },
+ {
+  "id": 918,
+  "text": "make further specifications"
+ },
+ {
+  "id": 919,
+  "text": "and further rules."
+ },
+ {
+  "id": 920,
+  "text": "So the little system we've implemented so far,"
+ },
+ {
+  "id": 921,
+  "text": "let's call it RBOS for example,"
+ },
+ {
+  "id": 922,
+  "text": "our current definition,"
+ },
+ {
+  "id": 923,
+  "text": "is actually modeled after the classic Linux system calls."
+ },
+ {
+  "id": 924,
+  "text": "So we have a few rules,"
+ },
+ {
+  "id": 925,
+  "text": "some rules."
+ },
+ {
+  "id": 926,
+  "text": "The general principles,"
+ },
+ {
+  "id": 927,
+  "text": "are listed in the three points below."
+ },
+ {
+  "id": 928,
+  "text": "First, there's a concept involved,"
+ },
+ {
+  "id": 929,
+  "text": "which is the concept of the system call number."
+ },
+ {
+  "id": 930,
+  "text": "The system call number."
+ },
+ {
+  "id": 931,
+  "text": "So what does the system call number mean?"
+ },
+ {
+  "id": 932,
+  "text": "On this,"
+ },
+ {
+  "id": 933,
+  "text": "let's come back and take a look."
+ },
+ {
+  "id": 934,
+  "text": "That is,"
+ },
+ {
+  "id": 935,
+  "text": "let's come back and take a look at"
+ },
+ {
+  "id": 936,
+  "text": "the ecall instruction we mentioned earlier."
+ },
+ {
+  "id": 937,
+  "text": "One thing to note about this instruction,"
+ },
+ {
+  "id": 938,
+  "text": "is that inside it,"
+ },
+ {
+  "id": 939,
+  "text": "it actually doesn't carry many parameters."
+ },
+ {
+  "id": 940,
+  "text": "without too many parameters"
+ },
+ {
+  "id": 941,
+  "text": "So this one,"
+ },
+ {
+  "id": 942,
+  "text": "but,"
+ },
+ {
+  "id": 943,
+  "text": "when we talk about system calls,"
+ },
+ {
+  "id": 944,
+  "text": "there's definitely not just one,"
+ },
+ {
+  "id": 945,
+  "text": "right?"
+ },
+ {
+  "id": 946,
+  "text": "With ecall,"
+ },
+ {
+  "id": 947,
+  "text": "it just triggers the system call,"
+ },
+ {
+  "id": 948,
+  "text": "but our actual system calls"
+ },
+ {
+  "id": 949,
+  "text": "could be numerous,"
+ },
+ {
+  "id": 950,
+  "text": "right?"
+ },
+ {
+  "id": 951,
+  "text": "For example, look at Linux — there are many system call functions,"
+ },
+ {
+  "id": 952,
+  "text": "open, read, write,"
+ },
+ {
+  "id": 953,
+  "text": "lots of system calls."
+ },
+ {
+  "id": 954,
+  "text": "So how do we tell these system calls apart?"
+ },
+ {
+  "id": 955,
+  "text": "We actually do it through what's called a"
+ },
+ {
+  "id": 956,
+  "text": "for each system call,"
+ },
+ {
+  "id": 957,
+  "text": "we give it an integer value,"
+ },
+ {
+  "id": 958,
+  "text": "a number, to distinguish them."
+ },
+ {
+  "id": 959,
+  "text": "But,"
+ },
+ {
+  "id": 960,
+  "text": "Now, this number,"
+ },
+ {
+  "id": 961,
+  "text": "there's nowhere in the ecall instruction to put it."
+ },
+ {
+  "id": 962,
+  "text": "We don't have a place to store that value."
+ },
+ {
+  "id": 963,
+  "text": "So under the current convention we're using,"
+ },
+ {
+  "id": 964,
+  "text": "we actually make use of a register."
+ },
+ {
+  "id": 965,
+  "text": "This may differ from some other architectures."
+ },
+ {
+  "id": 966,
+  "text": "It might not be quite the same."
+ },
+ {
+  "id": 967,
+  "text": "In some architectures,"
+ },
+ {
+  "id": 968,
+  "text": "there might be, in this,"
+ },
+ {
+  "id": 969,
+  "text": "there are also some related trap instructions,"
+ },
+ {
+  "id": 970,
+  "text": "and within the trap instruction itself,"
+ },
+ {
+  "id": 971,
+  "text": "the system call number is included."
+ },
+ {
+  "id": 972,
+  "text": "However,"
+ },
+ {
+  "id": 973,
+  "text": "with RISC-V,"
+ },
+ {
+  "id": 974,
+  "text": "it doesn't do it that way."
+ },
+ {
+  "id": 975,
+  "text": "It actually,"
+ },
+ {
+  "id": 976,
+  "text": "by convention, puts the system call number,"
+ },
+ {
+  "id": 977,
+  "text": "on a parameter register called a7,"
+ },
+ {
+  "id": 978,
+  "text": "one of these argument registers."
+ },
+ {
+  "id": 979,
+  "text": "As we know, the ones starting with a"
+ },
+ {
+  "id": 980,
+  "text": "is used to pass arguments."
+ },
+ {
+  "id": 981,
+  "text": "So this special argument"
+ },
+ {
+  "id": 982,
+  "text": "is used to hold the system call number, as specified."
+ },
+ {
+  "id": 983,
+  "text": "Besides that,"
+ },
+ {
+  "id": 984,
+  "text": "our a0 through a5,"
+ },
+ {
+  "id": 985,
+  "text": "they hold the other arguments of the call."
+ },
+ {
+  "id": 986,
+  "text": "Actually, the system call number can also be seen"
+ },
+ {
+  "id": 987,
+  "text": "as one of its arguments,"
+ },
+ {
+  "id": 988,
+  "text": "but"
+ },
+ {
+  "id": 989,
+  "text": "this argument is a bit special."
+ },
+ {
+  "id": 990,
+  "text": "We can use this argument"
+ },
+ {
+  "id": 991,
+  "text": "to tell different system calls apart."
+ },
+ {
+  "id": 992,
+  "text": "As for the other arguments,"
+ },
+ {
+  "id": 993,
+  "text": "a0 through a5,"
+ },
+ {
+  "id": 994,
+  "text": "they hold the regular arguments."
+ },
+ {
+  "id": 995,
+  "text": "Regular arguments."
+ },
+ {
+  "id": 996,
+  "text": "So at most, that's equivalent to 6 of them."
+ },
+ {
+  "id": 997,
+  "text": "Any more than that,"
+ },
+ {
+  "id": 998,
+  "text": "and mainly, considering efficiency,"
+ },
+ {
+  "id": 999,
+  "text": "in principle, you could hold more."
+ },
+ {
+  "id": 1000,
+  "text": "We could also use A6."
+ },
+ {
+  "id": 1001,
+  "text": "We could put one more there too, right?"
+ },
+ {
+  "id": 1002,
+  "text": "But we don't use it."
+ },
+ {
+  "id": 1003,
+  "text": "Then there's also a return value."
+ },
+ {
+  "id": 1004,
+  "text": "As for the return value,"
+ },
+ {
+  "id": 1005,
+  "text": "it's placed in A0."
+ },
+ {
+  "id": 1006,
+  "text": "Generally, for system calls,"
+ },
+ {
+  "id": 1007,
+  "text": "the most basic return value"
+ },
+ {
+  "id": 1008,
+  "text": "is just success or failure."
+ },
+ {
+  "id": 1009,
+  "text": "As for the other parameters,"
+ },
+ {
+  "id": 1010,
+  "text": "they may be returned through some other means."
+ },
+ {
+  "id": 1011,
+  "text": "But the value returned in A0,"
+ },
+ {
+  "id": 1012,
+  "text": "mainly indicates success or failure."
+ },
+ {
+  "id": 1013,
+  "text": "Success is generally 0,"
+ },
+ {
+  "id": 1014,
+  "text": "and if it's an error,"
+ },
+ {
+  "id": 1015,
+  "text": "then it's a negative number,"
+ },
+ {
+  "id": 1016,
+  "text": "representing different errors."
+ },
+ {
+  "id": 1017,
+  "text": "This is our convention."
+ },
+ {
+  "id": 1018,
+  "text": "Actually, Linux does the same thing."
+ },
+ {
+  "id": 1019,
+  "text": "We made this rule by referencing Linux."
+ },
+ {
+  "id": 1020,
+  "text": "So based on this principle,"
+ },
+ {
+  "id": 1021,
+  "text": "we can carefully design"
+ },
+ {
+  "id": 1022,
+  "text": "how our system call"
+ },
+ {
+  "id": 1023,
+  "text": "should be implemented."
+ },
+ {
+  "id": 1024,
+  "text": "Now, for the specific implementation,"
+ },
+ {
+  "id": 1025,
+  "text": "let me give you a brief overview."
+ },
+ {
+  "id": 1026,
+  "text": "So let's assume the process"
+ },
+ {
+  "id": 1027,
+  "text": "happens like this."
+ },
+ {
+  "id": 1028,
+  "text": "So here,"
+ },
+ {
+  "id": 1029,
+  "text": "suppose we implement a system call"
+ },
+ {
+  "id": 1030,
+  "text": "function called getHID."
+ },
+ {
+  "id": 1031,
+  "text": "This is a function we implemented."
+ },
+ {
+  "id": 1032,
+  "text": "It gets triggered from a task in user mode."
+ },
+ {
+  "id": 1033,
+  "text": "So once it's called,"
+ },
+ {
+  "id": 1034,
+  "text": "in the kernel,"
+ },
+ {
+  "id": 1035,
+  "text": "we actually assign each system call"
+ },
+ {
+  "id": 1036,
+  "text": "a system call number."
+ },
+ {
+  "id": 1037,
+  "text": "This system call number"
+ },
+ {
+  "id": 1038,
+  "text": "is kept in the"
+ },
+ {
+  "id": 1039,
+  "text": "header file syscall.h."
+ },
+ {
+  "id": 1040,
+  "text": "So our example here is quite simple."
+ },
+ {
+  "id": 1041,
+  "text": "We've only defined one."
+ },
+ {
+  "id": 1042,
+  "text": "After you go back,"
+ },
+ {
+  "id": 1043,
+  "text": "you can extend it yourselves."
+ },
+ {
+  "id": 1044,
+  "text": "Just put 1234 as an integer value, and that's fine."
+ },
+ {
+  "id": 1045,
+  "text": "And then,"
+ },
+ {
+  "id": 1046,
+  "text": "look at how we implement this getpid,"
+ },
+ {
+  "id": 1047,
+  "text": "when we write this function,"
+ },
+ {
+  "id": 1048,
+  "text": "before we call ecall,"
+ },
+ {
+  "id": 1049,
+  "text": "we take this a7,"
+ },
+ {
+  "id": 1050,
+  "text": "this value,"
+ },
+ {
+  "id": 1051,
+  "text": "we take this system call number,"
+ },
+ {
+  "id": 1052,
+  "text": "this number,"
+ },
+ {
+  "id": 1053,
+  "text": "this ID,"
+ },
+ {
+  "id": 1054,
+  "text": "and save it into a7."
+ },
+ {
+  "id": 1055,
+  "text": "So this a7,"
+ },
+ {
+  "id": 1056,
+  "text": "is used to — essentially, it is used to pass"
+ },
+ {
+  "id": 1057,
+  "text": "the system call number."
+ },
+ {
+  "id": 1058,
+  "text": "In the kernel, we check"
+ },
+ {
+  "id": 1059,
+  "text": "the value of this a7"
+ },
+ {
+  "id": 1060,
+  "text": "With this register,"
+ },
+ {
+  "id": 1061,
+  "text": "we can tell which system call has occurred,"
+ },
+ {
+  "id": 1062,
+  "text": "and then"
+ },
+ {
+  "id": 1063,
+  "text": "we just call the corresponding handler function."
+ },
+ {
+  "id": 1064,
+  "text": "So after this ecall,"
+ },
+ {
+  "id": 1065,
+  "text": "we come in here,"
+ },
+ {
+  "id": 1066,
+  "text": "and once we're in here,"
+ },
+ {
+  "id": 1067,
+  "text": "we call equal,"
+ },
+ {
+  "id": 1068,
+  "text": "which we've already talked about earlier."
+ },
+ {
+  "id": 1069,
+  "text": "Now, note one thing:"
+ },
+ {
+  "id": 1070,
+  "text": "when we call this function,"
+ },
+ {
+  "id": 1071,
+  "text": "in the end,"
+ },
+ {
+  "id": 1072,
+  "text": "what we actually call is this,"
+ },
+ {
+  "id": 1073,
+  "text": "the TrapHandler function."
+ },
+ {
+  "id": 1074,
+  "text": "And here,"
+ },
+ {
+  "id": 1075,
+  "text": "we've added a parameter,"
+ },
+ {
+  "id": 1076,
+  "text": "which is actually the exception occurrence,"
+ },
+ {
+  "id": 1077,
+  "text": "that an exception was triggered."
+ },
+ {
+  "id": 1078,
+  "text": "So here we'll have many..."
+ },
+ {
+  "id": 1079,
+  "text": "earlier, there was actually a save..."
+ },
+ {
+  "id": 1080,
+  "text": "register operations"
+ },
+ {
+  "id": 1081,
+  "text": "are essentially context save operations."
+ },
+ {
+  "id": 1082,
+  "text": "Now, in the context save operation,"
+ },
+ {
+  "id": 1083,
+  "text": "note that"
+ },
+ {
+  "id": 1084,
+  "text": "it will actually save a0, a1, and a2"
+ },
+ {
+  "id": 1085,
+  "text": "— it saves them"
+ },
+ {
+  "id": 1086,
+  "text": "into memory."
+ },
+ {
+  "id": 1087,
+  "text": "Then, when we call the trap handler,"
+ },
+ {
+  "id": 1088,
+  "text": "we use up a0, a1, and a2"
+ },
+ {
+  "id": 1089,
+  "text": "to pass"
+ },
+ {
+  "id": 1090,
+  "text": "some special values."
+ },
+ {
+  "id": 1091,
+  "text": "Among them,"
+ },
+ {
+  "id": 1092,
+  "text": "over here,"
+ },
+ {
+  "id": 1093,
+  "text": "note that"
+ },
+ {
+  "id": 1094,
+  "text": "through a0"
+ },
+ {
+  "id": 1095,
+  "text": "we pass in the context pointer,"
+ },
+ {
+  "id": 1096,
+  "text": "passing it in,"
+ },
+ {
+  "id": 1097,
+  "text": "because when we save,"
+ },
+ {
+  "id": 1098,
+  "text": "we actually store things in"
+ },
+ {
+  "id": 1099,
+  "text": "this memory region for the context."
+ },
+ {
+  "id": 1100,
+  "text": "This MSquash of ours,"
+ },
+ {
+  "id": 1101,
+  "text": "as we mentioned earlier,"
+ },
+ {
+  "id": 1102,
+  "text": "it is used to"
+ },
+ {
+  "id": 1103,
+  "text": "during task scheduling,"
+ },
+ {
+  "id": 1104,
+  "text": "or during exception handling,"
+ },
+ {
+  "id": 1105,
+  "text": "it is actually always"
+ },
+ {
+  "id": 1106,
+  "text": "pointing to"
+ },
+ {
+  "id": 1107,
+  "text": "it serves as a pointer,"
+ },
+ {
+  "id": 1108,
+  "text": "it actually points to that"
+ },
+ {
+  "id": 1109,
+  "text": "memory region for the context,"
+ },
+ {
+  "id": 1110,
+  "text": "when we save the context,"
+ },
+ {
+  "id": 1111,
+  "text": "don't we save it into here?"
+ },
+ {
+  "id": 1112,
+  "text": "So this pointer always points to it."
+ },
+ {
+  "id": 1113,
+  "text": "So once a2 is passed in,"
+ },
+ {
+  "id": 1114,
+  "text": "as you can imagine,"
+ },
+ {
+  "id": 1115,
+  "text": "we can, in this trap handler,"
+ },
+ {
+  "id": 1116,
+  "text": "inside this function,"
+ },
+ {
+  "id": 1117,
+  "text": "access what's in here."
+ },
+ {
+  "id": 1118,
+  "text": "In here there's a0,"
+ },
+ {
+  "id": 1119,
+  "text": "the values from a all the way up to a5."
+ },
+ {
+  "id": 1120,
+  "text": "Even though we know this value will be modified,"
+ },
+ {
+  "id": 1121,
+  "text": "that's fine,"
+ },
+ {
+  "id": 1122,
+  "text": "because we've already saved it."
+ },
+ {
+  "id": 1123,
+  "text": "Now the value in here"
+ },
+ {
+  "id": 1124,
+  "text": "holds our..."
+ },
+ {
+  "id": 1125,
+  "text": "the parameters passed during the system call."
+ },
+ {
+  "id": 1126,
+  "text": "It's actually right here."
+ },
+ {
+  "id": 1127,
+  "text": "The key is right here."
+ },
+ {
+  "id": 1128,
+  "text": "So we need to take this mscratch,"
+ },
+ {
+  "id": 1129,
+  "text": "that is, the pointer to the trap context, and pass it in."
+ },
+ {
+  "id": 1130,
+  "text": "Okay."
+ },
+ {
+  "id": 1131,
+  "text": "After passing it in,"
+ },
+ {
+  "id": 1132,
+  "text": "we go to the trap handler."
+ },
+ {
+  "id": 1133,
+  "text": "You can see here,"
+ },
+ {
+  "id": 1134,
+  "text": "our third parameter here"
+ },
+ {
+  "id": 1135,
+  "text": "is a pointer to the trap context."
+ },
+ {
+  "id": 1136,
+  "text": "We pass this parameter further down,"
+ },
+ {
+  "id": 1137,
+  "text": "into the system call,"
+ },
+ {
+  "id": 1138,
+  "text": "and then it will be used there."
+ },
+ {
+  "id": 1139,
+  "text": "Now this doSyscall function,"
+ },
+ {
+  "id": 1140,
+  "text": "It's actually one we implement inside our kernel —"
+ },
+ {
+  "id": 1141,
+  "text": "the general entry point for system calls."
+ },
+ {
+  "id": 1142,
+  "text": "Now, inside this,"
+ },
+ {
+  "id": 1143,
+  "text": "its core logic is really"
+ },
+ {
+  "id": 1144,
+  "text": "just a bunch of switch-case statements,"
+ },
+ {
+  "id": 1145,
+  "text": "because it dispatches based on different system call numbers"
+ },
+ {
+  "id": 1146,
+  "text": "to call different handler functions."
+ },
+ {
+  "id": 1147,
+  "text": "Of course, it can be extended."
+ },
+ {
+  "id": 1148,
+  "text": "There's only one here."
+ },
+ {
+  "id": 1149,
+  "text": "We just kept it very simple here."
+ },
+ {
+  "id": 1150,
+  "text": "And then, one thing to note,"
+ },
+ {
+  "id": 1151,
+  "text": "now that we have this,"
+ },
+ {
+  "id": 1152,
+  "text": "we can actually use this parameter"
+ },
+ {
+  "id": 1153,
+  "text": "to access values like a7,"
+ },
+ {
+  "id": 1154,
+  "text": "as well as a0 and so on."
+ },
+ {
+  "id": 1155,
+  "text": "Now, according to the earlier convention,"
+ },
+ {
+  "id": 1156,
+  "text": "these values are used to store"
+ },
+ {
+  "id": 1157,
+  "text": "the system call number is stored in here,"
+ },
+ {
+  "id": 1158,
+  "text": "and this one"
+ },
+ {
+  "id": 1159,
+  "text": "stores"
+ },
+ {
+  "id": 1160,
+  "text": "which is the first parameter"
+ },
+ {
+  "id": 1161,
+  "text": "and so on and so forth"
+ },
+ {
+  "id": 1162,
+  "text": "and they can all be used"
+ },
+ {
+  "id": 1163,
+  "text": "and then,"
+ },
+ {
+  "id": 1164,
+  "text": "please note,"
+ },
+ {
+  "id": 1165,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1166,
+  "text": "when we return the result,"
+ },
+ {
+  "id": 1167,
+  "text": "through"
+ },
+ {
+  "id": 1168,
+  "text": "the return value,"
+ },
+ {
+  "id": 1169,
+  "text": "we store it there,"
+ },
+ {
+  "id": 1170,
+  "text": "returned in a0."
+ },
+ {
+  "id": 1171,
+  "text": "If it fails,"
+ },
+ {
+  "id": 1172,
+  "text": "it will return negative 1."
+ },
+ {
+  "id": 1173,
+  "text": "Of course, what value does it return on failure?"
+ },
+ {
+  "id": 1174,
+  "text": "It depends on the specific error code,"
+ },
+ {
+  "id": 1175,
+  "text": "which we define ourselves."
+ },
+ {
+  "id": 1176,
+  "text": "In our case,"
+ },
+ {
+  "id": 1177,
+  "text": "we simply return negative 1."
+ },
+ {
+  "id": 1178,
+  "text": "If it succeeds,"
+ },
+ {
+  "id": 1179,
+  "text": "it returns 0."
+ },
+ {
+  "id": 1180,
+  "text": "So these values, like 0 and -1,"
+ },
+ {
+  "id": 1181,
+  "text": "when we return,"
+ },
+ {
+  "id": 1182,
+  "text": "they get saved in this context."
+ },
+ {
+  "id": 1183,
+  "text": "Then, when we restore,"
+ },
+ {
+  "id": 1184,
+  "text": "we know there is a restore at this point,"
+ },
+ {
+  "id": 1185,
+  "text": "right?"
+ },
+ {
+  "id": 1186,
+  "text": "During restore, those values are restored back."
+ },
+ {
+  "id": 1187,
+  "text": "So when a0 goes back to user mode,"
+ },
+ {
+  "id": 1188,
+  "text": "it can get the successful result of the system call."
+ },
+ {
+  "id": 1189,
+  "text": "You can tell whether the result is success or failure."
+ },
+ {
+  "id": 1190,
+  "text": "This is doSysCall."
+ },
+ {
+  "id": 1191,
+  "text": "This is the general entry point of our system calls."
+ },
+ {
+  "id": 1192,
+  "text": "Inside it,"
+ },
+ {
+  "id": 1193,
+  "text": "it dispatches to different implementations."
+ },
+ {
+  "id": 1194,
+  "text": "Now here,"
+ },
+ {
+  "id": 1195,
+  "text": "what we focus on is,"
+ },
+ {
+  "id": 1196,
+  "text": "how the parameters are passed,"
+ },
+ {
+  "id": 1197,
+  "text": "how the parameters are passed,"
+ },
+ {
+  "id": 1198,
+  "text": "and how we"
+ },
+ {
+  "id": 1199,
+  "text": "follow this system call's"
+ },
+ {
+  "id": 1200,
+  "text": "This parameter convention,"
+ },
+ {
+  "id": 1201,
+  "text": "using these parameters,"
+ },
+ {
+  "id": 1202,
+  "text": "using these registers,"
+ },
+ {
+  "id": 1203,
+  "text": "then finally,"
+ },
+ {
+  "id": 1204,
+  "text": "the return, the mret return"
+ },
+ {
+  "id": 1205,
+  "text": "there's nothing more to it."
+ },
+ {
+  "id": 1206,
+  "text": "mret returns to this"
+ },
+ {
+  "id": 1207,
+  "text": "original place,"
+ },
+ {
+  "id": 1208,
+  "text": "and that's how we exit"
+ },
+ {
+  "id": 1209,
+  "text": "our system call."
+ },
+ {
+  "id": 1210,
+  "text": "Now, in this process,"
+ },
+ {
+  "id": 1211,
+  "text": "the parameters are"
+ },
+ {
+  "id": 1212,
+  "text": "passed this way."
+ },
+ {
+  "id": 1213,
+  "text": "What I've mainly"
+ },
+ {
+  "id": 1214,
+  "text": "wanted to introduce to everyone here"
+ },
+ {
+  "id": 1215,
+  "text": "is this stuff."
+ },
+ {
+  "id": 1216,
+  "text": "And so it"
+ },
+ {
+  "id": 1217,
+  "text": "comes back."
+ },
+ {
+  "id": 1218,
+  "text": "Then, once it comes back,"
+ },
+ {
+  "id": 1219,
+  "text": "as you can imagine,"
+ },
+ {
+  "id": 1220,
+  "text": "our return value here"
+ },
+ {
+  "id": 1221,
+  "text": "this return"
+ },
+ {
+  "id": 1222,
+  "text": "is actually"
+ },
+ {
+  "id": 1223,
+  "text": "our a0 on this side"
+ },
+ {
+  "id": 1224,
+  "text": "so a0 gets it right here"
+ },
+ {
+  "id": 1225,
+  "text": "this is exactly what we talked about earlier"
+ },
+ {
+  "id": 1226,
+  "text": "passing parameters for system calls"
+ },
+ {
+  "id": 1227,
+  "text": "so,"
+ },
+ {
+  "id": 1228,
+  "text": "and finally, there's what's called"
+ },
+ {
+  "id": 1229,
+  "text": "system call wrapping"
+ },
+ {
+  "id": 1230,
+  "text": "this idea,"
+ },
+ {
+  "id": 1231,
+  "text": "really"
+ },
+ {
+  "id": 1232,
+  "text": "is just something I want to mention to you all"
+ },
+ {
+  "id": 1233,
+  "text": "that is, in our current code,"
+ },
+ {
+  "id": 1234,
+  "text": "as you know, what we've actually done"
+ },
+ {
+  "id": 1235,
+  "text": "is all pretty simple"
+ },
+ {
+  "id": 1236,
+  "text": "all the code is really"
+ },
+ {
+  "id": 1237,
+  "text": "wrapped into one part as the operating system"
+ },
+ {
+  "id": 1238,
+  "text": "so what we do is we take"
+ },
+ {
+  "id": 1239,
+  "text": "this"
+ },
+ {
+  "id": 1240,
+  "text": "The system call numbers,"
+ },
+ {
+  "id": 1241,
+  "text": "they're defined in a header file"
+ },
+ {
+  "id": 1242,
+  "text": "called syscode.h,"
+ },
+ {
+  "id": 1243,
+  "text": "and then,"
+ },
+ {
+  "id": 1244,
+  "text": "this function,"
+ },
+ {
+  "id": 1245,
+  "text": "the implementation of this function"
+ },
+ {
+  "id": 1246,
+  "text": "is in the assembly file."
+ },
+ {
+  "id": 1247,
+  "text": "So the actual"
+ },
+ {
+  "id": 1248,
+  "text": "logic that runs in kernel mode,"
+ },
+ {
+  "id": 1249,
+  "text": "that's wrapped up in this file, syscall.c."
+ },
+ {
+  "id": 1250,
+  "text": "Now, in a real execution environment,"
+ },
+ {
+  "id": 1251,
+  "text": "like something such as Linux,"
+ },
+ {
+  "id": 1252,
+  "text": "under an operating system like that,"
+ },
+ {
+  "id": 1253,
+  "text": "it actually separates these pieces of code."
+ },
+ {
+  "id": 1254,
+  "text": "And the way it separates them,"
+ },
+ {
+  "id": 1255,
+  "text": "is actually quite simple:"
+ },
+ {
+  "id": 1256,
+  "text": "it takes this sys.h,"
+ },
+ {
+  "id": 1257,
+  "text": "this syscall.h header file,"
+ },
+ {
+  "id": 1258,
+  "text": "and splits it into two parts."
+ },
+ {
+  "id": 1259,
+  "text": "So the left-hand part,"
+ },
+ {
+  "id": 1260,
+  "text": "It's actually, after you separate it out,"
+ },
+ {
+  "id": 1261,
+  "text": "it essentially becomes the C library we use all the time."
+ },
+ {
+  "id": 1262,
+  "text": "Now, this part is not actually distributed as part of the kernel."
+ },
+ {
+  "id": 1263,
+  "text": "It's maintained separately."
+ },
+ {
+  "id": 1264,
+  "text": "Then, at compile time,"
+ },
+ {
+  "id": 1265,
+  "text": "when compiling the application,"
+ },
+ {
+  "id": 1266,
+  "text": "it gets merged into the application."
+ },
+ {
+  "id": 1267,
+  "text": "So the application"
+ },
+ {
+  "id": 1268,
+  "text": "will then call these kinds of functions,"
+ },
+ {
+  "id": 1269,
+  "text": "basically the functions over here,"
+ },
+ {
+  "id": 1270,
+  "text": "like open, read, write, for example."
+ },
+ {
+  "id": 1271,
+  "text": "After calling one of these functions,"
+ },
+ {
+  "id": 1272,
+  "text": "it will actually trigger an exception,"
+ },
+ {
+  "id": 1273,
+  "text": "trigger this exception."
+ },
+ {
+  "id": 1274,
+  "text": "Now, the part on the right,"
+ },
+ {
+  "id": 1275,
+  "text": "this part on the right,"
+ },
+ {
+  "id": 1276,
+  "text": "is actually kept inside our kernel."
+ },
+ {
+  "id": 1277,
+  "text": "So what we'll see"
+ },
+ {
+  "id": 1278,
+  "text": "is that in the C library,"
+ },
+ {
+  "id": 1279,
+  "text": "its"
+ },
+ {
+  "id": 1280,
+  "text": "It has its own header file."
+ },
+ {
+  "id": 1281,
+  "text": "This header file and the kernel's header file"
+ },
+ {
+  "id": 1282,
+  "text": "need to maintain a certain correspondence,"
+ },
+ {
+  "id": 1283,
+  "text": "because the two of them share some information,"
+ },
+ {
+  "id": 1284,
+  "text": "especially things like this,"
+ },
+ {
+  "id": 1285,
+  "text": "information like system call numbers."
+ },
+ {
+  "id": 1286,
+  "text": "Because if these values don't match up,"
+ },
+ {
+  "id": 1287,
+  "text": "then things will break on both sides,"
+ },
+ {
+  "id": 1288,
+  "text": "right?"
+ },
+ {
+  "id": 1289,
+  "text": "So on this side,"
+ },
+ {
+  "id": 1290,
+  "text": "let me just mention this to everyone."
+ },
+ {
+  "id": 1291,
+  "text": "That is,"
+ },
+ {
+  "id": 1292,
+  "text": "if this were done properly,"
+ },
+ {
+  "id": 1293,
+  "text": "we should actually"
+ },
+ {
+  "id": 1294,
+  "text": "pull this part out separately,"
+ },
+ {
+  "id": 1295,
+  "text": "because in a real industrial environment,"
+ },
+ {
+  "id": 1296,
+  "text": "this is actually provided in the form of a CQ,"
+ },
+ {
+  "id": 1297,
+  "text": "provided as a standard CQ."
+ },
+ {
+  "id": 1298,
+  "text": "But for us here,"
+ },
+ {
+  "id": 1299,
+  "text": "we haven't made it that complicated."
+ },
+ {
+  "id": 1300,
+  "text": "So actually, everything is put together"
+ },
+ {
+  "id": 1301,
+  "text": "Pay attention to this, everyone"
+ },
+ {
+  "id": 1302,
+  "text": "Let me point this out"
+ },
+ {
+  "id": 1303,
+  "text": "So this"
+ },
+ {
+  "id": 1304,
+  "text": "code part,"
+ },
+ {
+  "id": 1305,
+  "text": "we can take a quick look at it"
+ },
+ {
+  "id": 1306,
+  "text": "That is, if I remove this,"
+ },
+ {
+  "id": 1307,
+  "text": "then after removing it,"
+ },
+ {
+  "id": 1308,
+  "text": "we know it actually goes through this piece of logic"
+ },
+ {
+  "id": 1309,
+  "text": "This piece of logic is just a demonstration"
+ },
+ {
+  "id": 1310,
+  "text": "It actually makes a system call"
+ },
+ {
+  "id": 1311,
+  "text": "Now, the execution process of this logic"
+ },
+ {
+  "id": 1312,
+  "text": "is exactly what we talked about just now"
+ },
+ {
+  "id": 1313,
+  "text": "Let's take a quick look"
+ },
+ {
+  "id": 1314,
+  "text": "Now, after running it like this,"
+ },
+ {
+  "id": 1315,
+  "text": "we'll see the task still keeps running"
+ },
+ {
+  "id": 1316,
+  "text": "while our..."
+ },
+ {
+  "id": 1317,
+  "text": "Hold on a second"
+ },
+ {
+  "id": 1318,
+  "text": "So this..."
+ },
+ {
+  "id": 1319,
+  "text": "Let me explain this execution process"
+ },
+ {
+  "id": 1320,
+  "text": "That is to say, task0 is created first."
+ },
+ {
+  "id": 1321,
+  "text": "Looking at the code we just saw,"
+ },
+ {
+  "id": 1322,
+  "text": "task0 is created first."
+ },
+ {
+  "id": 1323,
+  "text": "After it is created,"
+ },
+ {
+  "id": 1324,
+  "text": "it starts by calling this system call function."
+ },
+ {
+  "id": 1325,
+  "text": "Now, as we know, once this system call"
+ },
+ {
+  "id": 1326,
+  "text": "is triggered,"
+ },
+ {
+  "id": 1327,
+  "text": "it is actually an exception,"
+ },
+ {
+  "id": 1328,
+  "text": "and its exception"
+ },
+ {
+  "id": 1329,
+  "text": "cause value is 8,"
+ },
+ {
+  "id": 1330,
+  "text": "right?"
+ },
+ {
+  "id": 1331,
+  "text": "It is an exception triggered from user mode."
+ },
+ {
+  "id": 1332,
+  "text": "So when this exception occurs,"
+ },
+ {
+  "id": 1333,
+  "text": "this exception,"
+ },
+ {
+  "id": 1334,
+  "text": "what it actually triggers is"
+ },
+ {
+  "id": 1335,
+  "text": "our system call."
+ },
+ {
+  "id": 1336,
+  "text": "And our system call here"
+ },
+ {
+  "id": 1337,
+  "text": "will be executed."
+ },
+ {
+  "id": 1338,
+  "text": "What you see printed here,"
+ },
+ {
+  "id": 1339,
+  "text": "that is what this means."
+ },
+ {
+  "id": 1340,
+  "text": "That's the idea."
+ },
+ {
+  "id": 1341,
+  "text": "So,"
+ },
+ {
+  "id": 1342,
+  "text": "according to our understanding,"
+ },
+ {
+  "id": 1343,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1344,
+  "text": "if this system call,"
+ },
+ {
+  "id": 1345,
+  "text": "after it finishes executing,"
+ },
+ {
+  "id": 1346,
+  "text": "then it should be able to return out."
+ },
+ {
+  "id": 1347,
+  "text": "So we see"
+ },
+ {
+  "id": 1348,
+  "text": "that here it does return."
+ },
+ {
+  "id": 1349,
+  "text": "Now, why is it able to return?"
+ },
+ {
+  "id": 1350,
+  "text": "Everyone, pay attention here."
+ },
+ {
+  "id": 1351,
+  "text": "It's because in exception handling,"
+ },
+ {
+  "id": 1352,
+  "text": "for this kind of system call exception,"
+ },
+ {
+  "id": 1353,
+  "text": "we make sure that its EPC value,"
+ },
+ {
+  "id": 1354,
+  "text": "we add 4 to it,"
+ },
+ {
+  "id": 1355,
+  "text": "we covered this earlier."
+ },
+ {
+  "id": 1356,
+  "text": "Otherwise, it would,"
+ },
+ {
+  "id": 1357,
+  "text": "it would go back into the ecall instruction again,"
+ },
+ {
+  "id": 1358,
+  "text": "running in an infinite loop."
+ },
+ {
+  "id": 1359,
+  "text": "So that's why we can see this line."
+ },
+ {
+  "id": 1360,
+  "text": "Returned"
+ },
+ {
+  "id": 1361,
+  "text": "so we know that"
+ },
+ {
+  "id": 1362,
+  "text": "it has actually returned from the system call again"
+ },
+ {
+  "id": 1363,
+  "text": "and at this point"
+ },
+ {
+  "id": 1364,
+  "text": "its mode has switched back to user mode again"
+ },
+ {
+  "id": 1365,
+  "text": "and we can also use Hotlink"
+ },
+ {
+  "id": 1366,
+  "text": "to get the return value of that transfer"
+ },
+ {
+  "id": 1367,
+  "text": "at the same time, we can also use this parameter"
+ },
+ {
+  "id": 1368,
+  "text": "to fetch the value"
+ },
+ {
+  "id": 1369,
+  "text": "of course, what we pass on our side is in the form of a pointer"
+ },
+ {
+  "id": 1370,
+  "text": "which also works"
+ },
+ {
+  "id": 1371,
+  "text": "because right now our memory"
+ },
+ {
+  "id": 1372,
+  "text": "basically hasn't been divided too strictly yet"
+ },
+ {
+  "id": 1373,
+  "text": "so in fact, this piece of memory"
+ },
+ {
+  "id": 1374,
+  "text": "can be accessed from both user mode and kernel mode"
+ },
+ {
+  "id": 1375,
+  "text": "so we actually just pass a pointer"
+ },
+ {
+  "id": 1376,
+  "text": "to get the data out"
+ },
+ {
+  "id": 1377,
+  "text": "because our memory"
+ },
+ {
+  "id": 1378,
+  "text": "hasn't really been made strict like Linux's"
+ },
+ {
+  "id": 1379,
+  "text": "with strict user space"
+ },
+ {
+  "id": 1380,
+  "text": "comes with the memory protection"
+ },
+ {
+  "id": 1381,
+  "text": "so in practice, we can actually"
+ },
+ {
+  "id": 1382,
+  "text": "just pass pointers directly, which is fine"
+ },
+ {
+  "id": 1383,
+  "text": "just wanted to briefly mention that point"
+ },
+ {
+  "id": 1384,
+  "text": "then after returning"
+ },
+ {
+  "id": 1385,
+  "text": "the task simply continues running"
+ },
+ {
+  "id": 1386,
+  "text": "so that"
+ },
+ {
+  "id": 1387,
+  "text": "is what a system call"
+ },
+ {
+  "id": 1388,
+  "text": "looks like in a simple example"
+ },
+ {
+  "id": 1389,
+  "text": "as for system calls,"
+ },
+ {
+  "id": 1390,
+  "text": "that's all we'll cover for now"
+ },
+ {
+  "id": 1391,
+  "text": "as for the related exercises,"
+ },
+ {
+  "id": 1392,
+  "text": "I hope everyone will go back and work on them"
+ },
+ {
+  "id": 1393,
+  "text": "so that wraps up"
+ },
+ {
+  "id": 1394,
+  "text": "our introduction to system calls"
+ }
+]

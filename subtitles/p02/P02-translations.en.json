@@ -1,0 +1,6818 @@
+[
+ {
+  "id": 0,
+  "text": "Hello everyone, we're now starting Chapter 2, which is really our Chapter 1, since we're starting from scratch."
+ },
+ {
+  "id": 1,
+  "text": "Our first chapter is called A Tour of Computer Systems."
+ },
+ {
+  "id": 2,
+  "text": "This part is the introductory portion of the whole course."
+ },
+ {
+  "id": 3,
+  "text": "This part is mainly a review for everyone, a refresher,"
+ },
+ {
+  "id": 4,
+  "text": "basically the material from computer organization principles,"
+ },
+ {
+  "id": 5,
+  "text": "the computer architecture part,"
+ },
+ {
+  "id": 6,
+  "text": "covering mainly these blocks:"
+ },
+ {
+  "id": 7,
+  "text": "first, the hardware components of a computer,"
+ },
+ {
+  "id": 8,
+  "text": "then program storage and execution,"
+ },
+ {
+  "id": 9,
+  "text": "the design and evolution of programming languages,"
+ },
+ {
+  "id": 10,
+  "text": "the memory hierarchy,"
+ },
+ {
+  "id": 11,
+  "text": "and finally a brief introduction to the operating system."
+ },
+ {
+  "id": 12,
+  "text": "Let's start with the first part,"
+ },
+ {
+  "id": 13,
+  "text": "the hardware components of a computer."
+ },
+ {
+  "id": 14,
+  "text": "As we know,"
+ },
+ {
+  "id": 15,
+  "text": "when you learn C,"
+ },
+ {
+  "id": 16,
+  "text": "the first program you write,"
+ },
+ {
+  "id": 17,
+  "text": "should be Hello World,"
+ },
+ {
+  "id": 18,
+  "text": "right?"
+ },
+ {
+  "id": 19,
+  "text": "I don't know if"
+ },
+ {
+  "id": 20,
+  "text": "Now, as for how this program runs,"
+ },
+ {
+  "id": 21,
+  "text": "how far does your understanding go at this point?"
+ },
+ {
+  "id": 22,
+  "text": "That is to say, from when we finish writing this program"
+ },
+ {
+  "id": 23,
+  "text": "all the way to getting it to run,"
+ },
+ {
+  "id": 24,
+  "text": "and a Hello World appears on the screen,"
+ },
+ {
+  "id": 25,
+  "text": "what exactly happens along the way?"
+ },
+ {
+  "id": 26,
+  "text": "Can you describe it in your own words"
+ },
+ {
+  "id": 27,
+  "text": "right now?"
+ },
+ {
+  "id": 28,
+  "text": "Right?"
+ },
+ {
+  "id": 29,
+  "text": "But I think, that is to say,"
+ },
+ {
+  "id": 30,
+  "text": "after you've spent some time studying programming,"
+ },
+ {
+  "id": 31,
+  "text": "and running things on Linux,"
+ },
+ {
+  "id": 32,
+  "text": "you should have a deeper understanding of how this program runs."
+ },
+ {
+  "id": 33,
+  "text": "So here we just want to walk everyone through it once more."
+ },
+ {
+  "id": 34,
+  "text": "So, the composition of a computer,"
+ },
+ {
+  "id": 35,
+  "text": "we can summarize for you with this diagram here,"
+ },
+ {
+  "id": 36,
+  "text": "right?"
+ },
+ {
+  "id": 37,
+  "text": "What's on this diagram?"
+ },
+ {
+  "id": 38,
+  "text": "If I asked you to draw it,"
+ },
+ {
+  "id": 39,
+  "text": "that is, a computer —"
+ },
+ {
+  "id": 40,
+  "text": "If you want to draw what a computer"
+ },
+ {
+  "id": 41,
+  "text": "is made up of,"
+ },
+ {
+  "id": 42,
+  "text": "I don't know if everyone"
+ },
+ {
+  "id": 43,
+  "text": "can roughly sketch this diagram yourselves."
+ },
+ {
+  "id": 44,
+  "text": "On this diagram,"
+ },
+ {
+  "id": 45,
+  "text": "this..."
+ },
+ {
+  "id": 46,
+  "text": "what is this?"
+ },
+ {
+  "id": 47,
+  "text": "Right?"
+ },
+ {
+  "id": 48,
+  "text": "This, we call it the bus."
+ },
+ {
+  "id": 49,
+  "text": "Agreed?"
+ },
+ {
+  "id": 50,
+  "text": "That is to say,"
+ },
+ {
+  "id": 51,
+  "text": "all those things inside our computer,"
+ },
+ {
+  "id": 52,
+  "text": "all of them,"
+ },
+ {
+  "id": 53,
+  "text": "the other things are called components."
+ },
+ {
+  "id": 54,
+  "text": "You can think of them as components."
+ },
+ {
+  "id": 55,
+  "text": "Now these components,"
+ },
+ {
+  "id": 56,
+  "text": "they're all connected through a single bus,"
+ },
+ {
+  "id": 57,
+  "text": "wired together,"
+ },
+ {
+  "id": 58,
+  "text": "just like a highway."
+ },
+ {
+  "id": 59,
+  "text": "So this connecting part,"
+ },
+ {
+  "id": 60,
+  "text": "there are several big blocks"
+ },
+ {
+  "id": 61,
+  "text": "Now, the biggest block of this thing"
+ },
+ {
+  "id": 62,
+  "text": "needless to say"
+ },
+ {
+  "id": 63,
+  "text": "this is the core of our computer, and what is it called?"
+ },
+ {
+  "id": 64,
+  "text": "it's the CPU"
+ },
+ {
+  "id": 65,
+  "text": "Now, the CPU is actually..."
+ },
+ {
+  "id": 66,
+  "text": "If I ask you right now, what is the CPU?"
+ },
+ {
+  "id": 67,
+  "text": "you should still be able to say it"
+ },
+ {
+  "id": 68,
+  "text": "it's the Central Processing Unit"
+ },
+ {
+  "id": 69,
+  "text": "What does CPU mean?"
+ },
+ {
+  "id": 70,
+  "text": "Translated into Chinese, it's called the central processing unit"
+ },
+ {
+  "id": 71,
+  "text": "right?"
+ },
+ {
+  "id": 72,
+  "text": "If you go out there"
+ },
+ {
+  "id": 73,
+  "text": "say, to a job interview"
+ },
+ {
+  "id": 74,
+  "text": "do you think anyone would ask about these things?"
+ },
+ {
+  "id": 75,
+  "text": "Maybe they will"
+ },
+ {
+  "id": 76,
+  "text": "After you've learned these things in school"
+ },
+ {
+  "id": 77,
+  "text": "and you go out"
+ },
+ {
+  "id": 78,
+  "text": "it'd be good if you can explain them yourselves"
+ },
+ {
+  "id": 79,
+  "text": "Now, this"
+ },
+ {
+  "id": 80,
+  "text": "What's actually inside this CPU?"
+ },
+ {
+  "id": 81,
+  "text": "When you took computer organization,"
+ },
+ {
+  "id": 82,
+  "text": "did your instructor cover this?"
+ },
+ {
+  "id": 83,
+  "text": "Or on your own,"
+ },
+ {
+  "id": 84,
+  "text": "what's your understanding of this part?"
+ },
+ {
+  "id": 85,
+  "text": "Let me quickly walk you through it."
+ },
+ {
+  "id": 86,
+  "text": "On our side here,"
+ },
+ {
+  "id": 87,
+  "text": "there are these"
+ },
+ {
+  "id": 88,
+  "text": "Inside this CPU,"
+ },
+ {
+  "id": 89,
+  "text": "there are these main blocks."
+ },
+ {
+  "id": 90,
+  "text": "The first one is called"
+ },
+ {
+  "id": 91,
+  "text": "abbreviated as CU."
+ },
+ {
+  "id": 92,
+  "text": "Once you're out in the industry, you'll know"
+ },
+ {
+  "id": 93,
+  "text": "what CU means."
+ },
+ {
+  "id": 94,
+  "text": "It's the control unit,"
+ },
+ {
+  "id": 95,
+  "text": "the control unit."
+ },
+ {
+  "id": 96,
+  "text": "Understand?"
+ },
+ {
+  "id": 97,
+  "text": "The control unit is essentially the control part."
+ },
+ {
+  "id": 98,
+  "text": "To put its main job simply,"
+ },
+ {
+  "id": 99,
+  "text": "and this is something we'll cover later,"
+ },
+ {
+  "id": 100,
+  "text": "it's basically feeding some stuff into an instruction"
+ },
+ {
+  "id": 101,
+  "text": "parsing it into something"
+ },
+ {
+  "id": 102,
+  "text": "processing it, running it, right?"
+ },
+ {
+  "id": 103,
+  "text": "the control unit is over here"
+ },
+ {
+  "id": 104,
+  "text": "now"
+ },
+ {
+  "id": 105,
+  "text": "what is this one called?"
+ },
+ {
+  "id": 106,
+  "text": "we have an abbreviation for it, ALU"
+ },
+ {
+  "id": 107,
+  "text": "that stands for the arithmetic logic unit"
+ },
+ {
+  "id": 108,
+  "text": "now for the actual computation"
+ },
+ {
+  "id": 109,
+  "text": "our computer"
+ },
+ {
+  "id": 110,
+  "text": "a computer is meant for computing"
+ },
+ {
+  "id": 111,
+  "text": "to put it plainly"
+ },
+ {
+  "id": 112,
+  "text": "it's not meant for playing games"
+ },
+ {
+  "id": 113,
+  "text": "so a computer"
+ },
+ {
+  "id": 114,
+  "text": "when it was first invented"
+ },
+ {
+  "id": 115,
+  "text": "it was for computing"
+ },
+ {
+  "id": 116,
+  "text": "so where does that computing happen?"
+ },
+ {
+  "id": 117,
+  "text": "which part does it happen in?"
+ },
+ {
+  "id": 118,
+  "text": "actually right here"
+ },
+ {
+  "id": 119,
+  "text": "the arithmetic logic unit"
+ },
+ {
+  "id": 120,
+  "text": "You can tell right away,"
+ },
+ {
+  "id": 121,
+  "text": "the computations we do"
+ },
+ {
+  "id": 122,
+  "text": "are nothing more than arithmetic operations"
+ },
+ {
+  "id": 123,
+  "text": "and what else?"
+ },
+ {
+  "id": 124,
+  "text": "Logical operations,"
+ },
+ {
+  "id": 125,
+  "text": "right?"
+ },
+ {
+  "id": 126,
+  "text": "When you learned C,"
+ },
+ {
+  "id": 127,
+  "text": "that addition, subtraction, multiplication, and division,"
+ },
+ {
+  "id": 128,
+  "text": "what is that?"
+ },
+ {
+  "id": 129,
+  "text": "That falls under arithmetic operations."
+ },
+ {
+  "id": 130,
+  "text": "What else falls under logical operations?"
+ },
+ {
+  "id": 131,
+  "text": "AND, OR, NOT, things like that."
+ },
+ {
+  "id": 132,
+  "text": "Think about it, isn't that so?"
+ },
+ {
+  "id": 133,
+  "text": "So when you boil everything down to the end,"
+ },
+ {
+  "id": 134,
+  "text": "it's nothing more than arithmetic operations and logical operations."
+ },
+ {
+  "id": 135,
+  "text": "So the arithmetic logic unit,"
+ },
+ {
+  "id": 136,
+  "text": "that is right here."
+ },
+ {
+  "id": 137,
+  "text": "And then there's..."
+ },
+ {
+  "id": 138,
+  "text": "Besides that,"
+ },
+ {
+  "id": 139,
+  "text": "there is another very important part."
+ },
+ {
+  "id": 140,
+  "text": "It's basically a bunch of things"
+ },
+ {
+  "id": 141,
+  "text": "not just a single thing"
+ },
+ {
+  "id": 142,
+  "text": "It's a whole collection of things"
+ },
+ {
+  "id": 143,
+  "text": "And this collection,"
+ },
+ {
+  "id": 144,
+  "text": "we call them all registers"
+ },
+ {
+  "id": 145,
+  "text": "In other words, the data you need to process"
+ },
+ {
+  "id": 146,
+  "text": "is actually all in this,"
+ },
+ {
+  "id": 147,
+  "text": "all stored in these registers"
+ },
+ {
+  "id": 148,
+  "text": "and then,"
+ },
+ {
+  "id": 149,
+  "text": "it's handed over to the arithmetic logic unit to perform the computation"
+ },
+ {
+  "id": 150,
+  "text": "So that's what a processor is"
+ },
+ {
+  "id": 151,
+  "text": "Now, besides that,"
+ },
+ {
+  "id": 152,
+  "text": "we'll take a closer look at it later"
+ },
+ {
+  "id": 153,
+  "text": "Now let's look at the others"
+ },
+ {
+  "id": 154,
+  "text": "This one here is called the IO bridge"
+ },
+ {
+  "id": 155,
+  "text": "In practice, it's"
+ },
+ {
+  "id": 156,
+  "text": "a bridge for our processor to interact with the outside world"
+ },
+ {
+  "id": 157,
+  "text": "a bridge"
+ },
+ {
+  "id": 158,
+  "text": "And this bridge,"
+ },
+ {
+  "id": 159,
+  "text": "along with the bus, and one other very important component"
+ },
+ {
+  "id": 160,
+  "text": "That's our main memory."
+ },
+ {
+  "id": 161,
+  "text": "That's the memory where our data is stored."
+ },
+ {
+  "id": 162,
+  "text": "All connected together."
+ },
+ {
+  "id": 163,
+  "text": "Now, below this bus,"
+ },
+ {
+  "id": 164,
+  "text": "there are a large number of"
+ },
+ {
+  "id": 165,
+  "text": "what we actually call peripherals."
+ },
+ {
+  "id": 166,
+  "text": "Because with just these,"
+ },
+ {
+  "id": 167,
+  "text": "with just a CPU and memory,"
+ },
+ {
+  "id": 168,
+  "text": "the computer"
+ },
+ {
+  "id": 169,
+  "text": "is basically unusable to us,"
+ },
+ {
+  "id": 170,
+  "text": "right?"
+ },
+ {
+  "id": 171,
+  "text": "So we need some peripherals,"
+ },
+ {
+  "id": 172,
+  "text": "like a keyboard and mouse,"
+ },
+ {
+  "id": 173,
+  "text": "and a display,"
+ },
+ {
+  "id": 174,
+  "text": "so we can interact with it."
+ },
+ {
+  "id": 175,
+  "text": "So everything down here is peripherals."
+ },
+ {
+  "id": 176,
+  "text": "And that's what makes up a computer."
+ },
+ {
+  "id": 177,
+  "text": "Of course, this is a classic diagram."
+ },
+ {
+  "id": 178,
+  "text": "It's basically the same as our PCs, desktops, and laptops."
+ },
+ {
+  "id": 179,
+  "text": "And some phones have a similar organizational architecture."
+ },
+ {
+  "id": 180,
+  "text": "It might be slightly different from it,"
+ },
+ {
+  "id": 181,
+  "text": "but overall it's pretty much like this."
+ },
+ {
+  "id": 182,
+  "text": "A computer is"
+ },
+ {
+  "id": 183,
+  "text": "just this kind of thing."
+ },
+ {
+  "id": 184,
+  "text": "If you want to reinforce this impression later,"
+ },
+ {
+  "id": 185,
+  "text": "you can go home and try drawing this diagram yourself."
+ },
+ {
+  "id": 186,
+  "text": "Because some things, when described in words,"
+ },
+ {
+  "id": 187,
+  "text": "might not be easy to remember,"
+ },
+ {
+  "id": 188,
+  "text": "while graphical things tend to be easier to remember."
+ },
+ {
+  "id": 189,
+  "text": "So in our course, we draw a lot of diagrams."
+ },
+ {
+  "id": 190,
+  "text": "Through these diagrams, you can"
+ },
+ {
+  "id": 191,
+  "text": "deepen your learning and mastery of the knowledge."
+ },
+ {
+  "id": 192,
+  "text": "Now, this computer we're talking about,"
+ },
+ {
+  "id": 193,
+  "text": "the one in the diagram above,"
+ },
+ {
+  "id": 194,
+  "text": "this computer thing,"
+ },
+ {
+  "id": 195,
+  "text": "we actually often call it the"
+ },
+ {
+  "id": 196,
+  "text": "von Neumann architecture."
+ },
+ {
+  "id": 197,
+  "text": "When you learned computer organization and design,"
+ },
+ {
+  "id": 198,
+  "text": "you probably still remember this concept, right?"
+ },
+ {
+  "id": 199,
+  "text": "That is, the von Neumann..."
+ },
+ {
+  "id": 200,
+  "text": "This kind of organization"
+ },
+ {
+  "id": 201,
+  "text": "Now, the other corresponding approach is called what?"
+ },
+ {
+  "id": 202,
+  "text": "Do you all remember?"
+ },
+ {
+  "id": 203,
+  "text": "It's called the Harvard architecture."
+ },
+ {
+  "id": 204,
+  "text": "Right?"
+ },
+ {
+  "id": 205,
+  "text": "So von Neumann and Harvard are the two"
+ },
+ {
+  "id": 206,
+  "text": "major architectures in our computers."
+ },
+ {
+  "id": 207,
+  "text": "That is, two ways of organizing the hardware."
+ },
+ {
+  "id": 208,
+  "text": "Now, what's the difference between these two architectures?"
+ },
+ {
+  "id": 209,
+  "text": "From this diagram, we can"
+ },
+ {
+  "id": 210,
+  "text": "see what the difference is."
+ },
+ {
+  "id": 211,
+  "text": "For the von Neumann architecture,"
+ },
+ {
+  "id": 212,
+  "text": "you see it only has one bus to the outside."
+ },
+ {
+  "id": 213,
+  "text": "This CPU here"
+ },
+ {
+  "id": 214,
+  "text": "only communicates with the outside through a single bus."
+ },
+ {
+  "id": 215,
+  "text": "Everyone see that?"
+ },
+ {
+  "id": 216,
+  "text": "And the Harvard architecture,"
+ },
+ {
+  "id": 217,
+  "text": "what's its obvious feature?"
+ },
+ {
+  "id": 218,
+  "text": "It has two buses to communicate with the outside."
+ },
+ {
+  "id": 219,
+  "text": "Right?"
+ },
+ {
+  "id": 220,
+  "text": "So the Harvard"
+ },
+ {
+  "id": 221,
+  "text": "Harvard architecture,"
+ },
+ {
+  "id": 222,
+  "text": "it separates instructions and data"
+ },
+ {
+  "id": 223,
+  "text": "meaning the instructions it runs and the data it operates on"
+ },
+ {
+  "id": 224,
+  "text": "are separated,"
+ },
+ {
+  "id": 225,
+  "text": "kept in two memory regions,"
+ },
+ {
+  "id": 226,
+  "text": "and then they interact through two buses."
+ },
+ {
+  "id": 227,
+  "text": "Whereas the von Neumann,"
+ },
+ {
+  "id": 228,
+  "text": "relatively speaking, you can actually understand it as"
+ },
+ {
+  "id": 229,
+  "text": "its storage area"
+ },
+ {
+  "id": 230,
+  "text": "contains both instructions and data."
+ },
+ {
+  "id": 231,
+  "text": "Does everyone understand?"
+ },
+ {
+  "id": 232,
+  "text": "That's how it works."
+ },
+ {
+  "id": 233,
+  "text": "That's the most important difference between them."
+ },
+ {
+  "id": 234,
+  "text": "So, this,"
+ },
+ {
+  "id": 235,
+  "text": "we can say"
+ },
+ {
+  "id": 236,
+  "text": "in fact, a large number of PCs, servers,"
+ },
+ {
+  "id": 237,
+  "text": "and so on,"
+ },
+ {
+  "id": 238,
+  "text": "are actually based on"
+ },
+ {
+  "id": 239,
+  "text": "the von Neumann architecture"
+ },
+ {
+  "id": 240,
+  "text": "the main ones."
+ },
+ {
+  "id": 241,
+  "text": "So going forward,"
+ },
+ {
+  "id": 242,
+  "text": "we'll actually focus on this von Neumann architecture"
+ },
+ {
+  "id": 243,
+  "text": "for our introduction."
+ },
+ {
+  "id": 244,
+  "text": "Now, this"
+ },
+ {
+  "id": 245,
+  "text": "approach it uses,"
+ },
+ {
+  "id": 246,
+  "text": "its main advantage,"
+ },
+ {
+  "id": 247,
+  "text": "as you know,"
+ },
+ {
+  "id": 248,
+  "text": "is that it only has one"
+ },
+ {
+  "id": 249,
+  "text": "-- you only need to design one bus."
+ },
+ {
+  "id": 250,
+  "text": "So in this regard,"
+ },
+ {
+  "id": 251,
+  "text": "as you can imagine,"
+ },
+ {
+  "id": 252,
+  "text": "compared to the Harvard architecture,"
+ },
+ {
+  "id": 253,
+  "text": "its hardware design is definitely simpler."
+ },
+ {
+  "id": 254,
+  "text": "Right?"
+ },
+ {
+  "id": 255,
+  "text": "The one on the right here looks a bit more complex,"
+ },
+ {
+  "id": 256,
+  "text": "doesn't it?"
+ },
+ {
+  "id": 257,
+  "text": "So this simplicity,"
+ },
+ {
+  "id": 258,
+  "text": "but after that simplicity,"
+ },
+ {
+  "id": 259,
+  "text": "the overhead of its bus"
+ },
+ {
+  "id": 260,
+  "text": "it tends to be a bit smaller"
+ },
+ {
+  "id": 261,
+  "text": "the control logic is simpler to implement"
+ },
+ {
+  "id": 262,
+  "text": "basically, the hardware unit design is simpler"
+ },
+ {
+  "id": 263,
+  "text": "as for the Harvard architecture,"
+ },
+ {
+  "id": 264,
+  "text": "its hardware design is more complex"
+ },
+ {
+  "id": 265,
+  "text": "but once that complexity is there,"
+ },
+ {
+  "id": 266,
+  "text": "what you get in return is higher execution efficiency"
+ },
+ {
+  "id": 267,
+  "text": "because the data and the instructions"
+ },
+ {
+  "id": 268,
+  "text": "don't have to compete for the same bus"
+ },
+ {
+  "id": 269,
+  "text": "with two separate paths, it's naturally going to run a bit faster"
+ },
+ {
+  "id": 270,
+  "text": "think about it, isn't that right?"
+ },
+ {
+  "id": 271,
+  "text": "So on some small microcontrollers,"
+ },
+ {
+  "id": 272,
+  "text": "on tiny processors,"
+ },
+ {
+  "id": 273,
+  "text": "the preference is to use the Harvard architecture"
+ },
+ {
+  "id": 274,
+  "text": "whereas large servers and these"
+ },
+ {
+  "id": 275,
+  "text": "things like these desktop machines,"
+ },
+ {
+  "id": 276,
+  "text": "compared to these small controllers,"
+ },
+ {
+  "id": 277,
+  "text": "they are already relatively large processors"
+ },
+ {
+  "id": 278,
+  "text": "so they use the von Neumann architecture,"
+ },
+ {
+  "id": 279,
+  "text": "but it's not absolute"
+ },
+ {
+  "id": 280,
+  "text": "That is to say, these two architectures"
+ },
+ {
+  "id": 281,
+  "text": "also see a certain amount of convergence"
+ },
+ {
+  "id": 282,
+  "text": "in today's designs."
+ },
+ {
+  "id": 283,
+  "text": "Now, in the rest of this course,"
+ },
+ {
+  "id": 284,
+  "text": "we'll mainly focus on the von Neumann architecture"
+ },
+ {
+  "id": 285,
+  "text": "for our introduction."
+ },
+ {
+  "id": 286,
+  "text": "Because some of you may have seen this stuff before,"
+ },
+ {
+  "id": 287,
+  "text": "or might come up and ask,"
+ },
+ {
+  "id": 288,
+  "text": "\"So why aren't you teaching us the Harvard architecture?\""
+ },
+ {
+  "id": 289,
+  "text": "It's not that we won't cover it at all."
+ },
+ {
+  "id": 290,
+  "text": "It's just that on this part,"
+ },
+ {
+  "id": 291,
+  "text": "we do have our limitations,"
+ },
+ {
+  "id": 292,
+  "text": "because we can't possibly lay it all out in full."
+ },
+ {
+  "id": 293,
+  "text": "So everyone should just know that this is how it works"
+ },
+ {
+  "id": 294,
+  "text": "That's the second part of the hardware components,"
+ },
+ {
+  "id": 295,
+  "text": "which I've just briefly introduced to you."
+ },
+ {
+  "id": 296,
+  "text": "All right."
+ },
+ {
+  "id": 297,
+  "text": "Now, next,"
+ },
+ {
+  "id": 298,
+  "text": "we'll move on to the second block of this part,"
+ },
+ {
+  "id": 299,
+  "text": "which is about program storage and execution."
+ },
+ {
+  "id": 300,
+  "text": "So actually,"
+ },
+ {
+  "id": 301,
+  "text": "that is to say, we,"
+ },
+ {
+  "id": 302,
+  "text": "as we talked about at the very beginning,"
+ },
+ {
+  "id": 303,
+  "text": "a hello world,"
+ },
+ {
+  "id": 304,
+  "text": "once you've written a program,"
+ },
+ {
+  "id": 305,
+  "text": "how does it actually get running in the end,"
+ },
+ {
+  "id": 306,
+  "text": "and how does a"
+ },
+ {
+  "id": 307,
+  "text": "hello world get printed on the screen?"
+ },
+ {
+  "id": 308,
+  "text": "Right?"
+ },
+ {
+  "id": 309,
+  "text": "So what we're really going to do"
+ },
+ {
+  "id": 310,
+  "text": "is take this part"
+ },
+ {
+  "id": 311,
+  "text": "and tie it all together and walk through it again."
+ },
+ {
+  "id": 312,
+  "text": "So,"
+ },
+ {
+  "id": 313,
+  "text": "first, this diagram,"
+ },
+ {
+  "id": 314,
+  "text": "it's still the same diagram from before,"
+ },
+ {
+  "id": 315,
+  "text": "it's a diagram of"
+ },
+ {
+  "id": 316,
+  "text": "how a computer is put together, placed here."
+ },
+ {
+  "id": 317,
+  "text": "So we,"
+ },
+ {
+  "id": 318,
+  "text": "let's suppose we've now written a hello.c,"
+ },
+ {
+  "id": 319,
+  "text": "so once this C source code is written,"
+ },
+ {
+  "id": 320,
+  "text": "Can we just run it directly?"
+ },
+ {
+  "id": 321,
+  "text": "Of course not."
+ },
+ {
+  "id": 322,
+  "text": "Right?"
+ },
+ {
+  "id": 323,
+  "text": "What do we have to do with it first?"
+ },
+ {
+  "id": 324,
+  "text": "First we have to take it and"
+ },
+ {
+  "id": 325,
+  "text": "generate an executable program"
+ },
+ {
+  "id": 326,
+  "text": "Right?"
+ },
+ {
+  "id": 327,
+  "text": "On Linux,"
+ },
+ {
+  "id": 328,
+  "text": "it's called a.out"
+ },
+ {
+  "id": 329,
+  "text": "By default it's called a.out"
+ },
+ {
+  "id": 330,
+  "text": "Now what do we call this process?"
+ },
+ {
+  "id": 331,
+  "text": "It's called compilation and linking"
+ },
+ {
+  "id": 332,
+  "text": "Right?"
+ },
+ {
+  "id": 333,
+  "text": "We compile and link this thing,"
+ },
+ {
+  "id": 334,
+  "text": "and once we've generated an a.out,"
+ },
+ {
+  "id": 335,
+  "text": "we know this a.out,"
+ },
+ {
+  "id": 336,
+  "text": "this thing,"
+ },
+ {
+  "id": 337,
+  "text": "where is it placed now?"
+ },
+ {
+  "id": 338,
+  "text": "It's placed,"
+ },
+ {
+  "id": 339,
+  "text": "we'd say, on the hard disk."
+ },
+ {
+  "id": 340,
+  "text": "Right?"
+ },
+ {
+  "id": 341,
+  "text": "So the stuff on the hard disk"
+ },
+ {
+  "id": 342,
+  "text": "does it just run directly?"
+ },
+ {
+  "id": 343,
+  "text": "Not quite."
+ },
+ {
+  "id": 344,
+  "text": "We say that when we're"
+ },
+ {
+  "id": 345,
+  "text": "say you're in the share directory"
+ },
+ {
+  "id": 346,
+  "text": "and you type in a.out,"
+ },
+ {
+  "id": 347,
+  "text": "after you hit Enter,"
+ },
+ {
+  "id": 348,
+  "text": "what happens?"
+ },
+ {
+  "id": 349,
+  "text": "Well, this a.out"
+ },
+ {
+  "id": 350,
+  "text": "this program,"
+ },
+ {
+  "id": 351,
+  "text": "we need to first"
+ },
+ {
+  "id": 352,
+  "text": "load it into where?"
+ },
+ {
+  "id": 353,
+  "text": "Don't we need to first"
+ },
+ {
+  "id": 354,
+  "text": "load it into memory?"
+ },
+ {
+  "id": 355,
+  "text": "Right?"
+ },
+ {
+  "id": 356,
+  "text": "Now, this a.out,"
+ },
+ {
+  "id": 357,
+  "text": "it's an executable program."
+ },
+ {
+  "id": 358,
+  "text": "Now, an executable program,"
+ },
+ {
+  "id": 359,
+  "text": "if you open it up,"
+ },
+ {
+  "id": 360,
+  "text": "No matter which text editor you use"
+ },
+ {
+  "id": 361,
+  "text": "if you open it up,"
+ },
+ {
+  "id": 362,
+  "text": "the contents are unreadable to us."
+ },
+ {
+  "id": 363,
+  "text": "In fact, it's a binary thing."
+ },
+ {
+  "id": 364,
+  "text": "Now this kind of thing"
+ },
+ {
+  "id": 365,
+  "text": "is actually machine instructions."
+ },
+ {
+  "id": 366,
+  "text": "So these machine instructions,"
+ },
+ {
+  "id": 367,
+  "text": "they are placed one by one in this AD-OUT,"
+ },
+ {
+  "id": 368,
+  "text": "and loaded into memory."
+ },
+ {
+  "id": 369,
+  "text": "Then next,"
+ },
+ {
+  "id": 370,
+  "text": "it starts being executed."
+ },
+ {
+  "id": 371,
+  "text": "Now at this point during execution,"
+ },
+ {
+  "id": 372,
+  "text": "it involves what we just mentioned,"
+ },
+ {
+  "id": 373,
+  "text": "this control unit,"
+ },
+ {
+  "id": 374,
+  "text": "CU."
+ },
+ {
+  "id": 375,
+  "text": "This control unit"
+ },
+ {
+  "id": 376,
+  "text": "will go into memory"
+ },
+ {
+  "id": 377,
+  "text": "and fetch these machine instructions"
+ },
+ {
+  "id": 378,
+  "text": "one by one."
+ },
+ {
+  "id": 379,
+  "text": "And the fetched ones"
+ },
+ {
+  "id": 380,
+  "text": "This process,"
+ },
+ {
+  "id": 381,
+  "text": "we can actually think of it as"
+ },
+ {
+  "id": 382,
+  "text": "the whole process is"
+ },
+ {
+  "id": 383,
+  "text": "basically three steps."
+ },
+ {
+  "id": 384,
+  "text": "The first step is called fetch,"
+ },
+ {
+  "id": 385,
+  "text": "the second step is called decode,"
+ },
+ {
+  "id": 386,
+  "text": "and the third step is execute."
+ },
+ {
+  "id": 387,
+  "text": "So the control unit,"
+ },
+ {
+  "id": 388,
+  "text": "is really just doing these three things"
+ },
+ {
+  "id": 389,
+  "text": "over and over again."
+ },
+ {
+  "id": 390,
+  "text": "Now, fetching,"
+ },
+ {
+  "id": 391,
+  "text": "is called fetch in English,"
+ },
+ {
+  "id": 392,
+  "text": "decode is called decode,"
+ },
+ {
+  "id": 393,
+  "text": "and execution is called execute."
+ },
+ {
+  "id": 394,
+  "text": "Now, this fetch step,"
+ },
+ {
+  "id": 395,
+  "text": "basically,"
+ },
+ {
+  "id": 396,
+  "text": "takes the machine instruction,"
+ },
+ {
+  "id": 397,
+  "text": "and fetches it from memory into where?"
+ },
+ {
+  "id": 398,
+  "text": "It actually fetches it into a register."
+ },
+ {
+  "id": 399,
+  "text": "Into a register."
+ },
+ {
+  "id": 400,
+  "text": "That code,"
+ },
+ {
+  "id": 401,
+  "text": "basically, we have to translate it."
+ },
+ {
+  "id": 402,
+  "text": "Because once it's fetched in,"
+ },
+ {
+  "id": 403,
+  "text": "this 0101 computer"
+ },
+ {
+  "id": 404,
+  "text": "has no idea what it means."
+ },
+ {
+  "id": 405,
+  "text": "It definitely has to translate it,"
+ },
+ {
+  "id": 406,
+  "text": "translate it into an action it can recognize."
+ },
+ {
+  "id": 407,
+  "text": "Then, the third step,"
+ },
+ {
+  "id": 408,
+  "text": "only then can it execute it,"
+ },
+ {
+  "id": 409,
+  "text": "right?"
+ },
+ {
+  "id": 410,
+  "text": "These are all fundamentals."
+ },
+ {
+  "id": 411,
+  "text": "If you don't remember them very clearly,"
+ },
+ {
+  "id": 412,
+  "text": "let's quickly go over them again."
+ },
+ {
+  "id": 413,
+  "text": "So this,"
+ },
+ {
+  "id": 414,
+  "text": "just does this over and over, one instruction at a time."
+ },
+ {
+  "id": 415,
+  "text": "And this process,"
+ },
+ {
+  "id": 416,
+  "text": "is when the program starts executing."
+ },
+ {
+  "id": 417,
+  "text": "But some of you might ask,"
+ },
+ {
+  "id": 418,
+  "text": "regarding this execution,"
+ },
+ {
+  "id": 419,
+  "text": "for example, some students say,"
+ },
+ {
+  "id": 420,
+  "text": "How is it that"
+ },
+ {
+  "id": 421,
+  "text": "it's as if someone is pushing it to do this?"
+ },
+ {
+  "id": 422,
+  "text": "So who is pushing it to do this?"
+ },
+ {
+  "id": 423,
+  "text": "Now this brings us to,"
+ },
+ {
+  "id": 424,
+  "text": "when we were just talking about"
+ },
+ {
+  "id": 425,
+  "text": "the composition of a computer,"
+ },
+ {
+  "id": 426,
+  "text": "there was one part I forgot to mention."
+ },
+ {
+  "id": 427,
+  "text": "That is, there is actually one important"
+ },
+ {
+  "id": 428,
+  "text": "one important thing in a computer,"
+ },
+ {
+  "id": 429,
+  "text": "called a crystal oscillator."
+ },
+ {
+  "id": 430,
+  "text": "It is also a piece of hardware,"
+ },
+ {
+  "id": 431,
+  "text": "and this hardware,"
+ },
+ {
+  "id": 432,
+  "text": "once power is turned on,"
+ },
+ {
+  "id": 433,
+  "text": "it produces things like pulses,"
+ },
+ {
+  "id": 434,
+  "text": "at a fixed frequency,"
+ },
+ {
+  "id": 435,
+  "text": "to drive our processor"
+ },
+ {
+  "id": 436,
+  "text": "to do that repeated cycle"
+ },
+ {
+  "id": 437,
+  "text": "of fetching,"
+ },
+ {
+  "id": 438,
+  "text": "decoding, and executing instructions,"
+ },
+ {
+  "id": 439,
+  "text": "right?"
+ },
+ {
+  "id": 440,
+  "text": "When you buy a computer or a phone,"
+ },
+ {
+  "id": 441,
+  "text": "you often ask the salesperson,"
+ },
+ {
+  "id": 442,
+  "text": "\"What's the clock speed of this processor?\""
+ },
+ {
+  "id": 443,
+  "text": "You get what I mean, right?"
+ },
+ {
+  "id": 444,
+  "text": "The faster the clock frequency,"
+ },
+ {
+  "id": 445,
+  "text": "the speed is actually driven by this crystal oscillator thing,"
+ },
+ {
+  "id": 446,
+  "text": "that drives it."
+ },
+ {
+  "id": 447,
+  "text": "So the higher the clock speed,"
+ },
+ {
+  "id": 448,
+  "text": "the faster the computer computes."
+ },
+ {
+  "id": 449,
+  "text": "It's really just that simple."
+ },
+ {
+  "id": 450,
+  "text": "And sometimes it's not enough for us, so we say,"
+ },
+ {
+  "id": 451,
+  "text": "\"This frequency isn't enough, I want to overclock it.\""
+ },
+ {
+  "id": 452,
+  "text": "I don't know if any of you have done that these days."
+ },
+ {
+  "id": 453,
+  "text": "You buy a computer,"
+ },
+ {
+  "id": 454,
+  "text": "say it's 2GHz,"
+ },
+ {
+  "id": 455,
+  "text": "and you feel 2GHz isn't enough for gaming,"
+ },
+ {
+  "id": 456,
+  "text": "so you can go and overclock it."
+ },
+ {
+  "id": 457,
+  "text": "That can be done."
+ },
+ {
+  "id": 458,
+  "text": "Probably not as common now,"
+ },
+ {
+  "id": 459,
+  "text": "but in the past,"
+ },
+ {
+  "id": 460,
+  "text": "When you bought a computer"
+ },
+ {
+  "id": 461,
+  "text": "a lot of people would also"
+ },
+ {
+  "id": 462,
+  "text": "take this"
+ },
+ {
+  "id": 463,
+  "text": "whether they could modify their own computer"
+ },
+ {
+  "id": 464,
+  "text": "and overclock it"
+ },
+ {
+  "id": 465,
+  "text": "basically raise its frequency"
+ },
+ {
+  "id": 466,
+  "text": "as a way of showing off their skills"
+ },
+ {
+  "id": 467,
+  "text": "I don't know if any of you still do this now"
+ },
+ {
+  "id": 468,
+  "text": "Back then, I spent the same amount of money"
+ },
+ {
+  "id": 469,
+  "text": "and bought the same computer"
+ },
+ {
+  "id": 470,
+  "text": "because when it left the factory,"
+ },
+ {
+  "id": 471,
+  "text": "its frequency was fixed"
+ },
+ {
+  "id": 472,
+  "text": "Now, some of those enthusiasts"
+ },
+ {
+  "id": 473,
+  "text": "who were more technically skilled"
+ },
+ {
+  "id": 474,
+  "text": "would go into the settings on that CPU,"
+ },
+ {
+  "id": 475,
+  "text": "make some changes,"
+ },
+ {
+  "id": 476,
+  "text": "and raise its frequency"
+ },
+ {
+  "id": 477,
+  "text": "so the CPU would run faster, right?"
+ },
+ {
+  "id": 478,
+  "text": "And that made them very happy"
+ },
+ {
+  "id": 479,
+  "text": "But doing this..."
+ },
+ {
+  "id": 480,
+  "text": "Actually, it's not all that great either"
+ },
+ {
+  "id": 481,
+  "text": "because the frequency is high"
+ },
+ {
+  "id": 482,
+  "text": "and if it gets too high, the heat can get pretty intense too"
+ },
+ {
+  "id": 483,
+  "text": "Sometimes if things go wrong,"
+ },
+ {
+  "id": 484,
+  "text": "the computer just burns out."
+ },
+ {
+  "id": 485,
+  "text": "So it's a bit of a gamble for us."
+ },
+ {
+  "id": 486,
+  "text": "But from this we now know,"
+ },
+ {
+  "id": 487,
+  "text": "that inside a computer,"
+ },
+ {
+  "id": 488,
+  "text": "there's actually this precision thing going on."
+ },
+ {
+  "id": 489,
+  "text": "So overall,"
+ },
+ {
+  "id": 490,
+  "text": "our program here,"
+ },
+ {
+  "id": 491,
+  "text": "this is how it runs."
+ },
+ {
+  "id": 492,
+  "text": "This"
+ },
+ {
+  "id": 493,
+  "text": "is our process of"
+ },
+ {
+  "id": 494,
+  "text": "storing and executing a program."
+ },
+ {
+  "id": 495,
+  "text": "Good."
+ },
+ {
+  "id": 496,
+  "text": "Now that we've got this concept down,"
+ },
+ {
+  "id": 497,
+  "text": "we"
+ },
+ {
+  "id": 498,
+  "text": "move on to the next chapter,"
+ },
+ {
+  "id": 499,
+  "text": "which is about"
+ },
+ {
+  "id": 500,
+  "text": "Because in the end, we still have to write programs."
+ },
+ {
+  "id": 501,
+  "text": "So as for programming languages,"
+ },
+ {
+  "id": 502,
+  "text": "just understanding this hardware"
+ },
+ {
+  "id": 503,
+  "text": "really isn't enough."
+ },
+ {
+  "id": 504,
+  "text": "We also need to ask how these programming languages were designed in the first place."
+ },
+ {
+  "id": 505,
+  "text": "Because, as we know, in everything we just covered,"
+ },
+ {
+  "id": 506,
+  "text": "we touched on things like machine instructions,"
+ },
+ {
+  "id": 507,
+  "text": "and also things like the C language."
+ },
+ {
+  "id": 508,
+  "text": "Now, this,"
+ },
+ {
+  "id": 509,
+  "text": "this,"
+ },
+ {
+  "id": 510,
+  "text": "that is, machine language,"
+ },
+ {
+  "id": 511,
+  "text": "we..."
+ },
+ {
+  "id": 512,
+  "text": "Because later on,"
+ },
+ {
+  "id": 513,
+  "text": "what I'll be talking to you about"
+ },
+ {
+  "id": 514,
+  "text": "will mainly be"
+ },
+ {
+  "id": 515,
+  "text": "introducing you to some of this kind of"
+ },
+ {
+  "id": 516,
+  "text": "OS-level development."
+ },
+ {
+  "id": 517,
+  "text": "And that involves low-level languages."
+ },
+ {
+  "id": 518,
+  "text": "So this low-level machine language,"
+ },
+ {
+  "id": 519,
+  "text": "what exactly is it?"
+ },
+ {
+  "id": 520,
+  "text": "Our understanding of it"
+ },
+ {
+  "id": 521,
+  "text": "here"
+ },
+ {
+  "id": 522,
+  "text": "I'll"
+ },
+ {
+  "id": 523,
+  "text": "go into a bit more detail for you"
+ },
+ {
+  "id": 524,
+  "text": "So next,"
+ },
+ {
+  "id": 525,
+  "text": "let's use a"
+ },
+ {
+  "id": 526,
+  "text": "made-up example"
+ },
+ {
+  "id": 527,
+  "text": "to get a feel for"
+ },
+ {
+  "id": 528,
+  "text": "what machine language"
+ },
+ {
+  "id": 529,
+  "text": "actually is as a thing"
+ },
+ {
+  "id": 530,
+  "text": "Now, to keep this"
+ },
+ {
+  "id": 531,
+  "text": "a bit simpler to explain,"
+ },
+ {
+  "id": 532,
+  "text": "we'll invent a small computer"
+ },
+ {
+  "id": 533,
+  "text": "This small computer"
+ },
+ {
+  "id": 534,
+  "text": "is very simple."
+ },
+ {
+  "id": 535,
+  "text": "As you can see,"
+ },
+ {
+  "id": 536,
+  "text": "it's just the things I've drawn in the picture."
+ },
+ {
+  "id": 537,
+  "text": "What is it made of?"
+ },
+ {
+  "id": 538,
+  "text": "Well, inside it,"
+ },
+ {
+  "id": 539,
+  "text": "there are only two calculators"
+ },
+ {
+  "id": 540,
+  "text": "And then,"
+ },
+ {
+  "id": 541,
+  "text": "there's an arithmetic logic unit,"
+ },
+ {
+  "id": 542,
+  "text": "and then,"
+ },
+ {
+  "id": 543,
+  "text": "over here there's a control unit."
+ },
+ {
+  "id": 544,
+  "text": "Inside this control unit,"
+ },
+ {
+  "id": 545,
+  "text": "it's also very simple:"
+ },
+ {
+  "id": 546,
+  "text": "there's just one instruction register,"
+ },
+ {
+  "id": 547,
+  "text": "and something called a program counter,"
+ },
+ {
+  "id": 548,
+  "text": "that kind of thing."
+ },
+ {
+  "id": 549,
+  "text": "This is what we commonly call the PC."
+ },
+ {
+  "id": 550,
+  "text": "What it actually does,"
+ },
+ {
+  "id": 551,
+  "text": "is record where our program is currently executing,"
+ },
+ {
+  "id": 552,
+  "text": "the idea of that position."
+ },
+ {
+  "id": 553,
+  "text": "It's also a register."
+ },
+ {
+  "id": 554,
+  "text": "Now,"
+ },
+ {
+  "id": 555,
+  "text": "on the outside,"
+ },
+ {
+  "id": 556,
+  "text": "there's a block of memory,"
+ },
+ {
+  "id": 557,
+  "text": "and this memory,"
+ },
+ {
+  "id": 558,
+  "text": "its contents,"
+ },
+ {
+  "id": 559,
+  "text": "are also limited."
+ },
+ {
+  "id": 560,
+  "text": "Actually, if you guys"
+ },
+ {
+  "id": 561,
+  "text": "are interested in this kind of low-level hardware"
+ },
+ {
+  "id": 562,
+  "text": "and computing stuff,"
+ },
+ {
+  "id": 563,
+  "text": "if you're really into it,"
+ },
+ {
+  "id": 564,
+  "text": "if you're a real enthusiast,"
+ },
+ {
+  "id": 565,
+  "text": "you can search online."
+ },
+ {
+  "id": 566,
+  "text": "That is to say,"
+ },
+ {
+  "id": 567,
+  "text": "there are people on the internet"
+ },
+ {
+  "id": 568,
+  "text": "who use breadboards—"
+ },
+ {
+  "id": 569,
+  "text": "have you all heard of those?"
+ },
+ {
+  "id": 570,
+  "text": "Basically, breadboards,"
+ },
+ {
+  "id": 571,
+  "text": "and DuPont wires—"
+ },
+ {
+  "id": 572,
+  "text": "basically, connecting wires—"
+ },
+ {
+  "id": 573,
+  "text": "and very simple electronic components,"
+ },
+ {
+  "id": 574,
+  "text": "and they can literally build"
+ },
+ {
+  "id": 575,
+  "text": "a CPU by hand,"
+ },
+ {
+  "id": 576,
+  "text": "a 4-bit one,"
+ },
+ {
+  "id": 577,
+  "text": "or even an 8-bit CPU."
+ },
+ {
+  "id": 578,
+  "text": "Because as we know,"
+ },
+ {
+  "id": 579,
+  "text": "a CPU is essentially just transistors."
+ },
+ {
+  "id": 580,
+  "text": "Right?"
+ },
+ {
+  "id": 581,
+  "text": "So this thing, the transistor,"
+ },
+ {
+  "id": 582,
+  "text": "you can actually assemble it yourself,"
+ },
+ {
+  "id": 583,
+  "text": "and you can build one."
+ },
+ {
+  "id": 584,
+  "text": "Of course, with an integrated circuit,"
+ },
+ {
+  "id": 585,
+  "text": "it's just that the transistors themselves are"
+ },
+ {
+  "id": 586,
+  "text": "etched onto this silicon chip."
+ },
+ {
+  "id": 587,
+  "text": "We can absolutely wire it up ourselves"
+ },
+ {
+  "id": 588,
+  "text": "to make a CPU about this big."
+ },
+ {
+  "id": 589,
+  "text": "It's just that this CPU would be very weak as well,"
+ },
+ {
+  "id": 590,
+  "text": "right?"
+ },
+ {
+  "id": 591,
+  "text": "If I gave you this kind of model right now,"
+ },
+ {
+  "id": 592,
+  "text": "you could actually build it out of that too."
+ },
+ {
+  "id": 593,
+  "text": "But of course, for us,"
+ },
+ {
+  "id": 594,
+  "text": "this is getting into more hardcore stuff,"
+ },
+ {
+  "id": 595,
+  "text": "hardware stuff."
+ },
+ {
+  "id": 596,
+  "text": "We won't have everyone tinker with that here."
+ },
+ {
+  "id": 597,
+  "text": "So let's assume we have this kind of processor,"
+ },
+ {
+  "id": 598,
+  "text": "we built it ourselves,"
+ },
+ {
+  "id": 599,
+  "text": "and there are two registers in here."
+ },
+ {
+  "id": 600,
+  "text": "A processing unit,"
+ },
+ {
+  "id": 601,
+  "text": "and a control unit."
+ },
+ {
+  "id": 602,
+  "text": "Now, the functionality we ask it to implement is also very simple."
+ },
+ {
+  "id": 603,
+  "text": "We don't want it to do anything too complicated either."
+ },
+ {
+  "id": 604,
+  "text": "For example, let's say it's an 8-bit computer."
+ },
+ {
+  "id": 605,
+  "text": "So what do we mean by 8-bit?"
+ },
+ {
+  "id": 606,
+  "text": "Well, you can think of it as these registers,"
+ },
+ {
+  "id": 607,
+  "text": "each one being only 8 bits long."
+ },
+ {
+  "id": 608,
+  "text": "Its functionality only needs to support addition, and that's enough."
+ },
+ {
+  "id": 609,
+  "text": "So if this thing,"
+ },
+ {
+  "id": 610,
+  "text": "asked you to build a CPU out of it,"
+ },
+ {
+  "id": 611,
+  "text": "you could absolutely pull it off."
+ },
+ {
+  "id": 612,
+  "text": "Because its functionality is really, truly simple."
+ },
+ {
+  "id": 613,
+  "text": "Now, think about this, everyone."
+ },
+ {
+  "id": 614,
+  "text": "If you were given these components,"
+ },
+ {
+  "id": 615,
+  "text": "and asked to complete a simple addition operation,"
+ },
+ {
+  "id": 616,
+  "text": "how would that actually happen?"
+ },
+ {
+  "id": 617,
+  "text": "I mean, if you write it in a high-level language like C,"
+ },
+ {
+  "id": 618,
+  "text": "it's nothing more than a single line: C = A + B."
+ },
+ {
+  "id": 619,
+  "text": "This statement,"
+ },
+ {
+  "id": 620,
+  "text": "Now we need to implement this statement in machine language"
+ },
+ {
+  "id": 621,
+  "text": "to actually make it work"
+ },
+ {
+  "id": 622,
+  "text": "Have you thought about how we would do that?"
+ },
+ {
+  "id": 623,
+  "text": "Actually, it's quite simple"
+ },
+ {
+  "id": 624,
+  "text": "Think about it: suppose we have"
+ },
+ {
+  "id": 625,
+  "text": "two registers"
+ },
+ {
+  "id": 626,
+  "text": "and these things"
+ },
+ {
+  "id": 627,
+  "text": "So roughly, how many things do we need to do?"
+ },
+ {
+  "id": 628,
+  "text": "Actually, just about three or four steps"
+ },
+ {
+  "id": 629,
+  "text": "Think about it: suppose we want to"
+ },
+ {
+  "id": 630,
+  "text": "just a moment"
+ },
+ {
+  "id": 631,
+  "text": "Suppose we now want to implement a"
+ },
+ {
+  "id": 632,
+  "text": "A equals B plus C"
+ },
+ {
+  "id": 633,
+  "text": "a function like that"
+ },
+ {
+  "id": 634,
+  "text": "So the first thing we need to do"
+ },
+ {
+  "id": 635,
+  "text": "think about it: is nothing more than taking the data B and C"
+ },
+ {
+  "id": 636,
+  "text": "and putting them into registers inside the CPU"
+ },
+ {
+  "id": 637,
+  "text": "Isn't that right?"
+ },
+ {
+  "id": 638,
+  "text": "Now, generally speaking,"
+ },
+ {
+  "id": 639,
+  "text": "when we talk about data"
+ },
+ {
+  "id": 640,
+  "text": "It has to be put into memory first, of course."
+ },
+ {
+  "id": 641,
+  "text": "So after the CPU powers on,"
+ },
+ {
+  "id": 642,
+  "text": "everything inside it is empty."
+ },
+ {
+  "id": 643,
+  "text": "So the first thing we do,"
+ },
+ {
+  "id": 644,
+  "text": "probably nothing more than taking a piece of data like B,"
+ },
+ {
+  "id": 645,
+  "text": "moving it from memory into the CPU first,"
+ },
+ {
+  "id": 646,
+  "text": "and then the second step,"
+ },
+ {
+  "id": 647,
+  "text": "is nothing more than"
+ },
+ {
+  "id": 648,
+  "text": "taking another piece of data like C,"
+ },
+ {
+  "id": 649,
+  "text": "and moving it from memory into the CPU as well."
+ },
+ {
+  "id": 650,
+  "text": "Then at this point our arithmetic logic unit,"
+ },
+ {
+  "id": 651,
+  "text": "can, because the arithmetic logic unit,"
+ },
+ {
+  "id": 652,
+  "text": "it only accesses registers;"
+ },
+ {
+  "id": 653,
+  "text": "it cannot directly access external memory."
+ },
+ {
+  "id": 654,
+  "text": "So what we need to do, the first thing,"
+ },
+ {
+  "id": 655,
+  "text": "is to take the data from memory,"
+ },
+ {
+  "id": 656,
+  "text": "and move it into the registers first."
+ },
+ {
+  "id": 657,
+  "text": "Suppose this register holds B,"
+ },
+ {
+  "id": 658,
+  "text": "and this one holds C."
+ },
+ {
+  "id": 659,
+  "text": "Then what comes next is to perform an addition operation."
+ },
+ {
+  "id": 660,
+  "text": "So the addition operation, we said,"
+ },
+ {
+  "id": 661,
+  "text": "is what the arithmetic logic unit has to do."
+ },
+ {
+  "id": 662,
+  "text": "So it can take B and C"
+ },
+ {
+  "id": 663,
+  "text": "out of these registers,"
+ },
+ {
+  "id": 664,
+  "text": "then compute them and get an A."
+ },
+ {
+  "id": 665,
+  "text": "So where do we put A?"
+ },
+ {
+  "id": 666,
+  "text": "Right now we only have two registers."
+ },
+ {
+  "id": 667,
+  "text": "Where do we put A?"
+ },
+ {
+  "id": 668,
+  "text": "Actually, we just find any register,"
+ },
+ {
+  "id": 669,
+  "text": "for example, replace B with A, and that's it."
+ },
+ {
+  "id": 670,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 671,
+  "text": "Because B has already been used up,"
+ },
+ {
+  "id": 672,
+  "text": "it's no longer useful."
+ },
+ {
+  "id": 673,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 674,
+  "text": "So we put A here."
+ },
+ {
+  "id": 675,
+  "text": "Then finally,"
+ },
+ {
+  "id": 676,
+  "text": "after we're done thinking,"
+ },
+ {
+  "id": 677,
+  "text": "we say we still need to do what with it?"
+ },
+ {
+  "id": 678,
+  "text": "Find a way to move this A out"
+ },
+ {
+  "id": 679,
+  "text": "and save it."
+ },
+ {
+  "id": 680,
+  "text": "And that's basically it — we're done."
+ },
+ {
+  "id": 681,
+  "text": "Of course,"
+ },
+ {
+  "id": 682,
+  "text": "if you were to design"
+ },
+ {
+  "id": 683,
+  "text": "your own small CPU,"
+ },
+ {
+  "id": 684,
+  "text": "to accomplish something this simple,"
+ },
+ {
+  "id": 685,
+  "text": "you really just need to implement these four instructions."
+ },
+ {
+  "id": 686,
+  "text": "So how should we go about designing these four instructions?"
+ },
+ {
+  "id": 687,
+  "text": "Why do we care"
+ },
+ {
+  "id": 688,
+  "text": "about how machine instructions are designed?"
+ },
+ {
+  "id": 689,
+  "text": "Because when we talk about assembly later on,"
+ },
+ {
+  "id": 690,
+  "text": "it's actually closely tied to this."
+ },
+ {
+  "id": 691,
+  "text": "So it's worth everyone getting familiar with"
+ },
+ {
+  "id": 692,
+  "text": "some concepts related to machine instructions."
+ },
+ {
+  "id": 693,
+  "text": "Now, the four steps I mentioned earlier"
+ },
+ {
+  "id": 694,
+  "text": "actually correspond to"
+ },
+ {
+  "id": 695,
+  "text": "these descriptions up here."
+ },
+ {
+  "id": 696,
+  "text": "So the first step,"
+ },
+ {
+  "id": 697,
+  "text": "as we just said,"
+ },
+ {
+  "id": 698,
+  "text": "what is the first step?"
+ },
+ {
+  "id": 699,
+  "text": "Think back to what we just talked about."
+ },
+ {
+  "id": 700,
+  "text": "The first step is to take that b"
+ },
+ {
+  "id": 701,
+  "text": "this data,"
+ },
+ {
+  "id": 702,
+  "text": "fetch it out of memory,"
+ },
+ {
+  "id": 703,
+  "text": "and put it into the first register."
+ },
+ {
+  "id": 704,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 705,
+  "text": "But this memory,"
+ },
+ {
+  "id": 706,
+  "text": "how do we access memory?"
+ },
+ {
+  "id": 707,
+  "text": "We know that when a computer accesses"
+ },
+ {
+  "id": 708,
+  "text": "these things outside the CPU,"
+ },
+ {
+  "id": 709,
+  "text": "it accesses everything through addresses."
+ },
+ {
+  "id": 710,
+  "text": "I need to know whether it's"
+ },
+ {
+  "id": 711,
+  "text": "the first byte or the second byte in that memory."
+ },
+ {
+  "id": 712,
+  "text": "So, to sum it up,"
+ },
+ {
+  "id": 713,
+  "text": "it's really just this:"
+ },
+ {
+  "id": 714,
+  "text": "we have to access an address,"
+ },
+ {
+  "id": 715,
+  "text": "and then from that address,"
+ },
+ {
+  "id": 716,
+  "text": "take a piece of data and load it,"
+ },
+ {
+  "id": 717,
+  "text": "load it into a register."
+ },
+ {
+  "id": 718,
+  "text": "That's the first instruction."
+ },
+ {
+  "id": 719,
+  "text": "Now, what about the second instruction?"
+ },
+ {
+  "id": 720,
+  "text": "It's similar; you just swap it out."
+ },
+ {
+  "id": 721,
+  "text": "Load it from another address"
+ },
+ {
+  "id": 722,
+  "text": "into this register."
+ },
+ {
+  "id": 723,
+  "text": "Now, the third step,"
+ },
+ {
+  "id": 724,
+  "text": "is to perform an addition operation."
+ },
+ {
+  "id": 725,
+  "text": "Take the values in two registers,"
+ },
+ {
+  "id": 726,
+  "text": "and after adding them together,"
+ },
+ {
+  "id": 727,
+  "text": "the result, as I just said,"
+ },
+ {
+  "id": 728,
+  "text": "just use it to replace one of the registers."
+ },
+ {
+  "id": 729,
+  "text": "So the third step,"
+ },
+ {
+  "id": 730,
+  "text": "the final step,"
+ },
+ {
+  "id": 731,
+  "text": "is to take this result,"
+ },
+ {
+  "id": 732,
+  "text": "from register 0,"
+ },
+ {
+  "id": 733,
+  "text": "and store it,"
+ },
+ {
+  "id": 734,
+  "text": "putting it out into memory."
+ },
+ {
+  "id": 735,
+  "text": "Now this,"
+ },
+ {
+  "id": 736,
+  "text": "let's take a look at this instruction."
+ },
+ {
+  "id": 737,
+  "text": "How does it work?"
+ },
+ {
+  "id": 738,
+  "text": "If we ourselves,"
+ },
+ {
+  "id": 739,
+  "text": "once the hardware is done,"
+ },
+ {
+  "id": 740,
+  "text": "How do we design instructions?"
+ },
+ {
+  "id": 741,
+  "text": "So this"
+ },
+ {
+  "id": 742,
+  "text": "because as we just said,"
+ },
+ {
+  "id": 743,
+  "text": "this instruction"
+ },
+ {
+  "id": 744,
+  "text": "is placed in memory,"
+ },
+ {
+  "id": 745,
+  "text": "and it's also eight bits."
+ },
+ {
+  "id": 746,
+  "text": "So we need to design"
+ },
+ {
+  "id": 747,
+  "text": "how these eight bits"
+ },
+ {
+  "id": 748,
+  "text": "can express this concept."
+ },
+ {
+  "id": 749,
+  "text": "So really, we"
+ },
+ {
+  "id": 750,
+  "text": "have to design this."
+ },
+ {
+  "id": 751,
+  "text": "Now these actions like this,"
+ },
+ {
+  "id": 752,
+  "text": "load, add, store,"
+ },
+ {
+  "id": 753,
+  "text": "these are actions,"
+ },
+ {
+  "id": 754,
+  "text": "wouldn't you say?"
+ },
+ {
+  "id": 755,
+  "text": "This kind of action,"
+ },
+ {
+  "id": 756,
+  "text": "in our computer's"
+ },
+ {
+  "id": 757,
+  "text": "terminology,"
+ },
+ {
+  "id": 758,
+  "text": "we call it"
+ },
+ {
+  "id": 759,
+  "text": "we call it opcode."
+ },
+ {
+  "id": 760,
+  "text": "That is, the operation, the opcode."
+ },
+ {
+  "id": 761,
+  "text": "In other words, it represents a kind of action."
+ },
+ {
+  "id": 762,
+  "text": "Now, in a computer,"
+ },
+ {
+  "id": 763,
+  "text": "everything,"
+ },
+ {
+  "id": 764,
+  "text": "absolutely everything, is represented as 0s and 1s."
+ },
+ {
+  "id": 765,
+  "text": "So when it comes to this action,"
+ },
+ {
+  "id": 766,
+  "text": "how do we represent it?"
+ },
+ {
+  "id": 767,
+  "text": "Well, right now,"
+ },
+ {
+  "id": 768,
+  "text": "let's take an instruction,"
+ },
+ {
+  "id": 769,
+  "text": "suppose our instruction"
+ },
+ {
+  "id": 770,
+  "text": "is 8 bits long,"
+ },
+ {
+  "id": 771,
+  "text": "so one bit,"
+ },
+ {
+  "id": 772,
+  "text": "one bit,"
+ },
+ {
+  "id": 773,
+  "text": "8 bits."
+ },
+ {
+  "id": 774,
+  "text": "Then we can lay it out like this."
+ },
+ {
+  "id": 775,
+  "text": "For example, we could specify that"
+ },
+ {
+  "id": 776,
+  "text": "the two lowest-order bits at the front,"
+ },
+ {
+  "id": 777,
+  "text": "the 01, these two bits,"
+ },
+ {
+  "id": 778,
+  "text": "are used to represent this action."
+ },
+ {
+  "id": 779,
+  "text": "Now, as you know,"
+ },
+ {
+  "id": 780,
+  "text": "Two bits"
+ },
+ {
+  "id": 781,
+  "text": "Actually, in our computer,"
+ },
+ {
+  "id": 782,
+  "text": "that's already enough."
+ },
+ {
+  "id": 783,
+  "text": "Because with two bits,"
+ },
+ {
+  "id": 784,
+  "text": "how many operations can you express?"
+ },
+ {
+  "id": 785,
+  "text": "You can express four operations."
+ },
+ {
+  "id": 786,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 787,
+  "text": "00 01 10 11"
+ },
+ {
+  "id": 788,
+  "text": "Now, these four operations"
+ },
+ {
+  "id": 789,
+  "text": "on our computer,"
+ },
+ {
+  "id": 790,
+  "text": "are already enough."
+ },
+ {
+  "id": 791,
+  "text": "Why?"
+ },
+ {
+  "id": 792,
+  "text": "Because after we analyzed it,"
+ },
+ {
+  "id": 793,
+  "text": "we found that we only need a few operations,"
+ },
+ {
+  "id": 794,
+  "text": "just three:"
+ },
+ {
+  "id": 795,
+  "text": "load, add, and store."
+ },
+ {
+  "id": 796,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 797,
+  "text": "So, in practice, when we use the instruction,"
+ },
+ {
+  "id": 798,
+  "text": "we only need to use two of its bits."
+ },
+ {
+  "id": 799,
+  "text": "We only use two of its bits"
+ },
+ {
+  "id": 800,
+  "text": "is actually enough. So we just lay out a plan. That is, we use these two low-order bits to encode the action. So for the first command, we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 801,
+  "text": "So we just lay out a plan. That is, we use these two low-order bits to encode the action. So for the first command, we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 802,
+  "text": "That is, we use these two low-order bits to encode the action. So for the first command, we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 803,
+  "text": "to encode the action. So for the first command, we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 804,
+  "text": "So for the first command, we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 805,
+  "text": "we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 806,
+  "text": "But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 807,
+  "text": "who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 808,
+  "text": "Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 809,
+  "text": "involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 810,
+  "text": "a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 811,
+  "text": "So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 812,
+  "text": "and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 813,
+  "text": "These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 814,
+  "text": "and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 815,
+  "text": "hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 816,
+  "text": "Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 817,
+  "text": "It means how many registers can we address at most? Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 818,
+  "text": "Isn't it that we can only address at most four registers?"
+ },
+ {
+  "id": 819,
+  "text": "four registers?"
+ },
+ {
+  "id": 820,
+  "text": "Because the register codes can only be 00,"
+ },
+ {
+  "id": 821,
+  "text": "01, 10, and 11."
+ },
+ {
+  "id": 822,
+  "text": "But these four registers are actually enough for us."
+ },
+ {
+  "id": 823,
+  "text": "Why?"
+ },
+ {
+  "id": 824,
+  "text": "Because in the design we have now, there are only a few registers at most."
+ },
+ {
+  "id": 825,
+  "text": "Only two registers."
+ },
+ {
+  "id": 826,
+  "text": "So in our design,"
+ },
+ {
+  "id": 827,
+  "text": "putting these two bits"
+ },
+ {
+  "id": 828,
+  "text": "is actually enough."
+ },
+ {
+  "id": 829,
+  "text": "Right, everyone?"
+ },
+ {
+  "id": 830,
+  "text": "So,"
+ },
+ {
+  "id": 831,
+  "text": "this register only needs to hold two bits,"
+ },
+ {
+  "id": 832,
+  "text": "and then for the address we set aside four bits."
+ },
+ {
+  "id": 833,
+  "text": "With four bits,"
+ },
+ {
+  "id": 834,
+  "text": "think about it — how many bytes of range can we access?"
+ },
+ {
+  "id": 835,
+  "text": "Right now, because this is an introductory course,"
+ },
+ {
+  "id": 836,
+  "text": "we're designing low-level development,"
+ },
+ {
+  "id": 837,
+  "text": "so you'll probably need to cover these concepts a bit more."
+ },
+ {
+  "id": 838,
+  "text": "Because if everyone were developing entirely in a high-level language,"
+ },
+ {
+  "id": 839,
+  "text": "these low-level things would probably get covered less."
+ },
+ {
+  "id": 840,
+  "text": "that's the binary handling"
+ },
+ {
+  "id": 841,
+  "text": "we're still playing around here"
+ },
+ {
+  "id": 842,
+  "text": "I mean these 4 bits"
+ },
+ {
+  "id": 843,
+  "text": "how many do you think we can access"
+ },
+ {
+  "id": 844,
+  "text": "how many numbers can 4 bits represent"
+ },
+ {
+  "id": 845,
+  "text": "think about it"
+ },
+ {
+  "id": 846,
+  "text": "they can represent 16 numbers"
+ },
+ {
+  "id": 847,
+  "text": "so that means this computer of ours"
+ },
+ {
+  "id": 848,
+  "text": "can access at most how many bytes"
+ },
+ {
+  "id": 849,
+  "text": "only 16 bytes"
+ },
+ {
+  "id": 850,
+  "text": "so primitive"
+ },
+ {
+  "id": 851,
+  "text": "isn't it"
+ },
+ {
+  "id": 852,
+  "text": "but our"
+ },
+ {
+  "id": 853,
+  "text": "our complex computer here"
+ },
+ {
+  "id": 854,
+  "text": "this IT world"
+ },
+ {
+  "id": 855,
+  "text": "is actually built up bit by bit like this"
+ },
+ {
+  "id": 856,
+  "text": "don't you think"
+ },
+ {
+  "id": 857,
+  "text": "by learning these simple things"
+ },
+ {
+  "id": 858,
+  "text": "and then extrapolating from them"
+ },
+ {
+  "id": 859,
+  "text": "I think if you go and learn some"
+ },
+ {
+  "id": 860,
+  "text": "These are the fundamentals."
+ },
+ {
+  "id": 861,
+  "text": "Otherwise,"
+ },
+ {
+  "id": 862,
+  "text": "if you don't lay a solid foundation,"
+ },
+ {
+  "id": 863,
+  "text": "and then go on to tackle advanced stuff,"
+ },
+ {
+  "id": 864,
+  "text": "artificial intelligence and things like that,"
+ },
+ {
+  "id": 865,
+  "text": "a lot of it may actually end up hindering you instead of helping."
+ },
+ {
+  "id": 866,
+  "text": "So what we really hope is that through this course,"
+ },
+ {
+  "id": 867,
+  "text": "you'll get a sense of how computers actually came about."
+ },
+ {
+  "id": 868,
+  "text": "Now, this first instruction,"
+ },
+ {
+  "id": 869,
+  "text": "we've actually designed already."
+ },
+ {
+  "id": 870,
+  "text": "That is, we can use the low 2 bits to represent the opcode,"
+ },
+ {
+  "id": 871,
+  "text": "and then bits 2 and 3 in the middle to represent registers."
+ },
+ {
+  "id": 872,
+  "text": "Then,"
+ },
+ {
+  "id": 873,
+  "text": "the first register,"
+ },
+ {
+  "id": 874,
+  "text": "we number it 00."
+ },
+ {
+  "id": 875,
+  "text": "So 01 stands for load,"
+ },
+ {
+  "id": 876,
+  "text": "00..."
+ },
+ {
+  "id": 877,
+  "text": "and then xx?"
+ },
+ {
+  "id": 878,
+  "text": "We haven't decided on that yet for now."
+ },
+ {
+  "id": 879,
+  "text": "This part is used to hold the address."
+ },
+ {
+  "id": 880,
+  "text": "So we've got that instruction figured out."
+ },
+ {
+  "id": 881,
+  "text": "Now, what about the second instruction?"
+ },
+ {
+  "id": 882,
+  "text": "It's similar to it."
+ },
+ {
+  "id": 883,
+  "text": "Think about it."
+ },
+ {
+  "id": 884,
+  "text": "The only thing we change is one spot."
+ },
+ {
+  "id": 885,
+  "text": "We just change"
+ },
+ {
+  "id": 886,
+  "text": "this right here."
+ },
+ {
+  "id": 887,
+  "text": "The operation actually stays the same."
+ },
+ {
+  "id": 888,
+  "text": "Because what are they both?"
+ },
+ {
+  "id": 889,
+  "text": "Because they're both loads."
+ },
+ {
+  "id": 890,
+  "text": "Right?"
+ },
+ {
+  "id": 891,
+  "text": "So all that changes"
+ },
+ {
+  "id": 892,
+  "text": "is the register it operates on."
+ },
+ {
+  "id": 893,
+  "text": "Before, it was the first register..."
+ },
+ {
+  "id": 894,
+  "text": "The zero-th register, called 00."
+ },
+ {
+  "id": 895,
+  "text": "Now it's the first register, which is 01."
+ },
+ {
+  "id": 896,
+  "text": "Right?"
+ },
+ {
+  "id": 897,
+  "text": "What about the address?"
+ },
+ {
+  "id": 898,
+  "text": "We'll hold off on that and look at it next time."
+ },
+ {
+  "id": 899,
+  "text": "Then, our third instruction is called add."
+ },
+ {
+  "id": 900,
+  "text": "So for this instruction"
+ },
+ {
+  "id": 901,
+  "text": "we need to change it slightly"
+ },
+ {
+  "id": 902,
+  "text": "because the way it was expressed before isn't quite the same"
+ },
+ {
+  "id": 903,
+  "text": "Here what we want to express is that"
+ },
+ {
+  "id": 904,
+  "text": "the object being operated on is not"
+ },
+ {
+  "id": 905,
+  "text": "Originally the operands were a register"
+ },
+ {
+  "id": 906,
+  "text": "plus a memory location"
+ },
+ {
+  "id": 907,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 908,
+  "text": "What are the operands now?"
+ },
+ {
+  "id": 909,
+  "text": "Two registers"
+ },
+ {
+  "id": 910,
+  "text": "Right?"
+ },
+ {
+  "id": 911,
+  "text": "So we've re-divided this field"
+ },
+ {
+  "id": 912,
+  "text": "again."
+ },
+ {
+  "id": 913,
+  "text": "That is, the low 2 bits stay the same"
+ },
+ {
+  "id": 914,
+  "text": "to indicate this operation"
+ },
+ {
+  "id": 915,
+  "text": "The operation is add"
+ },
+ {
+  "id": 916,
+  "text": "Then we use 11"
+ },
+ {
+  "id": 917,
+  "text": "to distinguish it"
+ },
+ {
+  "id": 918,
+  "text": "to indicate add"
+ },
+ {
+  "id": 919,
+  "text": "Now on this side"
+ },
+ {
+  "id": 920,
+  "text": "It's about extracting these two bits and these two bits"
+ },
+ {
+  "id": 921,
+  "text": "to represent the registers"
+ },
+ {
+  "id": 922,
+  "text": "So the first register,"
+ },
+ {
+  "id": 923,
+  "text": "that's 00"
+ },
+ {
+  "id": 924,
+  "text": "and the second register is 01"
+ },
+ {
+  "id": 925,
+  "text": "Right?"
+ },
+ {
+  "id": 926,
+  "text": "And just like that, we've expressed it."
+ },
+ {
+  "id": 927,
+  "text": "Now, since we don't need,"
+ },
+ {
+  "id": 928,
+  "text": "uh, these two high-order bits here,"
+ },
+ {
+  "id": 929,
+  "text": "in this case,"
+ },
+ {
+  "id": 930,
+  "text": "these two high-order bits are actually not used."
+ },
+ {
+  "id": 931,
+  "text": "Right."
+ },
+ {
+  "id": 932,
+  "text": "So as you can see, when we design low-level language,"
+ },
+ {
+  "id": 933,
+  "text": "not a single bit gets wasted."
+ },
+ {
+  "id": 934,
+  "text": "Don't waste anything."
+ },
+ {
+  "id": 935,
+  "text": "That's exactly what's happening here."
+ },
+ {
+  "id": 936,
+  "text": "So through this learning,"
+ },
+ {
+  "id": 937,
+  "text": "once you understand these things,"
+ },
+ {
+  "id": 938,
+  "text": "then when you look at the machine instructions later,"
+ },
+ {
+  "id": 939,
+  "text": "I mean, for RISC-V machine instructions like this,"
+ },
+ {
+  "id": 940,
+  "text": "So I hope that through this learning"
+ },
+ {
+  "id": 941,
+  "text": "you can understand"
+ },
+ {
+  "id": 942,
+  "text": "how the more complex machine instructions"
+ },
+ {
+  "id": 943,
+  "text": "we'll cover later are designed."
+ },
+ {
+  "id": 944,
+  "text": "Now the final step is"
+ },
+ {
+  "id": 945,
+  "text": "putting the data back out."
+ },
+ {
+  "id": 946,
+  "text": "The store operation"
+ },
+ {
+  "id": 947,
+  "text": "is actually very similar to the load operation,"
+ },
+ {
+  "id": 948,
+  "text": "because all it needs to express"
+ },
+ {
+  "id": 949,
+  "text": "is the two objects to store:"
+ },
+ {
+  "id": 950,
+  "text": "one register and one address."
+ },
+ {
+  "id": 951,
+  "text": "So we just need to change the opcode"
+ },
+ {
+  "id": 952,
+  "text": "to 10, and that's it."
+ },
+ {
+  "id": 953,
+  "text": "And this way,"
+ },
+ {
+  "id": 954,
+  "text": "it's essentially like saying"
+ },
+ {
+  "id": 955,
+  "text": "once we've designed the hardware,"
+ },
+ {
+  "id": 956,
+  "text": "suppose you're designing the software,"
+ },
+ {
+  "id": 957,
+  "text": "this set of machine instructions is already designed."
+ },
+ {
+  "id": 958,
+  "text": "Do you see that?"
+ },
+ {
+  "id": 959,
+  "text": "In other words, our machine instructions"
+ },
+ {
+  "id": 960,
+  "text": "So it's basically like"
+ },
+ {
+  "id": 961,
+  "text": "that's how it was designed"
+ },
+ {
+  "id": 962,
+  "text": "Right"
+ },
+ {
+  "id": 963,
+  "text": "Now, after this thing was designed"
+ },
+ {
+  "id": 964,
+  "text": "you can see"
+ },
+ {
+  "id": 965,
+  "text": "that throughout our whole process"
+ },
+ {
+  "id": 966,
+  "text": "we actually designed two encoding formats"
+ },
+ {
+  "id": 967,
+  "text": "Did you notice that?"
+ },
+ {
+  "id": 968,
+  "text": "Right?"
+ },
+ {
+  "id": 969,
+  "text": "The first encoding format"
+ },
+ {
+  "id": 970,
+  "text": "where did we use it?"
+ },
+ {
+  "id": 971,
+  "text": "As for the first encoding format"
+ },
+ {
+  "id": 972,
+  "text": "what it expresses is"
+ },
+ {
+  "id": 973,
+  "text": "it holds a register and an address"
+ },
+ {
+  "id": 974,
+  "text": "So for this kind of instruction"
+ },
+ {
+  "id": 975,
+  "text": "what we use is"
+ },
+ {
+  "id": 976,
+  "text": "let's call this encoding format A"
+ },
+ {
+  "id": 977,
+  "text": "and this one format B"
+ },
+ {
+  "id": 978,
+  "text": "Then"
+ },
+ {
+  "id": 979,
+  "text": "our"
+ },
+ {
+  "id": 980,
+  "text": "These several kinds"
+ },
+ {
+  "id": 981,
+  "text": "Which one do they all use?"
+ },
+ {
+  "id": 982,
+  "text": "They all use method A, right?"
+ },
+ {
+  "id": 983,
+  "text": "That one, this one"
+ },
+ {
+  "id": 984,
+  "text": "What do we use for this instruction?"
+ },
+ {
+  "id": 985,
+  "text": "It's method B."
+ },
+ {
+  "id": 986,
+  "text": "This is what's called the instruction's encoding format."
+ },
+ {
+  "id": 987,
+  "text": "Later, when we talk about assembly,"
+ },
+ {
+  "id": 988,
+  "text": "you'll come across this concept as well."
+ },
+ {
+  "id": 989,
+  "text": "That is to say, the same 8 bits,"
+ },
+ {
+  "id": 990,
+  "text": "there are several encoding formats in there,"
+ },
+ {
+  "id": 991,
+  "text": "and which one we pick determines the information our instruction conveys."
+ },
+ {
+  "id": 992,
+  "text": "So we've finished designing this machine instruction."
+ },
+ {
+  "id": 993,
+  "text": "Now that it's designed,"
+ },
+ {
+  "id": 994,
+  "text": "let's look at how this process actually happens."
+ },
+ {
+  "id": 995,
+  "text": "Right now we want to understand how A plus B equals C"
+ },
+ {
+  "id": 996,
+  "text": "actually takes place inside a computer."
+ },
+ {
+  "id": 997,
+  "text": "Because this is very low-level, the lowest level,"
+ },
+ {
+  "id": 998,
+  "text": "just really fundamental stuff."
+ },
+ {
+  "id": 999,
+  "text": "One by one, we"
+ },
+ {
+  "id": 1000,
+  "text": "Even a very simple operation"
+ },
+ {
+  "id": 1001,
+  "text": "is actually quite complex inside a computer."
+ },
+ {
+  "id": 1002,
+  "text": "When you break it down all the way,"
+ },
+ {
+  "id": 1003,
+  "text": "it's essentially this kind of process."
+ },
+ {
+  "id": 1004,
+  "text": "Let's take a look"
+ },
+ {
+  "id": 1005,
+  "text": "at how this process happens."
+ },
+ {
+  "id": 1006,
+  "text": "This diagram here,"
+ },
+ {
+  "id": 1007,
+  "text": "it's actually still the one from before."
+ },
+ {
+  "id": 1008,
+  "text": "Once we finish going through it,"
+ },
+ {
+  "id": 1009,
+  "text": "we'll take a break."
+ },
+ {
+  "id": 1010,
+  "text": "If you look at this,"
+ },
+ {
+  "id": 1011,
+  "text": "what is the part on the right?"
+ },
+ {
+  "id": 1012,
+  "text": "The part on the right is what's in our memory."
+ },
+ {
+  "id": 1013,
+  "text": "You can think of it as,"
+ },
+ {
+  "id": 1014,
+  "text": "basically the a.out generated after we compile."
+ },
+ {
+  "id": 1015,
+  "text": "Now, as I mentioned earlier,"
+ },
+ {
+  "id": 1016,
+  "text": "our computer architecture,"
+ },
+ {
+  "id": 1017,
+  "text": "right now we're using the von Neumann architecture."
+ },
+ {
+  "id": 1018,
+  "text": "So what does that mean?"
+ },
+ {
+  "id": 1019,
+  "text": "By now, do you all know what the von Neumann architecture is?"
+ },
+ {
+  "id": 1020,
+  "text": "The von Neumann architecture means that instructions and data"
+ },
+ {
+  "id": 1021,
+  "text": "are stored in the same place."
+ },
+ {
+  "id": 1022,
+  "text": "Do you still follow what I mean?"
+ },
+ {
+  "id": 1023,
+  "text": "What does this yellow part represent?"
+ },
+ {
+  "id": 1024,
+  "text": "The 0101 stored in this part is actually instructions."
+ },
+ {
+  "id": 1025,
+  "text": "And the green part stores data."
+ },
+ {
+  "id": 1026,
+  "text": "What is it that we want to compute now?"
+ },
+ {
+  "id": 1027,
+  "text": "What we actually want to compute is"
+ },
+ {
+  "id": 1028,
+  "text": "1 plus 2 equals 3."
+ },
+ {
+  "id": 1029,
+  "text": "This one..."
+ },
+ {
+  "id": 1030,
+  "text": "This is in binary."
+ },
+ {
+  "id": 1031,
+  "text": "0001 — everyone knows what this is, right?"
+ },
+ {
+  "id": 1032,
+  "text": "This is in decimal."
+ },
+ {
+  "id": 1033,
+  "text": "It's just 1, don't you think?"
+ },
+ {
+  "id": 1034,
+  "text": "This 0001."
+ },
+ {
+  "id": 1035,
+  "text": "And 10 converted to decimal is what?"
+ },
+ {
+  "id": 1036,
+  "text": "That's 2."
+ },
+ {
+  "id": 1037,
+  "text": "Later on, for example,"
+ },
+ {
+  "id": 1038,
+  "text": "when you really do low-level development,"
+ },
+ {
+  "id": 1039,
+  "text": "you'll often be looking at memory."
+ },
+ {
+  "id": 1040,
+  "text": "I don't know if any of you have ever looked at memory"
+ },
+ {
+  "id": 1041,
+  "text": "When you look at memory"
+ },
+ {
+  "id": 1042,
+  "text": "you often have to do this in your head"
+ },
+ {
+  "id": 1043,
+  "text": "binary"
+ },
+ {
+  "id": 1044,
+  "text": "hexadecimal"
+ },
+ {
+  "id": 1045,
+  "text": "and decimal conversions"
+ },
+ {
+  "id": 1046,
+  "text": "Because we humans prefer decimal"
+ },
+ {
+  "id": 1047,
+  "text": "right?"
+ },
+ {
+  "id": 1048,
+  "text": "But inside a computer"
+ },
+ {
+  "id": 1049,
+  "text": "what you see is generally"
+ },
+ {
+  "id": 1050,
+  "text": "we use hexadecimal"
+ },
+ {
+  "id": 1051,
+  "text": "right?"
+ },
+ {
+  "id": 1052,
+  "text": "So now let's go more thoroughly"
+ },
+ {
+  "id": 1053,
+  "text": "let's look directly at binary"
+ },
+ {
+  "id": 1054,
+  "text": "It's really about the same"
+ },
+ {
+  "id": 1055,
+  "text": "So this is 0, 1, and 2"
+ },
+ {
+  "id": 1056,
+  "text": "this is where data is placed"
+ },
+ {
+  "id": 1057,
+  "text": "And here,"
+ },
+ {
+  "id": 1058,
+  "text": "this byte"
+ },
+ {
+  "id": 1059,
+  "text": "we're actually planning to put the result in"
+ },
+ {
+  "id": 1060,
+  "text": "It's putting 3."
+ },
+ {
+  "id": 1061,
+  "text": "But of course it's not 3 yet."
+ },
+ {
+  "id": 1062,
+  "text": "Because it hasn't been calculated yet."
+ },
+ {
+  "id": 1063,
+  "text": "Now, this thing in front is the instruction."
+ },
+ {
+  "id": 1064,
+  "text": "So think about it — what does this instruction represent?"
+ },
+ {
+  "id": 1065,
+  "text": "Based on the design we just did,"
+ },
+ {
+  "id": 1066,
+  "text": "let's try to guess for ourselves."
+ },
+ {
+  "id": 1067,
+  "text": "Because later on, when we do disassembly,"
+ },
+ {
+  "id": 1068,
+  "text": "it's really about taking the data —"
+ },
+ {
+  "id": 1069,
+  "text": "the binary data inside the computer —"
+ },
+ {
+  "id": 1070,
+  "text": "and working backwards to figure out what it actually is."
+ },
+ {
+  "id": 1071,
+  "text": "What is this thing?"
+ },
+ {
+  "id": 1072,
+  "text": "Based on the analysis we just did,"
+ },
+ {
+  "id": 1073,
+  "text": "I'll just go ahead and tell you directly."
+ },
+ {
+  "id": 1074,
+  "text": "You can go home and practice this on your own."
+ },
+ {
+  "id": 1075,
+  "text": "Do some training in this area."
+ },
+ {
+  "id": 1076,
+  "text": "Otherwise, when you have to do these things later,"
+ },
+ {
+  "id": 1077,
+  "text": "you might find it pretty painful."
+ },
+ {
+  "id": 1078,
+  "text": "Honestly, I think low-level development,"
+ },
+ {
+  "id": 1079,
+  "text": "it's really about pushing through stuff like this."
+ },
+ {
+  "id": 1080,
+  "text": "Because in high-level programming"
+ },
+ {
+  "id": 1081,
+  "text": "this is something you never deal with."
+ },
+ {
+  "id": 1082,
+  "text": "This 01 is the binary 010000,"
+ },
+ {
+  "id": 1083,
+  "text": "and what does this string of numbers represent?"
+ },
+ {
+  "id": 1084,
+  "text": "As we just said,"
+ },
+ {
+  "id": 1085,
+  "text": "let's briefly review"
+ },
+ {
+  "id": 1086,
+  "text": "that machine code concept from earlier."
+ },
+ {
+  "id": 1087,
+  "text": "So the idea is that through this,"
+ },
+ {
+  "id": 1088,
+  "text": "basically what we're doing now is,"
+ },
+ {
+  "id": 1089,
+  "text": "you can think of yourself as the CPU."
+ },
+ {
+  "id": 1090,
+  "text": "Right now the CPU is in"
+ },
+ {
+  "id": 1091,
+  "text": "how does it see it?"
+ },
+ {
+  "id": 1092,
+  "text": "We should look at this thing the same way."
+ },
+ {
+  "id": 1093,
+  "text": "So a bunch of 0s and 1s in the data,"
+ },
+ {
+  "id": 1094,
+  "text": "how does it look at them?"
+ },
+ {
+  "id": 1095,
+  "text": "As we just said,"
+ },
+ {
+  "id": 1096,
+  "text": "the first step of processing is fetch — fetching the code."
+ },
+ {
+  "id": 1097,
+  "text": "What is the second step?"
+ },
+ {
+  "id": 1098,
+  "text": "The first step is fetch,"
+ },
+ {
+  "id": 1099,
+  "text": "what does the second step do?"
+ },
+ {
+  "id": 1100,
+  "text": "that is, decoding"
+ },
+ {
+  "id": 1101,
+  "text": "this idea of translating it"
+ },
+ {
+  "id": 1102,
+  "text": "that's exactly what we need to do now"
+ },
+ {
+  "id": 1103,
+  "text": "suppose after you fetch this data"
+ },
+ {
+  "id": 1104,
+  "text": "then as the computer"
+ },
+ {
+  "id": 1105,
+  "text": "it's actually very simple"
+ },
+ {
+  "id": 1106,
+  "text": "it just looks at the last two bits"
+ },
+ {
+  "id": 1107,
+  "text": "right?"
+ },
+ {
+  "id": 1108,
+  "text": "because we just analyzed this"
+ },
+ {
+  "id": 1109,
+  "text": "we've already defined it in our format"
+ },
+ {
+  "id": 1110,
+  "text": "these last two bits are the opcode"
+ },
+ {
+  "id": 1111,
+  "text": "they tell us whether we're doing a load"
+ },
+ {
+  "id": 1112,
+  "text": "or a store"
+ },
+ {
+  "id": 1113,
+  "text": "or an add"
+ },
+ {
+  "id": 1114,
+  "text": "right?"
+ },
+ {
+  "id": 1115,
+  "text": "so we just look at this 0101 thing"
+ },
+ {
+  "id": 1116,
+  "text": "now look at this, everyone"
+ },
+ {
+  "id": 1117,
+  "text": "now let's look at this thing here"
+ },
+ {
+  "id": 1118,
+  "text": "this is 01 — what does that tell us?"
+ },
+ {
+  "id": 1119,
+  "text": "01 is the load concept we just designed"
+ },
+ {
+  "id": 1120,
+  "text": "That is, loading"
+ },
+ {
+  "id": 1121,
+  "text": "What does loading mean?"
+ },
+ {
+  "id": 1122,
+  "text": "We've been a bit wordy in explaining it"
+ },
+ {
+  "id": 1123,
+  "text": "Loading means"
+ },
+ {
+  "id": 1124,
+  "text": "Reading data from memory into a register"
+ },
+ {
+  "id": 1125,
+  "text": "Do you follow what I mean here?"
+ },
+ {
+  "id": 1126,
+  "text": "This one is load"
+ },
+ {
+  "id": 1127,
+  "text": "Now, what are these two bits of load?"
+ },
+ {
+  "id": 1128,
+  "text": "They tell us which"
+ },
+ {
+  "id": 1129,
+  "text": "They tell us which register to load into"
+ },
+ {
+  "id": 1130,
+  "text": "Right? So what does 00 represent?"
+ },
+ {
+  "id": 1131,
+  "text": "That's register zero"
+ },
+ {
+  "id": 1132,
+  "text": "That's register one"
+ },
+ {
+  "id": 1133,
+  "text": "Right?"
+ },
+ {
+  "id": 1134,
+  "text": "Then what is this?"
+ },
+ {
+  "id": 1135,
+  "text": "What do these four bits at the end express?"
+ },
+ {
+  "id": 1136,
+  "text": "It's the source address for the load"
+ },
+ {
+  "id": 1137,
+  "text": "The source address in memory"
+ },
+ {
+  "id": 1138,
+  "text": "That is, where in memory it loads from"
+ },
+ {
+  "id": 1139,
+  "text": "Into the register"
+ },
+ {
+  "id": 1140,
+  "text": "right"
+ },
+ {
+  "id": 1141,
+  "text": "So what is 0100?"
+ },
+ {
+  "id": 1142,
+  "text": "What does this address translate to in real terms?"
+ },
+ {
+  "id": 1143,
+  "text": "What is 0100?"
+ },
+ {
+  "id": 1144,
+  "text": "It's 4, right? Think about it."
+ },
+ {
+  "id": 1145,
+  "text": "At address 4,"
+ },
+ {
+  "id": 1146,
+  "text": "what's the corresponding value?"
+ },
+ {
+  "id": 1147,
+  "text": "It's 11, right? Think about it."
+ },
+ {
+  "id": 1148,
+  "text": "So if you translate this instruction"
+ },
+ {
+  "id": 1149,
+  "text": "into human language, what does it mean?"
+ },
+ {
+  "id": 1150,
+  "text": "It means"
+ },
+ {
+  "id": 1151,
+  "text": "load,"
+ },
+ {
+  "id": 1152,
+  "text": "that is, from the byte at address 4"
+ },
+ {
+  "id": 1153,
+  "text": "in memory,"
+ },
+ {
+  "id": 1154,
+  "text": "load a value,"
+ },
+ {
+  "id": 1155,
+  "text": "and load it to where?"
+ },
+ {
+  "id": 1156,
+  "text": "Load it into"
+ },
+ {
+  "id": 1157,
+  "text": "register number 00."
+ },
+ {
+  "id": 1158,
+  "text": "into the register"
+ },
+ {
+  "id": 1159,
+  "text": "Can he figure that out?"
+ },
+ {
+  "id": 1160,
+  "text": "Let's go through the first one slowly."
+ },
+ {
+  "id": 1161,
+  "text": "After that, things will actually seem to go faster."
+ },
+ {
+  "id": 1162,
+  "text": "And you'll still be able to work it out."
+ },
+ {
+  "id": 1163,
+  "text": "It's not that complicated."
+ },
+ {
+  "id": 1164,
+  "text": "Because this is already a very simple computer."
+ },
+ {
+  "id": 1165,
+  "text": "A computer with just 8 bits."
+ },
+ {
+  "id": 1166,
+  "text": "Look, today's computers are all 64-bit."
+ },
+ {
+  "id": 1167,
+  "text": "One instruction and you'd have to flip through a whole page."
+ },
+ {
+  "id": 1168,
+  "text": "It's a really complex thing, isn't it?"
+ },
+ {
+  "id": 1169,
+  "text": "Now we just have 8 bits."
+ },
+ {
+  "id": 1170,
+  "text": "You flip through them."
+ },
+ {
+  "id": 1171,
+  "text": "What it actually expresses is,"
+ },
+ {
+  "id": 1172,
+  "text": "as I just said,"
+ },
+ {
+  "id": 1173,
+  "text": "well,"
+ },
+ {
+  "id": 1174,
+  "text": "Okay, everyone, think about this."
+ },
+ {
+  "id": 1175,
+  "text": "Now our computer starts running."
+ },
+ {
+  "id": 1176,
+  "text": "Say, the moment it powers on,"
+ },
+ {
+  "id": 1177,
+  "text": "what state is it in right after power-on?"
+ },
+ {
+  "id": 1178,
+  "text": "Right after power-on,"
+ },
+ {
+  "id": 1179,
+  "text": "first, everything inside our computer is reset."
+ },
+ {
+  "id": 1180,
+  "text": "As for resetting,"
+ },
+ {
+  "id": 1181,
+  "text": "resetting these registers actually doesn't mean much,"
+ },
+ {
+  "id": 1182,
+  "text": "because they're just intermediate values in the process."
+ },
+ {
+  "id": 1183,
+  "text": "But this program counter,"
+ },
+ {
+  "id": 1184,
+  "text": "the value in the PC register is absolutely critical."
+ },
+ {
+  "id": 1185,
+  "text": "That is, when the computer powers on and resets,"
+ },
+ {
+  "id": 1186,
+  "text": "its value always points to the address of the first instruction you want to run."
+ },
+ {
+  "id": 1187,
+  "text": "Do you follow what I mean?"
+ },
+ {
+  "id": 1188,
+  "text": "Now let's suppose after our PC powers on,"
+ },
+ {
+  "id": 1189,
+  "text": "its value is definitely — and this is guaranteed by hardware —"
+ },
+ {
+  "id": 1190,
+  "text": "set to 0."
+ },
+ {
+  "id": 1191,
+  "text": "So of course, what does 0 mean?"
+ },
+ {
+  "id": 1192,
+  "text": "It means we're now going to start executing from"
+ },
+ {
+  "id": 1193,
+  "text": "this position in memory."
+ },
+ {
+  "id": 1194,
+  "text": "Do you follow what I mean?"
+ },
+ {
+  "id": 1195,
+  "text": "This arrow points to this position."
+ },
+ {
+  "id": 1196,
+  "text": "This arrow, if you imagine it, is really"
+ },
+ {
+  "id": 1197,
+  "text": "the memory location"
+ },
+ {
+  "id": 1198,
+  "text": "pointed to by the PC register,"
+ },
+ {
+  "id": 1199,
+  "text": "which is also where the first instruction we're going to execute is located."
+ },
+ {
+  "id": 1200,
+  "text": "Right?"
+ },
+ {
+  "id": 1201,
+  "text": "Good."
+ },
+ {
+  "id": 1202,
+  "text": "Now comes instruction fetch."
+ },
+ {
+  "id": 1203,
+  "text": "It's simply about running this fetch loop."
+ },
+ {
+  "id": 1204,
+  "text": "When fetching an instruction, it takes..."
+ },
+ {
+  "id": 1205,
+  "text": "what does it do?"
+ },
+ {
+  "id": 1206,
+  "text": "Now, everyone, what just happened here?"
+ },
+ {
+  "id": 1207,
+  "text": "Instruction fetch means taking the data from in here..."
+ },
+ {
+  "id": 1208,
+  "text": "and taking it out of this memory to where?"
+ },
+ {
+  "id": 1209,
+  "text": "It goes into our instruction register."
+ },
+ {
+  "id": 1210,
+  "text": "Because only after it's fetched in can the computer..."
+ },
+ {
+  "id": 1211,
+  "text": "the CPU start analyzing it."
+ },
+ {
+  "id": 1212,
+  "text": "Think about it — isn't that right?"
+ },
+ {
+  "id": 1213,
+  "text": "Then, at this point,"
+ },
+ {
+  "id": 1214,
+  "text": "based on the decoding rules we just saw,"
+ },
+ {
+  "id": 1215,
+  "text": "it analyzes it,"
+ },
+ {
+  "id": 1216,
+  "text": "decoding it according to the format we just discussed."
+ },
+ {
+  "id": 1217,
+  "text": "This is called decoding."
+ },
+ {
+  "id": 1218,
+  "text": "This is called decode, or decoding."
+ },
+ {
+  "id": 1219,
+  "text": "Now, as for decoding,"
+ },
+ {
+  "id": 1220,
+  "text": "Based on the analysis we just did,"
+ },
+ {
+  "id": 1221,
+  "text": "this 01 stands for load."
+ },
+ {
+  "id": 1222,
+  "text": "And who does 00 refer to?"
+ },
+ {
+  "id": 1223,
+  "text": "00 is this one here."
+ },
+ {
+  "id": 1224,
+  "text": "Think about it, doesn't that make sense?"
+ },
+ {
+  "id": 1225,
+  "text": "So what does 0100 point to?"
+ },
+ {
+  "id": 1226,
+  "text": "It's this position right here."
+ },
+ {
+  "id": 1227,
+  "text": "So for this instruction,"
+ },
+ {
+  "id": 1228,
+  "text": "when it executes,"
+ },
+ {
+  "id": 1229,
+  "text": "what action does it perform?"
+ },
+ {
+  "id": 1230,
+  "text": "It has to take,"
+ },
+ {
+  "id": 1231,
+  "text": "all it has to do is take,"
+ },
+ {
+  "id": 1232,
+  "text": "the data in here,"
+ },
+ {
+  "id": 1233,
+  "text": "the data at address 4,"
+ },
+ {
+  "id": 1234,
+  "text": "and load it into where?"
+ },
+ {
+  "id": 1235,
+  "text": "Load it into this register."
+ },
+ {
+  "id": 1236,
+  "text": "Make sense?"
+ },
+ {
+  "id": 1237,
+  "text": "So,"
+ },
+ {
+  "id": 1238,
+  "text": "the moment this instruction,"
+ },
+ {
+  "id": 1239,
+  "text": "executes,"
+ },
+ {
+  "id": 1240,
+  "text": "As we can see,"
+ },
+ {
+  "id": 1241,
+  "text": "in this register,"
+ },
+ {
+  "id": 1242,
+  "text": "its value"
+ },
+ {
+  "id": 1243,
+  "text": "this 01000 has been placed here."
+ },
+ {
+  "id": 1244,
+  "text": "Then what happens next is easy to see."
+ },
+ {
+  "id": 1245,
+  "text": "Because the first pass,"
+ },
+ {
+  "id": 1246,
+  "text": "the first process I described, is relatively slow."
+ },
+ {
+  "id": 1247,
+  "text": "Then afterwards,"
+ },
+ {
+  "id": 1248,
+  "text": "what do you think the second instruction does?"
+ },
+ {
+  "id": 1249,
+  "text": "Let's decode it ourselves."
+ },
+ {
+  "id": 1250,
+  "text": "What does 01 mean?"
+ },
+ {
+  "id": 1251,
+  "text": "Still load, right?"
+ },
+ {
+  "id": 1252,
+  "text": "Load from where?"
+ },
+ {
+  "id": 1253,
+  "text": "It loads from this address."
+ },
+ {
+  "id": 1254,
+  "text": "What does 01 01 mean?"
+ },
+ {
+  "id": 1255,
+  "text": "That's 5, isn't it?"
+ },
+ {
+  "id": 1256,
+  "text": "And 5 is exactly the value in here, isn't it?"
+ },
+ {
+  "id": 1257,
+  "text": "Which is 2, right?"
+ },
+ {
+  "id": 1258,
+  "text": "Isn't it?"
+ },
+ {
+  "id": 1259,
+  "text": "Load it into where?"
+ },
+ {
+  "id": 1260,
+  "text": "loaded into 01"
+ },
+ {
+  "id": 1261,
+  "text": "this register, which is inside this thing"
+ },
+ {
+  "id": 1262,
+  "text": "Is that still clear?"
+ },
+ {
+  "id": 1263,
+  "text": "So once this instruction is executed"
+ },
+ {
+  "id": 1264,
+  "text": "what happens?"
+ },
+ {
+  "id": 1265,
+  "text": "All of these things are changing"
+ },
+ {
+  "id": 1266,
+  "text": "Do you all see that?"
+ },
+ {
+  "id": 1267,
+  "text": "Because this PC is also incrementing, right?"
+ },
+ {
+  "id": 1268,
+  "text": "Think about it, isn't it?"
+ },
+ {
+  "id": 1269,
+  "text": "Because this arrow is moving downward"
+ },
+ {
+  "id": 1270,
+  "text": "instructions are fetched one by one"
+ },
+ {
+  "id": 1271,
+  "text": "and it's this PC that keeps track"
+ },
+ {
+  "id": 1272,
+  "text": "of which instruction has been fetched"
+ },
+ {
+  "id": 1273,
+  "text": "Then it's fetched in"
+ },
+ {
+  "id": 1274,
+  "text": "After it's fetched in,"
+ },
+ {
+  "id": 1275,
+  "text": "first we fetch this instruction in"
+ },
+ {
+  "id": 1276,
+  "text": "fetch it in and decode it"
+ },
+ {
+  "id": 1277,
+  "text": "After decoding,"
+ },
+ {
+  "id": 1278,
+  "text": "we start executing"
+ },
+ {
+  "id": 1279,
+  "text": "After execution is done"
+ },
+ {
+  "id": 1280,
+  "text": "this register changes, right? [1281] And at this point, [1282] the values A and B [1283] are loaded in, right? [1284] Think about it, [1285] what comes next? [1286] Next, this PC, [1287] this one... [1288] this... [1289] this... [1290] it changes, [1291] right? [1292] After it changes, [1293] it points to the third instruction. [1294] The third instruction. [1295] Just now, when we decoded it, [1296] we knew what this 11 meant. [1297] It's addition. [1298] Adding what? [1299] Adding the value in register 00 to the value in register 012."
+ },
+ {
+  "id": 1281,
+  "text": "So at this point"
+ },
+ {
+  "id": 1282,
+  "text": "These two values, A and B"
+ },
+ {
+  "id": 1283,
+  "text": "have been loaded in for us"
+ },
+ {
+  "id": 1284,
+  "text": "Now think about it, right?"
+ },
+ {
+  "id": 1285,
+  "text": "What comes next?"
+ },
+ {
+  "id": 1286,
+  "text": "Next, this PC"
+ },
+ {
+  "id": 1287,
+  "text": "this"
+ },
+ {
+  "id": 1288,
+  "text": "this"
+ },
+ {
+  "id": 1289,
+  "text": "this"
+ },
+ {
+  "id": 1290,
+  "text": "changes"
+ },
+ {
+  "id": 1291,
+  "text": "right?"
+ },
+ {
+  "id": 1292,
+  "text": "After it changes,"
+ },
+ {
+  "id": 1293,
+  "text": "it now points to the third instruction"
+ },
+ {
+  "id": 1294,
+  "text": "The third instruction,"
+ },
+ {
+  "id": 1295,
+  "text": "after we decoded it just now,"
+ },
+ {
+  "id": 1296,
+  "text": "we know what this 11 means"
+ },
+ {
+  "id": 1297,
+  "text": "It's an addition"
+ },
+ {
+  "id": 1298,
+  "text": "Add what together?"
+ },
+ {
+  "id": 1299,
+  "text": "Add the value in register 00 to the value in register 012."
+ },
+ {
+  "id": 1300,
+  "text": "This 00 is meaningless."
+ },
+ {
+  "id": 1301,
+  "text": "We can just ignore it."
+ },
+ {
+  "id": 1302,
+  "text": "So after we add them up,"
+ },
+ {
+  "id": 1303,
+  "text": "where did we say we put it?"
+ },
+ {
+  "id": 1304,
+  "text": "We still put it in here."
+ },
+ {
+  "id": 1305,
+  "text": "So at this point,"
+ },
+ {
+  "id": 1306,
+  "text": "what does the value in here become?"
+ },
+ {
+  "id": 1307,
+  "text": "It becomes 3."
+ },
+ {
+  "id": 1308,
+  "text": "Right?"
+ },
+ {
+  "id": 1309,
+  "text": "And what about the last step?"
+ },
+ {
+  "id": 1310,
+  "text": "What does it do?"
+ },
+ {
+  "id": 1311,
+  "text": "The last step is that"
+ },
+ {
+  "id": 1312,
+  "text": "we take the value in here"
+ },
+ {
+  "id": 1313,
+  "text": "and save it into memory."
+ },
+ {
+  "id": 1314,
+  "text": "And that is done through this"
+ },
+ {
+  "id": 1315,
+  "text": "instruction 10 here."
+ },
+ {
+  "id": 1316,
+  "text": "So if you look closely,"
+ },
+ {
+  "id": 1317,
+  "text": "it actually just does some very"
+ },
+ {
+  "id": 1318,
+  "text": "simple things:"
+ },
+ {
+  "id": 1319,
+  "text": "A plus B equals 3."
+ },
+ {
+  "id": 1320,
+  "text": "1 plus 2 equals 3"
+ },
+ {
+  "id": 1321,
+  "text": "But this computer,"
+ },
+ {
+  "id": 1322,
+  "text": "this process,"
+ },
+ {
+  "id": 1323,
+  "text": "it actually, so,"
+ },
+ {
+  "id": 1324,
+  "text": "a computer is a pretty dumb thing"
+ },
+ {
+  "id": 1325,
+  "text": "It only knows how to do"
+ },
+ {
+  "id": 1326,
+  "text": "these very mechanical things"
+ },
+ {
+  "id": 1327,
+  "text": "But where does its advantage lie?"
+ },
+ {
+  "id": 1328,
+  "text": "It's just fast"
+ },
+ {
+  "id": 1329,
+  "text": "The main difference between it and us humans"
+ },
+ {
+  "id": 1330,
+  "text": "is speed"
+ },
+ {
+  "id": 1331,
+  "text": "Right?"
+ },
+ {
+  "id": 1332,
+  "text": "We just talked about it for a long time,"
+ },
+ {
+  "id": 1333,
+  "text": "but actually it finishes in an instant"
+ },
+ {
+  "id": 1334,
+  "text": "Yet what it does"
+ },
+ {
+  "id": 1335,
+  "text": "is really that simple"
+ },
+ {
+  "id": 1336,
+  "text": "We just make use of its speed"
+ },
+ {
+  "id": 1337,
+  "text": "to help us get things done"
+ },
+ {
+  "id": 1338,
+  "text": "Now, in this process,"
+ },
+ {
+  "id": 1339,
+  "text": "we can see"
+ },
+ {
+  "id": 1340,
+  "text": "The main job of a computer"
+ },
+ {
+  "id": 1341,
+  "text": "is really just to take data"
+ },
+ {
+  "id": 1342,
+  "text": "and move it from memory into the processor"
+ },
+ {
+  "id": 1343,
+  "text": "then process it inside the processor"
+ },
+ {
+  "id": 1344,
+  "text": "and then move it to where?"
+ },
+ {
+  "id": 1345,
+  "text": "Back out to memory,"
+ },
+ {
+  "id": 1346,
+  "text": "right?"
+ },
+ {
+  "id": 1347,
+  "text": "So this is"
+ },
+ {
+  "id": 1348,
+  "text": "the core operation of a computer."
+ },
+ {
+  "id": 1349,
+  "text": "Now through this process,"
+ },
+ {
+  "id": 1350,
+  "text": "we actually"
+ },
+ {
+  "id": 1351,
+  "text": "want you to understand a few things."
+ },
+ {
+  "id": 1352,
+  "text": "First, what exactly does a computer's CPU look like?"
+ },
+ {
+  "id": 1353,
+  "text": "Take it apart and look inside,"
+ },
+ {
+  "id": 1354,
+  "text": "and it's really just these things."
+ },
+ {
+  "id": 1355,
+  "text": "Second, once you have this hardware,"
+ },
+ {
+  "id": 1356,
+  "text": "is that all there is to it?"
+ },
+ {
+  "id": 1357,
+  "text": "We still need software."
+ },
+ {
+  "id": 1358,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1359,
+  "text": "And what exactly is software?"
+ },
+ {
+  "id": 1360,
+  "text": "Software is nothing but these 0s and 1s."
+ },
+ {
+  "id": 1361,
+  "text": "These 0s and 1s have meaning."
+ },
+ {
+  "id": 1362,
+  "text": "And who defines that meaning?"
+ },
+ {
+  "id": 1363,
+  "text": "Well, we do."
+ },
+ {
+  "id": 1364,
+  "text": "Right?"
+ },
+ {
+  "id": 1365,
+  "text": "Once we've defined it,"
+ },
+ {
+  "id": 1366,
+  "text": "it goes into the processing units of the processor,"
+ },
+ {
+  "id": 1367,
+  "text": "and it decodes accordingly,"
+ },
+ {
+  "id": 1368,
+  "text": "then analyzes it,"
+ },
+ {
+  "id": 1369,
+  "text": "and it knows"
+ },
+ {
+  "id": 1370,
+  "text": "what we want it to do."
+ },
+ {
+  "id": 1371,
+  "text": "Everything"
+ },
+ {
+  "id": 1372,
+  "text": "is actually designed by us"
+ },
+ {
+  "id": 1373,
+  "text": "and then carried out by the machine."
+ },
+ {
+  "id": 1374,
+  "text": "That's the computer,"
+ },
+ {
+  "id": 1375,
+  "text": "and that's the entire workflow of how it operates."
+ },
+ {
+  "id": 1376,
+  "text": "So,"
+ },
+ {
+  "id": 1377,
+  "text": "let's wrap up this chapter with"
+ },
+ {
+  "id": 1378,
+  "text": "a brief summary."
+ },
+ {
+  "id": 1379,
+  "text": "Basically, what we've been talking about is"
+ },
+ {
+  "id": 1380,
+  "text": "How did the evolution of computers come about?"
+ },
+ {
+  "id": 1381,
+  "text": "Well, the very earliest"
+ },
+ {
+  "id": 1382,
+  "text": "predecessors of our computers"
+ },
+ {
+  "id": 1383,
+  "text": "actually worked in that kind of environment."
+ },
+ {
+  "id": 1384,
+  "text": "Their programming"
+ },
+ {
+  "id": 1385,
+  "text": "was really binary programming,"
+ },
+ {
+  "id": 1386,
+  "text": "extremely primitive."
+ },
+ {
+  "id": 1387,
+  "text": "And back then,"
+ },
+ {
+  "id": 1388,
+  "text": "software functionality was also fairly simple."
+ },
+ {
+  "id": 1389,
+  "text": "You've probably seen some materials"
+ },
+ {
+  "id": 1390,
+  "text": "about how programming"
+ },
+ {
+  "id": 1391,
+  "text": "was actually done back then."
+ },
+ {
+  "id": 1392,
+  "text": "It was punched with a punch machine."
+ },
+ {
+  "id": 1393,
+  "text": "Make sure you understand this,"
+ },
+ {
+  "id": 1394,
+  "text": "a hole punched by the machine meant 0,"
+ },
+ {
+  "id": 1395,
+  "text": "and a position left unpunched meant 1."
+ },
+ {
+  "id": 1396,
+  "text": "So when they wrote programs,"
+ },
+ {
+  "id": 1397,
+  "text": "they would just take that finger"
+ },
+ {
+  "id": 1398,
+  "text": "on a paper tape,"
+ },
+ {
+  "id": 1399,
+  "text": "and keep punching holes in it."
+ },
+ {
+  "id": 1400,
+  "text": "you punch 01 01 01"
+ },
+ {
+  "id": 1401,
+  "text": "This thing is basically our"
+ },
+ {
+  "id": 1402,
+  "text": "imagine this"
+ },
+ {
+  "id": 1403,
+  "text": "0 means punch a hole"
+ },
+ {
+  "id": 1404,
+  "text": "1 means don't punch a hole"
+ },
+ {
+  "id": 1405,
+  "text": "and this way"
+ },
+ {
+  "id": 1406,
+  "text": "after you finish punching it"
+ },
+ {
+  "id": 1407,
+  "text": "put it in front of the light"
+ },
+ {
+  "id": 1408,
+  "text": "and shine through it"
+ },
+ {
+  "id": 1409,
+  "text": "after the light passes through"
+ },
+ {
+  "id": 1410,
+  "text": "there's a receiver on the other side"
+ },
+ {
+  "id": 1411,
+  "text": "you get the idea?"
+ },
+ {
+  "id": 1412,
+  "text": "and over there it can decode it"
+ },
+ {
+  "id": 1413,
+  "text": "you can go search this up yourself"
+ },
+ {
+  "id": 1414,
+  "text": "this is the early computers"
+ },
+ {
+  "id": 1415,
+  "text": "this is what's called machine language"
+ },
+ {
+  "id": 1416,
+  "text": "this machine language,"
+ },
+ {
+  "id": 1417,
+  "text": "actually our underlying hardware today"
+ },
+ {
+  "id": 1418,
+  "text": "still works this way"
+ },
+ {
+  "id": 1419,
+  "text": "but you have to"
+ },
+ {
+  "id": 1420,
+  "text": "Writing programs this way is"
+ },
+ {
+  "id": 1421,
+  "text": "just too painful for us"
+ },
+ {
+  "id": 1422,
+  "text": "right?"
+ },
+ {
+  "id": 1423,
+  "text": "So what do we do?"
+ },
+ {
+  "id": 1424,
+  "text": "Well, later on"
+ },
+ {
+  "id": 1425,
+  "text": "we gradually"
+ },
+ {
+  "id": 1426,
+  "text": "got a bit smarter"
+ },
+ {
+  "id": 1427,
+  "text": "and invented assembly language."
+ },
+ {
+  "id": 1428,
+  "text": "Now, assembly language is actually very simple."
+ },
+ {
+  "id": 1429,
+  "text": "The only difference between assembly language and machine language"
+ },
+ {
+  "id": 1430,
+  "text": "is that it's written"
+ },
+ {
+  "id": 1431,
+  "text": "in something we humans can read."
+ },
+ {
+  "id": 1432,
+  "text": "But the two still map one to one."
+ },
+ {
+  "id": 1433,
+  "text": "As you can see,"
+ },
+ {
+  "id": 1434,
+  "text": "the first line,"
+ },
+ {
+  "id": 1435,
+  "text": "doesn't it look much nicer than this now?"
+ },
+ {
+  "id": 1436,
+  "text": "load r0 0x04."
+ },
+ {
+  "id": 1437,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 1438,
+  "text": "Let's translate it."
+ },
+ {
+  "id": 1439,
+  "text": "It's really just our"
+ },
+ {
+  "id": 1440,
+  "text": "Of course, this is in English."
+ },
+ {
+  "id": 1441,
+  "text": "Because computers were invented by Westerners,"
+ },
+ {
+  "id": 1442,
+  "text": "so they're explained in English."
+ },
+ {
+  "id": 1443,
+  "text": "So here's a bit of a side note."
+ },
+ {
+  "id": 1444,
+  "text": "If you want to learn computer science well,"
+ },
+ {
+  "id": 1445,
+  "text": "English is actually pretty important."
+ },
+ {
+  "id": 1446,
+  "text": "Because when you're reading materials and things like that,"
+ },
+ {
+  "id": 1447,
+  "text": "if you don't approach them from an English perspective,"
+ },
+ {
+  "id": 1448,
+  "text": "you'll find it a bit painful."
+ },
+ {
+  "id": 1449,
+  "text": "But you get used to it."
+ },
+ {
+  "id": 1450,
+  "text": "Now, load."
+ },
+ {
+  "id": 1451,
+  "text": "We just spent a while explaining it,"
+ },
+ {
+  "id": 1452,
+  "text": "and this instruction is really just doing that."
+ },
+ {
+  "id": 1453,
+  "text": "See?"
+ },
+ {
+  "id": 1454,
+  "text": "Load what?"
+ },
+ {
+  "id": 1455,
+  "text": "Load the memory address 0x04"
+ },
+ {
+  "id": 1456,
+  "text": "into our register 0."
+ },
+ {
+  "id": 1457,
+  "text": "See?"
+ },
+ {
+  "id": 1458,
+  "text": "So this assembly instruction"
+ },
+ {
+  "id": 1459,
+  "text": "is obviously much easier to read."
+ },
+ {
+  "id": 1460,
+  "text": "When we write it in assembly language,"
+ },
+ {
+  "id": 1461,
+  "text": "it's already quite close to human language."
+ },
+ {
+  "id": 1462,
+  "text": "So the second machine instruction,"
+ },
+ {
+  "id": 1463,
+  "text": "is simply load r1, 0x05."
+ },
+ {
+  "id": 1464,
+  "text": "The third instruction,"
+ },
+ {
+  "id": 1465,
+  "text": "as we just said, is addition."
+ },
+ {
+  "id": 1466,
+  "text": "It adds the two registers r0 and r1,"
+ },
+ {
+  "id": 1467,
+  "text": "and then stores the result in r0."
+ },
+ {
+  "id": 1468,
+  "text": "Right, everyone?"
+ },
+ {
+  "id": 1469,
+  "text": "we members just have to learn assembly"
+ },
+ {
+  "id": 1470,
+  "text": "So you all still need to get used to this kind of language."
+ },
+ {
+  "id": 1471,
+  "text": "And the fourth instruction,"
+ },
+ {
+  "id": 1472,
+  "text": "is simply to take"
+ },
+ {
+  "id": 1473,
+  "text": "the final result from r0,"
+ },
+ {
+  "id": 1474,
+  "text": "and move it to 0x04,"
+ },
+ {
+  "id": 1475,
+  "text": "06, that memory location."
+ },
+ {
+  "id": 1476,
+  "text": "And the data,"
+ },
+ {
+  "id": 1477,
+  "text": "is simply 0120 placed there."
+ },
+ {
+  "id": 1478,
+  "text": "Through this kind of thing,"
+ },
+ {
+  "id": 1479,
+  "text": "when we talk about assembly later,"
+ },
+ {
+  "id": 1480,
+  "text": "What exactly are these concepts we've been talking about?"
+ },
+ {
+  "id": 1481,
+  "text": "It's really just telling us"
+ },
+ {
+  "id": 1482,
+  "text": "here we put a byte,"
+ },
+ {
+  "id": 1483,
+  "text": "put a byte,"
+ },
+ {
+  "id": 1484,
+  "text": "put a byte,"
+ },
+ {
+  "id": 1485,
+  "text": "and in the end,"
+ },
+ {
+  "id": 1486,
+  "text": "this part becomes assembly language."
+ },
+ {
+  "id": 1487,
+  "text": "We can no longer see our machine instructions."
+ },
+ {
+  "id": 1488,
+  "text": "But this process,"
+ },
+ {
+  "id": 1489,
+  "text": "we say, hasn't really been lost,"
+ },
+ {
+  "id": 1490,
+  "text": "because our assembler"
+ },
+ {
+  "id": 1491,
+  "text": "did that for us."
+ },
+ {
+  "id": 1492,
+  "text": "Right?"
+ },
+ {
+  "id": 1493,
+  "text": "After studying compilation,"
+ },
+ {
+  "id": 1494,
+  "text": "you should have some understanding of this."
+ },
+ {
+  "id": 1495,
+  "text": "Now, as you know,"
+ },
+ {
+  "id": 1496,
+  "text": "writing in assembly is still painful."
+ },
+ {
+  "id": 1497,
+  "text": "Because, first of all,"
+ },
+ {
+  "id": 1498,
+  "text": "as we just saw,"
+ },
+ {
+  "id": 1499,
+  "text": "assembly and machine instructions"
+ },
+ {
+  "id": 1500,
+  "text": "It's basically a one-to-one result,"
+ },
+ {
+  "id": 1501,
+  "text": "right?"
+ },
+ {
+  "id": 1502,
+  "text": "If your program"
+ },
+ {
+  "id": 1503,
+  "text": "is written to be very complex,"
+ },
+ {
+  "id": 1504,
+  "text": "your assembly code will end up very long,"
+ },
+ {
+  "id": 1505,
+  "text": "and hard to read."
+ },
+ {
+  "id": 1506,
+  "text": "This stuff—"
+ },
+ {
+  "id": 1507,
+  "text": "these four instructions are still easy to read right now,"
+ },
+ {
+  "id": 1508,
+  "text": "but"
+ },
+ {
+  "id": 1509,
+  "text": "that's why in the end we"
+ },
+ {
+  "id": 1510,
+  "text": "ended up with C."
+ },
+ {
+  "id": 1511,
+  "text": "C actually isn't a"
+ },
+ {
+  "id": 1512,
+  "text": "very abstract language,"
+ },
+ {
+  "id": 1513,
+  "text": "but it's already much easier to read."
+ },
+ {
+  "id": 1514,
+  "text": "Take a look at this C code."
+ },
+ {
+  "id": 1515,
+  "text": "What does it express right now?"
+ },
+ {
+  "id": 1516,
+  "text": "This C code—"
+ },
+ {
+  "id": 1517,
+  "text": "actually, compared to this code snippet here—"
+ },
+ {
+  "id": 1518,
+  "text": "it basically corresponds to it."
+ },
+ {
+  "id": 1519,
+  "text": "Can you all read it?"
+ },
+ {
+  "id": 1520,
+  "text": "Now, when we look at C code,"
+ },
+ {
+  "id": 1521,
+  "text": "have we already seen"
+ },
+ {
+  "id": 1522,
+  "text": "the essence of the computer?"
+ },
+ {
+  "id": 1523,
+  "text": "That is to say, when you see"
+ },
+ {
+  "id": 1524,
+  "text": "this piece of C code,"
+ },
+ {
+  "id": 1525,
+  "text": "in your head,"
+ },
+ {
+  "id": 1526,
+  "text": "can you picture"
+ },
+ {
+  "id": 1527,
+  "text": "that it is really just 0101?"
+ },
+ {
+  "id": 1528,
+  "text": "Look at this."
+ },
+ {
+  "id": 1529,
+  "text": "Now we know that"
+ },
+ {
+  "id": 1530,
+  "text": "when we define an array"
+ },
+ {
+  "id": 1531,
+  "text": "of bytes —"
+ },
+ {
+  "id": 1532,
+  "text": "this byte array,"
+ },
+ {
+  "id": 1533,
+  "text": "an array of three bytes,"
+ },
+ {
+  "id": 1534,
+  "text": "with value 120,"
+ },
+ {
+  "id": 1535,
+  "text": "what is it actually in memory?"
+ },
+ {
+  "id": 1536,
+  "text": "It is actually something like this."
+ },
+ {
+  "id": 1537,
+  "text": "Can you picture this thing now?"
+ },
+ {
+  "id": 1538,
+  "text": "You must be able to picture this."
+ },
+ {
+  "id": 1539,
+  "text": "When we execute this statement,"
+ },
+ {
+  "id": 1540,
+  "text": "What is it doing?"
+ },
+ {
+  "id": 1541,
+  "text": "Actually, this one is still fairly"
+ },
+ {
+  "id": 1542,
+  "text": "basically still one-to-one,"
+ },
+ {
+  "id": 1543,
+  "text": "but written in a more complex way."
+ },
+ {
+  "id": 1544,
+  "text": "In fact, one statement"
+ },
+ {
+  "id": 1545,
+  "text": "might turn into many assembly instructions."
+ },
+ {
+  "id": 1546,
+  "text": "So this statement"
+ },
+ {
+  "id": 1547,
+  "text": "is actually similar to which instruction?"
+ },
+ {
+  "id": 1548,
+  "text": "It's actually equivalent to this instruction,"
+ },
+ {
+  "id": 1549,
+  "text": "right?"
+ },
+ {
+  "id": 1550,
+  "text": "And then this assembly"
+ },
+ {
+  "id": 1551,
+  "text": "actually corresponds to this machine"
+ },
+ {
+  "id": 1552,
+  "text": "instruction, right?"
+ },
+ {
+  "id": 1553,
+  "text": "And so on,"
+ },
+ {
+  "id": 1554,
+  "text": "it's just that this instruction,"
+ },
+ {
+  "id": 1555,
+  "text": "taking this instruction as an example, is a bit more complex."
+ },
+ {
+  "id": 1556,
+  "text": "As we know,"
+ },
+ {
+  "id": 1557,
+  "text": "one high-level language statement actually corresponds to several assembly instructions."
+ },
+ {
+  "id": 1558,
+  "text": "Can you see that now?"
+ },
+ {
+  "id": 1559,
+  "text": "Let me clear the screen."
+ },
+ {
+  "id": 1560,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 1561,
+  "text": "Let's pay attention to this one."
+ },
+ {
+  "id": 1562,
+  "text": "This high-level line."
+ },
+ {
+  "id": 1563,
+  "text": "Actually, one high-level line corresponds to two assembly instructions."
+ },
+ {
+  "id": 1564,
+  "text": "Which two?"
+ },
+ {
+  "id": 1565,
+  "text": "Add and store."
+ },
+ {
+  "id": 1566,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1567,
+  "text": "Because this thing, arrow2,"
+ },
+ {
+  "id": 1568,
+  "text": "actually corresponds to which block of memory?"
+ },
+ {
+  "id": 1569,
+  "text": "It's actually this block of memory."
+ },
+ {
+  "id": 1570,
+  "text": "Right?"
+ },
+ {
+  "id": 1571,
+  "text": "So these two assembly instructions"
+ },
+ {
+  "id": 1572,
+  "text": "actually correspond to this one line of high-level language."
+ },
+ {
+  "id": 1573,
+  "text": "And what these two assembly instructions correspond to"
+ },
+ {
+  "id": 1574,
+  "text": "are actually these two machine instructions."
+ },
+ {
+  "id": 1575,
+  "text": "So from here you can see"
+ },
+ {
+  "id": 1576,
+  "text": "that high-level language is really getting more and more refined."
+ },
+ {
+  "id": 1577,
+  "text": "Alright, so"
+ },
+ {
+  "id": 1578,
+  "text": "this is the evolution of our languages."
+ },
+ {
+  "id": 1579,
+  "text": "From machine language, to assembly language, to high-level language."
+ },
+ {
+  "id": 1580,
+  "text": "So high-level languages might..."
+ },
+ {
+  "id": 1581,
+  "text": "Now there are plenty of high-level languages."
+ },
+ {
+  "id": 1582,
+  "text": "C is actually still a relatively low-level high-level language."
+ },
+ {
+  "id": 1583,
+  "text": "If you're developing something these days..."
+ },
+ {
+  "id": 1584,
+  "text": "like Java or something..."
+ },
+ {
+  "id": 1585,
+  "text": "languages at that higher level..."
+ },
+ {
+  "id": 1586,
+  "text": "the abstraction is even more intense."
+ },
+ {
+  "id": 1587,
+  "text": "So the real point of this course is to get everyone..."
+ },
+ {
+  "id": 1588,
+  "text": "to look downward."
+ },
+ {
+  "id": 1589,
+  "text": "Once we can see what the essence of a computer really is..."
+ },
+ {
+  "id": 1590,
+  "text": "then this course has achieved its goal."
+ },
+ {
+  "id": 1591,
+  "text": "So at this point, let's say..."
+ },
+ {
+  "id": 1592,
+  "text": "when you look at that printf statement..."
+ },
+ {
+  "id": 1593,
+  "text": "have you ever wondered..."
+ },
+ {
+  "id": 1594,
+  "text": "what's actually behind it?"
+ },
+ {
+  "id": 1595,
+  "text": "How does this process actually happen?"
+ },
+ {
+  "id": 1596,
+  "text": "It's really a reverse..."
+ },
+ {
+  "id": 1597,
+  "text": "a backwards process."
+ },
+ {
+  "id": 1598,
+  "text": "Right?"
+ },
+ {
+  "id": 1599,
+  "text": "I won't go into that here."
+ },
+ {
+  "id": 1600,
+  "text": "Just now,"
+ },
+ {
+  "id": 1601,
+  "text": "what I mainly introduced to you was"
+ },
+ {
+  "id": 1602,
+  "text": "how programs developed"
+ },
+ {
+  "id": 1603,
+  "text": "from assembly language"
+ },
+ {
+  "id": 1604,
+  "text": "from machine language to assembly language"
+ },
+ {
+  "id": 1605,
+  "text": "to high-level languages,"
+ },
+ {
+  "id": 1606,
+  "text": "such a development process."
+ },
+ {
+  "id": 1607,
+  "text": "Now, next,"
+ },
+ {
+  "id": 1608,
+  "text": "I will introduce the fourth part of this chapter,"
+ },
+ {
+  "id": 1609,
+  "text": "which is the memory hierarchy."
+ },
+ {
+  "id": 1610,
+  "text": "So, on this,"
+ },
+ {
+  "id": 1611,
+  "text": "as we know, in what I just introduced to you"
+ },
+ {
+  "id": 1612,
+  "text": "about the composition of a computer's storage devices,"
+ },
+ {
+  "id": 1613,
+  "text": "we saw that several parts are related to storage."
+ },
+ {
+  "id": 1614,
+  "text": "The first part is registers,"
+ },
+ {
+  "id": 1615,
+  "text": "the second part is memory,"
+ },
+ {
+  "id": 1616,
+  "text": "and the third part is the hard disk."
+ },
+ {
+  "id": 1617,
+  "text": "So these parts are all hardware-related parts,"
+ },
+ {
+  "id": 1618,
+  "text": "the parts related to storage."
+ },
+ {
+  "id": 1619,
+  "text": "So these parts, during the running of a program,"
+ },
+ {
+  "id": 1620,
+  "text": "Both play a very important role."
+ },
+ {
+  "id": 1621,
+  "text": "Between them there is a very important pyramid structure."
+ },
+ {
+  "id": 1622,
+  "text": "Let's take a look at it together."
+ },
+ {
+  "id": 1623,
+  "text": "Now, this diagram is also an important one for our hierarchy."
+ },
+ {
+  "id": 1624,
+  "text": "Take a look, everyone."
+ },
+ {
+  "id": 1625,
+  "text": "In this pyramid diagram, the higher up you go, the closer it is to our processor."
+ },
+ {
+  "id": 1626,
+  "text": "For example, registers and caches."
+ },
+ {
+  "id": 1627,
+  "text": "The further down you go, the further away it is from our processor."
+ },
+ {
+  "id": 1628,
+  "text": "Now, for this part closest to the processor — the registers and caches —"
+ },
+ {
+  "id": 1629,
+  "text": "their characteristic is that they are relatively fast,"
+ },
+ {
+  "id": 1630,
+  "text": "but their capacity is relatively small."
+ },
+ {
+  "id": 1631,
+  "text": "For example, take typical registers."
+ },
+ {
+  "id": 1632,
+  "text": "In various processor architectures,"
+ },
+ {
+  "id": 1633,
+  "text": "there are at most only a few hundred registers."
+ },
+ {
+  "id": 1634,
+  "text": "But this part,"
+ },
+ {
+  "id": 1635,
+  "text": "the manufacturing cost is relatively high."
+ },
+ {
+  "id": 1636,
+  "text": "And the further away it is from our processor,"
+ },
+ {
+  "id": 1637,
+  "text": "its processing speed gets faster and faster,"
+ },
+ {
+  "id": 1638,
+  "text": "slower and slower,"
+ },
+ {
+  "id": 1639,
+  "text": "while the capacity can be made larger and larger."
+ },
+ {
+  "id": 1640,
+  "text": "And its cost can also be made lower and lower."
+ },
+ {
+  "id": 1641,
+  "text": "So this is the hierarchy of our storage devices."
+ },
+ {
+  "id": 1642,
+  "text": "Now, from a programmer's point of view,"
+ },
+ {
+  "id": 1643,
+  "text": "the reason we understand this hierarchy"
+ },
+ {
+  "id": 1644,
+  "text": "is mainly in the process of developing programs,"
+ },
+ {
+  "id": 1645,
+  "text": "so that our programs run fast,"
+ },
+ {
+  "id": 1646,
+  "text": "we can take the data we operate on frequently"
+ },
+ {
+  "id": 1647,
+  "text": "and place it as close to our processor as possible,"
+ },
+ {
+  "id": 1648,
+  "text": "for example in memory, cache, or registers."
+ },
+ {
+  "id": 1649,
+  "text": "That way, our programs can run very fast."
+ },
+ {
+  "id": 1650,
+  "text": "This is a kind of optimization technique."
+ },
+ {
+  "id": 1651,
+  "text": "So I hope everyone"
+ },
+ {
+  "id": 1652,
+  "text": "can also get an understanding of this diagram."
+ },
+ {
+  "id": 1653,
+  "text": "This is the hierarchy of storage devices."
+ },
+ {
+  "id": 1654,
+  "text": "The last part, as the final section of this chapter,"
+ },
+ {
+  "id": 1655,
+  "text": "the last part,"
+ },
+ {
+  "id": 1656,
+  "text": "as an important part of our entire computer system,"
+ },
+ {
+  "id": 1657,
+  "text": "is the operating system."
+ },
+ {
+  "id": 1658,
+  "text": "This is also an important topic"
+ },
+ {
+  "id": 1659,
+  "text": "that I hope everyone will study in this course."
+ },
+ {
+  "id": 1660,
+  "text": "So this is our last operating system."
+ },
+ {
+  "id": 1661,
+  "text": "Now, as for this operating system,"
+ },
+ {
+  "id": 1662,
+  "text": "we know that in"
+ },
+ {
+  "id": 1663,
+  "text": "in our entire"
+ },
+ {
+  "id": 1664,
+  "text": "computer system,"
+ },
+ {
+  "id": 1665,
+  "text": "at the very bottom we have our hardware,"
+ },
+ {
+  "id": 1666,
+  "text": "and at the very top we have our software."
+ },
+ {
+  "id": 1667,
+  "text": "Now, as software developed,"
+ },
+ {
+  "id": 1668,
+  "text": "software split into two parts:"
+ },
+ {
+  "id": 1669,
+  "text": "one part is the operating system,"
+ },
+ {
+  "id": 1670,
+  "text": "and the other part is application programs."
+ },
+ {
+  "id": 1671,
+  "text": "Now, between the operating system and the application programs,"
+ },
+ {
+  "id": 1672,
+  "text": "there is an interface."
+ },
+ {
+  "id": 1673,
+  "text": "And this interface,"
+ },
+ {
+  "id": 1674,
+  "text": "we call system calls."
+ },
+ {
+  "id": 1675,
+  "text": "And between our operating system and the hardware,"
+ },
+ {
+  "id": 1676,
+  "text": "there is also a layer of interface."
+ },
+ {
+  "id": 1677,
+  "text": "And this layer of interface,"
+ },
+ {
+  "id": 1678,
+  "text": "we call the instruction set architecture."
+ },
+ {
+  "id": 1679,
+  "text": "So the instruction set architecture,"
+ },
+ {
+  "id": 1680,
+  "text": "which is also what we'll cover in detail in the next chapter"
+ },
+ {
+  "id": 1681,
+  "text": "Now, the operating system,"
+ },
+ {
+  "id": 1682,
+  "text": "which is the main focus of this course,"
+ },
+ {
+  "id": 1683,
+  "text": "its main functions"
+ },
+ {
+  "id": 1684,
+  "text": "can be boiled down to two."
+ },
+ {
+  "id": 1685,
+  "text": "The first is to protect the hardware from being abused"
+ },
+ {
+  "id": 1686,
+  "text": "by out-of-control software applications and programs."
+ },
+ {
+  "id": 1687,
+  "text": "Because if we let applications access hardware directly,"
+ },
+ {
+  "id": 1688,
+  "text": "given varying levels of programmer skill,"
+ },
+ {
+  "id": 1689,
+  "text": "or unexpected exceptions in a program,"
+ },
+ {
+  "id": 1690,
+  "text": "the hardware could be damaged."
+ },
+ {
+  "id": 1691,
+  "text": "So one of the operating system's main functions"
+ },
+ {
+  "id": 1692,
+  "text": "is to"
+ },
+ {
+  "id": 1693,
+  "text": "prevent applications from accessing hardware directly,"
+ },
+ {
+  "id": 1694,
+  "text": "and instead go through our system calls,"
+ },
+ {
+  "id": 1695,
+  "text": "with the operating system accessing the hardware on their behalf,"
+ },
+ {
+  "id": 1696,
+  "text": "so the operating system serves to protect the hardware."
+ },
+ {
+  "id": 1697,
+  "text": "On the other hand, going upward,"
+ },
+ {
+  "id": 1698,
+  "text": "it provides applications with a simple, consistent abstraction interface,"
+ },
+ {
+  "id": 1699,
+  "text": "which is exactly the system call."
+ },
+ {
+  "id": 1700,
+  "text": "so that applications can access the operating system through system calls,"
+ },
+ {
+  "id": 1701,
+  "text": "and thereby indirectly access our hardware."
+ },
+ {
+  "id": 1702,
+  "text": "Alright, for today's class,"
+ },
+ {
+  "id": 1703,
+  "text": "that's all I'll cover for you."
+ }
+]

@@ -1,0 +1,5858 @@
+[
+ {
+  "id": 0,
+  "text": "So today, first, let's take another look at conditional branch instructions. Conditional branch instructions are called Conditional Branch Instructions in English. They are mainly used in our code — as we know, besides sequential execution, we have things like the most basic conditional judgment in C, the if-else statement, which is actually carried out by these assembly instructions, these machine instructions."
+ },
+ {
+  "id": 1,
+  "text": "So in the conditional branch instructions of Risk5,"
+ },
+ {
+  "id": 2,
+  "text": "there are several kinds,"
+ },
+ {
+  "id": 3,
+  "text": "and let's take a look."
+ },
+ {
+  "id": 4,
+  "text": "There are BEQ, BNE, BLT,"
+ },
+ {
+  "id": 5,
+  "text": "and these names"
+ },
+ {
+  "id": 6,
+  "text": "actually have meanings."
+ },
+ {
+  "id": 7,
+  "text": "As for their specific meanings,"
+ },
+ {
+  "id": 8,
+  "text": "we can see them here, which I have also listed for you."
+ },
+ {
+  "id": 9,
+  "text": "So for BEQ,"
+ },
+ {
+  "id": 10,
+  "text": "it is actually branch if equal."
+ },
+ {
+  "id": 11,
+  "text": "What that means is,"
+ },
+ {
+  "id": 12,
+  "text": "what does it mean?"
+ },
+ {
+  "id": 13,
+  "text": "It checks whether two numbers are equal."
+ },
+ {
+  "id": 14,
+  "text": "If they are equal,"
+ },
+ {
+  "id": 15,
+  "text": "then it jumps."
+ },
+ {
+  "id": 16,
+  "text": "Branch means to branch,"
+ },
+ {
+  "id": 17,
+  "text": "forking means jumping."
+ },
+ {
+  "id": 18,
+  "text": "The others are similar,"
+ },
+ {
+  "id": 19,
+  "text": "BNE"
+ },
+ {
+  "id": 20,
+  "text": "Now, once you remember this English term,"
+ },
+ {
+  "id": 21,
+  "text": "when you memorize this,"
+ },
+ {
+  "id": 22,
+  "text": "the name of the command becomes much easier to remember."
+ },
+ {
+  "id": 23,
+  "text": "This is one thing everyone should pay attention to."
+ },
+ {
+  "id": 24,
+  "text": "And there's another thing,"
+ },
+ {
+  "id": 25,
+  "text": "which is these conditional branch instructions,"
+ },
+ {
+  "id": 26,
+  "text": "the encoding format they use,"
+ },
+ {
+  "id": 27,
+  "text": "we call it B-type."
+ },
+ {
+  "id": 28,
+  "text": "So why is it called B-type?"
+ },
+ {
+  "id": 29,
+  "text": "Now you all understand what this B means, right?"
+ },
+ {
+  "id": 30,
+  "text": "It actually stands for branch,"
+ },
+ {
+  "id": 31,
+  "text": "it comes from conditional branch instructions."
+ },
+ {
+  "id": 32,
+  "text": "This encoding format,"
+ },
+ {
+  "id": 33,
+  "text": "this encoding scheme,"
+ },
+ {
+  "id": 34,
+  "text": "you can take a look at it."
+ },
+ {
+  "id": 35,
+  "text": "There's a diagram down below,"
+ },
+ {
+  "id": 36,
+  "text": "which I've laid out for you."
+ },
+ {
+  "id": 37,
+  "text": "As we can see from it,"
+ },
+ {
+  "id": 38,
+  "text": "bits 0 to 6 are still,"
+ },
+ {
+  "id": 39,
+  "text": "that is, the lower bits 0 to 6,"
+ },
+ {
+  "id": 40,
+  "text": "it still holds the opcode"
+ },
+ {
+  "id": 41,
+  "text": "right"
+ },
+ {
+  "id": 42,
+  "text": "and then there's also"
+ },
+ {
+  "id": 43,
+  "text": "two fields that hold registers"
+ },
+ {
+  "id": 44,
+  "text": "RS1 and RS2"
+ },
+ {
+  "id": 45,
+  "text": "now as for function3"
+ },
+ {
+  "id": 46,
+  "text": "it's used together with the opcode to"
+ },
+ {
+  "id": 47,
+  "text": "uniquely identify the"
+ },
+ {
+  "id": 48,
+  "text": "type of this instruction"
+ },
+ {
+  "id": 49,
+  "text": "and then there's also an immediate value"
+ },
+ {
+  "id": 50,
+  "text": "as you can see"
+ },
+ {
+  "id": 51,
+  "text": "this immediate value"
+ },
+ {
+  "id": 52,
+  "text": "now some of you might"
+ },
+ {
+  "id": 53,
+  "text": "have some confusion about the"
+ },
+ {
+  "id": 54,
+  "text": "encoding method of this immediate"
+ },
+ {
+  "id": 55,
+  "text": "and feel a bit puzzled"
+ },
+ {
+  "id": 56,
+  "text": "which is that this immediate value"
+ },
+ {
+  "id": 57,
+  "text": "is not kept together in one piece"
+ },
+ {
+  "id": 58,
+  "text": "do you all see that"
+ },
+ {
+  "id": 59,
+  "text": "that is, for the immediate value as a whole"
+ },
+ {
+  "id": 60,
+  "text": "It is a"
+ },
+ {
+  "id": 61,
+  "text": "The numbers written here are"
+ },
+ {
+  "id": 62,
+  "text": "the lowest is bit 1"
+ },
+ {
+  "id": 63,
+  "text": "and the highest goes up to"
+ },
+ {
+  "id": 64,
+  "text": "bit 12"
+ },
+ {
+  "id": 65,
+  "text": "So you can see that"
+ },
+ {
+  "id": 66,
+  "text": "for the full 12 bits of data"
+ },
+ {
+  "id": 67,
+  "text": "they are not placed together"
+ },
+ {
+  "id": 68,
+  "text": "They are actually distributed across"
+ },
+ {
+  "id": 69,
+  "text": "the entire"
+ },
+ {
+  "id": 70,
+  "text": "encoding format, in two separate places"
+ },
+ {
+  "id": 71,
+  "text": "And in the two places,"
+ },
+ {
+  "id": 72,
+  "text": "the format is actually still"
+ },
+ {
+  "id": 73,
+  "text": "bits 1 to 4 are here"
+ },
+ {
+  "id": 74,
+  "text": "then it jumps over here and puts bits 5 to 10"
+ },
+ {
+  "id": 75,
+  "text": "bits 5 to 10, then it jumps here again to"
+ },
+ {
+  "id": 76,
+  "text": "put bit 11, and then bit 12 is placed here"
+ },
+ {
+  "id": 77,
+  "text": "They are not placed consecutively"
+ },
+ {
+  "id": 78,
+  "text": "Do you see that?"
+ },
+ {
+  "id": 79,
+  "text": "Don't be surprised by this"
+ },
+ {
+  "id": 80,
+  "text": "As you all know,"
+ },
+ {
+  "id": 81,
+  "text": "this is a machine instruction."
+ },
+ {
+  "id": 82,
+  "text": "The way machine instructions are encoded,"
+ },
+ {
+  "id": 83,
+  "text": "it's really mainly considered"
+ },
+ {
+  "id": 84,
+  "text": "for the sake of the underlying hardware's"
+ },
+ {
+  "id": 85,
+  "text": "processing efficiency."
+ },
+ {
+  "id": 86,
+  "text": "So this encoding scheme"
+ },
+ {
+  "id": 87,
+  "text": "is designed entirely for"
+ },
+ {
+  "id": 88,
+  "text": "the processing efficiency of the underlying hardware."
+ },
+ {
+  "id": 89,
+  "text": "Now, when we're programming,"
+ },
+ {
+  "id": 90,
+  "text": "we don't actually need to worry about this."
+ },
+ {
+  "id": 91,
+  "text": "All we need to know is"
+ },
+ {
+  "id": 92,
+  "text": "that these two parts"
+ },
+ {
+  "id": 93,
+  "text": "together make up an immediate number --"
+ },
+ {
+  "id": 94,
+  "text": "a 12-bit immediate value --"
+ },
+ {
+  "id": 95,
+  "text": "and that's enough."
+ },
+ {
+  "id": 96,
+  "text": "That's one thing."
+ },
+ {
+  "id": 97,
+  "text": "And then there's another,"
+ },
+ {
+  "id": 98,
+  "text": "which is this:"
+ },
+ {
+  "id": 99,
+  "text": "we know that this"
+ },
+ {
+  "id": 100,
+  "text": "So besides knowing that"
+ },
+ {
+  "id": 101,
+  "text": "these conditional branch instructions,"
+ },
+ {
+  "id": 102,
+  "text": "they operate on certain —"
+ },
+ {
+  "id": 103,
+  "text": "that is, whether things are equal,"
+ },
+ {
+  "id": 104,
+  "text": "not equal,"
+ },
+ {
+  "id": 105,
+  "text": "they're divided into several groups like this."
+ },
+ {
+  "id": 106,
+  "text": "Right?"
+ },
+ {
+  "id": 107,
+  "text": "As you can see,"
+ },
+ {
+  "id": 108,
+  "text": "one checks for equality,"
+ },
+ {
+  "id": 109,
+  "text": "and one branches if not equal."
+ },
+ {
+  "id": 110,
+  "text": "Then there's another one,"
+ },
+ {
+  "id": 111,
+  "text": "which branches if less than."
+ },
+ {
+  "id": 112,
+  "text": "And another one that branches if greater than or equal."
+ },
+ {
+  "id": 113,
+  "text": "Less than and greater than or equal —"
+ },
+ {
+  "id": 114,
+  "text": "we know those are a pair,"
+ },
+ {
+  "id": 115,
+  "text": "right?"
+ },
+ {
+  "id": 116,
+  "text": "So that's one."
+ },
+ {
+  "id": 117,
+  "text": "And then there's another one, that is to say,"
+ },
+ {
+  "id": 118,
+  "text": "there's also this one here —"
+ },
+ {
+  "id": 119,
+  "text": "you see, apart from this BLT,"
+ },
+ {
+  "id": 120,
+  "text": "There's also a BLTU."
+ },
+ {
+  "id": 121,
+  "text": "And for BGE, there's a BGEU."
+ },
+ {
+  "id": 122,
+  "text": "Now the only difference"
+ },
+ {
+  "id": 123,
+  "text": "is that it has an extra U at the end."
+ },
+ {
+  "id": 124,
+  "text": "So what does this U mean?"
+ },
+ {
+  "id": 125,
+  "text": "It stands for the unsigned concept."
+ },
+ {
+  "id": 126,
+  "text": "That is to say, when they"
+ },
+ {
+  "id": 127,
+  "text": "If there's a U added,"
+ },
+ {
+  "id": 128,
+  "text": "it means that when they compare,"
+ },
+ {
+  "id": 129,
+  "text": "the comparison is done as unsigned numbers."
+ },
+ {
+  "id": 130,
+  "text": "In other words, the sign bit actually,"
+ },
+ {
+  "id": 131,
+  "text": "you can just treat everything as a positive number."
+ },
+ {
+  "id": 132,
+  "text": "Now, if there's no U,"
+ },
+ {
+  "id": 133,
+  "text": "it uses the signed representation."
+ },
+ {
+  "id": 134,
+  "text": "So in this case, this immediate value's—"
+ },
+ {
+  "id": 135,
+  "text": "I mean, this isn't an immediate value,"
+ },
+ {
+  "id": 136,
+  "text": "it's the number stored in the register—"
+ },
+ {
+  "id": 137,
+  "text": "if it's a positive or negative number,"
+ },
+ {
+  "id": 138,
+  "text": "it does take part in the comparison."
+ },
+ {
+  "id": 139,
+  "text": "That is, the comparison is performed as signed values."
+ },
+ {
+  "id": 140,
+  "text": "This is when these instructions were designed."
+ },
+ {
+  "id": 141,
+  "text": "We need to pay attention to this."
+ },
+ {
+  "id": 142,
+  "text": "So in total, the classification goes like this."
+ },
+ {
+  "id": 143,
+  "text": "It ends up being six in total."
+ },
+ {
+  "id": 144,
+  "text": "Six conditional branch instructions."
+ },
+ {
+  "id": 145,
+  "text": "You can actually memorize them in pairs."
+ },
+ {
+  "id": 146,
+  "text": "Now that we understand this,"
+ },
+ {
+  "id": 147,
+  "text": "the last point is that"
+ },
+ {
+  "id": 148,
+  "text": "because in the end it needs a jump,"
+ },
+ {
+  "id": 149,
+  "text": "when this jump happens,"
+ },
+ {
+  "id": 150,
+  "text": "this target,"
+ },
+ {
+  "id": 151,
+  "text": "the target address of the jump,"
+ },
+ {
+  "id": 152,
+  "text": "how is it calculated?"
+ },
+ {
+  "id": 153,
+  "text": "This is something we need to understand."
+ },
+ {
+  "id": 154,
+  "text": "As you can see,"
+ },
+ {
+  "id": 155,
+  "text": "the way it is calculated is right here."
+ },
+ {
+  "id": 156,
+  "text": "We've listed it out for you here,"
+ },
+ {
+  "id": 157,
+  "text": "that is, the method for calculating the jump target address."
+ },
+ {
+  "id": 158,
+  "text": "And how is it calculated?"
+ },
+ {
+  "id": 159,
+  "text": "It is based on the immediate value in the encoding."
+ },
+ {
+  "id": 160,
+  "text": "Multiply this immediate by two."
+ },
+ {
+  "id": 161,
+  "text": "After sign extension,"
+ },
+ {
+  "id": 162,
+  "text": "pay attention here, read carefully."
+ },
+ {
+  "id": 163,
+  "text": "Of course, what I've done here is take the English from the specification"
+ },
+ {
+  "id": 164,
+  "text": "and translate it into Chinese"
+ },
+ {
+  "id": 165,
+  "text": "for everyone here."
+ },
+ {
+  "id": 166,
+  "text": "Once you've understood this,"
+ },
+ {
+  "id": 167,
+  "text": "go back and take a look at the standard itself."
+ },
+ {
+  "id": 168,
+  "text": "That might give you an even better understanding."
+ },
+ {
+  "id": 169,
+  "text": "So, first multiply this immediate by two,"
+ },
+ {
+  "id": 170,
+  "text": "then after sign extension,"
+ },
+ {
+  "id": 171,
+  "text": "add it to the PC value,"
+ },
+ {
+  "id": 172,
+  "text": "and only then can you get the final target address."
+ },
+ {
+  "id": 173,
+  "text": "So what does this multiplying by 2 mean?"
+ },
+ {
+  "id": 174,
+  "text": "Actually, what it means is"
+ },
+ {
+  "id": 175,
+  "text": "it actually shows that"
+ },
+ {
+  "id": 176,
+  "text": "the immediate it finally gets"
+ },
+ {
+  "id": 177,
+  "text": "is definitely a multiple of 2."
+ },
+ {
+  "id": 178,
+  "text": "Do you all understand?"
+ },
+ {
+  "id": 179,
+  "text": "It's definitely a multiple of 2."
+ },
+ {
+  "id": 180,
+  "text": "like 2,"
+ },
+ {
+  "id": 181,
+  "text": "4,"
+ },
+ {
+  "id": 182,
+  "text": "8, values like that."
+ },
+ {
+  "id": 183,
+  "text": "Now why is that the case?"
+ },
+ {
+  "id": 184,
+  "text": "It's mainly because"
+ },
+ {
+  "id": 185,
+  "text": "it's that"
+ },
+ {
+  "id": 186,
+  "text": "as we mentioned earlier,"
+ },
+ {
+  "id": 187,
+  "text": "in instruction encoding,"
+ },
+ {
+  "id": 188,
+  "text": "when instructions are laid out in memory,"
+ },
+ {
+  "id": 189,
+  "text": "there's this concept of alignment."
+ },
+ {
+  "id": 190,
+  "text": "That is to say,"
+ },
+ {
+  "id": 191,
+  "text": "each instruction"
+ },
+ {
+  "id": 192,
+  "text": "may follow this... I mean,"
+ },
+ {
+  "id": 193,
+  "text": "that is to say,"
+ },
+ {
+  "id": 194,
+  "text": "of course, here in our case,"
+ },
+ {
+  "id": 195,
+  "text": "since the exercises we'll do later"
+ },
+ {
+  "id": 196,
+  "text": "don't involve these compressed instructions,"
+ },
+ {
+  "id": 197,
+  "text": "but we know"
+ },
+ {
+  "id": 198,
+  "text": "that, as we discussed earlier,"
+ },
+ {
+  "id": 199,
+  "text": "this RISC-V..."
+ },
+ {
+  "id": 200,
+  "text": "It supports this compressed instruction format."
+ },
+ {
+  "id": 201,
+  "text": "Now, as for compressed instructions,"
+ },
+ {
+  "id": 202,
+  "text": "each instruction"
+ },
+ {
+  "id": 203,
+  "text": "compared to our normal ones today,"
+ },
+ {
+  "id": 204,
+  "text": "for normal instructions, we know"
+ },
+ {
+  "id": 205,
+  "text": "how many bytes is one instruction?"
+ },
+ {
+  "id": 206,
+  "text": "We covered this earlier,"
+ },
+ {
+  "id": 207,
+  "text": "you still remember, right?"
+ },
+ {
+  "id": 208,
+  "text": "It's 4 bytes per instruction,"
+ },
+ {
+  "id": 209,
+  "text": "right?"
+ },
+ {
+  "id": 210,
+  "text": "But with the compressed format,"
+ },
+ {
+  "id": 211,
+  "text": "it's an instruction extension,"
+ },
+ {
+  "id": 212,
+  "text": "specifically the C extension."
+ },
+ {
+  "id": 213,
+  "text": "With the C extension,"
+ },
+ {
+  "id": 214,
+  "text": "one instruction is"
+ },
+ {
+  "id": 215,
+  "text": "half of that,"
+ },
+ {
+  "id": 216,
+  "text": "and since it's half,"
+ },
+ {
+  "id": 217,
+  "text": "it means a single instruction actually"
+ },
+ {
+  "id": 218,
+  "text": "takes up 2 bytes,"
+ },
+ {
+  "id": 219,
+  "text": "and multiplying that by 2,"
+ },
+ {
+  "id": 220,
+  "text": "That's actually what this case is about."
+ },
+ {
+  "id": 221,
+  "text": "At least that's how I understand it."
+ },
+ {
+  "id": 222,
+  "text": "You can all look at it this way."
+ },
+ {
+  "id": 223,
+  "text": "Understand it like this."
+ },
+ {
+  "id": 224,
+  "text": "So, since"
+ },
+ {
+  "id": 225,
+  "text": "this instruction"
+ },
+ {
+  "id": 226,
+  "text": "has a minimum alignment"
+ },
+ {
+  "id": 227,
+  "text": "of two bytes,"
+ },
+ {
+  "id": 228,
+  "text": "then when we"
+ },
+ {
+  "id": 229,
+  "text": "encode it,"
+ },
+ {
+  "id": 230,
+  "text": "that last bit behind it,"
+ },
+ {
+  "id": 231,
+  "text": "that is, the one corresponding to two to the power of one,"
+ },
+ {
+  "id": 232,
+  "text": "that bit,"
+ },
+ {
+  "id": 233,
+  "text": "can actually be omitted."
+ },
+ {
+  "id": 234,
+  "text": "We don't need to write it in."
+ },
+ {
+  "id": 235,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 236,
+  "text": "Because it's always zero."
+ },
+ {
+  "id": 237,
+  "text": "Think about it — the lowest bit is always zero."
+ },
+ {
+  "id": 238,
+  "text": "In other words, its address,"
+ },
+ {
+  "id": 239,
+  "text": "the last bit of the address is always zero."
+ },
+ {
+  "id": 240,
+  "text": "So this bit"
+ },
+ {
+  "id": 241,
+  "text": "doesn't need to be part of the encoding."
+ },
+ {
+  "id": 242,
+  "text": "So this way, we can save one"
+ },
+ {
+  "id": 243,
+  "text": "save one bit."
+ },
+ {
+  "id": 244,
+  "text": "You see what I mean, right?"
+ },
+ {
+  "id": 245,
+  "text": "So when they"
+ },
+ {
+  "id": 246,
+  "text": "designed the instructions,"
+ },
+ {
+  "id": 247,
+  "text": "this is how they saved space."
+ },
+ {
+  "id": 248,
+  "text": "So"
+ },
+ {
+  "id": 249,
+  "text": "if you look at it,"
+ },
+ {
+  "id": 250,
+  "text": "if you look at this,"
+ },
+ {
+  "id": 251,
+  "text": "this immediate,"
+ },
+ {
+  "id": 252,
+  "text": "this number here,"
+ },
+ {
+  "id": 253,
+  "text": "you can see it starts from 1,"
+ },
+ {
+  "id": 254,
+  "text": "encoding begins at bit 1, right?"
+ },
+ {
+  "id": 255,
+  "text": "So right here,"
+ },
+ {
+  "id": 256,
+  "text": "there is no bit 0."
+ },
+ {
+  "id": 257,
+  "text": "Notice that, everyone."
+ },
+ {
+  "id": 258,
+  "text": "No bit 0."
+ },
+ {
+  "id": 259,
+  "text": "So that means these 12 bits are actually the upper 12 bits."
+ },
+ {
+  "id": 260,
+  "text": "In fact, this whole address is really a 13-bit value."
+ },
+ {
+  "id": 261,
+  "text": "Now, with 13 bits, we also have to consider sign extension."
+ },
+ {
+  "id": 262,
+  "text": "That is, it can represent both positive and negative numbers."
+ },
+ {
+  "id": 263,
+  "text": "So its actual range is from negative 4096 to 4094."
+ },
+ {
+  "id": 264,
+  "text": "You can work this number out for yourselves when you get back."
+ },
+ {
+  "id": 265,
+  "text": "Based on the related concepts I just introduced to you,"
+ },
+ {
+  "id": 266,
+  "text": "you can guess why it's this range."
+ },
+ {
+  "id": 267,
+  "text": "Why is it this range?"
+ },
+ {
+  "id": 268,
+  "text": "Anyway,"
+ },
+ {
+  "id": 269,
+  "text": "it eventually produces a value,"
+ },
+ {
+  "id": 270,
+  "text": "and note that this value is added to the PC."
+ },
+ {
+  "id": 271,
+  "text": "So when it jumps, the jump is relative to the current PC value."
+ },
+ {
+  "id": 272,
+  "text": "Please keep that in mind too."
+ },
+ {
+  "id": 273,
+  "text": "In other words, based on the current PC value,"
+ },
+ {
+  "id": 274,
+  "text": "it jumps to an address roughly 4K above or below,"
+ },
+ {
+  "id": 275,
+  "text": "jumping to a new address to fetch the value."
+ },
+ {
+  "id": 276,
+  "text": "So that's how the target address is calculated."
+ },
+ {
+  "id": 277,
+  "text": "It's also an important concept for understanding jump and conditional branch instructions."
+ },
+ {
+  "id": 278,
+  "text": "Then, when it comes to the actual programming,"
+ },
+ {
+  "id": 279,
+  "text": "when you're writing code,"
+ },
+ {
+  "id": 280,
+  "text": "Actually, to make things easier for us programmers,"
+ },
+ {
+  "id": 281,
+  "text": "we don't actually go and do it like this afterwards,"
+ },
+ {
+  "id": 282,
+  "text": "writing an actual number."
+ },
+ {
+  "id": 283,
+  "text": "Because if you were to write these values directly,"
+ },
+ {
+  "id": 284,
+  "text": "it would mean that when you're programming,"
+ },
+ {
+  "id": 285,
+  "text": "you'd have to work out the absolute address of every single instruction yourself."
+ },
+ {
+  "id": 286,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 287,
+  "text": "There's really no need,"
+ },
+ {
+  "id": 288,
+  "text": "because we have the compiler to do that calculation for us."
+ },
+ {
+  "id": 289,
+  "text": "So when we actually write the code,"
+ },
+ {
+  "id": 290,
+  "text": "we don't write the immediate values directly."
+ },
+ {
+  "id": 291,
+  "text": "We use labels instead."
+ },
+ {
+  "id": 292,
+  "text": "You all remember the concept of a label, right?"
+ },
+ {
+  "id": 293,
+  "text": "That is, a label."
+ },
+ {
+  "id": 294,
+  "text": "We talked about this earlier."
+ },
+ {
+  "id": 295,
+  "text": "What exactly is a label?"
+ },
+ {
+  "id": 296,
+  "text": "It's really just the concept of an address."
+ },
+ {
+  "id": 297,
+  "text": "It's just that,"
+ },
+ {
+  "id": 298,
+  "text": "you don't have to write this address yourself."
+ },
+ {
+  "id": 299,
+  "text": "It's at compile time"
+ },
+ {
+  "id": 300,
+  "text": "With the compiler and linker working together to help you"
+ },
+ {
+  "id": 301,
+  "text": "help you compute this value"
+ },
+ {
+  "id": 302,
+  "text": "and generate this machine instruction."
+ },
+ {
+  "id": 303,
+  "text": "Does everyone understand?"
+ },
+ {
+  "id": 304,
+  "text": "So when we actually program,"
+ },
+ {
+  "id": 305,
+  "text": "we just need to write that label."
+ },
+ {
+  "id": 306,
+  "text": "We can look at an example in a moment,"
+ },
+ {
+  "id": 307,
+  "text": "and you'll understand this concept."
+ },
+ {
+  "id": 308,
+  "text": "So in summary,"
+ },
+ {
+  "id": 309,
+  "text": "for these conditional branch instructions,"
+ },
+ {
+  "id": 310,
+  "text": "that's all the related concepts."
+ },
+ {
+  "id": 311,
+  "text": "What I just covered are the six basic conditional branch instructions."
+ },
+ {
+  "id": 312,
+  "text": "Now, based on these six basic conditional branch instructions,"
+ },
+ {
+  "id": 313,
+  "text": "our assembly manual's specification"
+ },
+ {
+  "id": 314,
+  "text": "actually also defines some commonly used pseudo-instructions for us."
+ },
+ {
+  "id": 315,
+  "text": "We also learned the concept of pseudo-instructions in the last class."
+ },
+ {
+  "id": 316,
+  "text": "In fact, a pseudo-instruction is essentially just an alias for a basic instruction,"
+ },
+ {
+  "id": 317,
+  "text": "right?"
+ },
+ {
+  "id": 318,
+  "text": "For our convenience,"
+ },
+ {
+  "id": 319,
+  "text": "you can see that for some special"
+ },
+ {
+  "id": 320,
+  "text": "some special operations"
+ },
+ {
+  "id": 321,
+  "text": "For example, things like less than or equal to,"
+ },
+ {
+  "id": 322,
+  "text": "these are actually"
+ },
+ {
+  "id": 323,
+  "text": "just equivalent instructions derived through transformation."
+ },
+ {
+  "id": 324,
+  "text": "You can go back and look at them yourselves."
+ },
+ {
+  "id": 325,
+  "text": "We won't go through them one by one here."
+ },
+ {
+  "id": 326,
+  "text": "So those are four instructions."
+ },
+ {
+  "id": 327,
+  "text": "Now, what about these six instructions below?"
+ },
+ {
+  "id": 328,
+  "text": "Actually, these six instructions"
+ },
+ {
+  "id": 329,
+  "text": "are quite special."
+ },
+ {
+  "id": 330,
+  "text": "They all perform a special comparison with a particular number,"
+ },
+ {
+  "id": 331,
+  "text": "they all do a special comparison with 0."
+ },
+ {
+  "id": 332,
+  "text": "Because, as we know, when we program,"
+ },
+ {
+  "id": 333,
+  "text": "a huge number of operations compare against 0."
+ },
+ {
+  "id": 334,
+  "text": "I don't know if you've"
+ },
+ {
+  "id": 335,
+  "text": "for example, when programming in C,"
+ },
+ {
+  "id": 336,
+  "text": "ever noticed this pattern."
+ },
+ {
+  "id": 337,
+  "text": "In your code, there are lots of places"
+ },
+ {
+  "id": 338,
+  "text": "where you compare against 0."
+ },
+ {
+  "id": 339,
+  "text": "So we need to take this kind of"
+ },
+ {
+  "id": 340,
+  "text": "Instructions that compare against 0"
+ },
+ {
+  "id": 341,
+  "text": "we define them specially"
+ },
+ {
+  "id": 342,
+  "text": "Of course, they are defined as pseudo-instructions"
+ },
+ {
+  "id": 343,
+  "text": "just to make them convenient for us to use"
+ },
+ {
+  "id": 344,
+  "text": "For example, we often have"
+ },
+ {
+  "id": 345,
+  "text": "loops, for instance"
+ },
+ {
+  "id": 346,
+  "text": "if you still remember"
+ },
+ {
+  "id": 347,
+  "text": "that loop of yours, that negative loop"
+ },
+ {
+  "id": 348,
+  "text": "in the end, right"
+ },
+ {
+  "id": 349,
+  "text": "say you keep incrementing"
+ },
+ {
+  "id": 350,
+  "text": "or decrementing"
+ },
+ {
+  "id": 351,
+  "text": "until it goes down to 0, and then it compares"
+ },
+ {
+  "id": 352,
+  "text": "and also, sometimes"
+ },
+ {
+  "id": 353,
+  "text": "say a function's return value"
+ },
+ {
+  "id": 354,
+  "text": "is also compared against 0"
+ },
+ {
+  "id": 355,
+  "text": "right?"
+ },
+ {
+  "id": 356,
+  "text": "When we do a system call"
+ },
+ {
+  "id": 357,
+  "text": "generally, returning what number means success?"
+ },
+ {
+  "id": 358,
+  "text": "Remember that?"
+ },
+ {
+  "id": 359,
+  "text": "In our C language"
+ },
+ {
+  "id": 360,
+  "text": "When you make that system call,"
+ },
+ {
+  "id": 361,
+  "text": "it generally returns 0 to indicate success."
+ },
+ {
+  "id": 362,
+  "text": "Right?"
+ },
+ {
+  "id": 363,
+  "text": "When those of you first started learning C,"
+ },
+ {
+  "id": 364,
+  "text": "you might not quite have understood"
+ },
+ {
+  "id": 365,
+  "text": "why on earth"
+ },
+ {
+  "id": 366,
+  "text": "we use 0 to mean success."
+ },
+ {
+  "id": 367,
+  "text": "It's because 0 is a very special value."
+ },
+ {
+  "id": 368,
+  "text": "Any non-zero value"
+ },
+ {
+  "id": 369,
+  "text": "means what?"
+ },
+ {
+  "id": 370,
+  "text": "Failure."
+ },
+ {
+  "id": 371,
+  "text": "A failure code."
+ },
+ {
+  "id": 372,
+  "text": "Right?"
+ },
+ {
+  "id": 373,
+  "text": "So"
+ },
+ {
+  "id": 374,
+  "text": "very often in our code,"
+ },
+ {
+  "id": 375,
+  "text": "in lots of places,"
+ },
+ {
+  "id": 376,
+  "text": "we compare against 0."
+ },
+ {
+  "id": 377,
+  "text": "So,"
+ },
+ {
+  "id": 378,
+  "text": "it's the same in assembly."
+ },
+ {
+  "id": 379,
+  "text": "The comparison against 0"
+ },
+ {
+  "id": 380,
+  "text": "certain special operations"
+ },
+ {
+  "id": 381,
+  "text": "are also grouped together separately"
+ },
+ {
+  "id": 382,
+  "text": "and a set of instructions is placed here"
+ },
+ {
+  "id": 383,
+  "text": "of course these are pseudo-instructions"
+ },
+ {
+  "id": 384,
+  "text": "so to sum it all up"
+ },
+ {
+  "id": 385,
+  "text": "in our code"
+ },
+ {
+  "id": 386,
+  "text": "every place that involves a condition check"
+ },
+ {
+  "id": 387,
+  "text": "will use this kind of jump"
+ },
+ {
+  "id": 388,
+  "text": "branch instruction"
+ },
+ {
+  "id": 389,
+  "text": "conditional branch instruction"
+ },
+ {
+  "id": 390,
+  "text": "now the basic syntax"
+ },
+ {
+  "id": 391,
+  "text": "is not complicated"
+ },
+ {
+  "id": 392,
+  "text": "so we'll stop here for this part"
+ },
+ {
+  "id": 393,
+  "text": "now let's look at an exercise"
+ },
+ {
+  "id": 394,
+  "text": "for example"
+ },
+ {
+  "id": 395,
+  "text": "down here below"
+ },
+ {
+  "id": 396,
+  "text": "is a piece of code written in C"
+ },
+ {
+  "id": 397,
+  "text": "you can think about it"
+ },
+ {
+  "id": 398,
+  "text": "that is to say"
+ },
+ {
+  "id": 399,
+  "text": "what kind of assembly instructions we can use"
+ },
+ {
+  "id": 400,
+  "text": "write out an equivalent form"
+ },
+ {
+  "id": 401,
+  "text": "Now, of course, the source code"
+ },
+ {
+  "id": 402,
+  "text": "is something I've already provided to you"
+ },
+ {
+  "id": 403,
+  "text": "in the exercises"
+ },
+ {
+  "id": 404,
+  "text": "not in the exercises,"
+ },
+ {
+  "id": 405,
+  "text": "in that ASM code directory"
+ },
+ {
+  "id": 406,
+  "text": "But for now, we can, in class,"
+ },
+ {
+  "id": 407,
+  "text": "think it through ourselves."
+ },
+ {
+  "id": 408,
+  "text": "What do you think, using something like this,"
+ },
+ {
+  "id": 409,
+  "text": "first, the first instruction assigns a value to i."
+ },
+ {
+  "id": 410,
+  "text": "So since we're writing assembly instructions,"
+ },
+ {
+  "id": 411,
+  "text": "as you know, these kinds of variables in C,"
+ },
+ {
+  "id": 412,
+  "text": "can actually be seen here as just a what?"
+ },
+ {
+  "id": 413,
+  "text": "Can't they be seen as a register?"
+ },
+ {
+  "id": 414,
+  "text": "Think about it, can't they?"
+ },
+ {
+  "id": 415,
+  "text": "So we can actually assign a register,"
+ },
+ {
+  "id": 416,
+  "text": "take the initial value of this register,"
+ },
+ {
+  "id": 417,
+  "text": "and set it to 0."
+ },
+ {
+  "id": 418,
+  "text": "Now, combining this with the knowledge we learned earlier,"
+ },
+ {
+  "id": 419,
+  "text": "as you know, for a register,"
+ },
+ {
+  "id": 420,
+  "text": "If we want to assign it a value,"
+ },
+ {
+  "id": 421,
+  "text": "which instruction can we use to do that?"
+ },
+ {
+  "id": 422,
+  "text": "We covered this before."
+ },
+ {
+  "id": 423,
+  "text": "There is a dedicated pseudo-instruction called li."
+ },
+ {
+  "id": 424,
+  "text": "Remember?"
+ },
+ {
+  "id": 425,
+  "text": "What does li mean?"
+ },
+ {
+  "id": 426,
+  "text": "It stands for load immediate."
+ },
+ {
+  "id": 427,
+  "text": "It loads an immediate value."
+ },
+ {
+  "id": 428,
+  "text": "Right?"
+ },
+ {
+  "id": 429,
+  "text": "What's the advantage of using this instruction?"
+ },
+ {
+  "id": 430,
+  "text": "Remember?"
+ },
+ {
+  "id": 431,
+  "text": "When we construct a large number,"
+ },
+ {
+  "id": 432,
+  "text": "it's very complicated."
+ },
+ {
+  "id": 433,
+  "text": "Remember what we covered in the last lecture?"
+ },
+ {
+  "id": 434,
+  "text": "When we write code,"
+ },
+ {
+  "id": 435,
+  "text": "we don't need to construct it specially ourselves."
+ },
+ {
+  "id": 436,
+  "text": "We use a pseudo-instruction."
+ },
+ {
+  "id": 437,
+  "text": "li is a pseudo-instruction."
+ },
+ {
+  "id": 438,
+  "text": "It's handed off to the assembler."
+ },
+ {
+  "id": 439,
+  "text": "And the assembler..."
+ },
+ {
+  "id": 440,
+  "text": "it will help us, based on this actual number,"
+ },
+ {
+  "id": 441,
+  "text": "generate one or more"
+ },
+ {
+  "id": 442,
+  "text": "actual machine instructions,"
+ },
+ {
+  "id": 443,
+  "text": "right?"
+ },
+ {
+  "id": 444,
+  "text": "to construct a number,"
+ },
+ {
+  "id": 445,
+  "text": "what happens if it's a large number?"
+ },
+ {
+  "id": 446,
+  "text": "For a large number, there are several cases again."
+ },
+ {
+  "id": 447,
+  "text": "Remember that?"
+ },
+ {
+  "id": 448,
+  "text": "Recall everything you've learned before."
+ },
+ {
+  "id": 449,
+  "text": "Now, since we're here,"
+ },
+ {
+  "id": 450,
+  "text": "the number is still very simple."
+ },
+ {
+  "id": 451,
+  "text": "It's 0."
+ },
+ {
+  "id": 452,
+  "text": "So we just use li"
+ },
+ {
+  "id": 453,
+  "text": "to define a register"
+ },
+ {
+  "id": 454,
+  "text": "and set it to 0, and that's it."
+ },
+ {
+  "id": 455,
+  "text": "Now below,"
+ },
+ {
+  "id": 456,
+  "text": "this y loop,"
+ },
+ {
+  "id": 457,
+  "text": "at this point,"
+ },
+ {
+  "id": 458,
+  "text": "this involves condition checks."
+ },
+ {
+  "id": 459,
+  "text": "Did everyone see that?"
+ },
+ {
+  "id": 460,
+  "text": "Right? I mean"
+ },
+ {
+  "id": 461,
+  "text": "what is this value being compared against?"
+ },
+ {
+  "id": 462,
+  "text": "What value is this i being compared to?"
+ },
+ {
+  "id": 463,
+  "text": "Under what condition"
+ },
+ {
+  "id": 464,
+  "text": "will it do something?"
+ },
+ {
+  "id": 465,
+  "text": "He understands this concept."
+ },
+ {
+  "id": 466,
+  "text": "So here,"
+ },
+ {
+  "id": 467,
+  "text": "it's essentially just"
+ },
+ {
+  "id": 468,
+  "text": "a conditional comparison."
+ },
+ {
+  "id": 469,
+  "text": "We keep incrementing this i"
+ },
+ {
+  "id": 470,
+  "text": "over and over."
+ },
+ {
+  "id": 471,
+  "text": "What method can we use to implement the increment?"
+ },
+ {
+  "id": 472,
+  "text": "We learned earlier"
+ },
+ {
+  "id": 473,
+  "text": "that basic kind of"
+ },
+ {
+  "id": 474,
+  "text": "arithmetic operation"
+ },
+ {
+  "id": 475,
+  "text": "is just adding one."
+ },
+ {
+  "id": 476,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 477,
+  "text": "It's just add"
+ },
+ {
+  "id": 478,
+  "text": "— the concept of add,"
+ },
+ {
+  "id": 479,
+  "text": "right?"
+ },
+ {
+  "id": 480,
+  "text": "an addi, or just an add"
+ },
+ {
+  "id": 481,
+  "text": "and that's all it takes to implement it."
+ },
+ {
+  "id": 482,
+  "text": "Then,"
+ },
+ {
+  "id": 483,
+  "text": "we keep adding to this i,"
+ },
+ {
+  "id": 484,
+  "text": "and after adding it a certain number of times,"
+ },
+ {
+  "id": 485,
+  "text": "we take it,"
+ },
+ {
+  "id": 486,
+  "text": "and each time we add once,"
+ },
+ {
+  "id": 487,
+  "text": "what number do we compare it with?"
+ },
+ {
+  "id": 488,
+  "text": "We compare it with that,"
+ },
+ {
+  "id": 489,
+  "text": "the value 5."
+ },
+ {
+  "id": 490,
+  "text": "Right?"
+ },
+ {
+  "id": 491,
+  "text": "So where is this 5?"
+ },
+ {
+  "id": 492,
+  "text": "This 5,"
+ },
+ {
+  "id": 493,
+  "text": "we said 5 is a constant."
+ },
+ {
+  "id": 494,
+  "text": "When we compare,"
+ },
+ {
+  "id": 495,
+  "text": "we still have to put this 5"
+ },
+ {
+  "id": 496,
+  "text": "into a register to do the comparison."
+ },
+ {
+  "id": 497,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 498,
+  "text": "So besides"
+ },
+ {
+  "id": 499,
+  "text": "needing to designate a register,"
+ },
+ {
+  "id": 500,
+  "text": "to hold this"
+ },
+ {
+  "id": 501,
+  "text": "besides the variable i,"
+ },
+ {
+  "id": 502,
+  "text": "we also need another register"
+ },
+ {
+  "id": 503,
+  "text": "to hold the constant value 5"
+ },
+ {
+  "id": 504,
+  "text": "because inside the CPU,"
+ },
+ {
+  "id": 505,
+  "text": "it's impossible"
+ },
+ {
+  "id": 506,
+  "text": "to compare directly"
+ },
+ {
+  "id": 507,
+  "text": "from memory,"
+ },
+ {
+  "id": 508,
+  "text": "it has to take the values"
+ },
+ {
+  "id": 509,
+  "text": "and put them into"
+ },
+ {
+  "id": 510,
+  "text": "the registers first,"
+ },
+ {
+  "id": 511,
+  "text": "don't you think?"
+ },
+ {
+  "id": 512,
+  "text": "So for this code,"
+ },
+ {
+  "id": 513,
+  "text": "don't you need at least two registers?"
+ },
+ {
+  "id": 514,
+  "text": "Right?"
+ },
+ {
+  "id": 515,
+  "text": "So,"
+ },
+ {
+  "id": 516,
+  "text": "then what?"
+ },
+ {
+  "id": 517,
+  "text": "Then you take these two registers,"
+ },
+ {
+  "id": 518,
+  "text": "and keep comparing and comparing their values."
+ },
+ {
+  "id": 519,
+  "text": "When the two values"
+ },
+ {
+  "id": 520,
+  "text": "when they're equal"
+ },
+ {
+  "id": 521,
+  "text": "that tells us whether to keep looping"
+ },
+ {
+  "id": 522,
+  "text": "we don't loop anymore"
+ },
+ {
+  "id": 523,
+  "text": "think about it, right?"
+ },
+ {
+  "id": 524,
+  "text": "so, this"
+ },
+ {
+  "id": 525,
+  "text": "when we write it"
+ },
+ {
+  "id": 526,
+  "text": "it's really just about this much code"
+ },
+ {
+  "id": 527,
+  "text": "feel free to take a look"
+ },
+ {
+  "id": 528,
+  "text": "that is to say"
+ },
+ {
+  "id": 529,
+  "text": "combined with our earlier analysis"
+ },
+ {
+  "id": 530,
+  "text": "building on the analysis we just did"
+ },
+ {
+  "id": 531,
+  "text": "first of all"
+ },
+ {
+  "id": 532,
+  "text": "we define two variables"
+ },
+ {
+  "id": 533,
+  "text": "one is 5"
+ },
+ {
+  "id": 534,
+  "text": "X5"
+ },
+ {
+  "id": 535,
+  "text": "we use this X5 thing"
+ },
+ {
+  "id": 536,
+  "text": "this concept of X5"
+ },
+ {
+  "id": 537,
+  "text": "as we covered earlier"
+ },
+ {
+  "id": 538,
+  "text": "in RISC-V, the registers"
+ },
+ {
+  "id": 539,
+  "text": "all have numbers"
+ },
+ {
+  "id": 540,
+  "text": "So how many registers are there in total?"
+ },
+ {
+  "id": 541,
+  "text": "There are 32 registers in total."
+ },
+ {
+  "id": 542,
+  "text": "Right?"
+ },
+ {
+  "id": 543,
+  "text": "32 general-purpose registers."
+ },
+ {
+  "id": 544,
+  "text": "Use whichever one you want."
+ },
+ {
+  "id": 545,
+  "text": "Of course, you can't just use them however you like."
+ },
+ {
+  "id": 546,
+  "text": "In fact, they're not completely free to use."
+ },
+ {
+  "id": 547,
+  "text": "We'll talk about that later."
+ },
+ {
+  "id": 548,
+  "text": "But at this stage,"
+ },
+ {
+  "id": 549,
+  "text": "we can treat them as free to use."
+ },
+ {
+  "id": 550,
+  "text": "Let's use X5."
+ },
+ {
+  "id": 551,
+  "text": "For example, suppose we use X5."
+ },
+ {
+  "id": 552,
+  "text": "Now, with X5,"
+ },
+ {
+  "id": 553,
+  "text": "well, this X5,"
+ },
+ {
+  "id": 554,
+  "text": "in the C code,"
+ },
+ {
+  "id": 555,
+  "text": "actually corresponds to i."
+ },
+ {
+  "id": 556,
+  "text": "Because later, what are we doing with this X5?"
+ },
+ {
+  "id": 557,
+  "text": "We keep adding 1 to it."
+ },
+ {
+  "id": 558,
+  "text": "You can see that, right?"
+ },
+ {
+  "id": 559,
+  "text": "So this 5..."
+ },
+ {
+  "id": 560,
+  "text": "We need to put it into a register,"
+ },
+ {
+  "id": 561,
+  "text": "because when it comes to the final comparison,"
+ },
+ {
+  "id": 562,
+  "text": "the CPU is actually taking two registers"
+ },
+ {
+  "id": 563,
+  "text": "and comparing them."
+ },
+ {
+  "id": 564,
+  "text": "So this 5 also has to go into a register."
+ },
+ {
+  "id": 565,
+  "text": "So we'll define another X6,"
+ },
+ {
+  "id": 566,
+  "text": "and put this 5 in there."
+ },
+ {
+  "id": 567,
+  "text": "So this X6 essentially represents this 5,"
+ },
+ {
+  "id": 568,
+  "text": "right?"
+ },
+ {
+  "id": 569,
+  "text": "And then,"
+ },
+ {
+  "id": 570,
+  "text": "down below we need to repeatedly increment this i,"
+ },
+ {
+  "id": 571,
+  "text": "which means adding 1 to x5."
+ },
+ {
+  "id": 572,
+  "text": "And each time we add one,"
+ },
+ {
+  "id": 573,
+  "text": "as I just said, I do a comparison,"
+ },
+ {
+  "id": 574,
+  "text": "comparing x5 with x6."
+ },
+ {
+  "id": 575,
+  "text": "We just learned this bne earlier,"
+ },
+ {
+  "id": 576,
+  "text": "what does it mean?"
+ },
+ {
+  "id": 577,
+  "text": "It's branch."
+ },
+ {
+  "id": 578,
+  "text": "What does ne mean?"
+ },
+ {
+  "id": 579,
+  "text": "It means not equal, right?"
+ },
+ {
+  "id": 580,
+  "text": "not equal"
+ },
+ {
+  "id": 581,
+  "text": "So if they're not equal,"
+ },
+ {
+  "id": 582,
+  "text": "we just"
+ },
+ {
+  "id": 583,
+  "text": "jump"
+ },
+ {
+  "id": 584,
+  "text": "jump to loop."
+ },
+ {
+  "id": 585,
+  "text": "And loop, as we know, is really just an address."
+ },
+ {
+  "id": 586,
+  "text": "So from here, it actually starts the"
+ },
+ {
+  "id": 587,
+  "text": "increment by 1 for the next round."
+ },
+ {
+  "id": 588,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 589,
+  "text": "Because this x5,"
+ },
+ {
+  "id": 590,
+  "text": "starts out as 0,"
+ },
+ {
+  "id": 591,
+  "text": "after one increment it's 1,"
+ },
+ {
+  "id": 592,
+  "text": "and they're still equal."
+ },
+ {
+  "id": 593,
+  "text": "If they're not equal, we jump."
+ },
+ {
+  "id": 594,
+  "text": "Do you follow what I mean?"
+ },
+ {
+  "id": 595,
+  "text": "Then it increments by 1 again,"
+ },
+ {
+  "id": 596,
+  "text": "and eventually it will reach a point,"
+ },
+ {
+  "id": 597,
+  "text": "when does it become 5?"
+ },
+ {
+  "id": 598,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 599,
+  "text": "And when it becomes 5,"
+ },
+ {
+  "id": 600,
+  "text": "it won't jump"
+ },
+ {
+  "id": 601,
+  "text": "and just continues straight down"
+ },
+ {
+  "id": 602,
+  "text": "and jumps out of that Y loop"
+ },
+ {
+  "id": 603,
+  "text": "so that's essentially the effect"
+ },
+ {
+  "id": 604,
+  "text": "now, what else is there"
+ },
+ {
+  "id": 605,
+  "text": "let's try it out"
+ },
+ {
+  "id": 606,
+  "text": "so here's the thing"
+ },
+ {
+  "id": 607,
+  "text": "we can see that"
+ },
+ {
+  "id": 608,
+  "text": "on our side, we don't write an immediate address"
+ },
+ {
+  "id": 609,
+  "text": "we just write a label"
+ },
+ {
+  "id": 610,
+  "text": "after this loop is compiled and linked"
+ },
+ {
+  "id": 611,
+  "text": "what exactly is the value"
+ },
+ {
+  "id": 612,
+  "text": "we actually don't know"
+ },
+ {
+  "id": 613,
+  "text": "we don't know at the time of writing the code"
+ },
+ {
+  "id": 614,
+  "text": "right?"
+ },
+ {
+  "id": 615,
+  "text": "only the compiler knows"
+ },
+ {
+  "id": 616,
+  "text": "the compiler will finally generate"
+ },
+ {
+  "id": 617,
+  "text": "this instruction,"
+ },
+ {
+  "id": 618,
+  "text": "telling you what this value is"
+ },
+ {
+  "id": 619,
+  "text": "and that's how we achieve our"
+ },
+ {
+  "id": 620,
+  "text": "So that's the final result we end up with."
+ },
+ {
+  "id": 621,
+  "text": "The code is already there."
+ },
+ {
+  "id": 622,
+  "text": "Let's give everyone some time now."
+ },
+ {
+  "id": 623,
+  "text": "Open up that code."
+ },
+ {
+  "id": 624,
+  "text": "Use the environment we set up last time."
+ },
+ {
+  "id": 625,
+  "text": "Let's step through it ourselves in debug mode."
+ },
+ {
+  "id": 626,
+  "text": "and trace through this code."
+ },
+ {
+  "id": 627,
+  "text": "It's very simple."
+ },
+ {
+  "id": 628,
+  "text": "You still remember which make command to use, right?"
+ },
+ {
+  "id": 629,
+  "text": "It's make debug, right?"
+ },
+ {
+  "id": 630,
+  "text": "Step through it."
+ },
+ {
+  "id": 631,
+  "text": "As you step through, take a look at what's happening in between."
+ },
+ {
+  "id": 632,
+  "text": "Watch the changes in those registers I just mentioned."
+ },
+ {
+  "id": 633,
+  "text": "That should help deepen your understanding of this."
+ },
+ {
+  "id": 634,
+  "text": "At the same time,"
+ },
+ {
+  "id": 635,
+  "text": "pay attention to the addresses it jumps to."
+ },
+ {
+  "id": 636,
+  "text": "Let's first try it ourselves quickly."
+ },
+ {
+  "id": 637,
+  "text": "Let me demonstrate that for everyone."
+ },
+ {
+  "id": 638,
+  "text": "It's really simple."
+ },
+ {
+  "id": 639,
+  "text": "Let's take a look together."
+ },
+ {
+  "id": 640,
+  "text": "So,"
+ },
+ {
+  "id": 641,
+  "text": "this code,"
+ },
+ {
+  "id": 642,
+  "text": "it's in this directory."
+ },
+ {
+  "id": 643,
+  "text": "This is very simple,"
+ },
+ {
+  "id": 644,
+  "text": "this assembly syntax,"
+ },
+ {
+  "id": 645,
+  "text": "we won't go into it again."
+ },
+ {
+  "id": 646,
+  "text": "Now let's take another look"
+ },
+ {
+  "id": 647,
+  "text": "at this debugging process."
+ },
+ {
+  "id": 648,
+  "text": "For example, we run make a debug."
+ },
+ {
+  "id": 649,
+  "text": "After make a debug,"
+ },
+ {
+  "id": 650,
+  "text": "here we're actually tracking"
+ },
+ {
+  "id": 651,
+  "text": "the changes in x5, x6, x7,"
+ },
+ {
+  "id": 652,
+  "text": "the changing states of these three registers,"
+ },
+ {
+  "id": 653,
+  "text": "and that's it."
+ },
+ {
+  "id": 654,
+  "text": "Now here we can see,"
+ },
+ {
+  "id": 655,
+  "text": "here is the address of each instruction in the final generated code."
+ },
+ {
+  "id": 656,
+  "text": "Our first instruction actually starts at 0x8000."
+ },
+ {
+  "id": 657,
+  "text": "As for why this value is what it is,"
+ },
+ {
+  "id": 658,
+  "text": "we won't worry about that for now."
+ },
+ {
+  "id": 659,
+  "text": "Let's first take a look at"
+ },
+ {
+  "id": 660,
+  "text": "So after entering this state,"
+ },
+ {
+  "id": 661,
+  "text": "we know the command for single-step execution is which one?"
+ },
+ {
+  "id": 662,
+  "text": "In GDB it's the si command,"
+ },
+ {
+  "id": 663,
+  "text": "the 'si' command, short for Single Instruction."
+ },
+ {
+  "id": 664,
+  "text": "So at the very beginning,"
+ },
+ {
+  "id": 665,
+  "text": "we first take this x5 register"
+ },
+ {
+  "id": 666,
+  "text": "and assign it 0."
+ },
+ {
+  "id": 667,
+  "text": "Now over here,"
+ },
+ {
+  "id": 668,
+  "text": "at the moment it first starts executing,"
+ },
+ {
+  "id": 669,
+  "text": "the value of x5"
+ },
+ {
+  "id": 670,
+  "text": "is a non-zero value."
+ },
+ {
+  "id": 671,
+  "text": "Then after running si,"
+ },
+ {
+  "id": 672,
+  "text": "we check x5 again,"
+ },
+ {
+  "id": 673,
+  "text": "and it has become 0."
+ },
+ {
+  "id": 674,
+  "text": "Right?"
+ },
+ {
+  "id": 675,
+  "text": "It has taken effect."
+ },
+ {
+  "id": 676,
+  "text": "Then the next step,"
+ },
+ {
+  "id": 677,
+  "text": "is to assign x6 the value 5."
+ },
+ {
+  "id": 678,
+  "text": "So we want to watch the value of x6."
+ },
+ {
+  "id": 679,
+  "text": "At the start it is 0."
+ },
+ {
+  "id": 680,
+  "text": "Now if we single-step one more time"
+ },
+ {
+  "id": 681,
+  "text": "we can see that the value of X6"
+ },
+ {
+  "id": 682,
+  "text": "has become 5."
+ },
+ {
+  "id": 683,
+  "text": "Right?"
+ },
+ {
+  "id": 684,
+  "text": "That register is changing there."
+ },
+ {
+  "id": 685,
+  "text": "So next,"
+ },
+ {
+  "id": 686,
+  "text": "we need to take X5"
+ },
+ {
+  "id": 687,
+  "text": "and add 1 to its value."
+ },
+ {
+  "id": 688,
+  "text": "So let's watch the value of X5."
+ },
+ {
+  "id": 689,
+  "text": "After executing this step,"
+ },
+ {
+  "id": 690,
+  "text": "what should it become?"
+ },
+ {
+  "id": 691,
+  "text": "It should become 1."
+ },
+ {
+  "id": 692,
+  "text": "You can see it's now 1 here."
+ },
+ {
+  "id": 693,
+  "text": "Right?"
+ },
+ {
+  "id": 694,
+  "text": "Then the next step,"
+ },
+ {
+  "id": 695,
+  "text": "is the comparison."
+ },
+ {
+  "id": 696,
+  "text": "So at this point,"
+ },
+ {
+  "id": 697,
+  "text": "we know X5 is 11"
+ },
+ {
+  "id": 698,
+  "text": "and X6 is 5."
+ },
+ {
+  "id": 699,
+  "text": "So are the two values equal?"
+ },
+ {
+  "id": 700,
+  "text": "not equal"
+ },
+ {
+  "id": 701,
+  "text": "so if they're not equal, we jump"
+ },
+ {
+  "id": 702,
+  "text": "right?"
+ },
+ {
+  "id": 703,
+  "text": "what this instruction means is"
+ },
+ {
+  "id": 704,
+  "text": "if they're not equal, jump"
+ },
+ {
+  "id": 705,
+  "text": "jump to where?"
+ },
+ {
+  "id": 706,
+  "text": "jump to loop"
+ },
+ {
+  "id": 707,
+  "text": "so where is this loop?"
+ },
+ {
+  "id": 708,
+  "text": "according to our code"
+ },
+ {
+  "id": 709,
+  "text": "we know where loop actually is"
+ },
+ {
+  "id": 710,
+  "text": "loop is returning to the position of the add instruction"
+ },
+ {
+  "id": 711,
+  "text": "right?"
+ },
+ {
+  "id": 712,
+  "text": "what is the address of this add instruction?"
+ },
+ {
+  "id": 713,
+  "text": "just now we saw the address of the add instruction is 0x8008"
+ },
+ {
+  "id": 714,
+  "text": "this address"
+ },
+ {
+  "id": 715,
+  "text": "so if we step one more time"
+ },
+ {
+  "id": 716,
+  "text": "it should jump back"
+ },
+ {
+  "id": 717,
+  "text": "and continue executing"
+ },
+ {
+  "id": 718,
+  "text": "continue with the instruction at 0x8008"
+ },
+ {
+  "id": 719,
+  "text": "you see, the current pc value has already jumped"
+ },
+ {
+  "id": 720,
+  "text": "we're back to this x800, right?"
+ },
+ {
+  "id": 721,
+  "text": "see?"
+ },
+ {
+  "id": 722,
+  "text": "So it keeps going back and forth like this."
+ },
+ {
+  "id": 723,
+  "text": "And then eventually,"
+ },
+ {
+  "id": 724,
+  "text": "our values will become different."
+ },
+ {
+  "id": 725,
+  "text": "Eventually,"
+ },
+ {
+  "id": 726,
+  "text": "we'll see"
+ },
+ {
+  "id": 727,
+  "text": "if we track the value of x5,"
+ },
+ {
+  "id": 728,
+  "text": "it's still 3 right now."
+ },
+ {
+  "id": 729,
+  "text": "Now step again."
+ },
+ {
+  "id": 730,
+  "text": "If we single-step once more,"
+ },
+ {
+  "id": 731,
+  "text": "it becomes 4."
+ },
+ {
+  "id": 732,
+  "text": "Alright, step again."
+ },
+ {
+  "id": 733,
+  "text": "Now you can see"
+ },
+ {
+  "id": 734,
+  "text": "it has become 5 at this point."
+ },
+ {
+  "id": 735,
+  "text": "So 5 and 5,"
+ },
+ {
+  "id": 736,
+  "text": "these two values are now equal."
+ },
+ {
+  "id": 737,
+  "text": "right?"
+ },
+ {
+  "id": 738,
+  "text": "And when they're equal,"
+ },
+ {
+  "id": 739,
+  "text": "this instruction, as you know,"
+ },
+ {
+  "id": 740,
+  "text": "Will it jump back to this position again?"
+ },
+ {
+  "id": 741,
+  "text": "No, it won't."
+ },
+ {
+  "id": 742,
+  "text": "So in that case,"
+ },
+ {
+  "id": 743,
+  "text": "under these circumstances,"
+ },
+ {
+  "id": 744,
+  "text": "if we single-step through it,"
+ },
+ {
+  "id": 745,
+  "text": "you can see it has already continued moving forward,"
+ },
+ {
+  "id": 746,
+  "text": "and it starts going to"
+ },
+ {
+  "id": 747,
+  "text": "the address 10."
+ },
+ {
+  "id": 748,
+  "text": "Now this instruction here,"
+ },
+ {
+  "id": 749,
+  "text": "it's one of ours below,"
+ },
+ {
+  "id": 750,
+  "text": "an infinite loop."
+ },
+ {
+  "id": 751,
+  "text": "This infinite loop is actually there to"
+ },
+ {
+  "id": 752,
+  "text": "prevent our program from exiting,"
+ },
+ {
+  "id": 753,
+  "text": "right?"
+ },
+ {
+  "id": 754,
+  "text": "This is basically"
+ },
+ {
+  "id": 755,
+  "text": "the basic usage of this kind of"
+ },
+ {
+  "id": 756,
+  "text": "branch instruction."
+ },
+ {
+  "id": 757,
+  "text": "You can go back and"
+ },
+ {
+  "id": 758,
+  "text": "look at it together on your own."
+ },
+ {
+  "id": 759,
+  "text": "OK, so this is"
+ },
+ {
+  "id": 760,
+  "text": "Conditional branch instructions."
+ },
+ {
+  "id": 761,
+  "text": "So next,"
+ },
+ {
+  "id": 762,
+  "text": "let's look at the next part,"
+ },
+ {
+  "id": 763,
+  "text": "which is,"
+ },
+ {
+  "id": 764,
+  "text": "this exercise,"
+ },
+ {
+  "id": 765,
+  "text": "you'll go back and do it on your own."
+ },
+ {
+  "id": 766,
+  "text": "I won't walk through it"
+ },
+ {
+  "id": 767,
+  "text": "for everyone here."
+ },
+ {
+  "id": 768,
+  "text": "So next,"
+ },
+ {
+  "id": 769,
+  "text": "what we just covered,"
+ },
+ {
+  "id": 770,
+  "text": "they were called conditional"
+ },
+ {
+  "id": 771,
+  "text": "branches,"
+ },
+ {
+  "id": 772,
+  "text": "meaning they jump based on"
+ },
+ {
+  "id": 773,
+  "text": "evaluating a condition."
+ },
+ {
+  "id": 774,
+  "text": "Now below that,"
+ },
+ {
+  "id": 775,
+  "text": "there's another group"
+ },
+ {
+  "id": 776,
+  "text": "that are also jump instructions."
+ },
+ {
+  "id": 777,
+  "text": "This group of jump instructions,"
+ },
+ {
+  "id": 778,
+  "text": "we call them"
+ },
+ {
+  "id": 779,
+  "text": "unconditional jump instructions."
+ },
+ {
+  "id": 780,
+  "text": "That is,"
+ },
+ {
+  "id": 781,
+  "text": "it does not judge based on a condition,"
+ },
+ {
+  "id": 782,
+  "text": "so to speak."
+ },
+ {
+  "id": 783,
+  "text": "Now, as for these unconditional branch instructions,"
+ },
+ {
+  "id": 784,
+  "text": "there are two in total:"
+ },
+ {
+  "id": 785,
+  "text": "one is called JAL,"
+ },
+ {
+  "id": 786,
+  "text": "and one is called JALR."
+ },
+ {
+  "id": 787,
+  "text": "Let's take a look at them together."
+ },
+ {
+  "id": 788,
+  "text": "So the first one,"
+ },
+ {
+  "id": 789,
+  "text": "is called JAL."
+ },
+ {
+  "id": 790,
+  "text": "JAL stands for Jump and Link."
+ },
+ {
+  "id": 791,
+  "text": "So why,"
+ },
+ {
+  "id": 792,
+  "text": "is there also a concept of Link here?"
+ },
+ {
+  "id": 793,
+  "text": "We'll probably see this later,"
+ },
+ {
+  "id": 794,
+  "text": "that is, where are these instructions,"
+ },
+ {
+  "id": 795,
+  "text": "frequently used?"
+ },
+ {
+  "id": 796,
+  "text": "They're used in function calls."
+ },
+ {
+  "id": 797,
+  "text": "We'll look at the specifics later."
+ },
+ {
+  "id": 798,
+  "text": "Now for an instruction like JAL,"
+ },
+ {
+  "id": 799,
+  "text": "its instruction format,"
+ },
+ {
+  "id": 800,
+  "text": "is called JType."
+ },
+ {
+  "id": 801,
+  "text": "So now you all know"
+ },
+ {
+  "id": 802,
+  "text": "the encoding format we talked about earlier,"
+ },
+ {
+  "id": 803,
+  "text": "where does JType come from?"
+ },
+ {
+  "id": 804,
+  "text": "The J stands for jump."
+ },
+ {
+  "id": 805,
+  "text": "It means jump."
+ },
+ {
+  "id": 806,
+  "text": "And it,"
+ },
+ {
+  "id": 807,
+  "text": "this encoding format,"
+ },
+ {
+  "id": 808,
+  "text": "as you can see, there's an opcode,"
+ },
+ {
+  "id": 809,
+  "text": "then an rd,"
+ },
+ {
+  "id": 810,
+  "text": "and after that,"
+ },
+ {
+  "id": 811,
+  "text": "it holds an immediate value."
+ },
+ {
+  "id": 812,
+  "text": "This immediate value,"
+ },
+ {
+  "id": 813,
+  "text": "is roughly,"
+ },
+ {
+  "id": 814,
+  "text": "it's about 20 bits, 20 bits."
+ },
+ {
+  "id": 815,
+  "text": "It takes up 20 bits,"
+ },
+ {
+  "id": 816,
+  "text": "which is a pretty large range."
+ },
+ {
+  "id": 817,
+  "text": "It is used for calling subroutines,"
+ },
+ {
+  "id": 818,
+  "text": "as we've mentioned before."
+ },
+ {
+  "id": 819,
+  "text": "And then,"
+ },
+ {
+  "id": 820,
+  "text": "Now, the key here is how this 20-bit"
+ },
+ {
+  "id": 821,
+  "text": "immediate is used."
+ },
+ {
+  "id": 822,
+  "text": "It actually determines"
+ },
+ {
+  "id": 823,
+  "text": "the address we jump to,"
+ },
+ {
+  "id": 824,
+  "text": "the target address"
+ },
+ {
+  "id": 825,
+  "text": "It determines the final"
+ },
+ {
+  "id": 826,
+  "text": "target address of our jump."
+ },
+ {
+  "id": 827,
+  "text": "Now, the calculation method"
+ },
+ {
+  "id": 828,
+  "text": "is listed here for you."
+ },
+ {
+  "id": 829,
+  "text": "Please take a careful look"
+ },
+ {
+  "id": 830,
+  "text": "and understand this,"
+ },
+ {
+  "id": 831,
+  "text": "because it will help you"
+ },
+ {
+  "id": 832,
+  "text": "understand the execution process"
+ },
+ {
+  "id": 833,
+  "text": "of programs later on."
+ },
+ {
+  "id": 834,
+  "text": "Pay attention to this."
+ },
+ {
+  "id": 835,
+  "text": "It actually takes this"
+ },
+ {
+  "id": 836,
+  "text": "immediate value,"
+ },
+ {
+  "id": 837,
+  "text": "which is 20 bits in total,"
+ },
+ {
+  "id": 838,
+  "text": "and multiplies this 20-bit-wide"
+ },
+ {
+  "id": 839,
+  "text": "immediate by 2"
+ },
+ {
+  "id": 840,
+  "text": "Why multiply by 2?"
+ },
+ {
+  "id": 841,
+  "text": "This is the same as before."
+ },
+ {
+  "id": 842,
+  "text": "The reason is the same as before."
+ },
+ {
+  "id": 843,
+  "text": "It means"
+ },
+ {
+  "id": 844,
+  "text": "look at this encoding,"
+ },
+ {
+  "id": 845,
+  "text": "it goes from 1 to 20,"
+ },
+ {
+  "id": 846,
+  "text": "not starting from 0."
+ },
+ {
+  "id": 847,
+  "text": "Because as we mentioned earlier,"
+ },
+ {
+  "id": 848,
+  "text": "since all instructions are"
+ },
+ {
+  "id": 849,
+  "text": "definitely at multiples of 2,"
+ },
+ {
+  "id": 850,
+  "text": "the address of an instruction is definitely a multiple of 2,"
+ },
+ {
+  "id": 851,
+  "text": "so the last bit is always 0."
+ },
+ {
+  "id": 852,
+  "text": "There's no need to encode it,"
+ },
+ {
+  "id": 853,
+  "text": "so we just leave it out."
+ },
+ {
+  "id": 854,
+  "text": "So this,"
+ },
+ {
+  "id": 855,
+  "text": "that's why we multiply by 2."
+ },
+ {
+  "id": 856,
+  "text": "After multiplying by 2,"
+ },
+ {
+  "id": 857,
+  "text": "it's still sign-extended the same way."
+ },
+ {
+  "id": 858,
+  "text": "So it can"
+ },
+ {
+  "id": 859,
+  "text": "store what is actually a signed number in here."
+ },
+ {
+  "id": 860,
+  "text": "This tells us the jump can be a forward or backward jump."
+ },
+ {
+  "id": 861,
+  "text": "It can jump forward, and it can also jump backward."
+ },
+ {
+  "id": 862,
+  "text": "So what is the jump based on?"
+ },
+ {
+  "id": 863,
+  "text": "Actually, it's still the same thing — the jump is based on the PC value."
+ },
+ {
+  "id": 864,
+  "text": "That is to say, the value it finally computes"
+ },
+ {
+  "id": 865,
+  "text": "The value it finally computes gets added to the current PC value,"
+ },
+ {
+  "id": 866,
+  "text": "and that gives the final result."
+ },
+ {
+  "id": 867,
+  "text": "This is what's called a PC-based jump."
+ },
+ {
+  "id": 868,
+  "text": "Now, since its range is relatively large,"
+ },
+ {
+  "id": 869,
+  "text": "the branch instruction we looked at earlier,"
+ },
+ {
+  "id": 870,
+  "text": "it only has about a dozen or so bits, right?"
+ },
+ {
+  "id": 871,
+  "text": "A dozen or so bits."
+ },
+ {
+  "id": 872,
+  "text": "I just looked at it and forgot."
+ },
+ {
+  "id": 873,
+  "text": "It's 12 bits."
+ },
+ {
+  "id": 874,
+  "text": "So this one,"
+ },
+ {
+  "id": 875,
+  "text": "over here on this side,"
+ },
+ {
+  "id": 876,
+  "text": "there are 20 bits."
+ },
+ {
+  "id": 877,
+  "text": "So 20 bits."
+ },
+ {
+  "id": 878,
+  "text": "It can express a range that's a bit larger."
+ },
+ {
+  "id": 879,
+  "text": "Earlier, it could only jump within a 4K range."
+ },
+ {
+  "id": 880,
+  "text": "This way, it can jump within a range of one megabyte."
+ },
+ {
+  "id": 881,
+  "text": "jump within a range of one megabyte."
+ },
+ {
+  "id": 882,
+  "text": "So this is how its address is calculated."
+ },
+ {
+  "id": 883,
+  "text": "Now there's one more."
+ },
+ {
+  "id": 884,
+  "text": "It's a little different from the previous command."
+ },
+ {
+  "id": 885,
+  "text": "That is, it has an rd here."
+ },
+ {
+  "id": 886,
+  "text": "So what does rd mean?"
+ },
+ {
+  "id": 887,
+  "text": "It means that when this instruction executes,"
+ },
+ {
+  "id": 888,
+  "text": "besides jumping"
+ },
+ {
+  "id": 889,
+  "text": "to a new address"
+ },
+ {
+  "id": 890,
+  "text": "and continuing to run from there,"
+ },
+ {
+  "id": 891,
+  "text": "it also takes the instruction right after this JL"
+ },
+ {
+  "id": 892,
+  "text": "that is,"
+ },
+ {
+  "id": 893,
+  "text": "that is,"
+ },
+ {
+  "id": 894,
+  "text": "that is,"
+ },
+ {
+  "id": 895,
+  "text": "suppose this is a JL instruction."
+ },
+ {
+  "id": 896,
+  "text": "Then the JL's"
+ },
+ {
+  "id": 897,
+  "text": "suppose this is a JL instruction."
+ },
+ {
+  "id": 898,
+  "text": "Then there might be another"
+ },
+ {
+  "id": 899,
+  "text": "instruction below it."
+ },
+ {
+  "id": 900,
+  "text": "It takes the address of this instruction"
+ },
+ {
+  "id": 901,
+  "text": "and writes it into RD."
+ },
+ {
+  "id": 902,
+  "text": "As for what RD actually is,"
+ },
+ {
+  "id": 903,
+  "text": "that's up to you to decide."
+ },
+ {
+  "id": 904,
+  "text": "It writes it into there,"
+ },
+ {
+  "id": 905,
+  "text": "saved as a return address."
+ },
+ {
+  "id": 906,
+  "text": "So why does it put it in here?"
+ },
+ {
+  "id": 907,
+  "text": "Why does it put it in this register?"
+ },
+ {
+  "id": 908,
+  "text": "What exactly is it used for?"
+ },
+ {
+  "id": 909,
+  "text": "We'll see that later,"
+ },
+ {
+  "id": 910,
+  "text": "and I'll explain it to you."
+ },
+ {
+  "id": 911,
+  "text": "In other words, it takes this"
+ },
+ {
+  "id": 912,
+  "text": "Actually, at this point,"
+ },
+ {
+  "id": 913,
+  "text": "you can probably already guess"
+ },
+ {
+  "id": 914,
+  "text": "what it's used for."
+ },
+ {
+  "id": 915,
+  "text": "Think about it this way:"
+ },
+ {
+  "id": 916,
+  "text": "suppose the goal of this instruction"
+ },
+ {
+  "id": 917,
+  "text": "is to jump to a new function to execute."
+ },
+ {
+  "id": 918,
+  "text": "Then after this function finishes executing,"
+ },
+ {
+  "id": 919,
+  "text": "don't we need to come back?"
+ },
+ {
+  "id": 920,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 921,
+  "text": "When it comes back, what does it do?"
+ },
+ {
+  "id": 922,
+  "text": "When it comes back, isn't it going to execute"
+ },
+ {
+  "id": 923,
+  "text": "the next instruction?"
+ },
+ {
+  "id": 924,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 925,
+  "text": "So it takes this"
+ },
+ {
+  "id": 926,
+  "text": "next instruction address,"
+ },
+ {
+  "id": 927,
+  "text": "that is, it saves the address of this instruction in this place,"
+ },
+ {
+  "id": 928,
+  "text": "and the purpose is to let this function eventually return back."
+ },
+ {
+  "id": 929,
+  "text": "That's the idea."
+ },
+ {
+  "id": 930,
+  "text": "So we say the purpose of this unconditional jump instruction"
+ },
+ {
+  "id": 931,
+  "text": "is usually to call a subroutine,"
+ },
+ {
+  "id": 932,
+  "text": "and that's exactly where the subfunction is reflected."
+ },
+ {
+  "id": 933,
+  "text": "So as for this RD,"
+ },
+ {
+  "id": 934,
+  "text": "let me go over what I just said so you can understand it again."
+ },
+ {
+  "id": 935,
+  "text": "Now, in actual programming,"
+ },
+ {
+  "id": 936,
+  "text": "it's the same thing—that is,"
+ },
+ {
+  "id": 937,
+  "text": "we also don't write this address directly in the code."
+ },
+ {
+  "id": 938,
+  "text": "We also write a label,"
+ },
+ {
+  "id": 939,
+  "text": "and the compiler generates it in the end."
+ },
+ {
+  "id": 940,
+  "text": "I won't explain that here."
+ },
+ {
+  "id": 941,
+  "text": "So this is an instruction called JAL."
+ },
+ {
+  "id": 942,
+  "text": "And it corresponds to this instruction here."
+ },
+ {
+  "id": 943,
+  "text": "There is also another instruction called JALR."
+ },
+ {
+  "id": 944,
+  "text": "The only difference between these two instructions"
+ },
+ {
+  "id": 945,
+  "text": "is that, as we know, this JAL"
+ },
+ {
+  "id": 946,
+  "text": "basically means it takes the target address"
+ },
+ {
+  "id": 947,
+  "text": "it takes the target address it wants to jump to"
+ },
+ {
+  "id": 948,
+  "text": "and encodes it directly inside the instruction."
+ },
+ {
+  "id": 949,
+  "text": "So the target address is encoded directly in there."
+ },
+ {
+  "id": 950,
+  "text": "As for JALR,"
+ },
+ {
+  "id": 951,
+  "text": "it actually"
+ },
+ {
+  "id": 952,
+  "text": "is also jump and link,"
+ },
+ {
+  "id": 953,
+  "text": "but"
+ },
+ {
+  "id": 954,
+  "text": "the R here"
+ },
+ {
+  "id": 955,
+  "text": "stands for register."
+ },
+ {
+  "id": 956,
+  "text": "That is to say,"
+ },
+ {
+  "id": 957,
+  "text": "it actually takes this"
+ },
+ {
+  "id": 958,
+  "text": "target address it wants to jump to"
+ },
+ {
+  "id": 959,
+  "text": "and stores it in a register."
+ },
+ {
+  "id": 960,
+  "text": "And then,"
+ },
+ {
+  "id": 961,
+  "text": "it takes the target address"
+ },
+ {
+  "id": 962,
+  "text": "out of this register"
+ },
+ {
+  "id": 963,
+  "text": "and performs the calculation."
+ },
+ {
+  "id": 964,
+  "text": "Note this carefully."
+ },
+ {
+  "id": 965,
+  "text": "So that's why it's called JALR."
+ },
+ {
+  "id": 966,
+  "text": "This one,"
+ },
+ {
+  "id": 967,
+  "text": "so,"
+ },
+ {
+  "id": 968,
+  "text": "the difference between it and that JAL"
+ },
+ {
+  "id": 969,
+  "text": "instruction, JAL,"
+ },
+ {
+  "id": 970,
+  "text": "the difference is,"
+ },
+ {
+  "id": 971,
+  "text": "first of all, its encoding format is not quite the same."
+ },
+ {
+  "id": 972,
+  "text": "It uses the I-type we talked about earlier,"
+ },
+ {
+  "id": 973,
+  "text": "which is a kind of..."
+ },
+ {
+  "id": 974,
+  "text": "When did we first come across this I-type?"
+ },
+ {
+  "id": 975,
+  "text": "It was with that addi"
+ },
+ {
+  "id": 976,
+  "text": "instruction that we encountered it,"
+ },
+ {
+  "id": 977,
+  "text": "right?"
+ },
+ {
+  "id": 978,
+  "text": "It uses an I-type,"
+ },
+ {
+  "id": 979,
+  "text": "not a J-type."
+ },
+ {
+  "id": 980,
+  "text": "And it's also used for calling a subroutine."
+ },
+ {
+  "id": 981,
+  "text": "That goes without saying."
+ },
+ {
+  "id": 982,
+  "text": "So the key point is this:"
+ },
+ {
+  "id": 983,
+  "text": "when it makes the jump,"
+ },
+ {
+  "id": 984,
+  "text": "how is the target address calculated?"
+ },
+ {
+  "id": 985,
+  "text": "Now, as for the calculation method,"
+ },
+ {
+  "id": 986,
+  "text": "take a careful look, everyone."
+ },
+ {
+  "id": 987,
+  "text": "First of all, the RSE here,"
+ },
+ {
+  "id": 988,
+  "text": "that actually corresponds to what we call the register."
+ },
+ {
+  "id": 989,
+  "text": "That's the RSE."
+ },
+ {
+  "id": 990,
+  "text": "Since it uses I-type encoding,"
+ },
+ {
+  "id": 991,
+  "text": "it also has a field that holds an immediate number."
+ },
+ {
+  "id": 992,
+  "text": "It's just that the range of this immediate number is a bit smaller."
+ },
+ {
+  "id": 993,
+  "text": "The JAL earlier used 20 bits."
+ },
+ {
+  "id": 994,
+  "text": "Here, part of it is used up by RSE,"
+ },
+ {
+  "id": 995,
+  "text": "so it can only use 12 bits here."
+ },
+ {
+  "id": 996,
+  "text": "Then it takes this 12-bit immediate number,"
+ },
+ {
+  "id": 997,
+  "text": "and sign-extends it."
+ },
+ {
+  "id": 998,
+  "text": "That doesn't need any further explanation."
+ },
+ {
+  "id": 999,
+  "text": "Sign extension means it can still jump forward or backward."
+ },
+ {
+  "id": 1000,
+  "text": "So the sign-extended value,"
+ },
+ {
+  "id": 1001,
+  "text": "added to the value in the register,"
+ },
+ {
+  "id": 1002,
+  "text": "that is, the sum of these two things"
+ },
+ {
+  "id": 1003,
+  "text": "is the difference from what we saw before."
+ },
+ {
+  "id": 1004,
+  "text": "It is based on a register"
+ },
+ {
+  "id": 1005,
+  "text": "to compute the final address."
+ },
+ {
+  "id": 1006,
+  "text": "After adding these values to get the result,"
+ },
+ {
+  "id": 1007,
+  "text": "then the lowest bit is set to 0."
+ },
+ {
+  "id": 1008,
+  "text": "This is still the same as before,"
+ },
+ {
+  "id": 1009,
+  "text": "that is, ensuring two-byte alignment."
+ },
+ {
+  "id": 1010,
+  "text": "So when it jumps,"
+ },
+ {
+  "id": 1011,
+  "text": "unlike the previous instruction,"
+ },
+ {
+  "id": 1012,
+  "text": "which we know jumps forward or backward based on the PC value,"
+ },
+ {
+  "id": 1013,
+  "text": "here it jumps forward or backward based on the register."
+ },
+ {
+  "id": 1014,
+  "text": "That is where the difference lies."
+ },
+ {
+  "id": 1015,
+  "text": "So this is its method for computing the jump target address."
+ },
+ {
+  "id": 1016,
+  "text": "Now, similarly,"
+ },
+ {
+  "id": 1017,
+  "text": "in order to support function calls and returns,"
+ },
+ {
+  "id": 1018,
+  "text": "it still needs to write the address of the next instruction"
+ },
+ {
+  "id": 1019,
+  "text": "into rd."
+ },
+ {
+  "id": 1020,
+  "text": "And then when that subroutine returns,"
+ },
+ {
+  "id": 1021,
+  "text": "it will use the value in this rd"
+ },
+ {
+  "id": 1022,
+  "text": "to jump back,"
+ },
+ {
+  "id": 1023,
+  "text": "jumping to the next instruction and continuing execution"
+ },
+ {
+  "id": 1024,
+  "text": "right?"
+ },
+ {
+  "id": 1025,
+  "text": "This is the same as JAL."
+ },
+ {
+  "id": 1026,
+  "text": "So these two instructions,"
+ },
+ {
+  "id": 1027,
+  "text": "from the introduction and description I just gave you,"
+ },
+ {
+  "id": 1028,
+  "text": "you can see"
+ },
+ {
+  "id": 1029,
+  "text": "that JAL and JLR"
+ },
+ {
+  "id": 1030,
+  "text": "are a bit of a mouthful to say,"
+ },
+ {
+  "id": 1031,
+  "text": "a bit of a mouthful,"
+ },
+ {
+  "id": 1032,
+  "text": "but just understand what they mean."
+ },
+ {
+  "id": 1033,
+  "text": "Jump and link,"
+ },
+ {
+  "id": 1034,
+  "text": "jump and link."
+ },
+ {
+  "id": 1035,
+  "text": "They are both instances specifically designed for our function calls."
+ },
+ {
+  "id": 1036,
+  "text": "Keep that in mind."
+ },
+ {
+  "id": 1037,
+  "text": "As for the branch and conditional jump we saw earlier,"
+ },
+ {
+  "id": 1038,
+  "text": "they are actually designed for writing if-else in our code,"
+ },
+ {
+  "id": 1039,
+  "text": "for that kind of logic."
+ },
+ {
+  "id": 1040,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 1041,
+  "text": "So that's all I'll say about the concepts."
+ },
+ {
+  "id": 1042,
+  "text": "Next, let's go through some examples"
+ },
+ {
+  "id": 1043,
+  "text": "to get a feel for"
+ },
+ {
+  "id": 1044,
+  "text": "how these instructions are used."
+ },
+ {
+  "id": 1045,
+  "text": "Now, for this example,"
+ },
+ {
+  "id": 1046,
+  "text": "what we've actually provided for you is"
+ },
+ {
+  "id": 1047,
+  "text": "a piece of code called JALR."
+ },
+ {
+  "id": 1048,
+  "text": "Under that directory,"
+ },
+ {
+  "id": 1049,
+  "text": "let's take a look."
+ },
+ {
+  "id": 1050,
+  "text": "The one in here,"
+ },
+ {
+  "id": 1051,
+  "text": "the example inside JALR,"
+ },
+ {
+  "id": 1052,
+  "text": "is actually implementing"
+ },
+ {
+  "id": 1053,
+  "text": "something equivalent to a piece of our C code,"
+ },
+ {
+  "id": 1054,
+  "text": "this chunk of code here."
+ },
+ {
+  "id": 1055,
+  "text": "Because by default, that is,"
+ },
+ {
+  "id": 1056,
+  "text": "for this course,"
+ },
+ {
+  "id": 1057,
+  "text": "we assume you're already familiar with C,"
+ },
+ {
+  "id": 1058,
+  "text": "but maybe not so familiar with assembly,"
+ },
+ {
+  "id": 1059,
+  "text": "so we often go the other way around."
+ },
+ {
+  "id": 1060,
+  "text": "First, I'll explain it to you in"
+ },
+ {
+  "id": 1061,
+  "text": "C,"
+ },
+ {
+  "id": 1062,
+  "text": "what function we want to implement,"
+ },
+ {
+  "id": 1063,
+  "text": "and then"
+ },
+ {
+  "id": 1064,
+  "text": "we'll convert it"
+ },
+ {
+  "id": 1065,
+  "text": "into assembly."
+ },
+ {
+  "id": 1066,
+  "text": "That's the learning approach."
+ },
+ {
+  "id": 1067,
+  "text": "Let's take a look at"
+ },
+ {
+  "id": 1068,
+  "text": "this function."
+ },
+ {
+  "id": 1069,
+  "text": "You can see this piece of code."
+ },
+ {
+  "id": 1070,
+  "text": "What does it mean?"
+ },
+ {
+  "id": 1071,
+  "text": "It means that here"
+ },
+ {
+  "id": 1072,
+  "text": "we've defined two global variables,"
+ },
+ {
+  "id": 1073,
+  "text": "right?"
+ },
+ {
+  "id": 1074,
+  "text": "Now, these two global variables,"
+ },
+ {
+  "id": 1075,
+  "text": "written out here,"
+ },
+ {
+  "id": 1076,
+  "text": "means that in the code,"
+ },
+ {
+  "id": 1077,
+  "text": "we'll generally need to use two registers,"
+ },
+ {
+  "id": 1078,
+  "text": "right?"
+ },
+ {
+  "id": 1079,
+  "text": "to store these two values."
+ },
+ {
+  "id": 1080,
+  "text": "So the execution of the function starts here,"
+ },
+ {
+  "id": 1081,
+  "text": "because we named this function start,"
+ },
+ {
+  "id": 1082,
+  "text": "which is basically like what we had earlier,"
+ },
+ {
+  "id": 1083,
+  "text": "that start label we used in so many of our exercises,"
+ },
+ {
+  "id": 1084,
+  "text": "right?"
+ },
+ {
+  "id": 1085,
+  "text": "It's essentially the starting position of our instruction execution,"
+ },
+ {
+  "id": 1086,
+  "text": "the starting address."
+ },
+ {
+  "id": 1087,
+  "text": "Execution begins from here."
+ },
+ {
+  "id": 1088,
+  "text": "Now, during this execution,"
+ },
+ {
+  "id": 1089,
+  "text": "you can see it will go and call a function called sum."
+ },
+ {
+  "id": 1090,
+  "text": "So this is calling a function,"
+ },
+ {
+  "id": 1091,
+  "text": "what we call a function call in C."
+ },
+ {
+  "id": 1092,
+  "text": "Now, as for this function call, by now you should know,"
+ },
+ {
+  "id": 1093,
+  "text": "it must be using which instruction we learned earlier?"
+ },
+ {
+  "id": 1094,
+  "text": "It must be either JAL or JAL, right?"
+ },
+ {
+  "id": 1095,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1096,
+  "text": "You can use either one,"
+ },
+ {
+  "id": 1097,
+  "text": "that is, the JAL or the JALR instruction,"
+ },
+ {
+  "id": 1098,
+  "text": "the Jump and Link instruction."
+ },
+ {
+  "id": 1099,
+  "text": "So after calling this function,"
+ },
+ {
+  "id": 1100,
+  "text": "We know that as this program executes,"
+ },
+ {
+  "id": 1101,
+  "text": "this logic will definitely jump to this place,"
+ },
+ {
+  "id": 1102,
+  "text": "and then execute this."
+ },
+ {
+  "id": 1103,
+  "text": "What it actually executes is secondary."
+ },
+ {
+  "id": 1104,
+  "text": "So, say it executes"
+ },
+ {
+  "id": 1105,
+  "text": "something like A plus B."
+ },
+ {
+  "id": 1106,
+  "text": "So what's the key here?"
+ },
+ {
+  "id": 1107,
+  "text": "The key is,"
+ },
+ {
+  "id": 1108,
+  "text": "after this function finishes executing,"
+ },
+ {
+  "id": 1109,
+  "text": "as we know in C,"
+ },
+ {
+  "id": 1110,
+  "text": "after a function finishes executing,"
+ },
+ {
+  "id": 1111,
+  "text": "to return from it,"
+ },
+ {
+  "id": 1112,
+  "text": "what statement do we usually call?"
+ },
+ {
+  "id": 1113,
+  "text": "We call a return."
+ },
+ {
+  "id": 1114,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 1115,
+  "text": "So, return—"
+ },
+ {
+  "id": 1116,
+  "text": "it needs to know now,"
+ },
+ {
+  "id": 1117,
+  "text": "what does return actually mean?"
+ },
+ {
+  "id": 1118,
+  "text": "In the end, this return statement,"
+ },
+ {
+  "id": 1119,
+  "text": "actually still corresponds to"
+ },
+ {
+  "id": 1120,
+  "text": "For a JALR instruction,"
+ },
+ {
+  "id": 1121,
+  "text": "let's take a look at"
+ },
+ {
+  "id": 1122,
+  "text": "the rough implementation process,"
+ },
+ {
+  "id": 1123,
+  "text": "what's roughly involved."
+ },
+ {
+  "id": 1124,
+  "text": "First,"
+ },
+ {
+  "id": 1125,
+  "text": "if we call the SUM function,"
+ },
+ {
+  "id": 1126,
+  "text": "we can actually write it as a single instruction,"
+ },
+ {
+  "id": 1127,
+  "text": "called JALX5SUM."
+ },
+ {
+  "id": 1128,
+  "text": "Building on what we just described,"
+ },
+ {
+  "id": 1129,
+  "text": "what did we just say?"
+ },
+ {
+  "id": 1130,
+  "text": "That is, for the target address you want to jump to,"
+ },
+ {
+  "id": 1131,
+  "text": "we don't need to write an immediate value."
+ },
+ {
+  "id": 1132,
+  "text": "We actually just need to take this label,"
+ },
+ {
+  "id": 1133,
+  "text": "which is really just a"
+ },
+ {
+  "id": 1134,
+  "text": "so-called label, which is just the name of a function,"
+ },
+ {
+  "id": 1135,
+  "text": "and write it out and hand it over."
+ },
+ {
+  "id": 1136,
+  "text": "And once we hand it over,"
+ },
+ {
+  "id": 1137,
+  "text": "the compiler and the linker"
+ },
+ {
+  "id": 1138,
+  "text": "will compute the actual target address for us."
+ },
+ {
+  "id": 1139,
+  "text": "And then..."
+ },
+ {
+  "id": 1140,
+  "text": "Take note of this"
+ },
+ {
+  "id": 1141,
+  "text": "This JAL instruction"
+ },
+ {
+  "id": 1142,
+  "text": "has an rd register"
+ },
+ {
+  "id": 1143,
+  "text": "This rd register"
+ },
+ {
+  "id": 1144,
+  "text": "as we just mentioned"
+ },
+ {
+  "id": 1145,
+  "text": "what is it used to hold?"
+ },
+ {
+  "id": 1146,
+  "text": "It holds"
+ },
+ {
+  "id": 1147,
+  "text": "for this JAL instruction,"
+ },
+ {
+  "id": 1148,
+  "text": "the address of the next instruction"
+ },
+ {
+  "id": 1149,
+  "text": "is placed here"
+ },
+ {
+  "id": 1150,
+  "text": "So that's why I marked this in red here"
+ },
+ {
+  "id": 1151,
+  "text": "Basically, you can imagine it this way"
+ },
+ {
+  "id": 1152,
+  "text": "Just imagine"
+ },
+ {
+  "id": 1153,
+  "text": "that after we finish calling"
+ },
+ {
+  "id": 1154,
+  "text": "the SUM function"
+ },
+ {
+  "id": 1155,
+  "text": "there is definitely another instruction after it"
+ },
+ {
+  "id": 1156,
+  "text": "and this instruction here"
+ },
+ {
+  "id": 1157,
+  "text": "the address of this instruction"
+ },
+ {
+  "id": 1158,
+  "text": "it will store it into"
+ },
+ {
+  "id": 1159,
+  "text": "the X5 register"
+ },
+ {
+  "id": 1160,
+  "text": "So everyone,"
+ },
+ {
+  "id": 1161,
+  "text": "what is it stored here for?"
+ },
+ {
+  "id": 1162,
+  "text": "What is it used for?"
+ },
+ {
+  "id": 1163,
+  "text": "This brings us back to what we just talked about,"
+ },
+ {
+  "id": 1164,
+  "text": "this return."
+ },
+ {
+  "id": 1165,
+  "text": "Now, this return statement,"
+ },
+ {
+  "id": 1166,
+  "text": "it actually corresponds to,"
+ },
+ {
+  "id": 1167,
+  "text": "that is, it is called,"
+ },
+ {
+  "id": 1168,
+  "text": "we can translate it into,"
+ },
+ {
+  "id": 1169,
+  "text": "the JALR instruction."
+ },
+ {
+  "id": 1170,
+  "text": "As for the JALR instruction,"
+ },
+ {
+  "id": 1171,
+  "text": "as we mentioned earlier,"
+ },
+ {
+  "id": 1172,
+  "text": "what is its purpose?"
+ },
+ {
+  "id": 1173,
+  "text": "Based on the way it's written here,"
+ },
+ {
+  "id": 1174,
+  "text": "let's understand,"
+ },
+ {
+  "id": 1175,
+  "text": "in practice,"
+ },
+ {
+  "id": 1176,
+  "text": "how does it compute the target address?"
+ },
+ {
+  "id": 1177,
+  "text": "It uses 0x5."
+ },
+ {
+  "id": 1178,
+  "text": "What does 0x5 mean?"
+ },
+ {
+  "id": 1179,
+  "text": "It means it's based on the value in x5."
+ },
+ {
+  "id": 1180,
+  "text": "add an immediate value."
+ },
+ {
+  "id": 1181,
+  "text": "This immediate value is simply 0."
+ },
+ {
+  "id": 1182,
+  "text": "So, in that case,"
+ },
+ {
+  "id": 1183,
+  "text": "the target address it jumps to,"
+ },
+ {
+  "id": 1184,
+  "text": "is actually equal to x5."
+ },
+ {
+  "id": 1185,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1186,
+  "text": "Because the way it computes the target address,"
+ },
+ {
+  "id": 1187,
+  "text": "is x5 plus 0,"
+ },
+ {
+  "id": 1188,
+  "text": "and that's how it gets it."
+ },
+ {
+  "id": 1189,
+  "text": "Now, as you all know, x5,"
+ },
+ {
+  "id": 1190,
+  "text": "this statement here is executed first."
+ },
+ {
+  "id": 1191,
+  "text": "When it executes,"
+ },
+ {
+  "id": 1192,
+  "text": "it puts a value into x5."
+ },
+ {
+  "id": 1193,
+  "text": "What value does it put in?"
+ },
+ {
+  "id": 1194,
+  "text": "It puts the address"
+ },
+ {
+  "id": 1195,
+  "text": "of the next instruction over here."
+ },
+ {
+  "id": 1196,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1197,
+  "text": "So when you add 0 here,"
+ },
+ {
+  "id": 1198,
+  "text": "the address it actually jumps to,"
+ },
+ {
+  "id": 1199,
+  "text": "doesn't it end up jumping back over here again?"
+ },
+ {
+  "id": 1200,
+  "text": "Think about it, everyone."
+ },
+ {
+  "id": 1201,
+  "text": "Is that what it means?"
+ },
+ {
+  "id": 1202,
+  "text": "Can you figure it out?"
+ },
+ {
+  "id": 1203,
+  "text": "Everyone needs to get this straight."
+ },
+ {
+  "id": 1204,
+  "text": "With these two instructions, there's basically no problem."
+ },
+ {
+  "id": 1205,
+  "text": "That is, we use this register,"
+ },
+ {
+  "id": 1206,
+  "text": "the register x5,"
+ },
+ {
+  "id": 1207,
+  "text": "and when it jumps over here,"
+ },
+ {
+  "id": 1208,
+  "text": "it actually does one more thing,"
+ },
+ {
+  "id": 1209,
+  "text": "namely, it takes the address of its next instruction"
+ },
+ {
+  "id": 1210,
+  "text": "and saves it into x5."
+ },
+ {
+  "id": 1211,
+  "text": "It stores it there."
+ },
+ {
+  "id": 1212,
+  "text": "What is it stored there for?"
+ },
+ {
+  "id": 1213,
+  "text": "It's for the return."
+ },
+ {
+  "id": 1214,
+  "text": "You see what I mean,"
+ },
+ {
+  "id": 1215,
+  "text": "it's for its use."
+ },
+ {
+  "id": 1216,
+  "text": "When it uses it,"
+ },
+ {
+  "id": 1217,
+  "text": "it uses jr,"
+ },
+ {
+  "id": 1218,
+  "text": "and based on the value of x5,"
+ },
+ {
+  "id": 1219,
+  "text": "it computes the return address."
+ },
+ {
+  "id": 1220,
+  "text": "And that's the return address."
+ },
+ {
+  "id": 1221,
+  "text": "So it jumps back again."
+ },
+ {
+  "id": 1222,
+  "text": "So the whole process is this:"
+ },
+ {
+  "id": 1223,
+  "text": "jump up and execute,"
+ },
+ {
+  "id": 1224,
+  "text": "then return and jump back."
+ },
+ {
+  "id": 1225,
+  "text": "It makes sense, right?"
+ },
+ {
+  "id": 1226,
+  "text": "This is how we implement"
+ },
+ {
+  "id": 1227,
+  "text": "the process of a function call and return."
+ },
+ {
+  "id": 1228,
+  "text": "You can see that, right?"
+ },
+ {
+  "id": 1229,
+  "text": "So everyone, take this code"
+ },
+ {
+  "id": 1230,
+  "text": "and combine it with what we covered last time,"
+ },
+ {
+  "id": 1231,
+  "text": "and go over it yourselves."
+ },
+ {
+  "id": 1232,
+  "text": "I mean the code,"
+ },
+ {
+  "id": 1233,
+  "text": "take a look at it yourself when you get back."
+ },
+ {
+  "id": 1234,
+  "text": "Just go through the code in the course material,"
+ },
+ {
+  "id": 1235,
+  "text": "and make sure you understand the concept I just described."
+ },
+ {
+  "id": 1236,
+  "text": "As for the debugging process,"
+ },
+ {
+  "id": 1237,
+  "text": "I won't walk you through it,"
+ },
+ {
+  "id": 1238,
+  "text": "since we already spent a bit of time earlier."
+ },
+ {
+  "id": 1239,
+  "text": "Let's finish covering these jump instructions."
+ },
+ {
+  "id": 1240,
+  "text": "Let's call it a day."
+ },
+ {
+  "id": 1241,
+  "text": "Okay, this code example,"
+ },
+ {
+  "id": 1242,
+  "text": "we'll just go over it on our own."
+ },
+ {
+  "id": 1243,
+  "text": "I won't demonstrate it for you again."
+ },
+ {
+  "id": 1244,
+  "text": "So basically,"
+ },
+ {
+  "id": 1245,
+  "text": "for unconditional jumps"
+ },
+ {
+  "id": 1246,
+  "text": "we have two instructions."
+ },
+ {
+  "id": 1247,
+  "text": "One is j,"
+ },
+ {
+  "id": 1248,
+  "text": "and the other is jal, or jump and link register."
+ },
+ {
+  "id": 1249,
+  "text": "Two instructions."
+ },
+ {
+  "id": 1250,
+  "text": "Saying the full names,"
+ },
+ {
+  "id": 1251,
+  "text": "seems to flow a bit better."
+ },
+ {
+  "id": 1252,
+  "text": "The abbreviations are a bit of a tongue-twister."
+ },
+ {
+  "id": 1253,
+  "text": "Now, here,"
+ },
+ {
+  "id": 1254,
+  "text": "let's bring up one more concept."
+ },
+ {
+  "id": 1255,
+  "text": "That is, as we can see,"
+ },
+ {
+  "id": 1256,
+  "text": "just now when we introduced"
+ },
+ {
+  "id": 1257,
+  "text": "the jal instruction to you,"
+ },
+ {
+  "id": 1258,
+  "text": "as we mentioned earlier,"
+ },
+ {
+  "id": 1259,
+  "text": "as for its jump range,"
+ },
+ {
+  "id": 1260,
+  "text": "It's based on the PC"
+ },
+ {
+  "id": 1261,
+  "text": "up and down"
+ },
+ {
+  "id": 1262,
+  "text": "that is,"
+ },
+ {
+  "id": 1263,
+  "text": "that's already a very large range"
+ },
+ {
+  "id": 1264,
+  "text": "meaning it can jump within a 1-megabyte range"
+ },
+ {
+  "id": 1265,
+  "text": "right?"
+ },
+ {
+  "id": 1266,
+  "text": "But as we know"
+ },
+ {
+  "id": 1267,
+  "text": "the programs we're writing now"
+ },
+ {
+  "id": 1268,
+  "text": "might exceed 1 megabyte in size"
+ },
+ {
+  "id": 1269,
+  "text": "The programs you're writing now"
+ },
+ {
+  "id": 1270,
+  "text": "if the program you write is fairly small"
+ },
+ {
+  "id": 1271,
+  "text": "it might compile down to"
+ },
+ {
+  "id": 1272,
+  "text": "roughly a few K or a few tens of K"
+ },
+ {
+  "id": 1273,
+  "text": "which means its range"
+ },
+ {
+  "id": 1274,
+  "text": "is about that size"
+ },
+ {
+  "id": 1275,
+  "text": "right?"
+ },
+ {
+  "id": 1276,
+  "text": "But as your program grows"
+ },
+ {
+  "id": 1277,
+  "text": "just imagine"
+ },
+ {
+  "id": 1278,
+  "text": "when you run some large programs nowadays"
+ },
+ {
+  "id": 1279,
+  "text": "a single executable can get really big"
+ },
+ {
+  "id": 1280,
+  "text": "It might exceed 1 megabyte."
+ },
+ {
+  "id": 1281,
+  "text": "So at that point,"
+ },
+ {
+  "id": 1282,
+  "text": "if you try to jump within a range that exceeds 1 megabyte,"
+ },
+ {
+  "id": 1283,
+  "text": "then simply using an instruction like JAL,"
+ },
+ {
+  "id": 1284,
+  "text": "well, that's actually going to cause problems."
+ },
+ {
+  "id": 1285,
+  "text": "Think about it — wouldn't that be an issue?"
+ },
+ {
+  "id": 1286,
+  "text": "So what do we do?"
+ },
+ {
+  "id": 1287,
+  "text": "The people who designed the assembly instructions"
+ },
+ {
+  "id": 1288,
+  "text": "have definitely thought this through for us."
+ },
+ {
+  "id": 1289,
+  "text": "That is to say, how to handle longer-distance jumps."
+ },
+ {
+  "id": 1290,
+  "text": "In terms of data, we generally call this a 'far jump'."
+ },
+ {
+  "id": 1291,
+  "text": "So when you look at materials later on,"
+ },
+ {
+  "id": 1292,
+  "text": "you'll often see"
+ },
+ {
+  "id": 1293,
+  "text": "that relative to this 'far jump',"
+ },
+ {
+  "id": 1294,
+  "text": "there's what we call a 'near jump',"
+ },
+ {
+  "id": 1295,
+  "text": "which is a short-distance jump."
+ },
+ {
+  "id": 1296,
+  "text": "Because it can only jump up or down about 1 megabyte."
+ },
+ {
+  "id": 1297,
+  "text": "But if you need to jump beyond that range,"
+ },
+ {
+  "id": 1298,
+  "text": "that's what's called a long-distance jump."
+ },
+ {
+  "id": 1299,
+  "text": "So how do we implement a long-distance jump?"
+ },
+ {
+  "id": 1300,
+  "text": "Let's actually think about it this way."
+ },
+ {
+  "id": 1301,
+  "text": "We actually talked about this earlier."
+ },
+ {
+  "id": 1302,
+  "text": "When we construct a large number,"
+ },
+ {
+  "id": 1303,
+  "text": "remember what method we used?"
+ },
+ {
+  "id": 1304,
+  "text": "We introduced this concept called AUIPC, right?"
+ },
+ {
+  "id": 1305,
+  "text": "Remember that?"
+ },
+ {
+  "id": 1306,
+  "text": "By the same logic,"
+ },
+ {
+  "id": 1307,
+  "text": "we can also,"
+ },
+ {
+  "id": 1308,
+  "text": "basically bring in the AUIPC instruction,"
+ },
+ {
+  "id": 1309,
+  "text": "to help us construct a large number,"
+ },
+ {
+  "id": 1310,
+  "text": "and implement this long-distance jump."
+ },
+ {
+  "id": 1311,
+  "text": "On this,"
+ },
+ {
+  "id": 1312,
+  "text": "let me just briefly mention it."
+ },
+ {
+  "id": 1313,
+  "text": "I won't go into the details here."
+ },
+ {
+  "id": 1314,
+  "text": "Just be aware that"
+ },
+ {
+  "id": 1315,
+  "text": "there's such a concept, and that's enough."
+ },
+ {
+  "id": 1316,
+  "text": "Okay."
+ },
+ {
+  "id": 1317,
+  "text": "So that's the long-distance jump I just talked about."
+ },
+ {
+  "id": 1318,
+  "text": "Now there's another concept,"
+ },
+ {
+  "id": 1319,
+  "text": "which is that when we do jumps,"
+ },
+ {
+  "id": 1320,
+  "text": "Actually, there's no need to return."
+ },
+ {
+  "id": 1321,
+  "text": "So when there's no need to return,"
+ },
+ {
+  "id": 1322,
+  "text": "let's connect this with the example we just discussed."
+ },
+ {
+  "id": 1323,
+  "text": "When we returned just now,"
+ },
+ {
+  "id": 1324,
+  "text": "take a look at this example."
+ },
+ {
+  "id": 1325,
+  "text": "What did we actually have to do?"
+ },
+ {
+  "id": 1326,
+  "text": "We had to take the return address,"
+ },
+ {
+  "id": 1327,
+  "text": "and save it in a register,"
+ },
+ {
+  "id": 1328,
+  "text": "right?"
+ },
+ {
+  "id": 1329,
+  "text": "And then use it when returning."
+ },
+ {
+  "id": 1330,
+  "text": "So now, since we're..."
+ },
+ {
+  "id": 1331,
+  "text": "Suppose I call a function now,"
+ },
+ {
+  "id": 1332,
+  "text": "and this function doesn't need to return."
+ },
+ {
+  "id": 1333,
+  "text": "That is, the program simply ends."
+ },
+ {
+  "id": 1334,
+  "text": "Take this program for example,"
+ },
+ {
+  "id": 1335,
+  "text": "this is just an exit."
+ },
+ {
+  "id": 1336,
+  "text": "Once it exits, it's done."
+ },
+ {
+  "id": 1337,
+  "text": "It doesn't execute,"
+ },
+ {
+  "id": 1338,
+  "text": "it doesn't continue executing."
+ },
+ {
+  "id": 1339,
+  "text": "So what do we do in this case?"
+ },
+ {
+  "id": 1340,
+  "text": "So actually it's very simple."
+ },
+ {
+  "id": 1341,
+  "text": "We just don't use a register to"
+ },
+ {
+  "id": 1342,
+  "text": "save this return address, and that's it."
+ },
+ {
+  "id": 1343,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1344,
+  "text": "But according to the requirement of this instruction,"
+ },
+ {
+  "id": 1345,
+  "text": "here we must fill in a"
+ },
+ {
+  "id": 1346,
+  "text": "register name."
+ },
+ {
+  "id": 1347,
+  "text": "So which register should we use?"
+ },
+ {
+  "id": 1348,
+  "text": "This brings us to what we talked about earlier."
+ },
+ {
+  "id": 1349,
+  "text": "When we designed RISC-V,"
+ },
+ {
+  "id": 1350,
+  "text": "it has a special register."
+ },
+ {
+  "id": 1351,
+  "text": "You still remember, right?"
+ },
+ {
+  "id": 1352,
+  "text": "It's called x0."
+ },
+ {
+  "id": 1353,
+  "text": "This register is actually very special,"
+ },
+ {
+  "id": 1354,
+  "text": "right?"
+ },
+ {
+  "id": 1355,
+  "text": "Reading this register always gives you 0,"
+ },
+ {
+  "id": 1356,
+  "text": "and writing data into this register is completely meaningless."
+ },
+ {
+  "id": 1357,
+  "text": "This actually means this register cannot be used to hold any value for us."
+ },
+ {
+  "id": 1358,
+  "text": "So if we want to implement this kind of non-returning jump,"
+ },
+ {
+  "id": 1359,
+  "text": "actually, as you can see here, they all use x0."
+ },
+ {
+  "id": 1360,
+  "text": "So to make things easier for everyone to write,"
+ },
+ {
+  "id": 1361,
+  "text": "this way of writing is replaced with some pseudo-instructions."
+ },
+ {
+  "id": 1362,
+  "text": "That is to say, as long as it's a J or a JR,"
+ },
+ {
+  "id": 1363,
+  "text": "then what actually happens is that the rd field is"
+ },
+ {
+  "id": 1364,
+  "text": "replaced with x0."
+ },
+ {
+  "id": 1365,
+  "text": "That achieves this kind of jump that doesn't return."
+ },
+ {
+  "id": 1366,
+  "text": "So this kind of thing is"
+ },
+ {
+  "id": 1367,
+  "text": "for when you don't need to return,"
+ },
+ {
+  "id": 1368,
+  "text": "you can use this kind of instruction to implement it."
+ },
+ {
+  "id": 1369,
+  "text": "Just something for everyone to be aware of."
+ },
+ {
+  "id": 1370,
+  "text": "Alright, having said that,"
+ },
+ {
+  "id": 1371,
+  "text": "we've basically covered conditional jump instructions as well."
+ },
+ {
+  "id": 1372,
+  "text": "So finally,"
+ },
+ {
+  "id": 1373,
+  "text": "let me give everyone a brief summary."
+ },
+ {
+  "id": 1374,
+  "text": "Up to this point,"
+ },
+ {
+  "id": 1375,
+  "text": "of all the things we've covered,"
+ },
+ {
+  "id": 1376,
+  "text": "one concept is"
+ },
+ {
+  "id": 1377,
+  "text": "the concept of the addressed mode."
+ },
+ {
+  "id": 1378,
+  "text": "So the so-called addressed mode"
+ },
+ {
+  "id": 1379,
+  "text": "means that"
+ },
+ {
+  "id": 1380,
+  "text": "In an instruction,"
+ },
+ {
+  "id": 1381,
+  "text": "one way to locate an operand"
+ },
+ {
+  "id": 1382,
+  "text": "or its address"
+ },
+ {
+  "id": 1383,
+  "text": "Now, from everything we've covered so far,"
+ },
+ {
+  "id": 1384,
+  "text": "across all the instructions,"
+ },
+ {
+  "id": 1385,
+  "text": "the addressing modes involved"
+ },
+ {
+  "id": 1386,
+  "text": "— I'll briefly summarize them here for you."
+ },
+ {
+  "id": 1387,
+  "text": "let me give you a quick summary here."
+ },
+ {
+  "id": 1388,
+  "text": "The first one is called"
+ },
+ {
+  "id": 1389,
+  "text": "immediate addressing."
+ },
+ {
+  "id": 1390,
+  "text": "It's very simple:"
+ },
+ {
+  "id": 1391,
+  "text": "the operand"
+ },
+ {
+  "id": 1392,
+  "text": "is the instruction itself."
+ },
+ {
+  "id": 1393,
+  "text": "Here's an example,"
+ },
+ {
+  "id": 1394,
+  "text": "you probably remember it,"
+ },
+ {
+  "id": 1395,
+  "text": "addi,"
+ },
+ {
+  "id": 1396,
+  "text": "which is of course an addition instruction."
+ },
+ {
+  "id": 1397,
+  "text": "With this instruction,"
+ },
+ {
+  "id": 1398,
+  "text": "the number it operates on"
+ },
+ {
+  "id": 1399,
+  "text": "is actually given by the instruction itself"
+ },
+ {
+  "id": 1400,
+  "text": "embedded in this instruction"
+ },
+ {
+  "id": 1401,
+  "text": "isn't it?"
+ },
+ {
+  "id": 1402,
+  "text": "the number 20 here"
+ },
+ {
+  "id": 1403,
+  "text": "isn't it embedded in this instruction?"
+ },
+ {
+  "id": 1404,
+  "text": "its operand"
+ },
+ {
+  "id": 1405,
+  "text": "is directly embedded in this instruction"
+ },
+ {
+  "id": 1406,
+  "text": "So we call this"
+ },
+ {
+  "id": 1407,
+  "text": "an immediate operand"
+ },
+ {
+  "id": 1408,
+  "text": "It doesn't need to"
+ },
+ {
+  "id": 1409,
+  "text": "it's not stored in some special place"
+ },
+ {
+  "id": 1410,
+  "text": "it's right there in the instruction"
+ },
+ {
+  "id": 1411,
+  "text": "This is called an immediate operand"
+ },
+ {
+  "id": 1412,
+  "text": "Now, there's another type"
+ },
+ {
+  "id": 1413,
+  "text": "which we call a register operand"
+ },
+ {
+  "id": 1414,
+  "text": "With a register operand,"
+ },
+ {
+  "id": 1415,
+  "text": "the data it operates on"
+ },
+ {
+  "id": 1416,
+  "text": "is stored in a register"
+ },
+ {
+  "id": 1417,
+  "text": "and we access the register to get the operand"
+ },
+ {
+  "id": 1418,
+  "text": "A typical example is the add instruction"
+ },
+ {
+  "id": 1419,
+  "text": "right?"
+ },
+ {
+  "id": 1420,
+  "text": "In this add instruction, all the operands"
+ },
+ {
+  "id": 1421,
+  "text": "are kept in registers,"
+ },
+ {
+  "id": 1422,
+  "text": "x6 and x7."
+ },
+ {
+  "id": 1423,
+  "text": "That's one type."
+ },
+ {
+  "id": 1424,
+  "text": "Now the third type is called base-plus-offset addressing."
+ },
+ {
+  "id": 1425,
+  "text": "Base-plus-offset addressing means"
+ },
+ {
+  "id": 1426,
+  "text": "it works by using what?"
+ },
+ {
+  "id": 1427,
+  "text": "By using a base plus an offset."
+ },
+ {
+  "id": 1428,
+  "text": "So the so-called base,"
+ },
+ {
+  "id": 1429,
+  "text": "its base address is kept in a register."
+ },
+ {
+  "id": 1430,
+  "text": "Then,"
+ },
+ {
+  "id": 1431,
+  "text": "inside the instruction itself,"
+ },
+ {
+  "id": 1432,
+  "text": "you place an immediate value,"
+ },
+ {
+  "id": 1433,
+  "text": "place an immediate value,"
+ },
+ {
+  "id": 1434,
+  "text": "and then"
+ },
+ {
+  "id": 1435,
+  "text": "add that immediate value to the value in the register,"
+ },
+ {
+  "id": 1436,
+  "text": "which gives you an address."
+ },
+ {
+  "id": 1437,
+  "text": "Then, based on that address,"
+ },
+ {
+  "id": 1438,
+  "text": "you go and find the operand you want to operate on."
+ },
+ {
+  "id": 1439,
+  "text": "That's the third type."
+ },
+ {
+  "id": 1440,
+  "text": "This is called register-relative addressing."
+ },
+ {
+  "id": 1441,
+  "text": "And then the last kind,"
+ },
+ {
+  "id": 1442,
+  "text": "which is what we"
+ },
+ {
+  "id": 1443,
+  "text": "have already seen several times earlier,"
+ },
+ {
+  "id": 1444,
+  "text": "is that we take a PC value,"
+ },
+ {
+  "id": 1445,
+  "text": "base it on the PC value,"
+ },
+ {
+  "id": 1446,
+  "text": "and add an offset to it,"
+ },
+ {
+  "id": 1447,
+  "text": "to get the final address."
+ },
+ {
+  "id": 1448,
+  "text": "This is called PC-relative addressing."
+ },
+ {
+  "id": 1449,
+  "text": "So here,"
+ },
+ {
+  "id": 1450,
+  "text": "regarding this,"
+ },
+ {
+  "id": 1451,
+  "text": "the concept of addressing modes,"
+ },
+ {
+  "id": 1452,
+  "text": "it is really also"
+ },
+ {
+  "id": 1453,
+  "text": "an important concept in"
+ },
+ {
+  "id": 1454,
+  "text": "our assembly instructions."
+ },
+ {
+  "id": 1455,
+  "text": "So here,"
+ },
+ {
+  "id": 1456,
+  "text": "let's take this opportunity"
+ },
+ {
+  "id": 1457,
+  "text": "to summarize this for everyone here,"
+ },
+ {
+  "id": 1458,
+  "text": "so you can get familiar with"
+ },
+ {
+  "id": 1459,
+  "text": "this related knowledge."
+ },
+ {
+  "id": 1460,
+  "text": "So, this part about"
+ },
+ {
+  "id": 1461,
+  "text": "the assembly instructions"
+ },
+ {
+  "id": 1462,
+  "text": "is basically where we'll leave it for now."
+ },
+ {
+  "id": 1463,
+  "text": "Let's take a short break."
+ }
+]

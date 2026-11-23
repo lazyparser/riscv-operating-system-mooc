@@ -1,0 +1,5123 @@
+1
+00:00:00,400 --> 00:00:07,020
+Chapter 11, external device interrupts. It covers another kind of trap.
+
+2
+00:00:10,780 --> 00:00:24,620
+For the interrupt part, we mainly introduce interrupt classification, the registers designed for interrupts, the interrupt handling process, and also the PLIC, which is an interrupt-related peripheral.
+
+3
+00:00:24,620 --> 00:00:27,000
+So there is one more thing:
+
+4
+00:00:27,000 --> 00:00:28,020
+once we
+
+5
+00:00:28,020 --> 00:00:30,400
+finish covering the basic concepts
+
+6
+00:00:30,400 --> 00:00:31,400
+of interrupts for you,
+
+7
+00:00:31,400 --> 00:00:32,400
+we will show you
+
+8
+00:00:32,400 --> 00:00:33,160
+something,
+
+9
+00:00:33,160 --> 00:00:36,340
+that is,
+
+10
+00:00:36,340 --> 00:00:37,240
+remember our UART device?
+
+11
+00:00:37,240 --> 00:00:38,720
+In the beginning we used
+
+12
+00:00:38,720 --> 00:00:39,960
+UART to print on the
+
+13
+00:00:39,960 --> 00:00:40,920
+screen
+
+14
+00:00:40,920 --> 00:00:41,840
+Hello RVOS,
+
+15
+00:00:41,840 --> 00:00:42,120
+right?
+
+16
+00:00:42,120 --> 00:00:43,000
+Well, at that time,
+
+17
+00:00:43,000 --> 00:00:43,800
+we used
+
+18
+00:00:43,800 --> 00:00:46,340
+what is called the polling approach.
+
+19
+00:00:46,340 --> 00:00:48,380
+Now that we've studied interrupts,
+
+20
+00:00:48,380 --> 00:00:49,620
+let's take a look
+
+21
+00:00:49,620 --> 00:00:50,860
+How to use the interrupt-driven approach
+
+22
+00:00:50,860 --> 00:00:53,740
+to handle device input from the serial port
+
+23
+00:00:53,740 --> 00:00:58,280
+That roughly covers the contents
+
+24
+00:00:58,280 --> 00:01:01,080
+So here are the reference materials
+
+25
+00:01:01,080 --> 00:01:03,420
+Let's start with the first part
+
+26
+00:01:03,420 --> 00:01:04,540
+The classification of interrupts
+
+27
+00:01:04,540 --> 00:01:07,760
+So this
+
+28
+00:01:07,760 --> 00:01:11,620
+When we talk about interrupts,
+
+29
+00:01:11,620 --> 00:01:14,040
+traps are divided into exceptions and interrupts
+
+30
+00:01:14,040 --> 00:01:15,480
+And interrupts are further divided
+
+31
+00:01:15,480 --> 00:01:16,620
+Interrupts are further divided
+
+32
+00:01:16,620 --> 00:01:19,040
+Overall, we can classify interrupts into
+
+33
+00:01:19,040 --> 00:01:20,180
+two major categories
+
+34
+00:01:20,180 --> 00:01:21,520
+One is called local interrupts
+
+35
+00:01:21,520 --> 00:01:22,920
+and the other is called global interrupts
+
+36
+00:01:22,920 --> 00:01:26,980
+In fact, these local interrupts
+
+37
+00:01:26,980 --> 00:01:29,980
+are further divided into software interrupts and timer interrupts
+
+38
+00:01:29,980 --> 00:01:32,380
+So in fact, this corresponds to
+
+39
+00:01:32,380 --> 00:01:33,680
+in fact, just interrupts
+
+40
+00:01:33,680 --> 00:01:35,180
+In fact, you can also think of it as three categories
+
+41
+00:01:35,180 --> 00:01:36,980
+that is, software interrupts
+
+42
+00:01:36,980 --> 00:01:37,940
+software interrupts
+
+43
+00:01:37,940 --> 00:01:39,040
+timer interrupts
+
+44
+00:01:39,040 --> 00:01:41,420
+and external interrupts.
+
+45
+00:01:41,420 --> 00:01:42,600
+Now, this thing,
+
+46
+00:01:42,600 --> 00:01:44,720
+in fact, in the RISC-V specification,
+
+47
+00:01:44,720 --> 00:01:46,500
+is actually written out pretty clearly.
+
+48
+00:01:46,500 --> 00:01:46,900
+You can
+
+49
+00:01:46,900 --> 00:01:48,080
+actually it is still this table.
+
+50
+00:01:48,080 --> 00:01:49,240
+In this table,
+
+51
+00:01:49,240 --> 00:01:50,780
+you can see that this table at the time,
+
+52
+00:01:50,780 --> 00:01:53,020
+we actually just took the M-Course
+
+53
+00:01:53,020 --> 00:01:54,960
+that table,
+
+54
+00:01:54,960 --> 00:01:56,220
+Table 3.6,
+
+55
+00:01:56,220 --> 00:01:58,080
+and removed the exception part from it.
+
+56
+00:01:58,080 --> 00:02:00,340
+So we only look at the interrupt part.
+
+57
+00:02:00,340 --> 00:02:02,080
+Then the highest bit is still 1,
+
+58
+00:02:02,080 --> 00:02:04,420
+and its exception code
+
+59
+00:02:04,420 --> 00:02:06,560
+from 0123 up to 11,
+
+60
+00:02:06,560 --> 00:02:08,460
+is actually related to the concept I just talked about.
+
+61
+00:02:08,460 --> 00:02:09,580
+Take a look at this.
+
+62
+00:02:09,580 --> 00:02:11,980
+For example, this part,
+
+63
+00:02:11,980 --> 00:02:15,300
+it is divided like this.
+
+64
+00:02:15,300 --> 00:02:17,680
+That is to say, this block here,
+
+65
+00:02:17,680 --> 00:02:19,300
+it is all software interrupts.
+
+66
+00:02:19,300 --> 00:02:20,440
+This block here,
+
+67
+00:02:20,440 --> 00:02:21,800
+is all timer interrupts.
+
+68
+00:02:21,800 --> 00:02:23,920
+This block is all external interrupts.
+
+69
+00:02:23,920 --> 00:02:28,100
+Now, these software interrupts,
+
+70
+00:02:28,100 --> 00:02:32,560
+they are further divided according to the privilege level at which they occur,
+
+71
+00:02:32,560 --> 00:02:34,620
+that is, when the interrupt happens,
+
+72
+00:02:34,620 --> 00:02:37,660
+the privilege mode the hart is in,
+
+73
+00:02:37,660 --> 00:02:40,340
+so they are split into User, Supervisor, and Machine.
+
+74
+00:02:40,340 --> 00:02:41,480
+And it is the same for the ones below.
+
+75
+00:02:41,480 --> 00:02:44,000
+Each category is again divided into three.
+
+76
+00:02:44,000 --> 00:02:46,120
+User, Supervisor, Machine.
+
+77
+00:02:46,120 --> 00:02:48,340
+That is how it is divided.
+
+78
+00:02:48,340 --> 00:02:49,560
+But regardless,
+
+79
+00:02:49,560 --> 00:02:51,400
+these three here are actually software interrupts.
+
+80
+00:02:51,400 --> 00:02:53,140
+And this one here is the timer interrupt.
+
+81
+00:02:53,140 --> 00:02:56,500
+This is the external interrupt
+
+82
+00:02:56,500 --> 00:02:58,780
+which corresponds to these categories here
+
+83
+00:02:58,780 --> 00:03:06,710
+Now, in terms of physical wiring
+
+84
+00:03:06,710 --> 00:03:08,130
+that is, physically speaking
+
+85
+00:03:08,130 --> 00:03:09,250
+you can think of it this way
+
+86
+00:03:09,250 --> 00:03:10,730
+this hart,
+
+87
+00:03:10,730 --> 00:03:12,150
+as a CPU,
+
+88
+00:03:12,150 --> 00:03:14,490
+actually has three pins,
+
+89
+00:03:14,490 --> 00:03:16,150
+each hart has three pins,
+
+90
+00:03:16,150 --> 00:03:18,830
+connected to these three types of interrupts respectively.
+
+91
+00:03:18,830 --> 00:03:21,250
+For example, this figure here
+
+92
+00:03:21,250 --> 00:03:22,410
+is one I took
+
+93
+00:03:22,410 --> 00:03:26,370
+from this FU540,
+
+94
+00:03:26,370 --> 00:03:30,850
+a diagram taken from that chip.
+
+95
+00:03:30,850 --> 00:03:33,390
+The emulator we use,
+
+96
+00:03:33,390 --> 00:03:34,390
+that QEMU,
+
+97
+00:03:34,390 --> 00:03:39,170
+this emulator was actually developed with reference to this real device,
+
+98
+00:03:39,170 --> 00:03:41,150
+it was developed based on it.
+
+99
+00:03:41,150 --> 00:03:45,150
+So we often also refer to the schematic of this device
+
+100
+00:03:45,150 --> 00:03:45,990
+as a reference.
+
+101
+00:03:45,990 --> 00:03:48,350
+Let me take some diagrams from this RISC-V reference material.
+
+102
+00:03:48,350 --> 00:03:49,690
+and use them to give you an introduction.
+
+103
+00:03:49,690 --> 00:03:52,070
+Now, as you can also see in this diagram,
+
+104
+00:03:52,070 --> 00:03:52,950
+when it was drawn,
+
+105
+00:03:52,950 --> 00:03:55,350
+one hart has software interrupts connected to it,
+
+106
+00:03:55,350 --> 00:03:58,730
+timer interrupts, and external interrupts — three categories.
+
+107
+00:03:58,730 --> 00:04:00,810
+In fact, they come in through three pins,
+
+108
+00:04:00,810 --> 00:04:02,610
+three separate, independent interrupts.
+
+109
+00:04:02,610 --> 00:04:05,310
+Now, this slide of ours,
+
+110
+00:04:05,310 --> 00:04:08,310
+is actually focused on this external interrupt,
+
+111
+00:04:08,310 --> 00:04:09,410
+that is, the peripheral interrupt.
+
+112
+00:04:09,410 --> 00:04:12,450
+Let's take a look at this peripheral interrupt,
+
+113
+00:04:12,450 --> 00:04:14,110
+and what the handling process looks like.
+
+114
+00:04:14,110 --> 00:04:20,870
+Now, whenever it comes to interrupt handling,
+
+115
+00:04:20,870 --> 00:04:23,770
+we also run into a set of registers here.
+
+116
+00:04:23,770 --> 00:04:25,370
+This diagram of ours,
+
+117
+00:04:25,370 --> 00:04:26,250
+is really the earlier one.
+
+118
+00:04:26,250 --> 00:04:27,790
+So up here in this one,
+
+119
+00:04:27,790 --> 00:04:29,270
+we already have quite a few counters listed,
+
+120
+00:04:29,270 --> 00:04:30,310
+and we've already covered all of them.
+
+121
+00:04:30,310 --> 00:04:30,950
+All of them have been covered
+
+122
+00:04:30,950 --> 00:04:32,710
+Now there are two left
+
+123
+00:04:32,710 --> 00:04:34,330
+These two right here
+
+124
+00:04:34,330 --> 00:04:37,130
+These two counters we haven't talked about yet
+
+125
+00:04:37,130 --> 00:04:37,850
+And we haven't covered them
+
+126
+00:04:37,850 --> 00:04:39,590
+These two counters of ours
+
+127
+00:04:39,590 --> 00:04:41,430
+are both related to interrupts
+
+128
+00:04:41,430 --> 00:04:41,970
+So, that's why
+
+129
+00:04:41,970 --> 00:04:43,290
+we want to briefly mention them here
+
+130
+00:04:43,290 --> 00:04:46,590
+Let's first take a look at
+
+131
+00:04:46,590 --> 00:04:47,850
+this one
+
+132
+00:04:47,850 --> 00:04:55,180
+give me just a second here
+
+133
+00:04:55,180 --> 00:04:58,140
+Let's first take a look at
+
+134
+00:04:58,140 --> 00:05:00,380
+one called MRE
+
+135
+00:05:00,380 --> 00:05:04,080
+which stands for Machine Interrupt Enable
+
+136
+00:05:04,080 --> 00:05:06,720
+Now this register here
+
+137
+00:05:06,720 --> 00:05:07,980
+is actually used to control
+
+138
+00:05:07,980 --> 00:05:10,860
+those three types of interrupts we mentioned
+
+139
+00:05:10,860 --> 00:05:13,160
+namely software interrupts, timer interrupts, and
+
+140
+00:05:13,160 --> 00:05:15,380
+external peripheral interrupts
+
+141
+00:05:15,380 --> 00:05:18,040
+Now, as we mentioned earlier,
+
+142
+00:05:18,040 --> 00:05:20,040
+that mstatus register
+
+143
+00:05:20,040 --> 00:05:21,080
+also has a global interrupt enable,
+
+144
+00:05:21,080 --> 00:05:22,440
+so that is a global interrupt.
+
+145
+00:05:22,440 --> 00:05:24,840
+In other words, for the interrupt in mstatus,
+
+146
+00:05:24,840 --> 00:05:28,920
+it's mstatus,
+
+147
+00:05:28,920 --> 00:05:30,720
+doesn't it also have
+
+148
+00:05:30,720 --> 00:05:34,300
+that MIE flag bit in there?
+
+149
+00:05:34,300 --> 00:05:34,920
+So this is a
+
+150
+00:05:34,920 --> 00:05:35,940
+this is something you can think of as
+
+151
+00:05:35,940 --> 00:05:36,860
+a global interrupt.
+
+152
+00:05:36,860 --> 00:05:38,680
+Once this thing is turned off,
+
+153
+00:05:38,680 --> 00:05:40,320
+basically all interrupts,
+
+154
+00:05:40,320 --> 00:05:41,180
+no matter whether you enable them or not,
+
+155
+00:05:41,180 --> 00:05:42,480
+are completely disabled.
+
+156
+00:05:42,480 --> 00:05:44,080
+So, but then,
+
+157
+00:05:44,080 --> 00:05:45,420
+this is divided into several levels.
+
+158
+00:05:45,420 --> 00:05:46,040
+The first level,
+
+159
+00:05:46,040 --> 00:05:47,120
+is this MIE,
+
+160
+00:05:47,120 --> 00:05:47,920
+which is the global interrupt enable.
+
+161
+00:05:47,920 --> 00:05:49,640
+So after this interrupt is enabled,
+
+162
+00:05:49,640 --> 00:05:50,580
+we can also
+
+163
+00:05:50,580 --> 00:05:52,820
+for this External, Timer, and Software
+
+164
+00:05:52,820 --> 00:05:54,300
+these three categories of interrupts,
+
+165
+00:05:54,300 --> 00:05:55,980
+we can also set them individually.
+
+166
+00:05:55,980 --> 00:05:56,720
+That's actually what it means.
+
+167
+00:05:56,720 --> 00:05:57,940
+So MIE,
+
+168
+00:05:57,940 --> 00:06:00,700
+think of it as a second-level interrupt control,
+
+169
+00:06:00,700 --> 00:06:01,480
+control flags,
+
+170
+00:06:01,480 --> 00:06:03,140
+control switches.
+
+171
+00:06:03,140 --> 00:06:04,880
+Similarly,
+
+172
+00:06:04,880 --> 00:06:06,960
+it also corresponds to, that is,
+
+173
+00:06:06,960 --> 00:06:09,460
+it is also divided into U, S, and M,
+
+174
+00:06:09,460 --> 00:06:11,060
+each category is divided into these three types, U, S, and M.
+
+175
+00:06:11,060 --> 00:06:13,660
+This is MIE,
+
+176
+00:06:13,660 --> 00:06:16,480
+the role of this register.
+
+177
+00:06:16,480 --> 00:06:18,500
+Then there is one called MIP.
+
+178
+00:06:18,500 --> 00:06:19,680
+This MIP,
+
+179
+00:06:19,680 --> 00:06:20,580
+actually this,
+
+180
+00:06:20,580 --> 00:06:22,860
+you can think of it as being used for writing.
+
+181
+00:06:22,860 --> 00:06:23,920
+is that it is used to set things up.
+
+182
+00:06:23,920 --> 00:06:25,980
+Now MIP, on the other hand, is actually used for reading.
+
+183
+00:06:25,980 --> 00:06:26,500
+It actually
+
+184
+00:06:26,500 --> 00:06:29,000
+by reading these corresponding flag bits in it,
+
+185
+00:06:29,000 --> 00:06:31,860
+we can find out, in the current different modes,
+
+186
+00:06:31,860 --> 00:06:35,480
+whether each of these interrupts has occurred or not.
+
+187
+00:06:35,480 --> 00:06:36,140
+If it is 1,
+
+188
+00:06:36,140 --> 00:06:37,800
+it means this interrupt has currently occurred.
+
+189
+00:06:37,800 --> 00:06:38,800
+If it is 0,
+
+190
+00:06:38,800 --> 00:06:40,420
+it means this interrupt has not occurred.
+
+191
+00:06:40,420 --> 00:06:43,080
+So that is essentially the role it serves.
+
+192
+00:06:43,080 --> 00:06:45,200
+So these two registers,
+
+193
+00:06:45,200 --> 00:06:46,360
+which are related to interrupts,
+
+194
+00:06:46,360 --> 00:06:47,360
+are ones we need to understand.
+
+195
+00:06:47,360 --> 00:06:50,870
+Now, the interrupt handling process,
+
+196
+00:06:50,870 --> 00:06:53,890
+in fact, is similar to what we covered earlier,
+
+197
+00:06:53,890 --> 00:06:55,850
+so we can go through it a bit faster.
+
+198
+00:06:55,850 --> 00:06:57,910
+That is to say, it is still divided into several steps.
+
+199
+00:06:57,910 --> 00:06:59,210
+Among them,
+
+200
+00:06:59,210 --> 00:07:00,910
+when an interrupt occurs,
+
+201
+00:07:00,910 --> 00:07:03,350
+The HART will automatically do the following to execute
+
+202
+00:07:03,350 --> 00:07:04,410
+Now, over here,
+
+203
+00:07:04,410 --> 00:07:05,490
+the only thing to pay attention to is
+
+204
+00:07:05,490 --> 00:07:07,250
+which step is a bit different?
+
+205
+00:07:07,250 --> 00:07:09,290
+That is, compared with exceptions,
+
+206
+00:07:09,290 --> 00:07:10,770
+which step is different?
+
+207
+00:07:10,770 --> 00:07:12,930
+It will actually take
+
+208
+00:07:12,930 --> 00:07:15,010
+the value of the instruction after the current PC,
+
+209
+00:07:15,010 --> 00:07:16,250
+and copy it into NPC.
+
+210
+00:07:16,250 --> 00:07:18,330
+The reason for this was actually explained
+
+211
+00:07:18,330 --> 00:07:19,050
+earlier.
+
+212
+00:07:19,050 --> 00:07:20,530
+The main effect is that,
+
+213
+00:07:20,530 --> 00:07:21,490
+because when an interrupt occurs,
+
+214
+00:07:21,490 --> 00:07:23,870
+what effect is it actually trying to achieve?
+
+215
+00:07:23,870 --> 00:07:25,490
+The idea is that this normal control flow,
+
+216
+00:07:25,490 --> 00:07:26,750
+it has been interrupted,
+
+217
+00:07:26,750 --> 00:07:27,690
+and that's what we call an interrupt.
+
+218
+00:07:27,690 --> 00:07:29,630
+So after it's interrupted,
+
+219
+00:07:29,630 --> 00:07:31,650
+once the interrupt handling and execution
+
+220
+00:07:31,650 --> 00:07:33,430
+of the handler function is done,
+
+221
+00:07:33,430 --> 00:07:34,310
+When it comes back,
+
+222
+00:07:34,310 --> 00:07:37,150
+it can pick up right where it left off,
+
+223
+00:07:37,150 --> 00:07:38,670
+rather than from this instruction.
+
+224
+00:07:38,670 --> 00:07:40,850
+Actually, when executing this function,
+
+225
+00:07:40,850 --> 00:07:42,410
+this instruction has already finished executing.
+
+226
+00:07:42,410 --> 00:07:44,350
+After this instruction has finished executing,
+
+227
+00:07:44,350 --> 00:07:46,790
+it will then go and execute the next one below,
+
+228
+00:07:46,790 --> 00:07:48,410
+this interrupt handler.
+
+229
+00:07:48,410 --> 00:07:49,810
+Now, when it comes back,
+
+230
+00:07:49,810 --> 00:07:51,770
+it expects to continue executing from the following instructions.
+
+231
+00:07:51,770 --> 00:07:54,150
+So it actually automatically takes this,
+
+232
+00:07:54,150 --> 00:07:55,670
+the address of the next instruction,
+
+233
+00:07:55,670 --> 00:07:57,210
+and copies it into here.
+
+234
+00:07:57,210 --> 00:08:00,830
+That way, after it comes back,
+
+235
+00:08:00,830 --> 00:08:02,270
+it can go on and execute the next instruction.
+
+236
+00:08:02,270 --> 00:08:05,470
+So this whole normal execution flow,
+
+237
+00:08:05,470 --> 00:08:08,470
+if you don't care about interrupts,
+
+238
+00:08:08,470 --> 00:08:10,430
+you can think of this process as actually not having,
+
+239
+00:08:10,430 --> 00:08:13,150
+it's still actually executing sequentially,
+
+240
+00:08:13,150 --> 00:08:14,570
+with no interference at all.
+
+241
+00:08:14,570 --> 00:08:16,310
+but it actually gets interfered with
+
+242
+00:08:16,310 --> 00:08:18,430
+it actually gets interrupted, I should say
+
+243
+00:08:18,430 --> 00:08:25,000
+otherwise, there is really no difference from the exception handling we covered earlier
+
+244
+00:08:25,000 --> 00:08:27,420
+so I won't repeat it here
+
+245
+00:08:27,420 --> 00:08:29,640
+and then, that is to say,
+
+246
+00:08:29,640 --> 00:08:32,680
+the return is the same as well
+
+247
+00:08:32,680 --> 00:08:34,940
+so this handling, in fact,
+
+248
+00:08:34,940 --> 00:08:39,450
+there isn't much difference at all
+
+249
+00:08:39,450 --> 00:08:41,070
+alright, this processing flow,
+
+250
+00:08:41,070 --> 00:08:42,830
+we'll just cover it briefly up to here
+
+251
+00:08:42,830 --> 00:08:43,070
+so,
+
+252
+00:08:43,070 --> 00:08:45,770
+next, we're going to introduce
+
+253
+00:08:45,770 --> 00:08:48,730
+a component related to interrupts, called the PLIC
+
+254
+00:08:48,730 --> 00:08:50,610
+such a component
+
+255
+00:08:50,610 --> 00:08:51,490
+a device
+
+256
+00:08:51,490 --> 00:08:55,010
+now, as we know,
+
+257
+00:08:55,010 --> 00:08:58,150
+because what we're talking about now is external interrupts
+
+258
+00:08:58,150 --> 00:09:02,210
+software interrupts and timer interrupts
+
+259
+00:09:02,210 --> 00:09:04,410
+we'll cover those in later chapters
+
+260
+00:09:04,410 --> 00:09:07,270
+let's first look at external interrupts
+
+261
+00:09:07,270 --> 00:09:09,050
+So, so-called external interrupts,
+
+262
+00:09:09,050 --> 00:09:13,550
+external interrupts actually refer to interrupts generated by peripheral devices.
+
+263
+00:09:13,550 --> 00:09:16,310
+That is to say, we've seen this diagram several times before.
+
+264
+00:09:16,310 --> 00:09:18,010
+It means that on our bus,
+
+265
+00:09:18,010 --> 00:09:20,810
+this CPU and these external devices,
+
+266
+00:09:20,810 --> 00:09:22,130
+they're all actually connected to the bus.
+
+267
+00:09:22,130 --> 00:09:24,010
+So this external CPU,
+
+268
+00:09:24,010 --> 00:09:27,630
+based on the instructions placed in memory,
+
+269
+00:09:27,630 --> 00:09:29,890
+just executes them sequentially, executing and executing and executing.
+
+270
+00:09:29,890 --> 00:09:31,210
+Now, during execution,
+
+271
+00:09:31,210 --> 00:09:33,110
+suppose this peripheral device,
+
+272
+00:09:33,110 --> 00:09:35,250
+if it has something
+
+273
+00:09:35,250 --> 00:09:36,590
+it wants to notify our CPU about,
+
+274
+00:09:36,590 --> 00:09:38,790
+it can do so through an interrupt,
+
+275
+00:09:38,790 --> 00:09:43,010
+to notify our CPU.
+
+276
+00:09:43,010 --> 00:09:45,070
+Then the CPU's execution will be interrupted,
+
+277
+00:09:45,070 --> 00:09:46,270
+and it will then go and execute,
+
+278
+00:09:46,270 --> 00:09:47,970
+go and respond to this peripheral device.
+
+279
+00:09:47,970 --> 00:09:49,870
+In fact, it achieves this kind of effect.
+
+280
+00:09:49,870 --> 00:09:53,390
+Now, there are many kinds of these peripheral devices.
+
+281
+00:09:53,390 --> 00:09:54,550
+So these peripherals
+
+282
+00:09:54,550 --> 00:09:58,630
+can all affect the execution flow of our CPU.
+
+283
+00:09:58,630 --> 00:10:01,570
+But as we know,
+
+284
+00:10:01,570 --> 00:10:03,170
+based on what we just introduced,
+
+285
+00:10:03,170 --> 00:10:05,830
+for external interrupts,
+
+286
+00:10:05,830 --> 00:10:09,270
+our CPU actually only has a single input pin.
+
+287
+00:10:09,270 --> 00:10:11,990
+That is to say, there are many peripherals,
+
+288
+00:10:11,990 --> 00:10:14,370
+and we can't possibly take one interrupt line
+
+289
+00:10:14,370 --> 00:10:16,830
+from each peripheral into the CPU,
+
+290
+00:10:16,830 --> 00:10:18,090
+right?
+
+291
+00:10:18,090 --> 00:10:20,350
+Besides, the set of peripherals changes often,
+
+292
+00:10:20,350 --> 00:10:21,450
+and there may even be hot-plugging.
+
+293
+00:10:21,450 --> 00:10:23,370
+If we brought in one pin
+
+294
+00:10:23,370 --> 00:10:24,550
+for every single peripheral,
+
+295
+00:10:24,550 --> 00:10:26,870
+then the CPU design would become far too complex.
+
+296
+00:10:26,870 --> 00:10:27,750
+So in practice,
+
+297
+00:10:27,750 --> 00:10:29,230
+our CPU has only one
+
+298
+00:10:29,230 --> 00:10:31,890
+input pin for external interrupts.
+
+299
+00:10:31,890 --> 00:10:33,970
+So what do we do?
+
+300
+00:10:33,970 --> 00:10:35,910
+This is where a conversion comes into play.
+
+301
+00:10:35,910 --> 00:10:37,450
+and aggregation is a problem
+
+302
+00:10:37,450 --> 00:10:39,630
+So that's why we introduced
+
+303
+00:10:39,630 --> 00:10:41,990
+a device called the PLIC.
+
+304
+00:10:41,990 --> 00:10:43,330
+This device,
+
+305
+00:10:43,330 --> 00:10:45,570
+you can think of this device as
+
+306
+00:10:45,570 --> 00:10:48,210
+basically a Hub.
+
+307
+00:10:48,210 --> 00:10:50,370
+Its full name is
+
+308
+00:10:50,370 --> 00:10:53,630
+Platform Level Interruptor Controller,
+
+309
+00:10:53,630 --> 00:10:56,490
+which is a platform-level interrupt controller.
+
+310
+00:10:56,490 --> 00:10:58,030
+It is an interrupt controller.
+
+311
+00:10:58,030 --> 00:11:00,830
+Now, why is it called Platform Level?
+
+312
+00:11:00,830 --> 00:11:02,390
+We talked about Platform earlier.
+
+313
+00:11:02,390 --> 00:11:04,310
+You can understand it as basically an SoC,
+
+314
+00:11:04,310 --> 00:11:04,970
+right?
+
+315
+00:11:04,970 --> 00:11:08,270
+So it is a type of interrupt controller that is integrated into the SoC.
+
+316
+00:11:08,270 --> 00:11:09,650
+of interrupt controller.
+
+317
+00:11:09,650 --> 00:11:12,850
+Of course, there are other types of interrupt controllers as well.
+
+318
+00:11:12,850 --> 00:11:15,050
+What we mainly introduce here
+
+319
+00:11:15,050 --> 00:11:18,470
+is the Platform-type interrupt controller.
+
+320
+00:11:18,470 --> 00:11:19,870
+Now, its main function
+
+321
+00:11:19,870 --> 00:11:21,950
+What this picture shows is that
+
+322
+00:11:21,950 --> 00:11:23,370
+on the left side here,
+
+323
+00:11:23,370 --> 00:11:24,610
+there are lots and lots of peripherals.
+
+324
+00:11:24,610 --> 00:11:25,670
+Right?
+
+325
+00:11:25,670 --> 00:11:27,310
+There are lots and lots of peripherals.
+
+326
+00:11:27,310 --> 00:11:28,750
+So coming in from that side,
+
+327
+00:11:28,750 --> 00:11:29,470
+on the left,
+
+328
+00:11:29,470 --> 00:11:31,130
+you have lots and lots of pins coming in,
+
+329
+00:11:31,130 --> 00:11:32,250
+like a hub,
+
+330
+00:11:32,250 --> 00:11:33,590
+all hooked up together.
+
+331
+00:11:33,590 --> 00:11:34,670
+But over here,
+
+332
+00:11:34,670 --> 00:11:35,350
+going out,
+
+333
+00:11:35,350 --> 00:11:36,850
+for a single HUT,
+
+334
+00:11:36,850 --> 00:11:37,830
+there is only one pin.
+
+335
+00:11:37,830 --> 00:11:40,270
+Of course, since there are quite a few HUTs on this side,
+
+336
+00:11:40,270 --> 00:11:41,490
+it can,
+
+337
+00:11:41,490 --> 00:11:43,630
+for each HUT,
+
+338
+00:11:43,630 --> 00:11:45,130
+route a separate line out.
+
+339
+00:11:45,130 --> 00:11:46,810
+But if we
+
+340
+00:11:46,810 --> 00:11:48,390
+look at just one HUT,
+
+341
+00:11:48,390 --> 00:11:48,930
+In fact,
+
+342
+00:11:48,930 --> 00:11:50,970
+it's just like a multiplexer
+
+343
+00:11:50,970 --> 00:11:52,330
+that is, there are lots and lots of lines here,
+
+344
+00:11:52,330 --> 00:11:53,270
+but over here,
+
+345
+00:11:53,270 --> 00:11:54,290
+only one line comes out
+
+346
+00:11:54,290 --> 00:11:56,730
+So this PLIC,
+
+347
+00:11:56,730 --> 00:11:59,330
+it's actually just like a multiplexer.
+
+348
+00:11:59,330 --> 00:12:00,350
+It,
+
+349
+00:12:00,350 --> 00:12:01,230
+on its left side,
+
+350
+00:12:01,230 --> 00:12:02,530
+faces a whole bunch of external devices,
+
+351
+00:12:02,530 --> 00:12:03,010
+while over here,
+
+352
+00:12:03,010 --> 00:12:03,630
+there is only one line.
+
+353
+00:12:03,630 --> 00:12:05,090
+So what it does in this,
+
+354
+00:12:05,090 --> 00:12:06,230
+its main function,
+
+355
+00:12:06,230 --> 00:12:07,270
+is really just,
+
+356
+00:12:07,270 --> 00:12:08,890
+as everyone knows,
+
+357
+00:12:08,890 --> 00:12:09,990
+the CPU,
+
+358
+00:12:09,990 --> 00:12:10,950
+it can only,
+
+359
+00:12:10,950 --> 00:12:12,250
+handle one kind of interrupt at a time
+
+360
+00:12:12,250 --> 00:12:13,890
+So what it does here is
+
+361
+00:12:13,890 --> 00:12:16,510
+It just acts as an agent.
+
+362
+00:12:16,510 --> 00:12:18,630
+Based on the type of interrupt here,
+
+363
+00:12:18,630 --> 00:12:20,650
+or some other things,
+
+364
+00:12:20,650 --> 00:12:21,710
+which we will talk about,
+
+365
+00:12:21,710 --> 00:12:22,770
+like its priority and so on,
+
+366
+00:12:22,770 --> 00:12:24,490
+it can filter them out
+
+367
+00:12:24,490 --> 00:12:26,850
+and let only one current interrupt through.
+
+368
+00:12:26,850 --> 00:12:28,390
+If there are multiple interrupts
+
+369
+00:12:28,390 --> 00:12:29,230
+happening at the same time,
+
+370
+00:12:29,230 --> 00:12:32,030
+it will only let one interrupt through.
+
+371
+00:12:32,030 --> 00:12:32,870
+And then,
+
+372
+00:12:32,870 --> 00:12:34,210
+for the ones on the left,
+
+373
+00:12:34,210 --> 00:12:35,570
+it coordinates all the interrupts,
+
+374
+00:12:35,570 --> 00:12:38,170
+and on the right side,
+
+375
+00:12:38,170 --> 00:12:39,950
+it serves one hart,
+
+376
+00:12:39,950 --> 00:12:40,470
+essentially
+
+377
+00:12:40,470 --> 00:12:41,370
+playing that kind of role.
+
+378
+00:12:41,370 --> 00:12:44,690
+This is the interrupt controller.
+
+379
+00:12:44,690 --> 00:12:45,890
+Why did we have to invent
+
+380
+00:12:45,890 --> 00:12:46,670
+the interrupt controller?
+
+381
+00:12:46,670 --> 00:12:49,770
+The main purpose of this kind of device
+
+382
+00:12:49,910 --> 00:12:51,070
+Now, on the left,
+
+383
+00:12:51,070 --> 00:12:53,010
+we have lots and lots of peripherals.
+
+384
+00:12:53,010 --> 00:12:55,530
+If every peripheral has its own interrupt line,
+
+385
+00:12:55,530 --> 00:12:56,210
+then this,
+
+386
+00:12:56,210 --> 00:12:56,950
+in terms of terminology,
+
+387
+00:12:56,950 --> 00:12:59,810
+we call it an interrupt source.
+
+388
+00:12:59,810 --> 00:13:03,190
+Because all interrupts originate and come from these peripherals,
+
+389
+00:13:03,190 --> 00:13:04,230
+so we call them interrupt sources.
+
+390
+00:13:04,230 --> 00:13:05,350
+For every interrupt source,
+
+391
+00:13:05,350 --> 00:13:06,990
+we give it a code number.
+
+392
+00:13:06,990 --> 00:13:09,010
+We'll cover the related concepts later on.
+
+393
+00:13:09,010 --> 00:13:10,430
+So these terms,
+
+394
+00:13:10,430 --> 00:13:11,410
+I'll introduce them to you as well.
+
+395
+00:13:11,410 --> 00:13:13,630
+So this is called an interrupt source.
+
+396
+00:13:13,630 --> 00:13:17,450
+Now, in RISC-V,
+
+397
+00:13:17,450 --> 00:13:18,850
+in its specification,
+
+398
+00:13:18,850 --> 00:13:20,230
+what it specifies is that,
+
+399
+00:13:20,230 --> 00:13:22,310
+the current rule is that,
+
+400
+00:13:22,310 --> 00:13:23,970
+these interrupt sources
+
+401
+00:13:23,970 --> 00:13:26,710
+There are 53 of them defined in total, as standard
+
+402
+00:13:26,710 --> 00:13:28,070
+So its value,
+
+403
+00:13:28,070 --> 00:13:29,690
+it goes from 0 to 53
+
+404
+00:13:29,690 --> 00:13:31,290
+But number 0 among them,
+
+405
+00:13:31,290 --> 00:13:32,510
+this interrupt source,
+
+406
+00:13:32,510 --> 00:13:34,810
+it is not actually assigned to
+
+407
+00:13:34,810 --> 00:13:37,290
+any specific peripheral,
+
+408
+00:13:37,290 --> 00:13:38,450
+but is reserved,
+
+409
+00:13:38,450 --> 00:13:39,550
+reserved and unused.
+
+410
+00:13:39,550 --> 00:13:40,990
+So the actual valid range
+
+411
+00:13:40,990 --> 00:13:42,390
+of interrupt sources,
+
+412
+00:13:42,390 --> 00:13:43,390
+is from 1 to 53.
+
+413
+00:13:43,390 --> 00:13:45,790
+Now later on,
+
+414
+00:13:45,790 --> 00:13:47,270
+aren't we going to show you an example,
+
+415
+00:13:47,270 --> 00:13:48,830
+the one with the serial port device?
+
+416
+00:13:48,830 --> 00:13:49,730
+Well, the serial port device,
+
+417
+00:13:49,730 --> 00:13:51,370
+it also has an interrupt line coming in,
+
+418
+00:13:51,370 --> 00:13:52,330
+since it's a peripheral too.
+
+419
+00:13:52,330 --> 00:13:55,030
+Now, this interrupt source of the serial port device,
+
+420
+00:13:55,030 --> 00:13:56,530
+right here,
+
+421
+00:13:56,530 --> 00:13:57,750
+We define it as a level
+
+422
+00:13:57,750 --> 00:13:59,150
+Just so you're aware of it.
+
+423
+00:13:59,150 --> 00:14:00,690
+This is what we call an interrupt source.
+
+424
+00:14:00,690 --> 00:14:09,030
+Now, this thing, the PLIC,
+
+425
+00:14:09,030 --> 00:14:10,570
+is itself a peripheral,
+
+426
+00:14:10,570 --> 00:14:11,830
+it is also a peripheral, right?
+
+427
+00:14:11,830 --> 00:14:14,390
+So, if we want to access,
+
+428
+00:14:14,390 --> 00:14:16,770
+or rather, to operate this kind of peripheral,
+
+429
+00:14:16,770 --> 00:14:18,350
+of course we also do it through its registers
+
+430
+00:14:18,350 --> 00:14:19,830
+to access it.
+
+431
+00:14:19,830 --> 00:14:22,170
+And this, likewise,
+
+432
+00:14:22,170 --> 00:14:24,550
+is the same as the UART we talked about earlier,
+
+433
+00:14:24,550 --> 00:14:25,770
+that is to say, all peripherals,
+
+434
+00:14:25,770 --> 00:14:27,950
+they all use memory-mapped I/O,
+
+435
+00:14:27,950 --> 00:14:31,010
+to let us access their registers.
+
+436
+00:14:31,010 --> 00:14:32,830
+So, according to
+
+437
+00:14:32,830 --> 00:14:39,030
+the definition in our emulator,
+
+438
+00:14:39,030 --> 00:14:42,750
+the range of all of its PLIC registers,
+
+439
+00:14:42,750 --> 00:14:44,690
+is specified to be within this range,
+
+440
+00:14:44,690 --> 00:14:45,570
+namely 0XC
+
+441
+00:14:45,570 --> 00:14:47,690
+followed by 6 zeros
+
+442
+00:14:47,690 --> 00:14:49,610
+so this starts at this address
+
+443
+00:14:49,610 --> 00:14:52,950
+and then there's this range of addresses after it
+
+444
+00:14:52,950 --> 00:14:55,810
+used to allocate registers for it
+
+445
+00:14:55,810 --> 00:14:58,970
+Now the diagram on the right
+
+446
+00:14:58,970 --> 00:15:00,030
+actually shows exactly what I mean
+
+447
+00:15:00,030 --> 00:15:02,050
+That is, this is basically a peripheral
+
+448
+00:15:02,050 --> 00:15:05,050
+Last time we wrote UART here, right?
+
+449
+00:15:05,050 --> 00:15:07,430
+Here it's the PRC
+
+450
+00:15:07,430 --> 00:15:11,330
+The range of some of the PRC's registers
+
+451
+00:15:11,330 --> 00:15:13,470
+is allocated within this range
+
+452
+00:15:13,470 --> 00:15:15,470
+For details, you can refer to
+
+453
+00:15:15,470 --> 00:15:18,530
+this code
+
+454
+00:15:18,530 --> 00:15:21,250
+So its base address
+
+455
+00:15:21,250 --> 00:15:21,710
+is this one
+
+456
+00:15:21,710 --> 00:15:22,370
+PLC
+
+457
+00:15:22,370 --> 00:15:24,290
+This just defines a base address
+
+458
+00:15:24,290 --> 00:15:28,590
+So which ones are there?
+
+459
+00:15:28,590 --> 00:15:30,030
+Which ones does this PLC have?
+
+460
+00:15:30,030 --> 00:15:31,990
+Which interface registers does it have for programming?
+
+461
+00:15:31,990 --> 00:15:32,550
+So here,
+
+462
+00:15:32,550 --> 00:15:33,810
+let me first introduce to you,
+
+463
+00:15:33,810 --> 00:15:35,750
+the first thing,
+
+464
+00:15:35,750 --> 00:15:37,290
+as we mentioned earlier,
+
+465
+00:15:37,290 --> 00:15:37,950
+this PLIC,
+
+466
+00:15:37,950 --> 00:15:39,630
+one of its very important functions,
+
+467
+00:15:39,630 --> 00:15:41,350
+is that based on the priority of the interrupt,
+
+468
+00:15:41,350 --> 00:15:44,050
+it can select one to come through.
+
+469
+00:15:44,050 --> 00:15:45,050
+So,
+
+470
+00:15:45,050 --> 00:15:47,330
+we can actually handle multiple
+
+471
+00:15:47,330 --> 00:15:48,470
+if there are multiple devices,
+
+472
+00:15:48,470 --> 00:15:49,410
+multiple peripherals,
+
+473
+00:15:49,410 --> 00:15:52,230
+then the priorities of the interrupt sources of these multiple peripherals,
+
+474
+00:15:52,230 --> 00:15:54,210
+we can actually configure them individually.
+
+475
+00:15:54,210 --> 00:15:55,070
+We can set them,
+
+476
+00:15:55,070 --> 00:15:56,410
+and how do we set them?
+
+477
+00:15:56,410 --> 00:15:59,530
+Through a register called priority, for example.
+
+478
+00:15:59,530 --> 00:16:00,990
+Now this register,
+
+479
+00:16:00,990 --> 00:16:03,670
+its address starts from base,
+
+480
+00:16:03,670 --> 00:16:06,110
+and then based on the interrupt number times 4
+
+481
+00:16:06,110 --> 00:16:09,370
+Because each register is 32 bits wide,
+
+482
+00:16:09,370 --> 00:16:10,330
+which is 4 bytes.
+
+483
+00:16:10,330 --> 00:16:11,890
+So you use that as the offset.
+
+484
+00:16:11,890 --> 00:16:15,350
+Each PLIC interrupt source corresponds to one register.
+
+485
+00:16:15,350 --> 00:16:17,970
+So if your board has,
+
+486
+00:16:17,970 --> 00:16:20,970
+let's say it has fifty,
+
+487
+00:16:20,970 --> 00:16:22,690
+fifty-two or fifty-three of them,
+
+488
+00:16:22,690 --> 00:16:24,050
+then it's just one
+
+489
+00:16:24,050 --> 00:16:25,210
+one register per interrupt source,
+
+490
+00:16:25,210 --> 00:16:26,310
+that's basically the idea.
+
+491
+00:16:26,310 --> 00:16:28,330
+That's one concept.
+
+492
+00:16:28,330 --> 00:16:29,250
+The second one is,
+
+493
+00:16:29,250 --> 00:16:30,990
+the actual value you configure,
+
+494
+00:16:30,990 --> 00:16:34,270
+it's a number,
+
+495
+00:16:34,270 --> 00:16:35,590
+and that number
+
+496
+00:16:35,590 --> 00:16:38,850
+ranges from 0 to 7.
+
+497
+00:16:38,850 --> 00:16:40,590
+Among them, 0 means
+
+498
+00:16:40,590 --> 00:16:42,590
+if you set this interrupt source,
+
+499
+00:16:42,590 --> 00:16:43,510
+if you configure it to 0,
+
+500
+00:16:43,510 --> 00:16:44,190
+it effectively means
+
+501
+00:16:44,190 --> 00:16:45,490
+this interrupt source cannot be used
+
+502
+00:16:45,490 --> 00:16:46,750
+it cannot be used
+
+503
+00:16:46,750 --> 00:16:49,210
+and the value goes from 1 to 7
+
+504
+00:16:49,210 --> 00:16:53,090
+1 means the smaller the value, the lower it is
+
+505
+00:16:53,090 --> 00:16:54,530
+1 is the lowest
+
+506
+00:16:54,530 --> 00:16:58,950
+7 means this interrupt source has a higher priority
+
+507
+00:16:58,950 --> 00:17:04,690
+so the PLIC, based on the priority of your interrupt source,
+
+508
+00:17:04,690 --> 00:17:05,970
+it will make some decisions
+
+509
+00:17:05,970 --> 00:17:10,990
+and of course, if the priority is higher,
+
+510
+00:17:10,990 --> 00:17:14,230
+of course it will handle it first
+
+511
+00:17:14,230 --> 00:17:16,570
+and submit it to the CPU for processing
+
+512
+00:17:16,570 --> 00:17:18,590
+and you might have configured two interrupt sources
+
+513
+00:17:18,590 --> 00:17:19,990
+with priorities that are the same, right?
+
+514
+00:17:19,990 --> 00:17:21,910
+so if they are the same,
+
+515
+00:17:21,910 --> 00:17:25,230
+according to the specification,
+
+516
+00:17:25,230 --> 00:17:27,650
+it will further distinguish them by the ID value of the interrupt source
+
+517
+00:17:27,650 --> 00:17:29,710
+if the ID value is smaller,
+
+518
+00:17:29,710 --> 00:17:30,850
+the priority is higher
+
+519
+00:17:30,850 --> 00:17:32,110
+that is how it works
+
+520
+00:17:32,110 --> 00:17:35,170
+so it is essentially a two-level decision and handling process
+
+521
+00:17:35,170 --> 00:17:40,300
+This is priority handling.
+
+522
+00:17:40,300 --> 00:17:43,500
+Now, in our code,
+
+523
+00:17:43,500 --> 00:17:47,700
+here we've also listed some of the related content in our code.
+
+524
+00:17:47,700 --> 00:17:48,900
+It's actually this code.
+
+525
+00:17:48,900 --> 00:17:51,040
+It's actually based on the concept we just covered.
+
+526
+00:17:51,040 --> 00:17:52,740
+First, we defined a macro,
+
+527
+00:17:52,740 --> 00:17:54,360
+called PIC priority,
+
+528
+00:17:54,360 --> 00:17:58,800
+and its parameter is ID.
+
+529
+00:17:58,800 --> 00:18:02,420
+ID is the ID value of the interrupt source,
+
+530
+00:18:02,420 --> 00:18:03,460
+the number of the interrupt source.
+
+531
+00:18:03,460 --> 00:18:07,380
+Then, this logic below,
+
+532
+00:18:07,380 --> 00:18:09,080
+actually, this piece of code,
+
+533
+00:18:09,080 --> 00:18:10,280
+what does it actually mean?
+
+534
+00:18:10,280 --> 00:18:11,600
+It actually means that,
+
+535
+00:18:11,600 --> 00:18:13,760
+URLQ,
+
+536
+00:18:13,760 --> 00:18:14,760
+this thing is actually,
+
+537
+00:18:14,760 --> 00:18:18,540
+the interrupt number of our UART device.
+
+538
+00:18:18,540 --> 00:18:19,400
+This was earlier,
+
+539
+00:18:19,400 --> 00:18:20,960
+it's right here, right?
+
+540
+00:18:20,960 --> 00:18:22,140
+It's already here.
+
+541
+00:18:22,140 --> 00:18:23,360
+I've listed them for you as well.
+
+542
+00:18:23,360 --> 00:18:26,940
+So if we set it to 1,
+
+543
+00:18:26,940 --> 00:18:27,600
+what does that tell us?
+
+544
+00:18:27,600 --> 00:18:32,240
+It means we take this UART0 device peripheral,
+
+545
+00:18:32,240 --> 00:18:33,980
+and set its priority to 1.
+
+546
+00:18:33,980 --> 00:18:36,620
+And 1 is actually a relatively low priority.
+
+547
+00:18:36,620 --> 00:18:37,820
+That's what it means.
+
+548
+00:18:37,820 --> 00:18:40,060
+This is the priority setting.
+
+549
+00:18:40,060 --> 00:18:42,740
+Now the next register,
+
+550
+00:18:42,740 --> 00:18:43,480
+it's called pending.
+
+551
+00:18:43,480 --> 00:18:44,740
+The pending register,
+
+552
+00:18:44,740 --> 00:18:46,760
+it is actually used to... through this,
+
+553
+00:18:46,760 --> 00:18:48,260
+when we read this pending register,
+
+554
+00:18:48,260 --> 00:18:53,040
+we can find out whether a particular interrupt source has occurred.
+
+555
+00:18:53,040 --> 00:18:54,880
+That's actually what it's used for.
+
+556
+00:18:54,880 --> 00:19:00,730
+Now for this pending register,
+
+557
+00:19:00,730 --> 00:19:03,210
+each PLIC actually has two of them,
+
+558
+00:19:03,210 --> 00:19:05,250
+because each one is 32 bits.
+
+559
+00:19:05,250 --> 00:19:07,390
+But as we know, with 32 bits,
+
+560
+00:19:07,390 --> 00:19:10,490
+it can represent at most 32 interrupt sources, right?
+
+561
+00:19:10,490 --> 00:19:12,650
+But as the specification says,
+
+562
+00:19:12,650 --> 00:19:15,190
+there are already more than 50 of these, right?
+
+563
+00:19:15,190 --> 00:19:16,070
+53 of them.
+
+564
+00:19:16,070 --> 00:19:18,290
+So one register isn't enough.
+
+565
+00:19:18,290 --> 00:19:20,970
+That's why it defines two registers to represent them.
+
+566
+00:19:20,970 --> 00:19:22,950
+Each bit represents one.
+
+567
+00:19:22,950 --> 00:19:25,230
+So, for example, the first one,
+
+568
+00:19:25,230 --> 00:19:27,590
+bit zero of the pending register,
+
+569
+00:19:27,590 --> 00:19:29,850
+represents interrupt source number 0.
+
+570
+00:19:29,850 --> 00:19:31,030
+Then bit one,
+
+571
+00:19:31,030 --> 00:19:33,710
+represents interrupt source number 1.
+
+572
+00:19:33,710 --> 00:19:35,690
+So each one represents a single source.
+
+573
+00:19:35,690 --> 00:19:37,830
+If this value,
+
+574
+00:19:37,830 --> 00:19:39,190
+if each bit is 1,
+
+575
+00:19:39,190 --> 00:19:40,550
+it means the interrupt has occurred,
+
+576
+00:19:40,550 --> 00:19:41,810
+and is pending.
+
+577
+00:19:41,810 --> 00:19:44,410
+If it is 0,
+
+578
+00:19:44,410 --> 00:19:46,130
+it means that interrupt source has not occurred.
+
+579
+00:19:46,130 --> 00:19:47,050
+That's actually all it means.
+
+580
+00:19:47,050 --> 00:19:48,790
+So
+
+581
+00:19:48,790 --> 00:19:52,790
+This pending register
+
+582
+00:19:52,790 --> 00:19:54,230
+can be both read and written.
+
+583
+00:19:54,230 --> 00:19:57,810
+Through this claim mechanism, this claim method,
+
+584
+00:19:57,810 --> 00:19:58,990
+I'll explain it to you later,
+
+585
+00:19:58,990 --> 00:20:02,350
+you can clear its, this pending bit.
+
+586
+00:20:02,350 --> 00:20:03,230
+The pending bit.
+
+587
+00:20:03,230 --> 00:20:05,390
+Now it also says here,
+
+588
+00:20:05,390 --> 00:20:06,770
+bit 0 corresponds to...
+
+589
+00:20:06,770 --> 00:20:08,550
+Because interrupt source number 0 doesn't exist,
+
+590
+00:20:08,550 --> 00:20:10,090
+so this value,
+
+591
+00:20:10,090 --> 00:20:11,830
+writing to it is actually meaningless.
+
+592
+00:20:11,830 --> 00:20:13,690
+And the value read out is always 0.
+
+593
+00:20:13,690 --> 00:20:14,810
+Okay.
+
+594
+00:20:14,810 --> 00:20:16,410
+This is the pending register.
+
+595
+00:20:16,410 --> 00:20:17,930
+Then,
+
+596
+00:20:17,930 --> 00:20:21,230
+we can also control this
+
+597
+00:20:21,230 --> 00:20:23,650
+interrupt source,
+
+598
+00:20:23,650 --> 00:20:24,850
+whether to turn it on,
+
+599
+00:20:24,850 --> 00:20:25,950
+enable it or disable it,
+
+600
+00:20:25,950 --> 00:20:27,270
+ah.
+
+601
+00:20:27,270 --> 00:20:29,250
+So this
+
+602
+00:20:29,250 --> 00:20:31,810
+as we said,
+
+603
+00:20:31,810 --> 00:20:32,110
+this
+
+604
+00:20:32,110 --> 00:20:33,450
+um,
+
+605
+00:20:33,450 --> 00:20:36,270
+this register,
+
+606
+00:20:36,270 --> 00:20:37,850
+it's one hart, one of these,
+
+607
+00:20:37,850 --> 00:20:38,190
+ah,
+
+608
+00:20:38,190 --> 00:20:38,650
+one hart,
+
+609
+00:20:38,650 --> 00:20:39,730
+one hart, two of them,
+
+610
+00:20:39,730 --> 00:20:40,390
+one hart, two of them,
+
+611
+00:20:40,390 --> 00:20:42,370
+and the reason is the same, that is,
+
+612
+00:20:42,370 --> 00:20:42,830
+because
+
+613
+00:20:42,830 --> 00:20:47,110
+because a single Enable register can only handle 32 of them,
+
+614
+00:20:47,110 --> 00:20:51,090
+so you need two to handle 53 of them.
+
+615
+00:20:51,090 --> 00:20:53,490
+But there are two of them for each hart,
+
+616
+00:20:53,490 --> 00:20:57,170
+because it's configured per hart.
+
+617
+00:20:57,170 --> 00:21:02,410
+Similarly, one bit controls one,
+
+618
+00:21:02,410 --> 00:21:03,910
+this part is pretty simple.
+
+619
+00:21:03,910 --> 00:21:05,270
+Just get a general idea of it.
+
+620
+00:21:05,270 --> 00:21:11,010
+This is for controlling the interrupt sources.
+
+621
+00:21:11,010 --> 00:21:12,730
+a register for enabling and disabling them
+
+622
+00:21:12,730 --> 00:21:15,890
+Now, our related code
+
+623
+00:21:15,890 --> 00:21:16,710
+also
+
+624
+00:21:16,710 --> 00:21:18,950
+the reference code, which you can take a look at
+
+625
+00:21:18,950 --> 00:21:20,570
+also defines a macro
+
+626
+00:21:20,570 --> 00:21:21,810
+So this
+
+627
+00:21:21,810 --> 00:21:25,590
+parameter takes a
+
+628
+00:21:25,590 --> 00:21:26,530
+current hart ID
+
+629
+00:21:26,530 --> 00:21:29,330
+and then we set the UART
+
+630
+00:21:29,330 --> 00:21:30,670
+interrupt source
+
+631
+00:21:30,670 --> 00:21:33,690
+So these many bits are actually what we just talked about
+
+632
+00:21:33,690 --> 00:21:35,130
+each bit corresponds to one, based on
+
+633
+00:21:35,130 --> 00:21:37,590
+its number, or rather its corresponding bit position
+
+634
+00:21:37,590 --> 00:21:40,550
+This is the
+
+635
+00:21:40,550 --> 00:21:43,450
+enable register
+
+636
+00:21:43,450 --> 00:21:45,830
+And then there's another one
+
+637
+00:21:45,830 --> 00:21:47,870
+called threshold
+
+638
+00:21:47,870 --> 00:21:49,810
+that is, the priority threshold
+
+639
+00:21:49,810 --> 00:21:51,850
+We can, for this hart,
+
+640
+00:21:51,850 --> 00:21:53,890
+set the priority threshold for interrupt sources
+
+641
+00:21:53,890 --> 00:21:56,770
+So it's actually used to control
+
+642
+00:21:56,770 --> 00:21:58,750
+Think of it like a threshold bar
+
+643
+00:21:58,750 --> 00:22:01,410
+So if you set this threshold value
+
+644
+00:22:01,410 --> 00:22:02,910
+If this of yours
+
+645
+00:22:02,910 --> 00:22:04,390
+Because as we said, the interrupt source itself
+
+646
+00:22:04,390 --> 00:22:05,610
+We can set its priority
+
+647
+00:22:05,610 --> 00:22:06,750
+If this priority
+
+648
+00:22:06,750 --> 00:22:08,410
+Is less than or equal to this threshold value
+
+649
+00:22:08,410 --> 00:22:10,370
+Then it's essentially like saying
+
+650
+00:22:10,370 --> 00:22:11,710
+This interrupt happens
+
+651
+00:22:11,710 --> 00:22:12,530
+It will be discarded
+
+652
+00:22:12,530 --> 00:22:15,770
+Now for this threshold value
+
+653
+00:22:15,770 --> 00:22:17,950
+If we set it to 0
+
+654
+00:22:17,950 --> 00:22:20,210
+Then it essentially means that
+
+655
+00:22:20,210 --> 00:22:23,170
+As long as the original priority of your interrupt source
+
+656
+00:22:23,170 --> 00:22:24,390
+Is a non-zero number
+
+657
+00:22:24,390 --> 00:22:27,910
+Then basically it can be accepted
+
+658
+00:22:27,910 --> 00:22:31,390
+But if you set this threshold value to 7
+
+659
+00:22:31,390 --> 00:22:32,350
+Then it's essentially like saying
+
+660
+00:22:32,350 --> 00:22:35,570
+All these interrupt sources will just be discarded
+
+661
+00:22:35,570 --> 00:22:38,370
+That is to say, through this setting
+
+662
+00:22:38,370 --> 00:22:40,090
+this threshold can further control
+
+663
+00:22:40,090 --> 00:22:41,550
+filtering out certain
+
+664
+00:22:41,550 --> 00:22:45,270
+filtering out certain interrupt sources based on this priority
+
+665
+00:22:45,270 --> 00:22:51,470
+Here is a relevant example of the code for handling this.
+
+666
+00:22:51,470 --> 00:22:52,830
+Just take a look at this.
+
+667
+00:22:52,830 --> 00:22:56,790
+So, earlier,
+
+668
+00:22:56,790 --> 00:22:59,570
+these were just registers that control various switches
+
+669
+00:22:59,570 --> 00:23:02,530
+and thresholds.
+
+670
+00:23:02,530 --> 00:23:07,480
+Now there are two more.
+
+671
+00:23:07,480 --> 00:23:09,500
+One is called claim complete.
+
+672
+00:23:09,500 --> 00:23:11,340
+Let's also take a look at these two registers.
+
+673
+00:23:11,340 --> 00:23:12,560
+These two are,
+
+674
+00:23:12,560 --> 00:23:14,080
+as we said, these two registers,
+
+675
+00:23:14,080 --> 00:23:15,260
+first of all, what we need to understand is that
+
+676
+00:23:15,260 --> 00:23:17,320
+these two registers are actually the same register
+
+677
+00:23:17,320 --> 00:23:18,860
+— their addresses are actually identical.
+
+678
+00:23:18,860 --> 00:23:19,860
+However,
+
+679
+00:23:19,860 --> 00:23:21,880
+the reason they are kept separate
+
+680
+00:23:21,880 --> 00:23:23,380
+is mainly because the effects they produce are different.
+
+681
+00:23:23,380 --> 00:23:25,360
+So we just gave it two names.
+
+682
+00:23:25,360 --> 00:23:27,140
+Now, what about Claim?
+
+683
+00:23:27,140 --> 00:23:30,300
+It's actually a read operation on this same register.
+
+684
+00:23:30,300 --> 00:23:32,000
+And the write operation on it,
+
+685
+00:23:32,000 --> 00:23:33,300
+we call it Complete.
+
+686
+00:23:33,300 --> 00:23:34,060
+That's what it means.
+
+687
+00:23:34,060 --> 00:23:36,540
+Now, the read operation,
+
+688
+00:23:36,540 --> 00:23:37,220
+we call it Claim.
+
+689
+00:23:37,220 --> 00:23:39,300
+What Claim actually achieves,
+
+690
+00:23:39,300 --> 00:23:41,920
+is that it can get the ID of
+
+691
+00:23:41,920 --> 00:23:44,340
+the highest-priority interrupt source currently pending.
+
+692
+00:23:44,340 --> 00:23:46,260
+After a successful Claim,
+
+693
+00:23:46,260 --> 00:23:47,640
+it clears the corresponding pending bit.
+
+694
+00:23:47,640 --> 00:23:50,500
+And Complete,
+
+695
+00:23:50,500 --> 00:23:52,120
+basically is like saying,
+
+696
+00:23:52,120 --> 00:23:54,020
+we notify the PLIC through our program
+
+697
+00:23:54,020 --> 00:23:57,020
+that we've finished handling an interrupt.
+
+698
+00:23:57,020 --> 00:23:58,900
+Because as everyone knows, once this interrupt happens,
+
+699
+00:23:58,900 --> 00:24:01,920
+it still has to end up in our interrupt handling function.
+
+700
+00:24:01,920 --> 00:24:04,100
+So how do we notify this PLIC?
+
+701
+00:24:04,100 --> 00:24:05,520
+Is this interrupt handled?
+
+702
+00:24:05,520 --> 00:24:06,480
+Yes, it's handled.
+
+703
+00:24:06,480 --> 00:24:08,780
+We just use this Complete
+
+704
+00:24:08,780 --> 00:24:11,640
+to write to this Complete register, and that's it.
+
+705
+00:24:11,640 --> 00:24:13,620
+So the PLIC,
+
+706
+00:24:13,620 --> 00:24:15,260
+actually, through this mechanism,
+
+707
+00:24:15,260 --> 00:24:16,260
+it can
+
+708
+00:24:16,260 --> 00:24:18,660
+as you know, it's possible that
+
+709
+00:24:18,660 --> 00:24:21,960
+multiple interrupts occur at the same time.
+
+710
+00:24:21,960 --> 00:24:23,860
+Then it may hand the first interrupt
+
+711
+00:24:23,860 --> 00:24:25,320
+to us, and after we've finished handling it,
+
+712
+00:24:25,320 --> 00:24:26,540
+when does it hand us
+
+713
+00:24:26,540 --> 00:24:27,360
+the second interrupt?
+
+714
+00:24:27,360 --> 00:24:29,180
+It actually depends on us notifying it,
+
+715
+00:24:29,180 --> 00:24:30,560
+through this complete mechanism,
+
+716
+00:24:30,560 --> 00:24:31,240
+notifying it
+
+717
+00:24:31,240 --> 00:24:32,080
+when the second interrupt
+
+718
+00:24:32,080 --> 00:24:33,580
+can be let in again,
+
+719
+00:24:33,580 --> 00:24:34,440
+right?
+
+720
+00:24:34,440 --> 00:24:36,780
+This is what claim and complete are about.
+
+721
+00:24:36,780 --> 00:24:39,100
+the effect it is meant to achieve
+
+722
+00:24:39,100 --> 00:24:42,250
+So basically,
+
+723
+00:24:42,250 --> 00:24:43,870
+these are some related functions.
+
+724
+00:24:43,870 --> 00:24:44,670
+Here I'll just
+
+725
+00:24:44,670 --> 00:24:47,410
+you can combine the concepts we just covered
+
+726
+00:24:47,410 --> 00:24:48,030
+and let's take a look.
+
+727
+00:24:48,030 --> 00:24:50,350
+We've wrapped all of this up,
+
+728
+00:24:50,350 --> 00:24:54,990
+so basically regarding
+
+729
+00:24:54,990 --> 00:24:58,250
+the programming interface this PLIC provides,
+
+730
+00:24:58,250 --> 00:24:59,270
+how do we control it?
+
+731
+00:24:59,270 --> 00:25:01,350
+How do we use this interface to interact with it?
+
+732
+00:25:01,350 --> 00:25:02,470
+That's where we'll leave it for now.
+
+733
+00:25:02,470 --> 00:25:05,490
+So next,
+
+734
+00:25:05,490 --> 00:25:08,070
+we'll mainly use this diagram
+
+735
+00:25:08,070 --> 00:25:09,050
+to understand
+
+736
+00:25:09,050 --> 00:25:11,030
+how exactly an interrupt occurs,
+
+737
+00:25:11,030 --> 00:25:13,510
+and what the process looks like in between.
+
+738
+00:25:13,510 --> 00:25:15,790
+We set these counters,
+
+739
+00:25:15,790 --> 00:25:17,830
+and what role do they actually play?
+
+740
+00:25:17,830 --> 00:25:19,570
+Now, this diagram
+
+741
+00:25:19,570 --> 00:25:24,350
+Actually, I copied this diagram from the PIC specification,
+
+742
+00:25:24,350 --> 00:25:25,990
+a figure I took from the spec.
+
+743
+00:25:25,990 --> 00:25:27,690
+We modified it slightly,
+
+744
+00:25:27,690 --> 00:25:31,270
+to illustrate the operating flow of the PIC.
+
+745
+00:25:31,270 --> 00:25:33,590
+Now, on this diagram,
+
+746
+00:25:33,590 --> 00:25:35,030
+first, let's get a sense of what it shows.
+
+747
+00:25:35,030 --> 00:25:37,110
+What's being conveyed here is that
+
+748
+00:25:37,110 --> 00:25:38,830
+this is a PIC,
+
+749
+00:25:38,830 --> 00:25:40,430
+this whole thing is a PIC.
+
+750
+00:25:40,430 --> 00:25:42,630
+Now, up here,
+
+751
+00:25:42,630 --> 00:25:44,350
+for the sake of example,
+
+752
+00:25:44,350 --> 00:25:48,530
+let's say it has two external devices connected in,
+
+753
+00:25:48,530 --> 00:25:50,930
+two lines — one is called 1,
+
+754
+00:25:50,930 --> 00:25:51,570
+the other is called 2.
+
+755
+00:25:51,570 --> 00:25:53,290
+You can think of them as two peripherals.
+
+756
+00:25:53,290 --> 00:25:54,590
+Then over here,
+
+757
+00:25:54,590 --> 00:25:57,090
+it is actually connected to two CPUs,
+
+758
+00:25:57,090 --> 00:25:58,590
+right?
+
+759
+00:25:58,590 --> 00:25:59,930
+Two CPUs coming out.
+
+760
+00:25:59,930 --> 00:26:02,490
+This one is actually considered to be a
+
+761
+00:26:02,490 --> 00:26:05,630
+an interrupt line for external interrupts
+
+762
+00:26:05,630 --> 00:26:08,350
+So for a CPU,
+
+763
+00:26:08,350 --> 00:26:11,110
+there are actually two interrupt sources.
+
+764
+00:26:11,110 --> 00:26:12,190
+But there's only one line here.
+
+765
+00:26:12,190 --> 00:26:16,190
+And then,
+
+766
+00:26:16,190 --> 00:26:18,070
+this actually reflects
+
+767
+00:26:18,070 --> 00:26:19,770
+the concept of those registers we just talked about.
+
+768
+00:26:19,770 --> 00:26:22,370
+This is the priority setting.
+
+769
+00:26:22,370 --> 00:26:24,670
+That is, when we set the priority,
+
+770
+00:26:24,670 --> 00:26:25,590
+as for that priority,
+
+771
+00:26:25,590 --> 00:26:29,590
+don't we set it for individual interrupt sources?
+
+772
+00:26:29,590 --> 00:26:31,430
+Well, this thing here actually corresponds to that.
+
+773
+00:26:31,430 --> 00:26:33,430
+It's the setting, the setting.
+
+774
+00:26:33,430 --> 00:26:35,710
+This is used to control
+
+775
+00:26:35,710 --> 00:26:38,790
+the priority of interrupt source 2.
+
+776
+00:26:38,790 --> 00:26:39,930
+And this is used to control
+
+777
+00:26:39,930 --> 00:26:42,310
+the priority of interrupt source 1.
+
+778
+00:26:42,310 --> 00:26:44,490
+Then as for these things,
+
+779
+00:26:44,490 --> 00:26:45,930
+RE actually stands for enable,
+
+780
+00:26:45,930 --> 00:26:47,750
+corresponding to the enable registers.
+
+781
+00:26:47,750 --> 00:26:50,970
+This register,
+
+782
+00:26:50,970 --> 00:26:53,030
+the register where we actually do the enable,
+
+783
+00:26:53,030 --> 00:26:58,070
+depending on the different HART,
+
+784
+00:26:58,070 --> 00:27:00,010
+we can individually
+
+785
+00:27:00,010 --> 00:27:06,630
+configure these different interrupt sources separately.
+
+786
+00:27:06,630 --> 00:27:07,610
+As you can see, right?
+
+787
+00:27:07,610 --> 00:27:09,430
+For example, this
+
+788
+00:27:09,430 --> 00:27:13,930
+these two are for the two on this HART,
+
+789
+00:27:13,930 --> 00:27:14,890
+and these two,
+
+790
+00:27:14,890 --> 00:27:19,530
+again, are configured for this HART.
+
+791
+00:27:19,530 --> 00:27:21,310
+This is the Enable.
+
+792
+00:27:21,310 --> 00:27:22,170
+And then
+
+793
+00:27:22,170 --> 00:27:24,030
+this one is for the
+
+794
+00:27:24,030 --> 00:27:26,570
+Stretch Hold, that is, the threshold,
+
+795
+00:27:26,570 --> 00:27:28,110
+setting the
+
+796
+00:27:28,110 --> 00:27:29,810
+threshold for each interrupt source,
+
+797
+00:27:29,810 --> 00:27:33,530
+setting the threshold for each HART.
+
+798
+00:27:33,530 --> 00:27:34,730
+It should be the threshold for each HART,
+
+799
+00:27:34,730 --> 00:27:35,030
+right?
+
+800
+00:27:35,030 --> 00:27:35,830
+Let me take a look.
+
+801
+00:27:35,830 --> 00:27:40,090
+The threshold is set for the HOT level.
+
+802
+00:27:40,090 --> 00:27:42,090
+The threshold is for the HOT level.
+
+803
+00:27:42,090 --> 00:27:43,010
+So this is
+
+804
+00:27:43,010 --> 00:27:44,870
+a threshold for HOT.
+
+805
+00:27:44,870 --> 00:27:47,190
+This is the threshold.
+
+806
+00:27:47,190 --> 00:27:48,170
+And then,
+
+807
+00:27:48,170 --> 00:27:48,870
+this part here,
+
+808
+00:27:48,870 --> 00:27:49,750
+is actually the Pending bit.
+
+809
+00:27:49,750 --> 00:27:50,710
+That's what I use
+
+810
+00:27:50,710 --> 00:27:52,370
+by reading it out,
+
+811
+00:27:52,370 --> 00:27:53,590
+we know whether this
+
+812
+00:27:53,590 --> 00:27:57,530
+interrupt has occurred or not.
+
+813
+00:27:57,530 --> 00:27:58,350
+And this one here
+
+814
+00:27:58,350 --> 00:28:00,010
+is Claim and Complete.
+
+815
+00:28:00,010 --> 00:28:02,810
+Claim and Complete.
+
+816
+00:28:02,810 --> 00:28:05,370
+We go and
+
+817
+00:28:05,370 --> 00:28:07,790
+read this claim and complete,
+
+818
+00:28:07,790 --> 00:28:10,410
+and go write
+
+819
+00:28:10,410 --> 00:28:11,290
+to complete,
+
+820
+00:28:11,290 --> 00:28:12,490
+which is this register.
+
+821
+00:28:12,490 --> 00:28:14,910
+So in this figure,
+
+822
+00:28:14,910 --> 00:28:16,990
+all the registers we just introduced,
+
+823
+00:28:16,990 --> 00:28:18,290
+they're all covered here.
+
+824
+00:28:18,290 --> 00:28:20,570
+Let's take a look.
+
+825
+00:28:20,570 --> 00:28:21,710
+Let me give you an example.
+
+826
+00:28:21,710 --> 00:28:24,650
+Suppose we have two interrupt sources.
+
+827
+00:28:24,650 --> 00:28:26,570
+After these two interrupt sources occur,
+
+828
+00:28:26,570 --> 00:28:27,230
+what happens to us?
+
+829
+00:28:27,230 --> 00:28:29,610
+How we set these registers,
+
+830
+00:28:29,610 --> 00:28:31,170
+what effect will that have?
+
+831
+00:28:31,170 --> 00:28:33,430
+Now suppose we set
+
+832
+00:28:33,430 --> 00:28:35,990
+the priority of interrupt source 1 to 1,
+
+833
+00:28:35,990 --> 00:28:38,110
+and the priority of interrupt source 2 to 2.
+
+834
+00:28:38,110 --> 00:28:39,590
+What that means is,
+
+835
+00:28:39,590 --> 00:28:41,290
+as we know, the larger this value is,
+
+836
+00:28:41,290 --> 00:28:42,210
+the higher its priority.
+
+837
+00:28:42,210 --> 00:28:44,190
+So basically, interrupt source 2
+
+838
+00:28:44,190 --> 00:28:45,450
+has the higher priority.
+
+839
+00:28:45,450 --> 00:28:47,030
+And then,
+
+840
+00:28:47,030 --> 00:28:48,430
+for example, if we also set
+
+841
+00:28:48,430 --> 00:28:49,910
+For Hart
+
+842
+00:28:49,910 --> 00:28:52,210
+let's say for Hart 0,
+
+843
+00:28:52,210 --> 00:28:55,050
+we enable both of its interrupts.
+
+844
+00:28:55,050 --> 00:28:56,890
+And on this side, we disable them.
+
+845
+00:28:56,890 --> 00:28:58,150
+Now once this is disabled,
+
+846
+00:28:58,150 --> 00:29:00,750
+as you all know, nothing can actually get through,
+
+847
+00:29:00,750 --> 00:29:02,690
+Hart 0 can't get through here.
+
+848
+00:29:02,690 --> 00:29:04,030
+And then,
+
+849
+00:29:04,030 --> 00:29:05,370
+we also go and set this,
+
+850
+00:29:05,370 --> 00:29:06,310
+its threshold.
+
+851
+00:29:06,310 --> 00:29:07,170
+The threshold,
+
+852
+00:29:07,170 --> 00:29:08,890
+for example, let's set it to 0.
+
+853
+00:29:08,890 --> 00:29:10,690
+Setting it to 0, as we covered earlier,
+
+854
+00:29:10,690 --> 00:29:11,990
+means it effectively
+
+855
+00:29:11,990 --> 00:29:14,290
+lets all interrupts through,
+
+856
+00:29:14,290 --> 00:29:15,930
+lets all interrupts through.
+
+857
+00:29:15,930 --> 00:29:17,110
+Okay.
+
+858
+00:29:17,110 --> 00:29:18,390
+So suppose this
+
+859
+00:29:18,390 --> 00:29:20,810
+peripheral 1 and interrupt 2
+
+860
+00:29:20,810 --> 00:29:23,410
+occur.
+
+861
+00:29:23,410 --> 00:29:25,710
+Now, of course, the example we're using here is one where they happen at the same time.
+
+862
+00:29:25,710 --> 00:29:26,950
+But happening at the same time,
+
+863
+00:29:26,950 --> 00:29:27,830
+doesn't mean
+
+864
+00:29:27,830 --> 00:29:29,170
+they actually come in at the same time.
+
+865
+00:29:29,170 --> 00:29:30,030
+That's something you all need to keep in mind.
+
+866
+00:29:30,030 --> 00:29:31,070
+So,
+
+867
+00:29:31,070 --> 00:29:32,670
+so first,
+
+868
+00:29:32,670 --> 00:29:34,550
+we judge them based on priority.
+
+869
+00:29:34,550 --> 00:29:36,310
+We know that priority 1
+
+870
+00:29:36,310 --> 00:29:37,290
+is lower than priority 2,
+
+871
+00:29:37,290 --> 00:29:39,110
+so which interrupt
+
+872
+00:29:39,110 --> 00:29:40,810
+gets in first?
+
+873
+00:29:40,810 --> 00:29:43,250
+Well, it's definitely interrupt 2 that comes in first,
+
+874
+00:29:43,250 --> 00:29:43,590
+right?
+
+875
+00:29:43,590 --> 00:29:45,450
+Besides, this path is open,
+
+876
+00:29:45,450 --> 00:29:46,050
+so it can come in.
+
+877
+00:29:46,050 --> 00:29:47,510
+The path below can't come in.
+
+878
+00:29:47,510 --> 00:29:49,370
+In other words, this second one, the Hot
+
+879
+00:29:49,370 --> 00:29:51,010
+—it can't get in here,
+
+880
+00:29:51,010 --> 00:29:52,170
+because this path
+
+881
+00:29:52,170 --> 00:29:54,490
+This path is currently closed off.
+
+882
+00:29:54,490 --> 00:29:55,250
+It's closed off.
+
+883
+00:29:55,250 --> 00:29:56,310
+It's been disabled.
+
+884
+00:29:56,310 --> 00:29:57,930
+Meaning this can't get through.
+
+885
+00:29:57,930 --> 00:30:01,280
+Now, once it does get through,
+
+886
+00:30:01,280 --> 00:30:03,040
+this point, because the Threshold is also 0,
+
+887
+00:30:03,040 --> 00:30:06,620
+so 0 is definitely less than 2,
+
+888
+00:30:06,620 --> 00:30:08,240
+so it can definitely get in as well.
+
+889
+00:30:08,240 --> 00:30:09,280
+So once it gets in,
+
+890
+00:30:09,280 --> 00:30:10,460
+then, after it gets in,
+
+891
+00:30:10,460 --> 00:30:13,140
+we say that this source 2,
+
+892
+00:30:13,140 --> 00:30:18,160
+it's basically as if this interrupt lights up.
+
+893
+00:30:18,160 --> 00:30:18,760
+Once this light comes on,
+
+894
+00:30:18,760 --> 00:30:20,160
+the light coming on is basically like saying,
+
+895
+00:30:20,160 --> 00:30:23,360
+the interrupt on our CPU side has occurred.
+
+896
+00:30:23,360 --> 00:30:25,000
+It will then,
+
+897
+00:30:25,000 --> 00:30:27,560
+the execution process on our CPU here will get interrupted.
+
+898
+00:30:27,560 --> 00:30:31,120
+So the interruption takes us into our interrupt handler,
+
+899
+00:30:31,120 --> 00:30:32,720
+and we go and handle this interrupt.
+
+900
+00:30:32,720 --> 00:30:34,640
+Now, as for the handling process,
+
+901
+00:30:34,640 --> 00:30:35,640
+Actually, what we need to do
+
+902
+00:30:35,640 --> 00:30:37,080
+is figure out
+
+903
+00:30:37,080 --> 00:30:39,960
+which source came in.
+
+904
+00:30:39,960 --> 00:30:42,460
+We do this by calling claim,
+
+905
+00:30:42,460 --> 00:30:43,800
+and by calling claim,
+
+906
+00:30:43,800 --> 00:30:45,440
+we can find out,
+
+907
+00:30:45,440 --> 00:30:47,240
+because we know that
+
+908
+00:30:47,240 --> 00:30:48,280
+after the claim call,
+
+909
+00:30:48,280 --> 00:30:51,400
+it returns the ID of that interrupt source.
+
+910
+00:30:51,400 --> 00:30:54,120
+So then we know,
+
+911
+00:30:54,120 --> 00:30:55,380
+for example, say this is 1 2,
+
+912
+00:30:55,380 --> 00:30:56,420
+so it's number 2.
+
+913
+00:30:56,420 --> 00:30:59,380
+Once we know from claim
+
+914
+00:30:59,380 --> 00:31:00,440
+that it's number 2,
+
+915
+00:31:00,440 --> 00:31:03,460
+we go into the switch-case logic,
+
+916
+00:31:03,460 --> 00:31:03,860
+right?
+
+917
+00:31:03,860 --> 00:31:06,160
+We handle the logic for this interrupt source number 2,
+
+918
+00:31:06,160 --> 00:31:07,440
+and once that's done,
+
+919
+00:31:07,440 --> 00:31:08,400
+what else do we need to do?
+
+920
+00:31:08,400 --> 00:31:09,420
+We need to
+
+921
+00:31:09,420 --> 00:31:12,220
+One thing to mention here is that if we do a claim
+
+922
+00:31:12,220 --> 00:31:12,800
+then this
+
+923
+00:31:12,800 --> 00:31:16,960
+this pending bit will actually be cleared
+
+924
+00:31:16,960 --> 00:31:20,060
+this pending bit will actually be cleared
+
+925
+00:31:20,060 --> 00:31:22,580
+And then, after we're done handling it
+
+926
+00:31:22,580 --> 00:31:24,780
+we call this complete operation
+
+927
+00:31:24,780 --> 00:31:27,240
+Now, complete actually means going to
+
+928
+00:31:27,240 --> 00:31:30,000
+going to write to this complete register
+
+929
+00:31:30,000 --> 00:31:31,020
+So once we write to it,
+
+930
+00:31:31,020 --> 00:31:32,060
+it's essentially like saying
+
+931
+00:31:32,060 --> 00:31:33,880
+we've notified the PLIC
+
+932
+00:31:33,880 --> 00:31:35,100
+that this
+
+933
+00:31:35,100 --> 00:31:36,180
+current interrupt
+
+934
+00:31:36,180 --> 00:31:36,880
+has been handled
+
+935
+00:31:36,880 --> 00:31:39,340
+After it's handled,
+
+936
+00:31:39,340 --> 00:31:40,520
+then as you can imagine,
+
+937
+00:31:40,520 --> 00:31:44,610
+interrupt 2 is done
+
+938
+00:31:44,610 --> 00:31:45,210
+Once it's done,
+
+939
+00:31:45,210 --> 00:31:46,290
+then of course, as you know,
+
+940
+00:31:46,290 --> 00:31:47,130
+interrupt 1 actually
+
+941
+00:31:47,130 --> 00:31:48,450
+this part is blocked right here
+
+942
+00:31:48,450 --> 00:31:49,250
+and never gets in
+
+943
+00:31:49,250 --> 00:31:49,490
+right?
+
+944
+00:31:49,490 --> 00:31:50,690
+Then this interrupt number 1
+
+945
+00:31:50,690 --> 00:31:52,190
+will come in.
+
+946
+00:31:52,190 --> 00:31:53,270
+So over here
+
+947
+00:31:53,270 --> 00:31:55,010
+for number 1, the
+
+948
+00:31:55,010 --> 00:31:56,790
+Pending bit lights up again.
+
+949
+00:31:56,790 --> 00:31:57,570
+And once it lights up,
+
+950
+00:31:57,570 --> 00:31:58,630
+then our
+
+951
+00:31:58,630 --> 00:31:59,950
+in effect, our CPU
+
+952
+00:31:59,950 --> 00:32:01,450
+can handle interrupt number 1.
+
+953
+00:32:01,450 --> 00:32:03,390
+So this,
+
+954
+00:32:03,390 --> 00:32:06,930
+in a nutshell, is how PLIC does its arbitration.
+
+955
+00:32:06,930 --> 00:32:08,850
+That's how it works for us.
+
+956
+00:32:08,850 --> 00:32:10,230
+So just get a general idea of it.
+
+957
+00:32:10,230 --> 00:32:16,130
+Now, the last part of this chapter
+
+958
+00:32:16,130 --> 00:32:17,510
+is to give you an example.
+
+959
+00:32:17,510 --> 00:32:19,930
+That is, after we've learned
+
+960
+00:32:19,930 --> 00:32:22,190
+how interrupt handling works,
+
+961
+00:32:22,190 --> 00:32:22,970
+Let's take a look
+
+962
+00:32:22,970 --> 00:32:25,830
+at how we can use some of the related knowledge about interrupts
+
+963
+00:32:25,830 --> 00:32:26,750
+to implement
+
+964
+00:32:26,750 --> 00:32:30,530
+that is, still using the UART device
+
+965
+00:32:30,530 --> 00:32:31,510
+because as we discussed earlier,
+
+966
+00:32:31,510 --> 00:32:32,990
+we used the UART to implement an output.
+
+967
+00:32:32,990 --> 00:32:34,510
+Now, through interrupts,
+
+968
+00:32:34,510 --> 00:32:35,830
+we're going to implement an input.
+
+969
+00:32:35,830 --> 00:32:36,730
+What does that mean?
+
+970
+00:32:36,730 --> 00:32:39,590
+It means that when we're on the console,
+
+971
+00:32:39,590 --> 00:32:41,130
+say we type a character,
+
+972
+00:32:41,130 --> 00:32:42,870
+it actually goes through the keyboard,
+
+973
+00:32:42,870 --> 00:32:44,570
+and then through this console,
+
+974
+00:32:44,570 --> 00:32:45,770
+it sends it to that serial port.
+
+975
+00:32:45,770 --> 00:32:46,650
+In other words,
+
+976
+00:32:46,650 --> 00:32:48,770
+the data gets sent to
+
+977
+00:32:48,770 --> 00:32:49,530
+this serial port device.
+
+978
+00:32:49,530 --> 00:32:50,690
+Then this serial port device,
+
+979
+00:32:50,690 --> 00:32:52,110
+it will essentially,
+
+980
+00:32:52,110 --> 00:32:54,330
+it will get a
+
+981
+00:32:54,330 --> 00:32:56,270
+it will generate an interrupt to notify
+
+982
+00:32:56,270 --> 00:32:57,730
+this CPU, right?
+
+983
+00:32:57,730 --> 00:33:00,710
+Let me take a look at this.
+
+984
+00:33:00,710 --> 00:33:01,590
+Let's go over the principle of this
+
+985
+00:33:01,590 --> 00:33:02,430
+briefly first.
+
+986
+00:33:02,430 --> 00:33:03,770
+That is to say,
+
+987
+00:33:03,770 --> 00:33:05,430
+we know that
+
+988
+00:33:05,430 --> 00:33:07,770
+let's say this is our CPU,
+
+989
+00:33:07,770 --> 00:33:09,190
+and then
+
+990
+00:33:09,190 --> 00:33:09,650
+on the outside,
+
+991
+00:33:09,650 --> 00:33:12,850
+it has a PRC connected to it.
+
+992
+00:33:12,850 --> 00:33:13,530
+As for the PRC,
+
+993
+00:33:13,530 --> 00:33:15,630
+there's a UART device connected on the outside.
+
+994
+00:33:15,630 --> 00:33:17,590
+This UART device,
+
+995
+00:33:17,590 --> 00:33:20,250
+and this one here
+
+996
+00:33:20,250 --> 00:33:22,550
+is the P-L-I-C,
+
+997
+00:33:22,550 --> 00:33:23,830
+this thing right here.
+
+998
+00:33:23,830 --> 00:33:24,930
+And this one here,
+
+999
+00:33:24,930 --> 00:33:26,430
+maybe this is our HOT,
+
+1000
+00:33:26,430 --> 00:33:27,970
+the CPU.
+
+1001
+00:33:27,970 --> 00:33:31,690
+Now, this UART,
+
+1002
+00:33:31,690 --> 00:33:32,710
+this thing here,
+
+1003
+00:33:32,710 --> 00:33:33,230
+is actually all
+
+1004
+00:33:33,230 --> 00:33:34,830
+essentially inside our
+
+1005
+00:33:34,830 --> 00:33:36,650
+SoC, this platform,
+
+1006
+00:33:36,650 --> 00:33:37,650
+right?
+
+1007
+00:33:37,650 --> 00:33:39,270
+Now this one,
+
+1008
+00:33:39,270 --> 00:33:42,610
+if we're talking about a real physical device,
+
+1009
+00:33:42,610 --> 00:33:44,190
+it connects through this serial port device,
+
+1010
+00:33:44,190 --> 00:33:46,150
+and hooks up to a host machine of ours.
+
+1011
+00:33:46,150 --> 00:33:47,330
+I've drawn it kind of small,
+
+1012
+00:33:47,330 --> 00:33:48,330
+but in reality this thing is a bit bigger.
+
+1013
+00:33:48,330 --> 00:33:49,590
+Now this host machine,
+
+1014
+00:33:49,590 --> 00:33:50,390
+through this side here,
+
+1015
+00:33:50,390 --> 00:33:51,290
+through the keyboard,
+
+1016
+00:33:51,290 --> 00:33:52,610
+this side is the console.
+
+1017
+00:33:52,610 --> 00:33:54,970
+So we type a character C here,
+
+1018
+00:33:54,970 --> 00:33:56,510
+let's say we type a character C,
+
+1019
+00:33:56,510 --> 00:33:57,670
+then this character C,
+
+1020
+00:33:57,670 --> 00:33:59,150
+goes through this serial cable,
+
+1021
+00:33:59,150 --> 00:34:00,390
+it gets transmitted right up to this point
+
+1022
+00:34:00,390 --> 00:34:02,310
+Now, how does this UART take this
+
+1023
+00:34:02,310 --> 00:34:04,010
+it receives this character C,
+
+1024
+00:34:04,010 --> 00:34:05,590
+how does it notify our CPU? It actually does it through this,
+
+1025
+00:34:05,590 --> 00:34:06,530
+it sends out an interrupt
+
+1026
+00:34:06,530 --> 00:34:08,490
+and then our handling flow goes like this:
+
+1027
+00:34:08,490 --> 00:34:12,190
+once the interrupt comes in,
+
+1028
+00:34:12,190 --> 00:34:13,550
+it knows a character has arrived,
+
+1029
+00:34:13,550 --> 00:34:15,130
+and then we can take this character
+
+1030
+00:34:15,130 --> 00:34:16,790
+and read it out from this,
+
+1031
+00:34:16,790 --> 00:34:18,410
+and after reading it out,
+
+1032
+00:34:18,410 --> 00:34:20,290
+we use the output we implemented before,
+
+1033
+00:34:20,290 --> 00:34:23,690
+take this content,
+
+1034
+00:34:23,690 --> 00:34:25,370
+write it through this,
+
+1035
+00:34:25,370 --> 00:34:26,190
+write it back,
+
+1036
+00:34:26,190 --> 00:34:29,110
+and then through this
+
+1037
+00:34:29,110 --> 00:34:30,530
+serial line, write it out again,
+
+1038
+00:34:30,530 --> 00:34:32,530
+and on the screen
+
+1039
+00:34:32,530 --> 00:34:33,570
+we will see a C appear.
+
+1040
+00:34:33,570 --> 00:34:34,770
+That's how the whole flow works.
+
+1041
+00:34:34,770 --> 00:34:38,130
+What we actually want is to use this kind of
+
+1042
+00:34:38,130 --> 00:34:39,290
+flow like this
+
+1043
+00:34:39,290 --> 00:34:41,050
+So the one just now,
+
+1044
+00:34:41,050 --> 00:34:44,330
+this line here,
+
+1045
+00:34:44,330 --> 00:34:46,490
+is actually an interrupt,
+
+1046
+00:34:46,490 --> 00:34:49,050
+it notifies us through an interrupt.
+
+1047
+00:34:49,050 --> 00:34:51,170
+Now, for writing it back,
+
+1048
+00:34:51,170 --> 00:34:53,010
+actually, writing it back,
+
+1049
+00:34:53,010 --> 00:34:53,530
+it reuses
+
+1050
+00:34:53,530 --> 00:34:54,770
+our original
+
+1051
+00:34:54,770 --> 00:34:56,450
+logic from the very beginning,
+
+1052
+00:34:56,450 --> 00:34:57,590
+which is the polling approach,
+
+1053
+00:34:57,590 --> 00:34:58,550
+and then writes it out.
+
+1054
+00:34:58,550 --> 00:35:00,090
+This way,
+
+1055
+00:35:00,090 --> 00:35:01,230
+we see a C on the screen.
+
+1056
+00:35:01,230 --> 00:35:03,690
+Let's first take a look at the effect,
+
+1057
+00:35:03,690 --> 00:35:09,810
+and demonstrate this effect,
+
+1058
+00:35:09,810 --> 00:35:12,410
+so everyone can better understand what I mean.
+
+1059
+00:35:12,410 --> 00:35:24,890
+Here, we enter the sixth interrupt example,
+
+1060
+00:35:24,890 --> 00:35:26,410
+which we have already compiled.
+
+1061
+00:35:26,410 --> 00:35:27,550
+So let's run it.
+
+1062
+00:35:27,550 --> 00:35:33,090
+Now, everyone can see that this task is actually still running.
+
+1063
+00:35:33,090 --> 00:35:34,270
+But on the keyboard,
+
+1064
+00:35:34,270 --> 00:35:35,390
+for example, I type a C.
+
+1065
+00:35:35,390 --> 00:35:37,550
+When you see this C,
+
+1066
+00:35:37,550 --> 00:35:39,990
+it triggers an external...
+
+1067
+00:35:39,990 --> 00:35:41,990
+it triggers an external interrupt,
+
+1068
+00:35:41,990 --> 00:35:42,710
+right?
+
+1069
+00:35:42,710 --> 00:35:45,700
+Let me stop this.
+
+1070
+00:35:45,700 --> 00:35:49,700
+Now I press a C again.
+
+1071
+00:35:49,700 --> 00:35:50,880
+If I keep pressing it,
+
+1072
+00:35:50,880 --> 00:35:52,180
+it will keep triggering interrupts.
+
+1073
+00:35:52,180 --> 00:35:58,740
+So this...
+
+1074
+00:35:58,740 --> 00:36:01,000
+this line being printed out
+
+1075
+00:36:01,000 --> 00:36:02,280
+means that if...
+
+1076
+00:36:02,280 --> 00:36:03,740
+if this line gets printed out,
+
+1077
+00:36:03,740 --> 00:36:08,230
+that is to say, this line,
+
+1078
+00:36:08,230 --> 00:36:09,490
+if it gets printed out,
+
+1079
+00:36:09,490 --> 00:36:10,450
+then it shows that this...
+
+1080
+00:36:10,450 --> 00:36:12,050
+interrupt
+
+1081
+00:36:12,050 --> 00:36:13,070
+This UART,
+
+1082
+00:36:13,070 --> 00:36:14,490
+after it receives this data,
+
+1083
+00:36:14,490 --> 00:36:17,410
+the interrupt is generated.
+
+1084
+00:36:17,410 --> 00:36:17,970
+This generation,
+
+1085
+00:36:17,970 --> 00:36:19,670
+and then it takes this C,
+
+1086
+00:36:19,670 --> 00:36:21,290
+reads it out from the interrupt,
+
+1087
+00:36:21,290 --> 00:36:22,490
+and then echoes it back.
+
+1088
+00:36:22,490 --> 00:36:24,770
+This is actually done by writing it out.
+
+1089
+00:36:24,770 --> 00:36:27,130
+We achieve this effect.
+
+1090
+00:36:27,130 --> 00:36:29,050
+Let's take a look
+
+1091
+00:36:29,050 --> 00:36:31,190
+at how our code implements this.
+
+1092
+00:36:31,190 --> 00:36:34,990
+So first of all,
+
+1093
+00:36:34,990 --> 00:36:36,170
+for this PRC,
+
+1094
+00:36:36,170 --> 00:36:38,370
+we need to do some corresponding initialization
+
+1095
+00:36:38,370 --> 00:36:40,190
+for this peripheral.
+
+1096
+00:36:40,190 --> 00:36:42,490
+Actually, this is all implemented in the PRC,
+
+1097
+00:36:42,490 --> 00:36:44,270
+in this init function.
+
+1098
+00:36:44,270 --> 00:36:45,670
+Now, these things,
+
+1099
+00:36:45,670 --> 00:36:48,010
+based on what we discussed earlier,
+
+1100
+00:36:48,010 --> 00:36:49,970
+this is setting its priority.
+
+1101
+00:36:49,970 --> 00:36:51,630
+Setting it, whether it's enabled.
+
+1102
+00:36:51,630 --> 00:36:52,990
+It's its switch, the hold.
+
+1103
+00:36:52,990 --> 00:36:53,350
+Right?
+
+1104
+00:36:53,350 --> 00:36:56,130
+So what are these two steps doing?
+
+1105
+00:36:56,130 --> 00:36:57,550
+These two steps are exactly what we talked about earlier.
+
+1106
+00:36:57,550 --> 00:36:59,590
+That is, this MRE register.
+
+1107
+00:36:59,590 --> 00:37:00,810
+And the MSTATE register.
+
+1108
+00:37:00,810 --> 00:37:01,990
+As for this thing,
+
+1109
+00:37:01,990 --> 00:37:03,450
+actually our MRE,
+
+1110
+00:37:03,450 --> 00:37:04,230
+as we mentioned before,
+
+1111
+00:37:04,230 --> 00:37:05,810
+it can control
+
+1112
+00:37:05,810 --> 00:37:08,090
+As we said, interrupts come in three kinds.
+
+1113
+00:37:08,090 --> 00:37:09,150
+External interrupts,
+
+1114
+00:37:09,150 --> 00:37:10,150
+software interrupts,
+
+1115
+00:37:10,150 --> 00:37:11,050
+and timer interrupts.
+
+1116
+00:37:11,050 --> 00:37:12,730
+We can enable them
+
+1117
+00:37:12,730 --> 00:37:13,630
+individually.
+
+1118
+00:37:13,630 --> 00:37:15,850
+So what we're actually doing here is taking this
+
+1119
+00:37:15,850 --> 00:37:18,810
+E, which stands for external,
+
+1120
+00:37:18,810 --> 00:37:19,430
+meaning external
+
+1121
+00:37:19,430 --> 00:37:20,270
+External interrupts.
+
+1122
+00:37:20,270 --> 00:37:21,470
+We did an enable.
+
+1123
+00:37:21,470 --> 00:37:23,390
+At that time, everyone should pay attention to how it is written.
+
+1124
+00:37:23,390 --> 00:37:25,870
+It first reads out the value in this register,
+
+1125
+00:37:25,870 --> 00:37:27,650
+then sets the corresponding bit,
+
+1126
+00:37:27,650 --> 00:37:30,890
+and then we write it back.
+
+1127
+00:37:30,890 --> 00:37:32,290
+That is actually the process.
+
+1128
+00:37:32,290 --> 00:37:35,590
+This ensures that the values in the other registers
+
+1129
+00:37:35,590 --> 00:37:36,650
+will not be
+
+1130
+00:37:36,650 --> 00:37:39,030
+modified by us.
+
+1131
+00:37:39,030 --> 00:37:43,930
+Now this is actually a global interrupt enable.
+
+1132
+00:37:43,930 --> 00:37:45,450
+This is actually the global interrupt.
+
+1133
+00:37:45,450 --> 00:37:46,930
+So for this interrupt, as you can see,
+
+1134
+00:37:46,930 --> 00:37:48,350
+it goes level by level, with many levels.
+
+1135
+00:37:48,350 --> 00:37:49,790
+This one is global.
+
+1136
+00:37:49,790 --> 00:37:51,130
+And this one is
+
+1137
+00:37:51,130 --> 00:37:52,890
+the three main categories.
+
+1138
+00:37:52,890 --> 00:37:54,610
+Software interrupts,
+
+1139
+00:37:54,610 --> 00:37:56,530
+timer interrupts, and external interrupts.
+
+1140
+00:37:56,530 --> 00:37:58,890
+You can also turn each of them on and off separately.
+
+1141
+00:37:58,890 --> 00:38:01,530
+And then here you can also use this
+
+1142
+00:38:01,530 --> 00:38:04,190
+And here there's also, for the interrupt source,
+
+1143
+00:38:04,190 --> 00:38:06,810
+setting this HART up with a
+
+1144
+00:38:06,810 --> 00:38:09,590
+PRC-level
+
+1145
+00:38:09,590 --> 00:38:10,630
+enable
+
+1146
+00:38:10,630 --> 00:38:11,150
+Right?
+
+1147
+00:38:11,150 --> 00:38:12,590
+And then here you can also use
+
+1148
+00:38:12,590 --> 00:38:13,330
+the threshold register,
+
+1149
+00:38:13,330 --> 00:38:15,210
+to filter
+
+1150
+00:38:15,210 --> 00:38:16,590
+the interrupt sources.
+
+1151
+00:38:16,590 --> 00:38:17,810
+So as we can see,
+
+1152
+00:38:17,810 --> 00:38:20,070
+this whole interrupt handling process
+
+1153
+00:38:20,070 --> 00:38:21,170
+is actually divided into many levels.
+
+1154
+00:38:21,170 --> 00:38:21,910
+At each level,
+
+1155
+00:38:21,910 --> 00:38:24,350
+we have quite a few stages,
+
+1156
+00:38:24,350 --> 00:38:26,050
+and at every level we can control
+
+1157
+00:38:26,050 --> 00:38:27,290
+whether this interrupt
+
+1158
+00:38:27,290 --> 00:38:28,590
+gets handled or not.
+
+1159
+00:38:28,590 --> 00:38:30,090
+This process is still a bit complicated.
+
+1160
+00:38:30,090 --> 00:38:33,170
+Now these two lines refer to claim and complete,
+
+1161
+00:38:33,170 --> 00:38:34,590
+Let's skip that one.
+
+1162
+00:38:34,590 --> 00:38:36,070
+This is inside the prc.
+
+1163
+00:38:36,070 --> 00:38:37,570
+We'll set up the code here.
+
+1164
+00:38:37,570 --> 00:38:39,310
+This is our one...
+
+1165
+00:38:39,310 --> 00:38:41,870
+In this step, we'll add this new file.
+
+1166
+00:38:41,870 --> 00:38:43,710
+Now, there's some processing done in here.
+
+1167
+00:38:43,710 --> 00:38:46,590
+Now, as far as day-to-day work goes,
+
+1168
+00:38:46,590 --> 00:38:48,670
+as far as this trap goes,
+
+1169
+00:38:48,670 --> 00:38:50,670
+inside the trap handler,
+
+1170
+00:38:50,670 --> 00:38:52,010
+what we actually do is
+
+1171
+00:38:52,010 --> 00:38:53,350
+this switch.
+
+1172
+00:38:53,350 --> 00:38:55,430
+First, we distinguish whether it's an interrupt.
+
+1173
+00:38:55,430 --> 00:38:56,370
+If it is an interrupt,
+
+1174
+00:38:56,370 --> 00:38:58,630
+since the highest bit is 1,
+
+1175
+00:38:58,630 --> 00:38:59,350
+that means it's an interrupt.
+
+1176
+00:38:59,350 --> 00:39:00,790
+For interrupts, we go by this cos,
+
+1177
+00:39:00,790 --> 00:39:02,750
+that is, the mcos that was passed in,
+
+1178
+00:39:02,750 --> 00:39:03,410
+this value,
+
+1179
+00:39:03,410 --> 00:39:05,290
+this value here.
+
+1180
+00:39:05,290 --> 00:39:07,110
+For 1234, when it's 11,
+
+1181
+00:39:07,110 --> 00:39:08,890
+This value should actually be
+
+1182
+00:39:08,890 --> 00:39:10,870
+I think we covered this earlier,
+
+1183
+00:39:10,870 --> 00:39:11,730
+so let's take a look.
+
+1184
+00:39:11,730 --> 00:39:15,900
+Right here,
+
+1185
+00:39:15,900 --> 00:39:18,020
+it corresponds to this entry in this table:
+
+1186
+00:39:18,020 --> 00:39:19,140
+1234.
+
+1187
+00:39:19,140 --> 00:39:20,940
+So now we should have
+
+1188
+00:39:20,940 --> 00:39:22,620
+an external interrupt,
+
+1189
+00:39:22,620 --> 00:39:23,740
+so it should be this block.
+
+1190
+00:39:23,740 --> 00:39:24,860
+So we should have
+
+1191
+00:39:24,860 --> 00:39:26,720
+a machine-mode external
+
+1192
+00:39:26,720 --> 00:39:28,100
+interrupt, so this value is 11.
+
+1193
+00:39:28,100 --> 00:39:34,640
+This one is 11.
+
+1194
+00:39:34,640 --> 00:39:39,860
+That's too much,
+
+1195
+00:39:39,860 --> 00:39:47,840
+so over here it's 11.
+
+1196
+00:39:47,840 --> 00:39:50,730
+Now, if it's 11,
+
+1197
+00:39:50,730 --> 00:39:51,090
+as we know,
+
+1198
+00:39:51,090 --> 00:39:52,790
+then it's an external
+
+1199
+00:39:52,790 --> 00:39:54,790
+interrupt in machine mode.
+
+1200
+00:39:54,790 --> 00:39:55,510
+So at this point
+
+1201
+00:39:55,510 --> 00:39:57,670
+we just enter this interrupt handler
+
+1202
+00:39:57,670 --> 00:39:59,150
+Now, in this interrupt handler,
+
+1203
+00:39:59,150 --> 00:40:00,530
+we can see the processing flow.
+
+1204
+00:40:00,530 --> 00:40:01,890
+The first step is to claim.
+
+1205
+00:40:01,890 --> 00:40:03,530
+As for the claim process,
+
+1206
+00:40:03,530 --> 00:40:04,410
+as we talked about earlier,
+
+1207
+00:40:04,410 --> 00:40:05,650
+claim is done through its function,
+
+1208
+00:40:05,650 --> 00:40:07,970
+which returns the number of an interrupt source.
+
+1209
+00:40:07,970 --> 00:40:09,350
+Now, this interrupt source number,
+
+1210
+00:40:09,350 --> 00:40:10,930
+based on what we know now,
+
+1211
+00:40:10,930 --> 00:40:12,250
+since we are handling the UART,
+
+1212
+00:40:12,250 --> 00:40:13,370
+we check that
+
+1213
+00:40:13,370 --> 00:40:14,850
+if this number is the UART,
+
+1214
+00:40:14,850 --> 00:40:16,170
+then we handle one
+
+1215
+00:40:16,170 --> 00:40:18,590
+and enter the UART's
+
+1216
+00:40:18,590 --> 00:40:19,790
+handler function.
+
+1217
+00:40:19,790 --> 00:40:20,710
+We enter the UART,
+
+1218
+00:40:20,710 --> 00:40:23,010
+and then after the handling is done,
+
+1219
+00:40:23,010 --> 00:40:24,110
+please note, don't forget,
+
+1220
+00:40:24,110 --> 00:40:25,110
+you have to call a Complete.
+
+1221
+00:40:25,110 --> 00:40:25,770
+This way,
+
+1222
+00:40:25,770 --> 00:40:28,010
+we can essentially notify the PLIC,
+
+1223
+00:40:28,010 --> 00:40:28,970
+that our handling is done,
+
+1224
+00:40:28,970 --> 00:40:31,870
+so it can let the next interrupt come in.
+
+1225
+00:40:31,890 --> 00:40:35,480
+Pay attention to this, don't forget it.
+
+1226
+00:40:35,480 --> 00:40:37,540
+Now, in the UART logic,
+
+1227
+00:40:37,540 --> 00:40:40,140
+what we need to do is
+
+1228
+00:40:40,140 --> 00:40:42,240
+initialize it.
+
+1229
+00:40:42,240 --> 00:40:43,140
+In this initialization part,
+
+1230
+00:40:43,140 --> 00:40:45,520
+we need to add one thing, which is to take this
+
+1231
+00:40:45,520 --> 00:40:51,500
+interrupt controller inside our UART,
+
+1232
+00:40:51,500 --> 00:40:52,360
+and turn it on.
+
+1233
+00:40:52,360 --> 00:40:53,780
+Please note this.
+
+1234
+00:40:53,780 --> 00:40:56,360
+And also, its interrupts are split,
+
+1235
+00:40:56,360 --> 00:40:59,440
+since you know the UART is split into two lines for receiving and transmitting,
+
+1236
+00:40:59,440 --> 00:41:02,360
+so what we control here is the interrupt in the receive direction,
+
+1237
+00:41:02,360 --> 00:41:03,800
+because right now we are
+
+1238
+00:41:03,800 --> 00:41:05,700
+for this example,
+
+1239
+00:41:05,700 --> 00:41:07,240
+what we actually want to receive is a piece of
+
+1240
+00:41:07,240 --> 00:41:09,660
+data sent from the console.
+
+1241
+00:41:09,660 --> 00:41:11,540
+As we have already explained to you earlier
+
+1242
+00:41:11,540 --> 00:41:13,500
+So this function
+
+1243
+00:41:13,500 --> 00:41:14,620
+Is exactly what we just saw
+
+1244
+00:41:14,620 --> 00:41:15,920
+It just got dropped in all the way down
+
+1245
+00:41:15,920 --> 00:41:16,220
+Right
+
+1246
+00:41:16,220 --> 00:41:17,440
+That's exactly how it gets dropped in
+
+1247
+00:41:17,440 --> 00:41:18,120
+So once it drops in
+
+1248
+00:41:18,120 --> 00:41:19,280
+The logic inside here is very simple
+
+1249
+00:41:19,280 --> 00:41:20,800
+Once we can make it here
+
+1250
+00:41:20,800 --> 00:41:22,540
+That means the character has already come in
+
+1251
+00:41:22,540 --> 00:41:23,720
+The character has already come in
+
+1252
+00:41:23,720 --> 00:41:26,380
+Then we just need to use a getC function
+
+1253
+00:41:26,380 --> 00:41:27,720
+To read it out
+
+1254
+00:41:27,720 --> 00:41:29,200
+Now this getC function
+
+1255
+00:41:29,200 --> 00:41:30,220
+Is implemented right here
+
+1256
+00:41:30,220 --> 00:41:31,460
+The related logic here
+
+1257
+00:41:31,460 --> 00:41:33,200
+Why is it done this way
+
+1258
+00:41:33,200 --> 00:41:34,260
+I won't explain that
+
+1259
+00:41:34,260 --> 00:41:35,440
+Go back and take a look at it yourselves
+
+1260
+00:41:35,440 --> 00:41:37,560
+So after we read out a character
+
+1261
+00:41:37,560 --> 00:41:38,760
+Based on what we just explained,
+
+1262
+00:41:38,760 --> 00:41:40,020
+we'll write it out again,
+
+1263
+00:41:40,020 --> 00:41:41,640
+write it out again with putc.
+
+1264
+00:41:41,640 --> 00:41:44,040
+So once it's written out,
+
+1265
+00:41:44,040 --> 00:41:45,460
+our controller
+
+1266
+00:41:45,460 --> 00:41:48,500
+will write it to our console.
+
+1267
+00:41:48,500 --> 00:41:50,200
+So on the console
+
+1268
+00:41:50,200 --> 00:41:51,400
+we see the character c appear.
+
+1269
+00:41:51,400 --> 00:41:52,300
+That's how it comes about.
+
+1270
+00:41:52,300 --> 00:41:54,620
+Right here we've written the character out,
+
+1271
+00:41:54,620 --> 00:41:56,120
+and after writing it,
+
+1272
+00:41:56,120 --> 00:41:56,960
+we output a carriage return,
+
+1273
+00:41:56,960 --> 00:41:58,240
+and continue on.
+
+1274
+00:41:58,240 --> 00:42:00,360
+This is the example I just demonstrated to you.
+
+1275
+00:42:00,360 --> 00:42:01,700
+That's how it works.
+
+1276
+00:42:01,700 --> 00:42:02,540
+I'll stop here for now.
+
+1277
+00:42:02,540 --> 00:42:06,240
+As for the exercises on this interrupt,
+
+1278
+00:42:06,240 --> 00:42:07,380
+go back and work through them yourselves.
+
+1279
+00:42:07,380 --> 00:42:09,800
+All right,
+
+1280
+00:42:09,800 --> 00:42:11,820
+now regarding this external interrupt,
+
+1281
+00:42:11,820 --> 00:42:13,160
+That's all we'll cover for you here.

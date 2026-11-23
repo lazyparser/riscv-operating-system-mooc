@@ -1,0 +1,5579 @@
+1
+00:00:01,140 --> 00:00:31,120
+Alright, let's move into Chapter 16 of our course. This chapter is also the last chapter of this course for us. The topic of this chapter is called system calls. In fact, by working on this simple system, we'll introduce user mode and kernel mode — the kind of things you only find in real operating systems. We'll also see how, based on this kind of security protection, we can implement some
+
+2
+00:00:31,140 --> 00:00:32,200
+the concept of system calls.
+
+3
+00:00:32,200 --> 00:00:34,440
+The content of this chapter
+
+4
+00:00:34,440 --> 00:00:35,740
+is mainly divided into these parts,
+
+5
+00:00:35,740 --> 00:00:36,960
+five parts in total.
+
+6
+00:00:36,960 --> 00:00:37,780
+First,
+
+7
+00:00:37,780 --> 00:00:38,780
+I'll introduce to you
+
+8
+00:00:38,780 --> 00:00:42,480
+the concept of system modes —
+
+9
+00:00:42,480 --> 00:00:44,640
+user mode and kernel mode.
+
+10
+00:00:44,640 --> 00:00:46,900
+Then,
+
+11
+00:00:46,900 --> 00:00:47,440
+we'll take a look at
+
+12
+00:00:47,440 --> 00:00:48,740
+how, with our system modes,
+
+13
+00:00:48,740 --> 00:00:49,900
+we can switch
+
+14
+00:00:49,900 --> 00:00:50,660
+between these system modes,
+
+15
+00:00:50,660 --> 00:00:51,660
+right?
+
+16
+00:00:51,660 --> 00:00:53,160
+And after that,
+
+17
+00:00:53,160 --> 00:00:54,120
+once we have this concept in place,
+
+18
+00:00:54,120 --> 00:00:55,340
+we can go ahead and implement
+
+19
+00:00:55,340 --> 00:00:57,480
+our own system calls.
+
+20
+00:00:57,480 --> 00:00:58,240
+Now, the system call
+
+21
+00:00:58,240 --> 00:00:58,960
+What does this execution flow
+
+22
+00:00:58,960 --> 00:00:59,840
+look like?
+
+23
+00:00:59,840 --> 00:01:03,860
+And how does it pass parameters
+
+24
+00:01:03,860 --> 00:01:06,600
+between user mode and kernel mode?
+
+25
+00:01:06,600 --> 00:01:09,340
+And finally, I'll introduce to you
+
+26
+00:01:09,340 --> 00:01:11,800
+some concepts around how our system calls are wrapped.
+
+27
+00:01:11,800 --> 00:01:13,300
+So,
+
+28
+00:01:13,300 --> 00:01:15,900
+as for the reference documentation,
+
+29
+00:01:15,900 --> 00:01:20,220
+we mainly rely on the basic specifications of our instruction set.
+
+30
+00:01:20,220 --> 00:01:23,300
+Let's start with the first part,
+
+31
+00:01:23,300 --> 00:01:26,020
+which is the concept of user mode and kernel mode.
+
+32
+00:01:26,020 --> 00:01:28,780
+Now, on this topic,
+
+33
+00:01:28,780 --> 00:01:34,880
+when we introduced the RISC-V instruction set specification earlier,
+
+34
+00:01:34,880 --> 00:01:36,780
+we actually already mentioned this concept.
+
+35
+00:01:36,780 --> 00:01:38,620
+We also mentioned that
+
+36
+00:01:38,620 --> 00:01:41,300
+this RISC-V instruction set
+
+37
+00:01:41,300 --> 00:01:44,000
+can support our system
+
+38
+00:01:44,000 --> 00:01:48,920
+being implemented in these three typical application scenarios,
+
+39
+00:01:48,920 --> 00:01:50,260
+numbered one, two, and three.
+
+40
+00:01:50,260 --> 00:01:53,920
+The first one, we said, is the simplest embedded system.
+
+41
+00:01:53,920 --> 00:01:55,280
+So in that case,
+
+42
+00:01:55,280 --> 00:01:59,060
+it only needs to support one mode,
+
+43
+00:01:59,060 --> 00:02:00,500
+namely machine mode.
+
+44
+00:02:00,500 --> 00:02:01,880
+Now, going a step further,
+
+45
+00:02:01,880 --> 00:02:05,660
+we can say we can support a
+
+46
+00:02:05,660 --> 00:02:08,040
+so-called secure
+
+47
+00:02:08,040 --> 00:02:09,820
+system with a certain degree of security,
+
+48
+00:02:09,820 --> 00:02:11,040
+an embedded system like that.
+
+49
+00:02:11,040 --> 00:02:13,920
+So, if we want to implement this second kind,
+
+50
+00:02:13,920 --> 00:02:17,060
+that is, an embedded system with a certain degree of security,
+
+51
+00:02:17,060 --> 00:02:18,100
+then,
+
+52
+00:02:18,100 --> 00:02:21,020
+it must support at least
+
+53
+00:02:21,020 --> 00:02:22,240
+two modes,
+
+54
+00:02:22,240 --> 00:02:23,660
+namely machine mode and user mode.
+
+55
+00:02:23,660 --> 00:02:26,620
+So, up to this point,
+
+56
+00:02:26,620 --> 00:02:30,440
+the system we have actually implemented,
+
+57
+00:02:30,440 --> 00:02:33,120
+is really just the first kind,
+
+58
+00:02:33,120 --> 00:02:35,660
+because in our current example,
+
+59
+00:02:35,660 --> 00:02:36,480
+all the code,
+
+60
+00:02:36,480 --> 00:02:38,780
+our mode
+
+61
+00:02:38,780 --> 00:02:40,800
+Actually, it has been running in machine mode all along.
+
+62
+00:02:40,800 --> 00:02:42,420
+We never entered user mode.
+
+63
+00:02:42,420 --> 00:02:43,020
+Right?
+
+64
+00:02:43,020 --> 00:02:47,140
+Now, the third one is this:
+
+65
+00:02:47,140 --> 00:02:49,660
+Of course, we haven't introduced
+
+66
+00:02:49,660 --> 00:02:50,960
+the supervisor mode either.
+
+67
+00:02:50,960 --> 00:02:53,000
+In other words, the concept of virtual memory,
+
+68
+00:02:53,000 --> 00:02:54,160
+actually virtual addresses,
+
+69
+00:02:54,160 --> 00:02:55,580
+none of these concepts have been introduced.
+
+70
+00:02:55,580 --> 00:02:57,680
+So, up to this point,
+
+71
+00:02:57,680 --> 00:02:59,520
+we've only implemented the first kind.
+
+72
+00:02:59,520 --> 00:03:02,960
+Now, to implement this kind of
+
+73
+00:03:02,960 --> 00:03:04,940
+so-called secure embedded system,
+
+74
+00:03:04,940 --> 00:03:07,120
+we naturally need to be able to support
+
+75
+00:03:07,120 --> 00:03:08,740
+two different modes.
+
+76
+00:03:08,740 --> 00:03:12,740
+Taking this diagram as an example,
+
+77
+00:03:12,740 --> 00:03:13,760
+it effectively means that
+
+78
+00:03:13,760 --> 00:03:18,300
+our program must be able to implement
+
+79
+00:03:18,300 --> 00:03:20,280
+the normal user-mode
+
+80
+00:03:20,280 --> 00:03:21,200
+user programs
+
+81
+00:03:21,200 --> 00:03:22,900
+We run in user mode.
+
+82
+00:03:22,900 --> 00:03:24,700
+Then, whenever we need to execute some
+
+83
+00:03:24,700 --> 00:03:26,400
+kernel logic,
+
+84
+00:03:26,400 --> 00:03:29,420
+we switch the mode down to
+
+85
+00:03:29,420 --> 00:03:30,520
+the red part,
+
+86
+00:03:30,520 --> 00:03:32,440
+that is, into MachineTag to handle it.
+
+87
+00:03:32,440 --> 00:03:33,280
+And then,
+
+88
+00:03:33,280 --> 00:03:35,220
+once the handling is done,
+
+89
+00:03:35,220 --> 00:03:36,900
+we switch back to user mode.
+
+90
+00:03:36,900 --> 00:03:39,360
+If we can implement this approach,
+
+91
+00:03:39,360 --> 00:03:40,900
+it's essentially equivalent to
+
+92
+00:03:40,900 --> 00:03:42,180
+the second type he mentioned,
+
+93
+00:03:42,180 --> 00:03:44,980
+namely the secure embedded system,
+
+94
+00:03:44,980 --> 00:03:45,720
+in this kind of state.
+
+95
+00:03:45,720 --> 00:03:48,120
+Now, in this situation,
+
+96
+00:03:48,120 --> 00:03:49,280
+we can actually do the same thing:
+
+97
+00:03:49,280 --> 00:03:50,480
+we can call this UserTag
+
+98
+00:03:50,480 --> 00:03:52,980
+user mode,
+
+99
+00:03:52,980 --> 00:03:55,800
+and our M-mode is our kernel mode.
+
+100
+00:03:55,800 --> 00:03:59,380
+Like what we usually have in Linux,
+
+101
+00:03:59,380 --> 00:04:00,900
+When we say user mode, we mean that the kernel mode is what actually executes it
+
+102
+00:04:00,900 --> 00:04:03,040
+and kernel mode mainly refers to
+
+103
+00:04:03,040 --> 00:04:04,260
+the supervisor mode.
+
+104
+00:04:04,260 --> 00:04:05,840
+So here, we can actually just
+
+105
+00:04:05,840 --> 00:04:07,600
+talk about the kernel mode as the machine mode.
+
+106
+00:04:07,600 --> 00:04:08,860
+That is completely fine.
+
+107
+00:04:08,860 --> 00:04:11,560
+So how do we
+
+108
+00:04:11,560 --> 00:04:15,940
+make our mode transition between two modes
+
+109
+00:04:15,940 --> 00:04:17,960
+instead of staying in just one?
+
+110
+00:04:17,960 --> 00:04:19,400
+So let us review
+
+111
+00:04:19,400 --> 00:04:21,740
+the examples we have done so far
+
+112
+00:04:21,740 --> 00:04:23,780
+and how they were implemented.
+
+113
+00:04:23,780 --> 00:04:24,680
+That is to say, how did we
+
+114
+00:04:24,680 --> 00:04:27,120
+make sure that all of our code
+
+115
+00:04:27,120 --> 00:04:30,520
+stayed in the machine mode?
+
+116
+00:04:30,520 --> 00:04:33,100
+So for this,
+
+117
+00:04:33,100 --> 00:04:34,640
+we need to look back at
+
+118
+00:04:34,640 --> 00:04:36,560
+our earlier implementation.
+
+119
+00:04:36,560 --> 00:04:38,000
+Now,
+
+120
+00:04:38,000 --> 00:04:40,400
+let me pull out this piece of code for you.
+
+121
+00:04:40,400 --> 00:04:41,180
+That is, in the earlier part,
+
+122
+00:04:41,180 --> 00:04:42,660
+we may not have emphasized this enough,
+
+123
+00:04:42,660 --> 00:04:43,280
+which is to say,
+
+124
+00:04:43,280 --> 00:04:44,980
+you can go back and review
+
+125
+00:04:44,980 --> 00:04:45,720
+how we, in...
+
+126
+00:04:45,720 --> 00:04:47,880
+because from Chapter 8 onwards,
+
+127
+00:04:47,880 --> 00:04:49,560
+after this preemptive mode was introduced,
+
+128
+00:04:49,560 --> 00:04:52,540
+in fact, we basically...
+
+129
+00:04:52,540 --> 00:04:53,500
+this task scheduling,
+
+130
+00:04:53,500 --> 00:04:56,660
+this user task, in fact,
+
+131
+00:04:56,660 --> 00:04:57,620
+was finally settled in its current form
+
+132
+00:04:57,620 --> 00:04:59,260
+starting really from Chapter 8,
+
+133
+00:04:59,260 --> 00:05:00,660
+08, this preemptive...
+
+134
+00:05:00,660 --> 00:05:01,780
+starting from this point.
+
+135
+00:05:01,780 --> 00:05:03,420
+Now, let's pay attention to this:
+
+136
+00:05:03,420 --> 00:05:05,020
+that is, at that time we,
+
+137
+00:05:05,020 --> 00:05:06,820
+in order to ensure that our...
+
+138
+00:05:06,820 --> 00:05:08,960
+all of this, the user-mode tasks,
+
+139
+00:05:08,960 --> 00:05:10,160
+as well as the kernel mode...
+
+140
+00:05:10,160 --> 00:05:11,660
+that is, our user...
+
+141
+00:05:11,660 --> 00:05:12,280
+User tasks,
+
+142
+00:05:12,280 --> 00:05:13,560
+the code of user tasks,
+
+143
+00:05:13,560 --> 00:05:15,120
+and the code in our kernel
+
+144
+00:05:15,120 --> 00:05:16,960
+all run in Machine mode.
+
+145
+00:05:16,960 --> 00:05:18,560
+Actually, we have a piece of logic
+
+146
+00:05:18,560 --> 00:05:19,120
+that I don't know
+
+147
+00:05:19,120 --> 00:05:21,140
+if any of you have studied carefully.
+
+148
+00:05:21,140 --> 00:05:22,700
+So let me bring it up for you again.
+
+149
+00:05:22,700 --> 00:05:25,080
+That is, in start.s,
+
+150
+00:05:25,080 --> 00:05:26,520
+this file,
+
+151
+00:05:26,520 --> 00:05:27,060
+this assembly file,
+
+152
+00:05:27,060 --> 00:05:27,960
+which is our entry point,
+
+153
+00:05:27,960 --> 00:05:30,120
+inside this entry assembly code,
+
+154
+00:05:30,120 --> 00:05:34,220
+before we jump into the start kernel,
+
+155
+00:05:34,220 --> 00:05:35,640
+we actually have a piece of logic.
+
+156
+00:05:35,640 --> 00:05:40,040
+So let's recall first,
+
+157
+00:05:40,040 --> 00:05:40,820
+that is, back then,
+
+158
+00:05:40,820 --> 00:05:42,400
+what did we do inside this start kernel?
+
+159
+00:05:42,400 --> 00:05:43,720
+This start kernel,
+
+160
+00:05:43,720 --> 00:05:45,080
+what did it do back then?
+
+161
+00:05:45,080 --> 00:05:46,160
+So in start_kernel,
+
+162
+00:05:46,160 --> 00:05:47,440
+following the program,
+
+163
+00:05:47,440 --> 00:05:48,400
+if we trace this code,
+
+164
+00:05:48,400 --> 00:05:49,400
+then we get to start_kernel.
+
+165
+00:05:49,400 --> 00:05:51,780
+First, after entering start_kernel,
+
+166
+00:05:51,780 --> 00:05:54,280
+we call a function, schedule.
+
+167
+00:05:54,280 --> 00:05:56,900
+And before that, there's all this dot dot dot stuff,
+
+168
+00:05:56,900 --> 00:06:00,060
+which is really just a lot of initialization logic.
+
+169
+00:06:00,060 --> 00:06:01,040
+We won't go into that.
+
+170
+00:06:01,040 --> 00:06:02,380
+So at the very beginning,
+
+171
+00:06:02,380 --> 00:06:04,300
+actually in this state,
+
+172
+00:06:04,300 --> 00:06:05,400
+up to this point,
+
+173
+00:06:05,400 --> 00:06:07,540
+we're still all in machine mode.
+
+174
+00:06:07,540 --> 00:06:09,100
+Because right after boot,
+
+175
+00:06:09,100 --> 00:06:10,920
+it stays in machine mode.
+
+176
+00:06:10,920 --> 00:06:12,500
+So then we,
+
+177
+00:06:12,500 --> 00:06:13,380
+finally,
+
+178
+00:06:13,380 --> 00:06:15,420
+call the schedule function.
+
+179
+00:06:15,420 --> 00:06:17,860
+Now, this schedule function,
+
+180
+00:06:17,860 --> 00:06:18,920
+actually internally,
+
+181
+00:06:18,920 --> 00:06:19,820
+it will start
+
+182
+00:06:19,820 --> 00:06:22,040
+all of our user tasks
+
+183
+00:06:22,040 --> 00:06:24,540
+are actually started up inside this
+
+184
+00:06:24,540 --> 00:06:27,720
+So after we say they are started,
+
+185
+00:06:27,720 --> 00:06:28,780
+in fact, this
+
+186
+00:06:28,780 --> 00:06:31,120
+the one where start kernel resides,
+
+187
+00:06:31,120 --> 00:06:32,340
+this one we mentioned,
+
+188
+00:06:32,340 --> 00:06:34,440
+this is also a control flow,
+
+189
+00:06:34,440 --> 00:06:37,160
+and this control flow will actually no longer run.
+
+190
+00:06:37,160 --> 00:06:38,900
+So the things below here
+
+191
+00:06:38,900 --> 00:06:40,180
+shouldn't be printed out,
+
+192
+00:06:40,180 --> 00:06:41,200
+which means the logic below
+
+193
+00:06:41,200 --> 00:06:42,240
+is actually never reached at all.
+
+194
+00:06:42,240 --> 00:06:46,420
+So how do we go about starting
+
+195
+00:06:46,420 --> 00:06:47,260
+the very first
+
+196
+00:06:47,260 --> 00:06:48,820
+user task inside schedule?
+
+197
+00:06:48,820 --> 00:06:49,980
+We do it by calling switch2,
+
+198
+00:06:49,980 --> 00:06:50,380
+right?
+
+199
+00:06:50,380 --> 00:06:51,580
+You all still remember this,
+
+200
+00:06:51,580 --> 00:06:52,660
+this switch2
+
+201
+00:06:52,660 --> 00:06:53,360
+So with this logic,
+
+202
+00:06:53,360 --> 00:06:54,500
+what we ended up doing was
+
+203
+00:06:54,500 --> 00:06:55,920
+running through a bit of assembly logic,
+
+204
+00:06:55,920 --> 00:06:56,400
+switch2,
+
+205
+00:06:56,400 --> 00:06:57,060
+and in the end,
+
+206
+00:06:57,060 --> 00:06:58,180
+we actually used
+
+207
+00:06:58,180 --> 00:06:59,960
+the mret logic,
+
+208
+00:06:59,960 --> 00:07:02,460
+to enter
+
+209
+00:07:02,460 --> 00:07:03,880
+our first task at
+
+210
+00:07:03,880 --> 00:07:05,240
+its first instruction,
+
+211
+00:07:05,240 --> 00:07:06,280
+and start running from there.
+
+212
+00:07:06,280 --> 00:07:08,480
+So now let's
+
+213
+00:07:08,480 --> 00:07:10,800
+go back to what we
+
+214
+00:07:10,800 --> 00:07:11,380
+just...
+
+215
+00:07:11,380 --> 00:07:13,000
+back to what we
+
+216
+00:07:13,000 --> 00:07:13,260
+just...
+
+217
+00:07:13,260 --> 00:07:14,740
+the earlier part,
+
+218
+00:07:14,740 --> 00:07:15,640
+this start function.
+
+219
+00:07:15,640 --> 00:07:17,680
+What did we actually do in here?
+
+220
+00:07:17,680 --> 00:07:19,940
+Take a look at what we did in here.
+
+221
+00:07:19,940 --> 00:07:21,360
+Right here,
+
+222
+00:07:21,360 --> 00:07:22,220
+we can actually see that
+
+223
+00:07:22,220 --> 00:07:23,500
+what it's really doing,
+
+224
+00:07:23,500 --> 00:07:24,560
+let me briefly walk you through
+
+225
+00:07:24,560 --> 00:07:26,060
+this piece of assembly.
+
+226
+00:07:26,060 --> 00:07:27,920
+So what it actually does is,
+
+227
+00:07:27,920 --> 00:07:30,160
+first, it loads a value into the register t0,
+
+228
+00:07:30,160 --> 00:07:31,160
+assigns a value to it.
+
+229
+00:07:31,160 --> 00:07:31,840
+And this value,
+
+230
+00:07:31,840 --> 00:07:34,300
+as we said, is actually produced by,
+
+231
+00:07:34,300 --> 00:07:36,900
+taking this 3,
+
+232
+00:07:36,900 --> 00:07:38,000
+which we know is actually 11 in binary,
+
+233
+00:07:38,000 --> 00:07:40,420
+left-shifted by 11 bits and 1 left-shifted by 17 bits,
+
+234
+00:07:40,420 --> 00:07:42,500
+and combining them to generate a value,
+
+235
+00:07:42,500 --> 00:07:44,200
+which is then put into t0.
+
+236
+00:07:44,200 --> 00:07:45,260
+And then,
+
+237
+00:07:45,260 --> 00:07:46,700
+as for the CSR instruction,
+
+238
+00:07:46,700 --> 00:07:48,100
+it performs a CSR operation.
+
+239
+00:07:48,100 --> 00:07:49,460
+We know what that does,
+
+240
+00:07:49,460 --> 00:07:51,400
+it reads this CSR register.
+
+241
+00:07:51,400 --> 00:07:53,380
+It's really just taking mstatus,
+
+242
+00:07:53,380 --> 00:07:56,340
+the value of this control CSR register,
+
+243
+00:07:56,340 --> 00:07:58,180
+and reading it into a1,
+
+244
+00:07:58,180 --> 00:07:59,280
+and then
+
+245
+00:07:59,280 --> 00:08:00,020
+what do we do?
+
+246
+00:08:00,020 --> 00:08:01,440
+We do an OR operation,
+
+247
+00:08:01,440 --> 00:08:04,500
+taking the value in a1 and the value in t0,
+
+248
+00:08:04,500 --> 00:08:06,160
+so these two values,
+
+249
+00:08:06,160 --> 00:08:07,320
+we do an OR,
+
+250
+00:08:07,320 --> 00:08:10,580
+we do a bit-set operation,
+
+251
+00:08:10,580 --> 00:08:12,400
+and after doing the OR operation,
+
+252
+00:08:12,400 --> 00:08:14,140
+finally we take the result of the OR,
+
+253
+00:08:14,140 --> 00:08:15,560
+which is this t0,
+
+254
+00:08:15,560 --> 00:08:18,440
+and write it back into mstatus.
+
+255
+00:08:18,440 --> 00:08:20,020
+This is the write operation.
+
+256
+00:08:20,020 --> 00:08:21,420
+This is the read operation.
+
+257
+00:08:21,420 --> 00:08:23,160
+So the effect this actually achieves,
+
+258
+00:08:23,160 --> 00:08:23,660
+is that
+
+259
+00:08:23,660 --> 00:08:25,260
+we are essentially modifying mstatus,
+
+260
+00:08:25,260 --> 00:08:26,300
+modifying this register.
+
+261
+00:08:26,300 --> 00:08:27,640
+Set some of its bits
+
+262
+00:08:27,640 --> 00:08:28,580
+to turn them on
+
+263
+00:08:28,580 --> 00:08:30,300
+That's basically what it does
+
+264
+00:08:30,300 --> 00:08:32,600
+Now, what do these bits do?
+
+265
+00:08:32,600 --> 00:08:35,140
+We can refer to
+
+266
+00:08:35,140 --> 00:08:36,100
+our manual
+
+267
+00:08:36,100 --> 00:08:37,660
+regarding mstatus
+
+268
+00:08:37,660 --> 00:08:39,120
+the description of this register
+
+269
+00:08:39,120 --> 00:08:44,140
+This 3 shifted left by 11 bits
+
+270
+00:08:44,140 --> 00:08:44,780
+Actually, as you know
+
+271
+00:08:44,780 --> 00:08:46,140
+corresponds to the MPP bits
+
+272
+00:08:46,140 --> 00:08:48,960
+This 1 shifted left by 7 bits
+
+273
+00:08:48,960 --> 00:08:50,800
+actually corresponds to the MPIE bit
+
+274
+00:08:50,800 --> 00:08:51,760
+Now, as you know
+
+275
+00:08:51,760 --> 00:08:54,380
+what is the effect of setting these bits?
+
+276
+00:08:54,380 --> 00:08:55,600
+These MPP bits
+
+277
+00:08:55,600 --> 00:08:57,060
+let's recall what they mean
+
+278
+00:08:57,060 --> 00:08:59,120
+They represent, in machine mode,
+
+279
+00:08:59,120 --> 00:09:03,940
+the previous privilege level
+
+280
+00:09:03,940 --> 00:09:07,180
+So once its value is saved,
+
+281
+00:09:07,180 --> 00:09:08,400
+What effect will that have?
+
+282
+00:09:08,400 --> 00:09:10,180
+So let's go back to what we just said
+
+283
+00:09:10,180 --> 00:09:12,300
+about what happens with the mret instruction
+
+284
+00:09:12,300 --> 00:09:13,740
+This is a review
+
+285
+00:09:13,740 --> 00:09:15,680
+Once this mret instruction is executed,
+
+286
+00:09:15,680 --> 00:09:17,020
+based on what we introduced earlier,
+
+287
+00:09:17,020 --> 00:09:17,420
+we know that
+
+288
+00:09:17,420 --> 00:09:20,320
+it takes the value in MPP
+
+289
+00:09:20,320 --> 00:09:23,580
+to set the privilege level after mret,
+
+290
+00:09:23,580 --> 00:09:27,720
+this 'hot' privilege level,
+
+291
+00:09:27,720 --> 00:09:30,660
+so if we set it to 3,
+
+292
+00:09:30,660 --> 00:09:33,320
+we're actually setting both of those bits to 1.
+
+293
+00:09:33,320 --> 00:09:34,460
+And after that,
+
+294
+00:09:34,460 --> 00:09:35,860
+we're back at the Machine level.
+
+295
+00:09:35,860 --> 00:09:37,260
+So what that means is,
+
+296
+00:09:37,260 --> 00:09:38,500
+after this mret,
+
+297
+00:09:38,500 --> 00:09:39,580
+we know we return to,
+
+298
+00:09:39,580 --> 00:09:40,780
+we reach and enter into,
+
+299
+00:09:40,780 --> 00:09:42,980
+the instruction sequence of the first task.
+
+300
+00:09:42,980 --> 00:09:44,540
+And at that point, the first task will definitely be
+
+301
+00:09:44,540 --> 00:09:45,640
+That is to say, it's basically like saying
+
+302
+00:09:45,640 --> 00:09:47,580
+keeping the first task still running
+
+303
+00:09:47,580 --> 00:09:48,940
+under Machine mode,
+
+304
+00:09:48,940 --> 00:09:50,640
+and that's actually what it means.
+
+305
+00:09:50,640 --> 00:09:53,380
+And then,
+
+306
+00:09:53,380 --> 00:09:55,340
+this MPIE field,
+
+307
+00:09:55,340 --> 00:09:57,400
+is actually the interrupt enable bit
+
+308
+00:09:57,400 --> 00:09:58,700
+from the previous interrupt.
+
+309
+00:09:58,700 --> 00:10:00,600
+So if we set it to 1,
+
+310
+00:10:00,600 --> 00:10:01,900
+it effectively means that we are
+
+311
+00:10:01,900 --> 00:10:04,540
+turning on the interrupt enable from before.
+
+312
+00:10:04,540 --> 00:10:06,240
+Now, we know that at the time of MRET,
+
+313
+00:10:06,240 --> 00:10:08,260
+it will likewise, based on the value in this field,
+
+314
+00:10:08,260 --> 00:10:11,540
+restore the value of MIE.
+
+315
+00:10:11,540 --> 00:10:13,640
+And we know MIE is used to
+
+316
+00:10:13,640 --> 00:10:16,660
+control whether interrupts are enabled or disabled.
+
+317
+00:10:16,660 --> 00:10:18,260
+So, that means this instruction,
+
+318
+00:10:18,260 --> 00:10:19,460
+the setting here,
+
+319
+00:10:19,460 --> 00:10:21,160
+effectively ensures that
+
+320
+00:10:21,160 --> 00:10:23,820
+when it enters the user program,
+
+321
+00:10:23,820 --> 00:10:25,340
+for that task
+
+322
+00:10:25,340 --> 00:10:27,340
+it enabled interrupts again
+
+323
+00:10:27,340 --> 00:10:29,040
+enabled them again
+
+324
+00:10:29,040 --> 00:10:31,560
+So that's essentially what we did
+
+325
+00:10:31,560 --> 00:10:32,780
+Of course, what we care about
+
+326
+00:10:32,780 --> 00:10:34,320
+is actually over here
+
+327
+00:10:34,320 --> 00:10:35,740
+we're not particularly emphasizing
+
+328
+00:10:35,740 --> 00:10:37,200
+enabling and disabling interrupts here
+
+329
+00:10:37,200 --> 00:10:38,160
+What we mainly want to stress is this
+
+330
+00:10:38,160 --> 00:10:39,760
+that is, this thing
+
+331
+00:10:39,760 --> 00:10:41,720
+we're basically, so to speak,
+
+332
+00:10:41,720 --> 00:10:44,140
+ensuring that when we enter the user's task,
+
+333
+00:10:44,140 --> 00:10:45,120
+after the first task,
+
+334
+00:10:45,120 --> 00:10:46,140
+after mret,
+
+335
+00:10:46,140 --> 00:10:48,180
+our hart,
+
+336
+00:10:48,180 --> 00:10:50,580
+that is, the CPU's privilege level,
+
+337
+00:10:50,580 --> 00:10:53,900
+still remains in Machine mode
+
+338
+00:10:53,900 --> 00:10:56,660
+This is what we have so far
+
+339
+00:10:56,660 --> 00:10:59,360
+So our current system
+
+340
+00:10:59,360 --> 00:11:01,280
+is one where, whether it's a user program
+
+341
+00:11:01,280 --> 00:11:02,000
+or kernel code,
+
+342
+00:11:02,000 --> 00:11:03,740
+is actually running in Machine mode.
+
+343
+00:11:03,740 --> 00:11:04,660
+That is how it is implemented.
+
+344
+00:11:04,660 --> 00:11:09,510
+So now we are going to
+
+345
+00:11:09,510 --> 00:11:11,850
+make a change,
+
+346
+00:11:11,850 --> 00:11:12,890
+and the idea is this:
+
+347
+00:11:12,890 --> 00:11:14,650
+after entering the user program,
+
+348
+00:11:14,650 --> 00:11:16,690
+we want to move down from Machine mode
+
+349
+00:11:16,690 --> 00:11:18,210
+and return to user mode,
+
+350
+00:11:18,210 --> 00:11:20,150
+switch to user mode,
+
+351
+00:11:20,150 --> 00:11:22,970
+instead of staying in Machine mode.
+
+352
+00:11:22,970 --> 00:11:24,210
+So how do we do it?
+
+353
+00:11:24,210 --> 00:11:25,170
+Actually, it is quite simple.
+
+354
+00:11:25,170 --> 00:11:27,010
+As we know,
+
+355
+00:11:27,010 --> 00:11:30,030
+this register mstatus,
+
+356
+00:11:30,030 --> 00:11:31,590
+this register,
+
+357
+00:11:31,590 --> 00:11:32,870
+after power-on,
+
+358
+00:11:32,870 --> 00:11:34,270
+defaults to all zeros.
+
+359
+00:11:34,270 --> 00:11:35,170
+That is to say,
+
+360
+00:11:35,170 --> 00:11:36,770
+as you know, the value of MPP
+
+361
+00:11:36,770 --> 00:11:37,650
+They start out as all zeros.
+
+362
+00:11:37,650 --> 00:11:40,050
+If we don't change this value,
+
+363
+00:11:40,050 --> 00:11:42,450
+then after calling mret,
+
+364
+00:11:42,450 --> 00:11:44,430
+the new instruction,
+
+365
+00:11:44,430 --> 00:11:47,850
+when it runs, will read the value in here
+
+366
+00:11:47,850 --> 00:11:50,330
+to set the CPU's mode value.
+
+367
+00:11:50,330 --> 00:11:51,830
+So if it's 0,
+
+368
+00:11:51,830 --> 00:11:54,410
+then 0 actually means user mode.
+
+369
+00:11:54,410 --> 00:11:57,030
+So if we want
+
+370
+00:11:57,030 --> 00:11:59,090
+to enter the user program and
+
+371
+00:11:59,090 --> 00:12:02,090
+switch to user mode,
+
+372
+00:12:02,090 --> 00:12:03,950
+what we actually need to do
+
+373
+00:12:03,950 --> 00:12:06,410
+is simply not to set it to 11.
+
+374
+00:12:06,410 --> 00:12:08,930
+Make sure that after the mret,
+
+375
+00:12:08,930 --> 00:12:11,270
+it will naturally enter user mode.
+
+376
+00:12:11,270 --> 00:12:13,210
+Keep this in mind, everyone.
+
+377
+00:12:13,210 --> 00:12:17,450
+So in our new code,
+
+378
+00:12:17,450 --> 00:12:18,230
+this is the old code,
+
+379
+00:12:18,230 --> 00:12:20,170
+and after we move into the new code,
+
+380
+00:12:20,170 --> 00:12:23,090
+which is in our 11-syscall,
+
+381
+00:12:23,090 --> 00:12:26,010
+Now, to make our user task
+
+382
+00:12:26,010 --> 00:12:29,890
+not stay in Machine mode,
+
+383
+00:12:29,890 --> 00:12:32,570
+but instead switch to User mode,
+
+384
+00:12:32,570 --> 00:12:33,690
+it's actually very simple —
+
+385
+00:12:33,690 --> 00:12:35,090
+just don't set the MPP bit.
+
+386
+00:12:35,090 --> 00:12:37,450
+So you can see that in here,
+
+387
+00:12:37,450 --> 00:12:38,950
+at this point
+
+388
+00:12:38,950 --> 00:12:40,330
+in the new code,
+
+389
+00:12:40,330 --> 00:12:42,070
+we only turn on interrupts,
+
+390
+00:12:42,070 --> 00:12:43,150
+because interrupts still need to be enabled.
+
+391
+00:12:43,150 --> 00:12:43,670
+Think about it, right?
+
+392
+00:12:43,670 --> 00:12:46,030
+When we run user tasks,
+
+393
+00:12:46,030 --> 00:12:47,430
+interrupts still have to be enabled,
+
+394
+00:12:47,430 --> 00:12:47,910
+because if they're not enabled,
+
+395
+00:12:47,910 --> 00:12:48,590
+interrupts can't come in,
+
+396
+00:12:48,590 --> 00:12:49,290
+and that obviously won't work,
+
+397
+00:12:49,290 --> 00:12:49,750
+right?
+
+398
+00:12:49,750 --> 00:12:52,950
+So here,
+
+399
+00:12:52,950 --> 00:12:54,350
+you just don't set this bit, and that's it.
+
+400
+00:12:54,350 --> 00:12:55,690
+So after removing this,
+
+401
+00:12:55,690 --> 00:12:57,210
+In the new code,
+
+402
+00:12:57,210 --> 00:12:58,550
+why can we enter
+
+403
+00:12:58,550 --> 00:12:59,330
+this kernel mode,
+
+404
+00:12:59,330 --> 00:13:01,210
+why can we enter user mode? Well,
+
+405
+00:13:01,210 --> 00:13:03,530
+it's actually done through this.
+
+406
+00:13:03,530 --> 00:13:06,070
+Let me explain that to you.
+
+407
+00:13:06,070 --> 00:13:08,170
+Now let me show you.
+
+408
+00:13:08,170 --> 00:13:11,030
+Once we have this user protection mode,
+
+409
+00:13:11,030 --> 00:13:12,610
+we need to understand that
+
+410
+00:13:12,610 --> 00:13:15,670
+once a user program is running in user mode,
+
+411
+00:13:15,670 --> 00:13:17,390
+then if it tries to access
+
+412
+00:13:17,390 --> 00:13:20,750
+resources that can only be accessed in kernel mode,
+
+413
+00:13:20,750 --> 00:13:22,970
+it will actually be restricted.
+
+414
+00:13:22,970 --> 00:13:26,290
+Let's experience what this restriction looks like.
+
+415
+00:13:26,290 --> 00:13:36,080
+We can open our Syscode code.
+
+416
+00:13:36,080 --> 00:13:37,540
+We have
+
+417
+00:13:37,540 --> 00:13:40,560
+a user.c here,
+
+418
+00:13:40,560 --> 00:13:41,640
+this test program.
+
+419
+00:13:41,640 --> 00:13:43,680
+Now, this test program,
+
+420
+00:13:43,680 --> 00:13:46,240
+as we can see here,
+
+421
+00:13:46,240 --> 00:13:47,580
+There is a piece of code like this.
+
+422
+00:13:47,580 --> 00:13:47,880
+That is,
+
+423
+00:13:47,880 --> 00:13:48,920
+this
+
+424
+00:13:48,920 --> 00:13:51,040
+this macro here,
+
+425
+00:13:51,040 --> 00:13:52,180
+what we mean is,
+
+426
+00:13:52,180 --> 00:13:53,280
+inside this, we,
+
+427
+00:13:53,280 --> 00:13:55,700
+if this macro is enabled,
+
+428
+00:13:55,700 --> 00:13:56,640
+if it is defined,
+
+429
+00:13:56,640 --> 00:13:57,340
+it effectively means that,
+
+430
+00:13:57,340 --> 00:13:58,440
+we have added support for
+
+431
+00:13:58,440 --> 00:13:59,480
+this system call.
+
+432
+00:13:59,480 --> 00:14:00,700
+So when we
+
+433
+00:14:00,700 --> 00:14:02,480
+just looked at this
+
+434
+00:14:02,480 --> 00:14:05,560
+sysstart.s,
+
+435
+00:14:05,560 --> 00:14:06,980
+let's take a look at
+
+436
+00:14:06,980 --> 00:14:08,480
+start.s,
+
+437
+00:14:08,480 --> 00:14:12,550
+right at this spot.
+
+438
+00:14:12,550 --> 00:14:17,980
+If we have enabled this system call,
+
+439
+00:14:17,980 --> 00:14:21,740
+we will not set that MPP flag bit.
+
+440
+00:14:21,740 --> 00:14:22,360
+Do you all see that?
+
+441
+00:14:22,360 --> 00:14:23,940
+Otherwise,
+
+442
+00:14:23,940 --> 00:14:26,700
+we would still go ahead and set it.
+
+443
+00:14:26,700 --> 00:14:27,200
+And if we set it,
+
+444
+00:14:27,200 --> 00:14:28,100
+that means it still
+
+445
+00:14:28,100 --> 00:14:32,120
+won't switch down into user mode.
+
+446
+00:14:32,120 --> 00:14:35,220
+So now,
+
+447
+00:14:35,220 --> 00:14:38,200
+let me show you something.
+
+448
+00:14:38,200 --> 00:14:40,080
+What I mean is, right now we
+
+449
+00:14:40,080 --> 00:14:41,840
+want it to switch down into user mode.
+
+450
+00:14:41,840 --> 00:14:43,120
+Let's take a look at how,
+
+451
+00:14:43,120 --> 00:14:44,460
+after switching down into user mode,
+
+452
+00:14:44,460 --> 00:14:45,780
+there are things
+
+453
+00:14:45,780 --> 00:14:49,830
+that can only be accessed in that mode,
+
+454
+00:14:49,830 --> 00:14:51,330
+things that only the kernel side can access,
+
+455
+00:14:51,330 --> 00:14:54,170
+and we can protect them.
+
+456
+00:14:54,170 --> 00:14:54,970
+How do we protect them?
+
+457
+00:14:54,970 --> 00:14:56,310
+We can assume that right now we
+
+458
+00:14:56,310 --> 00:14:57,330
+just want to read,
+
+459
+00:14:57,330 --> 00:15:00,190
+to open this up,
+
+460
+00:15:00,190 --> 00:15:01,850
+and after you go back,
+
+461
+00:15:01,850 --> 00:15:03,470
+You can also follow along and practice with me.
+
+462
+00:15:03,470 --> 00:15:05,770
+That is to say, suppose...
+
+463
+00:15:05,770 --> 00:15:07,070
+As we know, in the past,
+
+464
+00:15:07,070 --> 00:15:11,050
+our code would actually call this everywhere,
+
+465
+00:15:11,050 --> 00:15:11,850
+and that was no problem.
+
+466
+00:15:11,850 --> 00:15:12,090
+Why?
+
+467
+00:15:12,090 --> 00:15:13,850
+Because this logic,
+
+468
+00:15:13,850 --> 00:15:16,450
+it actually reads mhartid,
+
+469
+00:15:16,450 --> 00:15:18,630
+a register in M-mode.
+
+470
+00:15:18,630 --> 00:15:19,710
+Now, this register,
+
+471
+00:15:19,710 --> 00:15:22,370
+it can only be accessed in certain modes.
+
+472
+00:15:22,370 --> 00:15:25,830
+In user mode, access is not allowed.
+
+473
+00:15:25,830 --> 00:15:26,710
+But before,
+
+474
+00:15:26,710 --> 00:15:27,070
+it didn't matter.
+
+475
+00:15:27,070 --> 00:15:28,070
+Because back then,
+
+476
+00:15:28,070 --> 00:15:30,190
+we never switched to user mode.
+
+477
+00:15:30,190 --> 00:15:32,190
+So calling this function everywhere,
+
+478
+00:15:32,190 --> 00:15:34,650
+there were actually no restrictions at all.
+
+479
+00:15:34,650 --> 00:15:35,210
+None whatsoever.
+
+480
+00:15:35,210 --> 00:15:37,430
+Because we were always, in fact, at the highest privilege level.
+
+481
+00:15:37,430 --> 00:15:38,350
+No restrictions at all.
+
+482
+00:15:38,350 --> 00:15:40,090
+Now, as we know,
+
+483
+00:15:40,090 --> 00:15:43,870
+once we turn on that config syscall,
+
+484
+00:15:43,870 --> 00:15:46,530
+our user task,
+
+485
+00:15:46,530 --> 00:15:47,870
+starting from this instruction,
+
+486
+00:15:47,870 --> 00:15:49,950
+has actually already switched over,
+
+487
+00:15:49,950 --> 00:15:51,730
+already switched into user mode.
+
+488
+00:15:51,730 --> 00:15:53,190
+So in user mode,
+
+489
+00:15:53,190 --> 00:15:54,590
+if you go and access this,
+
+490
+00:15:54,590 --> 00:15:56,490
+go and access this counter,
+
+491
+00:15:56,490 --> 00:15:58,910
+then that is definitely not allowed.
+
+492
+00:15:58,910 --> 00:16:00,490
+So it will trigger an exception,
+
+493
+00:16:00,490 --> 00:16:01,610
+trigger an exception.
+
+494
+00:16:01,610 --> 00:16:03,810
+Let's take a look,
+
+495
+00:16:03,810 --> 00:16:05,110
+and see if that is what happens.
+
+496
+00:16:05,110 --> 00:16:08,430
+So let's turn this on.
+
+497
+00:16:08,430 --> 00:16:10,150
+We don't worry about the rest below,
+
+498
+00:16:10,150 --> 00:16:11,390
+because once an exception is triggered,
+
+499
+00:16:11,390 --> 00:16:13,490
+inside the exception handler we will actually enter panic,
+
+500
+00:16:13,490 --> 00:16:14,410
+and it will actually just hang.
+
+501
+00:16:14,410 --> 00:16:16,130
+So the program just can't keep running.
+
+502
+00:16:16,130 --> 00:16:18,590
+As long as we see this exception triggered,
+
+503
+00:16:18,590 --> 00:16:21,690
+that proves what we said — that in user mode
+
+504
+00:16:21,690 --> 00:16:30,660
+access really is restricted.
+
+505
+00:16:30,660 --> 00:16:41,400
+Let's run it.
+
+506
+00:16:41,400 --> 00:16:46,340
+Everyone, look here — you see this spot?
+
+507
+00:16:46,340 --> 00:16:48,760
+Right after Task0 is created,
+
+508
+00:16:48,760 --> 00:16:53,020
+do we know why a synchronous exception is reported here?
+
+509
+00:16:53,020 --> 00:16:54,140
+It's actually because
+
+510
+00:16:54,140 --> 00:16:56,600
+we are, in the current mode,
+
+511
+00:16:56,600 --> 00:16:58,320
+actually already in User mode.
+
+512
+00:16:58,320 --> 00:17:00,280
+So if in User mode you go and access that,
+
+513
+00:17:00,280 --> 00:17:06,030
+if in User mode you go and access this instruction,
+
+514
+00:17:06,030 --> 00:17:07,230
+access this register,
+
+515
+00:17:07,230 --> 00:17:09,630
+then it will definitely raise an exception.
+
+516
+00:17:09,630 --> 00:17:11,350
+So this next line down will actually never be printed.
+
+517
+00:17:11,350 --> 00:17:11,910
+Why?
+
+518
+00:17:11,910 --> 00:17:14,630
+Because once you go in there to access it,
+
+519
+00:17:14,630 --> 00:17:17,330
+it actually goes straight into the exception handling logic.
+
+520
+00:17:17,330 --> 00:17:19,030
+And then it will oops.
+
+521
+00:17:19,030 --> 00:17:21,950
+So this actually serves as a
+
+522
+00:17:21,950 --> 00:17:23,230
+to user mode,
+
+523
+00:17:23,230 --> 00:17:24,490
+some of our kernel-mode resources
+
+524
+00:17:24,490 --> 00:17:25,390
+are protected.
+
+525
+00:17:25,390 --> 00:17:27,750
+This is what we call security,
+
+526
+00:17:27,750 --> 00:17:28,910
+which is reflected right here.
+
+527
+00:17:28,910 --> 00:17:38,060
+Now, how do we implement
+
+528
+00:17:38,060 --> 00:17:40,280
+this user mode and kernel mode,
+
+529
+00:17:40,280 --> 00:17:40,920
+that is, how do we
+
+530
+00:17:40,920 --> 00:17:42,100
+switch out of user mode?
+
+531
+00:17:42,100 --> 00:17:44,160
+Actually, let me explain this to you here.
+
+532
+00:17:44,160 --> 00:17:47,620
+It's this statement.
+
+533
+00:17:47,620 --> 00:17:49,360
+Pay attention to this.
+
+534
+00:17:49,360 --> 00:17:53,700
+Now, next we need to
+
+535
+00:17:53,700 --> 00:17:54,580
+there's a question,
+
+536
+00:17:54,580 --> 00:17:56,440
+which is, suppose we are in user mode,
+
+537
+00:17:56,440 --> 00:17:57,500
+suppose we are in user mode,
+
+538
+00:17:57,500 --> 00:18:00,520
+and we want to get the hart ID,
+
+539
+00:18:00,520 --> 00:18:02,960
+then what do we do?
+
+540
+00:18:02,960 --> 00:18:04,680
+Because we can't directly call
+
+541
+00:18:04,680 --> 00:18:05,800
+Calling it directly would cause an exception.
+
+542
+00:18:05,800 --> 00:18:06,940
+So what do we do?
+
+543
+00:18:06,940 --> 00:18:08,820
+Well, this involves having to
+
+544
+00:18:08,820 --> 00:18:10,880
+that is, we have to further
+
+545
+00:18:10,880 --> 00:18:12,560
+wrap this thing up.
+
+546
+00:18:12,560 --> 00:18:14,940
+Now, what do we mean by wrapping it up?
+
+547
+00:18:14,940 --> 00:18:16,140
+It really means providing system calls.
+
+548
+00:18:16,140 --> 00:18:18,360
+And providing system calls means that
+
+549
+00:18:18,360 --> 00:18:19,900
+our kernel
+
+550
+00:18:19,900 --> 00:18:21,060
+takes this access,
+
+551
+00:18:21,060 --> 00:18:23,240
+this actual operation,
+
+552
+00:18:23,240 --> 00:18:24,800
+and wraps it inside a system call.
+
+553
+00:18:24,800 --> 00:18:27,160
+Then, when a program in user mode
+
+554
+00:18:27,160 --> 00:18:29,280
+wants to access this thing,
+
+555
+00:18:29,280 --> 00:18:30,820
+what we actually do internally is
+
+556
+00:18:30,820 --> 00:18:33,300
+take this mode
+
+557
+00:18:33,300 --> 00:18:35,040
+and switch it,
+
+558
+00:18:35,040 --> 00:18:38,120
+actively switch it into Machine mode,
+
+559
+00:18:38,120 --> 00:18:40,460
+and only then can we access this HotID.
+
+560
+00:18:40,460 --> 00:18:43,580
+Now, this process of actively switching
+
+561
+00:18:43,580 --> 00:18:45,200
+It is essentially a way of
+
+562
+00:18:45,200 --> 00:18:47,240
+actively triggering an exception
+
+563
+00:18:47,240 --> 00:18:48,400
+and this kind of exception
+
+564
+00:18:48,400 --> 00:18:50,880
+is what implements the switch between our system modes.
+
+565
+00:18:50,880 --> 00:18:54,120
+And as for this mode switching,
+
+566
+00:18:54,120 --> 00:18:56,400
+we say it happens at these two points:
+
+567
+00:18:56,400 --> 00:19:00,580
+when switching from user mode to kernel mode,
+
+568
+00:19:00,580 --> 00:19:02,560
+we actually use a special
+
+569
+00:19:02,560 --> 00:19:04,560
+instruction called the ecall instruction to do it.
+
+570
+00:19:04,560 --> 00:19:06,720
+We will introduce this ecall instruction to you later.
+
+571
+00:19:06,720 --> 00:19:09,100
+In essence, it simply triggers an exception.
+
+572
+00:19:09,100 --> 00:19:10,940
+And once the exception is triggered,
+
+573
+00:19:10,940 --> 00:19:13,280
+it enters the exception handling routine.
+
+574
+00:19:13,280 --> 00:19:14,420
+And upon entering the exception handling routine,
+
+575
+00:19:14,420 --> 00:19:17,720
+it actually switches to machine mode
+
+576
+00:19:17,720 --> 00:19:19,300
+to handle this exception.
+
+577
+00:19:19,300 --> 00:19:20,560
+Then, in machine mode,
+
+578
+00:19:20,560 --> 00:19:21,600
+it naturally can
+
+579
+00:19:21,600 --> 00:19:23,160
+— it is equivalent to entering kernel mode.
+
+580
+00:19:23,160 --> 00:19:23,820
+Kernel mode.
+
+581
+00:19:23,820 --> 00:19:25,120
+So in here,
+
+582
+00:19:25,120 --> 00:19:27,260
+we can access those privileged instructions,
+
+583
+00:19:27,260 --> 00:19:30,140
+and access those privileged registers.
+
+584
+00:19:30,140 --> 00:19:31,840
+Then, once that's done,
+
+585
+00:19:31,840 --> 00:19:33,580
+since we need to return to user mode,
+
+586
+00:19:33,580 --> 00:19:36,000
+we need to make the return.
+
+587
+00:19:36,000 --> 00:19:36,520
+When returning,
+
+588
+00:19:36,520 --> 00:19:37,920
+essentially we are making use of
+
+589
+00:19:37,920 --> 00:19:39,640
+the e-return that we learned about earlier,
+
+590
+00:19:39,640 --> 00:19:41,240
+to implement it.
+
+591
+00:19:41,240 --> 00:19:41,780
+This one,
+
+592
+00:19:41,780 --> 00:19:43,040
+we've talked about this instruction before,
+
+593
+00:19:43,040 --> 00:19:44,500
+so I won't go into it again here.
+
+594
+00:19:44,500 --> 00:19:45,660
+Let's focus on
+
+595
+00:19:45,660 --> 00:19:46,520
+this e-call instruction.
+
+596
+00:19:46,520 --> 00:19:52,060
+The e-call instruction,
+
+597
+00:19:52,060 --> 00:19:54,320
+it is defined in the privilege specification,
+
+598
+00:19:54,320 --> 00:19:55,080
+right.
+
+599
+00:19:55,080 --> 00:19:56,840
+So it is called
+
+600
+00:19:56,840 --> 00:19:58,100
+the so-called E-Call.
+
+601
+00:19:58,100 --> 00:19:58,780
+That is, Environment
+
+602
+00:19:58,780 --> 00:20:00,120
+which means the environment call
+
+603
+00:20:00,120 --> 00:20:01,140
+the environment call is actually
+
+604
+00:20:01,140 --> 00:20:02,320
+what we specifically refer to as
+
+605
+00:20:02,320 --> 00:20:03,020
+it being that
+
+606
+00:20:03,020 --> 00:20:04,760
+full pipeline switch
+
+607
+00:20:04,760 --> 00:20:07,160
+so it actually belongs to a kind of
+
+608
+00:20:07,160 --> 00:20:08,280
+actively triggered exception
+
+609
+00:20:08,280 --> 00:20:09,720
+an actively triggered exception
+
+610
+00:20:09,720 --> 00:20:10,740
+so
+
+611
+00:20:10,740 --> 00:20:14,520
+after this actively triggered exception occurs,
+
+612
+00:20:14,520 --> 00:20:16,340
+depending on which call exception you trigger
+
+613
+00:20:16,340 --> 00:20:17,180
+at this point
+
+614
+00:20:17,180 --> 00:20:18,480
+when calling this E-Core,
+
+615
+00:20:18,480 --> 00:20:20,540
+when you currently call this E-Core,
+
+616
+00:20:20,540 --> 00:20:22,720
+the current value of
+
+617
+00:20:22,720 --> 00:20:24,100
+the privilege level
+
+618
+00:20:24,100 --> 00:20:27,300
+we distinguish different exception codes.
+
+619
+00:20:27,300 --> 00:20:30,180
+You see, everyone, we have 8, 9, 11 here.
+
+620
+00:20:30,180 --> 00:20:31,880
+So 8 actually means
+
+621
+00:20:31,880 --> 00:20:35,540
+If you make an environment call in user mode,
+
+622
+00:20:35,540 --> 00:20:38,600
+then the exception code triggered is 8.
+
+623
+00:20:38,600 --> 00:20:41,540
+If it's triggered in S mode, it's 9.
+
+624
+00:20:41,540 --> 00:20:43,800
+And if
+
+625
+00:20:43,800 --> 00:20:49,630
+if the environment call is made in some other modes,
+
+626
+00:20:49,630 --> 00:20:52,690
+then the exception code triggered is 11.
+
+627
+00:20:52,690 --> 00:20:54,290
+So now,
+
+628
+00:20:54,290 --> 00:20:58,450
+since this exception is triggered in user mode,
+
+629
+00:20:58,450 --> 00:20:59,550
+it should be,
+
+630
+00:20:59,550 --> 00:21:01,230
+as you can probably guess, it corresponds to 8.
+
+631
+00:21:01,230 --> 00:21:01,450
+Right?
+
+632
+00:21:01,450 --> 00:21:02,910
+You'll see it later in the code,
+
+633
+00:21:02,910 --> 00:21:04,010
+it's 8.
+
+634
+00:21:04,010 --> 00:21:06,990
+So that's the second point.
+
+635
+00:21:06,990 --> 00:21:09,050
+Now the third thing to note is that,
+
+636
+00:21:09,050 --> 00:21:12,150
+this is, after all, still the basic exception handling
+
+637
+00:21:12,150 --> 00:21:13,430
+we talked about earlier.
+
+638
+00:21:13,430 --> 00:21:15,450
+So when an exception occurs,
+
+639
+00:21:15,450 --> 00:21:17,990
+we know the value in the EPC register,
+
+640
+00:21:17,990 --> 00:21:21,790
+it holds a return address.
+
+641
+00:21:21,790 --> 00:21:22,830
+Now, one thing to pay attention to
+
+642
+00:21:22,830 --> 00:21:25,930
+if the exception is triggered by the 'yi' instruction
+
+643
+00:21:25,930 --> 00:21:27,210
+(the illegal instruction exception),
+
+644
+00:21:27,210 --> 00:21:29,070
+then what the EPC register holds
+
+645
+00:21:29,070 --> 00:21:32,730
+is the address of the 'yi' instruction itself,
+
+646
+00:21:32,730 --> 00:21:34,710
+that is, the address of that very instruction.
+
+647
+00:21:34,710 --> 00:21:37,070
+So I want to remind you here,
+
+648
+00:21:37,070 --> 00:21:38,690
+and this is worth paying attention to,
+
+649
+00:21:38,690 --> 00:21:41,790
+that if you want execution to continue
+
+650
+00:21:41,790 --> 00:21:43,650
+after the exception is handled,
+
+651
+00:21:43,650 --> 00:21:45,210
+then we actually need to
+
+652
+00:21:45,210 --> 00:21:47,210
+modify the value of the EPC register
+
+653
+00:21:47,210 --> 00:21:48,750
+inside our exception handling logic.
+
+654
+00:21:48,750 --> 00:21:51,110
+We need to change it
+
+655
+00:21:51,110 --> 00:21:51,790
+so it points to the next instruction to execute.
+
+656
+00:21:51,790 --> 00:21:53,290
+Otherwise,
+
+657
+00:21:53,290 --> 00:21:54,110
+it will return to the current EPC,
+
+658
+00:21:54,110 --> 00:21:56,750
+and you will end up in an infinite loop.
+
+659
+00:21:56,750 --> 00:21:58,930
+Keep that in mind.
+
+660
+00:21:58,930 --> 00:22:00,030
+Keep that in mind.
+
+661
+00:22:00,030 --> 00:22:05,740
+This is related to ECO,
+
+662
+00:22:05,740 --> 00:22:06,860
+an introduction to this command.
+
+663
+00:22:06,860 --> 00:22:09,340
+So next,
+
+664
+00:22:09,340 --> 00:22:10,480
+let's take a look
+
+665
+00:22:10,480 --> 00:22:11,780
+at the execution flow
+
+666
+00:22:11,780 --> 00:22:13,200
+of this system call.
+
+667
+00:22:13,200 --> 00:22:17,060
+Now, this
+
+668
+00:22:17,060 --> 00:22:18,660
+diagram here
+
+669
+00:22:18,660 --> 00:22:19,600
+is a fairly classic
+
+670
+00:22:19,600 --> 00:22:20,620
+system call flow.
+
+671
+00:22:20,620 --> 00:22:24,080
+In fact, for any operating system,
+
+672
+00:22:24,080 --> 00:22:25,060
+the invocation process
+
+673
+00:22:25,060 --> 00:22:25,980
+is pretty much the same.
+
+674
+00:22:25,980 --> 00:22:26,620
+It's just that
+
+675
+00:22:26,620 --> 00:22:28,580
+I tweaked it a bit
+
+676
+00:22:28,580 --> 00:22:30,500
+to fit our RISC-V,
+
+677
+00:22:30,500 --> 00:22:32,340
+into our current example here.
+
+678
+00:22:32,340 --> 00:22:34,820
+So, for instance, right now, on the user side,
+
+679
+00:22:34,820 --> 00:22:36,980
+as we know, the user programs we write
+
+680
+00:22:36,980 --> 00:22:40,140
+effectively start from the left here.
+
+681
+00:22:40,140 --> 00:22:44,160
+So we go call a function,
+
+682
+00:22:44,160 --> 00:22:45,000
+say this function.
+
+683
+00:22:45,000 --> 00:22:46,760
+Of course, this function is written fairly generally.
+
+684
+00:22:46,760 --> 00:22:48,960
+For example, what we're learning now,
+
+685
+00:22:48,960 --> 00:22:50,900
+those system calls in Linux,
+
+686
+00:22:50,900 --> 00:22:52,340
+say open, read, write,
+
+687
+00:22:52,340 --> 00:22:53,760
+they're all this kind of scenario.
+
+688
+00:22:53,760 --> 00:22:55,320
+After you call this open,
+
+689
+00:22:55,320 --> 00:22:56,140
+after the function,
+
+690
+00:22:56,140 --> 00:22:57,800
+it will enter this open function.
+
+691
+00:22:57,800 --> 00:22:59,400
+So inside this open function,
+
+692
+00:22:59,400 --> 00:23:00,440
+it does some logic.
+
+693
+00:23:00,440 --> 00:23:01,380
+Of course, the most core part,
+
+694
+00:23:01,380 --> 00:23:02,420
+what we care about is that
+
+695
+00:23:02,420 --> 00:23:04,500
+internally it will definitely call an ecall,
+
+696
+00:23:04,500 --> 00:23:06,840
+because only by calling ecall
+
+697
+00:23:06,840 --> 00:23:08,780
+can it trigger this exception.
+
+698
+00:23:08,780 --> 00:23:10,740
+Then this exception can eventually reach
+
+699
+00:23:10,740 --> 00:23:13,520
+switching this state from user mode
+
+700
+00:23:13,520 --> 00:23:14,360
+to kernel mode.
+
+701
+00:23:14,360 --> 00:23:16,200
+Now after switching to kernel mode
+
+702
+00:23:16,200 --> 00:23:17,700
+we then enter our
+
+703
+00:23:17,700 --> 00:23:19,480
+unified — it still goes into our
+
+704
+00:23:19,480 --> 00:23:20,620
+this trap handler function
+
+705
+00:23:20,620 --> 00:23:22,720
+Now inside this trap handler function,
+
+706
+00:23:22,720 --> 00:23:25,460
+we can go ahead and do our
+
+707
+00:23:25,460 --> 00:23:26,980
+that is, at this point
+
+708
+00:23:26,980 --> 00:23:28,760
+for example, if we need to access some kernel
+
+709
+00:23:28,760 --> 00:23:30,860
+logic that can only be accessed in kernel mode,
+
+710
+00:23:30,860 --> 00:23:32,640
+then we implement it inside these functions
+
+711
+00:23:32,640 --> 00:23:34,540
+Now after the implementation is done,
+
+712
+00:23:34,540 --> 00:23:37,360
+we know that in the end we still have to return
+
+713
+00:23:37,360 --> 00:23:39,080
+And when returning,
+
+714
+00:23:39,080 --> 00:23:41,300
+essentially it's still calling mret
+
+715
+00:23:41,300 --> 00:23:42,660
+there's nothing much to say about that
+
+716
+00:23:42,660 --> 00:23:43,760
+because for this exception,
+
+717
+00:23:43,760 --> 00:23:45,900
+in the end it always calls mret
+
+718
+00:23:45,900 --> 00:23:47,840
+After mret,
+
+719
+00:23:47,840 --> 00:23:49,260
+then we come back
+
+720
+00:23:49,260 --> 00:23:50,040
+and after coming back,
+
+721
+00:23:50,040 --> 00:23:51,880
+the whole process is complete.
+
+722
+00:23:51,880 --> 00:23:53,700
+In other words, the entire system call execution flow
+
+723
+00:23:53,700 --> 00:23:55,320
+actually works the same way.
+
+724
+00:23:55,320 --> 00:23:57,580
+Now, at the same time, let me also mention here
+
+725
+00:23:57,580 --> 00:23:59,640
+that after this mret,
+
+726
+00:23:59,640 --> 00:24:00,580
+the mode
+
+727
+00:24:00,580 --> 00:24:04,280
+switches from kernel mode back to user mode.
+
+728
+00:24:04,280 --> 00:24:05,380
+Because, as I mentioned earlier,
+
+729
+00:24:05,380 --> 00:24:08,920
+in the mret logic,
+
+730
+00:24:08,920 --> 00:24:10,760
+we actually make sure that
+
+731
+00:24:10,760 --> 00:24:13,840
+since with mstatus.MPP,
+
+732
+00:24:13,840 --> 00:24:15,620
+as long as the first time we enter
+
+733
+00:24:15,620 --> 00:24:16,920
+is in user mode,
+
+734
+00:24:16,920 --> 00:24:17,880
+this mstatus.MPP
+
+735
+00:24:17,880 --> 00:24:20,820
+will preserve the previous logic.
+
+736
+00:24:20,820 --> 00:24:21,900
+The previous logic is user mode,
+
+737
+00:24:21,900 --> 00:24:22,760
+so when it returns,
+
+738
+00:24:22,760 --> 00:24:24,200
+it is still user mode.
+
+739
+00:24:24,200 --> 00:24:25,540
+It returns to user mode.
+
+740
+00:24:25,540 --> 00:24:26,540
+After that, there's no need to
+
+741
+00:24:26,540 --> 00:24:27,820
+We don't actively set it again, because as long as when it comes in
+
+742
+00:24:27,820 --> 00:24:29,120
+at the first time, we set MPP
+
+743
+00:24:29,120 --> 00:24:31,200
+to make sure it is zero, then later on
+
+744
+00:24:31,200 --> 00:24:32,900
+it will naturally be saved and restored again. I won't go into more detail on this.
+
+745
+00:24:32,900 --> 00:24:34,020
+This actually belongs to
+
+746
+00:24:34,020 --> 00:24:39,240
+the unified handling logic part of this exception.
+
+747
+00:24:39,240 --> 00:24:41,060
+If it's not clear, you can go back and look at our
+
+748
+00:24:41,060 --> 00:24:41,880
+lecture on trap and exception
+
+749
+00:24:41,880 --> 00:24:43,540
+and the relevant content in that chapter. Basically, this is it.
+
+750
+00:24:43,540 --> 00:24:44,680
+Equo, on the other hand, will cause the mode to switch to kernel mode, and mReturn will switch the mode back.
+
+751
+00:24:44,680 --> 00:24:45,960
+The mode will switch back.
+
+752
+00:24:45,960 --> 00:24:48,440
+The mode will switch back.
+
+753
+00:24:48,440 --> 00:24:50,460
+The mode will switch back.
+
+754
+00:24:50,460 --> 00:24:52,580
+The mode will switch back.
+
+755
+00:24:52,580 --> 00:24:54,120
+The mode will switch back.
+
+756
+00:24:54,120 --> 00:24:55,780
+The mode will switch back.
+
+757
+00:24:55,780 --> 00:24:57,020
+The mode will switch back.
+
+758
+00:24:57,020 --> 00:24:57,460
+The mode will switch back.
+
+759
+00:24:57,460 --> 00:25:00,060
+The mode will switch back.
+
+760
+00:25:00,060 --> 00:25:01,360
+The mode will switch back.
+
+761
+00:25:01,360 --> 00:25:03,440
+So this is one of the system calls,
+
+762
+00:25:03,440 --> 00:25:05,400
+the overall execution flow.
+
+763
+00:25:05,400 --> 00:25:06,680
+Now, more specifically,
+
+764
+00:25:06,680 --> 00:25:07,840
+how does our code
+
+765
+00:25:07,840 --> 00:25:09,280
+actually get executed?
+
+766
+00:25:09,280 --> 00:25:10,160
+Let's take a look at it together.
+
+767
+00:25:10,160 --> 00:25:20,500
+So the logic in our code
+
+768
+00:25:20,500 --> 00:25:22,000
+is designed like this.
+
+769
+00:25:22,000 --> 00:25:24,080
+First, let me walk you through
+
+770
+00:25:24,080 --> 00:25:25,080
+the overall process of this code.
+
+771
+00:25:25,080 --> 00:25:27,180
+We've added a few files,
+
+772
+00:25:27,180 --> 00:25:29,100
+for example, an assembly file called ucs.s.
+
+773
+00:25:29,100 --> 00:25:30,920
+What's in there is actually the definitions of
+
+774
+00:25:30,920 --> 00:25:33,000
+our functions,
+
+775
+00:25:33,000 --> 00:25:34,920
+which you can basically think of as
+
+776
+00:25:34,920 --> 00:25:36,240
+these functions
+
+777
+00:25:36,240 --> 00:25:37,520
+essentially corresponding to this part,
+
+778
+00:25:37,520 --> 00:25:39,840
+this part here.
+
+779
+00:25:39,840 --> 00:25:41,000
+When you look at this code,
+
+780
+00:25:41,000 --> 00:25:42,140
+it all looks quite similar, doesn't it?
+
+781
+00:25:42,140 --> 00:25:42,700
+called in one go
+
+782
+00:25:42,700 --> 00:25:44,420
+So these functions,
+
+783
+00:25:44,420 --> 00:25:45,580
+even though they are written in assembly,
+
+784
+00:25:45,580 --> 00:25:46,900
+are actually equivalent to this kind of
+
+785
+00:25:46,900 --> 00:25:48,560
+this logic, this part of it.
+
+786
+00:25:48,560 --> 00:25:50,500
+Now this part
+
+787
+00:25:50,500 --> 00:25:51,900
+implements a call that runs everything in one go.
+
+788
+00:25:51,900 --> 00:25:53,960
+And this one-shot call,
+
+789
+00:25:53,960 --> 00:25:55,380
+as we know, once it is made,
+
+790
+00:25:55,380 --> 00:25:58,680
+what it goes to is what we have seen
+
+791
+00:25:58,680 --> 00:26:00,200
+again and again before, which is
+
+792
+00:26:00,200 --> 00:26:03,680
+the trap vector inside N to S,
+
+793
+00:26:03,680 --> 00:26:06,080
+that is, our trap entry point.
+
+794
+00:26:06,080 --> 00:26:07,620
+Now this entry point,
+
+795
+00:26:07,620 --> 00:26:11,040
+the process it goes through,
+
+796
+00:26:11,040 --> 00:26:12,720
+is not a simple function call.
+
+797
+00:26:12,720 --> 00:26:13,840
+We use blue to indicate it.
+
+798
+00:26:13,840 --> 00:26:15,580
+What it actually represents is triggering an exception.
+
+799
+00:26:15,580 --> 00:26:17,360
+It actually represents triggering an exception.
+
+800
+00:26:17,360 --> 00:26:19,900
+And inside this exception handler
+
+801
+00:26:19,900 --> 00:26:22,800
+The core thing is that it calls the trap handler.
+
+802
+00:26:22,800 --> 00:26:24,280
+So the trap handler...
+
+803
+00:26:24,280 --> 00:26:26,760
+If we trace into this function,
+
+804
+00:26:26,760 --> 00:26:29,660
+we'll find that it actually ends up here.
+
+805
+00:26:29,660 --> 00:26:34,700
+As for why it's 8, we explained that earlier.
+
+806
+00:26:34,700 --> 00:26:38,840
+It's because we triggered the exception in user mode.
+
+807
+00:26:38,840 --> 00:26:40,240
+We triggered the exception.
+
+808
+00:26:40,240 --> 00:26:42,220
+So this trigger of ecall...
+
+809
+00:26:42,220 --> 00:26:44,700
+so the code value is 8.
+
+810
+00:26:44,700 --> 00:26:46,900
+So inside 8,
+
+811
+00:26:46,900 --> 00:26:47,900
+inside the corresponding entry 8,
+
+812
+00:26:47,900 --> 00:26:52,120
+we actually call the kernel's syscall handler function.
+
+813
+00:26:52,120 --> 00:26:53,620
+And then,
+
+814
+00:26:53,620 --> 00:26:54,620
+inside there,
+
+815
+00:26:54,620 --> 00:26:57,140
+based on some specific parameters,
+
+816
+00:26:57,140 --> 00:27:02,100
+we call the actual SysGetHID.
+
+817
+00:27:02,100 --> 00:27:02,680
+Inside this,
+
+818
+00:27:02,680 --> 00:27:04,160
+it will access the earlier...
+
+819
+00:27:04,160 --> 00:27:04,840
+For example, just now we...
+
+820
+00:27:04,840 --> 00:27:06,120
+Taking the example we just used...
+
+821
+00:27:06,120 --> 00:27:07,400
+Then here we will go and
+
+822
+00:27:07,400 --> 00:27:09,600
+actually access that HotID of his
+
+823
+00:27:09,600 --> 00:27:10,980
+So in this situation,
+
+824
+00:27:10,980 --> 00:27:12,840
+since the access is done in Machine mode,
+
+825
+00:27:12,840 --> 00:27:14,560
+naturally there won't be any exception.
+
+826
+00:27:14,560 --> 00:27:17,200
+Now, among these things,
+
+827
+00:27:17,200 --> 00:27:18,860
+they are actually all ordinary function calls.
+
+828
+00:27:18,860 --> 00:27:20,080
+After returning,
+
+829
+00:27:20,080 --> 00:27:20,800
+please pay attention here.
+
+830
+00:27:20,800 --> 00:27:22,160
+There is a key piece of logic here,
+
+831
+00:27:22,160 --> 00:27:23,800
+which is that at this point we need to
+
+832
+00:27:23,800 --> 00:27:25,440
+add 4 to returnPC.
+
+833
+00:27:25,440 --> 00:27:26,480
+Why?
+
+834
+00:27:26,480 --> 00:27:29,500
+The reason is what we talked about earlier,
+
+835
+00:27:29,500 --> 00:27:30,660
+which is this equal function.
+
+836
+00:27:30,660 --> 00:27:32,980
+After it triggers an exception and returns,
+
+837
+00:27:32,980 --> 00:27:34,300
+if we don't handle it specially,
+
+838
+00:27:34,300 --> 00:27:36,340
+its EPC actually saves
+
+839
+00:27:36,340 --> 00:27:37,580
+the equal instruction itself.
+
+840
+00:27:37,580 --> 00:27:39,900
+So if we don't add 4,
+
+841
+00:27:39,900 --> 00:27:41,800
+Now, after the exception returns,
+
+842
+00:27:41,800 --> 00:27:46,260
+it will continue executing this equal instruction,
+
+843
+00:27:46,260 --> 00:27:48,580
+and then this loop starts happening all over again.
+
+844
+00:27:48,580 --> 00:27:50,040
+Now that's not what we want to see,
+
+845
+00:27:50,040 --> 00:27:53,640
+because what we want is to move on to the next step.
+
+846
+00:27:53,640 --> 00:27:55,820
+So we forcibly take this
+
+847
+00:27:55,820 --> 00:27:58,200
+MPC return PC and add 4 to it.
+
+848
+00:27:58,200 --> 00:27:59,560
+We know, based on our code logic,
+
+849
+00:27:59,560 --> 00:28:00,980
+after this return PC returns,
+
+850
+00:28:00,980 --> 00:28:03,900
+it will go and modify the EPC register.
+
+851
+00:28:03,900 --> 00:28:06,400
+Now, why add 4?
+
+852
+00:28:06,400 --> 00:28:08,140
+That's because one instruction is four bytes.
+
+853
+00:28:08,140 --> 00:28:09,860
+Right.
+
+854
+00:28:09,860 --> 00:28:11,280
+So after returning this way,
+
+855
+00:28:11,280 --> 00:28:12,780
+we know that this one,
+
+856
+00:28:12,780 --> 00:28:16,460
+it will not,
+
+857
+00:28:16,460 --> 00:28:18,840
+it will not,
+
+858
+00:28:18,840 --> 00:28:21,540
+it will no longer jump over here to execute.
+
+859
+00:28:21,540 --> 00:28:22,720
+So on our side,
+
+860
+00:28:22,720 --> 00:28:24,460
+it will be able to continue moving forward.
+
+861
+00:28:24,460 --> 00:28:30,580
+Right
+
+862
+00:28:30,580 --> 00:28:31,740
+over here
+
+863
+00:28:31,740 --> 00:28:34,860
+at this point it hasn't exited yet
+
+864
+00:28:34,860 --> 00:28:35,640
+so this return,
+
+865
+00:28:35,640 --> 00:28:37,720
+after mret returns,
+
+866
+00:28:37,720 --> 00:28:41,680
+it can continue moving forward
+
+867
+00:28:41,680 --> 00:28:43,200
+at this point,
+
+868
+00:28:43,200 --> 00:28:44,660
+it proceeds down to here
+
+869
+00:28:44,660 --> 00:28:46,920
+otherwise it would fall into an infinite loop at this equal branch
+
+870
+00:28:46,920 --> 00:28:48,240
+and that's not what we want to see
+
+871
+00:28:48,240 --> 00:28:49,840
+so this mret,
+
+872
+00:28:49,840 --> 00:28:50,860
+when it comes back,
+
+873
+00:28:50,860 --> 00:28:52,180
+is also shown with a blue line
+
+874
+00:28:52,180 --> 00:28:53,120
+because this is not a
+
+875
+00:28:53,120 --> 00:28:54,680
+ordinary function call either
+
+876
+00:28:54,680 --> 00:28:56,560
+because it involves a mode switch
+
+877
+00:28:56,560 --> 00:28:59,060
+because when it comes back from here,
+
+878
+00:28:59,060 --> 00:29:00,080
+the mode again goes from
+
+879
+00:29:00,080 --> 00:29:02,240
+supervisor mode back to user mode
+
+880
+00:29:02,240 --> 00:29:04,160
+so please pay attention to this
+
+881
+00:29:04,160 --> 00:29:06,280
+This is an actual
+
+882
+00:29:06,280 --> 00:29:08,940
+code execution process
+
+883
+00:29:08,940 --> 00:29:09,960
+that corresponds to the
+
+884
+00:29:09,960 --> 00:29:10,720
+flow we described above
+
+885
+00:29:10,720 --> 00:29:13,700
+Take a moment to get familiar with this
+
+886
+00:29:13,700 --> 00:29:17,120
+So once we have an overall understanding
+
+887
+00:29:17,120 --> 00:29:19,420
+of this execution flow,
+
+888
+00:29:19,420 --> 00:29:20,740
+there is still one problem we need to solve
+
+889
+00:29:20,740 --> 00:29:23,880
+and that is the issue of passing arguments in this function call
+
+890
+00:29:23,880 --> 00:29:26,060
+Because this process
+
+891
+00:29:26,060 --> 00:29:27,980
+is not an ordinary function call
+
+892
+00:29:27,980 --> 00:29:30,400
+So during this process,
+
+893
+00:29:30,400 --> 00:29:31,820
+similarly, because we
+
+894
+00:29:31,820 --> 00:29:34,020
+for example, when we call the open function system call,
+
+895
+00:29:34,020 --> 00:29:35,920
+we may still need to, at the user level,
+
+896
+00:29:35,920 --> 00:29:38,200
+pass some values into the kernel level
+
+897
+00:29:38,200 --> 00:29:39,980
+So how should we design
+
+898
+00:29:39,980 --> 00:29:41,300
+this passing process?
+
+899
+00:29:41,300 --> 00:29:44,140
+This is the fourth part we want to introduce to you
+
+900
+00:29:44,140 --> 00:29:48,270
+Now for this system call,
+
+901
+00:29:48,270 --> 00:29:50,150
+As we know, it is
+
+902
+00:29:50,150 --> 00:29:51,410
+actually the operating system's
+
+903
+00:29:51,410 --> 00:29:53,110
+set of interfaces provided to the outside world
+
+904
+00:29:53,110 --> 00:29:55,950
+So the system call's own
+
+905
+00:29:55,950 --> 00:29:58,670
+parameter-passing convention,
+
+906
+00:29:58,670 --> 00:30:00,710
+is in fact handled by different
+
+907
+00:30:00,710 --> 00:30:02,070
+operating systems themselves
+
+908
+00:30:02,070 --> 00:30:03,270
+through implementation-defined mechanisms.
+
+909
+00:30:03,270 --> 00:30:04,150
+However,
+
+910
+00:30:04,150 --> 00:30:06,810
+to a certain extent, it must also follow
+
+911
+00:30:06,810 --> 00:30:07,970
+what we mentioned earlier,
+
+912
+00:30:07,970 --> 00:30:10,470
+the function calling convention.
+
+913
+00:30:10,470 --> 00:30:12,970
+The function calling convention is fundamental.
+
+914
+00:30:12,970 --> 00:30:13,530
+However,
+
+915
+00:30:13,530 --> 00:30:14,590
+the operating system can, on top of that,
+
+916
+00:30:14,590 --> 00:30:15,270
+on top of this function,
+
+917
+00:30:15,270 --> 00:30:16,750
+on top of the function calling convention,
+
+918
+00:30:16,750 --> 00:30:17,770
+on that foundation,
+
+919
+00:30:17,770 --> 00:30:19,350
+make further specifications
+
+920
+00:30:19,350 --> 00:30:20,830
+and further rules.
+
+921
+00:30:20,830 --> 00:30:24,010
+So the little system we've implemented so far,
+
+922
+00:30:24,010 --> 00:30:25,250
+let's call it RBOS for example,
+
+923
+00:30:25,250 --> 00:30:27,370
+our current definition,
+
+924
+00:30:27,370 --> 00:30:30,670
+is actually modeled after the classic Linux system calls.
+
+925
+00:30:30,670 --> 00:30:34,150
+So we have a few rules,
+
+926
+00:30:34,150 --> 00:30:35,150
+some rules.
+
+927
+00:30:35,150 --> 00:30:39,010
+The general principles,
+
+928
+00:30:39,010 --> 00:30:40,870
+are listed in the three points below.
+
+929
+00:30:40,870 --> 00:30:42,490
+First, there's a concept involved,
+
+930
+00:30:42,490 --> 00:30:43,670
+which is the concept of the system call number.
+
+931
+00:30:43,670 --> 00:30:46,210
+The system call number.
+
+932
+00:30:46,210 --> 00:30:48,850
+So what does the system call number mean?
+
+933
+00:30:48,850 --> 00:30:50,130
+On this,
+
+934
+00:30:50,130 --> 00:30:51,770
+let's come back and take a look.
+
+935
+00:30:51,770 --> 00:30:52,070
+That is,
+
+936
+00:30:52,070 --> 00:30:55,990
+let's come back and take a look at
+
+937
+00:30:55,990 --> 00:31:01,660
+the ecall instruction we mentioned earlier.
+
+938
+00:31:01,660 --> 00:31:04,980
+One thing to note about this instruction,
+
+939
+00:31:04,980 --> 00:31:06,440
+is that inside it,
+
+940
+00:31:06,440 --> 00:31:08,920
+it actually doesn't carry many parameters.
+
+941
+00:31:08,920 --> 00:31:10,440
+without too many parameters
+
+942
+00:31:10,440 --> 00:31:11,500
+So this one,
+
+943
+00:31:11,500 --> 00:31:12,640
+but,
+
+944
+00:31:12,640 --> 00:31:14,840
+when we talk about system calls,
+
+945
+00:31:14,840 --> 00:31:16,240
+there's definitely not just one,
+
+946
+00:31:16,240 --> 00:31:16,720
+right?
+
+947
+00:31:16,720 --> 00:31:17,540
+With ecall,
+
+948
+00:31:17,540 --> 00:31:18,780
+it just triggers the system call,
+
+949
+00:31:18,780 --> 00:31:20,460
+but our actual system calls
+
+950
+00:31:20,460 --> 00:31:21,080
+could be numerous,
+
+951
+00:31:21,080 --> 00:31:21,620
+right?
+
+952
+00:31:21,620 --> 00:31:24,420
+For example, look at Linux — there are many system call functions,
+
+953
+00:31:24,420 --> 00:31:25,700
+open, read, write,
+
+954
+00:31:25,700 --> 00:31:26,640
+lots of system calls.
+
+955
+00:31:26,640 --> 00:31:28,760
+So how do we tell these system calls apart?
+
+956
+00:31:28,760 --> 00:31:30,640
+We actually do it through what's called a
+
+957
+00:31:30,640 --> 00:31:31,580
+for each system call,
+
+958
+00:31:31,580 --> 00:31:32,800
+we give it an integer value,
+
+959
+00:31:32,800 --> 00:31:35,700
+a number, to distinguish them.
+
+960
+00:31:35,700 --> 00:31:37,800
+But,
+
+961
+00:31:37,800 --> 00:31:38,460
+Now, this number,
+
+962
+00:31:38,460 --> 00:31:40,560
+there's nowhere in the ecall instruction to put it.
+
+963
+00:31:40,560 --> 00:31:42,040
+We don't have a place to store that value.
+
+964
+00:31:42,040 --> 00:31:49,100
+So under the current convention we're using,
+
+965
+00:31:49,100 --> 00:31:51,660
+we actually make use of a register.
+
+966
+00:31:51,660 --> 00:31:54,900
+This may differ from some other architectures.
+
+967
+00:31:54,900 --> 00:31:55,520
+It might not be quite the same.
+
+968
+00:31:55,520 --> 00:31:56,240
+In some architectures,
+
+969
+00:31:56,240 --> 00:31:58,040
+there might be, in this,
+
+970
+00:31:58,040 --> 00:32:01,620
+there are also some related trap instructions,
+
+971
+00:32:01,620 --> 00:32:02,860
+and within the trap instruction itself,
+
+972
+00:32:02,860 --> 00:32:04,820
+the system call number is included.
+
+973
+00:32:04,820 --> 00:32:05,660
+However,
+
+974
+00:32:05,660 --> 00:32:07,040
+with RISC-V,
+
+975
+00:32:07,040 --> 00:32:07,940
+it doesn't do it that way.
+
+976
+00:32:07,940 --> 00:32:11,200
+It actually,
+
+977
+00:32:11,200 --> 00:32:13,460
+by convention, puts the system call number,
+
+978
+00:32:13,460 --> 00:32:15,680
+on a parameter register called a7,
+
+979
+00:32:15,680 --> 00:32:17,780
+one of these argument registers.
+
+980
+00:32:17,780 --> 00:32:19,400
+As we know, the ones starting with a
+
+981
+00:32:19,400 --> 00:32:20,320
+is used to pass arguments.
+
+982
+00:32:20,320 --> 00:32:21,600
+So this special argument
+
+983
+00:32:21,600 --> 00:32:24,480
+is used to hold the system call number, as specified.
+
+984
+00:32:24,480 --> 00:32:27,360
+Besides that,
+
+985
+00:32:27,360 --> 00:32:29,480
+our a0 through a5,
+
+986
+00:32:29,480 --> 00:32:31,500
+they hold the other arguments of the call.
+
+987
+00:32:31,500 --> 00:32:33,340
+Actually, the system call number can also be seen
+
+988
+00:32:33,340 --> 00:32:34,420
+as one of its arguments,
+
+989
+00:32:34,420 --> 00:32:35,140
+but
+
+990
+00:32:35,140 --> 00:32:36,580
+this argument is a bit special.
+
+991
+00:32:36,580 --> 00:32:38,300
+We can use this argument
+
+992
+00:32:38,300 --> 00:32:40,300
+to tell different system calls apart.
+
+993
+00:32:40,300 --> 00:32:41,840
+As for the other arguments,
+
+994
+00:32:41,840 --> 00:32:42,740
+a0 through a5,
+
+995
+00:32:42,740 --> 00:32:44,780
+they hold the regular arguments.
+
+996
+00:32:44,780 --> 00:32:45,640
+Regular arguments.
+
+997
+00:32:45,640 --> 00:32:49,000
+So at most, that's equivalent to 6 of them.
+
+998
+00:32:49,000 --> 00:32:49,800
+Any more than that,
+
+999
+00:32:49,800 --> 00:32:51,100
+and mainly, considering efficiency,
+
+1000
+00:32:51,100 --> 00:32:52,320
+in principle, you could hold more.
+
+1001
+00:32:52,320 --> 00:32:53,800
+We could also use A6.
+
+1002
+00:32:53,800 --> 00:32:54,880
+We could put one more there too, right?
+
+1003
+00:32:54,880 --> 00:32:56,560
+But we don't use it.
+
+1004
+00:32:56,560 --> 00:32:59,160
+Then there's also a return value.
+
+1005
+00:32:59,160 --> 00:32:59,900
+As for the return value,
+
+1006
+00:32:59,900 --> 00:33:01,400
+it's placed in A0.
+
+1007
+00:33:01,400 --> 00:33:03,620
+Generally, for system calls,
+
+1008
+00:33:03,620 --> 00:33:06,380
+the most basic return value
+
+1009
+00:33:06,380 --> 00:33:07,960
+is just success or failure.
+
+1010
+00:33:07,960 --> 00:33:09,160
+As for the other parameters,
+
+1011
+00:33:09,160 --> 00:33:11,800
+they may be returned through some other means.
+
+1012
+00:33:11,800 --> 00:33:13,900
+But the value returned in A0,
+
+1013
+00:33:13,900 --> 00:33:14,980
+mainly indicates success or failure.
+
+1014
+00:33:14,980 --> 00:33:16,000
+Success is generally 0,
+
+1015
+00:33:16,000 --> 00:33:18,500
+and if it's an error,
+
+1016
+00:33:18,500 --> 00:33:19,380
+then it's a negative number,
+
+1017
+00:33:19,380 --> 00:33:20,500
+representing different errors.
+
+1018
+00:33:20,500 --> 00:33:22,800
+This is our convention.
+
+1019
+00:33:22,800 --> 00:33:24,500
+Actually, Linux does the same thing.
+
+1020
+00:33:24,500 --> 00:33:27,620
+We made this rule by referencing Linux.
+
+1021
+00:33:27,620 --> 00:33:29,020
+So based on this principle,
+
+1022
+00:33:29,020 --> 00:33:32,140
+we can carefully design
+
+1023
+00:33:32,140 --> 00:33:33,020
+how our system call
+
+1024
+00:33:33,020 --> 00:33:34,380
+should be implemented.
+
+1025
+00:33:34,380 --> 00:33:36,640
+Now, for the specific implementation,
+
+1026
+00:33:36,640 --> 00:33:38,520
+let me give you a brief overview.
+
+1027
+00:33:38,520 --> 00:33:43,380
+So let's assume the process
+
+1028
+00:33:43,380 --> 00:33:44,240
+happens like this.
+
+1029
+00:33:44,240 --> 00:33:45,140
+So here,
+
+1030
+00:33:45,140 --> 00:33:47,820
+suppose we implement a system call
+
+1031
+00:33:47,820 --> 00:33:49,560
+function called getHID.
+
+1032
+00:33:49,560 --> 00:33:52,700
+This is a function we implemented.
+
+1033
+00:33:52,700 --> 00:34:00,740
+It gets triggered from a task in user mode.
+
+1034
+00:34:00,740 --> 00:34:02,740
+So once it's called,
+
+1035
+00:34:02,740 --> 00:34:05,220
+in the kernel,
+
+1036
+00:34:05,220 --> 00:34:07,440
+we actually assign each system call
+
+1037
+00:34:07,440 --> 00:34:09,540
+a system call number.
+
+1038
+00:34:09,540 --> 00:34:10,600
+This system call number
+
+1039
+00:34:10,600 --> 00:34:13,240
+is kept in the
+
+1040
+00:34:13,240 --> 00:34:15,100
+header file syscall.h.
+
+1041
+00:34:15,100 --> 00:34:17,340
+So our example here is quite simple.
+
+1042
+00:34:17,340 --> 00:34:18,260
+We've only defined one.
+
+1043
+00:34:18,260 --> 00:34:19,840
+After you go back,
+
+1044
+00:34:19,840 --> 00:34:21,240
+you can extend it yourselves.
+
+1045
+00:34:21,240 --> 00:34:23,440
+Just put 1234 as an integer value, and that's fine.
+
+1046
+00:34:23,440 --> 00:34:24,520
+And then,
+
+1047
+00:34:24,520 --> 00:34:28,400
+look at how we implement this getpid,
+
+1048
+00:34:28,400 --> 00:34:29,700
+when we write this function,
+
+1049
+00:34:29,700 --> 00:34:31,720
+before we call ecall,
+
+1050
+00:34:31,720 --> 00:34:33,200
+we take this a7,
+
+1051
+00:34:33,200 --> 00:34:34,580
+this value,
+
+1052
+00:34:34,580 --> 00:34:36,660
+we take this system call number,
+
+1053
+00:34:36,660 --> 00:34:38,220
+this number,
+
+1054
+00:34:38,220 --> 00:34:39,000
+this ID,
+
+1055
+00:34:39,000 --> 00:34:40,380
+and save it into a7.
+
+1056
+00:34:40,380 --> 00:34:42,160
+So this a7,
+
+1057
+00:34:42,160 --> 00:34:44,100
+is used to — essentially, it is used to pass
+
+1058
+00:34:44,100 --> 00:34:45,400
+the system call number.
+
+1059
+00:34:45,400 --> 00:34:47,300
+In the kernel, we check
+
+1060
+00:34:47,300 --> 00:34:48,520
+the value of this a7
+
+1061
+00:34:48,520 --> 00:34:49,560
+With this register,
+
+1062
+00:34:49,560 --> 00:34:51,500
+we can tell which system call has occurred,
+
+1063
+00:34:51,500 --> 00:34:52,680
+and then
+
+1064
+00:34:52,680 --> 00:34:56,720
+we just call the corresponding handler function.
+
+1065
+00:34:56,720 --> 00:34:58,100
+So after this ecall,
+
+1066
+00:34:58,100 --> 00:34:59,000
+we come in here,
+
+1067
+00:34:59,000 --> 00:35:00,320
+and once we're in here,
+
+1068
+00:35:00,320 --> 00:35:01,140
+we call equal,
+
+1069
+00:35:01,140 --> 00:35:02,300
+which we've already talked about earlier.
+
+1070
+00:35:02,300 --> 00:35:03,900
+Now, note one thing:
+
+1071
+00:35:03,900 --> 00:35:07,260
+when we call this function,
+
+1072
+00:35:07,260 --> 00:35:08,240
+in the end,
+
+1073
+00:35:08,240 --> 00:35:09,260
+what we actually call is this,
+
+1074
+00:35:09,260 --> 00:35:12,100
+the TrapHandler function.
+
+1075
+00:35:12,100 --> 00:35:13,180
+And here,
+
+1076
+00:35:13,180 --> 00:35:14,860
+we've added a parameter,
+
+1077
+00:35:14,860 --> 00:35:19,420
+which is actually the exception occurrence,
+
+1078
+00:35:19,420 --> 00:35:20,440
+that an exception was triggered.
+
+1079
+00:35:20,440 --> 00:35:23,900
+So here we'll have many...
+
+1080
+00:35:23,900 --> 00:35:25,900
+earlier, there was actually a save...
+
+1081
+00:35:25,900 --> 00:35:27,260
+register operations
+
+1082
+00:35:27,260 --> 00:35:28,980
+are essentially context save operations.
+
+1083
+00:35:28,980 --> 00:35:30,540
+Now, in the context save operation,
+
+1084
+00:35:30,540 --> 00:35:31,440
+note that
+
+1085
+00:35:31,440 --> 00:35:33,120
+it will actually save a0, a1, and a2
+
+1086
+00:35:33,120 --> 00:35:34,460
+— it saves them
+
+1087
+00:35:34,460 --> 00:35:37,300
+into memory.
+
+1088
+00:35:37,300 --> 00:35:39,680
+Then, when we call the trap handler,
+
+1089
+00:35:39,680 --> 00:35:42,460
+we use up a0, a1, and a2
+
+1090
+00:35:42,460 --> 00:35:43,240
+to pass
+
+1091
+00:35:43,240 --> 00:35:45,740
+some special values.
+
+1092
+00:35:45,740 --> 00:35:46,940
+Among them,
+
+1093
+00:35:46,940 --> 00:35:47,360
+over here,
+
+1094
+00:35:47,360 --> 00:35:48,280
+note that
+
+1095
+00:35:48,280 --> 00:35:49,500
+through a0
+
+1096
+00:35:49,500 --> 00:35:51,840
+we pass in the context pointer,
+
+1097
+00:35:51,840 --> 00:35:52,740
+passing it in,
+
+1098
+00:35:52,740 --> 00:35:53,900
+because when we save,
+
+1099
+00:35:53,900 --> 00:35:54,680
+we actually store things in
+
+1100
+00:35:54,680 --> 00:35:56,380
+this memory region for the context.
+
+1101
+00:35:56,380 --> 00:35:57,980
+This MSquash of ours,
+
+1102
+00:35:57,980 --> 00:35:58,920
+as we mentioned earlier,
+
+1103
+00:35:58,920 --> 00:36:00,020
+it is used to
+
+1104
+00:36:00,020 --> 00:36:01,940
+during task scheduling,
+
+1105
+00:36:01,940 --> 00:36:03,040
+or during exception handling,
+
+1106
+00:36:03,040 --> 00:36:04,700
+it is actually always
+
+1107
+00:36:04,700 --> 00:36:06,320
+pointing to
+
+1108
+00:36:06,320 --> 00:36:07,740
+it serves as a pointer,
+
+1109
+00:36:07,740 --> 00:36:08,720
+it actually points to that
+
+1110
+00:36:08,720 --> 00:36:10,420
+memory region for the context,
+
+1111
+00:36:10,420 --> 00:36:11,240
+when we save the context,
+
+1112
+00:36:11,240 --> 00:36:12,380
+don't we save it into here?
+
+1113
+00:36:12,380 --> 00:36:14,880
+So this pointer always points to it.
+
+1114
+00:36:14,880 --> 00:36:16,520
+So once a2 is passed in,
+
+1115
+00:36:16,520 --> 00:36:17,380
+as you can imagine,
+
+1116
+00:36:17,380 --> 00:36:19,580
+we can, in this trap handler,
+
+1117
+00:36:19,580 --> 00:36:20,400
+inside this function,
+
+1118
+00:36:20,400 --> 00:36:22,400
+access what's in here.
+
+1119
+00:36:22,400 --> 00:36:24,340
+In here there's a0,
+
+1120
+00:36:24,340 --> 00:36:26,900
+the values from a all the way up to a5.
+
+1121
+00:36:26,900 --> 00:36:29,080
+Even though we know this value will be modified,
+
+1122
+00:36:29,080 --> 00:36:29,740
+that's fine,
+
+1123
+00:36:29,740 --> 00:36:30,660
+because we've already saved it.
+
+1124
+00:36:30,660 --> 00:36:31,900
+Now the value in here
+
+1125
+00:36:31,900 --> 00:36:33,440
+holds our...
+
+1126
+00:36:33,440 --> 00:36:36,680
+the parameters passed during the system call.
+
+1127
+00:36:36,680 --> 00:36:37,940
+It's actually right here.
+
+1128
+00:36:37,940 --> 00:36:39,220
+The key is right here.
+
+1129
+00:36:39,220 --> 00:36:41,980
+So we need to take this mscratch,
+
+1130
+00:36:41,980 --> 00:36:46,640
+that is, the pointer to the trap context, and pass it in.
+
+1131
+00:36:46,640 --> 00:36:47,100
+Okay.
+
+1132
+00:36:47,100 --> 00:36:48,620
+After passing it in,
+
+1133
+00:36:48,620 --> 00:36:50,420
+we go to the trap handler.
+
+1134
+00:36:50,420 --> 00:36:51,440
+You can see here,
+
+1135
+00:36:51,440 --> 00:36:53,780
+our third parameter here
+
+1136
+00:36:53,780 --> 00:36:55,280
+is a pointer to the trap context.
+
+1137
+00:36:55,280 --> 00:36:58,120
+We pass this parameter further down,
+
+1138
+00:36:58,120 --> 00:37:00,520
+into the system call,
+
+1139
+00:37:00,520 --> 00:37:01,520
+and then it will be used there.
+
+1140
+00:37:01,520 --> 00:37:07,680
+Now this doSyscall function,
+
+1141
+00:37:07,680 --> 00:37:09,960
+It's actually one we implement inside our kernel —
+
+1142
+00:37:09,960 --> 00:37:12,100
+the general entry point for system calls.
+
+1143
+00:37:12,100 --> 00:37:13,720
+Now, inside this,
+
+1144
+00:37:13,720 --> 00:37:15,480
+its core logic is really
+
+1145
+00:37:15,480 --> 00:37:17,680
+just a bunch of switch-case statements,
+
+1146
+00:37:17,680 --> 00:37:19,900
+because it dispatches based on different system call numbers
+
+1147
+00:37:19,900 --> 00:37:21,660
+to call different handler functions.
+
+1148
+00:37:21,660 --> 00:37:22,820
+Of course, it can be extended.
+
+1149
+00:37:22,820 --> 00:37:23,600
+There's only one here.
+
+1150
+00:37:23,600 --> 00:37:26,000
+We just kept it very simple here.
+
+1151
+00:37:26,000 --> 00:37:27,980
+And then, one thing to note,
+
+1152
+00:37:27,980 --> 00:37:29,660
+now that we have this,
+
+1153
+00:37:29,660 --> 00:37:32,540
+we can actually use this parameter
+
+1154
+00:37:32,540 --> 00:37:34,320
+to access values like a7,
+
+1155
+00:37:34,320 --> 00:37:36,240
+as well as a0 and so on.
+
+1156
+00:37:36,240 --> 00:37:40,440
+Now, according to the earlier convention,
+
+1157
+00:37:40,440 --> 00:37:41,120
+these values are used to store
+
+1158
+00:37:41,120 --> 00:37:43,300
+the system call number is stored in here,
+
+1159
+00:37:43,300 --> 00:37:44,440
+and this one
+
+1160
+00:37:44,440 --> 00:37:44,980
+stores
+
+1161
+00:37:44,980 --> 00:37:45,900
+which is the first parameter
+
+1162
+00:37:45,900 --> 00:37:46,800
+and so on and so forth
+
+1163
+00:37:46,800 --> 00:37:48,040
+and they can all be used
+
+1164
+00:37:48,040 --> 00:37:50,400
+and then,
+
+1165
+00:37:50,400 --> 00:37:51,040
+please note,
+
+1166
+00:37:51,040 --> 00:37:51,540
+that is to say,
+
+1167
+00:37:51,540 --> 00:37:54,800
+when we return the result,
+
+1168
+00:37:54,800 --> 00:37:55,520
+through
+
+1169
+00:37:55,520 --> 00:37:56,620
+the return value,
+
+1170
+00:37:56,620 --> 00:37:58,260
+we store it there,
+
+1171
+00:37:58,260 --> 00:37:58,920
+returned in a0.
+
+1172
+00:37:58,920 --> 00:37:59,700
+If it fails,
+
+1173
+00:37:59,700 --> 00:38:00,280
+it will return negative 1.
+
+1174
+00:38:00,280 --> 00:38:02,460
+Of course, what value does it return on failure?
+
+1175
+00:38:02,460 --> 00:38:03,960
+It depends on the specific error code,
+
+1176
+00:38:03,960 --> 00:38:04,720
+which we define ourselves.
+
+1177
+00:38:04,720 --> 00:38:05,800
+In our case,
+
+1178
+00:38:05,800 --> 00:38:06,760
+we simply return negative 1.
+
+1179
+00:38:06,760 --> 00:38:07,700
+If it succeeds,
+
+1180
+00:38:07,700 --> 00:38:08,320
+it returns 0.
+
+1181
+00:38:08,320 --> 00:38:10,240
+So these values, like 0 and -1,
+
+1182
+00:38:10,240 --> 00:38:11,380
+when we return,
+
+1183
+00:38:11,380 --> 00:38:13,000
+they get saved in this context.
+
+1184
+00:38:13,000 --> 00:38:15,400
+Then, when we restore,
+
+1185
+00:38:15,400 --> 00:38:17,260
+we know there is a restore at this point,
+
+1186
+00:38:17,260 --> 00:38:17,640
+right?
+
+1187
+00:38:17,640 --> 00:38:19,640
+During restore, those values are restored back.
+
+1188
+00:38:19,640 --> 00:38:22,680
+So when a0 goes back to user mode,
+
+1189
+00:38:22,680 --> 00:38:26,600
+it can get the successful result of the system call.
+
+1190
+00:38:26,600 --> 00:38:31,130
+You can tell whether the result is success or failure.
+
+1191
+00:38:31,130 --> 00:38:33,650
+This is doSysCall.
+
+1192
+00:38:33,650 --> 00:38:36,590
+This is the general entry point of our system calls.
+
+1193
+00:38:36,590 --> 00:38:38,510
+Inside it,
+
+1194
+00:38:38,510 --> 00:38:40,650
+it dispatches to different implementations.
+
+1195
+00:38:40,650 --> 00:38:42,130
+Now here,
+
+1196
+00:38:42,130 --> 00:38:43,130
+what we focus on is,
+
+1197
+00:38:43,130 --> 00:38:45,010
+how the parameters are passed,
+
+1198
+00:38:45,010 --> 00:38:46,630
+how the parameters are passed,
+
+1199
+00:38:46,630 --> 00:38:48,690
+and how we
+
+1200
+00:38:48,690 --> 00:38:51,630
+follow this system call's
+
+1201
+00:38:51,630 --> 00:38:52,530
+This parameter convention,
+
+1202
+00:38:52,530 --> 00:38:53,970
+using these parameters,
+
+1203
+00:38:53,970 --> 00:38:55,390
+using these registers,
+
+1204
+00:38:55,390 --> 00:38:57,730
+then finally,
+
+1205
+00:38:57,730 --> 00:38:58,970
+the return, the mret return
+
+1206
+00:38:58,970 --> 00:38:59,910
+there's nothing more to it.
+
+1207
+00:38:59,910 --> 00:39:02,610
+mret returns to this
+
+1208
+00:39:02,610 --> 00:39:04,870
+original place,
+
+1209
+00:39:04,870 --> 00:39:06,530
+and that's how we exit
+
+1210
+00:39:06,530 --> 00:39:07,490
+our system call.
+
+1211
+00:39:07,490 --> 00:39:10,070
+Now, in this process,
+
+1212
+00:39:10,070 --> 00:39:11,750
+the parameters are
+
+1213
+00:39:11,750 --> 00:39:14,030
+passed this way.
+
+1214
+00:39:14,030 --> 00:39:14,650
+What I've mainly
+
+1215
+00:39:14,650 --> 00:39:16,710
+wanted to introduce to everyone here
+
+1216
+00:39:16,710 --> 00:39:21,600
+is this stuff.
+
+1217
+00:39:21,600 --> 00:39:22,460
+And so it
+
+1218
+00:39:22,460 --> 00:39:23,920
+comes back.
+
+1219
+00:39:23,920 --> 00:39:25,460
+Then, once it comes back,
+
+1220
+00:39:25,460 --> 00:39:26,240
+as you can imagine,
+
+1221
+00:39:26,240 --> 00:39:27,840
+our return value here
+
+1222
+00:39:27,840 --> 00:39:28,400
+this return
+
+1223
+00:39:28,400 --> 00:39:29,620
+is actually
+
+1224
+00:39:29,620 --> 00:39:31,580
+our a0 on this side
+
+1225
+00:39:31,580 --> 00:39:33,400
+so a0 gets it right here
+
+1226
+00:39:33,400 --> 00:39:39,350
+this is exactly what we talked about earlier
+
+1227
+00:39:39,350 --> 00:39:40,990
+passing parameters for system calls
+
+1228
+00:39:40,990 --> 00:39:42,390
+so,
+
+1229
+00:39:42,390 --> 00:39:44,450
+and finally, there's what's called
+
+1230
+00:39:44,450 --> 00:39:45,350
+system call wrapping
+
+1231
+00:39:45,350 --> 00:39:46,030
+this idea,
+
+1232
+00:39:46,030 --> 00:39:46,290
+really
+
+1233
+00:39:46,290 --> 00:39:48,370
+is just something I want to mention to you all
+
+1234
+00:39:48,370 --> 00:39:50,610
+that is, in our current code,
+
+1235
+00:39:50,610 --> 00:39:52,130
+as you know, what we've actually done
+
+1236
+00:39:52,130 --> 00:39:53,910
+is all pretty simple
+
+1237
+00:39:53,910 --> 00:39:55,890
+all the code is really
+
+1238
+00:39:55,890 --> 00:39:58,650
+wrapped into one part as the operating system
+
+1239
+00:39:58,650 --> 00:40:00,490
+so what we do is we take
+
+1240
+00:40:00,490 --> 00:40:01,090
+this
+
+1241
+00:40:01,090 --> 00:40:04,450
+The system call numbers,
+
+1242
+00:40:04,450 --> 00:40:06,690
+they're defined in a header file
+
+1243
+00:40:06,690 --> 00:40:07,850
+called syscode.h,
+
+1244
+00:40:07,850 --> 00:40:08,770
+and then,
+
+1245
+00:40:08,770 --> 00:40:13,190
+this function,
+
+1246
+00:40:13,190 --> 00:40:13,850
+the implementation of this function
+
+1247
+00:40:13,850 --> 00:40:15,170
+is in the assembly file.
+
+1248
+00:40:15,170 --> 00:40:17,770
+So the actual
+
+1249
+00:40:17,770 --> 00:40:20,030
+logic that runs in kernel mode,
+
+1250
+00:40:20,030 --> 00:40:23,290
+that's wrapped up in this file, syscall.c.
+
+1251
+00:40:23,290 --> 00:40:27,850
+Now, in a real execution environment,
+
+1252
+00:40:27,850 --> 00:40:29,950
+like something such as Linux,
+
+1253
+00:40:29,950 --> 00:40:31,470
+under an operating system like that,
+
+1254
+00:40:31,470 --> 00:40:35,470
+it actually separates these pieces of code.
+
+1255
+00:40:35,470 --> 00:40:37,810
+And the way it separates them,
+
+1256
+00:40:37,810 --> 00:40:38,910
+is actually quite simple:
+
+1257
+00:40:38,910 --> 00:40:41,630
+it takes this sys.h,
+
+1258
+00:40:41,630 --> 00:40:43,610
+this syscall.h header file,
+
+1259
+00:40:43,610 --> 00:40:44,470
+and splits it into two parts.
+
+1260
+00:40:44,470 --> 00:40:47,070
+So the left-hand part,
+
+1261
+00:40:47,070 --> 00:40:51,530
+It's actually, after you separate it out,
+
+1262
+00:40:51,530 --> 00:40:54,670
+it essentially becomes the C library we use all the time.
+
+1263
+00:40:54,670 --> 00:40:59,130
+Now, this part is not actually distributed as part of the kernel.
+
+1264
+00:40:59,130 --> 00:41:00,490
+It's maintained separately.
+
+1265
+00:41:00,490 --> 00:41:02,710
+Then, at compile time,
+
+1266
+00:41:02,710 --> 00:41:05,090
+when compiling the application,
+
+1267
+00:41:05,090 --> 00:41:07,210
+it gets merged into the application.
+
+1268
+00:41:07,210 --> 00:41:08,510
+So the application
+
+1269
+00:41:08,510 --> 00:41:11,270
+will then call these kinds of functions,
+
+1270
+00:41:11,270 --> 00:41:12,910
+basically the functions over here,
+
+1271
+00:41:12,910 --> 00:41:14,690
+like open, read, write, for example.
+
+1272
+00:41:14,690 --> 00:41:16,210
+After calling one of these functions,
+
+1273
+00:41:16,210 --> 00:41:17,890
+it will actually trigger an exception,
+
+1274
+00:41:17,890 --> 00:41:19,610
+trigger this exception.
+
+1275
+00:41:19,610 --> 00:41:22,490
+Now, the part on the right,
+
+1276
+00:41:22,490 --> 00:41:24,050
+this part on the right,
+
+1277
+00:41:24,050 --> 00:41:27,270
+is actually kept inside our kernel.
+
+1278
+00:41:27,270 --> 00:41:28,150
+So what we'll see
+
+1279
+00:41:28,150 --> 00:41:29,630
+is that in the C library,
+
+1280
+00:41:29,630 --> 00:41:30,370
+its
+
+1281
+00:41:30,370 --> 00:41:31,670
+It has its own header file.
+
+1282
+00:41:31,670 --> 00:41:33,310
+This header file and the kernel's header file
+
+1283
+00:41:33,310 --> 00:41:35,270
+need to maintain a certain correspondence,
+
+1284
+00:41:35,270 --> 00:41:37,970
+because the two of them share some information,
+
+1285
+00:41:37,970 --> 00:41:39,070
+especially things like this,
+
+1286
+00:41:39,070 --> 00:41:40,590
+information like system call numbers.
+
+1287
+00:41:40,590 --> 00:41:42,010
+Because if these values don't match up,
+
+1288
+00:41:42,010 --> 00:41:43,530
+then things will break on both sides,
+
+1289
+00:41:43,530 --> 00:41:44,050
+right?
+
+1290
+00:41:44,050 --> 00:41:45,630
+So on this side,
+
+1291
+00:41:45,630 --> 00:41:46,430
+let me just mention this to everyone.
+
+1292
+00:41:46,430 --> 00:41:46,890
+That is,
+
+1293
+00:41:46,890 --> 00:41:48,610
+if this were done properly,
+
+1294
+00:41:48,610 --> 00:41:49,450
+we should actually
+
+1295
+00:41:49,450 --> 00:41:51,090
+pull this part out separately,
+
+1296
+00:41:51,090 --> 00:41:53,210
+because in a real industrial environment,
+
+1297
+00:41:53,210 --> 00:41:56,450
+this is actually provided in the form of a CQ,
+
+1298
+00:41:56,450 --> 00:41:58,410
+provided as a standard CQ.
+
+1299
+00:41:58,410 --> 00:42:00,230
+But for us here,
+
+1300
+00:42:00,230 --> 00:42:01,870
+we haven't made it that complicated.
+
+1301
+00:42:01,870 --> 00:42:03,670
+So actually, everything is put together
+
+1302
+00:42:03,670 --> 00:42:04,650
+Pay attention to this, everyone
+
+1303
+00:42:04,650 --> 00:42:05,630
+Let me point this out
+
+1304
+00:42:05,630 --> 00:42:08,410
+So this
+
+1305
+00:42:08,410 --> 00:42:13,930
+code part,
+
+1306
+00:42:14,050 --> 00:42:17,870
+we can take a quick look at it
+
+1307
+00:42:17,870 --> 00:42:20,430
+That is, if I remove this,
+
+1308
+00:42:20,430 --> 00:42:26,860
+then after removing it,
+
+1309
+00:42:26,860 --> 00:42:30,000
+we know it actually goes through this piece of logic
+
+1310
+00:42:30,000 --> 00:42:31,500
+This piece of logic is just a demonstration
+
+1311
+00:42:31,500 --> 00:42:33,860
+It actually makes a system call
+
+1312
+00:42:33,860 --> 00:42:35,800
+Now, the execution process of this logic
+
+1313
+00:42:35,800 --> 00:42:37,360
+is exactly what we talked about just now
+
+1314
+00:42:37,360 --> 00:42:38,440
+Let's take a quick look
+
+1315
+00:42:38,440 --> 00:42:56,380
+Now, after running it like this,
+
+1316
+00:42:56,380 --> 00:42:59,700
+we'll see the task still keeps running
+
+1317
+00:42:59,700 --> 00:43:00,940
+while our...
+
+1318
+00:43:00,940 --> 00:43:02,720
+Hold on a second
+
+1319
+00:43:02,720 --> 00:43:03,940
+So this...
+
+1320
+00:43:03,940 --> 00:43:09,190
+Let me explain this execution process
+
+1321
+00:43:09,190 --> 00:43:11,610
+That is to say, task0 is created first.
+
+1322
+00:43:11,610 --> 00:43:13,710
+Looking at the code we just saw,
+
+1323
+00:43:13,710 --> 00:43:15,690
+task0 is created first.
+
+1324
+00:43:15,690 --> 00:43:16,690
+After it is created,
+
+1325
+00:43:16,690 --> 00:43:21,070
+it starts by calling this system call function.
+
+1326
+00:43:21,070 --> 00:43:23,310
+Now, as we know, once this system call
+
+1327
+00:43:23,310 --> 00:43:25,870
+is triggered,
+
+1328
+00:43:25,870 --> 00:43:28,670
+it is actually an exception,
+
+1329
+00:43:28,670 --> 00:43:30,690
+and its exception
+
+1330
+00:43:30,690 --> 00:43:32,370
+cause value is 8,
+
+1331
+00:43:32,370 --> 00:43:32,930
+right?
+
+1332
+00:43:32,930 --> 00:43:34,390
+It is an exception triggered from user mode.
+
+1333
+00:43:34,390 --> 00:43:36,990
+So when this exception occurs,
+
+1334
+00:43:36,990 --> 00:43:39,170
+this exception,
+
+1335
+00:43:39,170 --> 00:43:41,290
+what it actually triggers is
+
+1336
+00:43:41,290 --> 00:43:42,150
+our system call.
+
+1337
+00:43:42,150 --> 00:43:43,930
+And our system call here
+
+1338
+00:43:43,930 --> 00:43:45,170
+will be executed.
+
+1339
+00:43:45,170 --> 00:43:46,210
+What you see printed here,
+
+1340
+00:43:46,210 --> 00:43:46,950
+that is what this means.
+
+1341
+00:43:46,950 --> 00:43:47,970
+That's the idea.
+
+1342
+00:43:47,970 --> 00:43:48,610
+So,
+
+1343
+00:43:48,610 --> 00:43:52,830
+according to our understanding,
+
+1344
+00:43:52,830 --> 00:43:53,170
+that is to say,
+
+1345
+00:43:53,170 --> 00:43:53,910
+if this system call,
+
+1346
+00:43:53,910 --> 00:43:54,930
+after it finishes executing,
+
+1347
+00:43:54,930 --> 00:43:56,990
+then it should be able to return out.
+
+1348
+00:43:56,990 --> 00:43:58,430
+So we see
+
+1349
+00:43:58,430 --> 00:44:01,430
+that here it does return.
+
+1350
+00:44:01,430 --> 00:44:03,050
+Now, why is it able to return?
+
+1351
+00:44:03,050 --> 00:44:03,790
+Everyone, pay attention here.
+
+1352
+00:44:03,790 --> 00:44:05,370
+It's because in exception handling,
+
+1353
+00:44:05,370 --> 00:44:07,530
+for this kind of system call exception,
+
+1354
+00:44:07,530 --> 00:44:09,950
+we make sure that its EPC value,
+
+1355
+00:44:09,950 --> 00:44:11,530
+we add 4 to it,
+
+1356
+00:44:11,530 --> 00:44:13,650
+we covered this earlier.
+
+1357
+00:44:13,650 --> 00:44:14,390
+Otherwise, it would,
+
+1358
+00:44:14,390 --> 00:44:16,270
+it would go back into the ecall instruction again,
+
+1359
+00:44:16,270 --> 00:44:18,070
+running in an infinite loop.
+
+1360
+00:44:18,070 --> 00:44:20,130
+So that's why we can see this line.
+
+1361
+00:44:20,130 --> 00:44:22,010
+Returned
+
+1362
+00:44:22,010 --> 00:44:24,910
+so we know that
+
+1363
+00:44:24,910 --> 00:44:27,910
+it has actually returned from the system call again
+
+1364
+00:44:27,910 --> 00:44:28,950
+and at this point
+
+1365
+00:44:28,950 --> 00:44:32,370
+its mode has switched back to user mode again
+
+1366
+00:44:32,370 --> 00:44:34,930
+and we can also use Hotlink
+
+1367
+00:44:34,930 --> 00:44:38,150
+to get the return value of that transfer
+
+1368
+00:44:38,150 --> 00:44:40,210
+at the same time, we can also use this parameter
+
+1369
+00:44:40,210 --> 00:44:41,570
+to fetch the value
+
+1370
+00:44:41,570 --> 00:44:43,930
+of course, what we pass on our side is in the form of a pointer
+
+1371
+00:44:43,930 --> 00:44:45,450
+which also works
+
+1372
+00:44:45,450 --> 00:44:48,250
+because right now our memory
+
+1373
+00:44:48,250 --> 00:44:50,850
+basically hasn't been divided too strictly yet
+
+1374
+00:44:50,850 --> 00:44:52,530
+so in fact, this piece of memory
+
+1375
+00:44:52,530 --> 00:44:55,190
+can be accessed from both user mode and kernel mode
+
+1376
+00:44:55,190 --> 00:44:57,630
+so we actually just pass a pointer
+
+1377
+00:44:57,630 --> 00:45:01,770
+to get the data out
+
+1378
+00:45:01,770 --> 00:45:02,930
+because our memory
+
+1379
+00:45:02,930 --> 00:45:04,730
+hasn't really been made strict like Linux's
+
+1380
+00:45:04,730 --> 00:45:06,390
+with strict user space
+
+1381
+00:45:06,390 --> 00:45:07,710
+comes with the memory protection
+
+1382
+00:45:07,710 --> 00:45:09,230
+so in practice, we can actually
+
+1383
+00:45:09,230 --> 00:45:10,630
+just pass pointers directly, which is fine
+
+1384
+00:45:10,630 --> 00:45:13,530
+just wanted to briefly mention that point
+
+1385
+00:45:13,530 --> 00:45:16,070
+then after returning
+
+1386
+00:45:16,070 --> 00:45:17,970
+the task simply continues running
+
+1387
+00:45:17,970 --> 00:45:18,450
+so that
+
+1388
+00:45:18,450 --> 00:45:22,010
+is what a system call
+
+1389
+00:45:22,010 --> 00:45:27,300
+looks like in a simple example
+
+1390
+00:45:27,300 --> 00:45:30,180
+as for system calls,
+
+1391
+00:45:30,180 --> 00:45:33,820
+that's all we'll cover for now
+
+1392
+00:45:33,820 --> 00:45:35,800
+as for the related exercises,
+
+1393
+00:45:35,800 --> 00:45:37,220
+I hope everyone will go back and work on them
+
+1394
+00:45:37,220 --> 00:45:40,960
+so that wraps up
+
+1395
+00:45:40,960 --> 00:45:42,180
+our introduction to system calls

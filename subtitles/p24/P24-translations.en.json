@@ -1,0 +1,7810 @@
+[
+ {
+  "id": 0,
+  "text": "All right, let's continue today's class. Today we start on Chapter 14, called Task Synchronization and Locks."
+ },
+ {
+  "id": 1,
+  "text": "Earlier, we devoted quite a bit of space to walking you through everything from cooperative multitasking to preemptive multitasking, and all of that was really introducing"
+ },
+ {
+  "id": 2,
+  "text": "how, on our"
+ },
+ {
+  "id": 3,
+  "text": "RISC-V-based platform,"
+ },
+ {
+  "id": 4,
+  "text": "we can develop a multitasking"
+ },
+ {
+  "id": 5,
+  "text": "relatively simple operating system."
+ },
+ {
+  "id": 6,
+  "text": "Now that we have multitasking,"
+ },
+ {
+  "id": 7,
+  "text": "the next step"
+ },
+ {
+  "id": 8,
+  "text": "is to look at some concepts related to tasks,"
+ },
+ {
+  "id": 9,
+  "text": "including, for example, the concept of task synchronization."
+ },
+ {
+  "id": 10,
+  "text": "The content of this chapter"
+ },
+ {
+  "id": 11,
+  "text": "is presented in these four main parts."
+ },
+ {
+  "id": 12,
+  "text": "The first part"
+ },
+ {
+  "id": 13,
+  "text": "covers the basic concepts of concurrency and synchronization."
+ },
+ {
+  "id": 14,
+  "text": "The second part"
+ },
+ {
+  "id": 15,
+  "text": "will introduce"
+ },
+ {
+  "id": 16,
+  "text": "how, within synchronization,"
+ },
+ {
+  "id": 17,
+  "text": "we will walk you through"
+ },
+ {
+  "id": 18,
+  "text": "one"
+ },
+ {
+  "id": 19,
+  "text": "synchronization method."
+ },
+ {
+  "id": 20,
+  "text": "it's basically the idea of a lock"
+ },
+ {
+  "id": 21,
+  "text": "so some things related to locks,"
+ },
+ {
+  "id": 22,
+  "text": "like critical sections,"
+ },
+ {
+  "id": 23,
+  "text": "these concepts"
+ },
+ {
+  "id": 24,
+  "text": "I'll introduce to you here."
+ },
+ {
+  "id": 25,
+  "text": "And then"
+ },
+ {
+  "id": 26,
+  "text": "for the third part,"
+ },
+ {
+  "id": 27,
+  "text": "we"
+ },
+ {
+  "id": 28,
+  "text": "will introduce to you"
+ },
+ {
+  "id": 29,
+  "text": "basically, for us,"
+ },
+ {
+  "id": 30,
+  "text": "locks"
+ },
+ {
+  "id": 31,
+  "text": "can be implemented in many different ways."
+ },
+ {
+  "id": 32,
+  "text": "So"
+ },
+ {
+  "id": 33,
+  "text": "among them,"
+ },
+ {
+  "id": 34,
+  "text": "there's one called the spinlock,"
+ },
+ {
+  "id": 35,
+  "text": "which is the main thing we'll introduce to you today."
+ },
+ {
+  "id": 36,
+  "text": "Chapter four,"
+ },
+ {
+  "id": 37,
+  "text": "the fourth part,"
+ },
+ {
+  "id": 38,
+  "text": "we'll then introduce to you"
+ },
+ {
+  "id": 39,
+  "text": "some other"
+ },
+ {
+  "id": 40,
+  "text": "Some synchronization methods"
+ },
+ {
+  "id": 41,
+  "text": "Now, mainly, I'll walk you through the key points."
+ },
+ {
+  "id": 42,
+  "text": "Alright, let's start by looking at"
+ },
+ {
+  "id": 43,
+  "text": "this."
+ },
+ {
+  "id": 44,
+  "text": "This is the reference section."
+ },
+ {
+  "id": 45,
+  "text": "Reference articles."
+ },
+ {
+  "id": 46,
+  "text": "Let's begin with the first part."
+ },
+ {
+  "id": 47,
+  "text": "That is, some related concepts of concurrency and synchronization."
+ },
+ {
+  "id": 48,
+  "text": "So first of all, we need to understand"
+ },
+ {
+  "id": 49,
+  "text": "that is,"
+ },
+ {
+  "id": 50,
+  "text": "what do we mean by concurrency?"
+ },
+ {
+  "id": 51,
+  "text": "Concurrency, in English, is called"
+ },
+ {
+  "id": 52,
+  "text": "Currency,"
+ },
+ {
+  "id": 53,
+  "text": "Current"
+ },
+ {
+  "id": 54,
+  "text": "meaning happening at the same time."
+ },
+ {
+  "id": 55,
+  "text": "The concept of happening at the same time."
+ },
+ {
+  "id": 56,
+  "text": "Now,"
+ },
+ {
+  "id": 57,
+  "text": "here,"
+ },
+ {
+  "id": 58,
+  "text": "this actually also involves"
+ },
+ {
+  "id": 59,
+  "text": "what we mentioned to you earlier"
+ },
+ {
+  "id": 60,
+  "text": "A concept called control flow"
+ },
+ {
+  "id": 61,
+  "text": "You might still remember"
+ },
+ {
+  "id": 62,
+  "text": "Earlier we talked about"
+ },
+ {
+  "id": 63,
+  "text": "We talked about something called control flow"
+ },
+ {
+  "id": 64,
+  "text": "And also exceptional control flow"
+ },
+ {
+  "id": 65,
+  "text": "Right?"
+ },
+ {
+  "id": 66,
+  "text": "So this"
+ },
+ {
+  "id": 67,
+  "text": "So now, when we"
+ },
+ {
+  "id": 68,
+  "text": "look at this control flow,"
+ },
+ {
+  "id": 69,
+  "text": "we can actually think of it as"
+ },
+ {
+  "id": 70,
+  "text": "what we discussed with you earlier,"
+ },
+ {
+  "id": 71,
+  "text": "this notion of tasks,"
+ },
+ {
+  "id": 72,
+  "text": "the notion of threads,"
+ },
+ {
+  "id": 73,
+  "text": "they're all quite similar."
+ },
+ {
+  "id": 74,
+  "text": "So this"
+ },
+ {
+  "id": 75,
+  "text": "concurrency,"
+ },
+ {
+  "id": 76,
+  "text": "is simply about having multiple control flows"
+ },
+ {
+  "id": 77,
+  "text": "that is, multiple tasks"
+ },
+ {
+  "id": 78,
+  "text": "executing at the same time"
+ },
+ {
+  "id": 79,
+  "text": "However,"
+ },
+ {
+  "id": 80,
+  "text": "Now, as for this control flow,"
+ },
+ {
+  "id": 81,
+  "text": "there are actually many different situations."
+ },
+ {
+  "id": 82,
+  "text": "Let's break concurrency down into the following cases"
+ },
+ {
+  "id": 83,
+  "text": "and go into a bit more detail for you."
+ },
+ {
+  "id": 84,
+  "text": "The first case is this: we should consider that,"
+ },
+ {
+  "id": 85,
+  "text": "as computers — sorry, as processors —"
+ },
+ {
+  "id": 86,
+  "text": "have developed over time,"
+ },
+ {
+  "id": 87,
+  "text": "it's very common nowadays that a single processor"
+ },
+ {
+  "id": 88,
+  "text": "actually contains multiple cores,"
+ },
+ {
+  "id": 89,
+  "text": "or that there are simply multiple processors."
+ },
+ {
+  "id": 90,
+  "text": "In that case, this is actually the most common"
+ },
+ {
+  "id": 91,
+  "text": "form of concurrent multitasking."
+ },
+ {
+  "id": 92,
+  "text": "As you can see up here,"
+ },
+ {
+  "id": 93,
+  "text": "there are two —"
+ },
+ {
+  "id": 94,
+  "text": "say, two processors,"
+ },
+ {
+  "id": 95,
+  "text": "and on each processor,"
+ },
+ {
+  "id": 96,
+  "text": "one control flow is running respectively."
+ },
+ {
+  "id": 97,
+  "text": "Between them,"
+ },
+ {
+  "id": 98,
+  "text": "they are completely independent,"
+ },
+ {
+  "id": 99,
+  "text": "with no interaction whatsoever"
+ },
+ {
+  "id": 100,
+  "text": "without any interference."
+ },
+ {
+  "id": 101,
+  "text": "Now, in modern computer"
+ },
+ {
+  "id": 102,
+  "text": "architectures,"
+ },
+ {
+  "id": 103,
+  "text": "this is called"
+ },
+ {
+  "id": 104,
+  "text": "a multiprocessor architecture."
+ },
+ {
+  "id": 105,
+  "text": "Typically,"
+ },
+ {
+  "id": 106,
+  "text": "under a multiprocessor architecture,"
+ },
+ {
+  "id": 107,
+  "text": "memory is generally"
+ },
+ {
+  "id": 108,
+  "text": "still shared."
+ },
+ {
+  "id": 109,
+  "text": "So,"
+ },
+ {
+  "id": 110,
+  "text": "roughly, that's how it works."
+ },
+ {
+  "id": 111,
+  "text": "Now, in that case,"
+ },
+ {
+  "id": 112,
+  "text": "this is the most typical multitasking scenario on a multiprocessor."
+ },
+ {
+  "id": 113,
+  "text": "And there is another scenario,"
+ },
+ {
+  "id": 114,
+  "text": "namely what's called multitasking on a single processor."
+ },
+ {
+  "id": 115,
+  "text": "This is actually the scenario"
+ },
+ {
+  "id": 116,
+  "text": "on which our operating system development in this course is based,"
+ },
+ {
+  "id": 117,
+  "text": "that is, there is only one processor,"
+ },
+ {
+  "id": 118,
+  "text": "but we still want to, on that single processor,"
+ },
+ {
+  "id": 119,
+  "text": "run multiple control flows at the same time."
+ },
+ {
+  "id": 120,
+  "text": "So this thing is basically what we did earlier through scheduling,"
+ },
+ {
+  "id": 121,
+  "text": "this kind of multitasking we implemented."
+ },
+ {
+  "id": 122,
+  "text": "Two tasks go through the scheduler,"
+ },
+ {
+  "id": 123,
+  "text": "meaning that for a while it schedules this one first,"
+ },
+ {
+  "id": 124,
+  "text": "then for a while it schedules that one first."
+ },
+ {
+  "id": 125,
+  "text": "So they share one processor,"
+ },
+ {
+  "id": 126,
+  "text": "and they share memory."
+ },
+ {
+  "id": 127,
+  "text": "Now in this situation,"
+ },
+ {
+  "id": 128,
+  "text": "similarly, there are multiple control flows present,"
+ },
+ {
+  "id": 129,
+  "text": "so it can also be considered a form of concurrency."
+ },
+ {
+  "id": 130,
+  "text": "So besides this first case,"
+ },
+ {
+  "id": 131,
+  "text": "actually there is another one we should talk about,"
+ },
+ {
+  "id": 132,
+  "text": "in fact a very typical scenario,"
+ },
+ {
+  "id": 133,
+  "text": "which is to consider the case of interrupts."
+ },
+ {
+  "id": 134,
+  "text": "An interrupt is also a kind of control flow,"
+ },
+ {
+  "id": 135,
+  "text": "right?"
+ },
+ {
+  "id": 136,
+  "text": "That is to say, when an interrupt occurs,"
+ },
+ {
+  "id": 137,
+  "text": "the interrupt and our ordinary task,"
+ },
+ {
+  "id": 138,
+  "text": "can actually be considered as two,"
+ },
+ {
+  "id": 139,
+  "text": "two kinds of concurrency."
+ },
+ {
+  "id": 140,
+  "text": "Two kinds of concurrency."
+ },
+ {
+  "id": 141,
+  "text": "So this kind here,"
+ },
+ {
+  "id": 142,
+  "text": "that is to say,"
+ },
+ {
+  "id": 143,
+  "text": "on a single-processor architecture,"
+ },
+ {
+  "id": 144,
+  "text": "a task plus an interrupt,"
+ },
+ {
+  "id": 145,
+  "text": "between these two,"
+ },
+ {
+  "id": 146,
+  "text": "there is actually a state of concurrency as well."
+ },
+ {
+  "id": 147,
+  "text": "This is also a situation we need to take into account,"
+ },
+ {
+  "id": 148,
+  "text": "when we think about concurrency."
+ },
+ {
+  "id": 149,
+  "text": "So don't overlook this situation."
+ },
+ {
+  "id": 150,
+  "text": "Now, these three,"
+ },
+ {
+  "id": 151,
+  "text": "are what we call,"
+ },
+ {
+  "id": 152,
+  "text": "for concurrency as a whole,"
+ },
+ {
+  "id": 153,
+  "text": "we break it down into three states."
+ },
+ {
+  "id": 154,
+  "text": "When you think about concurrency issues,"
+ },
+ {
+  "id": 155,
+  "text": "you really have to consider all three of these states."
+ },
+ {
+  "id": 156,
+  "text": "All of them."
+ },
+ {
+  "id": 157,
+  "text": "So that's the concept of concurrency."
+ },
+ {
+  "id": 158,
+  "text": "The second thing we want to"
+ },
+ {
+  "id": 159,
+  "text": "introduce is the concept of synchronization."
+ },
+ {
+  "id": 160,
+  "text": "So what about synchronization?"
+ },
+ {
+  "id": 161,
+  "text": "Actually, it comes along with concurrency."
+ },
+ {
+  "id": 162,
+  "text": "When we deal with this concurrency,"
+ },
+ {
+  "id": 163,
+  "text": "there is an approach we need to adopt —"
+ },
+ {
+  "id": 164,
+  "text": "from a software perspective,"
+ },
+ {
+  "id": 165,
+  "text": "a programming technique"
+ },
+ {
+  "id": 166,
+  "text": "that we call synchronization."
+ },
+ {
+  "id": 167,
+  "text": "So specifically,"
+ },
+ {
+  "id": 168,
+  "text": "why do we need to add synchronization"
+ },
+ {
+  "id": 169,
+  "text": "when we have concurrency?"
+ },
+ {
+  "id": 170,
+  "text": "Let's continue and introduce that to you."
+ },
+ {
+  "id": 171,
+  "text": "Now, next,"
+ },
+ {
+  "id": 172,
+  "text": "let's take a look at"
+ },
+ {
+  "id": 173,
+  "text": "the concepts involved"
+ },
+ {
+  "id": 174,
+  "text": "when we use synchronization,"
+ },
+ {
+  "id": 175,
+  "text": "such as critical sections,"
+ },
+ {
+  "id": 176,
+  "text": "locks,"
+ },
+ {
+  "id": 177,
+  "text": "and concepts like deadlock."
+ },
+ {
+  "id": 178,
+  "text": "Here,"
+ },
+ {
+  "id": 179,
+  "text": "let's summarize them all together."
+ },
+ {
+  "id": 180,
+  "text": "First, let's take a look at"
+ },
+ {
+  "id": 181,
+  "text": "what a critical section is."
+ },
+ {
+  "id": 182,
+  "text": "This concept,"
+ },
+ {
+  "id": 183,
+  "text": "actually, when it comes to application programming,"
+ },
+ {
+  "id": 184,
+  "text": "there is a similar concept there as well."
+ },
+ {
+  "id": 185,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 186,
+  "text": "When we are in a Linux environment,"
+ },
+ {
+  "id": 187,
+  "text": "developing a multithreaded"
+ },
+ {
+  "id": 188,
+  "text": "application program,"
+ },
+ {
+  "id": 189,
+  "text": "we also bring in this concept of the critical section."
+ },
+ {
+  "id": 190,
+  "text": "I don't know if you still remember"
+ },
+ {
+  "id": 191,
+  "text": "whether the instructor"
+ },
+ {
+  "id": 192,
+  "text": "introduced this concept to you in class."
+ },
+ {
+  "id": 193,
+  "text": "Well, the same thing"
+ },
+ {
+  "id": 194,
+  "text": "actually, inside the kernel,"
+ },
+ {
+  "id": 195,
+  "text": "this concept,"
+ },
+ {
+  "id": 196,
+  "text": "well, it was actually proposed from the operating system's point of view."
+ },
+ {
+  "id": 197,
+  "text": "And of course, inside the operating system,"
+ },
+ {
+  "id": 198,
+  "text": "the same concept exists as well."
+ },
+ {
+  "id": 199,
+  "text": "So what is a critical section?"
+ },
+ {
+  "id": 200,
+  "text": "Let's read through this together."
+ },
+ {
+  "id": 201,
+  "text": "That is to say, in this concurrent program execution environment,"
+ },
+ {
+  "id": 202,
+  "text": "we've already introduced concurrency to you earlier."
+ },
+ {
+  "id": 203,
+  "text": "All three cases need to be considered."
+ },
+ {
+  "id": 204,
+  "text": "Of course, for our current course,"
+ },
+ {
+  "id": 205,
+  "text": "since we're based on a single processor,"
+ },
+ {
+  "id": 206,
+  "text": "so the first case, multiprocessor concurrency,"
+ },
+ {
+  "id": 207,
+  "text": "we can kind of set aside for now."
+ },
+ {
+  "id": 208,
+  "text": "But if you look at modern systems like Linux,"
+ },
+ {
+  "id": 209,
+  "text": "they all support this kind of multiprocessor concurrency."
+ },
+ {
+  "id": 210,
+  "text": "So that's a bit more complex."
+ },
+ {
+  "id": 211,
+  "text": "Now, in this concurrent program execution environment,"
+ },
+ {
+  "id": 212,
+  "text": "what exactly is a critical section?"
+ },
+ {
+  "id": 213,
+  "text": "First of all, we need to understand,"
+ },
+ {
+  "id": 214,
+  "text": "a critical section itself refers to a fragment of instructions."
+ },
+ {
+  "id": 215,
+  "text": "Right here,"
+ },
+ {
+  "id": 216,
+  "text": "we've highlighted it for you in bold text,"
+ },
+ {
+  "id": 217,
+  "text": "which is the so-called critical section."
+ },
+ {
+  "id": 218,
+  "text": "It actually refers to a sequence of instructions,"
+ },
+ {
+  "id": 219,
+  "text": "a sequence of instructions."
+ },
+ {
+  "id": 220,
+  "text": "But,"
+ },
+ {
+  "id": 221,
+  "text": "these instructions"
+ },
+ {
+  "id": 222,
+  "text": "are, compared with ordinary instructions,"
+ },
+ {
+  "id": 223,
+  "text": "a little different,"
+ },
+ {
+  "id": 224,
+  "text": "in that there is a characteristic that has to be met."
+ },
+ {
+  "id": 225,
+  "text": "That is, these instructions,"
+ },
+ {
+  "id": 226,
+  "text": "what do they access?"
+ },
+ {
+  "id": 227,
+  "text": "They access some shared resources."
+ },
+ {
+  "id": 228,
+  "text": "Now, as for these shared resources,"
+ },
+ {
+  "id": 229,
+  "text": "there can be quite a variety of cases."
+ },
+ {
+  "id": 230,
+  "text": "Depending on your actual situation,"
+ },
+ {
+  "id": 231,
+  "text": "it could be a shared device,"
+ },
+ {
+  "id": 232,
+  "text": "say a serial port,"
+ },
+ {
+  "id": 233,
+  "text": "a screen,"
+ },
+ {
+  "id": 234,
+  "text": "a display,"
+ },
+ {
+  "id": 235,
+  "text": "or a shared memory region,"
+ },
+ {
+  "id": 236,
+  "text": "some variables,"
+ },
+ {
+  "id": 237,
+  "text": "some memory."
+ },
+ {
+  "id": 238,
+  "text": "That's roughly the idea."
+ },
+ {
+  "id": 239,
+  "text": "So, if,"
+ },
+ {
+  "id": 240,
+  "text": "That is to say, if these instruction segments"
+ },
+ {
+  "id": 241,
+  "text": "access these shared resources,"
+ },
+ {
+  "id": 242,
+  "text": "we call those instruction segments"
+ },
+ {
+  "id": 243,
+  "text": "critical sections."
+ },
+ {
+  "id": 244,
+  "text": "Please pay attention to this"
+ },
+ {
+  "id": 245,
+  "text": "— it's the basic concept of a critical section."
+ },
+ {
+  "id": 246,
+  "text": "At the same time, what we mean is,"
+ },
+ {
+  "id": 247,
+  "text": "if an instruction segment"
+ },
+ {
+  "id": 248,
+  "text": "accesses a shared resource,"
+ },
+ {
+  "id": 249,
+  "text": "it doesn't necessarily mean that"
+ },
+ {
+  "id": 250,
+  "text": "it will expose one of our"
+ },
+ {
+  "id": 251,
+  "text": "concurrency issues."
+ },
+ {
+  "id": 252,
+  "text": "So the critical sections we care about here,"
+ },
+ {
+  "id": 253,
+  "text": "when it comes to critical sections,"
+ },
+ {
+  "id": 254,
+  "text": "we actually also have to consider"
+ },
+ {
+  "id": 255,
+  "text": "that, when"
+ },
+ {
+  "id": 256,
+  "text": "multiple instruction segments"
+ },
+ {
+  "id": 257,
+  "text": "access this resource at the same time,"
+ },
+ {
+  "id": 258,
+  "text": "that may trigger"
+ },
+ {
+  "id": 259,
+  "text": "some problems."
+ },
+ {
+  "id": 260,
+  "text": "So for this kind of instruction sequence,"
+ },
+ {
+  "id": 261,
+  "text": "that's when we pay special attention to it,"
+ },
+ {
+  "id": 262,
+  "text": "and we call it a critical section."
+ },
+ {
+  "id": 263,
+  "text": "Now, this kind of"
+ },
+ {
+  "id": 264,
+  "text": "why do we say this can cause problems?"
+ },
+ {
+  "id": 265,
+  "text": "Let me give you an example,"
+ },
+ {
+  "id": 266,
+  "text": "so you can get a feel for the process."
+ },
+ {
+  "id": 267,
+  "text": "So suppose, look at the picture we've drawn here,"
+ },
+ {
+  "id": 268,
+  "text": "there is this thing,"
+ },
+ {
+  "id": 269,
+  "text": "that is, down below there is a processor,"
+ },
+ {
+  "id": 270,
+  "text": "since we're using a single processor"
+ },
+ {
+  "id": 271,
+  "text": "as our example to explain this to you,"
+ },
+ {
+  "id": 272,
+  "text": "so down below there's a processor,"
+ },
+ {
+  "id": 273,
+  "text": "and the blue part up top,"
+ },
+ {
+  "id": 274,
+  "text": "you can think of it as a shared resource,"
+ },
+ {
+  "id": 275,
+  "text": "let's say it's a piece of memory,"
+ },
+ {
+  "id": 276,
+  "text": "a variable,"
+ },
+ {
+  "id": 277,
+  "text": "a variable in memory,"
+ },
+ {
+  "id": 278,
+  "text": "and on the left,"
+ },
+ {
+  "id": 279,
+  "text": "there is a control flow."
+ },
+ {
+  "id": 280,
+  "text": "instruction i, i+1, i+2"
+ },
+ {
+  "id": 281,
+  "text": "and they are executed sequentially."
+ },
+ {
+  "id": 282,
+  "text": "On the right side, there is also a control flow"
+ },
+ {
+  "id": 283,
+  "text": "j, j+1, j+2, j+n,"
+ },
+ {
+  "id": 284,
+  "text": "which is also executed sequentially there."
+ },
+ {
+  "id": 285,
+  "text": "Now suppose these two control flows,"
+ },
+ {
+  "id": 286,
+  "text": "they both go and access this shared resource in the middle."
+ },
+ {
+  "id": 287,
+  "text": "Sometimes they might produce some conflicts."
+ },
+ {
+  "id": 288,
+  "text": "Now suppose the control flow on the left,"
+ },
+ {
+  "id": 289,
+  "text": "it actually acts on the variable inside,"
+ },
+ {
+  "id": 290,
+  "text": "say this variable is an integer variable,"
+ },
+ {
+  "id": 291,
+  "text": "and it keeps adding one to this integer variable,"
+ },
+ {
+  "id": 292,
+  "text": "it may just keep adding one to it over and over,"
+ },
+ {
+  "id": 293,
+  "text": "while the right side is used to subtract one from it."
+ },
+ {
+  "id": 294,
+  "text": "So the logic on the left,"
+ },
+ {
+  "id": 295,
+  "text": "in effect, just wants to keep adding, adding, adding, adding,"
+ },
+ {
+  "id": 296,
+  "text": "until it reaches a certain number,"
+ },
+ {
+  "id": 297,
+  "text": "and then it finishes."
+ },
+ {
+  "id": 298,
+  "text": "The right side wants to take an integer,"
+ },
+ {
+  "id": 299,
+  "text": "subtract, subtract, subtract, subtract, subtract."
+ },
+ {
+  "id": 300,
+  "text": "and when it's cut to a certain position, it ends."
+ },
+ {
+  "id": 301,
+  "text": "But think about it,"
+ },
+ {
+  "id": 302,
+  "text": "actually, when these two control flows"
+ },
+ {
+  "id": 303,
+  "text": "execute concurrently on one processor,"
+ },
+ {
+  "id": 304,
+  "text": "what problem can actually arise?"
+ },
+ {
+  "id": 305,
+  "text": "It's that they may be executed in an interleaved way,"
+ },
+ {
+  "id": 306,
+  "text": "right?"
+ },
+ {
+  "id": 307,
+  "text": "Based on the concept of task scheduling we talked about earlier,"
+ },
+ {
+  "id": 308,
+  "text": "we know that in a multitasking situation,"
+ },
+ {
+  "id": 309,
+  "text": "when the task on the left is executing,"
+ },
+ {
+  "id": 310,
+  "text": "it won't strictly, that is,"
+ },
+ {
+  "id": 311,
+  "text": "it won't proceed step by step without interference."
+ },
+ {
+  "id": 312,
+  "text": "When it reaches a certain state,"
+ },
+ {
+  "id": 313,
+  "text": "perhaps because, for example, a timer interrupt occurs,"
+ },
+ {
+  "id": 314,
+  "text": "our preemptive task"
+ },
+ {
+  "id": 315,
+  "text": "will take this execution flow"
+ },
+ {
+  "id": 316,
+  "text": "and switch it to its right side,"
+ },
+ {
+  "id": 317,
+  "text": "to execute inside the task on the right."
+ },
+ {
+  "id": 318,
+  "text": "So, on these two sides,"
+ },
+ {
+  "id": 319,
+  "text": "the control flow..."
+ },
+ {
+  "id": 320,
+  "text": "Because if they all go and access this block of memory above,"
+ },
+ {
+  "id": 321,
+  "text": "then possibly during their execution,"
+ },
+ {
+  "id": 322,
+  "text": "since this interrupt is here,"
+ },
+ {
+  "id": 323,
+  "text": "if it keeps switching back and forth here,"
+ },
+ {
+  "id": 324,
+  "text": "then the results they see may end up being different."
+ },
+ {
+  "id": 325,
+  "text": "Think about it — isn't that the case?"
+ },
+ {
+  "id": 326,
+  "text": "So if this kind of situation occurs,"
+ },
+ {
+  "id": 327,
+  "text": "then under these kinds of conditions,"
+ },
+ {
+  "id": 328,
+  "text": "we say that a sequence of instructions like this,"
+ },
+ {
+  "id": 329,
+  "text": "we call it a critical section."
+ },
+ {
+  "id": 330,
+  "text": "Now, on the left,"
+ },
+ {
+  "id": 331,
+  "text": "naturally, that is also a piece of code,"
+ },
+ {
+  "id": 332,
+  "text": "and it exists in a concurrent state,"
+ },
+ {
+  "id": 333,
+  "text": "because the two of them,"
+ },
+ {
+  "id": 334,
+  "text": "and the one on the right here,"
+ },
+ {
+  "id": 335,
+  "text": "is actually also a critical section."
+ },
+ {
+  "id": 336,
+  "text": "The two of them, between each other,"
+ },
+ {
+  "id": 337,
+  "text": "because after sharing a piece of memory,"
+ },
+ {
+  "id": 338,
+  "text": "their operations on it,"
+ },
+ {
+  "id": 339,
+  "text": "may well affect each other."
+ },
+ {
+  "id": 340,
+  "text": "So this kind of interference"
+ },
+ {
+  "id": 341,
+  "text": "can lead to some logical problems."
+ },
+ {
+  "id": 342,
+  "text": "And code like this"
+ },
+ {
+  "id": 343,
+  "text": "is what we call a critical section."
+ },
+ {
+  "id": 344,
+  "text": "So when we discuss"
+ },
+ {
+  "id": 345,
+  "text": "whether a piece of code"
+ },
+ {
+  "id": 346,
+  "text": "is a critical section or not,"
+ },
+ {
+  "id": 347,
+  "text": "it must be"
+ },
+ {
+  "id": 348,
+  "text": "in a situation like this,"
+ },
+ {
+  "id": 349,
+  "text": "only then do we consider that code a critical section."
+ },
+ {
+  "id": 350,
+  "text": "Not all code is called a critical section."
+ },
+ {
+  "id": 351,
+  "text": "So that is the concept of a critical section"
+ },
+ {
+  "id": 352,
+  "text": "that we need to understand first."
+ },
+ {
+  "id": 353,
+  "text": "Then how do we"
+ },
+ {
+  "id": 354,
+  "text": "in these changing situations,"
+ },
+ {
+  "id": 355,
+  "text": "how do we control this task"
+ },
+ {
+  "id": 356,
+  "text": "so it can effectively execute this critical section?"
+ },
+ {
+  "id": 357,
+  "text": "Put plainly,"
+ },
+ {
+  "id": 358,
+  "text": "when we need to execute these critical sections,"
+ },
+ {
+  "id": 359,
+  "text": "how do we ensure that"
+ },
+ {
+  "id": 360,
+  "text": "That is to say, for example, on the left,"
+ },
+ {
+  "id": 361,
+  "text": "that critical section from just now,"
+ },
+ {
+  "id": 362,
+  "text": "its execution logic will not"
+ },
+ {
+  "id": 363,
+  "text": "be affected by the handling of"
+ },
+ {
+  "id": 364,
+  "text": "that critical section on the right,"
+ },
+ {
+  "id": 365,
+  "text": "or be interfered with by it, right?"
+ },
+ {
+  "id": 366,
+  "text": "So actually, what we say"
+ },
+ {
+  "id": 367,
+  "text": "is that the most fundamental principle we adopt,"
+ },
+ {
+  "id": 368,
+  "text": "in other words,"
+ },
+ {
+  "id": 369,
+  "text": "when one control flow"
+ },
+ {
+  "id": 370,
+  "text": "enters a critical section,"
+ },
+ {
+  "id": 371,
+  "text": "the other control flows"
+ },
+ {
+  "id": 372,
+  "text": "must do what?"
+ },
+ {
+  "id": 373,
+  "text": "They must wait."
+ },
+ {
+  "id": 374,
+  "text": "As long as we can ensure"
+ },
+ {
+  "id": 375,
+  "text": "this problem is taken care of,"
+ },
+ {
+  "id": 376,
+  "text": "then we can actually"
+ },
+ {
+  "id": 377,
+  "text": "achieve this synchronization."
+ },
+ {
+  "id": 378,
+  "text": "To give an analogy,"
+ },
+ {
+  "id": 379,
+  "text": "this critical section"
+ },
+ {
+  "id": 380,
+  "text": "Let me give a real-world example."
+ },
+ {
+  "id": 381,
+  "text": "Actually, you can think of it this way."
+ },
+ {
+  "id": 382,
+  "text": "That is to say,"
+ },
+ {
+  "id": 383,
+  "text": "everyone can imagine"
+ },
+ {
+  "id": 384,
+  "text": "that we..."
+ },
+ {
+  "id": 385,
+  "text": "Because we say the concept of a critical section is a sequence of instructions,"
+ },
+ {
+  "id": 386,
+  "text": "so it's really just a procedure,"
+ },
+ {
+  "id": 387,
+  "text": "step one, step two, step three, right?"
+ },
+ {
+  "id": 388,
+  "text": "So let's take an example."
+ },
+ {
+  "id": 389,
+  "text": "Say we go to a bank ATM"
+ },
+ {
+  "id": 390,
+  "text": "to withdraw money — a process like this,"
+ },
+ {
+  "id": 391,
+  "text": "you can actually think of these steps of the process,"
+ },
+ {
+  "id": 392,
+  "text": "as being a critical section, right?"
+ },
+ {
+  "id": 393,
+  "text": "The first step of this procedure,"
+ },
+ {
+  "id": 394,
+  "text": "is that you first insert your card."
+ },
+ {
+  "id": 395,
+  "text": "After inserting the card,"
+ },
+ {
+  "id": 396,
+  "text": "you enter the password, and after entering the password,"
+ },
+ {
+  "id": 397,
+  "text": "you withdraw money, and after taking the money,"
+ },
+ {
+  "id": 398,
+  "text": "you take the card back out, right?"
+ },
+ {
+  "id": 399,
+  "text": "This sequence of steps,"
+ },
+ {
+  "id": 400,
+  "text": "Actually, we can think of it as a critical section."
+ },
+ {
+  "id": 401,
+  "text": "So,"
+ },
+ {
+  "id": 402,
+  "text": "we say"
+ },
+ {
+  "id": 403,
+  "text": "let's say I,"
+ },
+ {
+  "id": 404,
+  "text": "when our person performs this operation,"
+ },
+ {
+  "id": 405,
+  "text": "this person can actually be thought of as"
+ },
+ {
+  "id": 406,
+  "text": "a thread or a control flow."
+ },
+ {
+  "id": 407,
+  "text": "So this person, he"
+ },
+ {
+  "id": 408,
+  "text": "let's say I go first to"
+ },
+ {
+  "id": 409,
+  "text": "this ATM machine."
+ },
+ {
+  "id": 410,
+  "text": "This ATM machine can be thought of as"
+ },
+ {
+  "id": 411,
+  "text": "you can think of it as a shared resource."
+ },
+ {
+  "id": 412,
+  "text": "So when we, our person,"
+ },
+ {
+  "id": 413,
+  "text": "enters this,"
+ },
+ {
+  "id": 414,
+  "text": "let's say I,"
+ },
+ {
+  "id": 415,
+  "text": "let's say I get to this ATM machine first,"
+ },
+ {
+  "id": 416,
+  "text": "and I'm performing this operation,"
+ },
+ {
+  "id": 417,
+  "text": "then this process,"
+ },
+ {
+  "id": 418,
+  "text": "we say it actually cannot be"
+ },
+ {
+  "id": 419,
+  "text": "logically, it cannot be interrupted."
+ },
+ {
+  "id": 420,
+  "text": "Because if you think about it,"
+ },
+ {
+  "id": 421,
+  "text": "suppose I insert this card,"
+ },
+ {
+  "id": 422,
+  "text": "and then after I enter the password,"
+ },
+ {
+  "id": 423,
+  "text": "suddenly another thread"
+ },
+ {
+  "id": 424,
+  "text": "or another controller comes along,"
+ },
+ {
+  "id": 425,
+  "text": "and it starts operating on it as well,"
+ },
+ {
+  "id": 426,
+  "text": "then this part of mine,"
+ },
+ {
+  "id": 427,
+  "text": "my subsequent"
+ },
+ {
+  "id": 428,
+  "text": "I've basically given up this"
+ },
+ {
+  "id": 429,
+  "text": "critical resource,"
+ },
+ {
+  "id": 430,
+  "text": "so when I operate on it again afterwards,"
+ },
+ {
+  "id": 431,
+  "text": "it's definitely going to cause problems,"
+ },
+ {
+  "id": 432,
+  "text": "right?"
+ },
+ {
+  "id": 433,
+  "text": "So what we actually need to do is how to"
+ },
+ {
+  "id": 434,
+  "text": "this is basically the concept of concurrency,"
+ },
+ {
+  "id": 435,
+  "text": "so how do we make sure"
+ },
+ {
+  "id": 436,
+  "text": "that this control flow of mine won't be interfered with?"
+ },
+ {
+  "id": 437,
+  "text": "Actually, what we need to do"
+ },
+ {
+  "id": 438,
+  "text": "is to make the second person,"
+ },
+ {
+  "id": 439,
+  "text": "that is, the second control flow,"
+ },
+ {
+  "id": 440,
+  "text": "He can't start his step."
+ },
+ {
+  "id": 441,
+  "text": "He has to wait until I finish this step first."
+ },
+ {
+  "id": 442,
+  "text": "Then the other control flow can only"
+ },
+ {
+  "id": 443,
+  "text": "wait there."
+ },
+ {
+  "id": 444,
+  "text": "So with this approach,"
+ },
+ {
+  "id": 445,
+  "text": "we need to adopt a"
+ },
+ {
+  "id": 446,
+  "text": "synchronization method to achieve this effect."
+ },
+ {
+  "id": 447,
+  "text": "Now, there are many ways to synchronize."
+ },
+ {
+  "id": 448,
+  "text": "The most fundamental, the most basic one,"
+ },
+ {
+  "id": 449,
+  "text": "is to use locks."
+ },
+ {
+  "id": 450,
+  "text": "A lock is the most common technique used to implement synchronization."
+ },
+ {
+  "id": 451,
+  "text": "Now let's look at locks."
+ },
+ {
+  "id": 452,
+  "text": "There are many kinds, as we said."
+ },
+ {
+  "id": 453,
+  "text": "They include non-sleepable locks and sleepable locks."
+ },
+ {
+  "id": 454,
+  "text": "Now this concept,"
+ },
+ {
+  "id": 455,
+  "text": "what it actually refers to is this:"
+ },
+ {
+  "id": 456,
+  "text": "because whoever holds the lock,"
+ },
+ {
+  "id": 457,
+  "text": "well, actually, whoever executes the lock,"
+ },
+ {
+  "id": 458,
+  "text": "is certainly a control flow."
+ },
+ {
+  "id": 459,
+  "text": "And a control flow,"
+ },
+ {
+  "id": 460,
+  "text": "so you can think of it as just one task"
+ },
+ {
+  "id": 461,
+  "text": "now for this task"
+ },
+ {
+  "id": 462,
+  "text": "what it means by non-sleepable"
+ },
+ {
+  "id": 463,
+  "text": "actually refers to"
+ },
+ {
+  "id": 464,
+  "text": "it cannot leave our scheduling"
+ },
+ {
+  "id": 465,
+  "text": "that is, leave"
+ },
+ {
+  "id": 466,
+  "text": "but this so-called concept of sleeping"
+ },
+ {
+  "id": 467,
+  "text": "actually when we implemented multitasking earlier"
+ },
+ {
+  "id": 468,
+  "text": "we didn't introduce it"
+ },
+ {
+  "id": 469,
+  "text": "we actually left it as a later exercise"
+ },
+ {
+  "id": 470,
+  "text": "for you all to work on"
+ },
+ {
+  "id": 471,
+  "text": "because the so-called non-sleepable"
+ },
+ {
+  "id": 472,
+  "text": "is equivalent to saying"
+ },
+ {
+  "id": 473,
+  "text": "the task that holds this lock"
+ },
+ {
+  "id": 474,
+  "text": "cannot leave our scheduling queue"
+ },
+ {
+  "id": 475,
+  "text": "cannot exit our scheduling"
+ },
+ {
+  "id": 476,
+  "text": "while sleepable is equivalent to saying"
+ },
+ {
+  "id": 477,
+  "text": "after taking the lock"
+ },
+ {
+  "id": 478,
+  "text": "we can let this task"
+ },
+ {
+  "id": 479,
+  "text": "enter a state where it does not participate in scheduling"
+ },
+ {
+  "id": 480,
+  "text": "But right now,"
+ },
+ {
+  "id": 481,
+  "text": "what we're doing here is,"
+ },
+ {
+  "id": 482,
+  "text": "since we don't want to bring in too much"
+ },
+ {
+  "id": 483,
+  "text": "of the whole notion of sleeping,"
+ },
+ {
+  "id": 484,
+  "text": "what I'm going to present to you"
+ },
+ {
+  "id": 485,
+  "text": "focuses on,"
+ },
+ {
+  "id": 486,
+  "text": "and from here on it's mainly"
+ },
+ {
+  "id": 487,
+  "text": "about introducing a kind of"
+ },
+ {
+  "id": 488,
+  "text": "non-sleepable lock."
+ },
+ {
+  "id": 489,
+  "text": "So it's the non-sleepable lock,"
+ },
+ {
+  "id": 490,
+  "text": "as the example,"
+ },
+ {
+  "id": 491,
+  "text": "that I'll be walking you through."
+ },
+ {
+  "id": 492,
+  "text": "Okay."
+ },
+ {
+  "id": 493,
+  "text": "So this,"
+ },
+ {
+  "id": 494,
+  "text": "let's take a look at this,"
+ },
+ {
+  "id": 495,
+  "text": "implementing a lock,"
+ },
+ {
+  "id": 496,
+  "text": "and how it achieves"
+ },
+ {
+  "id": 497,
+  "text": "this thing we call"
+ },
+ {
+  "id": 498,
+  "text": "the synchronization effect."
+ },
+ {
+  "id": 499,
+  "text": "So over here,"
+ },
+ {
+  "id": 500,
+  "text": "Let's look at this animation"
+ },
+ {
+  "id": 501,
+  "text": "to demonstrate to you"
+ },
+ {
+  "id": 502,
+  "text": "how a lock"
+ },
+ {
+  "id": 503,
+  "text": "actually achieves this"
+ },
+ {
+  "id": 504,
+  "text": "synchronization."
+ },
+ {
+  "id": 505,
+  "text": "So again, let's use the same example as before."
+ },
+ {
+  "id": 506,
+  "text": "You can see that"
+ },
+ {
+  "id": 507,
+  "text": "down here is a processor,"
+ },
+ {
+  "id": 508,
+  "text": "and the blue part up here is some shared memory."
+ },
+ {
+  "id": 509,
+  "text": "On the left is one instruction stream,"
+ },
+ {
+  "id": 510,
+  "text": "and on the right is another instruction stream."
+ },
+ {
+  "id": 511,
+  "text": "So how do we implement a lock?"
+ },
+ {
+  "id": 512,
+  "text": "First, we need to create a lock."
+ },
+ {
+  "id": 513,
+  "text": "You can first think of it logically—"
+ },
+ {
+  "id": 514,
+  "text": "we can assume we need to create a lock."
+ },
+ {
+  "id": 515,
+  "text": "Now, this lock, at the very beginning,"
+ },
+ {
+  "id": 516,
+  "text": "we can initialize it to the unlocked state,"
+ },
+ {
+  "id": 517,
+  "text": "which is like saying"
+ },
+ {
+  "id": 518,
+  "text": "if we go back to that money withdrawal"
+ },
+ {
+  "id": 519,
+  "text": "example from earlier,"
+ },
+ {
+  "id": 520,
+  "text": "So that's basically like saying"
+ },
+ {
+  "id": 521,
+  "text": "we can be outside the ATM machine"
+ },
+ {
+  "id": 522,
+  "text": "we can all imagine it like this"
+ },
+ {
+  "id": 523,
+  "text": "there is a room"
+ },
+ {
+  "id": 524,
+  "text": "and on the door of that room"
+ },
+ {
+  "id": 525,
+  "text": "there is a lock"
+ },
+ {
+  "id": 526,
+  "text": "and this lock"
+ },
+ {
+  "id": 527,
+  "text": "is initially in an unlocked state"
+ },
+ {
+  "id": 528,
+  "text": "in an unlocked state"
+ },
+ {
+  "id": 529,
+  "text": "So this"
+ },
+ {
+  "id": 530,
+  "text": "so this thing basically means"
+ },
+ {
+  "id": 531,
+  "text": "we need to, in this"
+ },
+ {
+  "id": 532,
+  "text": "just having this lock is not enough"
+ },
+ {
+  "id": 533,
+  "text": "what we actually also need to do is"
+ },
+ {
+  "id": 534,
+  "text": "we still need to, in the execution flow we just had"
+ },
+ {
+  "id": 535,
+  "text": "that is, before and after our execution steps"
+ },
+ {
+  "id": 536,
+  "text": "we need to add"
+ },
+ {
+  "id": 537,
+  "text": "what is called"
+ },
+ {
+  "id": 538,
+  "text": "one called acquire"
+ },
+ {
+  "id": 539,
+  "text": "which is the action of acquiring the lock"
+ },
+ {
+  "id": 540,
+  "text": "And then, after this action is finished,"
+ },
+ {
+  "id": 541,
+  "text": "we need to add an action to release the lock."
+ },
+ {
+  "id": 542,
+  "text": "So release,"
+ },
+ {
+  "id": 543,
+  "text": "and acquire,"
+ },
+ {
+  "id": 544,
+  "text": "we often also correspond them to,"
+ },
+ {
+  "id": 545,
+  "text": "that is, acquire is called lock,"
+ },
+ {
+  "id": 546,
+  "text": "and release is called unlock."
+ },
+ {
+  "id": 547,
+  "text": "So acquire,"
+ },
+ {
+  "id": 548,
+  "text": "you can think of it as locking,"
+ },
+ {
+  "id": 549,
+  "text": "and release is unlocking."
+ },
+ {
+  "id": 550,
+  "text": "So, in other words,"
+ },
+ {
+  "id": 551,
+  "text": "taking the withdrawal example from earlier,"
+ },
+ {
+  "id": 552,
+  "text": "still using that as an example,"
+ },
+ {
+  "id": 553,
+  "text": "that is to say,"
+ },
+ {
+  "id": 554,
+  "text": "it's equivalent to saying,"
+ },
+ {
+  "id": 555,
+  "text": "before we enter the ATM room,"
+ },
+ {
+  "id": 556,
+  "text": "and before we insert the card and start the operation,"
+ },
+ {
+  "id": 557,
+  "text": "our first step is to close the lock."
+ },
+ {
+  "id": 558,
+  "text": "And once it's closed,"
+ },
+ {
+  "id": 559,
+  "text": "you can imagine that,"
+ },
+ {
+  "id": 560,
+  "text": "Then the other person simply can't get in."
+ },
+ {
+  "id": 561,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 562,
+  "text": "So it's basically like this."
+ },
+ {
+  "id": 563,
+  "text": "So before each person operates on their step,"
+ },
+ {
+  "id": 564,
+  "text": "they have to first try to acquire this lock,"
+ },
+ {
+  "id": 565,
+  "text": "and then, after they leave,"
+ },
+ {
+  "id": 566,
+  "text": "they just release the lock, and that's it."
+ },
+ {
+  "id": 567,
+  "text": "So with the lock added, let's see how this achieves"
+ },
+ {
+  "id": 568,
+  "text": "the synchronization effect."
+ },
+ {
+  "id": 569,
+  "text": "As we mentioned earlier, synchronization means"
+ },
+ {
+  "id": 570,
+  "text": "making another task"
+ },
+ {
+  "id": 571,
+  "text": "wait."
+ },
+ {
+  "id": 572,
+  "text": "Remember this key point:"
+ },
+ {
+  "id": 573,
+  "text": "you make another task wait."
+ },
+ {
+  "id": 574,
+  "text": "Waiting"
+ },
+ {
+  "id": 575,
+  "text": "can take many forms."
+ },
+ {
+  "id": 576,
+  "text": "It can be sleeping,"
+ },
+ {
+  "id": 577,
+  "text": "or it can be non-sleeping."
+ },
+ {
+  "id": 578,
+  "text": "Our focus"
+ },
+ {
+  "id": 579,
+  "text": "will be on the non-sleeping approach as our example."
+ },
+ {
+  "id": 580,
+  "text": "Okay."
+ },
+ {
+  "id": 581,
+  "text": "Now suppose the control flow on the left,"
+ },
+ {
+  "id": 582,
+  "text": "the task on the left,"
+ },
+ {
+  "id": 583,
+  "text": "first gets the CPU's execution rights."
+ },
+ {
+  "id": 584,
+  "text": "So the PC,"
+ },
+ {
+  "id": 585,
+  "text": "first points to this execution flow on the left."
+ },
+ {
+  "id": 586,
+  "text": "And the PC,"
+ },
+ {
+  "id": 587,
+  "text": "according to our current logic,"
+ },
+ {
+  "id": 588,
+  "text": "as we know, the PC,"
+ },
+ {
+  "id": 589,
+  "text": "doesn't start working right away."
+ },
+ {
+  "id": 590,
+  "text": "First it has to try to acquire this lock."
+ },
+ {
+  "id": 591,
+  "text": "Then, after acquire is executed,"
+ },
+ {
+  "id": 592,
+  "text": "since this lock right now,"
+ },
+ {
+  "id": 593,
+  "text": "is in an open state,"
+ },
+ {
+  "id": 594,
+  "text": "that is, a free state,"
+ },
+ {
+  "id": 595,
+  "text": "so when our task on the left,"
+ },
+ {
+  "id": 596,
+  "text": "goes and does the acquire,"
+ },
+ {
+  "id": 597,
+  "text": "as you can imagine,"
+ },
+ {
+  "id": 598,
+  "text": "the state of this lock will naturally change."
+ },
+ {
+  "id": 599,
+  "text": "It will become the locked state."
+ },
+ {
+  "id": 600,
+  "text": "It's like this door has just been closed."
+ },
+ {
+  "id": 601,
+  "text": "Right?"
+ },
+ {
+  "id": 602,
+  "text": "So the task on the left,"
+ },
+ {
+  "id": 603,
+  "text": "can now go ahead and execute its steps with confidence."
+ },
+ {
+  "id": 604,
+  "text": "The PC just starts moving downward as it executes."
+ },
+ {
+  "id": 605,
+  "text": "Now, during the execution,"
+ },
+ {
+  "id": 606,
+  "text": "as you can imagine,"
+ },
+ {
+  "id": 607,
+  "text": "suppose we are still in this single-processor multitasking scenario,"
+ },
+ {
+  "id": 608,
+  "text": "then an interrupt could happen."
+ },
+ {
+  "id": 609,
+  "text": "So what does it mean when an interrupt occurs?"
+ },
+ {
+  "id": 610,
+  "text": "It means our task is going to be switched out."
+ },
+ {
+  "id": 611,
+  "text": "Right?"
+ },
+ {
+  "id": 612,
+  "text": "So once a switch happens,"
+ },
+ {
+  "id": 613,
+  "text": "as you can imagine, this PC pointer will go from the left side,"
+ },
+ {
+  "id": 614,
+  "text": "the gray part."
+ },
+ {
+  "id": 615,
+  "text": "The gray color here means,"
+ },
+ {
+  "id": 616,
+  "text": "it's basically like the multitasking we did earlier."
+ },
+ {
+  "id": 617,
+  "text": "As you know, at this point the PC effectively remembers,"
+ },
+ {
+  "id": 618,
+  "text": "the position to return to."
+ },
+ {
+  "id": 619,
+  "text": "It remembers the return position."
+ },
+ {
+  "id": 620,
+  "text": "So once this interrupt happens,"
+ },
+ {
+  "id": 621,
+  "text": "the task on the left essentially leaves the CPU,"
+ },
+ {
+  "id": 622,
+  "text": "and the task on the right gets the CPU."
+ },
+ {
+  "id": 623,
+  "text": "Now, for the task on the right,"
+ },
+ {
+  "id": 624,
+  "text": "once its control flow gets the CPU,"
+ },
+ {
+  "id": 625,
+  "text": "you know that the very first operation it's going to perform"
+ },
+ {
+  "id": 626,
+  "text": "is definitely to try to acquire this lock,"
+ },
+ {
+  "id": 627,
+  "text": "right?"
+ },
+ {
+  "id": 628,
+  "text": "Now at this point, as you know,"
+ },
+ {
+  "id": 629,
+  "text": "since the current state of the lock is"
+ },
+ {
+  "id": 630,
+  "text": "locked,"
+ },
+ {
+  "id": 631,
+  "text": "you can imagine that its attempt to acquire,"
+ },
+ {
+  "id": 632,
+  "text": "to take the lock, is definitely going to fail."
+ },
+ {
+  "id": 633,
+  "text": "So since it fails,"
+ },
+ {
+  "id": 634,
+  "text": "the effect we want to achieve,"
+ },
+ {
+  "id": 635,
+  "text": "is to make the task on the right"
+ },
+ {
+  "id": 636,
+  "text": "wait,"
+ },
+ {
+  "id": 637,
+  "text": "and not proceed any further."
+ },
+ {
+  "id": 638,
+  "text": "Note carefully,"
+ },
+ {
+  "id": 639,
+  "text": "that is to say, what we mean by waiting"
+ },
+ {
+  "id": 640,
+  "text": "In fact, it means it can't proceed further."
+ },
+ {
+  "id": 641,
+  "text": "Because once it does execute,"
+ },
+ {
+  "id": 642,
+  "text": "then those two execution flows would be running concurrently,"
+ },
+ {
+  "id": 643,
+  "text": "which would cause conflicts."
+ },
+ {
+  "id": 644,
+  "text": "Now, as for this,"
+ },
+ {
+  "id": 645,
+  "text": "this so-called making it wait,"
+ },
+ {
+  "id": 646,
+  "text": "exactly what mechanism is used"
+ },
+ {
+  "id": 647,
+  "text": "to make it wait?"
+ },
+ {
+  "id": 648,
+  "text": "Well, there are many ways to do it."
+ },
+ {
+  "id": 649,
+  "text": "For now, let's set that aside."
+ },
+ {
+  "id": 650,
+  "text": "At least we know,"
+ },
+ {
+  "id": 651,
+  "text": "that is, at this general conceptual level,"
+ },
+ {
+  "id": 652,
+  "text": "the task on the right basically means,"
+ },
+ {
+  "id": 653,
+  "text": "it can no longer move forward."
+ },
+ {
+  "id": 654,
+  "text": "So, since the task on the right"
+ },
+ {
+  "id": 655,
+  "text": "can't move forward,"
+ },
+ {
+  "id": 656,
+  "text": "then as you all know,"
+ },
+ {
+  "id": 657,
+  "text": "what our entire CPU does"
+ },
+ {
+  "id": 658,
+  "text": "is still to keep going forward."
+ },
+ {
+  "id": 659,
+  "text": "The CPU is still executing instructions one by one."
+ },
+ {
+  "id": 660,
+  "text": "But it's like the instruction on the right here"
+ },
+ {
+  "id": 661,
+  "text": "it will actually be executed repeatedly"
+ },
+ {
+  "id": 662,
+  "text": "which is exactly what we'll talk about later,"
+ },
+ {
+  "id": 663,
+  "text": "this spinlock,"
+ },
+ {
+  "id": 664,
+  "text": "which is really designed to achieve this effect"
+ },
+ {
+  "id": 665,
+  "text": "Now, let's not worry about that"
+ },
+ {
+  "id": 666,
+  "text": "let's just say the task on the right"
+ },
+ {
+  "id": 667,
+  "text": "is basically, well,"
+ },
+ {
+  "id": 668,
+  "text": "as you know, it definitely can't keep running"
+ },
+ {
+  "id": 669,
+  "text": "it might be sleeping,"
+ },
+ {
+  "id": 670,
+  "text": "it has left the scheduler"
+ },
+ {
+  "id": 671,
+  "text": "Then naturally, after the new interrupt happens,"
+ },
+ {
+  "id": 672,
+  "text": "our scheduling"
+ },
+ {
+  "id": 673,
+  "text": "might come back around again"
+ },
+ {
+  "id": 674,
+  "text": "What I mean by coming back"
+ },
+ {
+  "id": 675,
+  "text": "is that the task on the left"
+ },
+ {
+  "id": 676,
+  "text": "may once again get permission to execute on the CPU"
+ },
+ {
+  "id": 677,
+  "text": "and then it starts running again"
+ },
+ {
+  "id": 678,
+  "text": "Alright?"
+ },
+ {
+  "id": 679,
+  "text": "and it just continues executing from where it was"
+ },
+ {
+  "id": 680,
+  "text": "So as you can see at this point,"
+ },
+ {
+  "id": 681,
+  "text": "its so-called non-preemptible"
+ },
+ {
+  "id": 682,
+  "text": "the instructions inside its critical section,"
+ },
+ {
+  "id": 683,
+  "text": "even though we know the task on the right"
+ },
+ {
+  "id": 684,
+  "text": "will actually still come and preempt it,"
+ },
+ {
+  "id": 685,
+  "text": "but you know, even though it preempts,"
+ },
+ {
+  "id": 686,
+  "text": "it won't actually"
+ },
+ {
+  "id": 687,
+  "text": "because the task on the right won't continue executing,"
+ },
+ {
+  "id": 688,
+  "text": "so it really won't interfere with it."
+ },
+ {
+  "id": 689,
+  "text": "So the instructions of the task on the left, in effect,"
+ },
+ {
+  "id": 690,
+  "text": "can proceed without interference, logically speaking."
+ },
+ {
+  "id": 691,
+  "text": "Please take note of this — it's especially important."
+ },
+ {
+  "id": 692,
+  "text": "Now there's another point to keep in mind:"
+ },
+ {
+  "id": 693,
+  "text": "it's possible that because interrupts keep happening,"
+ },
+ {
+  "id": 694,
+  "text": "so during the execution of the task on the left,"
+ },
+ {
+  "id": 695,
+  "text": "the task on its right"
+ },
+ {
+  "id": 696,
+  "text": "may still preempt it again,"
+ },
+ {
+  "id": 697,
+  "text": "this handling privilege."
+ },
+ {
+  "id": 698,
+  "text": "So this,"
+ },
+ {
+  "id": 699,
+  "text": "so when we talk about"
+ },
+ {
+  "id": 700,
+  "text": "So this critical section on the left"
+ },
+ {
+  "id": 701,
+  "text": "not being able to run without being interrupted,"
+ },
+ {
+  "id": 702,
+  "text": "that does not mean"
+ },
+ {
+  "id": 703,
+  "text": "the task on the right"
+ },
+ {
+  "id": 704,
+  "text": "won't take part in scheduling."
+ },
+ {
+  "id": 705,
+  "text": "Instead, it may still"
+ },
+ {
+  "id": 706,
+  "text": "because as long as it doesn't sleep,"
+ },
+ {
+  "id": 707,
+  "text": "it will still be scheduled in."
+ },
+ {
+  "id": 708,
+  "text": "So this"
+ },
+ {
+  "id": 709,
+  "text": "task on the right"
+ },
+ {
+  "id": 710,
+  "text": "will still preempt the CPU,"
+ },
+ {
+  "id": 711,
+  "text": "and execute."
+ },
+ {
+  "id": 712,
+  "text": "But as you can imagine,"
+ },
+ {
+  "id": 713,
+  "text": "at this point"
+ },
+ {
+  "id": 714,
+  "text": "it still can't make any further progress,"
+ },
+ {
+  "id": 715,
+  "text": "it can't make any progress."
+ },
+ {
+  "id": 716,
+  "text": "And that achieves our"
+ },
+ {
+  "id": 717,
+  "text": "synchronization effect here,"
+ },
+ {
+  "id": 718,
+  "text": "keeping the task on the right"
+ },
+ {
+  "id": 719,
+  "text": "that is, equivalent to saying"
+ },
+ {
+  "id": 720,
+  "text": "he's going to be waiting here"
+ },
+ {
+  "id": 721,
+  "text": "waiting only on the lock"
+ },
+ {
+  "id": 722,
+  "text": "It's like a person outside a door"
+ },
+ {
+  "id": 723,
+  "text": "he just has to wait; he can't get in"
+ },
+ {
+  "id": 724,
+  "text": "So, on this point,"
+ },
+ {
+  "id": 725,
+  "text": "I hope everyone, when understanding"
+ },
+ {
+  "id": 726,
+  "text": "this synchronization and this"
+ },
+ {
+  "id": 727,
+  "text": "concurrency, synchronization and locks,"
+ },
+ {
+  "id": 728,
+  "text": "will keep this in mind."
+ },
+ {
+  "id": 729,
+  "text": "Right."
+ },
+ {
+  "id": 730,
+  "text": "So as you can imagine,"
+ },
+ {
+  "id": 731,
+  "text": "in short,"
+ },
+ {
+  "id": 732,
+  "text": "the task on the right,"
+ },
+ {
+  "id": 733,
+  "text": "since it has no chance"
+ },
+ {
+  "id": 734,
+  "text": "to execute the code in its critical section,"
+ },
+ {
+  "id": 735,
+  "text": "then the task on the left,"
+ },
+ {
+  "id": 736,
+  "text": "the one on the left,"
+ },
+ {
+  "id": 737,
+  "text": "even though it may be preempted,"
+ },
+ {
+  "id": 738,
+  "text": "it can still, logically,"
+ },
+ {
+  "id": 739,
+  "text": "guarantee that its..."
+ },
+ {
+  "id": 740,
+  "text": "The instructions in the critical section"
+ },
+ {
+  "id": 741,
+  "text": "can be safely"
+ },
+ {
+  "id": 742,
+  "text": "logically safe"
+ },
+ {
+  "id": 743,
+  "text": "will be"
+ },
+ {
+  "id": 744,
+  "text": "when we say it is logically safe"
+ },
+ {
+  "id": 745,
+  "text": "logically it can still be interrupted in practice"
+ },
+ {
+  "id": 746,
+  "text": "please note this"
+ },
+ {
+  "id": 747,
+  "text": "in practice it can still be interrupted"
+ },
+ {
+  "id": 748,
+  "text": "so it is logically safe"
+ },
+ {
+  "id": 749,
+  "text": "running all the way to the end"
+ },
+ {
+  "id": 750,
+  "text": "but in between there can still be interruptions"
+ },
+ {
+  "id": 751,
+  "text": "this is something you also need to pay attention to"
+ },
+ {
+  "id": 752,
+  "text": "when understanding this multitasking"
+ },
+ {
+  "id": 753,
+  "text": "so this, so finally"
+ },
+ {
+  "id": 754,
+  "text": "because there is a release process"
+ },
+ {
+  "id": 755,
+  "text": "the release process"
+ },
+ {
+  "id": 756,
+  "text": "so as you can imagine"
+ },
+ {
+  "id": 757,
+  "text": "once it is released"
+ },
+ {
+  "id": 758,
+  "text": "then this lock"
+ },
+ {
+  "id": 759,
+  "text": "will naturally be released"
+ },
+ {
+  "id": 760,
+  "text": "Finally,"
+ },
+ {
+  "id": 761,
+  "text": "this process of ours will still be released."
+ },
+ {
+  "id": 762,
+  "text": "So once it is released,"
+ },
+ {
+  "id": 763,
+  "text": "then this lock of ours,"
+ },
+ {
+  "id": 764,
+  "text": "when the control flow on the right is executing,"
+ },
+ {
+  "id": 765,
+  "text": "it will see that this lock"
+ },
+ {
+  "id": 766,
+  "text": "is effectively in the unlocked state."
+ },
+ {
+  "id": 767,
+  "text": "So at this point, as you know,"
+ },
+ {
+  "id": 768,
+  "text": "once an interrupt occurs,"
+ },
+ {
+  "id": 769,
+  "text": "and the task on the right gets control,"
+ },
+ {
+  "id": 770,
+  "text": "its acquired operation"
+ },
+ {
+  "id": 771,
+  "text": "will actually succeed,"
+ },
+ {
+  "id": 772,
+  "text": "unlike before,"
+ },
+ {
+  "id": 773,
+  "text": "when it would be blocked here."
+ },
+ {
+  "id": 774,
+  "text": "So at this point,"
+ },
+ {
+  "id": 775,
+  "text": "it is as if the task on the right"
+ },
+ {
+  "id": 776,
+  "text": "has acquired this lock again."
+ },
+ {
+  "id": 777,
+  "text": "After acquiring this lock,"
+ },
+ {
+  "id": 778,
+  "text": "it can continue executing sequentially,"
+ },
+ {
+  "id": 779,
+  "text": "executing all the way until the execution on its right"
+ },
+ {
+  "id": 780,
+  "text": "executes successfully"
+ },
+ {
+  "id": 781,
+  "text": "So this entire process"
+ },
+ {
+  "id": 782,
+  "text": "is actually"
+ },
+ {
+  "id": 783,
+  "text": "as you can see,"
+ },
+ {
+  "id": 784,
+  "text": "throughout this whole process,"
+ },
+ {
+  "id": 785,
+  "text": "the two tasks achieve"
+ },
+ {
+  "id": 786,
+  "text": "this synchronization effect."
+ },
+ {
+  "id": 787,
+  "text": "This is what we mean by"
+ },
+ {
+  "id": 788,
+  "text": "introducing locks"
+ },
+ {
+  "id": 789,
+  "text": "to achieve synchronization,"
+ },
+ {
+  "id": 790,
+  "text": "the internal"
+ },
+ {
+  "id": 791,
+  "text": "low-level implementation process."
+ },
+ {
+  "id": 792,
+  "text": "Now,"
+ },
+ {
+  "id": 793,
+  "text": "after introducing this concept of locks,"
+ },
+ {
+  "id": 794,
+  "text": "when you program from now on,"
+ },
+ {
+  "id": 795,
+  "text": "you will probably"
+ },
+ {
+  "id": 796,
+  "text": "need to pay special attention to certain issues."
+ },
+ {
+  "id": 797,
+  "text": "For example,"
+ },
+ {
+  "id": 798,
+  "text": "for example, we often run into what is called the deadlock problem."
+ },
+ {
+  "id": 799,
+  "text": "Deadlock is called deadlock"
+ },
+ {
+  "id": 800,
+  "text": "So what exactly is a deadlock?"
+ },
+ {
+  "id": 801,
+  "text": "Here's the basic definition."
+ },
+ {
+  "id": 802,
+  "text": "When, along the execution path of a control flow,"
+ },
+ {
+  "id": 803,
+  "text": "multiple locks are involved,"
+ },
+ {
+  "id": 804,
+  "text": "the example we just solved was still fairly simple,"
+ },
+ {
+  "id": 805,
+  "text": "with just one lock, for instance."
+ },
+ {
+  "id": 806,
+  "text": "But as our logic grows more and more complex,"
+ },
+ {
+  "id": 807,
+  "text": "there will be more and more cases of synchronization."
+ },
+ {
+  "id": 808,
+  "text": "Under these more complicated situations,"
+ },
+ {
+  "id": 809,
+  "text": "we may need to define multiple locks,"
+ },
+ {
+  "id": 810,
+  "text": "to synchronize different shared resources and critical sections."
+ },
+ {
+  "id": 811,
+  "text": "So at this point,"
+ },
+ {
+  "id": 812,
+  "text": "what we need to pay attention to is,"
+ },
+ {
+  "id": 813,
+  "text": "a deadlock definitely occurs"
+ },
+ {
+  "id": 814,
+  "text": "in situations where multiple locks exist."
+ },
+ {
+  "id": 815,
+  "text": "If the order in which these locks are"
+ },
+ {
+  "id": 816,
+  "text": "acquired -- that acquisition order --"
+ },
+ {
+  "id": 817,
+  "text": "is not handled carefully enough,"
+ },
+ {
+  "id": 818,
+  "text": "a deadlock problem can easily happen."
+ },
+ {
+  "id": 819,
+  "text": "Let's take a simple example."
+ },
+ {
+  "id": 820,
+  "text": "Now let's get a feel for"
+ },
+ {
+  "id": 821,
+  "text": "what a deadlock is."
+ },
+ {
+  "id": 822,
+  "text": "That is to say,"
+ },
+ {
+  "id": 823,
+  "text": "suppose we now have two locks,"
+ },
+ {
+  "id": 824,
+  "text": "two locks, A and B."
+ },
+ {
+  "id": 825,
+  "text": "Now on the left there is still one execution control flow,"
+ },
+ {
+  "id": 826,
+  "text": "and on the right there is also an execution control flow."
+ },
+ {
+  "id": 827,
+  "text": "So the control flow on the left,"
+ },
+ {
+  "id": 828,
+  "text": "its order of acquiring locks is basically to acquire A first,"
+ },
+ {
+  "id": 829,
+  "text": "and then go on to try to acquire B."
+ },
+ {
+  "id": 830,
+  "text": "On the right, the order is to first try to acquire B,"
+ },
+ {
+  "id": 831,
+  "text": "and then try to acquire A."
+ },
+ {
+  "id": 832,
+  "text": "Now in this situation, it is possible for"
+ },
+ {
+  "id": 833,
+  "text": "note that I said it is possible,"
+ },
+ {
+  "id": 834,
+  "text": "meaning it is not absolutely going to happen."
+ },
+ {
+  "id": 835,
+  "text": "The example we are giving here,"
+ },
+ {
+  "id": 836,
+  "text": "of course, is a state where a deadlock could possibly occur,"
+ },
+ {
+  "id": 837,
+  "text": "it could possibly happen."
+ },
+ {
+  "id": 838,
+  "text": "So let's take a look at"
+ },
+ {
+  "id": 839,
+  "text": "why this could possibly happen."
+ },
+ {
+  "id": 840,
+  "text": "Actually, this process is still very simple."
+ },
+ {
+  "id": 841,
+  "text": "Let me give you a quick demonstration."
+ },
+ {
+  "id": 842,
+  "text": "So, look at the left side,"
+ },
+ {
+  "id": 843,
+  "text": "suppose this task on the left"
+ },
+ {
+  "id": 844,
+  "text": "first gets the execution rights of the CPU."
+ },
+ {
+  "id": 845,
+  "text": "Then it first tries to acquire the first lock, A."
+ },
+ {
+  "id": 846,
+  "text": "And after it gets this lock,"
+ },
+ {
+  "id": 847,
+  "text": "well, it"
+ },
+ {
+  "id": 848,
+  "text": "may be in its scheduling process"
+ },
+ {
+  "id": 849,
+  "text": "get scheduled again,"
+ },
+ {
+  "id": 850,
+  "text": "and B gets it."
+ },
+ {
+  "id": 851,
+  "text": "Then B starts executing,"
+ },
+ {
+  "id": 852,
+  "text": "since it first tries to acquire B,"
+ },
+ {
+  "id": 853,
+  "text": "the second task"
+ },
+ {
+  "id": 854,
+  "text": "gets the lock B."
+ },
+ {
+  "id": 855,
+  "text": "Now you can imagine"
+ },
+ {
+  "id": 856,
+  "text": "that it's possible this task"
+ },
+ {
+  "id": 857,
+  "text": "gets switched back again."
+ },
+ {
+  "id": 858,
+  "text": "After it's switched back,"
+ },
+ {
+  "id": 859,
+  "text": "at this point,"
+ },
+ {
+  "id": 860,
+  "text": "The task on the left"
+ },
+ {
+  "id": 861,
+  "text": "when it tries to acquire B,"
+ },
+ {
+  "id": 862,
+  "text": "then, as you can imagine, since this lock B has already been taken by the task on the right,"
+ },
+ {
+  "id": 863,
+  "text": "already been taken by the task on the right,"
+ },
+ {
+  "id": 864,
+  "text": "so there is no way it can get this lock."
+ },
+ {
+  "id": 865,
+  "text": "Right?"
+ },
+ {
+  "id": 866,
+  "text": "So this lock is definitely not acquirable."
+ },
+ {
+  "id": 867,
+  "text": "Then, since it cannot be acquired,"
+ },
+ {
+  "id": 868,
+  "text": "the task on the left is essentially stuck here,"
+ },
+ {
+  "id": 869,
+  "text": "at this instruction, it will actually be waiting,"
+ },
+ {
+  "id": 870,
+  "text": "waiting at this point."
+ },
+ {
+  "id": 871,
+  "text": "Now at this point, if the task switches back and"
+ },
+ {
+  "id": 872,
+  "text": "B tries to acquire A,"
+ },
+ {
+  "id": 873,
+  "text": "then B is here,"
+ },
+ {
+  "id": 874,
+  "text": "because for A,"
+ },
+ {
+  "id": 875,
+  "text": "it had released this lock A earlier,"
+ },
+ {
+  "id": 876,
+  "text": "but it did not"
+ },
+ {
+  "id": 877,
+  "text": "go ahead and acquire this lock A first,"
+ },
+ {
+  "id": 878,
+  "text": "but it did not release it either."
+ },
+ {
+  "id": 879,
+  "text": "Then the lock on the right,"
+ },
+ {
+  "id": 880,
+  "text": "the task on the right tries again,"
+ },
+ {
+  "id": 881,
+  "text": "and maybe A naturally"
+ },
+ {
+  "id": 882,
+  "text": "can't proceed either."
+ },
+ {
+  "id": 883,
+  "text": "So in this situation,"
+ },
+ {
+  "id": 884,
+  "text": "what kind of situation arises?"
+ },
+ {
+  "id": 885,
+  "text": "That is to say,"
+ },
+ {
+  "id": 886,
+  "text": "if the task switches over now,"
+ },
+ {
+  "id": 887,
+  "text": "switches to the left,"
+ },
+ {
+  "id": 888,
+  "text": "the left task certainly can't move forward either."
+ },
+ {
+  "id": 889,
+  "text": "And then,"
+ },
+ {
+  "id": 890,
+  "text": "even if it goes back to the right,"
+ },
+ {
+  "id": 891,
+  "text": "the right can't proceed either."
+ },
+ {
+  "id": 892,
+  "text": "So the two tasks end up"
+ },
+ {
+  "id": 893,
+  "text": "both waiting for each other"
+ },
+ {
+  "id": 894,
+  "text": "to release the lock the other one holds,"
+ },
+ {
+  "id": 895,
+  "text": "unable to make any progress."
+ },
+ {
+  "id": 896,
+  "text": "So under these conditions,"
+ },
+ {
+  "id": 897,
+  "text": "this is a very typical"
+ },
+ {
+  "id": 898,
+  "text": "deadlock situation—"
+ },
+ {
+  "id": 899,
+  "text": "a state of deadlock."
+ },
+ {
+  "id": 900,
+  "text": "So as everyone can imagine,"
+ },
+ {
+  "id": 901,
+  "text": "these two tasks"
+ },
+ {
+  "id": 902,
+  "text": "actually have no way to proceed any further."
+ },
+ {
+  "id": 903,
+  "text": "This is a deadlock."
+ },
+ {
+  "id": 904,
+  "text": "So this"
+ },
+ {
+  "id": 905,
+  "text": "is the simplest case"
+ },
+ {
+  "id": 906,
+  "text": "of a deadlock occurring."
+ },
+ {
+  "id": 907,
+  "text": "Now, with this kind of deadlock,"
+ },
+ {
+  "id": 908,
+  "text": "how do we solve it?"
+ },
+ {
+  "id": 909,
+  "text": "Well, there are some principles for solving it,"
+ },
+ {
+  "id": 910,
+  "text": "There are still some."
+ },
+ {
+  "id": 911,
+  "text": "and I'll briefly go over them with you."
+ },
+ {
+  "id": 912,
+  "text": "That is to say,"
+ },
+ {
+  "id": 913,
+  "text": "first of all,"
+ },
+ {
+  "id": 914,
+  "text": "we can adjust the order in which locks are acquired."
+ },
+ {
+  "id": 915,
+  "text": "For instance, keeping it consistent."
+ },
+ {
+  "id": 916,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 917,
+  "text": "Well, still taking the example above,"
+ },
+ {
+  "id": 918,
+  "text": "you can imagine"
+ },
+ {
+  "id": 919,
+  "text": "if the locks on both sides"
+ },
+ {
+  "id": 920,
+  "text": "Just now, the problem we ran into,"
+ },
+ {
+  "id": 921,
+  "text": "as you can see,"
+ },
+ {
+  "id": 922,
+  "text": "is that in fact,"
+ },
+ {
+  "id": 923,
+  "text": "the reason this problem occurred,"
+ },
+ {
+  "id": 924,
+  "text": "is simply because"
+ },
+ {
+  "id": 925,
+  "text": "the order in which they acquire locks is inconsistent."
+ },
+ {
+  "id": 926,
+  "text": "On the left, it's A first, then B,"
+ },
+ {
+  "id": 927,
+  "text": "and on the right, it's B first, then A."
+ },
+ {
+  "id": 928,
+  "text": "So if we take this order,"
+ },
+ {
+  "id": 929,
+  "text": "and swap it around,"
+ },
+ {
+  "id": 930,
+  "text": "if both sides do A first, then B,"
+ },
+ {
+  "id": 931,
+  "text": "the problem basically won't occur anymore."
+ },
+ {
+  "id": 932,
+  "text": "It basically won't occur anymore."
+ },
+ {
+  "id": 933,
+  "text": "You can go back and try this yourselves."
+ },
+ {
+  "id": 934,
+  "text": "It's really easy to make this comparison."
+ },
+ {
+  "id": 935,
+  "text": "Then the second way to solve the deadlock problem,"
+ },
+ {
+  "id": 936,
+  "text": "is to prevent a task as much as possible"
+ },
+ {
+  "id": 937,
+  "text": "from requesting another lock while already holding one lock."
+ },
+ {
+  "id": 938,
+  "text": "Now, since we saw this problem,"
+ },
+ {
+  "id": 939,
+  "text": "one possible situation where the earlier problem exists"
+ },
+ {
+  "id": 940,
+  "text": "So, for example, take the task on the left,"
+ },
+ {
+  "id": 941,
+  "text": "it first acquires lock A,"
+ },
+ {
+  "id": 942,
+  "text": "doesn't release it,"
+ },
+ {
+  "id": 943,
+  "text": "and then goes and tries to grab another lock."
+ },
+ {
+  "id": 944,
+  "text": "Now that could potentially cause problems."
+ },
+ {
+  "id": 945,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 946,
+  "text": "So what should we do about it?"
+ },
+ {
+  "id": 947,
+  "text": "Well, at design time,"
+ },
+ {
+  "id": 948,
+  "text": "we can, that is to say,"
+ },
+ {
+  "id": 949,
+  "text": "there are quite a few approaches."
+ },
+ {
+  "id": 950,
+  "text": "One is,"
+ },
+ {
+  "id": 951,
+  "text": "for instance, a fairly greedy approach:"
+ },
+ {
+  "id": 952,
+  "text": "assume we have multiple locks,"
+ },
+ {
+  "id": 953,
+  "text": "then when I"
+ },
+ {
+  "id": 954,
+  "text": "from a task's perspective,"
+ },
+ {
+  "id": 955,
+  "text": "when I acquire the locks,"
+ },
+ {
+  "id": 956,
+  "text": "I can atomically"
+ },
+ {
+  "id": 957,
+  "text": "request all of these locks"
+ },
+ {
+  "id": 958,
+  "text": "in one shot."
+ },
+ {
+  "id": 959,
+  "text": "Then in fact, if they are all"
+ },
+ {
+  "id": 960,
+  "text": "For example, if I acquire all of these locks,"
+ },
+ {
+  "id": 961,
+  "text": "and then, after I finish my work,"
+ },
+ {
+  "id": 962,
+  "text": "I release all of them at once,"
+ },
+ {
+  "id": 963,
+  "text": "then naturally, other people"
+ },
+ {
+  "id": 964,
+  "text": "won't end up competing with anyone else,"
+ },
+ {
+  "id": 965,
+  "text": "and this naturally avoids"
+ },
+ {
+  "id": 966,
+  "text": "the problem of mutual deadlock."
+ },
+ {
+  "id": 967,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 968,
+  "text": "But this situation"
+ },
+ {
+  "id": 969,
+  "text": "is actually somewhat"
+ },
+ {
+  "id": 970,
+  "text": "well, it's a rather extreme case,"
+ },
+ {
+  "id": 971,
+  "text": "because this is a bit excessive."
+ },
+ {
+  "id": 972,
+  "text": "It's basically like grabbing all the resources in your hands at once,"
+ },
+ {
+  "id": 973,
+  "text": "but you might not immediately"
+ },
+ {
+  "id": 974,
+  "text": "be able to use them all up right away."
+ },
+ {
+  "id": 975,
+  "text": "So this approach isn't really appropriate either."
+ },
+ {
+  "id": 976,
+  "text": "So what's a better way?"
+ },
+ {
+  "id": 977,
+  "text": "Perhaps it's to say"
+ },
+ {
+  "id": 978,
+  "text": "what we should do is"
+ },
+ {
+  "id": 979,
+  "text": "when we're programming,"
+ },
+ {
+  "id": 980,
+  "text": "What you can do is this:"
+ },
+ {
+  "id": 981,
+  "text": "whichever locks you use,"
+ },
+ {
+  "id": 982,
+  "text": "you only request those locks,"
+ },
+ {
+  "id": 983,
+  "text": "and then, instead of"
+ },
+ {
+  "id": 984,
+  "text": "requesting the next lock,"
+ },
+ {
+  "id": 985,
+  "text": "or rather, when you request a lock,"
+ },
+ {
+  "id": 986,
+  "text": "that is essentially requesting a shared resource."
+ },
+ {
+  "id": 987,
+  "text": "So when you request the next shared resource,"
+ },
+ {
+  "id": 988,
+  "text": "you should release whatever you requested before as much as possible."
+ },
+ {
+  "id": 989,
+  "text": "In other words, don't hold on to one thing while grabbing another."
+ },
+ {
+  "id": 990,
+  "text": "Doing that can also avoid this kind of"
+ },
+ {
+  "id": 991,
+  "text": "effectively avoid this deadlock problem."
+ },
+ {
+  "id": 992,
+  "text": "That's the second approach to solving deadlock."
+ },
+ {
+  "id": 993,
+  "text": "Now the third one is, of course, more extreme:"
+ },
+ {
+  "id": 994,
+  "text": "use locks as little as possible."
+ },
+ {
+  "id": 995,
+  "text": "That is, when you're programming,"
+ },
+ {
+  "id": 996,
+  "text": "don't get carried away thinking concurrency is just so convenient,"
+ },
+ {
+  "id": 997,
+  "text": "just because concurrency can indeed improve efficiency."
+ },
+ {
+  "id": 998,
+  "text": "So in practice,"
+ },
+ {
+  "id": 999,
+  "text": "when programming,"
+ },
+ {
+  "id": 1000,
+  "text": "Actually, we should start from"
+ },
+ {
+  "id": 1001,
+  "text": "the simplest angle as much as possible"
+ },
+ {
+  "id": 1002,
+  "text": "use less of this concurrency"
+ },
+ {
+  "id": 1003,
+  "text": "use fewer multithreads"
+ },
+ {
+  "id": 1004,
+  "text": "then naturally we'll use fewer locks"
+ },
+ {
+  "id": 1005,
+  "text": "and there will be less concurrency"
+ },
+ {
+  "id": 1006,
+  "text": "and naturally it won't lead to"
+ },
+ {
+  "id": 1007,
+  "text": "those annoying deadlock problems"
+ },
+ {
+  "id": 1008,
+  "text": "because once deadlock problems occur"
+ },
+ {
+  "id": 1009,
+  "text": "debugging becomes very troublesome"
+ },
+ {
+  "id": 1010,
+  "text": "So"
+ },
+ {
+  "id": 1011,
+  "text": "if it can be simple"
+ },
+ {
+  "id": 1012,
+  "text": "keep it as simple as possible"
+ },
+ {
+  "id": 1013,
+  "text": "This is also one of our main"
+ },
+ {
+  "id": 1014,
+  "text": "programming principles"
+ },
+ {
+  "id": 1015,
+  "text": "that is, right from the start"
+ },
+ {
+  "id": 1016,
+  "text": "don't make the code too fancy"
+ },
+ {
+  "id": 1017,
+  "text": "In other words, the simpler you can make it"
+ },
+ {
+  "id": 1018,
+  "text": "just use the simplest approach"
+ },
+ {
+  "id": 1019,
+  "text": "to solve the most complex problems"
+ },
+ {
+  "id": 1020,
+  "text": "is the best kind of strategy"
+ },
+ {
+  "id": 1021,
+  "text": "So these are some"
+ },
+ {
+  "id": 1022,
+  "text": "concepts related to deadlock."
+ },
+ {
+  "id": 1023,
+  "text": "So next,"
+ },
+ {
+  "id": 1024,
+  "text": "let's actually"
+ },
+ {
+  "id": 1025,
+  "text": "take a look at"
+ },
+ {
+  "id": 1026,
+  "text": "one kind of"
+ },
+ {
+  "id": 1027,
+  "text": "since ultimately we need to"
+ },
+ {
+  "id": 1028,
+  "text": "implement in code"
+ },
+ {
+  "id": 1029,
+  "text": "these concepts of synchronization and concurrency."
+ },
+ {
+  "id": 1030,
+  "text": "So let's take a look at"
+ },
+ {
+  "id": 1031,
+  "text": "the specific implementation we adopt,"
+ },
+ {
+  "id": 1032,
+  "text": "which is the concept of"
+ },
+ {
+  "id": 1033,
+  "text": "the spin lock."
+ },
+ {
+  "id": 1034,
+  "text": "In our course for now,"
+ },
+ {
+  "id": 1035,
+  "text": "we'll use the spin lock as a representative to introduce this to you."
+ },
+ {
+  "id": 1036,
+  "text": "As we discussed earlier,"
+ },
+ {
+  "id": 1037,
+  "text": "locks fall into"
+ },
+ {
+  "id": 1038,
+  "text": "two typical types of locks:"
+ },
+ {
+  "id": 1039,
+  "text": "one is the non-sleepable kind,"
+ },
+ {
+  "id": 1040,
+  "text": "One type is sleepable,"
+ },
+ {
+  "id": 1041,
+  "text": "and then there's what's called non-sleepable."
+ },
+ {
+  "id": 1042,
+  "text": "As I explained just now,"
+ },
+ {
+  "id": 1043,
+  "text": "that is, when it holds this lock,"
+ },
+ {
+  "id": 1044,
+  "text": "the task does not drop out of scheduling."
+ },
+ {
+  "id": 1045,
+  "text": "It still takes part in scheduling."
+ },
+ {
+  "id": 1046,
+  "text": "As for the so-called sleepable lock,"
+ },
+ {
+  "id": 1047,
+  "text": "that means when we hold this lock,"
+ },
+ {
+  "id": 1048,
+  "text": "we will take the task out of scheduling."
+ },
+ {
+  "id": 1049,
+  "text": "It won't take part in scheduling."
+ },
+ {
+  "id": 1050,
+  "text": "Now the spinlock we're talking about here,"
+ },
+ {
+  "id": 1051,
+  "text": "it actually falls under the typical non-sleepable locks."
+ },
+ {
+  "id": 1052,
+  "text": "That means that"
+ },
+ {
+  "id": 1053,
+  "text": "when we go and acquire this lock,"
+ },
+ {
+  "id": 1054,
+  "text": "our task still takes part in scheduling."
+ },
+ {
+  "id": 1055,
+  "text": "It still takes part in scheduling."
+ },
+ {
+  "id": 1056,
+  "text": "So as for the spinlock,"
+ },
+ {
+  "id": 1057,
+  "text": "its English name,"
+ },
+ {
+  "id": 1058,
+  "text": "is spinlock,"
+ },
+ {
+  "id": 1059,
+  "text": "which literally means spinning."
+ },
+ {
+  "id": 1060,
+  "text": "spin means to spin, like a spiral"
+ },
+ {
+  "id": 1061,
+  "text": "That's the concept of spinning"
+ },
+ {
+  "id": 1062,
+  "text": "So why is it called spinning?"
+ },
+ {
+  "id": 1063,
+  "text": "Let's take a look at its actual implementation"
+ },
+ {
+  "id": 1064,
+  "text": "It's still very typical"
+ },
+ {
+  "id": 1065,
+  "text": "So here is a classic example of implementing a spin lock"
+ },
+ {
+  "id": 1066,
+  "text": "A typical example"
+ },
+ {
+  "id": 1067,
+  "text": "As you can see"
+ },
+ {
+  "id": 1068,
+  "text": "First, we can define a struct for a spin lock"
+ },
+ {
+  "id": 1069,
+  "text": "Inside this struct"
+ },
+ {
+  "id": 1070,
+  "text": "we define something that essentially represents a spin lock"
+ },
+ {
+  "id": 1071,
+  "text": "And this lock has only one member"
+ },
+ {
+  "id": 1072,
+  "text": "which is a"
+ },
+ {
+  "id": 1073,
+  "text": "you can think of it simply as a flag"
+ },
+ {
+  "id": 1074,
+  "text": "If this flag, this value, is 0,"
+ },
+ {
+  "id": 1075,
+  "text": "it means this lock"
+ },
+ {
+  "id": 1076,
+  "text": "is in the open state"
+ },
+ {
+  "id": 1077,
+  "text": "it is not locked"
+ },
+ {
+  "id": 1078,
+  "text": "When the value becomes 1,"
+ },
+ {
+  "id": 1079,
+  "text": "the lock is essentially locked"
+ },
+ {
+  "id": 1080,
+  "text": "This is the definition of one of its structs"
+ },
+ {
+  "id": 1081,
+  "text": "Now, the second one"
+ },
+ {
+  "id": 1082,
+  "text": "What follows below are actually some functions for operating on this lock"
+ },
+ {
+  "id": 1083,
+  "text": "Since we've studied data structures"
+ },
+ {
+  "id": 1084,
+  "text": "you should find these patterns quite familiar"
+ },
+ {
+  "id": 1085,
+  "text": "That is, you first define a struct"
+ },
+ {
+  "id": 1086,
+  "text": "and then, around that struct, you design"
+ },
+ {
+  "id": 1087,
+  "text": "some related operations"
+ },
+ {
+  "id": 1088,
+  "text": "There's even a little bit of"
+ },
+ {
+  "id": 1089,
+  "text": "object-oriented thinking here, isn't there?"
+ },
+ {
+  "id": 1090,
+  "text": "So, this one"
+ },
+ {
+  "id": 1091,
+  "text": "has three basic operations"
+ },
+ {
+  "id": 1092,
+  "text": "which are basically its API"
+ },
+ {
+  "id": 1093,
+  "text": "One of them is initialization"
+ },
+ {
+  "id": 1094,
+  "text": "Now, for initialization,"
+ },
+ {
+  "id": 1095,
+  "text": "we say that this lock,"
+ },
+ {
+  "id": 1096,
+  "text": "when we initialize it, we always put it"
+ },
+ {
+  "id": 1097,
+  "text": "in an unlocked state"
+ },
+ {
+  "id": 1098,
+  "text": "And then,"
+ },
+ {
+  "id": 1099,
+  "text": "as for the spin lock,"
+ },
+ {
+  "id": 1100,
+  "text": "It actually corresponds to"
+ },
+ {
+  "id": 1101,
+  "text": "what we talked about earlier"
+ },
+ {
+  "id": 1102,
+  "text": "the concept of acquiring"
+ },
+ {
+  "id": 1103,
+  "text": "that is, trying to get hold of this lock"
+ },
+ {
+  "id": 1104,
+  "text": "trying to lock it"
+ },
+ {
+  "id": 1105,
+  "text": "and unlock,"
+ },
+ {
+  "id": 1106,
+  "text": "that's releasing this lock"
+ },
+ {
+  "id": 1107,
+  "text": "trying to open this lock"
+ },
+ {
+  "id": 1108,
+  "text": "and giving back the right to use it"
+ },
+ {
+  "id": 1109,
+  "text": "Now,"
+ },
+ {
+  "id": 1110,
+  "text": "the key point is"
+ },
+ {
+  "id": 1111,
+  "text": "this so-called spinning concept"
+ },
+ {
+  "id": 1112,
+  "text": "actually comes from the locking operation"
+ },
+ {
+  "id": 1113,
+  "text": "in that locking operation,"
+ },
+ {
+  "id": 1114,
+  "text": "what kind of concept do you see there?"
+ },
+ {
+  "id": 1115,
+  "text": "it has a loop inside"
+ },
+ {
+  "id": 1116,
+  "text": "and this loop,"
+ },
+ {
+  "id": 1117,
+  "text": "you can see it's an infinite loop"
+ },
+ {
+  "id": 1118,
+  "text": "So,"
+ },
+ {
+  "id": 1119,
+  "text": "inside this infinite loop,"
+ },
+ {
+  "id": 1120,
+  "text": "What does it do?"
+ },
+ {
+  "id": 1121,
+  "text": "Well, once it comes in,"
+ },
+ {
+  "id": 1122,
+  "text": "it first checks"
+ },
+ {
+  "id": 1123,
+  "text": "whether this lock is already locked."
+ },
+ {
+  "id": 1124,
+  "text": "So if it equals 0,"
+ },
+ {
+  "id": 1125,
+  "text": "that means the lock is not yet taken."
+ },
+ {
+  "id": 1126,
+  "text": "If it is not locked,"
+ },
+ {
+  "id": 1127,
+  "text": "then we grab this lock."
+ },
+ {
+  "id": 1128,
+  "text": "Once we have grabbed it,"
+ },
+ {
+  "id": 1129,
+  "text": "we lock it up,"
+ },
+ {
+  "id": 1130,
+  "text": "simply setting it to 1."
+ },
+ {
+  "id": 1131,
+  "text": "Now that it is locked,"
+ },
+ {
+  "id": 1132,
+  "text": "we break out of this loop."
+ },
+ {
+  "id": 1133,
+  "text": "Now, if you put this together with the logic from earlier,"
+ },
+ {
+  "id": 1134,
+  "text": "you can see that right after acquired,"
+ },
+ {
+  "id": 1135,
+  "text": "after this process,"
+ },
+ {
+  "id": 1136,
+  "text": "after this step,"
+ },
+ {
+  "id": 1137,
+  "text": "comes our critical section,"
+ },
+ {
+  "id": 1138,
+  "text": "the operation we want to perform."
+ },
+ {
+  "id": 1139,
+  "text": "So what this means is,"
+ },
+ {
+  "id": 1140,
+  "text": "Once we get this lock"
+ },
+ {
+  "id": 1141,
+  "text": "and lock it,"
+ },
+ {
+  "id": 1142,
+  "text": "we actually jump out of this loop,"
+ },
+ {
+  "id": 1143,
+  "text": "and then we can"
+ },
+ {
+  "id": 1144,
+  "text": "execute the instructions in the critical section below."
+ },
+ {
+  "id": 1145,
+  "text": "Conversely,"
+ },
+ {
+  "id": 1146,
+  "text": "if this lock,"
+ },
+ {
+  "id": 1147,
+  "text": "that is, when we go to acquire it,"
+ },
+ {
+  "id": 1148,
+  "text": "we find that this lock is already"
+ },
+ {
+  "id": 1149,
+  "text": "locked,"
+ },
+ {
+  "id": 1150,
+  "text": "then as you can imagine,"
+ },
+ {
+  "id": 1151,
+  "text": "this logic will come back"
+ },
+ {
+  "id": 1152,
+  "text": "and keep trying to check,"
+ },
+ {
+  "id": 1153,
+  "text": "keep trying to acquire this lock."
+ },
+ {
+  "id": 1154,
+  "text": "So,"
+ },
+ {
+  "id": 1155,
+  "text": "so"
+ },
+ {
+  "id": 1156,
+  "text": "the task that hasn't gotten this lock,"
+ },
+ {
+  "id": 1157,
+  "text": "that task,"
+ },
+ {
+  "id": 1158,
+  "text": "as you can imagine at this point,"
+ },
+ {
+  "id": 1159,
+  "text": "it will keep entering a state of"
+ },
+ {
+  "id": 1160,
+  "text": "In a loop, it keeps"
+ },
+ {
+  "id": 1161,
+  "text": "trying to acquire this lock,"
+ },
+ {
+  "id": 1162,
+  "text": "and this continuous trying process"
+ },
+ {
+  "id": 1163,
+  "text": "naturally blocks the task"
+ },
+ {
+  "id": 1164,
+  "text": "in front of the critical section."
+ },
+ {
+  "id": 1165,
+  "text": "This is exactly the effect we just described,"
+ },
+ {
+  "id": 1166,
+  "text": "where the task simply cannot proceed any further."
+ },
+ {
+  "id": 1167,
+  "text": "Now, this spinning process,"
+ },
+ {
+  "id": 1168,
+  "text": "we call it spinning,"
+ },
+ {
+  "id": 1169,
+  "text": "because it is spinning by itself,"
+ },
+ {
+  "id": 1170,
+  "text": "rather than being spun by someone else,"
+ },
+ {
+  "id": 1171,
+  "text": "right?"
+ },
+ {
+  "id": 1172,
+  "text": "That is the concept of a spinlock."
+ },
+ {
+  "id": 1173,
+  "text": "Now, over here,"
+ },
+ {
+  "id": 1174,
+  "text": "building on the example we just talked about,"
+ },
+ {
+  "id": 1175,
+  "text": "let's look at a"
+ },
+ {
+  "id": 1176,
+  "text": "case where, once we have these interfaces,"
+ },
+ {
+  "id": 1177,
+  "text": "how we would roughly use them in our programming."
+ },
+ {
+  "id": 1178,
+  "text": "So first of all,"
+ },
+ {
+  "id": 1179,
+  "text": "we need to define a lock variable object."
+ },
+ {
+  "id": 1180,
+  "text": "Then,"
+ },
+ {
+  "id": 1181,
+  "text": "we initialize it."
+ },
+ {
+  "id": 1182,
+  "text": "There's nothing much to say about that."
+ },
+ {
+  "id": 1183,
+  "text": "At the same time,"
+ },
+ {
+  "id": 1184,
+  "text": "please note something,"
+ },
+ {
+  "id": 1185,
+  "text": "that is, for the two control flows,"
+ },
+ {
+  "id": 1186,
+  "text": "since both control flows need to see this lock,"
+ },
+ {
+  "id": 1187,
+  "text": "this lock,"
+ },
+ {
+  "id": 1188,
+  "text": "the memory where this variable resides,"
+ },
+ {
+  "id": 1189,
+  "text": "should also be shared between the two control flows."
+ },
+ {
+  "id": 1190,
+  "text": "Now, once we have this lock,"
+ },
+ {
+  "id": 1191,
+  "text": "each control flow, before and after its critical section,"
+ },
+ {
+  "id": 1192,
+  "text": "adds a lock and unlock respectively."
+ },
+ {
+  "id": 1193,
+  "text": "So as you can imagine, based on the pseudo-code,"
+ },
+ {
+  "id": 1194,
+  "text": "as we just explained to you,"
+ },
+ {
+  "id": 1195,
+  "text": "if the task on the left acquires this lock first,"
+ },
+ {
+  "id": 1196,
+  "text": "then when the one on the right comes in,"
+ },
+ {
+  "id": 1197,
+  "text": "even though it is still scheduled,"
+ },
+ {
+  "id": 1198,
+  "text": "since we said this is a non-sleepable lock,"
+ },
+ {
+  "id": 1199,
+  "text": "the task on the right will still"
+ },
+ {
+  "id": 1200,
+  "text": "These two tasks will actually keep getting scheduled"
+ },
+ {
+  "id": 1201,
+  "text": "So if the one on the right gets the lock first,"
+ },
+ {
+  "id": 1202,
+  "text": "or if the one on the left gets the lock first,"
+ },
+ {
+  "id": 1203,
+  "text": "then when the right one tries,"
+ },
+ {
+  "id": 1204,
+  "text": "based on what we just explained,"
+ },
+ {
+  "id": 1205,
+  "text": "it will actually end up spinning."
+ },
+ {
+  "id": 1206,
+  "text": "And while it's spinning,"
+ },
+ {
+  "id": 1207,
+  "text": "the logic below just can't proceed."
+ },
+ {
+  "id": 1208,
+  "text": "That means even if it gets scheduled,"
+ },
+ {
+  "id": 1209,
+  "text": "takes part in scheduling and execution,"
+ },
+ {
+  "id": 1210,
+  "text": "it still can't move forward."
+ },
+ {
+  "id": 1211,
+  "text": "So what we achieve is"
+ },
+ {
+  "id": 1212,
+  "text": "letting the task on the left safely"
+ },
+ {
+  "id": 1213,
+  "text": "exit the critical section,"
+ },
+ {
+  "id": 1214,
+  "text": "finish executing the critical section."
+ },
+ {
+  "id": 1215,
+  "text": "So this is really a kind of"
+ },
+ {
+  "id": 1216,
+  "text": "so-called synchronous waiting result."
+ },
+ {
+  "id": 1217,
+  "text": "But this one,"
+ },
+ {
+  "id": 1218,
+  "text": "we're just using this example"
+ },
+ {
+  "id": 1219,
+  "text": "to introduce to you what's called spinning."
+ },
+ {
+  "id": 1220,
+  "text": "But actually, this piece of code,"
+ },
+ {
+  "id": 1221,
+  "text": "this spinning code,"
+ },
+ {
+  "id": 1222,
+  "text": "actually has some issues."
+ },
+ {
+  "id": 1223,
+  "text": "That is to say, we need to"
+ },
+ {
+  "id": 1224,
+  "text": "introduce to you next,"
+ },
+ {
+  "id": 1225,
+  "text": "that is, if we simply adopt this approach"
+ },
+ {
+  "id": 1226,
+  "text": "to implement spinning,"
+ },
+ {
+  "id": 1227,
+  "text": "there will actually be problems."
+ },
+ {
+  "id": 1228,
+  "text": "So why are there problems?"
+ },
+ {
+  "id": 1229,
+  "text": "As for this problem,"
+ },
+ {
+  "id": 1230,
+  "text": "if we look at it from the C source code,"
+ },
+ {
+  "id": 1231,
+  "text": "we actually can't see it very clearly."
+ },
+ {
+  "id": 1232,
+  "text": "But if we disassemble this piece of code,"
+ },
+ {
+  "id": 1233,
+  "text": "and actually look at its assembly code,"
+ },
+ {
+  "id": 1234,
+  "text": "we will gain a deeper understanding"
+ },
+ {
+  "id": 1235,
+  "text": "of why simply checking and locking like this"
+ },
+ {
+  "id": 1236,
+  "text": "can actually cause some problems."
+ },
+ {
+  "id": 1237,
+  "text": "So let's take a look at the code generated after disassembly."
+ },
+ {
+  "id": 1238,
+  "text": "Now, the code generated after disassembly"
+ },
+ {
+  "id": 1239,
+  "text": "actually looks like this."
+ },
+ {
+  "id": 1240,
+  "text": "This code and the code on the left"
+ },
+ {
+  "id": 1241,
+  "text": "can actually be mapped to each other to some extent."
+ },
+ {
+  "id": 1242,
+  "text": "First, there's an LW operation here,"
+ },
+ {
+  "id": 1243,
+  "text": "and as we mentioned earlier,"
+ },
+ {
+  "id": 1244,
+  "text": "LW essentially takes data from where?"
+ },
+ {
+  "id": 1245,
+  "text": "It loads data from memory into a register."
+ },
+ {
+  "id": 1246,
+  "text": "So what it actually does is take some data from memory"
+ },
+ {
+  "id": 1247,
+  "text": "and load it into the a5 register."
+ },
+ {
+  "id": 1248,
+  "text": "Now, what exactly is being loaded?"
+ },
+ {
+  "id": 1249,
+  "text": "It's loading this lock,"
+ },
+ {
+  "id": 1250,
+  "text": "because as we know, the lock"
+ },
+ {
+  "id": 1251,
+  "text": "variable we defined"
+ },
+ {
+  "id": 1252,
+  "text": "is actually in memory."
+ },
+ {
+  "id": 1253,
+  "text": "It takes the value stored in it"
+ },
+ {
+  "id": 1254,
+  "text": "and loads it into a5."
+ },
+ {
+  "id": 1255,
+  "text": "So what's in a5"
+ },
+ {
+  "id": 1256,
+  "text": "is essentially our"
+ },
+ {
+  "id": 1257,
+  "text": "LK"
+ },
+ {
+  "id": 1258,
+  "text": "variable's lock"
+ },
+ {
+  "id": 1259,
+  "text": "member, its value."
+ },
+ {
+  "id": 1260,
+  "text": "So next,"
+ },
+ {
+  "id": 1261,
+  "text": "it's actually doing a check,"
+ },
+ {
+  "id": 1262,
+  "text": "that is, it checks"
+ },
+ {
+  "id": 1263,
+  "text": "whether the value in a5"
+ },
+ {
+  "id": 1264,
+  "text": "is equal to 0."
+ },
+ {
+  "id": 1265,
+  "text": "So the logic it checks here"
+ },
+ {
+  "id": 1266,
+  "text": "is actually the same."
+ },
+ {
+  "id": 1267,
+  "text": "If it's not equal,"
+ },
+ {
+  "id": 1268,
+  "text": "that is, if it's not equal to 0,"
+ },
+ {
+  "id": 1269,
+  "text": "then it actually"
+ },
+ {
+  "id": 1270,
+  "text": "goes back and loops."
+ },
+ {
+  "id": 1271,
+  "text": "Let me take a look."
+ },
+ {
+  "id": 1272,
+  "text": "Right."
+ },
+ {
+  "id": 1273,
+  "text": "If it's"
+ },
+ {
+  "id": 1274,
+  "text": "not equal,"
+ },
+ {
+  "id": 1275,
+  "text": "meaning it's not equal to 0,"
+ },
+ {
+  "id": 1276,
+  "text": "then it"
+ },
+ {
+  "id": 1277,
+  "text": "goes back and loops."
+ },
+ {
+  "id": 1278,
+  "text": "If it equals 0,"
+ },
+ {
+  "id": 1279,
+  "text": "then"
+ },
+ {
+  "id": 1280,
+  "text": "it takes that"
+ },
+ {
+  "id": 1281,
+  "text": "A4 is actually"
+ },
+ {
+  "id": 1282,
+  "text": "1"
+ },
+ {
+  "id": 1283,
+  "text": "and then it takes that 1"
+ },
+ {
+  "id": 1284,
+  "text": "and writes it back into here"
+ },
+ {
+  "id": 1285,
+  "text": "so it achieves this effect"
+ },
+ {
+  "id": 1286,
+  "text": "the effect of negating and then adding 1"
+ },
+ {
+  "id": 1287,
+  "text": "So..."
+ },
+ {
+  "id": 1288,
+  "text": "this is just to give it"
+ },
+ {
+  "id": 1289,
+  "text": "a brief explanation"
+ },
+ {
+  "id": 1290,
+  "text": "of how this assembly maps to the code"
+ },
+ {
+  "id": 1291,
+  "text": "on the left"
+ },
+ {
+  "id": 1292,
+  "text": "But in this case,"
+ },
+ {
+  "id": 1293,
+  "text": "as we said,"
+ },
+ {
+  "id": 1294,
+  "text": "if both control flows"
+ },
+ {
+  "id": 1295,
+  "text": "might go and execute"
+ },
+ {
+  "id": 1296,
+  "text": "this logic,"
+ },
+ {
+  "id": 1297,
+  "text": "then in fact,"
+ },
+ {
+  "id": 1298,
+  "text": "it introduces a"
+ },
+ {
+  "id": 1299,
+  "text": "problem. What kind of problem?"
+ },
+ {
+  "id": 1300,
+  "text": "That is,"
+ },
+ {
+  "id": 1301,
+  "text": "it actually can't block"
+ },
+ {
+  "id": 1302,
+  "text": "to achieve this synchronization effect."
+ },
+ {
+  "id": 1303,
+  "text": "Let's assume,"
+ },
+ {
+  "id": 1304,
+  "text": "suppose we can give an example now."
+ },
+ {
+  "id": 1305,
+  "text": "This one,"
+ },
+ {
+  "id": 1306,
+  "text": "the reason is,"
+ },
+ {
+  "id": 1307,
+  "text": "you all must deeply understand,"
+ },
+ {
+  "id": 1308,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1309,
+  "text": "when we do task scheduling,"
+ },
+ {
+  "id": 1310,
+  "text": "our so-called interrupt occurrence, interruption, and preemption,"
+ },
+ {
+  "id": 1311,
+  "text": "in fact, what it preempts is at the"
+ },
+ {
+  "id": 1312,
+  "text": "assembly, that is, machine instruction level,"
+ },
+ {
+  "id": 1313,
+  "text": "and you can't simply think of it as at the C language level,"
+ },
+ {
+  "id": 1314,
+  "text": "this kind of high-level language level."
+ },
+ {
+  "id": 1315,
+  "text": "So each machine instruction up there,"
+ },
+ {
+  "id": 1316,
+  "text": "any one of them can be interrupted."
+ },
+ {
+  "id": 1317,
+  "text": "Now, think about it,"
+ },
+ {
+  "id": 1318,
+  "text": "suppose the control flow on the left,"
+ },
+ {
+  "id": 1319,
+  "text": "suppose it gets the CPU first."
+ },
+ {
+  "id": 1320,
+  "text": "First, it starts executing"
+ },
+ {
+  "id": 1321,
+  "text": "When execution reaches this logic,"
+ },
+ {
+  "id": 1322,
+  "text": "it also sees that the value of this lock is equal to 0."
+ },
+ {
+  "id": 1323,
+  "text": "That is, suppose the lock is open at the beginning,"
+ },
+ {
+  "id": 1324,
+  "text": "then if it is equal to 0,"
+ },
+ {
+  "id": 1325,
+  "text": "it will still interpret that this lock is not being held or contended."
+ },
+ {
+  "id": 1326,
+  "text": "But suppose that at this moment,"
+ },
+ {
+  "id": 1327,
+  "text": "the control flow on the left gets preempted,"
+ },
+ {
+  "id": 1328,
+  "text": "and after it is preempted,"
+ },
+ {
+  "id": 1329,
+  "text": "the control flow on the right starts executing."
+ },
+ {
+  "id": 1330,
+  "text": "Now the control flow on the right,"
+ },
+ {
+  "id": 1331,
+  "text": "because when the control flow on the left was preempted,"
+ },
+ {
+  "id": 1332,
+  "text": "it hadn't had a chance to execute the logic below yet,"
+ },
+ {
+  "id": 1333,
+  "text": "that is to say, the control flow on the left"
+ },
+ {
+  "id": 1334,
+  "text": "hadn't gotten to acquire the lock yet,"
+ },
+ {
+  "id": 1335,
+  "text": "then the control flow on the right might get the CPU again,"
+ },
+ {
+  "id": 1336,
+  "text": "and at that point it also sees that the lock is not locked,"
+ },
+ {
+  "id": 1337,
+  "text": "so it's possible that both control flows"
+ },
+ {
+  "id": 1338,
+  "text": "actually determine that the lock hasn't been acquired yet,"
+ },
+ {
+  "id": 1339,
+  "text": "which leads to both of these control flows"
+ },
+ {
+  "id": 1340,
+  "text": "and it might skip this locking process,"
+ },
+ {
+  "id": 1341,
+  "text": "skip this,"
+ },
+ {
+  "id": 1342,
+  "text": "this spinning process,"
+ },
+ {
+  "id": 1343,
+  "text": "and go straight in to"
+ },
+ {
+  "id": 1344,
+  "text": "after repeatedly locking this lock,"
+ },
+ {
+  "id": 1345,
+  "text": "after locking it again and again,"
+ },
+ {
+  "id": 1346,
+  "text": "it ends up going into the"
+ },
+ {
+  "id": 1347,
+  "text": "logic of the critical section down below."
+ },
+ {
+  "id": 1348,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1349,
+  "text": "So in that case,"
+ },
+ {
+  "id": 1350,
+  "text": "this..."
+ },
+ {
+  "id": 1351,
+  "text": "So the actual problem with it,"
+ },
+ {
+  "id": 1352,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1353,
+  "text": "it's essentially like saying,"
+ },
+ {
+  "id": 1354,
+  "text": "what kind of problem exists here?"
+ },
+ {
+  "id": 1355,
+  "text": "The point is, if we do it this way,"
+ },
+ {
+  "id": 1356,
+  "text": "we actually cannot achieve"
+ },
+ {
+  "id": 1357,
+  "text": "the effect of synchronizing"
+ },
+ {
+  "id": 1358,
+  "text": "the control flow."
+ },
+ {
+  "id": 1359,
+  "text": "And the root cause,"
+ },
+ {
+  "id": 1360,
+  "text": "Actually, it's still because"
+ },
+ {
+  "id": 1361,
+  "text": "when we say"
+ },
+ {
+  "id": 1362,
+  "text": "it uses this kind of simple"
+ },
+ {
+  "id": 1363,
+  "text": "atomic and logic"
+ },
+ {
+  "id": 1364,
+  "text": "in the operation of reading the lock's state"
+ },
+ {
+  "id": 1365,
+  "text": "and actually acquiring the lock,"
+ },
+ {
+  "id": 1366,
+  "text": "it is not completed"
+ },
+ {
+  "id": 1367,
+  "text": "within a single instruction."
+ },
+ {
+  "id": 1368,
+  "text": "And for us to guarantee that this thing"
+ },
+ {
+  "id": 1369,
+  "text": "can execute correctly,"
+ },
+ {
+  "id": 1370,
+  "text": "we actually have to ensure that"
+ },
+ {
+  "id": 1371,
+  "text": "reading the lock's state and acquiring the lock"
+ },
+ {
+  "id": 1372,
+  "text": "are done atomically,"
+ },
+ {
+  "id": 1373,
+  "text": "only then can the locking actually be realized."
+ },
+ {
+  "id": 1374,
+  "text": "So if we just write it simply like this,"
+ },
+ {
+  "id": 1375,
+  "text": "we actually cannot achieve"
+ },
+ {
+  "id": 1376,
+  "text": "the intended effect of a spinlock."
+ },
+ {
+  "id": 1377,
+  "text": "On this point,"
+ },
+ {
+  "id": 1378,
+  "text": "based on what I just said,"
+ },
+ {
+  "id": 1379,
+  "text": "that is, the example,"
+ },
+ {
+  "id": 1380,
+  "text": "That is to say, if we break this action down at the machine instruction level,"
+ },
+ {
+  "id": 1381,
+  "text": "then at every single machine instruction,"
+ },
+ {
+  "id": 1382,
+  "text": "there is a chance of being interrupted"
+ },
+ {
+  "id": 1383,
+  "text": "at any one of those instructions."
+ },
+ {
+  "id": 1384,
+  "text": "And once that interruption happens,"
+ },
+ {
+  "id": 1385,
+  "text": "it's possible that, I mean,"
+ },
+ {
+  "id": 1386,
+  "text": "both sides of the control flow"
+ },
+ {
+  "id": 1387,
+  "text": "wrongly assume that this lock is in an unlocked state."
+ },
+ {
+  "id": 1388,
+  "text": "What example can we use to understand this?"
+ },
+ {
+  "id": 1389,
+  "text": "Well, you can imagine,"
+ },
+ {
+  "id": 1390,
+  "text": "that is to say, it's like,"
+ },
+ {
+  "id": 1391,
+  "text": "the first person"
+ },
+ {
+  "id": 1392,
+  "text": "sees that this lock"
+ },
+ {
+  "id": 1393,
+  "text": "is open,"
+ },
+ {
+  "id": 1394,
+  "text": "and logically they should"
+ },
+ {
+  "id": 1395,
+  "text": "immediately lock this lock"
+ },
+ {
+  "id": 1396,
+  "text": "right away,"
+ },
+ {
+  "id": 1397,
+  "text": "so as to prevent"
+ },
+ {
+  "id": 1398,
+  "text": "another person from coming in."
+ },
+ {
+  "id": 1399,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1400,
+  "text": "Now, imagine, very unfortunately,"
+ },
+ {
+  "id": 1401,
+  "text": "that right after he saw"
+ },
+ {
+  "id": 1402,
+  "text": "that this lock"
+ },
+ {
+  "id": 1403,
+  "text": "was in the unlocked state,"
+ },
+ {
+  "id": 1404,
+  "text": "he just"
+ },
+ {
+  "id": 1405,
+  "text": "say he suddenly lost consciousness,"
+ },
+ {
+  "id": 1406,
+  "text": "suppose the behavior of"
+ },
+ {
+  "id": 1407,
+  "text": "not knowing,"
+ },
+ {
+  "id": 1408,
+  "text": "not too strong,"
+ },
+ {
+  "id": 1409,
+  "text": "he just suddenly lost consciousness."
+ },
+ {
+  "id": 1410,
+  "text": "Then the second person"
+ },
+ {
+  "id": 1411,
+  "text": "also comes up and,"
+ },
+ {
+  "id": 1412,
+  "text": "seeing that this lock"
+ },
+ {
+  "id": 1413,
+  "text": "is also unlocked,"
+ },
+ {
+  "id": 1414,
+  "text": "so effectively both people"
+ },
+ {
+  "id": 1415,
+  "text": "believe that this lock"
+ },
+ {
+  "id": 1416,
+  "text": "is unlocked."
+ },
+ {
+  "id": 1417,
+  "text": "Then the second person"
+ },
+ {
+  "id": 1418,
+  "text": "he might first just"
+ },
+ {
+  "id": 1419,
+  "text": "grab this lock first."
+ },
+ {
+  "id": 1420,
+  "text": "So this"
+ },
+ {
+  "id": 1421,
+  "text": "the first person, he might"
+ },
+ {
+  "id": 1422,
+  "text": "when he wakes up,"
+ },
+ {
+  "id": 1423,
+  "text": "since he still remembers"
+ },
+ {
+  "id": 1424,
+  "text": "the state he last saw was"
+ },
+ {
+  "id": 1425,
+  "text": "unlocked,"
+ },
+ {
+  "id": 1426,
+  "text": "at this point,"
+ },
+ {
+  "id": 1427,
+  "text": "he just continues on,"
+ },
+ {
+  "id": 1428,
+  "text": "and if he goes to acquire the lock again,"
+ },
+ {
+  "id": 1429,
+  "text": "he then repeatedly"
+ },
+ {
+  "id": 1430,
+  "text": "puts the lock back on,"
+ },
+ {
+  "id": 1431,
+  "text": "so the two people, in effect,"
+ },
+ {
+  "id": 1432,
+  "text": "it's like saying,"
+ },
+ {
+  "id": 1433,
+  "text": "in reality, we haven't achieved"
+ },
+ {
+  "id": 1434,
+  "text": "this protective effect."
+ },
+ {
+  "id": 1435,
+  "text": "So, we"
+ },
+ {
+  "id": 1436,
+  "text": "how do we solve this problem?"
+ },
+ {
+  "id": 1437,
+  "text": "Well, this thing,"
+ },
+ {
+  "id": 1438,
+  "text": "using ordinary instructions,"
+ },
+ {
+  "id": 1439,
+  "text": "can't actually be done."
+ },
+ {
+  "id": 1440,
+  "text": "So when we"
+ },
+ {
+  "id": 1441,
+  "text": "actually implement it,"
+ },
+ {
+  "id": 1442,
+  "text": "we need to introduce some more complex atomic instructions,"
+ },
+ {
+  "id": 1443,
+  "text": "so that actions that normally"
+ },
+ {
+  "id": 1444,
+  "text": "would take multiple steps with ordinary instructions,"
+ },
+ {
+  "id": 1445,
+  "text": "we can complete atomically in a single step."
+ },
+ {
+  "id": 1446,
+  "text": "Now, for this kind of thing, we say that at the architecture level,"
+ },
+ {
+  "id": 1447,
+  "text": "it actually provides this kind of"
+ },
+ {
+  "id": 1448,
+  "text": "support — it has taken this problem into account."
+ },
+ {
+  "id": 1449,
+  "text": "So there are special instructions that help us implement it."
+ },
+ {
+  "id": 1450,
+  "text": "Now, at our upper level,"
+ },
+ {
+  "id": 1451,
+  "text": "since we program in C,"
+ },
+ {
+  "id": 1452,
+  "text": "we can actually call this function,"
+ },
+ {
+  "id": 1453,
+  "text": "namely the function SyncLockerTestAndSet."
+ },
+ {
+  "id": 1454,
+  "text": "Now, as for this function,"
+ },
+ {
+  "id": 1455,
+  "text": "it actually lives in"
+ },
+ {
+  "id": 1456,
+  "text": "it is really a C function wrapped by GCC."
+ },
+ {
+  "id": 1457,
+  "text": "Now, if we actually take this piece of code"
+ },
+ {
+  "id": 1458,
+  "text": "and disassemble it,"
+ },
+ {
+  "id": 1459,
+  "text": "you can see"
+ },
+ {
+  "id": 1460,
+  "text": "It actually has a special instruction inside."
+ },
+ {
+  "id": 1461,
+  "text": "And that's this instruction right here."
+ },
+ {
+  "id": 1462,
+  "text": "It's called the AMO Swap instruction."
+ },
+ {
+  "id": 1463,
+  "text": "Now, with this instruction,"
+ },
+ {
+  "id": 1464,
+  "text": "what effect does it actually achieve?"
+ },
+ {
+  "id": 1465,
+  "text": "Well, it's what we mentioned earlier."
+ },
+ {
+  "id": 1466,
+  "text": "It can fetch the state of this lock,"
+ },
+ {
+  "id": 1467,
+  "text": "and perform the locking action, so that both happen as"
+ },
+ {
+  "id": 1468,
+  "text": "one atomic step — completed within a single instruction."
+ },
+ {
+  "id": 1469,
+  "text": "So this kind of thing falls under atomic operation instructions,"
+ },
+ {
+  "id": 1470,
+  "text": "and in fact they are also provided in our RISC-V instruction set."
+ },
+ {
+  "id": 1471,
+  "text": "If you're interested, you can take a look."
+ },
+ {
+  "id": 1472,
+  "text": "Volume 1 of the spec, the one on unprivileged instructions,"
+ },
+ {
+  "id": 1473,
+  "text": "has a chapter on the"
+ },
+ {
+  "id": 1474,
+  "text": "A — the atomic extension instruction set."
+ },
+ {
+  "id": 1475,
+  "text": "It defines some"
+ },
+ {
+  "id": 1476,
+  "text": "atomic operation instructions that go beyond the basic integer instructions."
+ },
+ {
+  "id": 1477,
+  "text": "atomic operation instructions"
+ },
+ {
+  "id": 1478,
+  "text": "Now, the format of this instruction"
+ },
+ {
+  "id": 1479,
+  "text": "is roughly like this."
+ },
+ {
+  "id": 1480,
+  "text": "So, this effect"
+ },
+ {
+  "id": 1481,
+  "text": "How does it roughly achieve this effect?"
+ },
+ {
+  "id": 1482,
+  "text": "Let me briefly explain it to you."
+ },
+ {
+  "id": 1483,
+  "text": "That is to say, this way,"
+ },
+ {
+  "id": 1484,
+  "text": "we can achieve the effect we just saw."
+ },
+ {
+  "id": 1485,
+  "text": "So how does it do that?"
+ },
+ {
+  "id": 1486,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 1487,
+  "text": "Suppose this assembly code,"
+ },
+ {
+  "id": 1488,
+  "text": "let me briefly walk you through it."
+ },
+ {
+  "id": 1489,
+  "text": "As for this assembly code,"
+ },
+ {
+  "id": 1490,
+  "text": "what is the front part doing?"
+ },
+ {
+  "id": 1491,
+  "text": "Actually,"
+ },
+ {
+  "id": 1492,
+  "text": "it takes the effect of a4,"
+ },
+ {
+  "id": 1493,
+  "text": "which is essentially,"
+ },
+ {
+  "id": 1494,
+  "text": "the a4 register,"
+ },
+ {
+  "id": 1495,
+  "text": "it actually holds a,"
+ },
+ {
+  "id": 1496,
+  "text": "this corresponds to this thing,"
+ },
+ {
+  "id": 1497,
+  "text": "it's this thing."
+ },
+ {
+  "id": 1498,
+  "text": "In the a4 register,"
+ },
+ {
+  "id": 1499,
+  "text": "it essentially holds"
+ },
+ {
+  "id": 1500,
+  "text": "the address of the lock member variable of this lock"
+ },
+ {
+  "id": 1501,
+  "text": "a4"
+ },
+ {
+  "id": 1502,
+  "text": "you can think of a4 as holding an address"
+ },
+ {
+  "id": 1503,
+  "text": "this address"
+ },
+ {
+  "id": 1504,
+  "text": "points to the lock member of this variable"
+ },
+ {
+  "id": 1505,
+  "text": "and then"
+ },
+ {
+  "id": 1506,
+  "text": "the second one, a5,"
+ },
+ {
+  "id": 1507,
+  "text": "li a5"
+ },
+ {
+  "id": 1508,
+  "text": "comma 1"
+ },
+ {
+  "id": 1509,
+  "text": "as we discussed earlier"
+ },
+ {
+  "id": 1510,
+  "text": "li is essentially load immediate"
+ },
+ {
+  "id": 1511,
+  "text": "right?"
+ },
+ {
+  "id": 1512,
+  "text": "so the effect of the second instruction is"
+ },
+ {
+  "id": 1513,
+  "text": "putting the value 1 into the a5 register"
+ },
+ {
+  "id": 1514,
+  "text": "that is to say"
+ },
+ {
+  "id": 1515,
+  "text": "you can think of it this way:"
+ },
+ {
+  "id": 1516,
+  "text": "these two registers"
+ },
+ {
+  "id": 1517,
+  "text": "this one is a4"
+ },
+ {
+  "id": 1518,
+  "text": "this one is a5"
+ },
+ {
+  "id": 1519,
+  "text": "so as for a4,"
+ },
+ {
+  "id": 1520,
+  "text": "Actually it is a pointer"
+ },
+ {
+  "id": 1521,
+  "text": "We placed a pointer"
+ },
+ {
+  "id": 1522,
+  "text": "This pointer"
+ },
+ {
+  "id": 1523,
+  "text": "points to this lock's"
+ },
+ {
+  "id": 1524,
+  "text": "this lock variable,"
+ },
+ {
+  "id": 1525,
+  "text": "this block of memory."
+ },
+ {
+  "id": 1526,
+  "text": "Then in a5,"
+ },
+ {
+  "id": 1527,
+  "text": "we put an initial value of 1."
+ },
+ {
+  "id": 1528,
+  "text": "And then the next one,"
+ },
+ {
+  "id": 1529,
+  "text": "is our key instruction here."
+ },
+ {
+  "id": 1530,
+  "text": "It is called AMO."
+ },
+ {
+  "id": 1531,
+  "text": "AMO is actually the abbreviation for atomic memory operation,"
+ },
+ {
+  "id": 1532,
+  "text": "that is, atomic memory operation instructions."
+ },
+ {
+  "id": 1533,
+  "text": "Now here,"
+ },
+ {
+  "id": 1534,
+  "text": "it has swap appended to it,"
+ },
+ {
+  "id": 1535,
+  "text": "which means this instruction is actually doing a swap."
+ },
+ {
+  "id": 1536,
+  "text": "So what kind of swap is it doing?"
+ },
+ {
+  "id": 1537,
+  "text": "It is actually"
+ },
+ {
+  "id": 1538,
+  "text": "swapping the value in the memory pointed to by a5 and the value in a4,"
+ },
+ {
+  "id": 1539,
+  "text": "exchanging them."
+ },
+ {
+  "id": 1540,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 1541,
+  "text": "It means it takes this A..."
+ },
+ {
+  "id": 1542,
+  "text": "Actually, let me put it this way."
+ },
+ {
+  "id": 1543,
+  "text": "It works like this:"
+ },
+ {
+  "id": 1544,
+  "text": "It does a swap like this."
+ },
+ {
+  "id": 1545,
+  "text": "It takes the value in the memory pointed to by a4,"
+ },
+ {
+  "id": 1546,
+  "text": "and swaps it with the a5 register."
+ },
+ {
+  "id": 1547,
+  "text": "That is, it puts E into that location,"
+ },
+ {
+  "id": 1548,
+  "text": "replacing the original value,"
+ },
+ {
+  "id": 1549,
+  "text": "and then takes the value that was in there"
+ },
+ {
+  "id": 1550,
+  "text": "and puts it into a5."
+ },
+ {
+  "id": 1551,
+  "text": "That's the effect it achieves."
+ },
+ {
+  "id": 1552,
+  "text": "Now, the logic in the next part"
+ },
+ {
+  "id": 1553,
+  "text": "is really checking the value in a5."
+ },
+ {
+  "id": 1554,
+  "text": "It first copies a5 into a3,"
+ },
+ {
+  "id": 1555,
+  "text": "and then checks whether the value in a3 is equal to 0."
+ },
+ {
+  "id": 1556,
+  "text": "So what it's actually checking is"
+ },
+ {
+  "id": 1557,
+  "text": "whether the value in here is equal to 0."
+ },
+ {
+  "id": 1558,
+  "text": "If it is equal to 0,"
+ },
+ {
+  "id": 1559,
+  "text": "then what does that tell us?"
+ },
+ {
+  "id": 1560,
+  "text": "That is to say, the original value inside this lock was 0."
+ },
+ {
+  "id": 1561,
+  "text": "Which means it was not locked."
+ },
+ {
+  "id": 1562,
+  "text": "Not locked."
+ },
+ {
+  "id": 1563,
+  "text": "Then it will actually just continue executing."
+ },
+ {
+  "id": 1564,
+  "text": "If the original value in here was 1,"
+ },
+ {
+  "id": 1565,
+  "text": "then it is locked."
+ },
+ {
+  "id": 1566,
+  "text": "Then it will enter the loop."
+ },
+ {
+  "id": 1567,
+  "text": "That is, if it is not equal to 0,"
+ },
+ {
+  "id": 1568,
+  "text": "then it loops."
+ },
+ {
+  "id": 1569,
+  "text": "Right?"
+ },
+ {
+  "id": 1570,
+  "text": "If it is not equal to 0, it loops."
+ },
+ {
+  "id": 1571,
+  "text": "So if the original value inside was 1,"
+ },
+ {
+  "id": 1572,
+  "text": "it means someone else has already locked it."
+ },
+ {
+  "id": 1573,
+  "text": "Then I can only go and spin."
+ },
+ {
+  "id": 1574,
+  "text": "Now, note one thing."
+ },
+ {
+  "id": 1575,
+  "text": "It actually uses a little trick here."
+ },
+ {
+  "id": 1576,
+  "text": "That is, when it does the swap,"
+ },
+ {
+  "id": 1577,
+  "text": "it swaps a 1 into it."
+ },
+ {
+  "id": 1578,
+  "text": "So what effect does that achieve?"
+ },
+ {
+  "id": 1579,
+  "text": "That is to say, if this lock was already locked,"
+ },
+ {
+  "id": 1580,
+  "text": "If it was already 1,"
+ },
+ {
+  "id": 1581,
+  "text": "then it actually doesn't change the value inside."
+ },
+ {
+  "id": 1582,
+  "text": "Right?"
+ },
+ {
+  "id": 1583,
+  "text": "But if it was originally just 0 inside,"
+ },
+ {
+  "id": 1584,
+  "text": "meaning it wasn't locked,"
+ },
+ {
+  "id": 1585,
+  "text": "then as soon as it puts 1 into it,"
+ },
+ {
+  "id": 1586,
+  "text": "that's essentially the same as locking it."
+ },
+ {
+  "id": 1587,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1588,
+  "text": "So,"
+ },
+ {
+  "id": 1589,
+  "text": "you can imagine that for a"
+ },
+ {
+  "id": 1590,
+  "text": "if it starts out in an unlocked state,"
+ },
+ {
+  "id": 1591,
+  "text": "then it's essentially like saying"
+ },
+ {
+  "id": 1592,
+  "text": "within a single instruction,"
+ },
+ {
+  "id": 1593,
+  "text": "it completes the locking"
+ },
+ {
+  "id": 1594,
+  "text": "and fetches the value from inside"
+ },
+ {
+  "id": 1595,
+  "text": "to make a judgment later on,"
+ },
+ {
+  "id": 1596,
+  "text": "all in one action."
+ },
+ {
+  "id": 1597,
+  "text": "That's the atomic instruction,"
+ },
+ {
+  "id": 1598,
+  "text": "and this is where its real power lies."
+ },
+ {
+  "id": 1599,
+  "text": "In a single instruction,"
+ },
+ {
+  "id": 1600,
+  "text": "and that completes this operation"
+ },
+ {
+  "id": 1601,
+  "text": "then we won't get the kind of"
+ },
+ {
+  "id": 1602,
+  "text": "separated state we mentioned earlier"
+ },
+ {
+  "id": 1603,
+  "text": "So,"
+ },
+ {
+  "id": 1604,
+  "text": "all it takes is"
+ },
+ {
+  "id": 1605,
+  "text": "it's as if when I"
+ },
+ {
+  "id": 1606,
+  "text": "see this lock"
+ },
+ {
+  "id": 1607,
+  "text": "in this state,"
+ },
+ {
+  "id": 1608,
+  "text": "I just grab this lock and"
+ },
+ {
+  "id": 1609,
+  "text": "first, no matter what,"
+ },
+ {
+  "id": 1610,
+  "text": "I lock it up right away"
+ },
+ {
+  "id": 1611,
+  "text": "then no one else can"
+ },
+ {
+  "id": 1612,
+  "text": "race against me"
+ },
+ {
+  "id": 1613,
+  "text": "and that's the effect we achieve"
+ },
+ {
+  "id": 1614,
+  "text": "Now, this kind of"
+ },
+ {
+  "id": 1615,
+  "text": "is the effect of atomic operations"
+ },
+ {
+  "id": 1616,
+  "text": "So when we implement a spinlock,"
+ },
+ {
+  "id": 1617,
+  "text": "we actually need to make full use of"
+ },
+ {
+  "id": 1618,
+  "text": "these atomic operation instructions"
+ },
+ {
+  "id": 1619,
+  "text": "in order to achieve the effect we want"
+ },
+ {
+  "id": 1620,
+  "text": "Otherwise, it just can't be done."
+ },
+ {
+  "id": 1621,
+  "text": "Please pay attention to this."
+ },
+ {
+  "id": 1622,
+  "text": "All right."
+ },
+ {
+  "id": 1623,
+  "text": "So this,"
+ },
+ {
+  "id": 1624,
+  "text": "is what I want to walk you through."
+ },
+ {
+  "id": 1625,
+  "text": "This kind of spinlock implementation,"
+ },
+ {
+  "id": 1626,
+  "text": "actually, by the way, also introduces to you"
+ },
+ {
+  "id": 1627,
+  "text": "the atomic operation instructions in RISC-V."
+ },
+ {
+  "id": 1628,
+  "text": "For the related content, you can go look it up yourselves,"
+ },
+ {
+  "id": 1629,
+  "text": "in the relevant chapters of Reference 1."
+ },
+ {
+  "id": 1630,
+  "text": "Now, coming back to our actual example,"
+ },
+ {
+  "id": 1631,
+  "text": "in our real internal implementation,"
+ },
+ {
+  "id": 1632,
+  "text": "it's actually very simple,"
+ },
+ {
+  "id": 1633,
+  "text": "because we adopted a"
+ },
+ {
+  "id": 1634,
+  "text": "somewhat clever shortcut."
+ },
+ {
+  "id": 1635,
+  "text": "So what did we actually do?"
+ },
+ {
+  "id": 1636,
+  "text": "We actually"
+ },
+ {
+  "id": 1637,
+  "text": "well, think about it,"
+ },
+ {
+  "id": 1638,
+  "text": "why did we run into this so-called"
+ },
+ {
+  "id": 1639,
+  "text": "problem of concurrent preemption in the first place?"
+ },
+ {
+  "id": 1640,
+  "text": "and especially in this"
+ },
+ {
+  "id": 1641,
+  "text": "our current premise is this single-processor environment"
+ },
+ {
+  "id": 1642,
+  "text": "actually we can see the main problem"
+ },
+ {
+  "id": 1643,
+  "text": "really comes from what happens after an interrupt"
+ },
+ {
+  "id": 1644,
+  "text": "which causes preemption, right?"
+ },
+ {
+  "id": 1645,
+  "text": "So if we consider"
+ },
+ {
+  "id": 1646,
+  "text": "our precondition being just a single processor"
+ },
+ {
+  "id": 1647,
+  "text": "a single processor like this,"
+ },
+ {
+  "id": 1648,
+  "text": "then our locking acquire logic"
+ },
+ {
+  "id": 1649,
+  "text": "can actually be made very simple."
+ },
+ {
+  "id": 1650,
+  "text": "How do we do that?"
+ },
+ {
+  "id": 1651,
+  "text": "We just need to turn off interrupts."
+ },
+ {
+  "id": 1652,
+  "text": "This is what I'm demonstrating to you here,"
+ },
+ {
+  "id": 1653,
+  "text": "that is, one way we implemented it,"
+ },
+ {
+  "id": 1654,
+  "text": "the simplest approach,"
+ },
+ {
+  "id": 1655,
+  "text": "which is to turn interrupts off."
+ },
+ {
+  "id": 1656,
+  "text": "How do we do it?"
+ },
+ {
+  "id": 1657,
+  "text": "We just turn interrupts off."
+ },
+ {
+  "id": 1658,
+  "text": "And once interrupts are turned off,"
+ },
+ {
+  "id": 1659,
+  "text": "you can imagine what happens next."
+ },
+ {
+  "id": 1660,
+  "text": "In fact, a second task won't even be created."
+ },
+ {
+  "id": 1661,
+  "text": "It just won't be switched over to."
+ },
+ {
+  "id": 1662,
+  "text": "In other words, any task..."
+ },
+ {
+  "id": 1663,
+  "text": "if the task on the left grabs the lock first,"
+ },
+ {
+  "id": 1664,
+  "text": "then inside this critical section,"
+ },
+ {
+  "id": 1665,
+  "text": "it disables interrupts."
+ },
+ {
+  "id": 1666,
+  "text": "Once interrupts are disabled,"
+ },
+ {
+  "id": 1667,
+  "text": "other tasks"
+ },
+ {
+  "id": 1668,
+  "text": "have no chance to participate at all,"
+ },
+ {
+  "id": 1669,
+  "text": "because scheduling no longer happens."
+ },
+ {
+  "id": 1670,
+  "text": "Remember, our scheduling is driven by interrupts."
+ },
+ {
+  "id": 1671,
+  "text": "Right?"
+ },
+ {
+  "id": 1672,
+  "text": "So if scheduling doesn't happen,"
+ },
+ {
+  "id": 1673,
+  "text": "then naturally nothing will preempt you."
+ },
+ {
+  "id": 1674,
+  "text": "And that naturally guarantees"
+ },
+ {
+  "id": 1675,
+  "text": "that the critical section on the left is"
+ },
+ {
+  "id": 1676,
+  "text": "logically never interrupted."
+ },
+ {
+  "id": 1677,
+  "text": "So what we actually implement here is using"
+ },
+ {
+  "id": 1678,
+  "text": "disabling interrupts to achieve this."
+ },
+ {
+  "id": 1679,
+  "text": "Please pay attention to this point."
+ },
+ {
+  "id": 1680,
+  "text": "Let's take a look at the actual code."
+ },
+ {
+  "id": 1681,
+  "text": "So for the code,"
+ },
+ {
+  "id": 1682,
+  "text": "we'll go straight into our OS code."
+ },
+ {
+  "id": 1683,
+  "text": "Today's should correspond to our number 09."
+ },
+ {
+  "id": 1684,
+  "text": "It corresponds to today's number..."
+ },
+ {
+  "id": 1685,
+  "text": "The one just now was chapter 14."
+ },
+ {
+  "id": 1686,
+  "text": "And here, in the examples, it's 09."
+ },
+ {
+  "id": 1687,
+  "text": "The 09 lock part."
+ },
+ {
+  "id": 1688,
+  "text": "Now, the code for this lock,"
+ },
+ {
+  "id": 1689,
+  "text": "it's all concentrated in a single file,"
+ },
+ {
+  "id": 1690,
+  "text": "called lock.c."
+ },
+ {
+  "id": 1691,
+  "text": "So this lock.c,"
+ },
+ {
+  "id": 1692,
+  "text": "as you can see,"
+ },
+ {
+  "id": 1693,
+  "text": "our spinlock,"
+ },
+ {
+  "id": 1694,
+  "text": "the way it's implemented,"
+ },
+ {
+  "id": 1695,
+  "text": "is actually very simple."
+ },
+ {
+  "id": 1696,
+  "text": "It just disables"
+ },
+ {
+  "id": 1697,
+  "text": "interrupts in machine mode."
+ },
+ {
+  "id": 1698,
+  "text": "And what it operates on is"
+ },
+ {
+  "id": 1699,
+  "text": "the mstatus register."
+ },
+ {
+  "id": 1700,
+  "text": "This register,"
+ },
+ {
+  "id": 1701,
+  "text": "we've actually mentioned it to you before."
+ },
+ {
+  "id": 1702,
+  "text": "So when unlocking,"
+ },
+ {
+  "id": 1703,
+  "text": "we simply restore and re-enable the interrupts."
+ },
+ {
+  "id": 1704,
+  "text": "Now, this is a very simple and brute-force approach,"
+ },
+ {
+  "id": 1705,
+  "text": "but in this particular scenario of ours,"
+ },
+ {
+  "id": 1706,
+  "text": "it can achieve a similar effect."
+ },
+ {
+  "id": 1707,
+  "text": "So let's take a look,"
+ },
+ {
+  "id": 1708,
+  "text": "and demonstrate what happens with interrupts"
+ },
+ {
+  "id": 1709,
+  "text": "after locking them."
+ },
+ {
+  "id": 1710,
+  "text": "So when doing the experiment,"
+ },
+ {
+  "id": 1711,
+  "text": "you can look directly at our user.c."
+ },
+ {
+  "id": 1712,
+  "text": "In there,"
+ },
+ {
+  "id": 1713,
+  "text": "we've defined two tasks."
+ },
+ {
+  "id": 1714,
+  "text": "Now in the first task,"
+ },
+ {
+  "id": 1715,
+  "text": "we have a section that uses a spinlock."
+ },
+ {
+  "id": 1716,
+  "text": "We've defined a macro here"
+ },
+ {
+  "id": 1717,
+  "text": "for whether to use it or not."
+ },
+ {
+  "id": 1718,
+  "text": "If we remove this macro,"
+ },
+ {
+  "id": 1719,
+  "text": "then this lock, in effect,"
+ },
+ {
+  "id": 1720,
+  "text": "Then we just don't add it."
+ },
+ {
+  "id": 1721,
+  "text": "So if this is defined,"
+ },
+ {
+  "id": 1722,
+  "text": "we add the lock."
+ },
+ {
+  "id": 1723,
+  "text": "Now, what effect are we trying to achieve?"
+ },
+ {
+  "id": 1724,
+  "text": "That is to say, as you can see,"
+ },
+ {
+  "id": 1725,
+  "text": "we have a piece of logic like this."
+ },
+ {
+  "id": 1726,
+  "text": "Inside this logic,"
+ },
+ {
+  "id": 1727,
+  "text": "in this task0,"
+ },
+ {
+  "id": 1728,
+  "text": "after task0 prints this begin,"
+ },
+ {
+  "id": 1729,
+  "text": "we do this."
+ },
+ {
+  "id": 1730,
+  "text": "We make this printing in task0,"
+ },
+ {
+  "id": 1731,
+  "text": "execute five times."
+ },
+ {
+  "id": 1732,
+  "text": "Execute five times."
+ },
+ {
+  "id": 1733,
+  "text": "And for those five times,"
+ },
+ {
+  "id": 1734,
+  "text": "we print a begin at the front,"
+ },
+ {
+  "id": 1735,
+  "text": "and an end at the back."
+ },
+ {
+  "id": 1736,
+  "text": "So we consider this part,"
+ },
+ {
+  "id": 1737,
+  "text": "the critical section."
+ },
+ {
+  "id": 1738,
+  "text": "This piece of logic is called the critical section."
+ },
+ {
+  "id": 1739,
+  "text": "Now this spinlock of ours,"
+ },
+ {
+  "id": 1740,
+  "text": "At the beginning, we acquire this lock."
+ },
+ {
+  "id": 1741,
+  "text": "At the end, we release this lock."
+ },
+ {
+  "id": 1742,
+  "text": "So what effect do we achieve?"
+ },
+ {
+  "id": 1743,
+  "text": "The idea is that we want,"
+ },
+ {
+  "id": 1744,
+  "text": "for the code in this critical section,"
+ },
+ {
+  "id": 1745,
+  "text": "once the lock is acquired,"
+ },
+ {
+  "id": 1746,
+  "text": "to guarantee that the five-iteration loop below,"
+ },
+ {
+  "id": 1747,
+  "text": "can output continuously,"
+ },
+ {
+  "id": 1748,
+  "text": "without being interrupted by other tasks in between."
+ },
+ {
+  "id": 1749,
+  "text": "So what if there is no lock?"
+ },
+ {
+  "id": 1750,
+  "text": "As you can imagine,"
+ },
+ {
+  "id": 1751,
+  "text": "that goal cannot be achieved."
+ },
+ {
+  "id": 1752,
+  "text": "Right?"
+ },
+ {
+  "id": 1753,
+  "text": "Let's remove this lock first."
+ },
+ {
+  "id": 1754,
+  "text": "Let's see what the effect looks like."
+ },
+ {
+  "id": 1755,
+  "text": "It was 09 just now, right?"
+ },
+ {
+  "id": 1756,
+  "text": "Let's go down and compile it."
+ },
+ {
+  "id": 1757,
+  "text": "So right now we have no lock."
+ },
+ {
+  "id": 1758,
+  "text": "Without the lock,"
+ },
+ {
+  "id": 1759,
+  "text": "what kind of effect will we see?"
+ },
+ {
+  "id": 1760,
+  "text": "Actually, the effect is already quite obvious."
+ },
+ {
+  "id": 1761,
+  "text": "I just stopped it there."
+ },
+ {
+  "id": 1762,
+  "text": "So what can we see?"
+ },
+ {
+  "id": 1763,
+  "text": "That is to say, task0"
+ },
+ {
+  "id": 1764,
+  "text": "is created first."
+ },
+ {
+  "id": 1765,
+  "text": "task0 starts running."
+ },
+ {
+  "id": 1766,
+  "text": "This printing got a bit garbled."
+ },
+ {
+  "id": 1767,
+  "text": "Now, this running message,"
+ },
+ {
+  "id": 1768,
+  "text": "after it was printed just once,"
+ },
+ {
+  "id": 1769,
+  "text": "we see that as soon as an interrupt occurs,"
+ },
+ {
+  "id": 1770,
+  "text": "the tasks actually get switched."
+ },
+ {
+  "id": 1771,
+  "text": "Now, because there's no lock,"
+ },
+ {
+  "id": 1772,
+  "text": "task1 starts running."
+ },
+ {
+  "id": 1773,
+  "text": "So this 'running' output from task0"
+ },
+ {
+  "id": 1774,
+  "text": "basically gets interrupted."
+ },
+ {
+  "id": 1775,
+  "text": "So this task0 of ours,"
+ },
+ {
+  "id": 1776,
+  "text": "it cannot be guaranteed to output continuously."
+ },
+ {
+  "id": 1777,
+  "text": "We cannot guarantee continuous output."
+ },
+ {
+  "id": 1778,
+  "text": "And task1 will keep interrupting it in the middle."
+ },
+ {
+  "id": 1779,
+  "text": "So if we want to achieve this,"
+ },
+ {
+  "id": 1780,
+  "text": "The critical section can continuously be"
+ },
+ {
+  "id": 1781,
+  "text": "logically not interrupted."
+ },
+ {
+  "id": 1782,
+  "text": "Then we open this lock."
+ },
+ {
+  "id": 1783,
+  "text": "So based on what we just explained,"
+ },
+ {
+  "id": 1784,
+  "text": "this actually disables interrupts inside."
+ },
+ {
+  "id": 1785,
+  "text": "Once interrupts are disabled,"
+ },
+ {
+  "id": 1786,
+  "text": "it is essentially equivalent to saying that"
+ },
+ {
+  "id": 1787,
+  "text": "this other task"
+ },
+ {
+  "id": 1788,
+  "text": "has no chance of being scheduled at all."
+ },
+ {
+  "id": 1789,
+  "text": "So naturally we achieve this effect."
+ },
+ {
+  "id": 1790,
+  "text": "Let's take a look at whether"
+ },
+ {
+  "id": 1791,
+  "text": "it really works exactly as we imagined."
+ },
+ {
+  "id": 1792,
+  "text": "As you can see, look at this Task 0."
+ },
+ {
+  "id": 1793,
+  "text": "Even though every time it prints"
+ },
+ {
+  "id": 1794,
+  "text": "it gets delayed for a long time,"
+ },
+ {
+  "id": 1795,
+  "text": "it still..."
+ },
+ {
+  "id": 1796,
+  "text": "Task 1 at this point"
+ },
+ {
+  "id": 1797,
+  "text": "cannot get in at all."
+ },
+ {
+  "id": 1798,
+  "text": "Only when this Task 0"
+ },
+ {
+  "id": 1799,
+  "text": "has printed five times,"
+ },
+ {
+  "id": 1800,
+  "text": "The moment it is pressed,"
+ },
+ {
+  "id": 1801,
+  "text": "at this point,"
+ },
+ {
+  "id": 1802,
+  "text": "because at this point,"
+ },
+ {
+  "id": 1803,
+  "text": "we release the lock again."
+ },
+ {
+  "id": 1804,
+  "text": "Once the lock is released,"
+ },
+ {
+  "id": 1805,
+  "text": "after the tasks come in,"
+ },
+ {
+  "id": 1806,
+  "text": "Task 1"
+ },
+ {
+  "id": 1807,
+  "text": "you can see that now they start coming in again,"
+ },
+ {
+  "id": 1808,
+  "text": "able to get in."
+ },
+ {
+  "id": 1809,
+  "text": "But as soon as Task 0"
+ },
+ {
+  "id": 1810,
+  "text": "gets scheduled in"
+ },
+ {
+  "id": 1811,
+  "text": "and starts running,"
+ },
+ {
+  "id": 1812,
+  "text": "then you can see"
+ },
+ {
+  "id": 1813,
+  "text": "the other tasks"
+ },
+ {
+  "id": 1814,
+  "text": "actually have no way"
+ },
+ {
+  "id": 1815,
+  "text": "to interrupt it."
+ },
+ {
+  "id": 1816,
+  "text": "So these five iterations"
+ },
+ {
+  "id": 1817,
+  "text": "will always run together,"
+ },
+ {
+  "id": 1818,
+  "text": "and that is the critical section."
+ },
+ {
+  "id": 1819,
+  "text": "The critical section can"
+ },
+ {
+  "id": 1820,
+  "text": "to run safely."
+ },
+ {
+  "id": 1821,
+  "text": "So nothing else can sneak in between."
+ },
+ {
+  "id": 1822,
+  "text": "Then logically,"
+ },
+ {
+  "id": 1823,
+  "text": "we can get a certain guarantee."
+ },
+ {
+  "id": 1824,
+  "text": "That's the concept of synchronization."
+ },
+ {
+  "id": 1825,
+  "text": "This example is very simple."
+ },
+ {
+  "id": 1826,
+  "text": "After you go back,"
+ },
+ {
+  "id": 1827,
+  "text": "you can try it out and feel it for yourselves."
+ },
+ {
+  "id": 1828,
+  "text": "So this is the spin lock."
+ },
+ {
+  "id": 1829,
+  "text": "The spin lock."
+ },
+ {
+  "id": 1830,
+  "text": "Of course, the approach we adopted"
+ },
+ {
+  "id": 1831,
+  "text": "is really just one"
+ },
+ {
+  "id": 1832,
+  "text": "of the ways to implement a spin lock —"
+ },
+ {
+  "id": 1833,
+  "text": "a rather crude implementation,"
+ },
+ {
+  "id": 1834,
+  "text": "just directly turning interrupts off."
+ },
+ {
+  "id": 1835,
+  "text": "We don't even spin."
+ },
+ {
+  "id": 1836,
+  "text": "But whether"
+ },
+ {
+  "id": 1837,
+  "text": "it's really spinning"
+ },
+ {
+  "id": 1838,
+  "text": "or this kind of approach,"
+ },
+ {
+  "id": 1839,
+  "text": "when we talk about designing the use of spin locks,"
+ },
+ {
+  "id": 1840,
+  "text": "it still has some limitations"
+ },
+ {
+  "id": 1841,
+  "text": "of course, it has its advantages"
+ },
+ {
+  "id": 1842,
+  "text": "the advantage is"
+ },
+ {
+  "id": 1843,
+  "text": "its efficiency is quite high"
+ },
+ {
+  "id": 1844,
+  "text": "because the task doesn't actually exit"
+ },
+ {
+  "id": 1845,
+  "text": "exit the scheduling"
+ },
+ {
+  "id": 1846,
+  "text": "so it can come back in at any time"
+ },
+ {
+  "id": 1847,
+  "text": "now, this"
+ },
+ {
+  "id": 1848,
+  "text": "however,"
+ },
+ {
+  "id": 1849,
+  "text": "it also has some problems"
+ },
+ {
+  "id": 1850,
+  "text": "as we have also seen"
+ },
+ {
+  "id": 1851,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1852,
+  "text": "first of all, after it acquires this spinlock,"
+ },
+ {
+  "id": 1853,
+  "text": "then, inside the critical section,"
+ },
+ {
+  "id": 1854,
+  "text": "we actually do not recommend"
+ },
+ {
+  "id": 1855,
+  "text": "performing any long-running operations"
+ },
+ {
+  "id": 1856,
+  "text": "so, like what we just did"
+ },
+ {
+  "id": 1857,
+  "text": "in that example,"
+ },
+ {
+  "id": 1858,
+  "text": "those kinds of approaches are really not recommended"
+ },
+ {
+  "id": 1859,
+  "text": "and in particular, that is to say"
+ },
+ {
+  "id": 1860,
+  "text": "In normal code,"
+ },
+ {
+  "id": 1861,
+  "text": "in the real world,"
+ },
+ {
+  "id": 1862,
+  "text": "a spinlock is actually, because"
+ },
+ {
+  "id": 1863,
+  "text": "of its particular properties,"
+ },
+ {
+  "id": 1864,
+  "text": "it can indeed also be used in,"
+ },
+ {
+  "id": 1865,
+  "text": "for example, interrupt paths."
+ },
+ {
+  "id": 1866,
+  "text": "So you can imagine that"
+ },
+ {
+  "id": 1867,
+  "text": "if, in an interrupt path,"
+ },
+ {
+  "id": 1868,
+  "text": "we were to perform some long-running operation,"
+ },
+ {
+  "id": 1869,
+  "text": "then after using this so-called protection,"
+ },
+ {
+  "id": 1870,
+  "text": "that effectively means"
+ },
+ {
+  "id": 1871,
+  "text": "other tasks cannot get executed."
+ },
+ {
+  "id": 1872,
+  "text": "So once this interrupt"
+ },
+ {
+  "id": 1873,
+  "text": "blocks in there for a long time,"
+ },
+ {
+  "id": 1874,
+  "text": "that is definitely not appropriate,"
+ },
+ {
+  "id": 1875,
+  "text": "right?"
+ },
+ {
+  "id": 1876,
+  "text": "In particular,"
+ },
+ {
+  "id": 1877,
+  "text": "inside a critical section protected by a spinlock,"
+ },
+ {
+  "id": 1878,
+  "text": "you also cannot voluntarily give up the CPU."
+ },
+ {
+  "id": 1879,
+  "text": "That effectively means"
+ },
+ {
+  "id": 1880,
+  "text": "This task is actually not allowed to sleep."
+ },
+ {
+  "id": 1881,
+  "text": "Although we didn't before..."
+ },
+ {
+  "id": 1882,
+  "text": "we didn't demonstrate sleeping earlier."
+ },
+ {
+  "id": 1883,
+  "text": "But the so-called sleeping..."
+ },
+ {
+  "id": 1884,
+  "text": "as we explained before..."
+ },
+ {
+  "id": 1885,
+  "text": "it means you cannot give up the scheduler..."
+ },
+ {
+  "id": 1886,
+  "text": "drop out of scheduling."
+ },
+ {
+  "id": 1887,
+  "text": "Now, because you can imagine..."
+ },
+ {
+  "id": 1888,
+  "text": "that is, if you're inside a spin lock..."
+ },
+ {
+  "id": 1889,
+  "text": "once you've acquired the lock..."
+ },
+ {
+  "id": 1890,
+  "text": "and then you give up scheduling..."
+ },
+ {
+  "id": 1891,
+  "text": "then it's very likely..."
+ },
+ {
+  "id": 1892,
+  "text": "you yourself will have no way..."
+ },
+ {
+  "id": 1893,
+  "text": "because once you voluntarily give up the CPU..."
+ },
+ {
+  "id": 1894,
+  "text": "whether you can come back..."
+ },
+ {
+  "id": 1895,
+  "text": "is actually questionable."
+ },
+ {
+  "id": 1896,
+  "text": "Suppose there's a problem in your program design..."
+ },
+ {
+  "id": 1897,
+  "text": "and you never come back..."
+ },
+ {
+  "id": 1898,
+  "text": "then this lock can never be released."
+ },
+ {
+  "id": 1899,
+  "text": "And if it can never be released..."
+ },
+ {
+  "id": 1900,
+  "text": "Then you could end up bringing down the whole system."
+ },
+ {
+  "id": 1901,
+  "text": "So, that's why we say after adopting spinlocks,"
+ },
+ {
+  "id": 1902,
+  "text": "although their advantages are quite obvious,"
+ },
+ {
+  "id": 1903,
+  "text": "the critical sections we actually protect with spinlocks,"
+ },
+ {
+  "id": 1904,
+  "text": "in other words,"
+ },
+ {
+  "id": 1905,
+  "text": "you can only run some quick logic inside them."
+ },
+ {
+  "id": 1906,
+  "text": "Once you acquire the lock, execute very quickly,"
+ },
+ {
+  "id": 1907,
+  "text": "and then release the lock right away."
+ },
+ {
+  "id": 1908,
+  "text": "You must not, inside the lock's critical section,"
+ },
+ {
+  "id": 1909,
+  "text": "perform long-running operations,"
+ },
+ {
+  "id": 1910,
+  "text": "or even go to sleep."
+ },
+ {
+  "id": 1911,
+  "text": "None of that is allowed."
+ },
+ {
+  "id": 1912,
+  "text": "In real systems,"
+ },
+ {
+  "id": 1913,
+  "text": "in Linux, for example,"
+ },
+ {
+  "id": 1914,
+  "text": "when spinlocks are used,"
+ },
+ {
+  "id": 1915,
+  "text": "this is something we need to pay special attention to."
+ },
+ {
+  "id": 1916,
+  "text": "So, as for spinlocks,"
+ },
+ {
+  "id": 1917,
+  "text": "that's all we'll cover in this brief introduction."
+ },
+ {
+  "id": 1918,
+  "text": "Now, this course of ours,"
+ },
+ {
+  "id": 1919,
+  "text": "since it's fairly short,"
+ },
+ {
+  "id": 1920,
+  "text": "Actually, the main goal is to give you a feel for"
+ },
+ {
+  "id": 1921,
+  "text": "some basic concepts of synchronization and concurrency,"
+ },
+ {
+  "id": 1922,
+  "text": "and the simplest use of spin locks."
+ },
+ {
+  "id": 1923,
+  "text": "Now, of course, there are many other synchronization techniques."
+ },
+ {
+  "id": 1924,
+  "text": "Here,"
+ },
+ {
+  "id": 1925,
+  "text": "since time is limited,"
+ },
+ {
+  "id": 1926,
+  "text": "we won't go through them one by one."
+ },
+ {
+  "id": 1927,
+  "text": "We've just put together a simple table for you here."
+ },
+ {
+  "id": 1928,
+  "text": "If you're interested,"
+ },
+ {
+  "id": 1929,
+  "text": "there's actually a lot of material you can look at."
+ },
+ {
+  "id": 1930,
+  "text": "So, for example, besides spin locks,"
+ },
+ {
+  "id": 1931,
+  "text": "we also have the most commonly used ones, such as semaphores."
+ },
+ {
+  "id": 1932,
+  "text": "Now, with semaphores,"
+ },
+ {
+  "id": 1933,
+  "text": "we say they support sleeping,"
+ },
+ {
+  "id": 1934,
+  "text": "meaning that when you hold the semaphore,"
+ },
+ {
+  "id": 1935,
+  "text": "tasks inside your critical section are allowed to sleep."
+ },
+ {
+  "id": 1936,
+  "text": "Then there are also some other things, like"
+ },
+ {
+  "id": 1937,
+  "text": "we also frequently use, for example, mutexes."
+ },
+ {
+  "id": 1938,
+  "text": "Now, a mutex,"
+ },
+ {
+  "id": 1939,
+  "text": "actually, in real practice,"
+ },
+ {
+  "id": 1940,
+  "text": "Actually, this is the simplest form of a semaphore."
+ },
+ {
+  "id": 1941,
+  "text": "So this..."
+ },
+ {
+  "id": 1942,
+  "text": "There are also some others, like completion variables and so on."
+ },
+ {
+  "id": 1943,
+  "text": "Waking up tasks through signals, and so on."
+ },
+ {
+  "id": 1944,
+  "text": "So there are quite a few other synchronization techniques."
+ },
+ {
+  "id": 1945,
+  "text": "We won't go into them in detail here."
+ },
+ {
+  "id": 1946,
+  "text": "Through this chapter,"
+ },
+ {
+  "id": 1947,
+  "text": "the main thing is to understand some basic concepts,"
+ },
+ {
+  "id": 1948,
+  "text": "concepts related to synchronization,"
+ },
+ {
+  "id": 1949,
+  "text": "and locking."
+ },
+ {
+  "id": 1950,
+  "text": "As for the related exercises,"
+ },
+ {
+  "id": 1951,
+  "text": "you can go back and try them out yourselves."
+ }
+]

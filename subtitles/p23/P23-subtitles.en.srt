@@ -1,0 +1,4239 @@
+1
+00:00:00,000 --> 00:00:03,720
+Next, we're going to cover Chapter 13.
+
+2
+00:00:04,140 --> 00:00:06,780
+In Chapter 13, what we want to introduce is
+
+3
+00:00:06,980 --> 00:00:11,500
+how to implement preemptive multitasking.
+
+4
+00:00:15,690 --> 00:00:16,870
+It breaks down into a few parts.
+
+5
+00:00:23,170 --> 00:00:25,410
+First, let's look at what preemptive multitasking actually means.
+
+6
+00:00:25,410 --> 00:00:28,850
+Earlier in the course,
+
+7
+00:00:28,870 --> 00:00:33,990
+we showed you how to implement cooperative multitasking, right?
+
+8
+00:00:34,490 --> 00:00:37,090
+Now, cooperative multitasking is relatively simple.
+
+9
+00:00:37,090 --> 00:00:42,130
+At the time, we actually used function calls and returns,
+
+10
+00:00:42,130 --> 00:00:45,290
+and that's essentially how we implemented a cooperative scheme.
+
+11
+00:00:45,290 --> 00:00:48,590
+Cooperation is simple to implement,
+
+12
+00:00:48,590 --> 00:00:51,250
+but its drawbacks are pretty obvious.
+
+13
+00:00:51,250 --> 00:00:53,730
+It requires each of the tasks
+
+14
+00:00:53,730 --> 00:00:57,610
+to actively call the task_yield function
+
+15
+00:00:57,610 --> 00:01:00,410
+to give up its use of the processor
+
+16
+00:01:00,410 --> 00:01:03,570
+and hand it over to another task to run.
+
+17
+00:01:03,570 --> 00:01:08,150
+Now, in a lot of real operating systems out there,
+
+18
+00:01:08,150 --> 00:01:11,070
+this kind of cooperative multitasking
+
+19
+00:01:11,070 --> 00:01:12,690
+has actually been gradually phased out.
+
+20
+00:01:12,690 --> 00:01:14,890
+Instead, we mostly use what's called
+
+21
+00:01:14,890 --> 00:01:16,530
+through preemptive multitasking
+
+22
+00:01:16,530 --> 00:01:19,930
+That is, we want the operating system
+
+23
+00:01:19,930 --> 00:01:24,180
+to decide by itself which task
+
+24
+00:01:24,180 --> 00:01:26,040
+gets to use the CPU,
+
+25
+00:01:26,040 --> 00:01:30,860
+so it can proactively take the CPU away from a task in order to reschedule,
+
+26
+00:01:30,860 --> 00:01:33,940
+rather than having the task give it up on its own.
+
+27
+00:01:33,940 --> 00:01:36,640
+So how is this actually implemented?
+
+28
+00:01:36,640 --> 00:01:38,120
+In fact, it uses
+
+29
+00:01:38,120 --> 00:01:39,840
+some of the concepts related to interrupts
+
+30
+00:01:39,840 --> 00:01:42,480
+that we introduced to you earlier.
+
+31
+00:01:42,480 --> 00:01:44,060
+So next,
+
+32
+00:01:44,060 --> 00:01:44,860
+let's take a look at
+
+33
+00:01:44,860 --> 00:01:46,900
+how this preemptive multitasking
+
+34
+00:01:46,900 --> 00:01:48,200
+is implemented.
+
+35
+00:01:48,200 --> 00:01:54,140
+Now,
+
+36
+00:01:54,140 --> 00:01:55,440
+let's first look at this diagram.
+
+37
+00:01:55,440 --> 00:01:56,300
+In this diagram,
+
+38
+00:01:56,300 --> 00:01:58,240
+we can see there are two tasks,
+
+39
+00:01:58,240 --> 00:01:58,540
+right?
+
+40
+00:01:58,540 --> 00:02:00,580
+Task A and Task B.
+
+41
+00:02:00,580 --> 00:02:01,900
+Now, this Task A,
+
+42
+00:02:01,900 --> 00:02:03,060
+its instructions,
+
+43
+00:02:03,060 --> 00:02:05,040
+starting from I all the way to I plus M,
+
+44
+00:02:05,040 --> 00:02:06,200
+keep executing one after another.
+
+45
+00:02:06,200 --> 00:02:07,820
+And B, starting from J to
+
+46
+00:02:07,820 --> 00:02:11,300
+J plus N, starts executing.
+
+47
+00:02:11,300 --> 00:02:14,300
+Now, since what we're implementing here is
+
+48
+00:02:14,300 --> 00:02:15,120
+preemptive multitasking,
+
+49
+00:02:15,120 --> 00:02:16,480
+as you can see,
+
+50
+00:02:16,480 --> 00:02:17,720
+with these two tasks,
+
+51
+00:02:17,720 --> 00:02:18,940
+inside them,
+
+52
+00:02:18,940 --> 00:02:20,640
+they don't call any task function to
+
+53
+00:02:20,640 --> 00:02:23,100
+voluntarily give up the CPU.
+
+54
+00:02:23,100 --> 00:02:25,460
+So once any task is running,
+
+55
+00:02:25,460 --> 00:02:27,600
+how can we let another task
+
+56
+00:02:27,600 --> 00:02:29,360
+also get to use this CPU?
+
+57
+00:02:29,360 --> 00:02:29,900
+Right?
+
+58
+00:02:29,900 --> 00:02:31,300
+That's exactly what we want to achieve.
+
+59
+00:02:31,300 --> 00:02:34,940
+Well, the method we actually adopt,
+
+60
+00:02:34,940 --> 00:02:36,940
+is to make use of what we learned earlier,
+
+61
+00:02:36,940 --> 00:02:38,640
+This interrupt approach
+
+62
+00:02:38,640 --> 00:02:40,840
+is actually what we used earlier
+
+63
+00:02:40,840 --> 00:02:41,920
+with the timer interrupt.
+
+64
+00:02:41,920 --> 00:02:45,110
+We make this interrupt
+
+65
+00:02:45,110 --> 00:02:46,170
+occur periodically,
+
+66
+00:02:46,170 --> 00:02:49,230
+and then each time the timer expires,
+
+67
+00:02:49,230 --> 00:02:50,390
+once the interrupt fires,
+
+68
+00:02:50,390 --> 00:02:52,950
+we can handle it in the timer interrupt handling process,
+
+69
+00:02:52,950 --> 00:02:55,710
+where the kernel —
+
+70
+00:02:55,710 --> 00:02:57,030
+that is, our operating system —
+
+71
+00:02:57,030 --> 00:03:00,010
+schedules these tasks.
+
+72
+00:03:00,010 --> 00:03:02,870
+That is essentially the effect we want to achieve.
+
+73
+00:03:02,870 --> 00:03:06,210
+Now, once this interrupt occurs,
+
+74
+00:03:06,210 --> 00:03:07,790
+based on what we have learned,
+
+75
+00:03:07,790 --> 00:03:09,770
+we know it is actually a trap,
+
+76
+00:03:09,770 --> 00:03:11,770
+and in the trap handler,
+
+77
+00:03:11,770 --> 00:03:14,670
+we will perform operations like these.
+
+78
+00:03:14,670 --> 00:03:17,770
+These operations are actually very similar
+
+79
+00:03:17,770 --> 00:03:20,850
+to the cooperative approach from earlier,
+
+80
+00:03:20,850 --> 00:03:22,390
+though of course the implementation is somewhat different.
+
+81
+00:03:22,390 --> 00:03:25,450
+because after all, it is implemented in the middle of an interrupt handling process
+
+82
+00:03:25,450 --> 00:03:28,750
+but the overall idea is still similar to what we saw before
+
+83
+00:03:28,750 --> 00:03:32,170
+the first step is to save the original context
+
+84
+00:03:32,170 --> 00:03:33,990
+then switch the context
+
+85
+00:03:33,990 --> 00:03:37,190
+then restore the next new context
+
+86
+00:03:37,190 --> 00:03:38,390
+and finally
+
+87
+00:03:38,390 --> 00:03:41,670
+since this is an interrupt handler
+
+88
+00:03:41,670 --> 00:03:44,390
+of course it ends up calling mret to return
+
+89
+00:03:44,390 --> 00:03:45,750
+that is something you should be aware of
+
+90
+00:03:45,750 --> 00:03:50,120
+next, let's take a look at this
+
+91
+00:03:50,120 --> 00:03:52,980
+inside the chip handler function
+
+92
+00:03:52,980 --> 00:03:54,040
+it actually
+
+93
+00:03:54,040 --> 00:03:58,340
+what its execution process looks like in detail
+
+94
+00:03:58,340 --> 00:04:00,520
+how the details are implemented
+
+95
+00:04:00,520 --> 00:04:02,640
+based on what we just introduced
+
+96
+00:04:02,640 --> 00:04:04,100
+we know that after chip occurs
+
+97
+00:04:04,100 --> 00:04:05,900
+we actually make use of the timer system interrupt
+
+98
+00:04:05,900 --> 00:04:09,640
+and in fact, inside this chip function
+
+99
+00:04:09,640 --> 00:04:10,580
+you can imagine that
+
+100
+00:04:10,580 --> 00:04:11,740
+we will definitely check
+
+101
+00:04:11,740 --> 00:04:14,220
+Is this interrupt a timer interrupt,
+
+102
+00:04:14,220 --> 00:04:15,360
+or some other exception?
+
+103
+00:04:15,360 --> 00:04:18,500
+Now, if it's some other interrupt or exception,
+
+104
+00:04:18,500 --> 00:04:19,980
+then its handling flow
+
+105
+00:04:19,980 --> 00:04:23,120
+is really no different from the exception handling
+
+106
+00:04:23,120 --> 00:04:25,240
+and external interrupt handling
+
+107
+00:04:25,240 --> 00:04:27,220
+that we introduced earlier.
+
+108
+00:04:27,220 --> 00:04:29,160
+So the logic on the left
+
+109
+00:04:29,160 --> 00:04:30,400
+is perfectly fine,
+
+110
+00:04:30,400 --> 00:04:35,300
+meaning it takes the path on the left,
+
+111
+00:04:35,900 --> 00:04:37,320
+which is the same as the original logic,
+
+112
+00:04:37,320 --> 00:04:38,200
+with no difference at all.
+
+113
+00:04:38,200 --> 00:04:41,360
+Now, if it's a timer interrupt,
+
+114
+00:04:41,360 --> 00:04:43,880
+then we need to do some extra work on our side.
+
+115
+00:04:43,880 --> 00:04:46,400
+Apart from what we just mentioned—
+
+116
+00:04:46,400 --> 00:04:48,760
+maintaining an internal clock tick—
+
+117
+00:04:48,760 --> 00:04:51,260
+the core operation on our side is that
+
+118
+00:04:51,260 --> 00:04:53,540
+we will call
+
+119
+00:04:53,540 --> 00:04:56,540
+the original switch2 function in here,
+
+120
+00:04:56,540 --> 00:04:59,020
+to perform the context switch.
+
+121
+00:04:59,020 --> 00:05:01,780
+And then, finally,
+
+122
+00:05:01,780 --> 00:05:04,900
+it actually still exits the interrupt via mret.
+
+123
+00:05:05,900 --> 00:05:08,520
+So the logic is actually still very clear.
+
+124
+00:05:08,520 --> 00:05:12,030
+Now, as for the concrete implementation,
+
+125
+00:05:12,030 --> 00:05:12,930
+we need to take a look at it.
+
+126
+00:05:12,930 --> 00:05:15,190
+That is, how do we implement it?
+
+127
+00:05:15,190 --> 00:05:18,450
+So when an interrupt occurs,
+
+128
+00:05:18,450 --> 00:05:21,210
+according to our earlier design,
+
+129
+00:05:21,210 --> 00:05:21,670
+we know
+
+130
+00:05:21,670 --> 00:05:25,250
+it will actually still go through this logic.
+
+131
+00:05:25,250 --> 00:05:29,220
+It will definitely still go to the trap vector,
+
+132
+00:05:29,220 --> 00:05:30,740
+into this entry point,
+
+133
+00:05:30,740 --> 00:05:31,060
+right?
+
+134
+00:05:31,060 --> 00:05:32,380
+And inside here,
+
+135
+00:05:32,380 --> 00:05:34,600
+it saves the context,
+
+136
+00:05:34,600 --> 00:05:35,720
+and so on.
+
+137
+00:05:35,720 --> 00:05:37,360
+As for the specifics,
+
+138
+00:05:37,360 --> 00:05:38,580
+we'll talk about that later.
+
+139
+00:05:38,580 --> 00:05:40,280
+That is, there are also some changes in here,
+
+140
+00:05:40,280 --> 00:05:41,560
+but the most essential part
+
+141
+00:05:41,560 --> 00:05:43,740
+definitely still removed that
+
+142
+00:05:43,740 --> 00:05:46,880
+chip handler processing function,
+
+143
+00:05:46,880 --> 00:05:47,800
+right?
+
+144
+00:05:47,800 --> 00:05:49,480
+Now, as for this function,
+
+145
+00:05:49,480 --> 00:05:49,980
+we know
+
+146
+00:05:49,980 --> 00:05:52,700
+we now,
+
+147
+00:05:52,700 --> 00:05:55,180
+based on our earlier introduction,
+
+148
+00:05:55,180 --> 00:05:57,120
+when it comes in as an interrupt,
+
+149
+00:05:57,120 --> 00:05:58,020
+it will actually
+
+150
+00:05:58,020 --> 00:06:01,560
+go into the timer handling logic,
+
+151
+00:06:01,560 --> 00:06:03,540
+that is, this function,
+
+152
+00:06:03,540 --> 00:06:06,760
+it will go into this one here.
+
+153
+00:06:06,760 --> 00:06:08,980
+Now, the logic of this handler,
+
+154
+00:06:08,980 --> 00:06:11,060
+we have some changes to it now.
+
+155
+00:06:11,060 --> 00:06:13,460
+Besides some things,
+
+156
+00:06:13,460 --> 00:06:16,240
+like maintaining a clock tick count,
+
+157
+00:06:16,240 --> 00:06:17,520
+the most core part is actually that
+
+158
+00:06:17,520 --> 00:06:18,760
+it will call that schedule
+
+159
+00:06:18,760 --> 00:06:20,400
+function.
+
+160
+00:06:20,400 --> 00:06:23,740
+Now, as for this schedule function,
+
+161
+00:06:23,740 --> 00:06:24,960
+Actually, inside it,
+
+162
+00:06:24,960 --> 00:06:28,120
+in the end, we call switch2,
+
+163
+00:06:28,120 --> 00:06:30,980
+this function,
+
+164
+00:06:30,980 --> 00:06:31,780
+and this function,
+
+165
+00:06:31,780 --> 00:06:35,020
+is actually implemented in our assembly code.
+
+166
+00:06:35,020 --> 00:06:42,760
+Now, this switch_to function,
+
+167
+00:06:42,760 --> 00:06:45,380
+eventually still goes to mret.
+
+168
+00:06:45,380 --> 00:06:47,220
+This corresponds to that flowchart we had earlier.
+
+169
+00:06:47,220 --> 00:06:49,020
+Let's take another look at it ourselves.
+
+170
+00:06:49,020 --> 00:06:50,080
+That is to say,
+
+171
+00:06:50,080 --> 00:06:52,800
+so this entire trap handler,
+
+172
+00:06:52,800 --> 00:06:56,280
+the way it's described here might be slightly confusing.
+
+173
+00:06:56,280 --> 00:06:57,260
+So this trap handler,
+
+174
+00:06:57,260 --> 00:07:00,400
+don't confuse it with this trap handler,
+
+175
+00:07:00,400 --> 00:07:02,120
+this actually represents,
+
+176
+00:07:02,120 --> 00:07:03,720
+I mean, this entire processing procedure,
+
+177
+00:07:03,720 --> 00:07:06,020
+this whole processing procedure of ours,
+
+178
+00:07:06,020 --> 00:07:07,340
+the entire processing procedure.
+
+179
+00:07:07,340 --> 00:07:10,050
+So this trap handler,
+
+180
+00:07:10,050 --> 00:07:11,810
+this whole processing procedure.
+
+181
+00:07:11,810 --> 00:07:12,450
+In fact, it is
+
+182
+00:07:12,450 --> 00:07:15,610
+after making such an active call,
+
+183
+00:07:15,610 --> 00:07:17,410
+and finally going through mreturn,
+
+184
+00:07:17,410 --> 00:07:19,010
+we return
+
+185
+00:07:19,010 --> 00:07:20,470
+to our normal processing flow.
+
+186
+00:07:20,470 --> 00:07:21,390
+But in this process,
+
+187
+00:07:21,390 --> 00:07:22,410
+because at its core,
+
+188
+00:07:22,410 --> 00:07:24,650
+it actually implements a
+
+189
+00:07:24,650 --> 00:07:27,490
+switch2 process,
+
+190
+00:07:27,490 --> 00:07:28,190
+and in there,
+
+191
+00:07:28,190 --> 00:07:30,370
+we achieve our
+
+192
+00:07:30,370 --> 00:07:32,410
+task switching effect.
+
+193
+00:07:32,410 --> 00:07:37,620
+So
+
+194
+00:07:37,620 --> 00:07:39,880
+this is our
+
+195
+00:07:39,880 --> 00:07:41,340
+trap handler function's
+
+196
+00:07:41,340 --> 00:07:43,020
+implementation process,
+
+197
+00:07:43,020 --> 00:07:45,320
+which I've walked you through.
+
+198
+00:07:45,320 --> 00:07:46,720
+Now, in terms of
+
+199
+00:07:46,720 --> 00:07:49,360
+the design of these related data structures,
+
+200
+00:07:49,360 --> 00:07:51,000
+we also need to make some corresponding adjustments.
+
+201
+00:07:51,000 --> 00:07:52,300
+Because, why is that?
+
+202
+00:07:52,300 --> 00:07:53,340
+Because, if we recall,
+
+203
+00:07:53,340 --> 00:07:57,300
+in the case of cooperative multitasking,
+
+204
+00:07:57,300 --> 00:07:58,800
+our
+
+205
+00:07:58,800 --> 00:08:01,600
+that is, not the trap handler,
+
+206
+00:08:01,600 --> 00:08:03,380
+that is, inside this function called switch_to,
+
+207
+00:08:03,380 --> 00:08:04,380
+it actually goes through
+
+208
+00:08:04,380 --> 00:08:05,900
+not through mret,
+
+209
+00:08:05,900 --> 00:08:06,680
+everyone still remembers, right?
+
+210
+00:08:06,680 --> 00:08:07,780
+we used that
+
+211
+00:08:07,780 --> 00:08:10,360
+the function's return instruction to achieve it.
+
+212
+00:08:10,360 --> 00:08:12,120
+Now, as we know with the return instruction,
+
+213
+00:08:12,120 --> 00:08:14,400
+why can we return back?
+
+214
+00:08:14,400 --> 00:08:18,140
+Actually, it's because we make use of this register, ra,
+
+215
+00:08:18,140 --> 00:08:18,760
+right?
+
+216
+00:08:18,760 --> 00:08:20,140
+Indeed, the register ra,
+
+217
+00:08:20,140 --> 00:08:21,500
+but here,
+
+218
+00:08:21,500 --> 00:08:23,000
+since it uses mret,
+
+219
+00:08:23,000 --> 00:08:24,240
+we know we need to
+
+220
+00:08:24,240 --> 00:08:28,480
+to return from here
+
+221
+00:08:28,480 --> 00:08:30,680
+Actually, which register should we be using?
+
+222
+00:08:30,680 --> 00:08:34,280
+We are actually using the mepc register
+
+223
+00:08:34,280 --> 00:08:35,360
+right?
+
+224
+00:08:35,360 --> 00:08:37,180
+to implement the return,
+
+225
+00:08:37,180 --> 00:08:38,280
+returning from an exception,
+
+226
+00:08:38,280 --> 00:08:39,440
+returning from a trap.
+
+227
+00:08:39,440 --> 00:08:43,380
+So back when we were in the coroutine,
+
+228
+00:08:43,380 --> 00:08:44,980
+this ra register of ours,
+
+229
+00:08:44,980 --> 00:08:46,840
+in our context,
+
+230
+00:08:46,840 --> 00:08:48,260
+of course we had already saved it.
+
+231
+00:08:48,260 --> 00:08:50,360
+But right now,
+
+232
+00:08:50,360 --> 00:08:53,460
+since we want to use the mret instruction
+
+233
+00:08:53,460 --> 00:08:55,280
+to return,
+
+234
+00:08:55,280 --> 00:08:57,740
+then we cannot use ra anymore.
+
+235
+00:08:57,740 --> 00:09:00,480
+We actually need to take this register,
+
+236
+00:09:00,480 --> 00:09:02,960
+and also save a copy of it
+
+237
+00:09:02,960 --> 00:09:04,680
+in our context.
+
+238
+00:09:04,680 --> 00:09:07,780
+So when we implement it,
+
+239
+00:09:07,780 --> 00:09:08,920
+at this point,
+
+240
+00:09:08,920 --> 00:09:10,920
+we actually no longer care about that ra thing.
+
+241
+00:09:10,920 --> 00:09:12,680
+Because in this trap handler,
+
+242
+00:09:12,680 --> 00:09:15,020
+we actually don't care much about the ra register,
+
+243
+00:09:15,020 --> 00:09:17,700
+what we care about is the mepc register.
+
+244
+00:09:17,700 --> 00:09:18,760
+I wrote that wrong earlier.
+
+245
+00:09:18,760 --> 00:09:19,720
+It should be mepc.
+
+246
+00:09:19,720 --> 00:09:21,000
+This spot here.
+
+247
+00:09:21,000 --> 00:09:24,040
+What I wrote here earlier should be mepc.
+
+248
+00:09:24,040 --> 00:09:26,320
+This register here.
+
+249
+00:09:26,320 --> 00:09:28,000
+Now, since this register,
+
+250
+00:09:28,000 --> 00:09:31,000
+takes part in our task context switching,
+
+251
+00:09:31,000 --> 00:09:32,320
+so naturally,
+
+252
+00:09:32,320 --> 00:09:34,520
+for each task,
+
+253
+00:09:34,520 --> 00:09:35,920
+when we maintain its context,
+
+254
+00:09:35,920 --> 00:09:38,840
+we also need to maintain something equivalent to epc.
+
+255
+00:09:38,840 --> 00:09:41,200
+Of course, we named it pc on our side.
+
+256
+00:09:41,200 --> 00:09:43,040
+Of course, if we called it epc,
+
+257
+00:09:43,040 --> 00:09:45,260
+it might be easier to understand.
+
+258
+00:09:45,260 --> 00:09:47,840
+Actually, both this pc and epc are used to
+
+259
+00:09:47,840 --> 00:09:50,740
+maintain the contents of that register.
+
+260
+00:09:50,740 --> 00:09:53,060
+We'll take it when a task switch happens
+
+261
+00:09:53,060 --> 00:09:55,420
+perform the corresponding save and restore,
+
+262
+00:09:55,420 --> 00:09:58,660
+and that is how we implement task switching.
+
+263
+00:09:58,660 --> 00:10:03,640
+The other parts are actually very similar.
+
+264
+00:10:03,640 --> 00:10:08,080
+Now, specifically, how does MEPC work in the quantum task?
+
+265
+00:10:08,080 --> 00:10:10,180
+How does it achieve the effect we want?
+
+266
+00:10:10,180 --> 00:10:13,080
+Let me give you a simple demonstration.
+
+267
+00:10:13,080 --> 00:10:14,200
+So next,
+
+268
+00:10:14,200 --> 00:10:16,240
+let's take some time to do a simple demonstration for you.
+
+269
+00:10:16,240 --> 00:10:21,770
+So first of all,
+
+270
+00:10:21,770 --> 00:10:23,250
+here is some of the relevant code.
+
+271
+00:10:23,250 --> 00:10:25,710
+As we can see in this code,
+
+272
+00:10:25,710 --> 00:10:28,590
+our context struct here,
+
+273
+00:10:28,590 --> 00:10:29,450
+has been adjusted a bit.
+
+274
+00:10:29,450 --> 00:10:32,490
+Besides, in the coroutine room from before,
+
+275
+00:10:32,490 --> 00:10:36,790
+we still save those registers in the same way,
+
+276
+00:10:36,790 --> 00:10:39,890
+but over here we have also added and defined a new
+
+277
+00:10:39,890 --> 00:10:40,830
+variable called PC.
+
+278
+00:10:40,830 --> 00:10:42,710
+This variable is actually used to,
+
+279
+00:10:42,710 --> 00:10:45,910
+to be precise, it should be used to save that EPC,
+
+280
+00:10:45,910 --> 00:10:46,830
+used to save the EPC.
+
+281
+00:10:46,830 --> 00:10:49,130
+This part may not be written very accurately here,
+
+282
+00:10:49,130 --> 00:10:50,550
+but I want to emphasize this point:
+
+283
+00:10:50,550 --> 00:10:52,070
+it saves the EPC.
+
+284
+00:10:52,070 --> 00:10:56,950
+And then,
+
+285
+00:10:56,950 --> 00:10:59,250
+in this function,
+
+286
+00:10:59,250 --> 00:11:01,150
+we also made some corresponding adjustments.
+
+287
+00:11:01,150 --> 00:11:03,950
+So after the trap vector comes in,
+
+288
+00:11:03,950 --> 00:11:04,870
+in the previous logic,
+
+289
+00:11:04,870 --> 00:11:08,050
+we would only save all the general-purpose registers.
+
+290
+00:11:08,050 --> 00:11:10,130
+But now,
+
+291
+00:11:10,130 --> 00:11:11,390
+we added some more logic.
+
+292
+00:11:11,390 --> 00:11:12,350
+As you can see,
+
+293
+00:11:12,350 --> 00:11:13,570
+the logic we added,
+
+294
+00:11:13,570 --> 00:11:14,410
+the logic here,
+
+295
+00:11:14,410 --> 00:11:17,750
+actually saves MEPC as well.
+
+296
+00:11:17,750 --> 00:11:19,090
+It saves it into the context.
+
+297
+00:11:19,090 --> 00:11:21,010
+Please take note of this.
+
+298
+00:11:21,010 --> 00:11:22,110
+And then,
+
+299
+00:11:22,110 --> 00:11:23,630
+according to our logic,
+
+300
+00:11:23,630 --> 00:11:24,170
+here
+
+301
+00:11:24,170 --> 00:11:25,770
+it just goes and calls that handler function
+
+302
+00:11:25,770 --> 00:11:26,670
+inside the handler function,
+
+303
+00:11:26,670 --> 00:11:28,070
+as we described earlier,
+
+304
+00:11:28,070 --> 00:11:30,070
+it will actually trigger another call
+
+305
+00:11:30,070 --> 00:11:31,390
+to the switch2 function
+
+306
+00:11:31,390 --> 00:11:32,990
+and this switch2 function
+
+307
+00:11:32,990 --> 00:11:35,530
+will ultimately call mreturn to return
+
+308
+00:11:35,530 --> 00:11:36,890
+it will, in the end,
+
+309
+00:11:36,890 --> 00:11:38,450
+ultimately call mreturn to return
+
+310
+00:11:38,450 --> 00:11:41,150
+and before calling mreturn to return,
+
+311
+00:11:41,150 --> 00:11:46,230
+it will save all the general-purpose registers as well
+
+312
+00:11:46,230 --> 00:11:47,850
+this corresponds to what we saw earlier
+
+313
+00:11:47,850 --> 00:11:49,170
+these two correspond to each other
+
+314
+00:11:49,170 --> 00:11:50,890
+and similarly, corresponding to that,
+
+315
+00:11:50,890 --> 00:11:52,510
+we have some logic on this side too
+
+316
+00:11:52,510 --> 00:11:55,710
+which is to restore the EPC as well
+
+317
+00:11:55,710 --> 00:11:56,770
+so here,
+
+318
+00:11:56,770 --> 00:11:59,470
+please pay attention to this,
+
+319
+00:11:59,470 --> 00:12:00,770
+when you're reading the code,
+
+320
+00:12:00,770 --> 00:12:03,490
+it's these two parts that we handle
+
+321
+00:12:03,490 --> 00:12:06,050
+When we grabbed the temporary multitasking here,
+
+322
+00:12:06,050 --> 00:12:08,470
+we made some corresponding adjustments.
+
+323
+00:12:08,470 --> 00:12:12,230
+And let's pay attention to one thing,
+
+324
+00:12:12,230 --> 00:12:13,890
+which is the switch_to function.
+
+325
+00:12:13,890 --> 00:12:15,650
+Because the whole flow we have now,
+
+326
+00:12:15,650 --> 00:12:17,070
+it actually goes around in a circle.
+
+327
+00:12:17,070 --> 00:12:20,650
+We actually come in from the trap vector,
+
+328
+00:12:20,650 --> 00:12:22,030
+and then go out from here.
+
+329
+00:12:22,030 --> 00:12:25,310
+So for this switch_to function,
+
+330
+00:12:25,310 --> 00:12:29,630
+the saving logic that used to be there,
+
+331
+00:12:29,630 --> 00:12:31,610
+it's actually placed over here in the switch_to function.
+
+332
+00:12:31,610 --> 00:12:32,110
+Right?
+
+333
+00:12:32,110 --> 00:12:33,650
+If you still remember
+
+334
+00:12:33,650 --> 00:12:38,210
+how it was implemented during cooperative multitasking,
+
+335
+00:12:38,210 --> 00:12:40,210
+then now, with this logic,
+
+336
+00:12:40,210 --> 00:12:42,770
+we basically removed it from switch_to,
+
+337
+00:12:42,770 --> 00:12:47,810
+and instead we reused this logic from the trap vector.
+
+338
+00:12:47,810 --> 00:12:51,450
+So on this side, there's no save logic anymore.
+
+339
+00:12:51,450 --> 00:12:52,990
+There's no save logic on this side anymore.
+
+340
+00:12:52,990 --> 00:12:53,890
+Please keep that in mind.
+
+341
+00:12:53,890 --> 00:12:59,210
+These are all some adjustments for this preemptive multitasking.
+
+342
+00:12:59,210 --> 00:13:05,870
+Now, after understanding the related code and struct adjustments we just made,
+
+343
+00:13:05,870 --> 00:13:06,610
+let's take a look.
+
+344
+00:13:06,610 --> 00:13:09,950
+In a preemptive multitasking system,
+
+345
+00:13:09,950 --> 00:13:11,450
+how does this process actually happen?
+
+346
+00:13:11,450 --> 00:13:13,490
+Let me give you a simple animated demonstration.
+
+347
+00:13:13,490 --> 00:13:15,830
+All right.
+
+348
+00:13:15,830 --> 00:13:16,570
+This diagram,
+
+349
+00:13:16,570 --> 00:13:17,730
+picking up from what we just looked at,
+
+350
+00:13:17,730 --> 00:13:18,910
+that is, on the left is one task,
+
+351
+00:13:18,910 --> 00:13:19,650
+and on the right is another task,
+
+352
+00:13:19,650 --> 00:13:20,330
+right?
+
+353
+00:13:20,330 --> 00:13:21,110
+And this one,
+
+354
+00:13:21,110 --> 00:13:21,770
+on this side,
+
+355
+00:13:21,770 --> 00:13:22,970
+is its context.
+
+356
+00:13:22,970 --> 00:13:23,490
+And on the right side,
+
+357
+00:13:23,490 --> 00:13:24,630
+is also its context.
+
+358
+00:13:24,630 --> 00:13:26,110
+They are in memory.
+
+359
+00:13:26,110 --> 00:13:26,330
+Good.
+
+360
+00:13:26,330 --> 00:13:27,930
+Now this blue-colored part,
+
+361
+00:13:27,930 --> 00:13:29,370
+it actually represents the CPU
+
+362
+00:13:29,370 --> 00:13:30,530
+so let's assume there is only one CPU
+
+363
+00:13:30,530 --> 00:13:32,490
+then how do we implement these two tasks
+
+364
+00:13:32,490 --> 00:13:34,230
+switching on this CPU
+
+365
+00:13:34,230 --> 00:13:35,330
+let's take a look together
+
+366
+00:13:35,330 --> 00:13:37,170
+so first is initialization
+
+367
+00:13:37,170 --> 00:13:39,330
+just like the previous one
+
+368
+00:13:39,330 --> 00:13:40,770
+that is, we first take
+
+369
+00:13:40,770 --> 00:13:43,870
+the address of Task A's first instruction
+
+370
+00:13:43,870 --> 00:13:46,690
+and put it in here
+
+371
+00:13:46,690 --> 00:13:48,470
+do some initialization
+
+372
+00:13:48,470 --> 00:13:49,750
+the right side is the same
+
+373
+00:13:49,750 --> 00:13:51,530
+put ra in there
+
+374
+00:13:51,530 --> 00:13:52,730
+right?
+
+375
+00:13:52,730 --> 00:13:53,910
+nothing special about this
+
+376
+00:13:53,910 --> 00:13:56,170
+then, down below
+
+377
+00:13:56,170 --> 00:13:58,090
+we need to use mscratch
+
+378
+00:13:58,090 --> 00:14:01,050
+that is, initialize first
+
+379
+00:14:01,050 --> 00:14:04,010
+assuming this Task A on the left
+
+380
+00:14:04,010 --> 00:14:05,930
+is the first task we want to schedule
+
+381
+00:14:05,930 --> 00:14:07,070
+So, first, let's take
+
+382
+00:14:07,070 --> 00:14:09,370
+First, let's point the mscratch register
+
+383
+00:14:09,370 --> 00:14:11,970
+to the task on the left,
+
+384
+00:14:11,970 --> 00:14:13,370
+to its corresponding context.
+
+385
+00:14:13,370 --> 00:14:15,410
+This way, it means we want to
+
+386
+00:14:15,410 --> 00:14:16,190
+Right from the start,
+
+387
+00:14:16,190 --> 00:14:18,230
+we run the task on the left first.
+
+388
+00:14:18,230 --> 00:14:19,230
+Good.
+
+389
+00:14:19,230 --> 00:14:24,250
+Then the PC starts running.
+
+390
+00:14:24,250 --> 00:14:28,430
+So let's assume it first executes the first instruction,
+
+391
+00:14:28,430 --> 00:14:30,170
+and then
+
+392
+00:14:30,170 --> 00:14:31,830
+goes on to execute the second instruction.
+
+393
+00:14:31,830 --> 00:14:33,630
+Now, when executing the second instruction,
+
+394
+00:14:33,630 --> 00:14:34,830
+the value of PC down here
+
+395
+00:14:34,830 --> 00:14:38,110
+this value here,
+
+396
+00:14:38,110 --> 00:14:39,550
+is also changing accordingly.
+
+397
+00:14:39,550 --> 00:14:41,790
+This value is changing as well.
+
+398
+00:14:41,790 --> 00:14:44,130
+Good.
+
+399
+00:14:44,130 --> 00:14:47,430
+Now let's assume at this point,
+
+400
+00:14:47,430 --> 00:14:48,450
+this timer,
+
+401
+00:14:48,450 --> 00:14:50,830
+For example, when we reach the
+
+402
+00:14:50,830 --> 00:14:52,750
+timer,
+
+403
+00:14:52,750 --> 00:14:54,270
+once the timer fires,
+
+404
+00:14:54,270 --> 00:14:56,790
+we know that the trap handling flow
+
+405
+00:14:56,790 --> 00:14:58,450
+that we learned earlier
+
+406
+00:14:58,450 --> 00:15:00,450
+will kick in.
+
+407
+00:15:00,450 --> 00:15:01,770
+Now, as for the trap,
+
+408
+00:15:01,770 --> 00:15:03,790
+we know that in its handling flow,
+
+409
+00:15:03,790 --> 00:15:05,990
+one very important point is that
+
+410
+00:15:05,990 --> 00:15:07,410
+it will take this
+
+411
+00:15:07,410 --> 00:15:11,600
+— since this was an interrupt,
+
+412
+00:15:11,600 --> 00:15:12,020
+right,
+
+413
+00:15:12,020 --> 00:15:12,540
+it was an interrupt —
+
+414
+00:15:12,540 --> 00:15:14,560
+it takes the address
+
+415
+00:15:14,560 --> 00:15:17,500
+of this instruction, the I plus 2 instruction,
+
+416
+00:15:17,500 --> 00:15:19,640
+the address of it,
+
+417
+00:15:19,640 --> 00:15:22,860
+and saves it into mepc.
+
+418
+00:15:22,860 --> 00:15:24,820
+So you can see that
+
+419
+00:15:24,820 --> 00:15:26,120
+at this point,
+
+420
+00:15:26,120 --> 00:15:28,620
+it will become an I plus 2.
+
+421
+00:15:28,620 --> 00:15:29,180
+What about I plus 2?
+
+422
+00:15:29,180 --> 00:15:30,340
+Actually, it is this instruction's
+
+423
+00:15:30,340 --> 00:15:33,420
+the address of this instruction
+
+424
+00:15:33,420 --> 00:15:35,360
+And saving it here,
+
+425
+00:15:35,360 --> 00:15:37,520
+we will see later on,
+
+426
+00:15:37,520 --> 00:15:38,620
+it will serve this task
+
+427
+00:15:38,620 --> 00:15:40,520
+after a switch and then a return later,
+
+428
+00:15:40,520 --> 00:15:41,540
+it will come into play.
+
+429
+00:15:41,540 --> 00:15:43,900
+Let's take a look at how this process happens.
+
+430
+00:15:43,900 --> 00:15:46,000
+So suppose its MEPC now,
+
+431
+00:15:46,000 --> 00:15:47,780
+has become I plus 2.
+
+432
+00:15:47,780 --> 00:15:49,820
+So it becomes I plus 2,
+
+433
+00:15:49,820 --> 00:15:51,620
+and then, this trap,
+
+434
+00:15:51,620 --> 00:15:53,700
+at the same time, it will jump to this
+
+435
+00:15:53,700 --> 00:15:55,320
+the entry of our trap handler,
+
+436
+00:15:55,320 --> 00:15:56,940
+to perform the corresponding operations.
+
+437
+00:15:56,940 --> 00:15:58,460
+So the first step,
+
+438
+00:15:58,460 --> 00:16:01,280
+according to the code we had earlier,
+
+439
+00:16:01,280 --> 00:16:02,940
+the implementation of it,
+
+440
+00:16:02,940 --> 00:16:06,680
+its first step is to take the previous context's
+
+441
+00:16:06,680 --> 00:16:09,000
+So the so-called previous one is what's currently pointed to
+
+442
+00:16:09,000 --> 00:16:11,140
+the contents of this context
+
+443
+00:16:11,140 --> 00:16:13,140
+need to be saved
+
+444
+00:16:13,140 --> 00:16:14,980
+By so-called saving,
+
+445
+00:16:14,980 --> 00:16:17,880
+we mean taking some of the contents on the CPU
+
+446
+00:16:17,880 --> 00:16:21,780
+and saving them into our memory
+
+447
+00:16:21,780 --> 00:16:24,160
+Now, in this process,
+
+448
+00:16:24,160 --> 00:16:26,740
+since we're currently focusing on mepc,
+
+449
+00:16:26,740 --> 00:16:27,920
+so it actually
+
+450
+00:16:27,920 --> 00:16:29,860
+we won't talk about the other registers
+
+451
+00:16:29,860 --> 00:16:32,000
+So actually it will take what's in mepc,
+
+452
+00:16:32,000 --> 00:16:33,800
+i+2, and save it in there
+
+453
+00:16:33,800 --> 00:16:34,220
+on the left
+
+454
+00:16:34,220 --> 00:16:35,760
+So on the left side here,
+
+455
+00:16:35,760 --> 00:16:36,840
+it will also become i+2
+
+456
+00:16:36,840 --> 00:16:37,400
+right?
+
+457
+00:16:37,400 --> 00:16:39,840
+Now after saving is done,
+
+458
+00:16:39,840 --> 00:16:41,800
+the next thing we need to do
+
+459
+00:16:41,800 --> 00:16:47,420
+is switch the context
+
+460
+00:16:47,420 --> 00:16:48,340
+Now by so-called switching,
+
+461
+00:16:48,340 --> 00:16:50,520
+So basically, what we do is take the pointer
+
+462
+00:16:50,520 --> 00:16:52,380
+stored in mscratch,
+
+463
+00:16:52,380 --> 00:16:54,020
+which originally pointed to the left side,
+
+464
+00:16:54,020 --> 00:16:55,580
+and now make it point to the right side instead.
+
+465
+00:16:55,580 --> 00:16:56,280
+Then, next,
+
+466
+00:16:56,280 --> 00:16:57,120
+we need to get ready
+
+467
+00:16:57,120 --> 00:16:59,780
+to schedule the task on the right onto the CPU
+
+468
+00:16:59,780 --> 00:17:00,420
+and start running it.
+
+469
+00:17:00,420 --> 00:17:03,340
+Now, before it runs,
+
+470
+00:17:03,340 --> 00:17:05,000
+what's the first thing we need to do?
+
+471
+00:17:05,000 --> 00:17:07,260
+We need to take the context on the right
+
+472
+00:17:07,260 --> 00:17:09,940
+and restore it onto the CPU,
+
+473
+00:17:09,940 --> 00:17:12,080
+because what we're doing now is replacing
+
+474
+00:17:12,080 --> 00:17:12,940
+the entire execution environment currently on the CPU,
+
+475
+00:17:12,940 --> 00:17:15,380
+essentially swapping it out,
+
+476
+00:17:15,380 --> 00:17:17,800
+replacing it with the task on the right.
+
+477
+00:17:17,800 --> 00:17:19,040
+In this swapping process,
+
+478
+00:17:19,040 --> 00:17:21,080
+once again, we only care about MEPC.
+
+479
+00:17:21,080 --> 00:17:25,580
+Looking at MEPC,
+
+480
+00:17:25,580 --> 00:17:27,700
+what value will it be replaced with?
+
+481
+00:17:27,700 --> 00:17:29,280
+it gets replaced with this
+
+482
+00:17:29,280 --> 00:17:30,880
+the original initialized return address,
+
+483
+00:17:30,880 --> 00:17:33,060
+which is the first instruction of the task on the right,
+
+484
+00:17:33,060 --> 00:17:34,400
+because the task on the right
+
+485
+00:17:34,400 --> 00:17:35,320
+is about to start running,
+
+486
+00:17:35,320 --> 00:17:35,560
+right?
+
+487
+00:17:35,560 --> 00:17:39,040
+Now the i + 2 value originally in there
+
+488
+00:17:39,040 --> 00:17:39,840
+gets replaced.
+
+489
+00:17:39,840 --> 00:17:40,800
+But don't worry.
+
+490
+00:17:40,800 --> 00:17:41,080
+Why?
+
+491
+00:17:41,080 --> 00:17:43,220
+Because even though this value gets replaced,
+
+492
+00:17:43,220 --> 00:17:45,340
+we've already saved a copy of it
+
+493
+00:17:45,340 --> 00:17:46,780
+in the original location for it.
+
+494
+00:17:46,780 --> 00:17:47,640
+Pay attention here.
+
+495
+00:17:47,640 --> 00:17:50,180
+In fact, this one saved here,
+
+496
+00:17:50,180 --> 00:17:51,740
+so this replacement over here
+
+497
+00:17:51,740 --> 00:17:53,840
+won't lose anything.
+
+498
+00:17:53,840 --> 00:17:55,060
+Pay attention to this.
+
+499
+00:17:55,060 --> 00:17:58,070
+So this one
+
+500
+00:17:58,070 --> 00:17:59,710
+just gets replaced.
+
+501
+00:17:59,710 --> 00:18:00,350
+It becomes connected.
+
+502
+00:18:00,350 --> 00:18:01,290
+Now, then,
+
+503
+00:18:01,290 --> 00:18:03,250
+think about it — after this is done,
+
+504
+00:18:03,250 --> 00:18:04,970
+when we start executing mret,
+
+505
+00:18:04,970 --> 00:18:09,790
+the process of switching our task will happen.
+
+506
+00:18:09,790 --> 00:18:10,870
+This will happen.
+
+507
+00:18:10,870 --> 00:18:13,150
+Because, as we know, with mret,
+
+508
+00:18:13,150 --> 00:18:15,290
+it actually takes the value in mepc
+
+509
+00:18:15,290 --> 00:18:19,790
+— it jumps based on the value inside there.
+
+510
+00:18:19,790 --> 00:18:21,910
+So if this is set at this point,
+
+511
+00:18:21,910 --> 00:18:24,130
+then it will actually jump to that location to execute.
+
+512
+00:18:24,130 --> 00:18:28,090
+So once this mret executes,
+
+513
+00:18:28,090 --> 00:18:32,510
+our pc actually jumps to task b,
+
+514
+00:18:32,510 --> 00:18:34,670
+and it starts running from its first instruction.
+
+515
+00:18:34,670 --> 00:18:37,110
+At this point,
+
+516
+00:18:37,110 --> 00:18:39,850
+we have completed the first switch of this task.
+
+517
+00:18:39,850 --> 00:18:42,250
+Next,
+
+518
+00:18:42,250 --> 00:18:43,990
+let's look at how the task switches back.
+
+519
+00:18:43,990 --> 00:18:45,390
+Switching back is actually a process
+
+520
+00:18:45,390 --> 00:18:46,230
+that, just like before,
+
+521
+00:18:46,230 --> 00:18:47,610
+It's actually quite similar.
+
+522
+00:18:47,610 --> 00:18:49,290
+So let's assume this PZ,
+
+523
+00:18:49,290 --> 00:18:51,350
+starts running again, continuing downward,
+
+524
+00:18:51,350 --> 00:18:52,950
+proceeding to J+1.
+
+525
+00:18:52,950 --> 00:18:54,470
+Now, since this task,
+
+526
+00:18:54,470 --> 00:18:55,630
+did not give up the CPU voluntarily,
+
+527
+00:18:55,630 --> 00:18:57,930
+we don't know when it will switch.
+
+528
+00:18:57,930 --> 00:18:59,790
+But the actual switch,
+
+529
+00:18:59,790 --> 00:19:01,130
+still happens at, well,
+
+530
+00:19:01,130 --> 00:19:02,750
+the moment of this interrupt.
+
+531
+00:19:02,750 --> 00:19:04,530
+At this point, an interrupt should occur.
+
+532
+00:19:04,530 --> 00:19:06,170
+We haven't drawn this interrupt yet,
+
+533
+00:19:06,170 --> 00:19:07,350
+but you can imagine it.
+
+534
+00:19:07,350 --> 00:19:08,270
+Suppose at this moment,
+
+535
+00:19:08,270 --> 00:19:09,750
+this interrupt happens again.
+
+536
+00:19:09,750 --> 00:19:10,910
+Once the interrupt occurs,
+
+537
+00:19:10,910 --> 00:19:13,090
+as you know, the same process we just described repeats.
+
+538
+00:19:13,090 --> 00:19:15,870
+What is this repeating process?
+
+539
+00:19:15,870 --> 00:19:16,330
+Well, that is,
+
+540
+00:19:16,330 --> 00:19:18,830
+suppose the interrupt occurs at this point.
+
+541
+00:19:18,830 --> 00:19:19,810
+Once an interrupt occurs,
+
+542
+00:19:19,810 --> 00:19:23,890
+it will take this instruction at pc plus 2
+
+543
+00:19:23,890 --> 00:19:25,050
+and save it into this field here.
+
+544
+00:19:25,050 --> 00:19:26,450
+That's what I'm trying to say.
+
+545
+00:19:26,450 --> 00:19:27,770
+And then,
+
+546
+00:19:27,770 --> 00:19:29,590
+this side here becomes pc plus 2.
+
+547
+00:19:29,590 --> 00:19:31,630
+So after it's saved,
+
+548
+00:19:31,630 --> 00:19:33,590
+as we know,
+
+549
+00:19:33,590 --> 00:19:38,930
+it jumps to
+
+550
+00:19:38,930 --> 00:19:39,850
+this task handler,
+
+551
+00:19:39,850 --> 00:19:41,690
+into this trap handler function.
+
+552
+00:19:41,690 --> 00:19:43,390
+Then it repeats the logic from before:
+
+553
+00:19:43,390 --> 00:19:44,430
+save,
+
+554
+00:19:44,430 --> 00:19:48,230
+save the original context,
+
+555
+00:19:48,230 --> 00:19:49,570
+and then switch,
+
+556
+00:19:49,570 --> 00:19:52,680
+switch.
+
+557
+00:19:52,680 --> 00:19:54,580
+After the switch is done,
+
+558
+00:19:54,580 --> 00:19:54,960
+restore.
+
+559
+00:19:54,960 --> 00:19:56,420
+When it restores,
+
+560
+00:19:56,420 --> 00:19:57,320
+as you all know, at this point
+
+561
+00:19:57,320 --> 00:19:59,640
+This register i+2, this value,
+
+562
+00:19:59,640 --> 00:20:02,700
+it will be replaced by the value over here.
+
+563
+00:20:02,700 --> 00:20:03,780
+But that's fine,
+
+564
+00:20:03,780 --> 00:20:04,960
+we've already saved a copy here.
+
+565
+00:20:04,960 --> 00:20:06,100
+So even though it gets replaced here,
+
+566
+00:20:06,100 --> 00:20:07,200
+that doesn't matter.
+
+567
+00:20:07,200 --> 00:20:08,200
+Same as before.
+
+568
+00:20:08,200 --> 00:20:11,300
+Now, when we restore,
+
+569
+00:20:11,300 --> 00:20:13,520
+this i+2 comes back in.
+
+570
+00:20:13,520 --> 00:20:14,360
+So as you know,
+
+571
+00:20:14,360 --> 00:20:15,700
+at this point, moving on down,
+
+572
+00:20:15,700 --> 00:20:17,540
+when we execute mret,
+
+573
+00:20:17,540 --> 00:20:21,000
+where do we return to?
+
+574
+00:20:21,000 --> 00:20:22,160
+Well, quite naturally,
+
+575
+00:20:22,160 --> 00:20:24,920
+it goes by the value of this i+2,
+
+576
+00:20:24,920 --> 00:20:27,400
+to jump there and continue executing.
+
+577
+00:20:27,400 --> 00:20:27,820
+Right?
+
+578
+00:20:27,820 --> 00:20:29,900
+So next,
+
+579
+00:20:29,900 --> 00:20:30,620
+it comes right back.
+
+580
+00:20:30,620 --> 00:20:36,100
+And after that, there's nothing more to say.
+
+581
+00:20:36,100 --> 00:20:37,580
+So what we're emphasizing here
+
+582
+00:20:37,580 --> 00:20:39,140
+is really this point:
+
+583
+00:20:39,140 --> 00:20:40,400
+in this process,
+
+584
+00:20:40,400 --> 00:20:42,500
+even though our task didn't voluntarily give up the CPU,
+
+585
+00:20:42,500 --> 00:20:46,160
+with the occurrence of this timer interrupt,
+
+586
+00:20:46,160 --> 00:20:47,860
+with all these things happening,
+
+587
+00:20:47,860 --> 00:20:49,420
+in the middle of that,
+
+588
+00:20:49,420 --> 00:20:51,900
+we use the interrupt handler
+
+589
+00:20:51,900 --> 00:20:56,520
+to carry out the scheduling and execution of the entire task.
+
+590
+00:20:56,520 --> 00:21:02,520
+So that's essentially what we call preemption.
+
+591
+00:21:02,520 --> 00:21:03,240
+That's exactly what it means.
+
+592
+00:21:03,240 --> 00:21:04,880
+So in other words,
+
+593
+00:21:04,880 --> 00:21:06,140
+the task didn't voluntarily give up the CPU,
+
+594
+00:21:06,140 --> 00:21:07,460
+but our kernel,
+
+595
+00:21:07,460 --> 00:21:08,940
+preempted it.
+
+596
+00:21:08,940 --> 00:21:10,580
+This is what's called preemptive multitasking.
+
+597
+00:21:10,580 --> 00:21:18,060
+So up to this point,
+
+598
+00:21:18,060 --> 00:21:20,580
+we've finished introducing preemptive multitasking
+
+599
+00:21:20,580 --> 00:21:21,580
+to all of you.
+
+600
+00:21:21,580 --> 00:21:23,060
+Now, some of you may ask,
+
+601
+00:21:23,060 --> 00:21:23,740
+I mean,
+
+602
+00:21:23,740 --> 00:21:25,460
+preemptive multitasking
+
+603
+00:21:25,460 --> 00:21:27,360
+once we implement it,
+
+604
+00:21:27,360 --> 00:21:28,240
+then the original,
+
+605
+00:21:28,240 --> 00:21:30,000
+this backward-compatible kind of
+
+606
+00:21:30,000 --> 00:21:32,040
+if the original cooperative multitasking,
+
+607
+00:21:32,040 --> 00:21:33,080
+actually refers to
+
+608
+00:21:33,080 --> 00:21:34,040
+I mean, our
+
+609
+00:21:34,040 --> 00:21:36,440
+the Task_yield interface,
+
+610
+00:21:36,440 --> 00:21:38,220
+does it become useless for us?
+
+611
+00:21:38,220 --> 00:21:39,140
+Because it's also possible,
+
+612
+00:21:39,140 --> 00:21:40,420
+as you can imagine,
+
+613
+00:21:40,420 --> 00:21:42,600
+it's possible that during the execution of our program,
+
+614
+00:21:42,600 --> 00:21:44,260
+we might
+
+615
+00:21:44,260 --> 00:21:47,840
+a task might want to voluntarily give up the CPU,
+
+616
+00:21:47,840 --> 00:21:50,860
+for example, we don't want to wait until the timer fires
+
+617
+00:21:50,860 --> 00:21:51,740
+before we get switched out,
+
+618
+00:21:51,740 --> 00:21:53,180
+because we may have finished our work,
+
+619
+00:21:53,180 --> 00:21:55,260
+and then we can release the CPU right away.
+
+620
+00:21:55,260 --> 00:21:58,420
+So, this Task_yield function of ours,
+
+621
+00:21:58,420 --> 00:22:01,440
+In fact, we still have a need for its existence.
+
+622
+00:22:01,440 --> 00:22:03,560
+So how do we maintain compatibility with this?
+
+623
+00:22:03,560 --> 00:22:08,160
+Well, we actually need to introduce
+
+624
+00:22:08,160 --> 00:22:10,000
+that is, for our third type,
+
+625
+00:22:10,000 --> 00:22:11,720
+the introduction of the software interrupt,
+
+626
+00:22:11,720 --> 00:22:16,480
+we actually implement it through this software interrupt mechanism.
+
+627
+00:22:16,480 --> 00:22:19,400
+This allows us to achieve
+
+628
+00:22:19,400 --> 00:22:23,100
+that is, on top of the existing preemptive multitasking,
+
+629
+00:22:23,100 --> 00:22:26,080
+we can still be compatible with this kind of cooperative multitasking.
+
+630
+00:22:26,080 --> 00:22:30,560
+Now, this software interrupt,
+
+631
+00:22:30,560 --> 00:22:31,460
+as we introduced earlier,
+
+632
+00:22:31,460 --> 00:22:34,200
+it still uses the CLINT device,
+
+633
+00:22:34,200 --> 00:22:36,380
+because this local interrupt,
+
+634
+00:22:36,380 --> 00:22:37,720
+the local interrupt generator,
+
+635
+00:22:37,720 --> 00:22:39,780
+it can generate software interrupts,
+
+636
+00:22:39,780 --> 00:22:41,200
+and it can also generate timer interrupts.
+
+637
+00:22:41,200 --> 00:22:44,360
+So this thing,
+
+638
+00:22:44,360 --> 00:22:48,680
+that is, why did we think of
+
+639
+00:22:48,680 --> 00:22:50,860
+using a software interrupt to do this?
+
+640
+00:22:50,860 --> 00:22:52,440
+Well, think about it.
+
+641
+00:22:52,440 --> 00:22:56,160
+That is to say, if we use the timer interrupt
+
+642
+00:22:56,160 --> 00:22:57,420
+to implement preemption,
+
+643
+00:22:57,420 --> 00:23:00,900
+what effect does that actually amount to?
+
+644
+00:23:00,900 --> 00:23:04,060
+It means that even if a task doesn't voluntarily give up the CPU,
+
+645
+00:23:04,060 --> 00:23:07,040
+then through this...
+
+646
+00:23:07,040 --> 00:23:11,600
+after we set this thing up,
+
+647
+00:23:11,600 --> 00:23:12,840
+it generates a timer interrupt,
+
+648
+00:23:12,840 --> 00:23:17,200
+and it can trigger us periodically,
+
+649
+00:23:17,200 --> 00:23:18,880
+like giving us a phone call, so to speak.
+
+650
+00:23:18,880 --> 00:23:20,560
+Think of an analogy, everyone.
+
+651
+00:23:20,560 --> 00:23:21,580
+It's like saying,
+
+652
+00:23:21,580 --> 00:23:23,460
+we tell this thing,
+
+653
+00:23:23,460 --> 00:23:25,580
+our task is running up there,
+
+654
+00:23:25,580 --> 00:23:27,920
+and before we start running it,
+
+655
+00:23:27,920 --> 00:23:28,860
+we have already set it up so that
+
+656
+00:23:28,860 --> 00:23:30,760
+this CLINT, this thing,
+
+657
+00:23:30,760 --> 00:23:32,580
+as a peripheral device,
+
+658
+00:23:32,580 --> 00:23:34,140
+for example, every one second,
+
+659
+00:23:34,140 --> 00:23:35,460
+gives us a phone call,
+
+660
+00:23:35,460 --> 00:23:37,160
+and then after it makes that call,
+
+661
+00:23:37,160 --> 00:23:39,080
+Our kernel,
+
+662
+00:23:39,080 --> 00:23:40,640
+in the process of receiving the interrupt,
+
+663
+00:23:40,640 --> 00:23:42,740
+switches this task
+
+664
+00:23:42,740 --> 00:23:44,340
+actually to achieve this effect
+
+665
+00:23:44,340 --> 00:23:47,740
+this is the concept of preemption.
+
+666
+00:23:47,740 --> 00:23:50,280
+Now suppose we want to
+
+667
+00:23:50,280 --> 00:23:52,440
+voluntarily give up ourselves,
+
+668
+00:23:52,440 --> 00:23:54,280
+what does that actually mean?
+
+669
+00:23:54,280 --> 00:23:56,120
+It means that since we still want to
+
+670
+00:23:56,120 --> 00:23:56,980
+reuse the original code,
+
+671
+00:23:56,980 --> 00:23:58,000
+actually the main goal
+
+672
+00:23:58,000 --> 00:23:59,140
+is still to reuse the original code.
+
+673
+00:23:59,140 --> 00:24:00,880
+And the original code,
+
+674
+00:24:00,880 --> 00:24:02,280
+as we know, actually comes in through
+
+675
+00:24:02,280 --> 00:24:04,000
+the interrupt entry point,
+
+676
+00:24:04,000 --> 00:24:05,540
+comes in through the interrupt entry point,
+
+677
+00:24:05,540 --> 00:24:07,540
+and then implements this preemption.
+
+678
+00:24:07,540 --> 00:24:09,560
+So how do we make this
+
+679
+00:24:09,560 --> 00:24:10,900
+task, during execution,
+
+680
+00:24:10,900 --> 00:24:12,500
+for example, while I'm executing,
+
+681
+00:24:12,500 --> 00:24:14,040
+And then we call a task yield
+
+682
+00:24:14,040 --> 00:24:15,360
+So, we call a task yield,
+
+683
+00:24:15,360 --> 00:24:16,500
+which can actively go
+
+684
+00:24:16,500 --> 00:24:19,720
+Basically, it's like actively making a phone call to yourself,
+
+685
+00:24:19,720 --> 00:24:22,180
+that is, actively triggering an interrupt.
+
+686
+00:24:22,180 --> 00:24:24,740
+Now, this is the concept of a software interrupt.
+
+687
+00:24:24,740 --> 00:24:28,160
+Because all the other interrupts,
+
+688
+00:24:28,160 --> 00:24:32,500
+in fact, are not triggered actively by us,
+
+689
+00:24:32,500 --> 00:24:32,900
+right? A peripheral interrupt
+
+690
+00:24:32,900 --> 00:24:34,240
+can happen at any time,
+
+691
+00:24:34,240 --> 00:24:36,380
+and as for the timer interrupt,
+
+692
+00:24:36,380 --> 00:24:38,380
+that's not actively triggered by us either,
+
+693
+00:24:38,380 --> 00:24:39,740
+and this timer interrupt,
+
+694
+00:24:39,740 --> 00:24:42,520
+we don't trigger it actively either. We just set up a period ahead of time,
+
+695
+00:24:42,520 --> 00:24:44,760
+and when that period is up,
+
+696
+00:24:44,760 --> 00:24:46,020
+it generates on its own,
+
+697
+00:24:46,020 --> 00:24:47,860
+generated by this external thing,
+
+698
+00:24:47,860 --> 00:24:49,140
+and as for the software interrupt,
+
+699
+00:24:49,140 --> 00:24:50,140
+you can understand it as meaning that,
+
+700
+00:24:50,140 --> 00:24:56,120
+basically, we go and set this thing up.
+
+701
+00:24:56,120 --> 00:24:57,860
+Of course, we do it by issuing a command
+
+702
+00:24:57,860 --> 00:24:59,120
+to set up this thing,
+
+703
+00:24:59,120 --> 00:25:01,420
+and then it generates an interrupt for us.
+
+704
+00:25:01,420 --> 00:25:03,740
+Now, this thing is actually just like an exception—
+
+705
+00:25:03,740 --> 00:25:06,320
+relatively speaking, it's a bit like a synchronous process,
+
+706
+00:25:06,320 --> 00:25:07,580
+a bit like a synchronous process.
+
+707
+00:25:07,580 --> 00:25:09,860
+This kind is called a software interrupt,
+
+708
+00:25:09,860 --> 00:25:11,640
+that is, an interrupt triggered by software.
+
+709
+00:25:11,640 --> 00:25:12,840
+That's what a software interrupt is.
+
+710
+00:25:12,840 --> 00:25:17,130
+So once it's triggered by a software interrupt,
+
+711
+00:25:17,130 --> 00:25:18,790
+you know, if it's like this—
+
+712
+00:25:18,790 --> 00:25:19,830
+once an interrupt is generated,
+
+713
+00:25:19,830 --> 00:25:20,790
+we can
+
+714
+00:25:20,790 --> 00:25:22,970
+just like with a timer interrupt,
+
+715
+00:25:22,970 --> 00:25:24,830
+we can completely reuse
+
+716
+00:25:24,830 --> 00:25:29,710
+the original handling flow and functions.
+
+717
+00:25:29,710 --> 00:25:31,350
+Actually, the reason we introduce software interrupts,
+
+718
+00:25:31,350 --> 00:25:34,830
+is precisely to achieve this effect.
+
+719
+00:25:34,830 --> 00:25:36,490
+So next, let's take a look at
+
+720
+00:25:36,490 --> 00:25:38,670
+that is, how we make use of it.
+
+721
+00:25:38,670 --> 00:25:41,030
+How do we trigger a software interrupt?
+
+722
+00:25:41,030 --> 00:25:42,610
+How do we make use of a software interrupt?
+
+723
+00:25:42,610 --> 00:25:49,050
+Now, since the software interrupt is still generated by the CLINT,
+
+724
+00:25:49,050 --> 00:25:51,330
+this device,
+
+725
+00:25:51,330 --> 00:25:53,690
+so let's take a look at it first.
+
+726
+00:25:53,690 --> 00:25:55,350
+Earlier, before this,
+
+727
+00:25:55,350 --> 00:25:57,470
+in the previous chapter, we mainly introduced
+
+728
+00:25:57,470 --> 00:25:59,530
+its timer part.
+
+729
+00:25:59,530 --> 00:26:00,770
+Now it also has some registers
+
+730
+00:26:00,770 --> 00:26:03,610
+that are related to software interrupts.
+
+731
+00:26:03,610 --> 00:26:05,250
+Let's take a look at them together now.
+
+732
+00:26:05,250 --> 00:26:08,930
+It has a register called MSIP.
+
+733
+00:26:08,930 --> 00:26:12,750
+This is, for each hart,
+
+734
+00:26:12,750 --> 00:26:14,630
+there is one MSIP register.
+
+735
+00:26:14,630 --> 00:26:17,090
+This MSIP register is rather special.
+
+736
+00:26:17,090 --> 00:26:19,670
+It is also a 32-bit register,
+
+737
+00:26:19,670 --> 00:26:21,210
+but this 32-bit register,
+
+738
+00:26:21,210 --> 00:26:22,970
+in practice, we only use
+
+739
+00:26:22,970 --> 00:26:24,670
+its lowest bit.
+
+740
+00:26:24,670 --> 00:26:27,210
+The other high 32 bits
+
+741
+00:26:27,210 --> 00:26:28,510
+Actually, we don't use it.
+
+742
+00:26:28,510 --> 00:26:29,790
+So what about the lowest bit?
+
+743
+00:26:29,790 --> 00:26:30,490
+Pay attention here, everyone.
+
+744
+00:26:30,490 --> 00:26:31,370
+In hardware,
+
+745
+00:26:31,370 --> 00:26:33,290
+it actually gets mapped to
+
+746
+00:26:33,290 --> 00:26:34,230
+this,
+
+747
+00:26:34,230 --> 00:26:37,090
+mapped to the MIP register,
+
+748
+00:26:37,090 --> 00:26:39,590
+to its special MSIP bit.
+
+749
+00:26:39,590 --> 00:26:42,090
+You can think of it this way:
+
+750
+00:26:42,090 --> 00:26:44,930
+when we write to this register,
+
+751
+00:26:44,930 --> 00:26:46,430
+once we write
+
+752
+00:26:46,430 --> 00:26:48,430
+the lowest bit of this register,
+
+753
+00:26:48,430 --> 00:26:50,150
+then this bit,
+
+754
+00:26:50,150 --> 00:26:50,950
+because we know this bit
+
+755
+00:26:50,950 --> 00:26:52,990
+is actually used to indicate
+
+756
+00:26:52,990 --> 00:26:58,010
+that is, it is actually the so-called interrupt's
+
+757
+00:26:58,010 --> 00:27:02,110
+software interrupt pending bit,
+
+758
+00:27:02,110 --> 00:27:03,410
+the software interrupt pending bit,
+
+759
+00:27:03,410 --> 00:27:05,810
+which is used to tell us whether this interrupt has occurred.
+
+760
+00:27:05,810 --> 00:27:08,630
+Now, since we're mapping to this,
+
+761
+00:27:08,630 --> 00:27:11,470
+If we set the lowest bit of this MSIP register to 1,
+
+762
+00:27:11,470 --> 00:27:14,130
+and we set it to 1,
+
+763
+00:27:14,130 --> 00:27:15,970
+then this bit naturally becomes 1 as well,
+
+764
+00:27:15,970 --> 00:27:17,830
+so through this bit,
+
+765
+00:27:17,830 --> 00:27:20,390
+we can also read out that the software interrupt has occurred.
+
+766
+00:27:20,390 --> 00:27:21,430
+That is actually what this means.
+
+767
+00:27:21,430 --> 00:27:24,070
+Don't let this confuse you.
+
+768
+00:27:24,070 --> 00:27:25,150
+That is to say,
+
+769
+00:27:25,150 --> 00:27:27,990
+this MSIP
+
+770
+00:27:27,990 --> 00:27:32,010
+is the name of a register inside the CLINT,
+
+771
+00:27:32,010 --> 00:27:33,930
+while this MSIP here,
+
+772
+00:27:33,930 --> 00:27:34,790
+actually refers to
+
+773
+00:27:34,790 --> 00:27:37,730
+a certain bit of the MIP register,
+
+774
+00:27:37,730 --> 00:27:38,810
+a certain bit position.
+
+775
+00:27:38,810 --> 00:27:40,210
+Please pay attention to this,
+
+776
+00:27:40,210 --> 00:27:41,610
+don't mix them up.
+
+777
+00:27:41,610 --> 00:27:50,190
+This is the MSIP register.
+
+778
+00:27:50,190 --> 00:27:51,830
+Now, using it,
+
+779
+00:27:51,830 --> 00:27:52,310
+is very simple.
+
+780
+00:27:52,310 --> 00:27:53,310
+As I just said,
+
+781
+00:27:53,310 --> 00:27:54,350
+Let me emphasize this again here.
+
+782
+00:27:54,350 --> 00:27:56,190
+That is to say, when we write 1 to this
+
+783
+00:27:56,190 --> 00:27:58,230
+MICB register — that is, this MSI control register —
+
+784
+00:27:58,230 --> 00:28:00,190
+actually, writing 1 to its lowest bit
+
+785
+00:28:00,190 --> 00:28:01,910
+will trigger this software interrupt.
+
+786
+00:28:01,910 --> 00:28:04,310
+What if we write 0?
+
+787
+00:28:04,310 --> 00:28:06,770
+It means we are acknowledging that interrupt.
+
+788
+00:28:06,770 --> 00:28:09,470
+In effect, we are notifying the CLINT that
+
+789
+00:28:09,470 --> 00:28:11,070
+we have finished handling the software interrupt.
+
+790
+00:28:11,070 --> 00:28:12,330
+This way,
+
+791
+00:28:12,330 --> 00:28:15,290
+it will not keep triggering this software interrupt repeatedly.
+
+792
+00:28:15,290 --> 00:28:17,470
+Otherwise, if you don't acknowledge it,
+
+793
+00:28:17,470 --> 00:28:19,350
+this software interrupt will essentially keep being generated.
+
+794
+00:28:19,350 --> 00:28:20,870
+The signal level stays high,
+
+795
+00:28:20,870 --> 00:28:23,170
+and then it will keep generating this software interrupt non-stop.
+
+796
+00:28:23,170 --> 00:28:24,910
+So once you have finished handling it,
+
+797
+00:28:24,910 --> 00:28:25,930
+you must acknowledge it.
+
+798
+00:28:25,930 --> 00:28:28,110
+Writing 0 to it turns it off.
+
+799
+00:28:28,110 --> 00:28:30,470
+Otherwise, this software interrupt will keep being triggered forever.
+
+800
+00:28:30,470 --> 00:28:31,910
+Please keep this in mind when writing to it.
+
+801
+00:28:31,910 --> 00:28:36,330
+So based on the idea we just discussed,
+
+802
+00:28:36,330 --> 00:28:38,110
+that is, by triggering a software interrupt,
+
+803
+00:28:38,110 --> 00:28:40,390
+we go through the same flow
+
+804
+00:28:40,390 --> 00:28:43,150
+to carry out the task switch.
+
+805
+00:28:43,150 --> 00:28:47,530
+Now, based on this idea,
+
+806
+00:28:47,530 --> 00:28:50,030
+for the function that this task used to have,
+
+807
+00:28:50,030 --> 00:28:51,810
+we rewrite it a bit.
+
+808
+00:28:51,810 --> 00:28:54,030
+We can take the implementation of this function
+
+809
+00:28:54,030 --> 00:28:56,450
+and, compared with the cooperative
+
+810
+00:28:56,450 --> 00:28:59,370
+multitasking version's task yield,
+
+811
+00:28:59,370 --> 00:29:00,910
+we can actually make a comparison.
+
+812
+00:29:00,910 --> 00:29:02,070
+Here,
+
+813
+00:29:02,070 --> 00:29:04,430
+it no longer calls that switch function,
+
+814
+00:29:04,430 --> 00:29:05,650
+but in fact it
+
+815
+00:29:05,650 --> 00:29:07,530
+just does one very simple thing,
+
+816
+00:29:07,530 --> 00:29:10,870
+which is writing a 1
+
+817
+00:29:10,870 --> 00:29:11,670
+into this mrcp register,
+
+818
+00:29:11,670 --> 00:29:13,130
+writing this 1.
+
+819
+00:29:13,130 --> 00:29:14,970
+But this action is very simple,
+
+820
+00:29:14,970 --> 00:29:15,610
+yet this 1
+
+821
+00:29:15,610 --> 00:29:17,290
+We need to understand what actually happens behind the scenes.
+
+822
+00:29:17,290 --> 00:29:19,990
+It actually triggers a software interrupt.
+
+823
+00:29:19,990 --> 00:29:22,750
+So once the software interrupt is triggered,
+
+824
+00:29:22,750 --> 00:29:25,690
+it's really just the interrupt handling flow.
+
+825
+00:29:25,690 --> 00:29:28,590
+So similarly,
+
+826
+00:29:28,590 --> 00:29:30,070
+it goes into that trap vector
+
+827
+00:29:30,070 --> 00:29:31,130
+function,
+
+828
+00:29:31,130 --> 00:29:31,870
+right?
+
+829
+00:29:31,870 --> 00:29:33,210
+And then that
+
+830
+00:29:33,210 --> 00:29:34,390
+calls the trap handler.
+
+831
+00:29:34,390 --> 00:29:35,330
+The trap handler
+
+832
+00:29:35,330 --> 00:29:38,530
+in turn calls schedule.
+
+833
+00:29:38,530 --> 00:29:40,830
+So if we walk through the whole process,
+
+834
+00:29:40,830 --> 00:29:42,050
+it's actually the same as
+
+835
+00:29:42,050 --> 00:29:44,550
+the process of the timer interrupt we just saw
+
+836
+00:29:44,550 --> 00:29:46,030
+that we generated earlier.
+
+837
+00:29:46,030 --> 00:29:46,670
+Do you all see that?
+
+838
+00:29:46,670 --> 00:29:48,310
+It's actually the same.
+
+839
+00:29:48,310 --> 00:29:49,350
+This way, we basically
+
+840
+00:29:49,350 --> 00:29:50,630
+keep the original logic unchanged.
+
+841
+00:29:50,630 --> 00:29:52,050
+The only thing is that
+
+842
+00:29:52,050 --> 00:29:54,090
+I just took this function in task1
+
+843
+00:29:54,090 --> 00:29:55,010
+and
+
+844
+00:29:55,010 --> 00:29:57,890
+and
+
+845
+00:29:57,890 --> 00:29:59,790
+rewrote it,
+
+846
+00:29:59,790 --> 00:30:00,670
+meaning that inside
+
+847
+00:30:00,670 --> 00:30:02,570
+it just goes and
+
+848
+00:30:02,570 --> 00:30:03,690
+sets this
+
+849
+00:30:03,690 --> 00:30:06,630
+software interrupt register, and that's it.
+
+850
+00:30:06,630 --> 00:30:09,320
+And then,
+
+851
+00:30:09,320 --> 00:30:09,860
+please pay attention here,
+
+852
+00:30:09,860 --> 00:30:11,220
+that is, at this point
+
+853
+00:30:11,220 --> 00:30:12,160
+we must
+
+854
+00:30:12,160 --> 00:30:13,660
+clear it to zero.
+
+855
+00:30:13,660 --> 00:30:15,060
+This way, after it's handled,
+
+856
+00:30:15,060 --> 00:30:16,140
+we do a hardware return.
+
+857
+00:30:16,140 --> 00:30:17,180
+This way,
+
+858
+00:30:17,180 --> 00:30:18,600
+the software interrupt won't stay
+
+859
+00:30:18,600 --> 00:30:20,300
+there forever.
+
+860
+00:30:20,300 --> 00:30:21,320
+If you skip this step,
+
+861
+00:30:21,320 --> 00:30:22,620
+You'll notice that the soft terminal
+
+862
+00:30:22,620 --> 00:30:24,580
+will just keep coming in, again and again
+
+863
+00:30:24,580 --> 00:30:26,160
+Then the program falls into an infinite loop again
+
+864
+00:30:26,160 --> 00:30:26,940
+which is not good
+
+865
+00:30:26,940 --> 00:30:28,620
+So please keep that in mind
+
+866
+00:30:28,620 --> 00:30:31,280
+So this way
+
+867
+00:30:31,280 --> 00:30:34,760
+we have achieved compatibility with the cooperative
+
+868
+00:30:34,760 --> 00:30:36,040
+that is, voluntarily giving up the CPU
+
+869
+00:30:36,040 --> 00:30:37,460
+for this function
+
+870
+00:30:37,460 --> 00:30:40,610
+So this function
+
+871
+00:30:40,610 --> 00:30:43,590
+we can still keep it
+
+872
+00:30:43,590 --> 00:30:44,290
+still keep it
+
+873
+00:30:44,290 --> 00:30:49,060
+At the same time, likewise
+
+874
+00:30:49,060 --> 00:30:51,700
+we have also covered the interrupt part
+
+875
+00:30:51,700 --> 00:30:53,080
+basically in its entirety
+
+876
+00:30:53,080 --> 00:30:54,520
+That is to say, device interrupts
+
+877
+00:30:54,520 --> 00:30:55,300
+timer interrupts
+
+878
+00:30:55,300 --> 00:30:56,040
+and software interrupts
+
+879
+00:30:56,040 --> 00:30:57,160
+we have touched on all of them
+
+880
+00:30:57,160 --> 00:31:04,820
+Through these examples, you can get an idea of how it works
+
+881
+00:31:04,820 --> 00:31:07,000
+So for chapter 13,
+
+882
+00:31:07,000 --> 00:31:09,320
+that's all the content we'll cover.
+
+883
+00:31:09,320 --> 00:31:11,420
+Now, this example,
+
+884
+00:31:11,420 --> 00:31:14,340
+let me give you a quick demonstration.
+
+885
+00:31:14,340 --> 00:31:19,930
+That is, the final preemptive example,
+
+886
+00:31:19,930 --> 00:31:22,410
+in the 08 preemptive example,
+
+887
+00:31:22,410 --> 00:31:23,870
+the preemption example,
+
+888
+00:31:23,870 --> 00:31:28,120
+in this example,
+
+889
+00:31:28,120 --> 00:31:30,360
+and in this example,
+
+890
+00:31:30,360 --> 00:31:33,680
+we've also defined two tasks.
+
+891
+00:31:33,680 --> 00:31:36,260
+Now, with these two tasks,
+
+892
+00:31:36,260 --> 00:31:37,040
+pay attention here.
+
+893
+00:31:37,040 --> 00:31:38,580
+Inside them,
+
+894
+00:31:38,580 --> 00:31:41,400
+we only have, in the first task,
+
+895
+00:31:41,400 --> 00:31:42,900
+a TaskHead.
+
+896
+00:31:42,900 --> 00:31:44,260
+Let's comment this out for now.
+
+897
+00:31:44,260 --> 00:31:45,860
+Suppose we don't introduce this thing,
+
+898
+00:31:45,860 --> 00:31:46,600
+and let's take a look.
+
+899
+00:31:46,600 --> 00:31:48,200
+That is, suppose we,
+
+900
+00:31:48,200 --> 00:31:50,900
+don't voluntarily give up the CPU at all,
+
+901
+00:31:50,900 --> 00:31:52,620
+So this...
+
+902
+00:31:52,620 --> 00:31:56,320
+So as you can see
+
+903
+00:31:56,320 --> 00:31:57,860
+these two tasks, inside this
+
+904
+00:31:57,860 --> 00:32:00,580
+apart from the delay,
+
+905
+00:32:00,580 --> 00:32:02,200
+it's basically just an infinite loop,
+
+906
+00:32:02,200 --> 00:32:03,040
+running on its own,
+
+907
+00:32:03,040 --> 00:32:05,420
+it never actively gives up the CPU.
+
+908
+00:32:05,420 --> 00:32:08,320
+Now we again take these two tasks
+
+909
+00:32:08,320 --> 00:32:10,100
+and register them into our system,
+
+910
+00:32:10,100 --> 00:32:11,380
+creating them.
+
+911
+00:32:11,380 --> 00:32:13,100
+Then we will also see this:
+
+912
+00:32:13,100 --> 00:32:15,180
+since we have now replaced the entire underlying kernel
+
+913
+00:32:15,180 --> 00:32:16,840
+with a preemptive one,
+
+914
+00:32:16,840 --> 00:32:19,240
+these two tasks will still keep getting switched.
+
+915
+00:32:19,240 --> 00:32:22,300
+Let's look at the demo process.
+
+916
+00:32:22,300 --> 00:32:35,130
+We can see — look, this 0101,
+
+917
+00:32:35,130 --> 00:32:37,230
+it's switching again, right?
+
+918
+00:32:37,230 --> 00:32:39,230
+This 0101 is switching again.
+
+919
+00:32:39,230 --> 00:32:41,090
+And this switching frequency
+
+920
+00:32:41,090 --> 00:32:42,830
+is of course driven by that timer.
+
+921
+00:32:42,830 --> 00:32:44,710
+Whatever we set the timer to
+
+922
+00:32:44,710 --> 00:32:46,090
+that's exactly what it is.
+
+923
+00:32:46,090 --> 00:32:48,610
+This task,
+
+924
+00:32:48,610 --> 00:32:49,150
+one moment it's 0,
+
+925
+00:32:49,150 --> 00:32:49,670
+the next moment it's 1.
+
+926
+00:32:49,670 --> 00:32:51,190
+Of course, sometimes
+
+927
+00:32:51,190 --> 00:32:52,010
+it prints two lines,
+
+928
+00:32:52,010 --> 00:32:52,570
+sometimes it prints one.
+
+929
+00:32:52,570 --> 00:32:53,370
+That's mainly because
+
+930
+00:32:53,370 --> 00:32:54,750
+the timing isn't always that precise,
+
+931
+00:32:54,750 --> 00:32:55,650
+so it doesn't necessarily land
+
+932
+00:32:55,650 --> 00:32:56,890
+right on the printing point.
+
+933
+00:32:56,890 --> 00:32:57,770
+So,
+
+934
+00:32:57,770 --> 00:32:58,410
+this,
+
+935
+00:32:58,410 --> 00:32:59,910
+this is preemption.
+
+936
+00:32:59,910 --> 00:33:02,570
+That is to say, in our code,
+
+937
+00:33:02,570 --> 00:33:03,810
+we never voluntarily give up the CPU,
+
+938
+00:33:03,810 --> 00:33:06,610
+yet they can still be switched between each other.
+
+939
+00:33:06,610 --> 00:33:07,630
+So here,
+
+940
+00:33:07,630 --> 00:33:08,350
+right here,
+
+941
+00:33:08,350 --> 00:33:09,770
+Right here,
+
+942
+00:33:09,770 --> 00:33:11,650
+let's add a voluntary yield.
+
+943
+00:33:11,650 --> 00:33:12,190
+Let's take a look.
+
+944
+00:33:12,190 --> 00:33:12,570
+That is to say,
+
+945
+00:33:12,570 --> 00:33:14,010
+after the voluntary yield,
+
+946
+00:33:14,010 --> 00:33:14,590
+we can see
+
+947
+00:33:14,590 --> 00:33:15,770
+that at this point
+
+948
+00:33:15,770 --> 00:33:16,710
+the 'run' message hasn't been printed yet.
+
+949
+00:33:16,710 --> 00:33:18,190
+Right after the create,
+
+950
+00:33:18,190 --> 00:33:20,930
+it immediately gave up the CPU and ran it.
+
+951
+00:33:20,930 --> 00:33:23,790
+So this 0 won't print 'running' right away.
+
+952
+00:33:23,790 --> 00:33:45,140
+Let's see the effect.
+
+953
+00:33:45,140 --> 00:33:45,460
+Okay,
+
+954
+00:33:45,460 --> 00:33:46,340
+let's take a look.
+
+955
+00:33:46,340 --> 00:33:48,780
+See, as soon as task0 yields,
+
+956
+00:33:48,780 --> 00:33:50,940
+we trigger a software interrupt.
+
+957
+00:33:50,940 --> 00:33:53,180
+This is printed from inside the kernel.
+
+958
+00:33:53,180 --> 00:33:54,300
+And then,
+
+959
+00:33:54,300 --> 00:33:55,860
+you see this 1111,
+
+960
+00:33:55,860 --> 00:33:56,660
+it just actively...
+
+961
+00:33:56,660 --> 00:33:59,060
+Since it triggered a software interrupt,
+
+962
+00:33:59,060 --> 00:34:00,520
+it will voluntarily give up the CPU.
+
+963
+00:34:00,520 --> 00:34:02,440
+So you can see that task1
+
+964
+00:34:02,440 --> 00:34:03,880
+starts running immediately.
+
+965
+00:34:03,880 --> 00:34:06,660
+Over here, task1 starts running right away.
+
+966
+00:34:06,660 --> 00:34:07,720
+Now this,
+
+967
+00:34:07,720 --> 00:34:09,120
+and then afterwards,
+
+968
+00:34:09,120 --> 00:34:12,100
+it's actually another context switch.
+
+969
+00:34:12,100 --> 00:34:13,360
+Then the timer goes off.
+
+970
+00:34:13,360 --> 00:34:14,720
+The timer goes off.
+
+971
+00:34:14,720 --> 00:34:16,080
+After the timer goes off,
+
+972
+00:34:16,080 --> 00:34:18,400
+our task0 says I'm back.
+
+973
+00:34:18,400 --> 00:34:19,940
+This I'm back,
+
+974
+00:34:19,940 --> 00:34:22,560
+is actually reflected in this line here.
+
+975
+00:34:22,560 --> 00:34:24,360
+Because at this point,
+
+976
+00:34:24,360 --> 00:34:25,980
+this is a voluntary give-up,
+
+977
+00:34:25,980 --> 00:34:26,920
+so actually,
+
+978
+00:34:26,920 --> 00:34:28,240
+for this task,
+
+979
+00:34:28,240 --> 00:34:29,260
+before the switch,
+
+980
+00:34:29,260 --> 00:34:30,460
+it was actually stopped right here.
+
+981
+00:34:30,460 --> 00:34:31,560
+And then,
+
+982
+00:34:31,560 --> 00:34:33,620
+"I'm back", and it starts running again.
+
+983
+00:34:33,620 --> 00:34:34,100
+Right?
+
+984
+00:34:34,100 --> 00:34:34,920
+And then,
+
+985
+00:34:34,920 --> 00:34:37,520
+it just starts running again.
+
+986
+00:34:37,520 --> 00:34:38,920
+And then,
+
+987
+00:34:38,920 --> 00:34:39,280
+next,
+
+988
+00:34:39,280 --> 00:34:40,220
+it's the timer-based switching again.
+
+989
+00:34:40,220 --> 00:34:41,040
+Timer-based switching.
+
+990
+00:34:41,040 --> 00:34:42,000
+Now, after this,
+
+991
+00:34:42,000 --> 00:34:42,760
+it's just the two tasks
+
+992
+00:34:42,760 --> 00:34:45,020
+switching back and forth on their own.
+
+993
+00:34:45,020 --> 00:34:46,960
+This,
+
+994
+00:34:46,960 --> 00:34:49,840
+I'll just demonstrate for you.
+
+995
+00:34:49,840 --> 00:34:51,280
+So through this example,
+
+996
+00:34:51,280 --> 00:34:51,940
+I hope you get a sense of,
+
+997
+00:34:51,940 --> 00:34:52,400
+that is to say,
+
+998
+00:34:52,400 --> 00:34:54,120
+our preemptive approach—
+
+999
+00:34:54,120 --> 00:34:55,720
+actually, the core of preemptive scheduling,
+
+1000
+00:34:55,720 --> 00:34:57,520
+is that it's done through interrupts.
+
+1001
+00:34:57,520 --> 00:34:59,480
+through timer interrupts
+
+1002
+00:34:59,480 --> 00:35:02,600
+to periodically trigger our kernel
+
+1003
+00:35:02,600 --> 00:35:04,720
+to implement task scheduling
+
+1004
+00:35:04,720 --> 00:35:05,660
+Of course, what we have implemented
+
+1005
+00:35:05,660 --> 00:35:08,100
+the code we've implemented so far
+
+1006
+00:35:08,100 --> 00:35:09,280
+is relatively simple
+
+1007
+00:35:09,280 --> 00:35:10,900
+Now, based on this idea
+
+1008
+00:35:10,900 --> 00:35:11,920
+we can actually expand it
+
+1009
+00:35:11,920 --> 00:35:14,540
+expand it into a lot of much more complex
+
+1010
+00:35:14,540 --> 00:35:16,240
+task scheduling
+
+1011
+00:35:16,240 --> 00:35:18,220
+For example, we haven't added yet
+
+1012
+00:35:18,220 --> 00:35:19,340
+task priorities
+
+1013
+00:35:19,340 --> 00:35:20,020
+right?
+
+1014
+00:35:20,020 --> 00:35:21,660
+And then there's also
+
+1015
+00:35:21,660 --> 00:35:23,460
+things like task sleeping, and so on
+
+1016
+00:35:23,460 --> 00:35:25,640
+All of these can be built on top of what we have now
+
+1017
+00:35:25,640 --> 00:35:27,640
+these most basic
+
+1018
+00:35:27,640 --> 00:35:29,120
+features.
+
+1019
+00:35:29,120 --> 00:35:31,140
+As for the more complex stuff,
+
+1020
+00:35:31,140 --> 00:35:34,980
+we'll leave that to you as an exercise.
+
+1021
+00:35:34,980 --> 00:35:36,180
+and extend it ourselves.
+
+1022
+00:35:36,180 --> 00:35:38,660
+So, this
+
+1023
+00:35:38,660 --> 00:35:41,760
+about this strong multitasking,
+
+1024
+00:35:41,760 --> 00:35:43,520
+we'll wrap up our introduction here.
+
+1025
+00:35:43,520 --> 00:35:44,260
+As for the exercises,
+
+1026
+00:35:44,260 --> 00:35:45,460
+go home and work on them yourselves.
+
+1027
+00:35:45,460 --> 00:35:48,080
+That's all for today's content,
+
+1028
+00:35:48,080 --> 00:35:48,840
+just this much.
+
+1029
+00:35:48,840 --> 00:35:49,980
+We covered it quite fast,
+
+1030
+00:35:49,980 --> 00:35:52,520
+and there was quite a lot of content.
+
+1031
+00:35:52,520 --> 00:35:54,020
+So for the remaining time, you can
+
+1032
+00:35:54,020 --> 00:35:55,980
+take this exercise,
+
+1033
+00:35:55,980 --> 00:35:59,200
+including the demo code from the course,
+
+1034
+00:35:59,200 --> 00:36:00,600
+and study it on your own.
+
+1035
+00:36:00,600 --> 00:36:04,500
+If you want to see how, during the interrupt and exception process,
+
+1036
+00:36:04,500 --> 00:36:06,920
+those complicated registers I just talked about
+
+1037
+00:36:06,920 --> 00:36:07,780
+actually change,
+
+1038
+00:36:07,780 --> 00:36:09,780
+we can actually use GDB debugging,
+
+1039
+00:36:09,780 --> 00:36:10,680
+set breakpoints, and watch.
+
+1040
+00:36:10,680 --> 00:36:13,780
+Set the breakpoint at the task entry point.
+
+1041
+00:36:13,780 --> 00:36:16,080
+that is, breaking at our
+
+1042
+00:36:16,080 --> 00:36:24,990
+breaking at the entry points of these tasks,
+
+1043
+00:36:24,990 --> 00:36:29,270
+and debugging it yourself.
+
+1044
+00:36:29,270 --> 00:36:30,750
+Break at the entry points of these tasks,
+
+1045
+00:36:30,750 --> 00:36:32,850
+and look at what happens before a task comes in
+
+1046
+00:36:32,850 --> 00:36:33,790
+and after it comes in,
+
+1047
+00:36:33,790 --> 00:36:36,290
+the actual changes in registers like mstatus,
+
+1048
+00:36:36,290 --> 00:36:37,750
+mepc,
+
+1049
+00:36:37,750 --> 00:36:39,430
+and so on.
+
+1050
+00:36:39,430 --> 00:36:40,870
+Combine that with what we demonstrated in class,
+
+1051
+00:36:40,870 --> 00:36:42,670
+and watch it against the effect of that animation.
+
+1052
+00:36:42,670 --> 00:36:43,850
+That way,
+
+1053
+00:36:43,850 --> 00:36:45,070
+by slowing down the action
+
+1054
+00:36:45,070 --> 00:36:47,630
+and dissecting the whole process,
+
+1055
+00:36:47,630 --> 00:36:50,670
+you will gain a deeper understanding of it.
+
+1056
+00:36:50,670 --> 00:36:54,070
+All right, on the related content,
+
+1057
+00:36:54,070 --> 00:36:55,590
+that is all we will cover for now.
+
+1058
+00:36:55,590 --> 00:36:56,850
+That's it for today.
+
+1059
+00:36:56,850 --> 00:36:58,310
+Let's take the code,
+
+1060
+00:36:58,310 --> 00:36:59,190
+and go over it yourselves first.

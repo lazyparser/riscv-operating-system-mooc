@@ -1,0 +1,7467 @@
+1
+00:00:02,100 --> 00:00:13,600
+Okay, so let's start today's class right now. We'll continue with Chapter 7 from last time, HelloRBOS, and keep going from there.
+
+2
+00:00:14,320 --> 00:00:21,000
+Last class, we mainly walked through the system boot process, right?
+
+3
+00:00:21,000 --> 00:00:28,340
+We know that this Virtual board simulated on our emulator has 8 cores in total.
+
+4
+00:00:28,340 --> 00:00:29,540
+Now, out of those 8 cores,
+
+5
+00:00:29,540 --> 00:00:31,800
+in practice, in our usage,
+
+6
+00:00:31,800 --> 00:00:33,480
+we only make sure to use one of them
+
+7
+00:00:33,480 --> 00:00:35,180
+and that's enough.
+
+8
+00:00:35,180 --> 00:00:36,680
+So next,
+
+9
+00:00:36,680 --> 00:00:37,900
+what we're talking about is
+
+10
+00:00:37,900 --> 00:00:41,100
+when it comes to developing an operating system,
+
+11
+00:00:41,100 --> 00:00:43,760
+when you guys debug programs,
+
+12
+00:00:43,760 --> 00:00:45,720
+the thing you probably like most,
+
+13
+00:00:45,720 --> 00:00:47,980
+for instance, if you want to see how a program is running,
+
+14
+00:00:47,980 --> 00:00:49,560
+is through printing,
+
+15
+00:00:49,560 --> 00:00:50,040
+right?
+
+16
+00:00:50,040 --> 00:00:51,300
+printing its logs.
+
+17
+00:00:51,300 --> 00:00:52,900
+Well, with this board,
+
+18
+00:00:52,900 --> 00:00:54,480
+honestly, we
+
+19
+00:00:54,480 --> 00:00:57,340
+didn't have a
+
+20
+00:00:57,340 --> 00:00:59,960
+proper way to print this stuff in the beginning.
+
+21
+00:00:59,960 --> 00:01:01,520
+So, to make things easier,
+
+22
+00:01:01,520 --> 00:01:02,580
+for our later debugging,
+
+23
+00:01:02,580 --> 00:01:03,320
+we also need
+
+24
+00:01:03,320 --> 00:01:04,880
+to take some of the things inside
+
+25
+00:01:04,880 --> 00:01:05,580
+and print them out.
+
+26
+00:01:05,580 --> 00:01:06,780
+Just like when we wrote our first program,
+
+27
+00:01:06,780 --> 00:01:07,600
+Hello World,
+
+28
+00:01:07,600 --> 00:01:09,480
+so how do we
+
+29
+00:01:09,480 --> 00:01:11,440
+print this thing out?
+
+30
+00:01:11,440 --> 00:01:12,540
+We actually make use of
+
+31
+00:01:12,540 --> 00:01:14,180
+a serial port device on this board
+
+32
+00:01:14,180 --> 00:01:17,120
+— this kind of serial port device —
+
+33
+00:01:17,120 --> 00:01:18,860
+to print the information out.
+
+34
+00:01:18,860 --> 00:01:19,940
+Let's take a look
+
+35
+00:01:19,940 --> 00:01:22,700
+at what method is used
+
+36
+00:01:22,700 --> 00:01:24,320
+to print it out.
+
+37
+00:01:24,320 --> 00:01:28,360
+Now, this diagram,
+
+38
+00:01:28,360 --> 00:01:31,640
+I believe I've already shown it to you before,
+
+39
+00:01:31,640 --> 00:01:32,440
+that is, in
+
+40
+00:01:32,440 --> 00:01:33,820
+embedded development,
+
+41
+00:01:33,820 --> 00:01:35,220
+Now, in the typical case,
+
+42
+00:01:35,220 --> 00:01:37,360
+this here
+
+43
+00:01:37,360 --> 00:01:39,060
+is our development board,
+
+44
+00:01:39,060 --> 00:01:39,920
+the target board.
+
+45
+00:01:39,920 --> 00:01:41,100
+So what we do
+
+46
+00:01:41,100 --> 00:01:42,180
+is, normally, on this
+
+47
+00:01:42,180 --> 00:01:44,580
+host machine, we do the development,
+
+48
+00:01:44,580 --> 00:01:45,720
+but the actual program
+
+49
+00:01:45,720 --> 00:01:47,140
+runs on this target board,
+
+50
+00:01:47,140 --> 00:01:47,380
+right?
+
+51
+00:01:47,380 --> 00:01:48,860
+So this,
+
+52
+00:01:48,860 --> 00:01:50,640
+what do we call this kind of setup?
+
+53
+00:01:50,640 --> 00:01:51,340
+As mentioned earlier,
+
+54
+00:01:51,340 --> 00:01:52,740
+what is this kind of development environment called?
+
+55
+00:01:52,740 --> 00:01:55,760
+It's called a cross-development environment,
+
+56
+00:01:55,760 --> 00:01:56,140
+right?
+
+57
+00:01:56,140 --> 00:01:57,420
+In embedded development,
+
+58
+00:01:57,420 --> 00:01:59,700
+this is a typical runtime environment,
+
+59
+00:01:59,700 --> 00:02:00,260
+a typical development environment.
+
+60
+00:02:00,260 --> 00:02:02,240
+So now, what we do here
+
+61
+00:02:02,240 --> 00:02:04,080
+That is to say, this development board
+
+62
+00:02:04,080 --> 00:02:04,960
+we didn't actually use
+
+63
+00:02:04,960 --> 00:02:06,460
+a real physical board
+
+64
+00:02:06,460 --> 00:02:07,860
+what we actually used is an emulator
+
+65
+00:02:07,860 --> 00:02:10,360
+to simulate an emulated board
+
+66
+00:02:10,360 --> 00:02:12,140
+that is, QMU is used to emulate it
+
+67
+00:02:12,140 --> 00:02:15,420
+Now, actually, the way QMU runs
+
+68
+00:02:15,420 --> 00:02:17,260
+compared to a physical board
+
+69
+00:02:17,260 --> 00:02:18,680
+the difference is really not that big
+
+70
+00:02:18,680 --> 00:02:22,760
+Now, for this kind of embedded-style board,
+
+71
+00:02:22,760 --> 00:02:25,500
+since the devices on it are limited
+
+72
+00:02:25,500 --> 00:02:27,880
+it's generally not like our PC environment,
+
+73
+00:02:27,880 --> 00:02:30,300
+which comes standard with a monitor
+
+74
+00:02:30,300 --> 00:02:32,060
+or something like a screen
+
+75
+00:02:32,060 --> 00:02:33,900
+so it's hard for us to, that is,
+
+76
+00:02:33,900 --> 00:02:35,740
+print our debug output right from the start
+
+77
+00:02:35,740 --> 00:02:37,120
+onto this kind of screen
+
+78
+00:02:37,120 --> 00:02:39,520
+actually, a screen is a very complex device
+
+79
+00:02:39,520 --> 00:02:41,920
+So what do we do?
+
+80
+00:02:41,920 --> 00:02:43,160
+Actually, when we debug
+
+81
+00:02:43,160 --> 00:02:45,100
+Generally, we actually make use of our host machine
+
+82
+00:02:45,100 --> 00:02:47,680
+Our host machine has a screen on it
+
+83
+00:02:47,680 --> 00:02:50,780
+Or you can think of it as something on the screen
+
+84
+00:02:50,780 --> 00:02:52,240
+running a console, this kind of concept
+
+85
+00:02:52,240 --> 00:02:54,020
+So yes, it does have a screen
+
+86
+00:02:54,020 --> 00:02:55,900
+So we can actually make use of this board
+
+87
+00:02:55,900 --> 00:02:57,420
+On top of it
+
+88
+00:02:57,420 --> 00:03:00,480
+Through this serial port cable
+
+89
+00:03:00,480 --> 00:03:03,060
+That is, this red cable, we connect them up
+
+90
+00:03:03,060 --> 00:03:04,240
+Through this serial port cable
+
+91
+00:03:04,240 --> 00:03:07,220
+Then the running status of the program inside it
+
+92
+00:03:07,220 --> 00:03:08,900
+Actually, through this serial port cable
+
+93
+00:03:08,900 --> 00:03:10,640
+For example, if you want to print Hello World
+
+94
+00:03:10,640 --> 00:03:12,260
+You just use this serial port cable
+
+95
+00:03:12,260 --> 00:03:14,360
+You send this message through this serial port cable
+
+96
+00:03:14,360 --> 00:03:15,740
+and print it out on our host machine
+
+97
+00:03:15,740 --> 00:03:18,140
+And then, through a program running on our host machine
+
+98
+00:03:18,140 --> 00:03:19,800
+a serial port receiving program
+
+99
+00:03:19,800 --> 00:03:21,220
+which you can think of as a client
+
+100
+00:03:21,220 --> 00:03:23,780
+and then it prints this content onto our screen
+
+101
+00:03:23,780 --> 00:03:26,520
+this way we can also see the internal debug information
+
+102
+00:03:26,520 --> 00:03:26,960
+right?
+
+103
+00:03:26,960 --> 00:03:30,460
+in fact, the very earliest kind of on-site debugging
+
+104
+00:03:30,460 --> 00:03:31,720
+was done exactly using this kind of approach
+
+105
+00:03:31,720 --> 00:03:32,900
+because back in the beginning,
+
+106
+00:03:32,900 --> 00:03:35,360
+if you wanted to hook up a display on this,
+
+107
+00:03:35,360 --> 00:03:37,780
+that was actually quite a complicated job
+
+108
+00:03:37,780 --> 00:03:39,800
+so we can use this serial port,
+
+109
+00:03:39,800 --> 00:03:41,240
+this kind of relatively simple device,
+
+110
+00:03:41,240 --> 00:03:42,720
+and output the content through it
+
+111
+00:03:42,720 --> 00:03:43,200
+and in this way,
+
+112
+00:03:43,200 --> 00:03:45,600
+we actually achieve the effect of both displaying and debugging
+
+113
+00:03:45,600 --> 00:03:46,320
+the output.
+
+114
+00:03:46,320 --> 00:03:46,760
+right?
+
+115
+00:03:46,760 --> 00:03:50,820
+So this red-colored wire here
+
+116
+00:03:50,820 --> 00:03:52,240
+is our serial port cable
+
+117
+00:03:52,240 --> 00:03:55,460
+Now of course, what we're using right now is an emulator,
+
+118
+00:03:55,460 --> 00:03:57,980
+so inside it there isn't really a physical cable connected
+
+119
+00:03:57,980 --> 00:03:59,360
+but you should imagine that
+
+120
+00:03:59,360 --> 00:04:02,060
+inside, it actually emulates a physical serial port cable
+
+121
+00:04:02,060 --> 00:04:04,100
+So this kind of serial cable,
+
+122
+00:04:04,100 --> 00:04:05,720
+we say it's actually very simple.
+
+123
+00:04:05,720 --> 00:04:06,880
+It's just one receive, one transmit.
+
+124
+00:04:06,880 --> 00:04:08,780
+It's this diagram here.
+
+125
+00:04:08,780 --> 00:04:09,740
+With this diagram added,
+
+126
+00:04:09,740 --> 00:04:10,720
+the meaning it actually conveys is this:
+
+127
+00:04:10,720 --> 00:04:12,860
+You can take what we just talked about on this side,
+
+128
+00:04:12,860 --> 00:04:14,440
+treat this end as this thing here,
+
+129
+00:04:14,440 --> 00:04:16,720
+and then treat this side as that thing,
+
+130
+00:04:16,720 --> 00:04:18,420
+and then the two sides are connected by one cable.
+
+131
+00:04:18,420 --> 00:04:19,700
+Inside this cable, actually,
+
+132
+00:04:19,700 --> 00:04:21,240
+there are actually two wires.
+
+133
+00:04:21,240 --> 00:04:22,980
+If you cut open that serial cable,
+
+134
+00:04:22,980 --> 00:04:26,200
+you'll find there are at least two or three wires inside.
+
+135
+00:04:26,200 --> 00:04:28,240
+So this one-receive-one-transmit,
+
+136
+00:04:28,240 --> 00:04:30,180
+that is, the TX on this side,
+
+137
+00:04:30,180 --> 00:04:32,940
+in technical terms, is the transmitting end.
+
+138
+00:04:32,940 --> 00:04:33,860
+That means it's for sending.
+
+139
+00:04:33,860 --> 00:04:36,260
+So the transmit side, and then over here,
+
+140
+00:04:36,260 --> 00:04:38,440
+this side is a receive, RX.
+
+141
+00:04:38,440 --> 00:04:40,660
+So T stands for transmit.
+
+142
+00:04:40,660 --> 00:04:42,120
+And R stands for receive.
+
+143
+00:04:42,120 --> 00:04:44,700
+That makes it easy to remember and understand.
+
+144
+00:04:44,700 --> 00:04:46,800
+So what it sends here,
+
+145
+00:04:46,800 --> 00:04:49,120
+comes from here to its receiving end.
+
+146
+00:04:49,120 --> 00:04:50,340
+And on this side,
+
+147
+00:04:50,340 --> 00:04:51,320
+if there is information,
+
+148
+00:04:51,320 --> 00:04:53,880
+you can also send information over from here.
+
+149
+00:04:53,880 --> 00:04:54,460
+Think about it, isn't that right?
+
+150
+00:04:54,460 --> 00:04:57,400
+For example, when you press Enter on your side,
+
+151
+00:04:57,400 --> 00:04:58,260
+or type some characters,
+
+152
+00:04:58,260 --> 00:05:00,820
+how do those characters get transmitted to this board of ours?
+
+153
+00:05:00,820 --> 00:05:03,680
+Well, they actually go through the transmit direction here.
+
+154
+00:05:03,680 --> 00:05:07,540
+So this serial port actually has two wires, one for sending and one for receiving.
+
+155
+00:05:07,540 --> 00:05:09,440
+It can send and receive at the same time.
+
+156
+00:05:09,440 --> 00:05:15,400
+Now, normally for our host machine,
+
+157
+00:05:15,400 --> 00:05:17,220
+before we use it,
+
+158
+00:05:17,220 --> 00:05:20,680
+people usually go and configure a serial port.
+
+159
+00:05:20,680 --> 00:05:21,020
+Right?
+
+160
+00:05:21,020 --> 00:05:24,320
+If any of you have done real board development,
+
+161
+00:05:24,320 --> 00:05:25,800
+So all of these things need to be configured.
+
+162
+00:05:25,800 --> 00:05:26,260
+Right?
+
+163
+00:05:26,260 --> 00:05:29,360
+Now, why do we need to configure things like those PLIC settings here?
+
+164
+00:05:29,360 --> 00:05:32,520
+These things are actually related to the serial port device.
+
+165
+00:05:32,520 --> 00:05:34,120
+We'll give you some introduction to that later.
+
+166
+00:05:34,120 --> 00:05:35,400
+Now, over here,
+
+167
+00:05:35,400 --> 00:05:38,140
+it's basically like we open one on the host machine.
+
+168
+00:05:38,140 --> 00:05:41,400
+Like I just said, you open a terminal on the host machine.
+
+169
+00:05:41,400 --> 00:05:42,700
+So this information,
+
+170
+00:05:42,700 --> 00:05:44,140
+is actually printed on that terminal.
+
+171
+00:05:44,140 --> 00:05:44,440
+Right?
+
+172
+00:05:44,440 --> 00:05:48,940
+This is a standard embedded cross-development environment.
+
+173
+00:05:48,940 --> 00:05:49,980
+Now, currently,
+
+174
+00:05:49,980 --> 00:05:50,760
+what we actually want to do is,
+
+175
+00:05:50,760 --> 00:05:52,000
+on this emulator,
+
+176
+00:05:52,000 --> 00:05:53,600
+that is, effectively on this board,
+
+177
+00:05:53,600 --> 00:05:55,560
+we want to take the serial port device on it
+
+178
+00:05:55,560 --> 00:05:57,820
+and put it to use.
+
+179
+00:05:57,820 --> 00:05:58,620
+We need to get it working.
+
+180
+00:05:58,620 --> 00:05:59,940
+And then, using this serial port device,
+
+181
+00:05:59,940 --> 00:06:01,400
+to pass the data over
+
+182
+00:06:01,400 --> 00:06:03,200
+and print a hello on ours
+
+183
+00:06:03,200 --> 00:06:05,500
+So this first step of ours
+
+184
+00:06:05,500 --> 00:06:08,140
+you see, actually in this whole process of ours,
+
+185
+00:06:08,140 --> 00:06:08,980
+this should be the second step
+
+186
+00:06:08,980 --> 00:06:11,060
+The first step is the entire initial boot process
+
+187
+00:06:11,060 --> 00:06:12,100
+The second step is to say,
+
+188
+00:06:12,100 --> 00:06:13,240
+we want to print a hello out on it
+
+189
+00:06:13,240 --> 00:06:14,200
+Once we have this thing,
+
+190
+00:06:14,200 --> 00:06:16,120
+everything after that becomes easy
+
+191
+00:06:16,120 --> 00:06:17,520
+because we can see
+
+192
+00:06:17,520 --> 00:06:18,740
+the results of the program running
+
+193
+00:06:18,740 --> 00:06:19,520
+right?
+
+194
+00:06:19,520 --> 00:06:22,500
+Of course, we can also use GDB to debug right now,
+
+195
+00:06:22,500 --> 00:06:23,900
+but a lot of the time,
+
+196
+00:06:23,900 --> 00:06:25,140
+we actually prefer
+
+197
+00:06:25,140 --> 00:06:26,560
+using this kind of printing-log approach to look at things,
+
+198
+00:06:26,560 --> 00:06:27,840
+because it's a bit more efficient that way
+
+199
+00:06:27,840 --> 00:06:31,840
+Now, as for how to get this
+
+200
+00:06:31,840 --> 00:06:33,920
+serial port device
+
+201
+00:06:33,920 --> 00:06:35,100
+put it to use
+
+202
+00:06:35,100 --> 00:06:36,720
+and what exactly UART is
+
+203
+00:06:36,720 --> 00:06:37,920
+these are the concepts we can
+
+204
+00:06:37,920 --> 00:06:39,340
+briefly introduce to you here
+
+205
+00:06:39,340 --> 00:06:43,060
+so this UART
+
+206
+00:06:43,060 --> 00:06:45,120
+the full name is called
+
+207
+00:06:45,120 --> 00:06:47,000
+it's actually an English acronym
+
+208
+00:06:47,000 --> 00:06:51,340
+namely Universal Asynchronous Receiver and Transmitter
+
+209
+00:06:51,340 --> 00:06:53,680
+so it actually expresses a few concepts
+
+210
+00:06:53,680 --> 00:06:54,620
+that is, it is a
+
+211
+00:06:54,620 --> 00:06:56,900
+Universal means unified
+
+212
+00:06:56,900 --> 00:06:58,940
+that is, historically speaking,
+
+213
+00:06:58,940 --> 00:07:00,420
+it took quite a lot of things
+
+214
+00:07:00,420 --> 00:07:01,820
+and made them fairly general-purpose
+
+215
+00:07:01,820 --> 00:07:02,420
+and unified
+
+216
+00:07:02,420 --> 00:07:03,700
+and then it embodies a
+
+217
+00:07:03,700 --> 00:07:06,180
+that is, it has the concept of asynchronous
+
+218
+00:07:06,180 --> 00:07:08,100
+Asynchronous, the concept of asynchronous
+
+219
+00:07:08,100 --> 00:07:10,440
+and then Receiver and Transmitter
+
+220
+00:07:10,440 --> 00:07:11,780
+which is what's written down below here
+
+221
+00:07:11,780 --> 00:07:14,020
+It can send and receive at the same time
+
+222
+00:07:14,020 --> 00:07:15,180
+That diagram we just saw
+
+223
+00:07:15,180 --> 00:07:15,660
+Everyone has seen it
+
+224
+00:07:15,660 --> 00:07:16,800
+It has two wires for sending and receiving
+
+225
+00:07:16,800 --> 00:07:17,040
+Right?
+
+226
+00:07:17,040 --> 00:07:18,540
+It sends and receives simultaneously
+
+227
+00:07:18,540 --> 00:07:20,660
+So we often
+
+228
+00:07:20,660 --> 00:07:21,920
+just call it the serial cable
+
+229
+00:07:21,920 --> 00:07:22,820
+Now, the serial cable
+
+230
+00:07:22,820 --> 00:07:24,100
+mainly because it has one characteristic
+
+231
+00:07:24,100 --> 00:07:25,240
+which is the concept of serial
+
+232
+00:07:25,240 --> 00:07:26,860
+So what do we mean by serial?
+
+233
+00:07:26,860 --> 00:07:27,340
+That is to say,
+
+234
+00:07:27,340 --> 00:07:29,040
+because when it sends and receives,
+
+235
+00:07:29,040 --> 00:07:29,800
+there are only two wires,
+
+236
+00:07:29,800 --> 00:07:30,220
+right?
+
+237
+00:07:30,220 --> 00:07:31,360
+Think about it. If we
+
+238
+00:07:31,360 --> 00:07:33,160
+take one of the wires
+
+239
+00:07:33,160 --> 00:07:34,000
+as an example,
+
+240
+00:07:34,000 --> 00:07:34,840
+then what it means is
+
+241
+00:07:34,840 --> 00:07:35,960
+We only have one channel
+
+242
+00:07:35,960 --> 00:07:37,140
+that can send and receive data.
+
+243
+00:07:37,140 --> 00:07:38,800
+Now, when this data is sent and received,
+
+244
+00:07:38,800 --> 00:07:39,400
+at that time,
+
+245
+00:07:39,400 --> 00:07:39,880
+it actually,
+
+246
+00:07:39,880 --> 00:07:41,060
+what we call serial,
+
+247
+00:07:41,060 --> 00:07:41,780
+means that,
+
+248
+00:07:41,780 --> 00:07:42,780
+its,
+
+249
+00:07:42,780 --> 00:07:46,260
+the data inside it,
+
+250
+00:07:46,260 --> 00:07:47,580
+is sent out bit by bit,
+
+251
+00:07:47,580 --> 00:07:49,040
+one bit at a time.
+
+252
+00:07:49,040 --> 00:07:50,940
+Now, more specifically,
+
+253
+00:07:50,940 --> 00:07:52,180
+that is to say, for example, let's say,
+
+254
+00:07:52,180 --> 00:07:55,200
+we want to send a character A.
+
+255
+00:07:55,200 --> 00:07:56,880
+We know that this character A,
+
+256
+00:07:56,880 --> 00:07:58,960
+when represented in our computer,
+
+257
+00:07:58,960 --> 00:07:59,720
+it's ASCII, right?
+
+258
+00:07:59,720 --> 00:08:00,560
+It's actually,
+
+259
+00:08:00,560 --> 00:08:02,920
+an 8-bit piece of data, isn't it?
+
+260
+00:08:02,920 --> 00:08:04,480
+As for what exactly it is,
+
+261
+00:08:04,480 --> 00:08:05,280
+I can't remember exactly,
+
+262
+00:08:05,280 --> 00:08:06,540
+I think it was something like sixty-something, or whatever it was.
+
+263
+00:08:06,540 --> 00:08:08,320
+So actually it's an 8-bit piece of data.
+
+264
+00:08:08,320 --> 00:08:09,600
+Now, an 8-bit piece of data,
+
+265
+00:08:09,600 --> 00:08:10,840
+as represented in our computer,
+
+266
+00:08:10,840 --> 00:08:11,840
+is simply 8 bits.
+
+267
+00:08:11,840 --> 00:08:13,160
+8 bits,
+
+268
+00:08:13,160 --> 00:08:14,980
+a sequence of 0s and 1s in those bit positions.
+
+269
+00:08:14,980 --> 00:08:16,660
+I'll just make up the actual values here,
+
+270
+00:08:16,660 --> 00:08:18,140
+12345678.
+
+271
+00:08:18,140 --> 00:08:19,020
+Say we have a piece of data like this.
+
+272
+00:08:19,020 --> 00:08:20,800
+Now for this piece of data,
+
+273
+00:08:20,800 --> 00:08:23,060
+how does it actually get sent out over the serial port?
+
+274
+00:08:23,060 --> 00:08:25,260
+Well, this is serial transmission.
+
+275
+00:08:25,260 --> 00:08:26,400
+It's sent one bit at a time.
+
+276
+00:08:26,400 --> 00:08:28,300
+In other words, if it's 8 bits,
+
+277
+00:08:28,300 --> 00:08:30,120
+then you have to send 8 electrical pulses,
+
+278
+00:08:30,120 --> 00:08:32,660
+meaning the signal level has to change 8 times.
+
+279
+00:08:32,660 --> 00:08:34,860
+A 0 represents a low level,
+
+280
+00:08:34,860 --> 00:08:36,340
+and a 1 represents a high level.
+
+281
+00:08:36,340 --> 00:08:37,640
+That is to say, it's basically like
+
+282
+00:08:37,640 --> 00:08:39,360
+And also, what it says here is that
+
+283
+00:08:39,360 --> 00:08:40,700
+When it transmits,
+
+284
+00:08:40,700 --> 00:08:41,600
+over here it's
+
+285
+00:08:41,600 --> 00:08:45,360
+let me see if it's written here
+
+286
+00:08:45,360 --> 00:08:46,860
+that is to say, it actually sends it
+
+287
+00:08:46,860 --> 00:08:48,940
+from the low bit to the high bit.
+
+288
+00:08:48,940 --> 00:08:50,980
+So if the data I've written here
+
+289
+00:08:50,980 --> 00:08:52,160
+in our computer is
+
+290
+00:08:52,160 --> 00:08:54,800
+a value like 11101011,
+
+291
+00:08:54,800 --> 00:08:55,980
+then when it transmits,
+
+292
+00:08:55,980 --> 00:08:58,320
+it sends the 0 first, then the 1,
+
+293
+00:08:58,320 --> 00:09:00,500
+and that's how it gets sent out.
+
+294
+00:09:00,500 --> 00:09:01,220
+So, that is to say,
+
+295
+00:09:01,220 --> 00:09:02,880
+the voltage level on this wire,
+
+296
+00:09:02,880 --> 00:09:06,000
+if you measure it with that meter,
+
+297
+00:09:06,000 --> 00:09:07,080
+you'll find that
+
+298
+00:09:07,080 --> 00:09:09,380
+at the very beginning it's a low level,
+
+299
+00:09:09,380 --> 00:09:10,660
+that is, the first one is a low level.
+
+300
+00:09:10,660 --> 00:09:13,320
+What we usually see on the oscilloscope is a low level.
+
+301
+00:09:13,320 --> 00:09:14,600
+Then there's a high level
+
+302
+00:09:14,600 --> 00:09:15,420
+right?
+
+303
+00:09:15,420 --> 00:09:17,100
+And then another low level
+
+304
+00:09:17,100 --> 00:09:20,260
+And then another high level
+
+305
+00:09:20,260 --> 00:09:23,460
+So here it's 0101
+
+306
+00:09:23,460 --> 00:09:25,740
+That is, low, high, low, high
+
+307
+00:09:25,740 --> 00:09:26,720
+And then going further along
+
+308
+00:09:26,720 --> 00:09:28,720
+So if this is a timeline
+
+309
+00:09:28,720 --> 00:09:32,180
+the bits are sent out one by one like this
+
+310
+00:09:32,180 --> 00:09:34,620
+And the receiver also receives them bit by bit
+
+311
+00:09:34,620 --> 00:09:35,940
+Every time it finishes receiving eight bits
+
+312
+00:09:35,940 --> 00:09:37,600
+it knows that's one character
+
+313
+00:09:37,600 --> 00:09:39,480
+and then converts it into an A
+
+314
+00:09:39,480 --> 00:09:41,020
+That's the processing flow
+
+315
+00:09:41,020 --> 00:09:42,440
+You can picture it, right?
+
+316
+00:09:42,440 --> 00:09:44,000
+So this
+
+317
+00:09:44,000 --> 00:09:46,280
+since it's sent bit by bit
+
+318
+00:09:46,280 --> 00:09:47,300
+it brings in a concept
+
+319
+00:09:47,300 --> 00:09:48,400
+the concept of baud rate
+
+320
+00:09:48,400 --> 00:09:49,240
+This concept
+
+321
+00:09:49,240 --> 00:09:51,720
+We also hear this concept quite often,
+
+322
+00:09:51,720 --> 00:09:53,240
+meaning that when we configure it,
+
+323
+00:09:53,240 --> 00:09:53,960
+we also have to configure this,
+
+324
+00:09:53,960 --> 00:09:55,600
+because the baud rate on both sides must match —
+
+325
+00:09:55,600 --> 00:09:57,920
+the transmission frequency has to be the same,
+
+326
+00:09:57,920 --> 00:09:59,640
+so that the receiving side and the sending side
+
+327
+00:09:59,640 --> 00:10:02,840
+can line up with each other.
+
+328
+00:10:02,840 --> 00:10:04,840
+Now, what is a baud rate? Its unit is actually
+
+329
+00:10:04,840 --> 00:10:06,160
+bits per second,
+
+330
+00:10:06,160 --> 00:10:08,440
+meaning how many bits per second,
+
+331
+00:10:08,440 --> 00:10:10,100
+that is, how many bits are sent per second.
+
+332
+00:10:10,100 --> 00:10:11,660
+So do you understand now? When someone configures
+
+333
+00:10:11,660 --> 00:10:12,560
+a baud rate like 115200,
+
+334
+00:10:12,560 --> 00:10:14,040
+what does that mean? It means it sends
+
+335
+00:10:14,040 --> 00:10:16,040
+115200, that is,
+
+336
+00:10:16,040 --> 00:10:16,560
+115,200
+
+337
+00:10:16,560 --> 00:10:18,700
+high-and-low level transitions
+
+338
+00:10:18,700 --> 00:10:20,400
+per second.
+
+339
+00:10:20,400 --> 00:10:22,240
+Each transition is one bit,
+
+340
+00:10:22,240 --> 00:10:24,400
+so 115200 means 115,200 bits per second.
+
+341
+00:10:24,400 --> 00:10:25,280
+That's what it means
+
+342
+00:10:25,280 --> 00:10:25,880
+per second
+
+343
+00:10:25,880 --> 00:10:27,940
+This is its sending frequency
+
+344
+00:10:27,940 --> 00:10:29,140
+The bigger this number is
+
+345
+00:10:29,140 --> 00:10:30,360
+the faster it sends
+
+346
+00:10:30,360 --> 00:10:31,920
+right?
+
+347
+00:10:31,920 --> 00:10:33,140
+So this
+
+348
+00:10:33,140 --> 00:10:34,900
+and moreover, what's shown here is serial
+
+349
+00:10:34,900 --> 00:10:36,020
+Let me explain to you
+
+350
+00:10:36,020 --> 00:10:36,860
+why, what serial means
+
+351
+00:10:36,860 --> 00:10:37,520
+That's what it means
+
+352
+00:10:37,520 --> 00:10:39,920
+So parallel actually means
+
+353
+00:10:39,920 --> 00:10:40,580
+it's equivalent to saying
+
+354
+00:10:40,580 --> 00:10:41,320
+parallel means
+
+355
+00:10:41,320 --> 00:10:43,980
+right now there's only one wire
+
+356
+00:10:43,980 --> 00:10:44,340
+right?
+
+357
+00:10:44,340 --> 00:10:45,400
+So parallel means
+
+358
+00:10:45,400 --> 00:10:47,620
+if we used a parallel approach
+
+359
+00:10:47,620 --> 00:10:48,700
+to send eight bits
+
+360
+00:10:48,700 --> 00:10:49,740
+then you'd probably need eight wires
+
+361
+00:10:49,740 --> 00:10:50,480
+sending them at the same time,
+
+362
+00:10:50,480 --> 00:10:53,180
+sending all eight bits
+
+363
+00:10:53,180 --> 00:10:54,440
+over to the other side in one go.
+
+364
+00:10:54,440 --> 00:10:55,380
+That is what we call parallel.
+
+365
+00:10:55,380 --> 00:10:57,140
+Now, with serial, you can see
+
+366
+00:10:57,140 --> 00:10:59,320
+its advantage is quite obvious,
+
+367
+00:10:59,320 --> 00:11:00,260
+namely that it saves material.
+
+368
+00:11:00,260 --> 00:11:01,040
+It only needs one wire,
+
+369
+00:11:01,040 --> 00:11:01,660
+right?
+
+370
+00:11:01,660 --> 00:11:04,220
+With a parallel port, at a minimum,
+
+371
+00:11:04,220 --> 00:11:05,240
+you would need eight wires,
+
+372
+00:11:05,240 --> 00:11:06,420
+and all of that costs money,
+
+373
+00:11:06,420 --> 00:11:07,380
+because every wire,
+
+374
+00:11:07,380 --> 00:11:09,160
+each of those lines, costs money.
+
+375
+00:11:09,160 --> 00:11:10,180
+So for this serial port,
+
+376
+00:11:10,180 --> 00:11:11,580
+we can say that physically speaking,
+
+377
+00:11:11,580 --> 00:11:13,500
+it is also very economical and practical,
+
+378
+00:11:13,500 --> 00:11:14,600
+good enough for use.
+
+379
+00:11:14,600 --> 00:11:16,980
+Now, the second point,
+
+380
+00:11:16,980 --> 00:11:18,200
+it is an asynchronous concept.
+
+381
+00:11:18,200 --> 00:11:20,100
+So what does asynchronous mean here?
+
+382
+00:11:20,100 --> 00:11:20,820
+This brings us to
+
+383
+00:11:20,820 --> 00:11:22,020
+something we will introduce to you later,
+
+384
+00:11:22,020 --> 00:11:24,220
+which is that, because in this
+
+385
+00:11:24,220 --> 00:11:25,140
+as we just saw,
+
+386
+00:11:25,140 --> 00:11:26,580
+when it sends and receives data lines,
+
+387
+00:11:26,580 --> 00:11:27,840
+it only has data lines,
+
+388
+00:11:27,840 --> 00:11:28,820
+and it does not have
+
+389
+00:11:28,820 --> 00:11:30,560
+In other words, when we send data on both sides,
+
+390
+00:11:30,560 --> 00:11:31,900
+there is actually a concept involved,
+
+391
+00:11:31,900 --> 00:11:33,000
+which is called synchronization.
+
+392
+00:11:33,000 --> 00:11:33,620
+What is synchronization?
+
+393
+00:11:33,620 --> 00:11:34,420
+It is basically like this:
+
+394
+00:11:34,420 --> 00:11:35,360
+if I want to interact with you,
+
+395
+00:11:35,360 --> 00:11:36,100
+we need to have a
+
+396
+00:11:36,100 --> 00:11:37,080
+signal to tell you,
+
+397
+00:11:37,080 --> 00:11:37,740
+"I'm starting."
+
+398
+00:11:37,740 --> 00:11:39,240
+When you see that I've started,
+
+399
+00:11:39,240 --> 00:11:40,480
+then you begin receiving data,
+
+400
+00:11:40,480 --> 00:11:42,380
+and only then can you correctly parse it.
+
+401
+00:11:42,380 --> 00:11:44,620
+Suppose I don't do any kind of synchronization with you,
+
+402
+00:11:44,620 --> 00:11:46,000
+and I just start sending data to you.
+
+403
+00:11:46,000 --> 00:11:47,620
+Then how do you know when to receive
+
+404
+00:11:47,620 --> 00:11:48,780
+and when to send?
+
+405
+00:11:48,780 --> 00:11:49,280
+Think about it, right?
+
+406
+00:11:49,280 --> 00:11:51,640
+This is what we call the concept of synchronization.
+
+407
+00:11:51,640 --> 00:11:52,640
+Now, for synchronization,
+
+408
+00:11:52,640 --> 00:11:53,580
+there are many ways to do it.
+
+409
+00:11:53,580 --> 00:11:54,360
+One way
+
+410
+00:11:54,360 --> 00:11:55,560
+is to synchronize using a clock.
+
+411
+00:11:55,560 --> 00:11:56,760
+That is to say, everyone basically
+
+412
+00:11:56,760 --> 00:11:57,940
+has a watch in hand,
+
+413
+00:11:57,940 --> 00:11:58,660
+and we sync up on the time.
+
+414
+00:11:58,660 --> 00:11:59,820
+For example, we agree that
+
+415
+00:11:59,820 --> 00:12:01,260
+we'll start sending data at one o'clock.
+
+416
+00:12:01,260 --> 00:12:02,680
+Then at one o'clock you start
+
+417
+00:12:02,680 --> 00:12:03,960
+receiving the data.
+
+418
+00:12:03,960 --> 00:12:04,420
+In this way,
+
+419
+00:12:04,420 --> 00:12:05,700
+we're using the clock.
+
+420
+00:12:05,700 --> 00:12:06,320
+So this kind of approach
+
+421
+00:12:06,320 --> 00:12:08,260
+Usually, you need to add a clock line
+
+422
+00:12:08,260 --> 00:12:10,420
+so that after synchronization on the clock
+
+423
+00:12:10,420 --> 00:12:12,160
+you can then start sending the data.
+
+424
+00:12:12,160 --> 00:12:14,620
+Now, if we look at this window,
+
+425
+00:12:14,620 --> 00:12:15,840
+it does not need a clock line.
+
+426
+00:12:15,840 --> 00:12:17,240
+It is just a single data line.
+
+427
+00:12:17,240 --> 00:12:19,600
+So how can you use just one data line
+
+428
+00:12:19,600 --> 00:12:21,580
+to synchronize the data?
+
+429
+00:12:21,580 --> 00:12:23,500
+That comes down to when it sends the data,
+
+430
+00:12:23,500 --> 00:12:25,320
+there is a data format issue.
+
+431
+00:12:25,320 --> 00:12:28,080
+That is, the data it sends is not simply
+
+432
+00:12:28,080 --> 00:12:29,180
+just sending A, B, C, D.
+
+433
+00:12:29,180 --> 00:12:32,220
+It actually has some special markers to indicate
+
+434
+00:12:32,220 --> 00:12:33,660
+that a piece of data has started being sent,
+
+435
+00:12:33,660 --> 00:12:35,580
+and that a piece of data has finished.
+
+436
+00:12:35,580 --> 00:12:36,920
+I think you all understand what I mean here.
+
+437
+00:12:36,920 --> 00:12:40,180
+So through this data protocol,
+
+438
+00:12:40,180 --> 00:12:42,500
+you can also achieve a synchronization effect.
+
+439
+00:12:42,500 --> 00:12:43,880
+Later on, we will also show you
+
+440
+00:12:43,880 --> 00:12:45,760
+its specific handling method.
+
+441
+00:12:45,760 --> 00:12:46,700
+So this involves
+
+442
+00:12:46,700 --> 00:12:49,020
+agreeing on a communication protocol format.
+
+443
+00:12:49,020 --> 00:12:51,060
+So on the software side, there are some
+
+444
+00:12:51,060 --> 00:12:52,600
+On the hardware side, it's simple,
+
+445
+00:12:52,600 --> 00:12:53,160
+just one wire,
+
+446
+00:12:53,160 --> 00:12:56,080
+but on the software side, you have to define some special specifications
+
+447
+00:12:56,080 --> 00:12:58,020
+to make the whole thing work.
+
+448
+00:12:58,020 --> 00:13:00,680
+So this is the concept of asynchronous.
+
+449
+00:13:00,680 --> 00:13:03,380
+Now, full-duplex is easy to explain:
+
+450
+00:13:03,380 --> 00:13:04,480
+it means it can send and receive at the same time,
+
+451
+00:13:04,480 --> 00:13:04,940
+because as we can see,
+
+452
+00:13:04,940 --> 00:13:06,300
+it actually has two wires,
+
+453
+00:13:06,300 --> 00:13:08,140
+one receiving wire and one transmitting wire, right?
+
+454
+00:13:08,140 --> 00:13:10,140
+So it can achieve full-duplex.
+
+455
+00:13:10,140 --> 00:13:11,780
+So this is what we call UART.
+
+456
+00:13:11,780 --> 00:13:13,560
+After all that talk,
+
+457
+00:13:13,560 --> 00:13:14,780
+there is actually a standard specification.
+
+458
+00:13:14,780 --> 00:13:15,960
+If you're interested, you can look it up,
+
+459
+00:13:15,960 --> 00:13:19,240
+there's an international standard specification for UART defined online.
+
+460
+00:13:19,240 --> 00:13:20,960
+We'll just give you a brief overview.
+
+461
+00:13:20,960 --> 00:13:23,840
+Okay, these are the characteristics of UART.
+
+462
+00:13:23,840 --> 00:13:26,280
+Really, these are just some of the definitions of UART.
+
+463
+00:13:26,280 --> 00:13:28,600
+So those were the definitions just now.
+
+464
+00:13:28,600 --> 00:13:30,120
+Now, physically speaking,
+
+465
+00:13:30,120 --> 00:13:32,600
+let me give you a quick look,
+
+466
+00:13:32,600 --> 00:13:35,820
+it originally had this kind of connector standard.
+
+467
+00:13:35,820 --> 00:13:37,600
+Nowadays, people probably use it less often,
+
+468
+00:13:37,600 --> 00:13:42,320
+because in many cases USB cables have taken its place.
+
+469
+00:13:42,320 --> 00:13:45,660
+Actually, the earliest UART cable was this standard type,
+
+470
+00:13:45,660 --> 00:13:48,040
+the 9-pin cable.
+
+471
+00:13:48,040 --> 00:13:50,980
+Now, on this side, this is of course called the male connector and the female connector.
+
+472
+00:13:50,980 --> 00:13:53,340
+The male connector has those protruding, pointed pins.
+
+473
+00:13:53,340 --> 00:13:55,100
+The female connector is actually recessed, with sockets.
+
+474
+00:13:55,100 --> 00:13:56,740
+And the two sides can mate together.
+
+475
+00:13:56,740 --> 00:13:58,680
+That's how they achieve a physical connection.
+
+476
+00:13:58,680 --> 00:14:01,100
+Now, the pins on it are also specified by a standard,
+
+477
+00:14:01,100 --> 00:14:02,640
+defining what each pin means.
+
+478
+00:14:02,640 --> 00:14:04,860
+So the commonly used ones, in practice,
+
+479
+00:14:04,860 --> 00:14:06,200
+even though there are nine pins,
+
+480
+00:14:06,200 --> 00:14:07,440
+in reality we only use
+
+481
+00:14:07,440 --> 00:14:08,620
+Generally, three of the pins are used.
+
+482
+00:14:08,620 --> 00:14:09,620
+One is for receiving,
+
+483
+00:14:09,620 --> 00:14:10,440
+one is for transmitting,
+
+484
+00:14:10,440 --> 00:14:11,680
+because as we just saw, transmitting and receiving
+
+485
+00:14:11,680 --> 00:14:12,580
+is two wires, right?
+
+486
+00:14:12,580 --> 00:14:13,320
+And then,
+
+487
+00:14:13,320 --> 00:14:14,700
+there's actually also a ground line.
+
+488
+00:14:14,700 --> 00:14:17,800
+So just get a rough idea of this.
+
+489
+00:14:17,800 --> 00:14:19,540
+If you have an actual physical board,
+
+490
+00:14:19,540 --> 00:14:20,620
+you can go and take a look.
+
+491
+00:14:20,620 --> 00:14:23,140
+You'll find this kind of interface coming out of it.
+
+492
+00:14:23,140 --> 00:14:26,300
+This is its physical interface.
+
+493
+00:14:26,300 --> 00:14:28,780
+Now, the more important part,
+
+494
+00:14:28,780 --> 00:14:29,680
+as we just mentioned,
+
+495
+00:14:29,680 --> 00:14:30,820
+is that from the software side,
+
+496
+00:14:30,820 --> 00:14:33,000
+since we still tend toward some
+
+497
+00:14:33,000 --> 00:14:34,880
+we still focus more on software concepts,
+
+498
+00:14:34,880 --> 00:14:37,200
+even though the physical side is simple,
+
+499
+00:14:37,200 --> 00:14:39,820
+sending and receiving data requires a communication protocol
+
+500
+00:14:39,820 --> 00:14:41,060
+to define its specification.
+
+501
+00:14:41,060 --> 00:14:43,560
+its transmit and receive behavior, and its synchronization behavior
+
+502
+00:14:43,560 --> 00:14:46,420
+so it defines a communication protocol
+
+503
+00:14:46,420 --> 00:14:48,000
+now, this UART communication protocol,
+
+504
+00:14:48,000 --> 00:14:48,720
+is actually very simple
+
+505
+00:14:48,720 --> 00:14:49,740
+let's take a quick look at it
+
+506
+00:14:49,740 --> 00:14:53,200
+that is, what the process of sending and receiving data actually looks like
+
+507
+00:14:53,200 --> 00:14:55,400
+so this figure, the one on top here,
+
+508
+00:14:55,400 --> 00:14:56,760
+we can actually understand it as,
+
+509
+00:14:56,760 --> 00:15:00,020
+let's say this side is a sender,
+
+510
+00:15:00,020 --> 00:15:00,780
+TX,
+
+511
+00:15:00,780 --> 00:15:01,860
+and this side here,
+
+512
+00:15:01,860 --> 00:15:02,960
+let's say it's an RX,
+
+513
+00:15:02,960 --> 00:15:05,160
+and this here,
+
+514
+00:15:05,160 --> 00:15:06,420
+what it actually expresses is a
+
+515
+00:15:06,420 --> 00:15:08,440
+timeline
+
+516
+00:15:08,440 --> 00:15:09,960
+that is, if this side is time,
+
+517
+00:15:09,960 --> 00:15:11,700
+if the horizontal axis is time,
+
+518
+00:15:11,700 --> 00:15:13,240
+then the vertical axis,
+
+519
+00:15:13,240 --> 00:15:14,220
+represents,
+
+520
+00:15:14,220 --> 00:15:14,980
+its
+
+521
+00:15:14,980 --> 00:15:16,840
+This thing on this line,
+
+522
+00:15:16,840 --> 00:15:19,220
+the level going high and low,
+
+523
+00:15:19,220 --> 00:15:20,840
+it can actually be understood this way.
+
+524
+00:15:20,840 --> 00:15:23,280
+So we say,
+
+525
+00:15:23,280 --> 00:15:24,400
+normally,
+
+526
+00:15:24,400 --> 00:15:25,700
+for example, on this line,
+
+527
+00:15:25,700 --> 00:15:26,980
+how do we, that is,
+
+528
+00:15:26,980 --> 00:15:29,060
+it's nothing more than either transmitting data,
+
+529
+00:15:29,060 --> 00:15:31,200
+or it's not in the state of transmitting data.
+
+530
+00:15:31,200 --> 00:15:32,320
+These are two things,
+
+531
+00:15:32,320 --> 00:15:33,900
+and we need to tell them apart.
+
+532
+00:15:33,900 --> 00:15:34,340
+Think about it, isn't that right?
+
+533
+00:15:34,340 --> 00:15:36,000
+So how do we tell whether
+
+534
+00:15:36,000 --> 00:15:37,300
+it's currently transmitting data,
+
+535
+00:15:37,300 --> 00:15:38,860
+or not transmitting data?
+
+536
+00:15:38,860 --> 00:15:39,860
+Well, we define it like this:
+
+537
+00:15:39,860 --> 00:15:41,880
+when this bus,
+
+538
+00:15:41,880 --> 00:15:42,860
+which is really just this line,
+
+539
+00:15:42,860 --> 00:15:44,660
+when this line is in the idle state,
+
+540
+00:15:44,660 --> 00:15:45,740
+that is, it's not working,
+
+541
+00:15:45,740 --> 00:15:47,080
+when it's not sending data,
+
+542
+00:15:47,080 --> 00:15:49,780
+the specification requires this signal line to be at logic one.
+
+543
+00:15:49,780 --> 00:15:50,580
+What do we mean by logic one?
+
+544
+00:15:50,580 --> 00:15:53,660
+That is, if you measure it with a multimeter,
+
+545
+00:15:53,660 --> 00:15:54,820
+it actually guarantees that
+
+546
+00:15:54,820 --> 00:15:58,320
+on this line of this window,
+
+547
+00:15:58,320 --> 00:15:59,400
+it sits at a high level.
+
+548
+00:15:59,400 --> 00:16:01,060
+So-called high and low,
+
+549
+00:16:01,060 --> 00:16:02,060
+of course, is a relative concept.
+
+550
+00:16:02,060 --> 00:16:03,980
+It doesn't mean a specific number of volts.
+
+551
+00:16:03,980 --> 00:16:05,340
+It might just be relative to some value.
+
+552
+00:16:05,340 --> 00:16:06,000
+If it's higher than that,
+
+553
+00:16:06,000 --> 00:16:06,880
+then it's a high level;
+
+554
+00:16:06,880 --> 00:16:08,460
+lower than that, and it's a low level.
+
+555
+00:16:08,460 --> 00:16:09,260
+So this,
+
+556
+00:16:09,260 --> 00:16:13,160
+that is, after it's pulled high,
+
+557
+00:16:13,160 --> 00:16:15,760
+it actually stays in the pulled-up state all the time.
+
+558
+00:16:15,760 --> 00:16:16,280
+You just learn,
+
+559
+00:16:16,280 --> 00:16:16,920
+so,
+
+560
+00:16:16,920 --> 00:16:20,640
+how do we know it's about to start sending data?
+
+561
+00:16:20,640 --> 00:16:21,480
+So it
+
+562
+00:16:21,480 --> 00:16:22,600
+the transmitting end
+
+563
+00:16:22,600 --> 00:16:25,640
+will actively pull this high level down
+
+564
+00:16:25,640 --> 00:16:26,880
+pull down for one bit
+
+565
+00:16:26,880 --> 00:16:28,660
+So how long is this one bit?
+
+566
+00:16:28,660 --> 00:16:29,800
+Actually, you can work it out.
+
+567
+00:16:29,800 --> 00:16:31,820
+Because, as we said, once the baud rate is set
+
+568
+00:16:31,820 --> 00:16:32,700
+you know that this
+
+569
+00:16:32,700 --> 00:16:34,480
+duration of one bit
+
+570
+00:16:34,480 --> 00:16:36,020
+is actually, for example, 115200
+
+571
+00:16:36,020 --> 00:16:37,500
+so the duration of this one bit is
+
+572
+00:16:37,500 --> 00:16:39,780
+1/115200 of a second
+
+573
+00:16:39,780 --> 00:16:40,340
+Think about it, isn't that right?
+
+574
+00:16:40,340 --> 00:16:42,560
+So how long does this one bit last?
+
+575
+00:16:42,560 --> 00:16:43,700
+Because the horizontal axis is time,
+
+576
+00:16:43,700 --> 00:16:45,300
+so how long does this one bit last?
+
+577
+00:16:45,300 --> 00:16:47,460
+These can all be measured.
+
+578
+00:16:47,460 --> 00:16:49,520
+So at the very beginning,
+
+579
+00:16:49,520 --> 00:16:50,480
+it sits at a high level, which means
+
+580
+00:16:50,480 --> 00:16:51,880
+it is in the idle state
+
+581
+00:16:51,880 --> 00:16:53,900
+So once we're ready to start sending data
+
+582
+00:16:53,900 --> 00:16:55,340
+how do I tell the other side
+
+583
+00:16:55,340 --> 00:16:56,420
+that I'm about to start working?
+
+584
+00:16:56,420 --> 00:16:58,340
+Well, it pulls the line low
+
+585
+00:16:58,340 --> 00:16:59,360
+that is, it takes the voltage
+
+586
+00:16:59,360 --> 00:17:00,700
+from high to low
+
+587
+00:17:00,700 --> 00:17:02,000
+and holds it for one bit
+
+588
+00:17:02,000 --> 00:17:03,100
+of time,
+
+589
+00:17:03,100 --> 00:17:05,860
+and that signals the start.
+
+590
+00:17:05,860 --> 00:17:07,260
+That is the start bit.
+
+591
+00:17:07,260 --> 00:17:08,320
+It means exactly this:
+
+592
+00:17:08,320 --> 00:17:10,920
+the sender first sends a low level, a zero,
+
+593
+00:17:10,920 --> 00:17:12,560
+to indicate the beginning of the character transmission,
+
+594
+00:17:12,560 --> 00:17:13,800
+right?
+
+595
+00:17:13,800 --> 00:17:15,980
+Then, for the actual character being transmitted,
+
+596
+00:17:15,980 --> 00:17:17,300
+as we know, generally,
+
+597
+00:17:17,300 --> 00:17:18,760
+we just talk about one byte,
+
+598
+00:17:18,760 --> 00:17:20,220
+one piece of ASCII data,
+
+599
+00:17:20,220 --> 00:17:21,860
+that's what we call the transmitted data.
+
+600
+00:17:21,860 --> 00:17:24,300
+Now, this gray part at the end,
+
+601
+00:17:24,300 --> 00:17:26,880
+that means it's sending this data
+
+602
+00:17:26,880 --> 00:17:29,280
+Now, this data,
+
+603
+00:17:29,280 --> 00:17:30,780
+according to the rules of the protocol,
+
+604
+00:17:30,780 --> 00:17:32,060
+has what's called a data length
+
+605
+00:17:32,060 --> 00:17:33,140
+This data length
+
+606
+00:17:33,140 --> 00:17:34,960
+can be 5, 6, 7, or 8 bits
+
+607
+00:17:34,960 --> 00:17:35,720
+But in general,
+
+608
+00:17:35,720 --> 00:17:36,760
+we usually just use one form,
+
+609
+00:17:36,760 --> 00:17:39,440
+with the length set to 8
+
+610
+00:17:39,440 --> 00:17:40,820
+bits
+
+611
+00:17:40,820 --> 00:17:42,440
+The ASCII standard uses 8 bits for everything
+
+612
+00:17:42,440 --> 00:17:44,420
+So when we send an 'A',
+
+613
+00:17:44,420 --> 00:17:45,360
+it takes up 8 bits
+
+614
+00:17:45,360 --> 00:17:46,820
+In other words, this entire
+
+615
+00:17:46,820 --> 00:17:49,200
+whole process
+
+616
+00:17:49,200 --> 00:17:50,680
+can actually only send one byte
+
+617
+00:17:50,680 --> 00:17:51,400
+Does everyone understand?
+
+618
+00:17:51,400 --> 00:17:52,480
+Every time it sends a byte,
+
+619
+00:17:52,480 --> 00:17:53,160
+there has to be a
+
+620
+00:17:53,160 --> 00:17:54,880
+process like this
+
+621
+00:17:54,880 --> 00:17:58,660
+So, we send 8 bits
+
+622
+00:17:58,660 --> 00:17:59,600
+Once that's sent,
+
+623
+00:17:59,600 --> 00:18:00,500
+it forms one 8-bit unit.
+
+624
+00:18:00,500 --> 00:18:01,180
+Then,
+
+625
+00:18:01,180 --> 00:18:02,600
+the rule is to send the lowest bit first,
+
+626
+00:18:02,600 --> 00:18:03,620
+and the highest bit last.
+
+627
+00:18:03,620 --> 00:18:04,860
+The example I gave you earlier,
+
+628
+00:18:04,860 --> 00:18:06,260
+I was actually explaining this very concept,
+
+629
+00:18:06,260 --> 00:18:07,660
+that is, with an 8-bit piece of data,
+
+630
+00:18:07,660 --> 00:18:08,620
+each of its bits —
+
+631
+00:18:08,620 --> 00:18:09,700
+do we send the low bit first,
+
+632
+00:18:09,700 --> 00:18:10,600
+or the high bit first?
+
+633
+00:18:10,600 --> 00:18:11,440
+This is also something
+
+634
+00:18:11,440 --> 00:18:13,300
+that has to be specified in the protocol.
+
+635
+00:18:13,300 --> 00:18:14,660
+And then,
+
+636
+00:18:14,660 --> 00:18:15,920
+after the data has been sent,
+
+637
+00:18:15,920 --> 00:18:16,820
+it will be followed by
+
+638
+00:18:16,820 --> 00:18:19,060
+one additional bit.
+
+639
+00:18:19,060 --> 00:18:19,740
+This bit,
+
+640
+00:18:19,740 --> 00:18:20,700
+we call it
+
+641
+00:18:20,700 --> 00:18:22,300
+machine parity bit
+
+642
+00:18:22,300 --> 00:18:23,680
+It's called parity in English.
+
+643
+00:18:23,680 --> 00:18:26,140
+Now, this parity bit,
+
+644
+00:18:26,140 --> 00:18:27,640
+what it really does,
+
+645
+00:18:27,640 --> 00:18:29,460
+its actual purpose is to,
+
+646
+00:18:29,460 --> 00:18:31,800
+the original idea behind its design,
+
+647
+00:18:31,800 --> 00:18:32,500
+is essentially this:
+
+648
+00:18:32,500 --> 00:18:34,880
+it helps us check
+
+649
+00:18:34,880 --> 00:18:36,420
+whether the data got corrupted
+
+650
+00:18:36,420 --> 00:18:38,180
+during transmission.
+
+651
+00:18:38,180 --> 00:18:39,740
+For example, as we all know,
+
+652
+00:18:39,740 --> 00:18:41,460
+circuits can be subject to interference.
+
+653
+00:18:41,460 --> 00:18:42,620
+Once electromagnetic waves get disturbed,
+
+654
+00:18:42,620 --> 00:18:43,900
+a one you sent from your end,
+
+655
+00:18:43,900 --> 00:18:46,000
+might be read as a zero on the other side.
+
+656
+00:18:46,000 --> 00:18:47,560
+You see what I mean, right?
+
+657
+00:18:47,560 --> 00:18:48,860
+There can be some instability,
+
+658
+00:18:48,860 --> 00:18:49,740
+causing some interference.
+
+659
+00:18:49,740 --> 00:18:51,680
+So how do we detect
+
+660
+00:18:51,680 --> 00:18:53,580
+that the data has been disturbed?
+
+661
+00:18:53,580 --> 00:18:54,420
+A problem occurs.
+
+662
+00:18:54,420 --> 00:18:55,640
+So we introduced a
+
+663
+00:18:55,640 --> 00:18:56,920
+concept of parity bits.
+
+664
+00:18:56,920 --> 00:18:58,560
+That is to say, this parity check
+
+665
+00:18:58,560 --> 00:18:59,000
+well,
+
+666
+00:18:59,000 --> 00:19:00,520
+in practice there are a few kinds.
+
+667
+00:19:00,520 --> 00:19:01,520
+One is no parity check,
+
+668
+00:19:01,520 --> 00:19:01,880
+that is to say,
+
+669
+00:19:01,880 --> 00:19:04,100
+for instance, in general,
+
+670
+00:19:04,100 --> 00:19:04,980
+we might assume that this,
+
+671
+00:19:04,980 --> 00:19:06,380
+normally, say, when you
+
+672
+00:19:06,380 --> 00:19:07,980
+connect your board to yourself,
+
+673
+00:19:07,980 --> 00:19:08,840
+just hooked up like this,
+
+674
+00:19:08,840 --> 00:19:10,040
+if there is no strong
+
+675
+00:19:10,040 --> 00:19:11,160
+electromagnetic interference in the environment,
+
+676
+00:19:11,160 --> 00:19:12,800
+the data generally won't go wrong; it's
+
+677
+00:19:12,800 --> 00:19:13,780
+still fairly stable.
+
+678
+00:19:13,780 --> 00:19:15,320
+So if we save one bit,
+
+679
+00:19:15,320 --> 00:19:16,800
+the transmission speed will definitely be a bit faster.
+
+680
+00:19:16,800 --> 00:19:18,040
+And this one
+
+681
+00:19:18,040 --> 00:19:19,480
+You can also configure it to
+
+682
+00:19:19,480 --> 00:19:20,240
+that is, not to do parity checking.
+
+683
+00:19:20,240 --> 00:19:21,260
+Usually we seem to configure it this way,
+
+684
+00:19:21,260 --> 00:19:22,040
+without parity checking.
+
+685
+00:19:22,040 --> 00:19:23,860
+But you can also configure it to do parity checking.
+
+686
+00:19:23,860 --> 00:19:24,300
+Now, for parity checking,
+
+687
+00:19:24,300 --> 00:19:25,640
+there are two types: odd parity and even parity.
+
+688
+00:19:25,640 --> 00:19:27,300
+So what is odd parity?
+
+689
+00:19:27,300 --> 00:19:27,520
+Well,
+
+690
+00:19:27,520 --> 00:19:30,040
+that is, if among the data bits,
+
+691
+00:19:30,040 --> 00:19:31,180
+the number of ones is even,
+
+692
+00:19:31,180 --> 00:19:31,900
+then the parity bit is 1.
+
+693
+00:19:31,900 --> 00:19:32,420
+What does that mean?
+
+694
+00:19:32,420 --> 00:19:33,580
+It means that as the sender,
+
+695
+00:19:33,580 --> 00:19:35,500
+say you want to send out a piece of data,
+
+696
+00:19:35,500 --> 00:19:36,360
+and in the data you are sending,
+
+697
+00:19:36,360 --> 00:19:37,200
+within these 8 bits,
+
+698
+00:19:37,200 --> 00:19:40,340
+say there are 7 ones,
+
+699
+00:19:40,340 --> 00:19:41,460
+then that means
+
+700
+00:19:41,460 --> 00:19:42,460
+there is an odd number of one bits.
+
+701
+00:19:42,460 --> 00:19:42,700
+So
+
+702
+00:19:42,700 --> 00:19:46,120
+if the number of ones is odd,
+
+703
+00:19:46,120 --> 00:19:47,860
+this part here is written wrong,
+
+704
+00:19:47,860 --> 00:19:48,100
+sorry about that.
+
+705
+00:19:48,100 --> 00:19:50,000
+This should probably be the odd
+
+706
+00:19:50,000 --> 00:19:50,640
+it should be odd parity,
+
+707
+00:19:50,640 --> 00:19:51,800
+down here it says even,
+
+708
+00:19:51,800 --> 00:19:52,780
+up here it should be odd.
+
+709
+00:19:52,780 --> 00:19:54,400
+That is to say, if the sender
+
+710
+00:19:54,400 --> 00:19:55,680
+sends this data,
+
+711
+00:19:55,680 --> 00:19:57,280
+and there are 7 bits
+
+712
+00:19:57,280 --> 00:19:59,040
+that are 1 in it,
+
+713
+00:19:59,040 --> 00:19:59,600
+then that means
+
+714
+00:19:59,600 --> 00:20:02,000
+the number of ones is odd,
+
+715
+00:20:02,000 --> 00:20:03,540
+so the sender, on this
+
+716
+00:20:03,540 --> 00:20:05,000
+parity bit position here,
+
+717
+00:20:05,000 --> 00:20:06,100
+sets it to 1,
+
+718
+00:20:06,100 --> 00:20:07,320
+to tell the other side that
+
+719
+00:20:07,320 --> 00:20:08,940
+in the data I'm sending,
+
+720
+00:20:08,940 --> 00:20:09,540
+there are actually
+
+721
+00:20:09,540 --> 00:20:11,360
+then the number of 1s
+
+722
+00:20:11,360 --> 00:20:12,100
+is actually odd
+
+723
+00:20:12,100 --> 00:20:13,780
+So after the receiver gets it,
+
+724
+00:20:13,780 --> 00:20:14,560
+based on this bit,
+
+725
+00:20:14,560 --> 00:20:15,820
+it checks whether your odd parity data
+
+726
+00:20:15,820 --> 00:20:17,000
+matches what it says
+
+727
+00:20:17,000 --> 00:20:17,540
+the expressed meaning
+
+728
+00:20:17,540 --> 00:20:17,980
+is the same or not,
+
+729
+00:20:17,980 --> 00:20:18,920
+doing a simple check.
+
+730
+00:20:18,920 --> 00:20:19,540
+Everyone understands, right?
+
+731
+00:20:19,540 --> 00:20:21,180
+This simple parity check,
+
+732
+00:20:21,180 --> 00:20:22,140
+it's just a simple check.
+
+733
+00:20:22,140 --> 00:20:24,140
+Actually, it's not completely accurate,
+
+734
+00:20:24,140 --> 00:20:25,360
+but after all, it serves
+
+735
+00:20:25,360 --> 00:20:26,560
+a certain checking purpose.
+
+736
+00:20:26,560 --> 00:20:30,620
+Now, this even parity,
+
+737
+00:20:30,620 --> 00:20:31,460
+is just the opposite.
+
+738
+00:20:31,460 --> 00:20:32,880
+And so on and so forth.
+
+739
+00:20:32,880 --> 00:20:33,840
+What else is there?
+
+740
+00:20:33,840 --> 00:20:34,660
+The parity bit is always 1.
+
+741
+00:20:34,660 --> 00:20:35,640
+Why is the parity bit always 0?
+
+742
+00:20:35,640 --> 00:20:36,980
+Actually, it also has a special purpose.
+
+743
+00:20:36,980 --> 00:20:38,480
+I won't go into the details here.
+
+744
+00:20:38,480 --> 00:20:40,160
+So what this means is,
+
+745
+00:20:40,160 --> 00:20:41,620
+after it finishes sending the data,
+
+746
+00:20:41,620 --> 00:20:43,160
+it usually adds a parity bit as well.
+
+747
+00:20:43,160 --> 00:20:44,320
+Or there might not be this bit at all.
+
+748
+00:20:44,320 --> 00:20:45,920
+So after sending is done,
+
+749
+00:20:45,920 --> 00:20:47,160
+how does it indicate that
+
+750
+00:20:47,160 --> 00:20:48,820
+one byte has been completely sent?
+
+751
+00:20:48,820 --> 00:20:50,180
+Because we have a beginning,
+
+752
+00:20:50,180 --> 00:20:51,080
+we also need an end.
+
+753
+00:20:51,080 --> 00:20:52,560
+This is the concept of synchronization.
+
+754
+00:20:52,560 --> 00:20:53,800
+That is to say, before I send,
+
+755
+00:20:53,800 --> 00:20:54,620
+I wave my hand,
+
+756
+00:20:54,620 --> 00:20:55,620
+and after I finish sending,
+
+757
+00:20:55,620 --> 00:20:56,440
+I also wave my hand,
+
+758
+00:20:56,440 --> 00:20:57,820
+telling the other side that it's done.
+
+759
+00:20:57,820 --> 00:20:58,080
+Right?
+
+760
+00:20:58,080 --> 00:20:59,540
+So for the start,
+
+761
+00:20:59,540 --> 00:21:00,660
+we signal the other side with a low level
+
+762
+00:21:00,660 --> 00:21:02,040
+a single-bit low level
+
+763
+00:21:02,040 --> 00:21:03,000
+to tell the other side.
+
+764
+00:21:03,000 --> 00:21:03,940
+So how do we
+
+765
+00:21:03,940 --> 00:21:06,680
+tell the other side that it's finished?
+
+766
+00:21:06,680 --> 00:21:08,580
+It's actually on this line,
+
+767
+00:21:08,580 --> 00:21:09,760
+we need to actually produce
+
+768
+00:21:09,760 --> 00:21:11,100
+a high level of one bit, one and a half bits,
+
+769
+00:21:11,100 --> 00:21:12,840
+or two bits
+
+770
+00:21:12,840 --> 00:21:14,060
+and this is configurable as well.
+
+771
+00:21:14,060 --> 00:21:15,280
+So in this way,
+
+772
+00:21:15,280 --> 00:21:16,220
+we tell the other side
+
+773
+00:21:16,220 --> 00:21:19,040
+that one byte has been sent,
+
+774
+00:21:19,040 --> 00:21:19,960
+that one byte has been sent.
+
+775
+00:21:19,960 --> 00:21:21,980
+So our entire...,
+
+776
+00:21:21,980 --> 00:21:22,560
+that is to say,
+
+777
+00:21:22,560 --> 00:21:23,860
+once you say you want to send
+
+778
+00:21:23,860 --> 00:21:25,500
+eight bytes,
+
+779
+00:21:25,500 --> 00:21:27,500
+or say ten bytes,
+
+780
+00:21:27,500 --> 00:21:28,400
+then for each byte
+
+781
+00:21:28,400 --> 00:21:29,520
+they all have to go through such a process.
+
+782
+00:21:29,520 --> 00:21:30,600
+So this is one
+
+783
+00:21:30,600 --> 00:21:31,460
+plus that makes one frame.
+
+784
+00:21:31,460 --> 00:21:32,240
+This frame,
+
+785
+00:21:32,240 --> 00:21:33,680
+a frame in UART,
+
+786
+00:21:33,680 --> 00:21:34,720
+its this
+
+787
+00:21:34,720 --> 00:21:35,760
+actually has a start
+
+788
+00:21:35,760 --> 00:21:37,260
+and also adds a parity bit,
+
+789
+00:21:37,260 --> 00:21:38,860
+and together these make up
+
+790
+00:21:38,860 --> 00:21:39,300
+this one frame.
+
+791
+00:21:39,300 --> 00:21:39,980
+Does everyone understand?
+
+792
+00:21:39,980 --> 00:21:41,200
+So this sending process
+
+793
+00:21:41,200 --> 00:21:42,600
+is actually not as
+
+794
+00:21:42,600 --> 00:21:43,120
+simple as you might imagine.
+
+795
+00:21:43,120 --> 00:21:44,440
+It's not just that you send data,
+
+796
+00:21:44,440 --> 00:21:45,120
+pure data.
+
+797
+00:21:45,120 --> 00:21:45,960
+It actually has some
+
+798
+00:21:45,960 --> 00:21:48,080
+bytes with special meanings in it,
+
+799
+00:21:48,080 --> 00:21:50,220
+which serve some synchronization purpose,
+
+800
+00:21:50,220 --> 00:21:51,520
+and a verification purpose.
+
+801
+00:21:51,520 --> 00:21:52,660
+You get what I mean, right?
+
+802
+00:21:52,660 --> 00:21:55,260
+This is the communication protocol of the serial port.
+
+803
+00:21:55,260 --> 00:21:56,660
+Then the transceivers on both sides
+
+804
+00:21:56,660 --> 00:21:57,980
+have to follow this protocol,
+
+805
+00:21:57,980 --> 00:22:00,640
+doing some checks on the data on the line,
+
+806
+00:22:00,640 --> 00:22:02,140
+so that the data is
+
+807
+00:22:02,140 --> 00:22:04,420
+correctly sent and received.
+
+808
+00:22:04,420 --> 00:22:07,060
+Now, as for this information,
+
+809
+00:22:07,060 --> 00:22:10,460
+when we use this serial port transceiver,
+
+810
+00:22:10,460 --> 00:22:11,920
+what it actually means is that,
+
+811
+00:22:11,920 --> 00:22:13,680
+for us as software engineers,
+
+812
+00:22:13,680 --> 00:22:14,460
+we need to configure it.
+
+813
+00:22:14,460 --> 00:22:15,020
+You understand that, right?
+
+814
+00:22:15,020 --> 00:22:16,200
+You see, as I just said,
+
+815
+00:22:16,200 --> 00:22:18,100
+the parity bit can be there or not.
+
+816
+00:22:18,100 --> 00:22:18,740
+So whether you want it or not,
+
+817
+00:22:18,740 --> 00:22:19,820
+that's up to you to decide.
+
+818
+00:22:19,820 --> 00:22:21,360
+Then, on the peripheral interface,
+
+819
+00:22:21,360 --> 00:22:22,840
+there are some special registers,
+
+820
+00:22:22,840 --> 00:22:24,440
+that let us configure it.
+
+821
+00:22:24,440 --> 00:22:26,200
+So, before we correctly
+
+822
+00:22:26,200 --> 00:22:27,600
+send out a piece of data,
+
+823
+00:22:27,600 --> 00:22:29,060
+first there is a certain initialization process.
+
+824
+00:22:29,060 --> 00:22:30,200
+That is, we need to configure some devices.
+
+825
+00:22:30,200 --> 00:22:31,660
+All of our hardware devices,
+
+826
+00:22:31,660 --> 00:22:32,300
+including writing drivers,
+
+827
+00:22:32,300 --> 00:22:33,280
+actually follow this same idea.
+
+828
+00:22:33,280 --> 00:22:35,480
+Before using them, you have to do some configuration,
+
+829
+00:22:35,480 --> 00:22:36,240
+do some initialization.
+
+830
+00:22:36,240 --> 00:22:37,740
+Now, why do we need to do initialization?
+
+831
+00:22:37,740 --> 00:22:39,220
+There is definitely a reason behind it.
+
+832
+00:22:39,220 --> 00:22:40,000
+So we look at this interface,
+
+833
+00:22:40,000 --> 00:22:41,320
+why is it done this way?
+
+834
+00:22:41,320 --> 00:22:43,720
+I've given you some introduction here.
+
+835
+00:22:43,720 --> 00:22:46,520
+This is the concept of the communication protocol.
+
+836
+00:22:46,520 --> 00:22:50,340
+So next,
+
+837
+00:22:50,340 --> 00:22:51,280
+let's take a look at
+
+838
+00:22:51,280 --> 00:22:53,540
+when we actually do the programming,
+
+839
+00:22:53,540 --> 00:22:56,040
+how exactly we operate this thing.
+
+840
+00:22:56,040 --> 00:22:57,920
+Now, as we mentioned earlier,
+
+841
+00:22:57,920 --> 00:22:59,280
+So this, we
+
+842
+00:22:59,280 --> 00:23:03,340
+this NS16550A,
+
+843
+00:23:03,340 --> 00:23:03,960
+actually it is
+
+844
+00:23:03,960 --> 00:23:06,340
+the emulator we are using now,
+
+845
+00:23:06,340 --> 00:23:07,960
+the one it emulates,
+
+846
+00:23:07,960 --> 00:23:09,900
+this serial transceiver,
+
+847
+00:23:09,900 --> 00:23:11,740
+is exactly the model of this device.
+
+848
+00:23:11,740 --> 00:23:12,560
+This model,
+
+849
+00:23:12,560 --> 00:23:13,700
+by the way, is a real model.
+
+850
+00:23:13,700 --> 00:23:18,720
+On those much larger machines, they use a rather common serial transceiver model.
+
+851
+00:23:18,720 --> 00:23:20,220
+Now, this serial transceiver,
+
+852
+00:23:20,220 --> 00:23:22,680
+its technical manual is also available.
+
+853
+00:23:22,680 --> 00:23:23,720
+This technical manual is also,
+
+854
+00:23:23,720 --> 00:23:25,300
+we'll take a look at it together with everyone in a bit.
+
+855
+00:23:25,300 --> 00:23:29,780
+So, for us,
+
+856
+00:23:29,780 --> 00:23:33,060
+that is, when it comes to operating an external device,
+
+857
+00:23:33,060 --> 00:23:34,420
+namely this serial transceiver,
+
+858
+00:23:34,420 --> 00:23:37,260
+then what is it that you need to operate?
+
+859
+00:23:37,260 --> 00:23:37,880
+Think about it.
+
+860
+00:23:37,880 --> 00:23:39,380
+It's basically to program it.
+
+861
+00:23:39,380 --> 00:23:41,720
+When we talk about programming an interface device,
+
+862
+00:23:41,720 --> 00:23:44,300
+what we're really doing is controlling some of the registers inside it.
+
+863
+00:23:44,300 --> 00:23:44,840
+Think about it — isn't that the case?
+
+864
+00:23:44,840 --> 00:23:47,040
+So when we program,
+
+865
+00:23:47,040 --> 00:23:48,040
+as for these registers,
+
+866
+00:23:48,040 --> 00:23:50,480
+how do we access a register?
+
+867
+00:23:50,480 --> 00:23:53,920
+For the general-purpose registers on the CPU,
+
+868
+00:23:53,920 --> 00:23:55,400
+we access them all by name.
+
+869
+00:23:55,400 --> 00:23:55,680
+Right?
+
+870
+00:23:55,680 --> 00:23:57,040
+Things like X1, X0.
+
+871
+00:23:57,040 --> 00:23:58,160
+You still remember that, right?
+
+872
+00:23:58,160 --> 00:24:00,160
+But these peripheral registers —
+
+873
+00:24:00,160 --> 00:24:01,380
+there are so many of them.
+
+874
+00:24:01,380 --> 00:24:02,800
+How do we access them?
+
+875
+00:24:02,800 --> 00:24:04,620
+Moreover, the registers of each type of peripheral are different.
+
+876
+00:24:04,620 --> 00:24:05,860
+We can't possibly give them all unified names.
+
+877
+00:24:05,860 --> 00:24:07,020
+It's not like the CPU, which is just a single block.
+
+878
+00:24:07,020 --> 00:24:09,840
+So what we actually use is,
+
+879
+00:24:09,840 --> 00:24:13,000
+what's called memory mapping.
+
+880
+00:24:13,000 --> 00:24:14,080
+What is memory mapping?
+
+881
+00:24:14,080 --> 00:24:15,800
+That is to say, we take every peripheral,
+
+882
+00:24:15,800 --> 00:24:18,640
+across our entire physical address range,
+
+883
+00:24:18,640 --> 00:24:19,900
+and assign it an interval.
+
+884
+00:24:19,900 --> 00:24:22,920
+For example, take this UART device.
+
+885
+00:24:22,920 --> 00:24:23,900
+We see that in
+
+886
+00:24:23,900 --> 00:24:24,920
+well, this table here,
+
+887
+00:24:24,920 --> 00:24:27,680
+I dug it out of the QEMU source code.
+
+888
+00:24:27,680 --> 00:24:29,180
+If you're interested, you can go and look at QEMU's
+
+889
+00:24:29,180 --> 00:24:30,540
+simulator source code.
+
+890
+00:24:30,540 --> 00:24:32,820
+What it does in there is, for each type of peripheral,
+
+891
+00:24:32,820 --> 00:24:34,040
+and these are all peripherals in here,
+
+892
+00:24:34,040 --> 00:24:36,120
+which we'll introduce to you step by step later on.
+
+893
+00:24:36,120 --> 00:24:38,460
+So the UART device is the serial port device,
+
+894
+00:24:38,460 --> 00:24:40,140
+and it is one kind of peripheral in here.
+
+895
+00:24:40,140 --> 00:24:42,820
+Now, for all the registers of this peripheral,
+
+896
+00:24:42,820 --> 00:24:45,340
+it assigns an address to each register,
+
+897
+00:24:45,340 --> 00:24:49,200
+and these addresses are laid out linearly across the memory range.
+
+898
+00:24:49,200 --> 00:24:50,100
+This is a physical address.
+
+899
+00:24:50,100 --> 00:24:51,800
+And this physical address,
+
+900
+00:24:51,800 --> 00:24:55,820
+starting at the position 0x1000,
+
+901
+00:24:55,820 --> 00:24:58,680
+From this position
+
+902
+00:24:58,680 --> 00:25:00,280
+starting from this address
+
+903
+00:25:00,280 --> 00:25:01,880
+we reserved this chunk
+
+904
+00:25:01,880 --> 00:25:04,220
+for our use
+
+905
+00:25:04,220 --> 00:25:05,260
+for our use
+
+906
+00:25:05,260 --> 00:25:07,200
+Now, this chunk
+
+907
+00:25:07,200 --> 00:25:08,960
+was given a range called Linux100
+
+908
+00:25:08,960 --> 00:25:10,620
+That is, from this address
+
+909
+00:25:10,620 --> 00:25:12,100
+from this physical address to this address
+
+910
+00:25:12,100 --> 00:25:13,800
+this range was given
+
+911
+00:25:13,800 --> 00:25:14,820
+And for this range
+
+912
+00:25:14,820 --> 00:25:16,420
+we mapped it to this
+
+913
+00:25:16,420 --> 00:25:19,320
+to these registers of this serial port receiver
+
+914
+00:25:19,320 --> 00:25:20,220
+That's the idea
+
+915
+00:25:20,220 --> 00:25:20,800
+We
+
+916
+00:25:20,800 --> 00:25:23,940
+So let's make sure we understand this diagram from earlier
+
+917
+00:25:23,940 --> 00:25:26,300
+When we were thinking about that
+
+918
+00:25:26,300 --> 00:25:27,940
+boot process earlier
+
+919
+00:25:27,940 --> 00:25:29,320
+we also looked at this diagram, right?
+
+920
+00:25:29,320 --> 00:25:32,480
+Back then, which things did we only introduce in this diagram?
+
+921
+00:25:32,480 --> 00:25:34,540
+back then, we only introduced one
+
+922
+00:25:34,540 --> 00:25:36,280
+ROM and one RAM
+
+923
+00:25:36,280 --> 00:25:37,520
+so our memory is here
+
+924
+00:25:37,520 --> 00:25:38,520
+so the memory's
+
+925
+00:25:38,520 --> 00:25:39,800
+for example, this memory of ours
+
+926
+00:25:39,800 --> 00:25:41,820
+is as large as 128 megabytes
+
+927
+00:25:41,820 --> 00:25:43,320
+and for these 128 megabytes,
+
+928
+00:25:43,320 --> 00:25:44,660
+we actually mapped it to
+
+929
+00:25:44,660 --> 00:25:45,900
+our entire address
+
+930
+00:25:45,900 --> 00:25:48,880
+from Linux 8000 to Linux 8800
+
+931
+00:25:48,880 --> 00:25:50,160
+in this range
+
+932
+00:25:50,160 --> 00:25:52,420
+this range is actually 128 megabytes
+
+933
+00:25:52,420 --> 00:25:55,340
+so in terms of the physical address,
+
+934
+00:25:55,340 --> 00:25:57,440
+from the physical address of our bus,
+
+935
+00:25:57,440 --> 00:25:59,200
+the physical address of the bus,
+
+936
+00:25:59,200 --> 00:26:01,500
+from Linux 8000 to Linux 8800
+
+937
+00:26:01,500 --> 00:26:03,000
+in this range,
+
+938
+00:26:03,000 --> 00:26:04,860
+it is given to this memory
+
+939
+00:26:04,860 --> 00:26:07,000
+for the memory to use
+
+940
+00:26:07,000 --> 00:26:07,900
+you can understand it this way
+
+941
+00:26:07,900 --> 00:26:09,500
+So this memory of ours,
+
+942
+00:26:09,500 --> 00:26:10,860
+this physical memory,
+
+943
+00:26:10,860 --> 00:26:12,580
+if the base here is 0,
+
+944
+00:26:12,580 --> 00:26:14,600
+then 0 gets mapped to 0x80000000.
+
+945
+00:26:14,600 --> 00:26:16,260
+You all get what I mean here, right?
+
+946
+00:26:16,260 --> 00:26:17,680
+Of course, when we program,
+
+947
+00:26:17,680 --> 00:26:19,560
+as far as we programmers are concerned,
+
+948
+00:26:19,560 --> 00:26:20,840
+the address we see is this one.
+
+949
+00:26:20,840 --> 00:26:22,160
+You understand, right?
+
+950
+00:26:22,160 --> 00:26:24,360
+So when we compile and link,
+
+951
+00:26:24,360 --> 00:26:25,760
+we access based on this address,
+
+952
+00:26:25,760 --> 00:26:27,660
+the first byte of our memory,
+
+953
+00:26:27,660 --> 00:26:29,680
+that is, the first byte in our memory
+
+954
+00:26:29,680 --> 00:26:31,260
+actually corresponds to 0x80000000.
+
+955
+00:26:31,260 --> 00:26:33,400
+When you did the exercises before,
+
+956
+00:26:33,400 --> 00:26:34,560
+you should have come across this concept already.
+
+957
+00:26:34,560 --> 00:26:34,800
+Right?
+
+958
+00:26:34,800 --> 00:26:37,840
+Now, with the same concept,
+
+959
+00:26:37,840 --> 00:26:40,880
+take this serial port device,
+
+960
+00:26:40,880 --> 00:26:43,700
+the registers that are accessed on it
+
+961
+00:26:43,700 --> 00:26:45,060
+also gets mapped to
+
+962
+00:26:45,060 --> 00:26:46,040
+our unified
+
+963
+00:26:46,040 --> 00:26:47,260
+physical address space
+
+964
+00:26:47,260 --> 00:26:48,960
+And this mapping
+
+965
+00:26:48,960 --> 00:26:51,100
+maps to 0x1000,
+
+966
+00:26:51,100 --> 00:26:52,120
+a range like this.
+
+967
+00:26:52,120 --> 00:26:54,480
+A range like this.
+
+968
+00:26:54,480 --> 00:26:56,740
+This range actually comes from here.
+
+969
+00:26:56,740 --> 00:26:59,400
+Now, this so-called mapping process,
+
+970
+00:26:59,400 --> 00:27:01,920
+is done for us by the physical hardware.
+
+971
+00:27:01,920 --> 00:27:04,360
+Our software doesn't need to configure this.
+
+972
+00:27:04,360 --> 00:27:05,700
+Of course, over here we're using an emulator,
+
+973
+00:27:05,700 --> 00:27:08,600
+so it's implemented in software,
+
+974
+00:27:08,600 --> 00:27:09,900
+but on real hardware,
+
+975
+00:27:09,900 --> 00:27:11,520
+you can think of it as the circuit board being designed
+
+976
+00:27:11,520 --> 00:27:13,220
+with the connections wired up.
+
+977
+00:27:13,220 --> 00:27:18,440
+And the address range configured up here
+
+978
+00:27:18,440 --> 00:27:21,800
+is reserved for the serial port device's registers.
+
+979
+00:27:21,800 --> 00:27:23,800
+What each of these registers represents
+
+980
+00:27:23,800 --> 00:27:25,020
+is specially defined.
+
+981
+00:27:25,020 --> 00:27:25,800
+Let's come back to that later.
+
+982
+00:27:25,800 --> 00:27:28,260
+So when we access these registers,
+
+983
+00:27:28,260 --> 00:27:30,420
+we access them through these addresses.
+
+984
+00:27:30,420 --> 00:27:31,560
+That's actually what this means.
+
+985
+00:27:31,560 --> 00:27:35,660
+So this is what we call
+
+986
+00:27:35,660 --> 00:27:39,860
+the first step to accessing this register:
+
+987
+00:27:39,860 --> 00:27:41,020
+first, you need to know its address.
+
+988
+00:27:41,020 --> 00:27:42,520
+Now, on this,
+
+989
+00:27:42,520 --> 00:27:44,000
+let's look at our code together
+
+990
+00:27:44,000 --> 00:27:44,720
+and see
+
+991
+00:27:44,720 --> 00:27:45,900
+where we see
+
+992
+00:27:45,900 --> 00:27:47,220
+the concepts I just mentioned.
+
+993
+00:27:47,220 --> 00:28:02,680
+I've opened it right here,
+
+994
+00:28:02,680 --> 00:28:04,120
+I didn't have time to open it earlier—
+
+995
+00:28:04,120 --> 00:28:10,580
+the code we gave you, I've opened it.
+
+996
+00:28:10,580 --> 00:28:12,580
+In this code,
+
+997
+00:28:12,580 --> 00:28:15,700
+for example, today we covered
+
+998
+00:28:15,700 --> 00:28:16,560
+the operating system's—
+
+999
+00:28:16,560 --> 00:28:19,020
+still this one,
+
+1000
+00:28:19,020 --> 00:28:21,040
+01 hello rvls, right here.
+
+1001
+00:28:21,040 --> 00:28:22,060
+So, where do we see this?
+
+1002
+00:28:22,060 --> 00:28:24,240
+Where does this show up in our code?
+
+1003
+00:28:24,240 --> 00:28:25,020
+This thing we just talked about,
+
+1004
+00:28:25,020 --> 00:28:26,400
+the concept of serial port mapping,
+
+1005
+00:28:26,400 --> 00:28:27,720
+we can open up this file,
+
+1006
+00:28:27,720 --> 00:28:29,200
+uart.c,
+
+1007
+00:28:29,200 --> 00:28:40,220
+Can everyone still see it clearly?
+
+1008
+00:28:40,220 --> 00:28:41,900
+It's a little bit dark.
+
+1009
+00:28:41,900 --> 00:28:44,000
+So as we can see,
+
+1010
+00:28:44,000 --> 00:28:45,800
+that is, we should
+
+1011
+00:28:45,800 --> 00:28:50,260
+first look at this file,
+
+1012
+00:28:50,260 --> 00:28:51,760
+or rather, the code in
+
+1013
+00:28:51,760 --> 00:28:53,660
+this file, platform.h.
+
+1014
+00:28:53,660 --> 00:28:57,200
+Now, this platform.h,
+
+1015
+00:28:57,200 --> 00:28:59,280
+this is where we define
+
+1016
+00:28:59,280 --> 00:29:01,340
+everything related to our development board,
+
+1017
+00:29:01,340 --> 00:29:02,660
+all the physical
+
+1018
+00:29:02,660 --> 00:29:03,680
+characteristics and properties.
+
+1019
+00:29:03,680 --> 00:29:04,960
+The concept of a platform,
+
+1020
+00:29:04,960 --> 00:29:05,880
+which we covered earlier,
+
+1021
+00:29:05,880 --> 00:29:06,640
+You all still remember this, right?
+
+1022
+00:29:06,640 --> 00:29:08,160
+platform
+
+1023
+00:29:08,160 --> 00:29:09,060
+actually corresponds to
+
+1024
+00:29:09,060 --> 00:29:09,720
+essentially our
+
+1025
+00:29:09,720 --> 00:29:11,680
+this development board,
+
+1026
+00:29:11,680 --> 00:29:13,640
+or you could say this SoC,
+
+1027
+00:29:13,640 --> 00:29:15,260
+the concept of it.
+
+1028
+00:29:15,260 --> 00:29:16,340
+So in here,
+
+1029
+00:29:16,340 --> 00:29:17,860
+for example, earlier we defined
+
+1030
+00:29:17,860 --> 00:29:19,560
+the concept of eight processors,
+
+1031
+00:29:19,560 --> 00:29:20,980
+and we've kept that here.
+
+1032
+00:29:20,980 --> 00:29:23,320
+In today's exercise,
+
+1033
+00:29:23,320 --> 00:29:24,420
+we've added another concept,
+
+1034
+00:29:24,420 --> 00:29:26,380
+namely, we first defined a
+
+1035
+00:29:26,380 --> 00:29:29,160
+UART0 as this 1000.
+
+1036
+00:29:29,160 --> 00:29:30,440
+Now why define this?
+
+1037
+00:29:30,440 --> 00:29:31,700
+This is exactly what we just talked about —
+
+1038
+00:29:31,700 --> 00:29:33,860
+it's the starting address of its mapping.
+
+1039
+00:29:33,860 --> 00:29:36,640
+So for all the registers,
+
+1040
+00:29:36,640 --> 00:29:38,680
+we place them according to this base address.
+
+1041
+00:29:38,680 --> 00:29:41,120
+to do a corresponding operation.
+
+1042
+00:29:41,120 --> 00:29:43,220
+Because here we defined a
+
+1043
+00:29:43,220 --> 00:29:45,120
+UART_REG macro.
+
+1044
+00:29:45,120 --> 00:29:46,340
+Now, as you can see,
+
+1045
+00:29:46,340 --> 00:29:47,980
+this macro is actually inside this
+
+1046
+00:29:47,980 --> 00:29:50,200
+It takes a parameter REG,
+
+1047
+00:29:50,200 --> 00:29:50,920
+and then
+
+1048
+00:29:50,920 --> 00:29:52,180
+it actually works on UART0,
+
+1049
+00:29:52,180 --> 00:29:54,360
+that 1000 range we just saw,
+
+1050
+00:29:54,360 --> 00:29:55,660
+using it as the base value,
+
+1051
+00:29:55,660 --> 00:29:57,500
+and adding an offset
+
+1052
+00:29:57,500 --> 00:29:59,340
+to get
+
+1053
+00:29:59,340 --> 00:30:00,040
+the address of a corresponding register.
+
+1054
+00:30:00,040 --> 00:30:01,000
+The macro is used to get
+
+1055
+00:30:01,000 --> 00:30:03,500
+the address of a corresponding register,
+
+1056
+00:30:03,500 --> 00:30:05,880
+that is, one of the registers on UART0.
+
+1057
+00:30:05,880 --> 00:30:07,760
+That is the effect of this macro.
+
+1058
+00:30:07,760 --> 00:30:09,220
+This macro is in fact intended to achieve this effect.
+
+1059
+00:30:09,220 --> 00:30:11,460
+And this REG parameter,
+
+1060
+00:30:11,460 --> 00:30:12,600
+is actually passed as these macros.
+
+1061
+00:30:12,600 --> 00:30:15,460
+So all these macros
+
+1062
+00:30:15,460 --> 00:30:16,460
+these macros,
+
+1063
+00:30:16,460 --> 00:30:17,800
+actually correspond to,
+
+1064
+00:30:17,800 --> 00:30:19,640
+one by one,
+
+1065
+00:30:19,640 --> 00:30:22,140
+the control registers on this UART serial device
+
+1066
+00:30:22,140 --> 00:30:23,480
+— these control registers.
+
+1067
+00:30:23,480 --> 00:30:26,120
+Their offsets are 0, 1, 2 respectively.
+
+1068
+00:30:26,120 --> 00:30:27,960
+So in total, you can think of it this way:
+
+1069
+00:30:27,960 --> 00:30:29,320
+on the UART device,
+
+1070
+00:30:29,320 --> 00:30:32,840
+it provides 8 registers in total
+
+1071
+00:30:32,840 --> 00:30:34,360
+— just 8 registers.
+
+1072
+00:30:34,360 --> 00:30:36,320
+Then later on,
+
+1073
+00:30:36,320 --> 00:30:37,140
+we use these macros,
+
+1074
+00:30:37,140 --> 00:30:38,920
+pass in the base, and we can get
+
+1075
+00:30:38,920 --> 00:30:41,420
+the address of each register.
+
+1076
+00:30:41,420 --> 00:30:42,620
+Then, through that address,
+
+1077
+00:30:42,620 --> 00:30:44,500
+we can access the register.
+
+1078
+00:30:44,500 --> 00:30:46,060
+So reading and writing the registers,
+
+1079
+00:30:46,060 --> 00:30:53,540
+there's no problem with any of that.
+
+1080
+00:30:53,540 --> 00:30:55,840
+Now, this UART serial device,
+
+1081
+00:30:55,840 --> 00:30:56,680
+what this device is actually
+
+1082
+00:30:56,680 --> 00:30:59,400
+What are these registers actually used for?
+
+1083
+00:30:59,400 --> 00:31:01,160
+To figure this out, we need to look at
+
+1084
+00:31:01,160 --> 00:31:03,200
+the specific datasheet for this serial port device
+
+1085
+00:31:03,200 --> 00:31:04,620
+this datasheet,
+
+1086
+00:31:04,620 --> 00:31:06,500
+And we've already provided this datasheet for you,
+
+1087
+00:31:06,500 --> 00:31:08,800
+we have also provided for everyone
+
+1088
+00:31:08,800 --> 00:31:14,540
+in the repository you downloaded.
+
+1089
+00:31:14,540 --> 00:31:16,640
+You can go in here,
+
+1090
+00:31:16,640 --> 00:31:18,300
+there's a directory called reference,
+
+1091
+00:31:18,300 --> 00:31:19,280
+which means reference materials.
+
+1092
+00:31:19,280 --> 00:31:21,000
+Inside this reference materials directory,
+
+1093
+00:31:21,000 --> 00:31:26,280
+there's a document called TD16550PDF.
+
+1094
+00:31:26,280 --> 00:31:30,280
+This document actually contains the definitions of its registers.
+
+1095
+00:31:30,280 --> 00:31:32,860
+Of course, that standard data—
+
+1096
+00:31:32,860 --> 00:31:34,860
+that is, the datasheets engineers read—
+
+1097
+00:31:34,860 --> 00:31:36,040
+is really similar to this kind of document.
+
+1098
+00:31:36,040 --> 00:31:40,070
+It's this document.
+
+1099
+00:31:40,070 --> 00:31:41,370
+Let me also show it to you first,
+
+1100
+00:31:41,370 --> 00:31:44,810
+so that if any of you do low-level development in the future,
+
+1101
+00:31:44,810 --> 00:31:47,090
+So this datasheet is something you'll need to consult often.
+
+1102
+00:31:47,090 --> 00:31:49,630
+In other words, information on all the components is actually included on it.
+
+1103
+00:31:49,630 --> 00:31:52,650
+This NS16550 serial port device,
+
+1104
+00:31:52,650 --> 00:31:54,730
+its standard document
+
+1105
+00:31:54,730 --> 00:31:56,390
+is actually a document that looks like this.
+
+1106
+00:31:56,390 --> 00:31:59,190
+But this document is in English,
+
+1107
+00:31:59,190 --> 00:32:01,510
+and the content is quite engineering-oriented.
+
+1108
+00:32:01,510 --> 00:32:04,450
+So we won't use this document to introduce it to you.
+
+1109
+00:32:04,450 --> 00:32:08,050
+We actually picked up a document,
+
+1110
+00:32:08,050 --> 00:32:10,830
+a document that someone on the internet
+
+1111
+00:32:10,830 --> 00:32:12,630
+specially summarized for us.
+
+1112
+00:32:12,630 --> 00:32:13,470
+This document,
+
+1113
+00:32:13,470 --> 00:32:14,770
+it's much easier to read.
+
+1114
+00:32:14,770 --> 00:32:15,630
+Let me put it this way,
+
+1115
+00:32:15,630 --> 00:32:16,290
+it's easier to read.
+
+1116
+00:32:16,290 --> 00:32:17,890
+Its,
+
+1117
+00:32:17,890 --> 00:32:19,970
+it actually takes that kind of
+
+1118
+00:32:19,970 --> 00:32:21,390
+standard engineering-oriented document,
+
+1119
+00:32:21,390 --> 00:32:22,810
+and converts it into
+
+1120
+00:32:22,810 --> 00:32:27,470
+a reference document that's easier to look things up in.
+
+1121
+00:32:27,470 --> 00:32:29,070
+So let's take this document
+
+1122
+00:32:29,070 --> 00:32:33,230
+and use it as a reference for this programming exercise.
+
+1123
+00:32:33,230 --> 00:32:35,970
+Let's take a look at it together.
+
+1124
+00:32:35,970 --> 00:32:38,070
+In other words, including the one up here on my screen,
+
+1125
+00:32:38,070 --> 00:32:39,910
+this diagram is actually also from that
+
+1126
+00:32:39,910 --> 00:32:41,870
+resource document I just mentioned
+
+1127
+00:32:41,870 --> 00:32:43,110
+— I extracted it from there.
+
+1128
+00:32:43,110 --> 00:32:45,110
+So let's take a quick look.
+
+1129
+00:32:45,110 --> 00:32:46,230
+Over here on this diagram,
+
+1130
+00:32:46,230 --> 00:32:47,390
+of course, we should explain
+
+1131
+00:32:47,390 --> 00:32:48,270
+what some of it means.
+
+1132
+00:32:48,270 --> 00:32:49,430
+For example, over here it says
+
+1133
+00:32:49,430 --> 00:32:50,630
+A0, A1, A2.
+
+1134
+00:32:50,630 --> 00:32:51,330
+What does that mean?
+
+1135
+00:32:51,330 --> 00:32:52,290
+What it actually means is
+
+1136
+00:32:52,290 --> 00:32:53,830
+the offsets of those registers.
+
+1137
+00:32:53,830 --> 00:32:55,550
+that offset
+
+1138
+00:32:55,550 --> 00:32:57,950
+Because it only provides
+
+1139
+00:32:57,950 --> 00:32:59,230
+8 registers,
+
+1140
+00:32:59,230 --> 00:33:00,430
+and those 8 registers
+
+1141
+00:33:00,430 --> 00:33:00,830
+As you all know,
+
+1142
+00:33:00,830 --> 00:33:02,350
+to represent 8 registers,
+
+1143
+00:33:02,350 --> 00:33:03,550
+you only need 3 bits
+
+1144
+00:33:03,550 --> 00:33:04,130
+and that's enough.
+
+1145
+00:33:04,130 --> 00:33:04,690
+Think about it, right?
+
+1146
+00:33:04,690 --> 00:33:07,050
+So the encoding is simply
+
+1147
+00:33:07,050 --> 00:33:07,610
+000,
+
+1148
+00:33:07,610 --> 00:33:11,210
+001, 010, and so on.
+
+1149
+00:33:11,210 --> 00:33:12,030
+Right?
+
+1150
+00:33:12,030 --> 00:33:14,030
+With 8 such encodings,
+
+1151
+00:33:14,030 --> 00:33:16,090
+you can express 8 registers.
+
+1152
+00:33:16,090 --> 00:33:18,870
+Of course, in actual use,
+
+1153
+00:33:18,870 --> 00:33:20,610
+you don't use this number directly to access them.
+
+1154
+00:33:20,610 --> 00:33:23,330
+Instead, you have to add the mechanism we mentioned just now,
+
+1155
+00:33:23,330 --> 00:33:24,930
+the 1000 mechanism,
+
+1156
+00:33:24,930 --> 00:33:26,770
+to get its actual address.
+
+1157
+00:33:26,770 --> 00:33:29,270
+That's how you can access these registers.
+
+1158
+00:33:29,270 --> 00:33:32,110
+So these are the 8 registers.
+
+1159
+00:33:32,110 --> 00:33:32,810
+Now note that,
+
+1160
+00:33:32,810 --> 00:33:34,450
+as you can see, these registers
+
+1161
+00:33:34,450 --> 00:33:39,210
+That is to say, there are some registers
+
+1162
+00:33:39,210 --> 00:33:41,310
+that actually appear more than once.
+
+1163
+00:33:41,310 --> 00:33:43,810
+0000000001
+
+1164
+00:33:43,810 --> 00:33:46,370
+It has entries that show up repeatedly.
+
+1165
+00:33:46,370 --> 00:33:47,650
+Now, these repeated entries
+
+1166
+00:33:47,650 --> 00:33:48,770
+basically mean that,
+
+1167
+00:33:48,770 --> 00:33:49,910
+this register,
+
+1168
+00:33:49,910 --> 00:33:52,850
+it has some shared or multiplexed functions.
+
+1169
+00:33:52,850 --> 00:33:54,790
+And on top of that,
+
+1170
+00:33:54,790 --> 00:33:57,570
+each of these registers,
+
+1171
+00:33:57,570 --> 00:33:59,170
+is further split into two modes,
+
+1172
+00:33:59,170 --> 00:34:00,690
+namely read mode and write mode.
+
+1173
+00:34:00,690 --> 00:34:01,850
+So what do we mean by read mode?
+
+1174
+00:34:01,850 --> 00:34:02,670
+It means that when we
+
+1175
+00:34:02,670 --> 00:34:04,570
+read from this register,
+
+1176
+00:34:04,570 --> 00:34:06,430
+what information can we get out of it?
+
+1177
+00:34:06,430 --> 00:34:07,930
+That is essentially what it is telling us.
+
+1178
+00:34:07,930 --> 00:34:10,090
+And when we write to this register,
+
+1179
+00:34:10,090 --> 00:34:11,710
+what effect does that achieve?
+
+1180
+00:34:11,710 --> 00:34:13,590
+It is giving us that kind of explanation.
+
+1181
+00:34:13,590 --> 00:34:15,750
+So when you look at these registers,
+
+1182
+00:34:15,750 --> 00:34:17,390
+take this register zero, for example,
+
+1183
+00:34:17,390 --> 00:34:19,550
+what it actually expresses is this.
+
+1184
+00:34:19,550 --> 00:34:22,390
+When you read it,
+
+1185
+00:34:22,390 --> 00:34:25,270
+it is used to read some kind of
+
+1186
+00:34:25,270 --> 00:34:27,390
+value from the receiving register.
+
+1187
+00:34:27,390 --> 00:34:28,770
+We'll come back to this later.
+
+1188
+00:34:28,770 --> 00:34:30,550
+But when you write to it,
+
+1189
+00:34:30,550 --> 00:34:33,950
+it can have two different functions.
+
+1190
+00:34:33,950 --> 00:34:35,470
+One is writing,
+
+1191
+00:34:35,470 --> 00:34:38,230
+which means writing into this transmit register.
+
+1192
+00:34:38,230 --> 00:34:39,390
+And then there is another one,
+
+1193
+00:34:39,390 --> 00:34:40,790
+which is to enable something or other.
+
+1194
+00:34:40,790 --> 00:34:42,010
+So what this means,
+
+1195
+00:34:42,010 --> 00:34:42,570
+in practice, is that
+
+1196
+00:34:42,570 --> 00:34:43,790
+when this register is written to,
+
+1197
+00:34:43,790 --> 00:34:45,270
+it has two different functions.
+
+1198
+00:34:45,270 --> 00:34:46,130
+So how do we...
+
+1199
+00:34:46,130 --> 00:34:48,490
+Well, these two different functions
+
+1200
+00:34:48,490 --> 00:34:49,910
+cannot be enabled at the same time.
+
+1201
+00:34:49,910 --> 00:34:52,850
+So it will set some other bits
+
+1202
+00:34:52,850 --> 00:34:56,070
+to achieve, that is to say, selecting different functions
+
+1203
+00:34:56,070 --> 00:34:58,070
+which we'll see later when we program
+
+1204
+00:34:58,070 --> 00:34:59,230
+I'm telling you this here
+
+1205
+00:34:59,230 --> 00:35:01,810
+so that when you read this document on your own
+
+1206
+00:35:01,810 --> 00:35:03,430
+you understand the concept
+
+1207
+00:35:03,430 --> 00:35:09,380
+Let's first take this diagram
+
+1208
+00:35:09,380 --> 00:35:10,640
+and just briefly go over it
+
+1209
+00:35:10,640 --> 00:35:13,180
+Anyway, just know that there are eight registers
+
+1210
+00:35:13,180 --> 00:35:16,580
+and each register has two different modes
+
+1211
+00:35:16,580 --> 00:35:17,760
+read mode and write mode
+
+1212
+00:35:17,760 --> 00:35:19,760
+You can read from it and you can write to it
+
+1213
+00:35:19,760 --> 00:35:22,120
+And roughly what they mean
+
+1214
+00:35:22,120 --> 00:35:23,940
+we'll look at in detail later
+
+1215
+00:35:23,940 --> 00:35:28,520
+What we just did was get a sense of
+
+1216
+00:35:28,520 --> 00:35:31,320
+the registers of this serial port device and some of the
+
+1217
+00:35:31,320 --> 00:35:33,120
+basic concepts of how to access it
+
+1218
+00:35:33,120 --> 00:35:34,740
+As for the actual code
+
+1219
+00:35:34,740 --> 00:35:36,040
+I just showed it to you
+
+1220
+00:35:36,040 --> 00:35:39,200
+right here
+
+1221
+00:35:39,200 --> 00:35:44,320
+Correspondingly, we defined some macros here to match those,
+
+1222
+00:35:44,320 --> 00:35:47,960
+to represent the values of these registers.
+
+1223
+00:35:47,960 --> 00:35:52,160
+At the same time, we also defined a set of
+
+1224
+00:35:52,160 --> 00:35:56,320
+a set of functions, like uart_read and so on,
+
+1225
+00:35:56,320 --> 00:35:57,740
+uart_write and so on.
+
+1226
+00:35:57,740 --> 00:35:59,740
+Now, for this set of functions, as you can see,
+
+1227
+00:35:59,740 --> 00:36:03,320
+they are actually converted through these macros mentioned earlier.
+
+1228
+00:36:03,320 --> 00:36:04,620
+So this one,
+
+1229
+00:36:04,620 --> 00:36:08,740
+calling this macro is essentially like taking from this register,
+
+1230
+00:36:08,740 --> 00:36:09,840
+passing in a register value,
+
+1231
+00:36:09,840 --> 00:36:11,600
+and it will take that value
+
+1232
+00:36:11,600 --> 00:36:13,200
+and fetch it out through this,
+
+1233
+00:36:13,200 --> 00:36:15,540
+just like accessing a variable.
+
+1234
+00:36:15,540 --> 00:36:16,960
+When you read it here,
+
+1235
+00:36:16,960 --> 00:36:17,780
+you're accessing a register.
+
+1236
+00:36:17,780 --> 00:36:18,980
+Now we just treat it like accessing a variable,
+
+1237
+00:36:18,980 --> 00:36:20,720
+and that works the same way.
+
+1238
+00:36:20,720 --> 00:36:22,320
+Writing works the same way too.
+
+1239
+00:36:22,320 --> 00:36:25,020
+Take a look at this.
+
+1240
+00:36:25,020 --> 00:36:26,600
+If you can't quite follow it,
+
+1241
+00:36:26,600 --> 00:36:28,480
+We can talk about it more after class.
+
+1242
+00:36:28,480 --> 00:36:30,520
+The code is still fairly simple.
+
+1243
+00:36:30,520 --> 00:36:31,740
+It's just this part.
+
+1244
+00:36:31,740 --> 00:36:33,100
+We basically take this behavior,
+
+1245
+00:36:33,100 --> 00:36:34,480
+and use these two
+
+1246
+00:36:34,480 --> 00:36:40,380
+— actually just two functions — to implement it.
+
+1247
+00:36:40,380 --> 00:36:44,260
+Now, when it comes to using this serial port device,
+
+1248
+00:36:44,260 --> 00:36:46,260
+there are mainly a few parts.
+
+1249
+00:36:46,260 --> 00:36:47,360
+That is, first of all, we know
+
+1250
+00:36:47,360 --> 00:36:48,080
+what we need to do with it:
+
+1251
+00:36:48,080 --> 00:36:48,860
+we need to initialize it,
+
+1252
+00:36:48,860 --> 00:36:49,300
+right?
+
+1253
+00:36:49,300 --> 00:36:50,860
+Now, what initialization means,
+
+1254
+00:36:50,860 --> 00:36:51,480
+basically, is
+
+1255
+00:36:51,480 --> 00:36:53,140
+setting that
+
+1256
+00:36:53,140 --> 00:36:55,060
+— for example, the baud rate,
+
+1257
+00:36:55,060 --> 00:36:56,300
+setting what we just mentioned,
+
+1258
+00:36:56,300 --> 00:36:57,460
+like the parity bit,
+
+1259
+00:36:57,460 --> 00:36:57,960
+and all that.
+
+1260
+00:36:57,960 --> 00:36:58,640
+This way,
+
+1261
+00:36:58,640 --> 00:37:01,780
+Only then can this device work properly.
+
+1262
+00:37:01,780 --> 00:37:03,760
+This is something we must do.
+
+1263
+00:37:03,760 --> 00:37:05,780
+Now, for the corresponding code,
+
+1264
+00:37:05,780 --> 00:37:07,480
+we can take a look at
+
+1265
+00:37:07,480 --> 00:37:09,080
+in our code,
+
+1266
+00:37:09,080 --> 00:37:11,120
+this UART init
+
+1267
+00:37:11,120 --> 00:37:12,300
+function.
+
+1268
+00:37:12,300 --> 00:37:14,480
+This function will, during our
+
+1269
+00:37:14,480 --> 00:37:16,220
+boot process,
+
+1270
+00:37:16,220 --> 00:37:17,280
+be called.
+
+1271
+00:37:17,280 --> 00:37:21,280
+We'll look at it together in a moment.
+
+1272
+00:37:21,280 --> 00:37:22,780
+Now, here I've captured a screenshot,
+
+1273
+00:37:22,780 --> 00:37:23,440
+and I'll briefly go over it,
+
+1274
+00:37:23,440 --> 00:37:24,500
+that is, roughly what this initialization
+
+1275
+00:37:24,500 --> 00:37:25,200
+needs to initialize.
+
+1276
+00:37:25,200 --> 00:37:26,980
+So, first,
+
+1277
+00:37:26,980 --> 00:37:28,160
+we first
+
+1278
+00:37:28,160 --> 00:37:30,620
+take the interrupt and
+
+1279
+00:37:30,620 --> 00:37:31,840
+the interrupt functionality
+
+1280
+00:37:31,840 --> 00:37:32,840
+inside this device
+
+1281
+00:37:32,840 --> 00:37:33,640
+We've disabled it.
+
+1282
+00:37:33,640 --> 00:37:35,240
+Now, this serial port device,
+
+1283
+00:37:35,240 --> 00:37:36,500
+when will the interrupt actually be used?
+
+1284
+00:37:36,500 --> 00:37:38,360
+We'll use it later on.
+
+1285
+00:37:38,360 --> 00:37:39,220
+We don't need it for now.
+
+1286
+00:37:39,220 --> 00:37:41,080
+For the moment, we don't want to introduce the concept of interrupts,
+
+1287
+00:37:41,080 --> 00:37:41,940
+because we haven't covered interrupts yet.
+
+1288
+00:37:41,940 --> 00:37:43,900
+All we need to know here is that
+
+1289
+00:37:43,900 --> 00:37:45,400
+we've turned the interrupt function off for now,
+
+1290
+00:37:45,400 --> 00:37:46,320
+and we're not using that feature.
+
+1291
+00:37:46,320 --> 00:37:49,900
+Now, down here,
+
+1292
+00:37:49,900 --> 00:37:53,940
+we're actually setting the baud rate of this serial port.
+
+1293
+00:37:53,940 --> 00:37:56,380
+We already covered the concept of baud rate earlier,
+
+1294
+00:37:56,380 --> 00:37:57,840
+the transmit and receive rate.
+
+1295
+00:37:57,840 --> 00:37:59,100
+We have to configure that first.
+
+1296
+00:37:59,100 --> 00:38:01,300
+Next,
+
+1297
+00:38:01,300 --> 00:38:02,740
+what are we actually setting here?
+
+1298
+00:38:02,740 --> 00:38:04,880
+We're setting some of its data and control bits.
+
+1299
+00:38:04,880 --> 00:38:05,860
+These concepts
+
+1300
+00:38:05,860 --> 00:38:06,820
+basically mean that
+
+1301
+00:38:06,820 --> 00:38:08,060
+This piece of code
+
+1302
+00:38:08,060 --> 00:38:08,820
+is actually, basically,
+
+1303
+00:38:08,820 --> 00:38:11,080
+what we're doing is setting this thing up
+
+1304
+00:38:11,080 --> 00:38:13,180
+Now, of course, this interface of ours
+
+1305
+00:38:13,180 --> 00:38:14,140
+is set up on the client side
+
+1306
+00:38:14,140 --> 00:38:16,320
+but we also need to set it on the board
+
+1307
+00:38:16,320 --> 00:38:17,940
+because our board doesn't have an interface
+
+1308
+00:38:17,940 --> 00:38:19,680
+so we set it up through code instead
+
+1309
+00:38:19,680 --> 00:38:20,480
+Same effect.
+
+1310
+00:38:20,480 --> 00:38:22,200
+What's below this,
+
+1311
+00:38:22,200 --> 00:38:23,580
+is actually setting up these, what are they,
+
+1312
+00:38:23,580 --> 00:38:24,500
+these error-correcting code bits and so on,
+
+1313
+00:38:24,500 --> 00:38:25,020
+these kinds of concepts
+
+1314
+00:38:25,020 --> 00:38:29,320
+So how exactly is this thing configured?
+
+1315
+00:38:29,320 --> 00:38:35,870
+Let's take a look at the code together.
+
+1316
+00:38:35,870 --> 00:38:36,550
+This one,
+
+1317
+00:38:36,550 --> 00:38:37,870
+right here,
+
+1318
+00:38:37,870 --> 00:38:41,450
+just this part right here.
+
+1319
+00:38:41,450 --> 00:38:47,090
+Let's look at this first.
+
+1320
+00:38:47,090 --> 00:38:48,630
+Here, it's disabling interrupts.
+
+1321
+00:38:48,630 --> 00:38:50,290
+I'll skip that part.
+
+1322
+00:38:50,290 --> 00:38:50,970
+Uh,
+
+1323
+00:38:50,970 --> 00:38:53,310
+let's first take a look at this
+
+1324
+00:38:53,310 --> 00:38:54,350
+piece of code.
+
+1325
+00:38:54,350 --> 00:38:56,850
+There's a detailed explanation above as well.
+
+1326
+00:38:56,850 --> 00:38:59,130
+Let me just quickly go through it here.
+
+1327
+00:38:59,130 --> 00:39:00,650
+Uh,
+
+1328
+00:39:00,650 --> 00:39:02,650
+this thing,
+
+1329
+00:39:02,650 --> 00:39:03,050
+we
+
+1330
+00:39:03,050 --> 00:39:05,890
+set this thing up,
+
+1331
+00:39:05,890 --> 00:39:06,450
+that is to say,
+
+1332
+00:39:06,450 --> 00:39:06,930
+uh,
+
+1333
+00:39:06,930 --> 00:39:07,670
+it works like this.
+
+1334
+00:39:07,670 --> 00:39:17,160
+There's this concept behind it,
+
+1335
+00:39:17,160 --> 00:39:17,680
+that is to say,
+
+1336
+00:39:17,680 --> 00:39:18,460
+uh,
+
+1337
+00:39:18,460 --> 00:39:20,000
+when setting the baud rate,
+
+1338
+00:39:20,000 --> 00:39:21,440
+we know that this serial device,
+
+1339
+00:39:21,440 --> 00:39:21,680
+it...
+
+1340
+00:39:21,680 --> 00:39:24,440
+this so-called baud rate actually...
+
+1341
+00:39:24,440 --> 00:39:27,580
+It's basically a frequency that generates data
+
+1342
+00:39:27,580 --> 00:39:27,980
+Right?
+
+1343
+00:39:27,980 --> 00:39:31,900
+Now, physically speaking,
+
+1344
+00:39:31,900 --> 00:39:34,000
+in reality,
+
+1345
+00:39:34,000 --> 00:39:36,660
+in actual physical terms,
+
+1346
+00:39:36,660 --> 00:39:38,540
+we say this serial port transceiver,
+
+1347
+00:39:38,540 --> 00:39:40,400
+you can think of it as a serial port device.
+
+1348
+00:39:40,400 --> 00:39:42,580
+So this serial port transceiver,
+
+1349
+00:39:42,580 --> 00:39:43,560
+on our board,
+
+1350
+00:39:43,560 --> 00:39:43,860
+right?
+
+1351
+00:39:43,860 --> 00:39:45,820
+On this SoC board of ours,
+
+1352
+00:39:45,820 --> 00:39:47,440
+and this SoC,
+
+1353
+00:39:47,440 --> 00:39:48,920
+of course, has some CPUs inside it,
+
+1354
+00:39:48,920 --> 00:39:49,380
+and things like that,
+
+1355
+00:39:49,380 --> 00:39:50,320
+which we won't worry about.
+
+1356
+00:39:50,320 --> 00:39:51,140
+The CPU.
+
+1357
+00:39:51,140 --> 00:39:52,560
+And this thing,
+
+1358
+00:39:52,560 --> 00:39:53,740
+actually counts as its peripheral device.
+
+1359
+00:39:53,740 --> 00:39:54,700
+There are many peripheral devices,
+
+1360
+00:39:54,700 --> 00:39:55,960
+and we'll just dot dot dot.
+
+1361
+00:39:55,960 --> 00:39:56,360
+Let's not talk about that.
+
+1362
+00:39:56,360 --> 00:39:57,280
+So the UART device,
+
+1363
+00:39:57,280 --> 00:39:58,740
+it actually belongs to the peripheral devices.
+
+1364
+00:39:58,740 --> 00:40:01,120
+Now this peripheral,
+
+1365
+00:40:01,120 --> 00:40:01,560
+well,
+
+1366
+00:40:01,560 --> 00:40:03,200
+right now
+
+1367
+00:40:03,200 --> 00:40:04,540
+it has to go through one of these over here.
+
+1368
+00:40:04,540 --> 00:40:06,060
+Say we have a TX port,
+
+1369
+00:40:06,060 --> 00:40:06,840
+and this data
+
+1370
+00:40:06,840 --> 00:40:07,640
+needs to be sent out.
+
+1371
+00:40:07,640 --> 00:40:09,320
+Now, for sending it out,
+
+1372
+00:40:09,320 --> 00:40:12,020
+there is a frequency at which the data is generated,
+
+1373
+00:40:12,020 --> 00:40:12,700
+and we have to configure that.
+
+1374
+00:40:12,700 --> 00:40:14,120
+So as for this frequency,
+
+1375
+00:40:14,120 --> 00:40:15,260
+how is it actually produced?
+
+1376
+00:40:15,260 --> 00:40:17,420
+It actually comes from outside,
+
+1377
+00:40:17,420 --> 00:40:19,480
+on our side we generally have some
+
+1378
+00:40:19,480 --> 00:40:20,180
+uh,
+
+1379
+00:40:20,180 --> 00:40:21,420
+a thing called a crystal oscillator.
+
+1380
+00:40:21,420 --> 00:40:22,560
+A crystal oscillator means that
+
+1381
+00:40:22,560 --> 00:40:23,580
+It is a component.
+
+1382
+00:40:23,580 --> 00:40:25,780
+It generates this fixed frequency.
+
+1383
+00:40:25,780 --> 00:40:27,200
+So this crystal oscillator,
+
+1384
+00:40:27,200 --> 00:40:28,460
+or clock,
+
+1385
+00:40:28,460 --> 00:40:31,040
+it produces an input clock.
+
+1386
+00:40:31,040 --> 00:40:31,900
+Now, under normal circumstances,
+
+1387
+00:40:31,900 --> 00:40:32,300
+as we know,
+
+1388
+00:40:32,300 --> 00:40:34,460
+this clock on the board,
+
+1389
+00:40:34,460 --> 00:40:35,540
+it is generally a fixed frequency.
+
+1390
+00:40:35,540 --> 00:40:37,860
+For example, it is the fixed frequency X.
+
+1391
+00:40:37,860 --> 00:40:38,900
+Now here,
+
+1392
+00:40:38,900 --> 00:40:41,640
+the frequency Y that it produces,
+
+1393
+00:40:41,640 --> 00:40:43,000
+is actually configurable.
+
+1394
+00:40:43,000 --> 00:40:44,520
+We have things like 115200,
+
+1395
+00:40:44,520 --> 00:40:45,540
+9600,
+
+1396
+00:40:45,540 --> 00:40:46,420
+these frequencies, right?
+
+1397
+00:40:46,420 --> 00:40:47,620
+So this thing,
+
+1398
+00:40:47,620 --> 00:40:48,980
+on this serial port device,
+
+1399
+00:40:48,980 --> 00:40:50,180
+there are some components inside it,
+
+1400
+00:40:50,180 --> 00:40:52,960
+that can take this X as the input
+
+1401
+00:40:52,960 --> 00:40:53,820
+as the input.
+
+1402
+00:40:53,820 --> 00:40:55,480
+And this is essentially the output frequency.
+
+1403
+00:40:55,480 --> 00:40:57,920
+By configuring some of the parameters inside it,
+
+1404
+00:40:57,920 --> 00:40:59,380
+we can make it produce—
+
+1405
+00:40:59,380 --> 00:41:00,680
+that is to say, we only have
+
+1406
+00:41:00,680 --> 00:41:02,500
+one unified input frequency x,
+
+1407
+00:41:02,500 --> 00:41:03,640
+but we can generate
+
+1408
+00:41:03,640 --> 00:41:05,440
+different output frequencies y.
+
+1409
+00:41:05,440 --> 00:41:07,860
+And that is something we can configure.
+
+1410
+00:41:07,860 --> 00:41:10,420
+Now, this configuration,
+
+1411
+00:41:10,420 --> 00:41:12,680
+we need to make use of—
+
+1412
+00:41:12,680 --> 00:41:15,040
+the configuration on this component here,
+
+1413
+00:41:15,040 --> 00:41:15,940
+is set up like this:
+
+1414
+00:41:15,940 --> 00:41:16,920
+that is to say, on
+
+1415
+00:41:16,920 --> 00:41:19,500
+in our manual here,
+
+1416
+00:41:19,500 --> 00:41:21,220
+in this manual,
+
+1417
+00:41:21,220 --> 00:41:22,700
+you can scroll down,
+
+1418
+00:41:22,700 --> 00:41:25,760
+in this part of the manual,
+
+1419
+00:41:25,760 --> 00:41:29,040
+there is a table here,
+
+1420
+00:41:29,040 --> 00:41:31,820
+there is a table here
+
+1421
+00:41:31,820 --> 00:41:37,060
+It's called the baud rate generator programming table.
+
+1422
+00:41:37,060 --> 00:41:40,880
+Baud rate generator programming table.
+
+1423
+00:41:40,880 --> 00:41:42,120
+Generate this programming table.
+
+1424
+00:41:42,120 --> 00:41:43,380
+What it actually means is,
+
+1425
+00:41:43,380 --> 00:41:45,000
+it describes it this way.
+
+1426
+00:41:45,000 --> 00:41:45,980
+You can take a quick look at it.
+
+1427
+00:41:45,980 --> 00:41:47,560
+The text is a bit small.
+
+1428
+00:41:47,560 --> 00:41:48,340
+Let me zoom in a little.
+
+1429
+00:41:48,340 --> 00:42:00,940
+On this table of his,
+
+1430
+00:42:00,940 --> 00:42:02,300
+what concept is he expressing?
+
+1431
+00:42:02,300 --> 00:42:02,760
+That is to say,
+
+1432
+00:42:02,760 --> 00:42:03,760
+this,
+
+1433
+00:42:03,760 --> 00:42:07,140
+he says all the boards,
+
+1434
+00:42:07,140 --> 00:42:08,680
+typically will have,
+
+1435
+00:42:08,680 --> 00:42:09,340
+will have a
+
+1436
+00:42:09,340 --> 00:42:11,660
+18432 MHz
+
+1437
+00:42:11,660 --> 00:42:12,460
+crystal,
+
+1438
+00:42:12,460 --> 00:42:13,160
+which is a crystal oscillator,
+
+1439
+00:42:13,160 --> 00:42:14,100
+which is what I just mentioned.
+
+1440
+00:42:14,100 --> 00:42:14,600
+It is a
+
+1441
+00:42:14,600 --> 00:42:15,260
+a component
+
+1442
+00:42:15,260 --> 00:42:16,440
+it will generate a
+
+1443
+00:42:16,440 --> 00:42:18,640
+it has a fixed input frequency
+
+1444
+00:42:18,640 --> 00:42:19,340
+So,
+
+1445
+00:42:19,340 --> 00:42:22,960
+if we take this
+
+1446
+00:42:22,960 --> 00:42:24,020
+that is to say, when it's said like this,
+
+1447
+00:42:24,020 --> 00:42:25,020
+this kind of thing,
+
+1448
+00:42:25,020 --> 00:42:27,000
+it basically produces two kinds of
+
+1449
+00:42:27,000 --> 00:42:28,440
+there are two input frequencies
+
+1450
+00:42:28,440 --> 00:42:32,080
+that is, either a 1.8432MHz clock,
+
+1451
+00:42:32,080 --> 00:42:33,400
+or else 7-point
+
+1452
+00:42:33,400 --> 00:42:34,100
+this higher one,
+
+1453
+00:42:34,100 --> 00:42:34,900
+just these two kinds
+
+1454
+00:42:34,900 --> 00:42:36,300
+it currently has two input clocks
+
+1455
+00:42:36,300 --> 00:42:37,100
+which is what we call X,
+
+1456
+00:42:37,100 --> 00:42:38,940
+the input clock frequency
+
+1457
+00:42:38,940 --> 00:42:42,560
+Then through some special register configuration,
+
+1458
+00:42:42,560 --> 00:42:44,020
+we can take this output,
+
+1459
+00:42:44,020 --> 00:42:45,560
+and configure it for different output frequencies,
+
+1460
+00:42:45,560 --> 00:42:47,440
+that is, the baud rate.
+
+1461
+00:42:47,440 --> 00:42:48,800
+There are 50 and 75
+
+1462
+00:42:48,800 --> 00:42:50,440
+You see, there are a series of things here.
+
+1463
+00:42:50,440 --> 00:42:54,280
+So we just need to take some special values in this register,
+
+1464
+00:42:54,280 --> 00:42:55,680
+and set it to these values,
+
+1465
+00:42:55,680 --> 00:42:56,960
+and it's equivalent to saying,
+
+1466
+00:42:56,960 --> 00:43:01,080
+it works like y equals f of x,
+
+1467
+00:43:01,080 --> 00:43:02,900
+where this x,
+
+1468
+00:43:02,900 --> 00:43:03,620
+as we just said,
+
+1469
+00:43:03,620 --> 00:43:06,580
+is fixed at 18342 or these two values.
+
+1470
+00:43:06,580 --> 00:43:10,340
+Then we can adjust the parameters of this function f,
+
+1471
+00:43:10,340 --> 00:43:11,780
+which is basically adjusting the register,
+
+1472
+00:43:11,780 --> 00:43:14,120
+so that the resulting y, which is the baud rate,
+
+1473
+00:43:14,120 --> 00:43:15,780
+changes differently,
+
+1474
+00:43:15,780 --> 00:43:16,640
+right at this point.
+
+1475
+00:43:16,640 --> 00:43:18,280
+Now, this table,
+
+1476
+00:43:18,280 --> 00:43:19,840
+has a correspondence relationship.
+
+1477
+00:43:19,840 --> 00:43:21,280
+How do we adjust it?
+
+1478
+00:43:21,280 --> 00:43:22,020
+Basically, this f,
+
+1479
+00:43:22,020 --> 00:43:24,920
+let's say it follows a linear rule like ax plus b,
+
+1480
+00:43:24,920 --> 00:43:26,040
+something like x plus b.
+
+1481
+00:43:26,040 --> 00:43:27,260
+We assume it works like this.
+
+1482
+00:43:27,260 --> 00:43:28,860
+So this thing,
+
+1483
+00:43:28,860 --> 00:43:30,400
+this parameter A,
+
+1484
+00:43:30,400 --> 00:43:32,120
+we can adjust this parameter here.
+
+1485
+00:43:32,120 --> 00:43:33,140
+That's essentially what it means.
+
+1486
+00:43:33,140 --> 00:43:37,140
+So when we're writing this program,
+
+1487
+00:43:37,140 --> 00:43:39,700
+what our comment is trying to say is,
+
+1488
+00:43:39,700 --> 00:43:41,740
+what we want to produce,
+
+1489
+00:43:41,740 --> 00:43:42,940
+what we actually use is,
+
+1490
+00:43:42,940 --> 00:43:49,320
+we actually use 18432 as the input frequency.
+
+1491
+00:43:49,320 --> 00:43:51,800
+Then, if we want to produce
+
+1492
+00:43:51,800 --> 00:43:56,300
+an output baud rate of 38.4K,
+
+1493
+00:43:56,300 --> 00:43:58,200
+then all we really need to do is set
+
+1494
+00:43:58,200 --> 00:44:00,820
+the value in this register to 3,
+
+1495
+00:44:00,820 --> 00:44:02,100
+and that's it.
+
+1496
+00:44:02,100 --> 00:44:02,820
+That's the idea.
+
+1497
+00:44:02,820 --> 00:44:06,280
+So which two registers are these?
+
+1498
+00:44:06,280 --> 00:44:08,880
+We describe them in the code.
+
+1499
+00:44:08,880 --> 00:44:09,760
+Let's take a look together.
+
+1500
+00:44:09,760 --> 00:44:15,240
+In this code,
+
+1501
+00:44:15,240 --> 00:44:16,400
+What's written here means
+
+1502
+00:44:16,400 --> 00:44:19,820
+we're actually configuring this DLL and DLM
+
+1503
+00:44:19,820 --> 00:44:20,900
+these two registers
+
+1504
+00:44:20,900 --> 00:44:23,180
+As for these two registers,
+
+1505
+00:44:23,180 --> 00:44:27,200
+we also saw them earlier in this manual
+
+1506
+00:44:27,200 --> 00:44:31,440
+Where was it?
+
+1507
+00:44:31,440 --> 00:44:32,020
+Let me take a look.
+
+1508
+00:44:32,020 --> 00:44:33,120
+It should be around here.
+
+1509
+00:44:33,120 --> 00:44:35,140
+What it corresponds to is actually
+
+1510
+00:44:35,140 --> 00:44:36,080
+it's an abbreviation.
+
+1511
+00:44:36,080 --> 00:44:36,880
+So,
+
+1512
+00:44:36,880 --> 00:44:39,140
+for LLM,
+
+1513
+00:44:39,140 --> 00:44:41,580
+it corresponds to what's on this table.
+
+1514
+00:44:41,580 --> 00:44:48,210
+Let's take a look.
+
+1515
+00:44:48,210 --> 00:44:49,050
+As for this stuff,
+
+1516
+00:44:49,050 --> 00:44:51,170
+you don't need to memorize it.
+
+1517
+00:44:51,170 --> 00:44:53,810
+It's mainly obtained by looking things up in the manual.
+
+1518
+00:44:53,810 --> 00:44:54,690
+For DL,
+
+1519
+00:44:54,690 --> 00:44:56,110
+it's just this abbreviation
+
+1520
+00:44:56,110 --> 00:44:56,590
+which is
+
+1521
+00:44:56,590 --> 00:45:01,370
+short for Device Latch List
+
+1522
+00:45:01,370 --> 00:45:01,650
+that is
+
+1523
+00:45:01,650 --> 00:45:03,090
+that's what it means
+
+1524
+00:45:03,090 --> 00:45:03,630
+what I mean is
+
+1525
+00:45:03,630 --> 00:45:08,450
+the value you need to configure is not the value we just configured
+
+1526
+00:45:08,450 --> 00:45:10,650
+we just calculated it as 3, right?
+
+1527
+00:45:10,650 --> 00:45:12,110
+right?
+
+1528
+00:45:12,110 --> 00:45:13,630
+the value we configured earlier was 3
+
+1529
+00:45:13,630 --> 00:45:14,770
+so 3,
+
+1530
+00:45:14,770 --> 00:45:16,390
+when we represent it inside the computer
+
+1531
+00:45:16,390 --> 00:45:18,230
+that is, all the configurable values
+
+1532
+00:45:18,230 --> 00:45:20,810
+are actually a 16-bit number
+
+1533
+00:45:20,810 --> 00:45:21,990
+so 3,
+
+1534
+00:45:21,990 --> 00:45:22,950
+in the computer,
+
+1535
+00:45:22,950 --> 00:45:28,510
+it is actually a number like 0x0003
+
+1536
+00:45:28,510 --> 00:45:32,550
+so all the configurable values are 16-bit
+
+1537
+00:45:32,550 --> 00:45:34,950
+right, a 16-bit number like this
+
+1538
+00:45:34,950 --> 00:45:36,070
+and 16 bits,
+
+1539
+00:45:36,070 --> 00:45:37,850
+it needs two
+
+1540
+00:45:37,850 --> 00:45:42,900
+two bytes to represent
+
+1541
+00:45:42,900 --> 00:45:43,220
+Right?
+
+1542
+00:45:43,220 --> 00:45:45,140
+Now, one register.
+
+1543
+00:45:45,140 --> 00:45:45,720
+In this UART,
+
+1544
+00:45:45,720 --> 00:45:46,340
+this UART,
+
+1545
+00:45:46,340 --> 00:45:47,180
+I forgot to mention earlier,
+
+1546
+00:45:47,180 --> 00:45:48,140
+for these UART registers,
+
+1547
+00:45:48,140 --> 00:45:49,560
+each register is 8 bits wide.
+
+1548
+00:45:49,560 --> 00:45:52,100
+So this 0x0003
+
+1549
+00:45:52,100 --> 00:45:54,440
+is actually stored in two registers.
+
+1550
+00:45:54,440 --> 00:45:55,380
+These two registers,
+
+1551
+00:45:55,380 --> 00:45:56,360
+one is called dll,
+
+1552
+00:45:56,360 --> 00:45:57,880
+and the other is called dllm.
+
+1553
+00:45:57,880 --> 00:45:59,140
+That's what it means.
+
+1554
+00:45:59,140 --> 00:46:00,160
+Now, for dll,
+
+1555
+00:46:00,160 --> 00:46:00,820
+this l here,
+
+1556
+00:46:00,820 --> 00:46:02,240
+this l,
+
+1557
+00:46:02,240 --> 00:46:03,640
+stands for low.
+
+1558
+00:46:03,640 --> 00:46:04,540
+What does low mean?
+
+1559
+00:46:04,540 --> 00:46:05,280
+It means the low bits.
+
+1560
+00:46:05,280 --> 00:46:07,340
+That is, this number
+
+1561
+00:46:07,340 --> 00:46:10,600
+This 03 has to be put into
+
+1562
+00:46:10,600 --> 00:46:13,440
+the register called DLL.
+
+1563
+00:46:13,440 --> 00:46:15,460
+And this 00, the high bits,
+
+1564
+00:46:15,460 --> 00:46:16,780
+we have to put them into
+
+1565
+00:46:16,780 --> 00:46:20,980
+the register called DLM.
+
+1566
+00:46:20,980 --> 00:46:24,440
+So if you look at our code here,
+
+1567
+00:46:24,440 --> 00:46:25,940
+we are basically writing values into these two registers,
+
+1568
+00:46:25,940 --> 00:46:26,540
+writing values in,
+
+1569
+00:46:26,540 --> 00:46:27,280
+right?
+
+1570
+00:46:27,280 --> 00:46:29,460
+The low bits get 0x03.
+
+1571
+00:46:29,460 --> 00:46:32,740
+Let me explain what these two lines mean.
+
+1572
+00:46:32,740 --> 00:46:35,220
+So what does the next line mean?
+
+1573
+00:46:35,220 --> 00:46:36,780
+Why do we have to set one more register,
+
+1574
+00:46:36,780 --> 00:46:40,240
+the LCR register, before writing this data?
+
+1575
+00:46:40,240 --> 00:46:42,700
+This LCR register,
+
+1576
+00:46:42,700 --> 00:46:45,800
+this is because...
+
+1577
+00:46:45,800 --> 00:46:48,840
+Take a look here, I've written an explanation for you.
+
+1578
+00:46:48,840 --> 00:46:57,530
+That is to say, our DLL and DLM,
+
+1579
+00:46:57,530 --> 00:46:58,690
+these two registers,
+
+1580
+00:46:58,690 --> 00:47:03,290
+they share their addresses with our receive and transmit...
+
+1581
+00:47:03,290 --> 00:47:04,710
+As for these two registers,
+
+1582
+00:47:04,710 --> 00:47:05,990
+the enable register,
+
+1583
+00:47:05,990 --> 00:47:07,290
+actually shares an address,
+
+1584
+00:47:07,290 --> 00:47:10,050
+shares an address.
+
+1585
+00:47:10,050 --> 00:47:13,750
+Now, since there is a multiplexing relationship,
+
+1586
+00:47:13,750 --> 00:47:17,910
+we need to write a particular bit in the LCR register,
+
+1587
+00:47:17,910 --> 00:47:19,950
+that is, to make it select that one,
+
+1588
+00:47:19,950 --> 00:47:22,770
+because one register can't be used for both at the same time.
+
+1589
+00:47:22,770 --> 00:47:24,970
+It either does that thing we just talked about,
+
+1590
+00:47:24,970 --> 00:47:28,550
+or it does the job of enabling interrupts,
+
+1591
+00:47:28,550 --> 00:47:32,150
+or it does that thing we just talked about,
+
+1592
+00:47:32,150 --> 00:47:34,210
+setting the baud rate.
+
+1593
+00:47:34,210 --> 00:47:36,030
+So for this function, you can only pick one of the two.
+
+1594
+00:47:36,030 --> 00:47:37,590
+We need to flip a switch,
+
+1595
+00:47:37,590 --> 00:47:38,870
+to select the function of this register,
+
+1596
+00:47:38,870 --> 00:47:40,050
+to pick it.
+
+1597
+00:47:40,050 --> 00:47:44,190
+So actually, the function of this register,
+
+1598
+00:47:44,190 --> 00:47:45,270
+the function of this statement,
+
+1599
+00:47:45,270 --> 00:47:47,810
+is really done by controlling the LCR's
+
+1600
+00:47:47,810 --> 00:47:49,190
+bit 7.
+
+1601
+00:47:49,190 --> 00:47:51,010
+Set this bit 7 to 1.
+
+1602
+00:47:51,010 --> 00:47:53,070
+As for why the code is written this way,
+
+1603
+00:47:53,070 --> 00:47:54,910
+we won't go into it here.
+
+1604
+00:47:54,910 --> 00:47:56,670
+That's basic C language knowledge.
+
+1605
+00:47:56,670 --> 00:47:58,810
+Setting a particular bit,
+
+1606
+00:47:58,810 --> 00:47:59,910
+setting bit 7 to 1.
+
+1607
+00:47:59,910 --> 00:48:01,270
+As for why it's bit 7,
+
+1608
+00:48:01,270 --> 00:48:02,870
+you can look that up in the manual.
+
+1609
+00:48:02,870 --> 00:48:05,430
+It's the LCR register,
+
+1610
+00:48:06,030 --> 00:48:07,830
+and its bit 7 is used for exactly this purpose.
+
+1611
+00:48:07,830 --> 00:48:09,990
+Once it's set like this,
+
+1612
+00:48:09,990 --> 00:48:11,350
+it effectively means that,
+
+1613
+00:48:11,350 --> 00:48:13,130
+these DL and DM,
+
+1614
+00:48:13,130 --> 00:48:16,110
+can now be used to configure the baud rate.
+
+1615
+00:48:16,110 --> 00:48:18,390
+Just to mention this here,
+
+1616
+00:48:18,390 --> 00:48:20,790
+you can refer back to our earlier explanation,
+
+1617
+00:48:20,790 --> 00:48:21,350
+and look at it together.
+
+1618
+00:48:21,350 --> 00:48:24,930
+Then the next one,
+
+1619
+00:48:24,930 --> 00:48:25,850
+is about this part here,
+
+1620
+00:48:25,850 --> 00:48:28,370
+here it's setting that parity bit.
+
+1621
+00:48:28,370 --> 00:48:29,090
+and so on — this concept.
+
+1622
+00:48:29,090 --> 00:48:30,530
+Now, this,
+
+1623
+00:48:30,530 --> 00:48:33,190
+it involves the LCR register.
+
+1624
+00:48:33,190 --> 00:48:34,570
+You can go and check the manual.
+
+1625
+00:48:34,570 --> 00:48:37,410
+In that manual, the different bits
+
+1626
+00:48:37,410 --> 00:48:38,410
+have different meanings.
+
+1627
+00:48:38,410 --> 00:48:42,870
+Each bit in here,
+
+1628
+00:48:42,870 --> 00:48:44,250
+why it is set that way,
+
+1629
+00:48:44,250 --> 00:48:46,270
+well, here
+
+1630
+00:48:46,270 --> 00:48:48,430
+I think I won't go into detail,
+
+1631
+00:48:48,430 --> 00:48:49,910
+because explaining all of that would take way too much time.
+
+1632
+00:48:49,910 --> 00:48:51,210
+You'd better go through the manual,
+
+1633
+00:48:51,210 --> 00:48:53,290
+look at these bits in LCR,
+
+1634
+00:48:53,290 --> 00:48:54,810
+and see what each of them means.
+
+1635
+00:48:54,810 --> 00:48:56,250
+I've already listed them out here.
+
+1636
+00:48:56,250 --> 00:48:57,790
+Why we set it,
+
+1637
+00:48:57,790 --> 00:48:59,010
+what we set it to,
+
+1638
+00:48:59,010 --> 00:49:00,310
+the exact value we set it to,
+
+1639
+00:49:00,310 --> 00:49:02,090
+you can just check the manual and see for yourself.
+
+1640
+00:49:02,090 --> 00:49:04,390
+So, that being the case,
+
+1641
+00:49:04,390 --> 00:49:08,430
+So our serial port is essentially initialized now.
+
+1642
+00:49:08,430 --> 00:49:10,070
+The effect of our initialization,
+
+1643
+00:49:10,070 --> 00:49:11,670
+you can look at what's written here — it basically says,
+
+1644
+00:49:11,670 --> 00:49:13,550
+our data bits use 8 bits,
+
+1645
+00:49:13,550 --> 00:49:17,730
+and the stop bit uses 1 bit,
+
+1646
+00:49:17,730 --> 00:49:19,650
+and then there is no parity check,
+
+1647
+00:49:19,650 --> 00:49:21,150
+and so on.
+
+1648
+00:49:21,150 --> 00:49:28,090
+Once we finish going through this, we'll call it a day.
+
+1649
+00:49:28,090 --> 00:49:32,820
+This is the serial port initialization.
+
+1650
+00:49:32,820 --> 00:49:37,440
+Now, since what we want to do
+
+1651
+00:49:37,440 --> 00:49:40,100
+is print content out on that serial port,
+
+1652
+00:49:40,100 --> 00:49:42,360
+then actually, for this serial device of ours,
+
+1653
+00:49:42,360 --> 00:49:45,760
+we're really only using its transmit function right now.
+
+1654
+00:49:45,760 --> 00:49:50,650
+It's like on the diagram from earlier,
+
+1655
+00:49:50,650 --> 00:49:58,670
+since we now want to print out
+
+1656
+00:49:58,670 --> 00:50:00,170
+Hello and so on,
+
+1657
+00:50:00,170 --> 00:50:02,610
+then once we've initialized the serial device on this side,
+
+1658
+00:50:02,610 --> 00:50:03,810
+after getting it all set up,
+
+1659
+00:50:03,810 --> 00:50:07,730
+what we actually use it for is to send the content over,
+
+1660
+00:50:07,730 --> 00:50:08,050
+right?
+
+1661
+00:50:08,050 --> 00:50:11,330
+So actually, we are only using its transmit function.
+
+1662
+00:50:11,330 --> 00:50:13,130
+The receive function we are not using for now.
+
+1663
+00:50:13,130 --> 00:50:15,270
+So what we are using right now is the transmit function.
+
+1664
+00:50:15,270 --> 00:50:17,450
+Now, about this transmit function,
+
+1665
+00:50:17,450 --> 00:50:21,070
+let's take a look at how to use it.
+
+1666
+00:50:21,070 --> 00:50:26,820
+We say that UART operates in full duplex,
+
+1667
+00:50:26,820 --> 00:50:29,880
+with transmit and receive as two independent directions for data transfer.
+
+1668
+00:50:29,880 --> 00:50:31,980
+Now, on this point,
+
+1669
+00:50:31,980 --> 00:50:32,840
+I want to bring up something for you.
+
+1670
+00:50:32,840 --> 00:50:35,840
+That is, for data transmission and reception,
+
+1671
+00:50:35,840 --> 00:50:37,360
+in general,
+
+1672
+00:50:37,360 --> 00:50:39,000
+we have two ways of handling it.
+
+1673
+00:50:39,000 --> 00:50:40,920
+One is called the polling method,
+
+1674
+00:50:40,920 --> 00:50:42,180
+and the other is called the interrupt method.
+
+1675
+00:50:42,180 --> 00:50:44,640
+So what is the polling method?
+
+1676
+00:50:44,640 --> 00:50:45,560
+It actually means this.
+
+1677
+00:50:45,560 --> 00:50:48,480
+Suppose we want to send a piece of data.
+
+1678
+00:50:48,480 --> 00:50:50,860
+Inside this UART,
+
+1679
+00:50:50,860 --> 00:50:51,880
+there is actually a register.
+
+1680
+00:50:51,880 --> 00:50:52,880
+This register...
+
+1681
+00:50:52,880 --> 00:50:53,600
+Inside it,
+
+1682
+00:50:53,600 --> 00:50:54,920
+if you want to put data in,
+
+1683
+00:50:54,920 --> 00:50:56,040
+this register
+
+1684
+00:50:56,040 --> 00:50:58,740
+is connected to its data lines and sends it out.
+
+1685
+00:50:58,740 --> 00:51:01,300
+So the content in this register,
+
+1686
+00:51:01,300 --> 00:51:01,620
+as we know,
+
+1687
+00:51:01,620 --> 00:51:03,320
+you put one byte in,
+
+1688
+00:51:03,320 --> 00:51:04,900
+it puts one byte in at a time,
+
+1689
+00:51:04,900 --> 00:51:05,800
+you put one byte in,
+
+1690
+00:51:05,800 --> 00:51:06,880
+and it sends one out.
+
+1691
+00:51:06,880 --> 00:51:07,800
+Put one in, send one out.
+
+1692
+00:51:07,800 --> 00:51:09,040
+But this sending, as we know,
+
+1693
+00:51:09,040 --> 00:51:09,940
+takes time.
+
+1694
+00:51:09,940 --> 00:51:10,400
+Right, everyone?
+
+1695
+00:51:10,400 --> 00:51:12,000
+In other words, this...
+
+1696
+00:51:12,000 --> 00:51:13,940
+you can't just send into it whenever you like,
+
+1697
+00:51:13,940 --> 00:51:16,860
+because if that byte hasn't finished sending yet
+
+1698
+00:51:16,860 --> 00:51:18,420
+and you put a second byte in,
+
+1699
+00:51:18,420 --> 00:51:21,380
+you'll overwrite the previous byte,
+
+1700
+00:51:21,380 --> 00:51:22,880
+and your data will get corrupted.
+
+1701
+00:51:22,880 --> 00:51:25,040
+So, to achieve this effect,
+
+1702
+00:51:25,040 --> 00:51:26,660
+there is a way, that is to say,
+
+1703
+00:51:26,660 --> 00:51:29,860
+we have the polling method or the interrupt method
+
+1704
+00:51:29,860 --> 00:51:31,560
+to know when to put the data in,
+
+1705
+00:51:31,560 --> 00:51:33,120
+so that it can be sent out correctly.
+
+1706
+00:51:33,120 --> 00:51:35,460
+Now, what we call polling,
+
+1707
+00:51:35,460 --> 00:51:38,040
+means we can keep checking a register,
+
+1708
+00:51:38,040 --> 00:51:40,620
+to see whether this register is currently free.
+
+1709
+00:51:40,620 --> 00:51:42,040
+If it is free,
+
+1710
+00:51:42,040 --> 00:51:43,040
+we send the data out,
+
+1711
+00:51:43,040 --> 00:51:44,120
+right?
+
+1712
+00:51:44,120 --> 00:51:47,020
+If the register is not free,
+
+1713
+00:51:47,020 --> 00:51:47,760
+then we don't send it.
+
+1714
+00:51:47,760 --> 00:51:48,760
+That's what polling is.
+
+1715
+00:51:48,760 --> 00:51:50,640
+It is implemented through a loop,
+
+1716
+00:51:50,640 --> 00:51:52,920
+constantly checking it.
+
+1717
+00:51:52,920 --> 00:51:54,920
+Then there is also the interrupt method,
+
+1718
+00:51:54,920 --> 00:51:56,580
+which means that when this register
+
+1719
+00:51:56,580 --> 00:51:57,620
+is free,
+
+1720
+00:51:57,620 --> 00:52:01,040
+we let this UART device...
+
+1721
+00:52:01,040 --> 00:52:02,860
+It will notify us through an interrupt.
+
+1722
+00:52:02,860 --> 00:52:04,560
+It's like giving us a call to say,
+
+1723
+00:52:04,560 --> 00:52:06,440
+"I'm free now,
+
+1724
+00:52:06,440 --> 00:52:07,860
+you can put it in."
+
+1725
+00:52:07,860 --> 00:52:08,840
+At that point,
+
+1726
+00:52:08,840 --> 00:52:12,220
+we can use the interrupt approach.
+
+1727
+00:52:12,220 --> 00:52:13,320
+As for the interrupt,
+
+1728
+00:52:13,320 --> 00:52:14,520
+since we haven't covered that concept yet,
+
+1729
+00:52:14,520 --> 00:52:15,520
+we'll hold off on it for now.
+
+1730
+00:52:15,520 --> 00:52:18,680
+Let's focus on how this polling works.
+
+1731
+00:52:18,680 --> 00:52:20,180
+Here,
+
+1732
+00:52:20,180 --> 00:52:22,100
+there are two registers involved.
+
+1733
+00:52:22,100 --> 00:52:27,520
+One is called the transmit holder,
+
+1734
+00:52:27,520 --> 00:52:31,000
+that is, the THR register.
+
+1735
+00:52:31,000 --> 00:52:31,900
+This register,
+
+1736
+00:52:31,900 --> 00:52:34,240
+as we call it, is the register for putting data.
+
+1737
+00:52:34,240 --> 00:52:36,120
+The data we want to send,
+
+1738
+00:52:36,120 --> 00:52:38,240
+we just need to put it into this register,
+
+1739
+00:52:38,240 --> 00:52:39,660
+and it will send it out.
+
+1740
+00:52:39,660 --> 00:52:42,340
+So how do we know this register
+
+1741
+00:52:42,340 --> 00:52:44,620
+already finished being processed by it,
+
+1742
+00:52:44,620 --> 00:52:45,800
+already sent out.
+
+1743
+00:52:45,800 --> 00:52:47,920
+Then we use a register on this side
+
+1744
+00:52:47,920 --> 00:52:50,320
+called the line status register.
+
+1745
+00:52:50,320 --> 00:52:52,060
+There's a special bit in it that tells us
+
+1746
+00:52:52,060 --> 00:52:55,420
+whether the transmit register is already free.
+
+1747
+00:52:55,420 --> 00:52:57,560
+So combining these two registers,
+
+1748
+00:52:57,560 --> 00:53:00,380
+we can implement data transmission.
+
+1749
+00:53:00,380 --> 00:53:04,640
+Let's look at how the code is actually written.
+
+1750
+00:53:04,640 --> 00:53:06,620
+The code is actually quite simple.
+
+1751
+00:53:06,620 --> 00:53:09,060
+You can see that we've implemented a
+
+1752
+00:53:09,060 --> 00:53:10,920
+function called uartputc,
+
+1753
+00:53:10,920 --> 00:53:11,660
+this function.
+
+1754
+00:53:11,660 --> 00:53:12,880
+This function actually mimics
+
+1755
+00:53:12,880 --> 00:53:14,440
+the putc function in our C library.
+
+1756
+00:53:14,440 --> 00:53:15,480
+As you know, putc
+
+1757
+00:53:15,480 --> 00:53:17,180
+only sends one byte at a time,
+
+1758
+00:53:17,180 --> 00:53:17,800
+right?
+
+1759
+00:53:17,800 --> 00:53:20,380
+And here you can see
+
+1760
+00:53:20,380 --> 00:53:21,580
+there's just a while loop here,
+
+1761
+00:53:21,580 --> 00:53:23,720
+What is this while loop doing?
+
+1762
+00:53:23,720 --> 00:53:25,520
+What this while loop is actually doing is
+
+1763
+00:53:25,520 --> 00:53:27,060
+As you can see, what it's really doing is
+
+1764
+00:53:27,060 --> 00:53:28,980
+continuously reading a register
+
+1765
+00:53:28,980 --> 00:53:31,420
+specifically this lsr register
+
+1766
+00:53:31,420 --> 00:53:33,040
+reading out the value inside this register
+
+1767
+00:53:33,040 --> 00:53:35,060
+and at the same time, through this AND operation,
+
+1768
+00:53:35,060 --> 00:53:37,800
+checking whether bit 5 of this register
+
+1769
+00:53:37,800 --> 00:53:39,900
+is currently equal to 1
+
+1770
+00:53:39,900 --> 00:53:41,840
+If it is 1,
+
+1771
+00:53:41,840 --> 00:53:43,620
+if at this point, that is,
+
+1772
+00:53:43,620 --> 00:53:44,700
+if it equals 0,
+
+1773
+00:53:44,700 --> 00:53:48,340
+then the value read out here
+
+1774
+00:53:48,340 --> 00:53:49,760
+is not yet 1
+
+1775
+00:53:49,760 --> 00:53:51,080
+and if it's not 1, that means
+
+1776
+00:53:51,080 --> 00:53:53,140
+this register is currently not free
+
+1777
+00:53:53,140 --> 00:53:56,340
+that is, our THR register here
+
+1778
+00:53:56,340 --> 00:53:57,560
+is currently not free yet
+
+1779
+00:53:57,560 --> 00:53:59,380
+and while it's not free, it just spins in this infinite loop
+
+1780
+00:53:59,380 --> 00:54:02,020
+So when does this code...
+
+1781
+00:54:02,020 --> 00:54:03,560
+If we can get down to this part here,
+
+1782
+00:54:03,560 --> 00:54:05,740
+that means the LSR we just read out,
+
+1783
+00:54:05,740 --> 00:54:07,300
+bit 5 of it, is 1.
+
+1784
+00:54:07,300 --> 00:54:07,780
+Think about it, right?
+
+1785
+00:54:07,780 --> 00:54:10,540
+So when it's 1, it means this register,
+
+1786
+00:54:10,540 --> 00:54:12,900
+the THR here, is free.
+
+1787
+00:54:12,900 --> 00:54:14,240
+Being free, it goes down to the next step,
+
+1788
+00:54:14,240 --> 00:54:15,980
+and at this point, through a write operation,
+
+1789
+00:54:15,980 --> 00:54:18,420
+we write the character into this register.
+
+1790
+00:54:18,420 --> 00:54:20,380
+So you can actually think of this line as meaning,
+
+1791
+00:54:20,380 --> 00:54:22,960
+the data has been sent out to the window,
+
+1792
+00:54:22,960 --> 00:54:27,400
+thus achieving synchronization with this sending device.
+
+1793
+00:54:27,400 --> 00:54:29,460
+this synchronization effect
+
+1794
+00:54:29,460 --> 00:54:32,740
+We call this approach the polling method.
+
+1795
+00:54:32,740 --> 00:54:34,080
+The polling method.
+
+1796
+00:54:34,080 --> 00:54:38,910
+So after implementing the sending of a single character,
+
+1797
+00:54:38,910 --> 00:54:39,990
+well, you know, when sending,
+
+1798
+00:54:39,990 --> 00:54:42,030
+say I want to send a hello or something,
+
+1799
+00:54:42,030 --> 00:54:44,310
+what we actually do is break it down into each character,
+
+1800
+00:54:44,310 --> 00:54:46,850
+and call putc once for every character.
+
+1801
+00:54:46,850 --> 00:54:48,210
+and just send it out
+
+1802
+00:54:48,210 --> 00:54:49,330
+See what I mean?
+
+1803
+00:54:49,330 --> 00:54:52,910
+And that's how the character gets transmitted.
+
+1804
+00:54:52,910 --> 00:54:53,850
+So using the serial port,
+
+1805
+00:54:53,850 --> 00:54:54,850
+we can achieve this effect.
+
+1806
+00:54:54,850 --> 00:54:56,850
+As for the related code,
+
+1807
+00:54:56,850 --> 00:54:59,070
+you can go take a look.
+
+1808
+00:54:59,070 --> 00:55:10,110
+It's the example we just talked about,
+
+1809
+00:55:10,110 --> 00:55:16,760
+in that code's os,
+
+1810
+00:55:16,760 --> 00:55:21,060
+the example inside hello rbos.
+
+1811
+00:55:21,060 --> 00:55:21,960
+Feel free to check it out.
+
+1812
+00:55:21,960 --> 00:55:23,440
+We'll leave this one to you,
+
+1813
+00:55:23,440 --> 00:55:25,300
+and in the second class later,
+
+1814
+00:55:25,300 --> 00:55:27,020
+we'll spend some time going through it together.
+
+1815
+00:55:27,020 --> 00:55:28,440
+You can try this example out as an exercise,
+
+1816
+00:55:28,440 --> 00:55:29,840
+and see what we just covered,
+
+1817
+00:55:29,840 --> 00:55:30,740
+combining it with what we just talked about.
+
+1818
+00:55:30,740 --> 00:55:31,320
+Go and take a look.
+
+1819
+00:55:31,320 --> 00:55:35,280
+Alright, let's, let's continue.
+
+1820
+00:55:35,280 --> 00:55:48,450
+Now that I've gone over the code with you,
+
+1821
+00:55:48,450 --> 00:55:49,890
+I forgot to give you a quick demo
+
+1822
+00:55:49,890 --> 00:56:00,230
+So let's take a look at that simple Hello demo from just now
+
+1823
+00:56:00,230 --> 00:56:03,230
+After we compile it
+
+1824
+00:56:03,230 --> 00:56:05,190
+once we just run make run,
+
+1825
+00:56:05,190 --> 00:56:06,410
+we can see
+
+1826
+00:56:06,410 --> 00:56:10,530
+that a Hello appears on the screen
+
+1827
+00:56:10,530 --> 00:56:11,950
+RBOS
+
+1828
+00:56:11,950 --> 00:56:14,370
+Now, when it prints this out here,
+
+1829
+00:56:14,370 --> 00:56:15,750
+what we need to understand is that
+
+1830
+00:56:15,750 --> 00:56:21,230
+we are actually controlling the UART device inside the emulator
+
+1831
+00:56:21,230 --> 00:56:25,110
+and you can imagine that there is a virtual UART line
+
+1832
+00:56:25,110 --> 00:56:27,950
+and through that UART line from the device,
+
+1833
+00:56:27,950 --> 00:56:30,930
+it gets printed to our host machine's console
+
+1834
+00:56:30,930 --> 00:56:33,550
+and then these characters appear on the console
+
+1835
+00:56:33,550 --> 00:56:35,470
+and those characters are what we printed out
+
+1836
+00:56:35,470 --> 00:56:36,890
+And the corresponding code
+
+1837
+00:56:36,890 --> 00:56:39,170
+is in our
+
+1838
+00:56:39,170 --> 00:56:42,250
+hello,
+
+1839
+00:56:42,250 --> 00:56:45,850
+our kono.c code,
+
+1840
+00:56:45,850 --> 00:56:51,230
+this function that we talked about earlier
+
+1841
+00:56:51,230 --> 00:56:53,810
+In other words, it's actually jumped into from assembly
+
+1842
+00:56:53,810 --> 00:56:54,990
+the first C function, right?
+
+1843
+00:56:54,990 --> 00:56:56,370
+Now, in this C function,
+
+1844
+00:56:56,370 --> 00:56:58,030
+right at the start, it runs
+
+1845
+00:56:58,030 --> 00:57:00,130
+a UART initialization,
+
+1846
+00:57:00,130 --> 00:57:02,710
+getting that serial port device initialized.
+
+1847
+00:57:02,710 --> 00:57:04,630
+Then, through a puts,
+
+1848
+00:57:04,630 --> 00:57:05,710
+this puts,
+
+1849
+00:57:05,710 --> 00:57:06,670
+inside it actually,
+
+1850
+00:57:06,670 --> 00:57:08,610
+for each of its characters,
+
+1851
+00:57:08,610 --> 00:57:09,850
+calls that putc,
+
+1852
+00:57:09,850 --> 00:57:11,730
+and then takes each character
+
+1853
+00:57:11,730 --> 00:57:12,590
+and, through the serial port,
+
+1854
+00:57:12,590 --> 00:57:14,430
+prints it out to our console.
+
+1855
+00:57:14,430 --> 00:57:16,050
+And after the printing is done,
+
+1856
+00:57:16,050 --> 00:57:18,290
+of course we just write an infinite loop,
+
+1857
+00:57:18,290 --> 00:57:19,070
+and it just stops there.
+
+1858
+00:57:19,070 --> 00:57:20,090
+So as we can see,
+
+1859
+00:57:20,090 --> 00:57:22,050
+in our output here,
+
+1860
+00:57:22,050 --> 00:57:24,110
+it doesn't go any further at this point.
+
+1861
+00:57:24,110 --> 00:57:25,890
+So that's basically the effect.
+
+1862
+00:57:25,890 --> 00:57:27,150
+Let me briefly explain it to you.
+
+1863
+00:57:27,150 --> 00:57:28,490
+Alright.
+
+1864
+00:57:28,490 --> 00:57:32,750
+As for this simple piece of code,
+
+1865
+00:57:32,750 --> 00:57:35,750
+you can just go back and look through it yourselves.
+
+1866
+00:57:35,750 --> 00:57:37,170
+I won't spend class time
+
+1867
+00:57:37,170 --> 00:57:38,690
+going through it here in the lecture.

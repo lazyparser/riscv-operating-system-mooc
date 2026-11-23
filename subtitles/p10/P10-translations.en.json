@@ -1,0 +1,4510 @@
+[
+ {
+  "id": 0,
+  "text": "Let's do this exercise together in class, take a look at it."
+ },
+ {
+  "id": 1,
+  "text": "In our latest repository, all the exercises have been — the exercise document has been moved to the root directory, because some students said they couldn't find it."
+ },
+ {
+  "id": 2,
+  "text": "It was originally in the slides directory, now I've pulled it out, directly in the root directory, you can open this exercise.pdf."
+ },
+ {
+  "id": 3,
+  "text": "Let's take a look at 5-1."
+ },
+ {
+  "id": 4,
+  "text": "This one"
+ },
+ {
+  "id": 5,
+  "text": "is also about the sub command"
+ },
+ {
+  "id": 6,
+  "text": "through this exercise we can also see"
+ },
+ {
+  "id": 7,
+  "text": "that is,"
+ },
+ {
+  "id": 8,
+  "text": "disassemble the execution of this sub command"
+ },
+ {
+  "id": 9,
+  "text": "look at the assembly instructions"
+ },
+ {
+  "id": 10,
+  "text": "and the encoding of the corresponding machine instructions"
+ },
+ {
+  "id": 11,
+  "text": "and match them against the RISC-V specification yourself"
+ },
+ {
+  "id": 12,
+  "text": "that is, just now"
+ },
+ {
+  "id": 13,
+  "text": "in fact, matching against the things we just introduced to you"
+ },
+ {
+  "id": 14,
+  "text": "be able to match them up with the disassembly yourself"
+ },
+ {
+  "id": 15,
+  "text": "that is,"
+ },
+ {
+  "id": 16,
+  "text": "that is,"
+ },
+ {
+  "id": 17,
+  "text": "for example, we"
+ },
+ {
+  "id": 18,
+  "text": "for example, this command"
+ },
+ {
+  "id": 19,
+  "text": "after we run make"
+ },
+ {
+  "id": 20,
+  "text": "We use that return edge to debug this instruction"
+ },
+ {
+  "id": 21,
+  "text": "After running it"
+ },
+ {
+  "id": 22,
+  "text": "That's not right"
+ },
+ {
+  "id": 23,
+  "text": "That's wrong"
+ },
+ {
+  "id": 24,
+  "text": "Use that make code"
+ },
+ {
+  "id": 25,
+  "text": "Which actually calls obj dump"
+ },
+ {
+  "id": 26,
+  "text": "So this sub instruction"
+ },
+ {
+  "id": 27,
+  "text": "Why is it this one"
+ },
+ {
+  "id": 28,
+  "text": "Try it yourself"
+ },
+ {
+  "id": 29,
+  "text": "Combined with the concepts we covered in class"
+ },
+ {
+  "id": 30,
+  "text": "See if you can match it up"
+ },
+ {
+  "id": 31,
+  "text": "Basically, you need to turn this thing"
+ },
+ {
+  "id": 32,
+  "text": "Into its binary form"
+ },
+ {
+  "id": 33,
+  "text": "You know, that 010101"
+ },
+ {
+  "id": 34,
+  "text": "And then look it up in the table"
+ },
+ {
+  "id": 35,
+  "text": "Look up our"
+ },
+ {
+  "id": 36,
+  "text": "This table"
+ },
+ {
+  "id": 37,
+  "text": "The sub instruction is right here"
+ },
+ {
+  "id": 38,
+  "text": "See if it matches"
+ },
+ {
+  "id": 39,
+  "text": "Including matching up these registers"
+ },
+ {
+  "id": 40,
+  "text": "replace it."
+ },
+ {
+  "id": 41,
+  "text": "That's the first requirement."
+ },
+ {
+  "id": 42,
+  "text": "And then,"
+ },
+ {
+  "id": 43,
+  "text": "these exercises are all pretty simple."
+ },
+ {
+  "id": 44,
+  "text": "And then, conversely,"
+ },
+ {
+  "id": 45,
+  "text": "if we..."
+ },
+ {
+  "id": 46,
+  "text": "whenever I give you an instruction,"
+ },
+ {
+  "id": 47,
+  "text": "say it's B305,"
+ },
+ {
+  "id": 48,
+  "text": "can you, on your own,"
+ },
+ {
+  "id": 49,
+  "text": "using the knowledge we've learned so far,"
+ },
+ {
+  "id": 50,
+  "text": "disassemble it back into a"
+ },
+ {
+  "id": 51,
+  "text": "assembly instruction?"
+ },
+ {
+  "id": 52,
+  "text": "This exercise is very simple."
+ },
+ {
+  "id": 53,
+  "text": "Please try it yourselves."
+ },
+ {
+  "id": 54,
+  "text": "I'll give you a little bit of time."
+ },
+ {
+  "id": 55,
+  "text": "Everyone, focus up."
+ },
+ {
+  "id": 56,
+  "text": "Let's go through it quickly together."
+ },
+ {
+  "id": 57,
+  "text": "This exercise is relatively simple."
+ },
+ {
+  "id": 58,
+  "text": "The first part of Exercise 5-1,"
+ },
+ {
+  "id": 59,
+  "text": "we won't cover the first one."
+ },
+ {
+  "id": 60,
+  "text": "I'll leave that for you to look up on your own."
+ },
+ {
+  "id": 61,
+  "text": "Conversely, that means"
+ },
+ {
+  "id": 62,
+  "text": "if it's this,"
+ },
+ {
+  "id": 63,
+  "text": "given this,"
+ },
+ {
+  "id": 64,
+  "text": "when you look for it,"
+ },
+ {
+  "id": 65,
+  "text": "let's take a look at what it says."
+ },
+ {
+  "id": 66,
+  "text": "It says that"
+ },
+ {
+  "id": 67,
+  "text": "the value in memory is B3059500,"
+ },
+ {
+  "id": 68,
+  "text": "from left to right, going from low address to high address,"
+ },
+ {
+  "id": 69,
+  "text": "in units of bytes."
+ },
+ {
+  "id": 70,
+  "text": "Now, we know that"
+ },
+ {
+  "id": 71,
+  "text": "since it's in RISC-V,"
+ },
+ {
+  "id": 72,
+  "text": "the machine stores data in little-endian order,"
+ },
+ {
+  "id": 73,
+  "text": "so if it's B3059500,"
+ },
+ {
+  "id": 74,
+  "text": "then from low address to high address,"
+ },
+ {
+  "id": 75,
+  "text": "what is the actual value?"
+ },
+ {
+  "id": 76,
+  "text": "It's actually reversed,"
+ },
+ {
+  "id": 77,
+  "text": "right?"
+ },
+ {
+  "id": 78,
+  "text": "So first we need to take this value"
+ },
+ {
+  "id": 79,
+  "text": "and reverse it."
+ },
+ {
+  "id": 80,
+  "text": "And the other way around,"
+ },
+ {
+  "id": 81,
+  "text": "it's 00"
+ },
+ {
+  "id": 82,
+  "text": "95"
+ },
+ {
+  "id": 83,
+  "text": "05"
+ },
+ {
+  "id": 84,
+  "text": "B3"
+ },
+ {
+  "id": 85,
+  "text": "from low bits to high bits."
+ },
+ {
+  "id": 86,
+  "text": "That's actually what this number should be."
+ },
+ {
+  "id": 87,
+  "text": "Now, for this number,"
+ },
+ {
+  "id": 88,
+  "text": "first we need to convert it to binary."
+ },
+ {
+  "id": 89,
+  "text": "For this,"
+ },
+ {
+  "id": 90,
+  "text": "we'll just use the calculator to convert it quickly."
+ },
+ {
+  "id": 91,
+  "text": "This one,"
+ },
+ {
+  "id": 92,
+  "text": "of course, if you want to"
+ },
+ {
+  "id": 93,
+  "text": "convert it by hand,"
+ },
+ {
+  "id": 94,
+  "text": "that's also very convenient."
+ },
+ {
+  "id": 95,
+  "text": "So it's actually 00"
+ },
+ {
+  "id": 96,
+  "text": "90505"
+ },
+ {
+  "id": 97,
+  "text": "B3"
+ },
+ {
+  "id": 98,
+  "text": "and once converted to binary,"
+ },
+ {
+  "id": 99,
+  "text": "it's really just the string of digits below."
+ },
+ {
+  "id": 100,
+  "text": "Take this string of binary digits."
+ },
+ {
+  "id": 101,
+  "text": "It's actually one value every four bits."
+ },
+ {
+  "id": 102,
+  "text": "Let's split it up."
+ },
+ {
+  "id": 103,
+  "text": "34"
+ },
+ {
+  "id": 104,
+  "text": "It might be a bit small."
+ },
+ {
+  "id": 105,
+  "text": "Let me make it bigger."
+ },
+ {
+  "id": 106,
+  "text": "How do I enlarge this?"
+ },
+ {
+  "id": 107,
+  "text": "Looks like it's enlarged now."
+ },
+ {
+  "id": 108,
+  "text": "Basically, split it into 8-bit groups."
+ },
+ {
+  "id": 109,
+  "text": "I think I split it wrong here."
+ },
+ {
+  "id": 110,
+  "text": "1 2 3 4"
+ },
+ {
+  "id": 111,
+  "text": "Wrong."
+ },
+ {
+  "id": 112,
+  "text": "The front is 0."
+ },
+ {
+  "id": 113,
+  "text": "So it's actually eight 0s."
+ },
+ {
+  "id": 114,
+  "text": "So the whole thing is this number."
+ },
+ {
+  "id": 115,
+  "text": "I'll leave this one as is."
+ },
+ {
+  "id": 116,
+  "text": "And then,"
+ },
+ {
+  "id": 117,
+  "text": "after we get to this point,"
+ },
+ {
+  "id": 118,
+  "text": "we need to go look up the spec."
+ },
+ {
+  "id": 119,
+  "text": "Now, as for this spec,"
+ },
+ {
+  "id": 120,
+  "text": "We just looked at, that is to say,"
+ },
+ {
+  "id": 121,
+  "text": "we need to start reading from the low bits,"
+ },
+ {
+  "id": 122,
+  "text": "and this CPU works the same way."
+ },
+ {
+  "id": 123,
+  "text": "After it fetches the instruction,"
+ },
+ {
+  "id": 124,
+  "text": "after that fetch,"
+ },
+ {
+  "id": 125,
+  "text": "comes decoding."
+ },
+ {
+  "id": 126,
+  "text": "For decoding,"
+ },
+ {
+  "id": 127,
+  "text": "it actually looks at the low bits first."
+ },
+ {
+  "id": 128,
+  "text": "So,"
+ },
+ {
+  "id": 129,
+  "text": "the advantage of starting with the low bits,"
+ },
+ {
+  "id": 130,
+  "text": "is that since it's,"
+ },
+ {
+  "id": 131,
+  "text": "it's little-endian code,"
+ },
+ {
+  "id": 132,
+  "text": "think about it,"
+ },
+ {
+  "id": 133,
+  "text": "the first byte it fetches,"
+ },
+ {
+  "id": 134,
+  "text": "is its low bits."
+ },
+ {
+  "id": 135,
+  "text": "And as for those low bits,"
+ },
+ {
+  "id": 136,
+  "text": "11001,"
+ },
+ {
+  "id": 137,
+  "text": "then we have to look at,"
+ },
+ {
+  "id": 138,
+  "text": "we know its,"
+ },
+ {
+  "id": 139,
+  "text": "all of these RISC-V instructions,"
+ },
+ {
+  "id": 140,
+  "text": "The lower 7 bits"
+ },
+ {
+  "id": 141,
+  "text": "are all OPCODE."
+ },
+ {
+  "id": 142,
+  "text": "So let's pick out those 7 bits."
+ },
+ {
+  "id": 143,
+  "text": "This is actually 8 bits."
+ },
+ {
+  "id": 144,
+  "text": "It's actually this string of digits:"
+ },
+ {
+  "id": 145,
+  "text": "011 0011."
+ },
+ {
+  "id": 146,
+  "text": "Now, we know the last two bits are both 11."
+ },
+ {
+  "id": 147,
+  "text": "So really we just need to see what 011 00 is."
+ },
+ {
+  "id": 148,
+  "text": "Right?"
+ },
+ {
+  "id": 149,
+  "text": "What is 011 00?"
+ },
+ {
+  "id": 150,
+  "text": "Let's look up what 011 00 is."
+ },
+ {
+  "id": 151,
+  "text": "011 00 01 01 01."
+ },
+ {
+  "id": 152,
+  "text": "Even though they're all 011 00 01,"
+ },
+ {
+  "id": 153,
+  "text": "which one has 0000?"
+ },
+ {
+  "id": 154,
+  "text": "That's the add instruction, right?"
+ },
+ {
+  "id": 155,
+  "text": "It seems to be the add instruction."
+ },
+ {
+  "id": 156,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 157,
+  "text": "It should be the add instruction."
+ },
+ {
+  "id": 158,
+  "text": "Because its first 7 bits are 0."
+ },
+ {
+  "id": 159,
+  "text": "The first 7 bits are 0."
+ },
+ {
+  "id": 160,
+  "text": "1234567"
+ },
+ {
+  "id": 161,
+  "text": "the first 7 bits are 0"
+ },
+ {
+  "id": 162,
+  "text": "so this part should line up with this"
+ },
+ {
+  "id": 163,
+  "text": "then it's 000"
+ },
+ {
+  "id": 164,
+  "text": "this side is 3 bits"
+ },
+ {
+  "id": 165,
+  "text": "1234"
+ },
+ {
+  "id": 166,
+  "text": "12345"
+ },
+ {
+  "id": 167,
+  "text": "so this way it matches up"
+ },
+ {
+  "id": 168,
+  "text": "in that case"
+ },
+ {
+  "id": 169,
+  "text": "12345"
+ },
+ {
+  "id": 170,
+  "text": "12345"
+ },
+ {
+  "id": 171,
+  "text": "3 bits"
+ },
+ {
+  "id": 172,
+  "text": "12345"
+ },
+ {
+  "id": 173,
+  "text": "so this matches up"
+ },
+ {
+  "id": 174,
+  "text": "up front it's add 01100"
+ },
+ {
+  "id": 175,
+  "text": "01100, right"
+ },
+ {
+  "id": 176,
+  "text": "that is to say, if you only look at"
+ },
+ {
+  "id": 177,
+  "text": "as we mentioned earlier"
+ },
+ {
+  "id": 178,
+  "text": "if you only look at the OPCODE"
+ },
+ {
+  "id": 179,
+  "text": "it actually can't uniquely determine"
+ },
+ {
+  "id": 180,
+  "text": "Which instruction is this?"
+ },
+ {
+  "id": 181,
+  "text": "Right?"
+ },
+ {
+  "id": 182,
+  "text": "It's actually assembled from these."
+ },
+ {
+  "id": 183,
+  "text": "So you need to take this into account too."
+ },
+ {
+  "id": 184,
+  "text": "So all three of these need to be included."
+ },
+ {
+  "id": 185,
+  "text": "Now, from these three numbers"
+ },
+ {
+  "id": 186,
+  "text": "once they're determined,"
+ },
+ {
+  "id": 187,
+  "text": "it's actually the add instruction."
+ },
+ {
+  "id": 188,
+  "text": "Alright, once that's settled, it's easy."
+ },
+ {
+  "id": 189,
+  "text": "Easy to handle."
+ },
+ {
+  "id": 190,
+  "text": "So here,"
+ },
+ {
+  "id": 191,
+  "text": "in what we're doing for add, this is rd."
+ },
+ {
+  "id": 192,
+  "text": "Over here is rs."
+ },
+ {
+  "id": 193,
+  "text": "rs1."
+ },
+ {
+  "id": 194,
+  "text": "And then rs2."
+ },
+ {
+  "id": 195,
+  "text": "So for this one,"
+ },
+ {
+  "id": 196,
+  "text": "we say we convert it"
+ },
+ {
+  "id": 197,
+  "text": "into a decimal number,"
+ },
+ {
+  "id": 198,
+  "text": "what is 1001?"
+ },
+ {
+  "id": 199,
+  "text": "It's 4 plus 1, which is 5, right?"
+ },
+ {
+  "id": 200,
+  "text": "So this one here,"
+ },
+ {
+  "id": 201,
+  "text": "1010 is 4 plus 2, that's 6."
+ },
+ {
+  "id": 202,
+  "text": "And over here,"
+ },
+ {
+  "id": 203,
+  "text": "this one is 4, and this is 6, right?"
+ },
+ {
+  "id": 204,
+  "text": "No, that's wrong. I read it wrong."
+ },
+ {
+  "id": 205,
+  "text": "I'm getting a bit confused here."
+ },
+ {
+  "id": 206,
+  "text": "2 to the power of 1."
+ },
+ {
+  "id": 207,
+  "text": "2 to the... 2 to the..."
+ },
+ {
+  "id": 208,
+  "text": "Where did this slide go?"
+ },
+ {
+  "id": 209,
+  "text": "It should be right here."
+ },
+ {
+  "id": 210,
+  "text": "This is 2 to the power of 0, 2 to the power of 1, 2..."
+ },
+ {
+  "id": 211,
+  "text": "This is 8 plus 2."
+ },
+ {
+  "id": 212,
+  "text": "8 plus 2 is..."
+ },
+ {
+  "id": 213,
+  "text": "8 plus 2 is..."
+ },
+ {
+  "id": 214,
+  "text": "10."
+ },
+ {
+  "id": 215,
+  "text": "Is it 11?"
+ },
+ {
+  "id": 216,
+  "text": "01011."
+ },
+ {
+  "id": 217,
+  "text": "So in that case, it should be 5011, right?"
+ },
+ {
+  "id": 218,
+  "text": "I didn't calculate it wrong."
+ },
+ {
+  "id": 219,
+  "text": "This is 8 plus 1, so it's 9."
+ },
+ {
+  "id": 220,
+  "text": "9011, right?"
+ },
+ {
+  "id": 221,
+  "text": "Then it should be"
+ },
+ {
+  "id": 222,
+  "text": "add"
+ },
+ {
+  "id": 223,
+  "text": "and then it's"
+ },
+ {
+  "id": 224,
+  "text": "x11"
+ },
+ {
+  "id": 225,
+  "text": "and then x"
+ },
+ {
+  "id": 226,
+  "text": "10 and X9"
+ },
+ {
+  "id": 227,
+  "text": "Is that right?"
+ },
+ {
+  "id": 228,
+  "text": "Did I calculate it wrong anywhere?"
+ },
+ {
+  "id": 229,
+  "text": "What did you get?"
+ },
+ {
+  "id": 230,
+  "text": "Anyway, the rough calculation method is something like that."
+ },
+ {
+  "id": 231,
+  "text": "I mainly wanted to show you"
+ },
+ {
+  "id": 232,
+  "text": "how to look things up in this table,"
+ },
+ {
+  "id": 233,
+  "text": "looking it up in reverse."
+ },
+ {
+  "id": 234,
+  "text": "Of course, in many cases,"
+ },
+ {
+  "id": 235,
+  "text": "in fact, in most cases,"
+ },
+ {
+  "id": 236,
+  "text": "if you have the object code,"
+ },
+ {
+  "id": 237,
+  "text": "you can just use a debugger to step back."
+ },
+ {
+  "id": 238,
+  "text": "But,"
+ },
+ {
+  "id": 239,
+  "text": "I mean, sometimes"
+ },
+ {
+  "id": 240,
+  "text": "there might be times when you don't have machine code"
+ },
+ {
+  "id": 241,
+  "text": "it could happen occasionally"
+ },
+ {
+  "id": 242,
+  "text": "so it's still worth understanding"
+ },
+ {
+  "id": 243,
+  "text": "but this one"
+ },
+ {
+  "id": 244,
+  "text": "involves"
+ },
+ {
+  "id": 245,
+  "text": "some basic concepts of encoding formats"
+ },
+ {
+  "id": 246,
+  "text": "and we're just going to"
+ },
+ {
+  "id": 247,
+  "text": "skip going through it again here"
+ },
+ {
+  "id": 248,
+  "text": "so please review it on your own when you get back"
+ },
+ {
+  "id": 249,
+  "text": "okay, let's continue with the exercises that follow"
+ },
+ {
+  "id": 250,
+  "text": "and the rest of the course"
+ },
+ {
+  "id": 251,
+  "text": "so next up"
+ },
+ {
+  "id": 252,
+  "text": "let's look at"
+ },
+ {
+  "id": 253,
+  "text": "now that we've covered the add instruction"
+ },
+ {
+  "id": 254,
+  "text": "the second one we'll cover is addi"
+ },
+ {
+  "id": 255,
+  "text": "the immediate addition instruction"
+ },
+ {
+  "id": 256,
+  "text": "and this instruction"
+ },
+ {
+  "id": 257,
+  "text": "uses the I-type format"
+ },
+ {
+  "id": 258,
+  "text": "the immediate format"
+ },
+ {
+  "id": 259,
+  "text": "and the main difference from the R-type format is that"
+ },
+ {
+  "id": 260,
+  "text": "It removes one register."
+ },
+ {
+  "id": 261,
+  "text": "And by expanding the space of one of the registers,"
+ },
+ {
+  "id": 262,
+  "text": "it can be used to hold an immediate value."
+ },
+ {
+  "id": 263,
+  "text": "The advantage of this is"
+ },
+ {
+  "id": 264,
+  "text": "that it can carry an immediate value"
+ },
+ {
+  "id": 265,
+  "text": "right within a single instruction,"
+ },
+ {
+  "id": 266,
+  "text": "so you don't have to go through a register to find that immediate."
+ },
+ {
+  "id": 267,
+  "text": "However,"
+ },
+ {
+  "id": 268,
+  "text": "there is a potential issue here."
+ },
+ {
+  "id": 269,
+  "text": "That is,"
+ },
+ {
+  "id": 270,
+  "text": "as you know,"
+ },
+ {
+  "id": 271,
+  "text": "please note that"
+ },
+ {
+  "id": 272,
+  "text": "this immediate value,"
+ },
+ {
+  "id": 273,
+  "text": "since it is embedded within a 32-bit instruction,"
+ },
+ {
+  "id": 274,
+  "text": "this immediate value"
+ },
+ {
+  "id": 275,
+  "text": "only takes up 12 bits."
+ },
+ {
+  "id": 276,
+  "text": "So the range of this immediate is actually limited."
+ },
+ {
+  "id": 277,
+  "text": "The range it can express is actually limited."
+ },
+ {
+  "id": 278,
+  "text": "So this is the basic format."
+ },
+ {
+  "id": 279,
+  "text": "We won't go into more detail here."
+ },
+ {
+  "id": 280,
+  "text": "So, this immediate value, you see, it only takes up 12 bits."
+ },
+ {
+  "id": 281,
+  "text": "That is, 12 bits."
+ },
+ {
+  "id": 282,
+  "text": "Now, with 12 bits, the range it can represent is, as written below, it can only express values in the range of 2 to the power of 11."
+ },
+ {
+  "id": 283,
+  "text": "Actually, the immediate value is also sign-extended before it takes part in the arithmetic operation."
+ },
+ {
+  "id": 284,
+  "text": "This immediate value only takes up 12 bits."
+ },
+ {
+  "id": 285,
+  "text": "So it occupies 12 bits."
+ },
+ {
+  "id": 286,
+  "text": "Now, these 12 bits mean the range it can express is exactly what is written below."
+ },
+ {
+  "id": 287,
+  "text": "Its representable range is limited to what is written below."
+ },
+ {
+  "id": 288,
+  "text": "It is just as written below."
+ },
+ {
+  "id": 289,
+  "text": "It can only express values from."
+ },
+ {
+  "id": 290,
+  "text": "2 to the power of 11."
+ },
+ {
+  "id": 291,
+  "text": "From negative 2 to the power of 11 to positive 2 to the power of 11."
+ },
+ {
+  "id": 292,
+  "text": "Now, converting this into an actual decimal value."
+ },
+ {
+  "id": 293,
+  "text": "That is, from negative 2048 to 2047."
+ },
+ {
+  "id": 294,
+  "text": "A range of values like this."
+ },
+ {
+  "id": 295,
+  "text": "Also, please note one thing."
+ },
+ {
+  "id": 296,
+  "text": "That is, when it takes part in the arithmetic operation."
+ },
+ {
+  "id": 297,
+  "text": "Since this is an addition instruction."
+ },
+ {
+  "id": 298,
+  "text": "Before taking part in the arithmetic operation."
+ },
+ {
+  "id": 299,
+  "text": "This immediate value will be sign-extended."
+ },
+ {
+  "id": 300,
+  "text": "We covered this concept earlier."
+ },
+ {
+  "id": 301,
+  "text": "What is sign extension?"
+ },
+ {
+  "id": 302,
+  "text": "It means that if this number"
+ },
+ {
+  "id": 303,
+  "text": "this eleven"
+ },
+ {
+  "id": 304,
+  "text": "twelve-bit number"
+ },
+ {
+  "id": 305,
+  "text": "if its most significant bit is one,"
+ },
+ {
+  "id": 306,
+  "text": "then the bits in front will actually all be"
+ },
+ {
+  "id": 307,
+  "text": "extended into"
+ },
+ {
+  "id": 308,
+  "text": "thirty-two bits of all ones,"
+ },
+ {
+  "id": 309,
+  "text": "which actually represents a negative number."
+ },
+ {
+  "id": 310,
+  "text": "And if it's zero?"
+ },
+ {
+  "id": 311,
+  "text": "Then the bits in front stay"
+ },
+ {
+  "id": 312,
+  "text": "as zero."
+ },
+ {
+  "id": 313,
+  "text": "That's sign extension."
+ },
+ {
+  "id": 314,
+  "text": "So either way,"
+ },
+ {
+  "id": 315,
+  "text": "the range it can represent is actually limited."
+ },
+ {
+  "id": 316,
+  "text": "This add"
+ },
+ {
+  "id": 317,
+  "text": "i is exactly this kind of instruction."
+ },
+ {
+  "id": 318,
+  "text": "Now, just a note:"
+ },
+ {
+  "id": 319,
+  "text": "even though RISC-V provides"
+ },
+ {
+  "id": 320,
+  "text": "This addi instruction"
+ },
+ {
+  "id": 321,
+  "text": "but it does not provide a subi instruction."
+ },
+ {
+  "id": 322,
+  "text": "Think about why."
+ },
+ {
+  "id": 323,
+  "text": "The reason is actually very simple."
+ },
+ {
+  "id": 324,
+  "text": "It's that, as we know,"
+ },
+ {
+  "id": 325,
+  "text": "subtracting — sub is subtracting —"
+ },
+ {
+  "id": 326,
+  "text": "subtracting an immediate value,"
+ },
+ {
+  "id": 327,
+  "text": "if you subtract a positive number,"
+ },
+ {
+  "id": 328,
+  "text": "it's actually equivalent to adding what?"
+ },
+ {
+  "id": 329,
+  "text": "Adding a negative number."
+ },
+ {
+  "id": 330,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 331,
+  "text": "So RISC-V"
+ },
+ {
+  "id": 332,
+  "text": "— we know one of its starting points in designing instructions —"
+ },
+ {
+  "id": 333,
+  "text": "is to be as simple as possible."
+ },
+ {
+  "id": 334,
+  "text": "So if it can save one instruction, it saves one."
+ },
+ {
+  "id": 335,
+  "text": "So it didn't specifically"
+ },
+ {
+  "id": 336,
+  "text": "add an instruction for sub."
+ },
+ {
+  "id": 337,
+  "text": "It's a reduced instruction set computer,"
+ },
+ {
+  "id": 338,
+  "text": "so it just uses addi in place of subi."
+ },
+ {
+  "id": 339,
+  "text": "That's actually the purpose behind it."
+ },
+ {
+  "id": 340,
+  "text": "So,"
+ },
+ {
+  "id": 341,
+  "text": "now that we've learned these,"
+ },
+ {
+  "id": 342,
+  "text": "add, addi,"
+ },
+ {
+  "id": 343,
+  "text": "and the sub instructions,"
+ },
+ {
+  "id": 344,
+  "text": "that is, addition and subtraction,"
+ },
+ {
+  "id": 345,
+  "text": "those are basically it for us."
+ },
+ {
+  "id": 346,
+  "text": "Now, with these instructions in hand,"
+ },
+ {
+  "id": 347,
+  "text": "we can actually use them,"
+ },
+ {
+  "id": 348,
+  "text": "by combining them and picking certain values,"
+ },
+ {
+  "id": 349,
+  "text": "to express some higher-level uses."
+ },
+ {
+  "id": 350,
+  "text": "So that's how it works."
+ },
+ {
+  "id": 351,
+  "text": "But as for these higher-level functions,"
+ },
+ {
+  "id": 352,
+  "text": "RISC-V doesn't provide them with new instructions."
+ },
+ {
+  "id": 353,
+  "text": "Instead, it provides what we call pseudo-instructions."
+ },
+ {
+  "id": 354,
+  "text": "These are exactly the pseudo-instructions we're talking about."
+ },
+ {
+  "id": 355,
+  "text": "For example, say we want to negate a number,"
+ },
+ {
+  "id": 356,
+  "text": "to take its negative value."
+ },
+ {
+  "id": 357,
+  "text": "We define a pseudo-instruction,"
+ },
+ {
+  "id": 358,
+  "text": "called NEG."
+ },
+ {
+  "id": 359,
+  "text": "That's the idea of 'negative'."
+ },
+ {
+  "id": 360,
+  "text": "But for neg,"
+ },
+ {
+  "id": 361,
+  "text": "it's actually equivalent to"
+ },
+ {
+  "id": 362,
+  "text": "really just a sub instruction."
+ },
+ {
+  "id": 363,
+  "text": "But,"
+ },
+ {
+  "id": 364,
+  "text": "note the special thing about it:"
+ },
+ {
+  "id": 365,
+  "text": "in the sub instruction's RSE field,"
+ },
+ {
+  "id": 366,
+  "text": "it places X0."
+ },
+ {
+  "id": 367,
+  "text": "We know that X0,"
+ },
+ {
+  "id": 368,
+  "text": "this register,"
+ },
+ {
+  "id": 369,
+  "text": "as we covered earlier,"
+ },
+ {
+  "id": 370,
+  "text": "has a special meaning."
+ },
+ {
+  "id": 371,
+  "text": "That is, with X0,"
+ },
+ {
+  "id": 372,
+  "text": "writing to it has no effect at all,"
+ },
+ {
+  "id": 373,
+  "text": "and when you read from it,"
+ },
+ {
+  "id": 374,
+  "text": "the value you get is always 0."
+ },
+ {
+  "id": 375,
+  "text": "So we know"
+ },
+ {
+  "id": 376,
+  "text": "what effect this achieves."
+ },
+ {
+  "id": 377,
+  "text": "It's actually"
+ },
+ {
+  "id": 378,
+  "text": "doing one thing,"
+ },
+ {
+  "id": 379,
+  "text": "namely subtracting RS from 0."
+ },
+ {
+  "id": 380,
+  "text": "and then store it into ID."
+ },
+ {
+  "id": 381,
+  "text": "We know that"
+ },
+ {
+  "id": 382,
+  "text": "if what's in RS is a positive number,"
+ },
+ {
+  "id": 383,
+  "text": "then effectively"
+ },
+ {
+  "id": 384,
+  "text": "for a number,"
+ },
+ {
+  "id": 385,
+  "text": "0 minus it"
+ },
+ {
+  "id": 386,
+  "text": "is actually taking its complement —"
+ },
+ {
+  "id": 387,
+  "text": "getting its negative value."
+ },
+ {
+  "id": 388,
+  "text": "If it's 1, the result is negative 1; if it's negative 1, the result is 1."
+ },
+ {
+  "id": 389,
+  "text": "It's like taking the negative."
+ },
+ {
+  "id": 390,
+  "text": "That's what this negation means."
+ },
+ {
+  "id": 391,
+  "text": "This is the instruction for negation."
+ },
+ {
+  "id": 392,
+  "text": "So what else is there?"
+ },
+ {
+  "id": 393,
+  "text": "Sometimes we need to take"
+ },
+ {
+  "id": 394,
+  "text": "two values in registers"
+ },
+ {
+  "id": 395,
+  "text": "and, that is to say,"
+ },
+ {
+  "id": 396,
+  "text": "take the value in this register"
+ },
+ {
+  "id": 397,
+  "text": "and move it into another register."
+ },
+ {
+  "id": 398,
+  "text": "In other instruction sets,"
+ },
+ {
+  "id": 399,
+  "text": "there's a corresponding Move instruction."
+ },
+ {
+  "id": 400,
+  "text": "Now, RISC-V, on the other hand"
+ },
+ {
+  "id": 401,
+  "text": "does not provide a dedicated move instruction."
+ },
+ {
+  "id": 402,
+  "text": "Instead, it's implemented using another instruction."
+ },
+ {
+  "id": 403,
+  "text": "In other words, its move instruction"
+ },
+ {
+  "id": 404,
+  "text": "is actually equivalent to the addi instruction."
+ },
+ {
+  "id": 405,
+  "text": "As you know, with the i in addi"
+ },
+ {
+  "id": 406,
+  "text": "if it turns this last value into 0,"
+ },
+ {
+  "id": 407,
+  "text": "what effect does that achieve?"
+ },
+ {
+  "id": 408,
+  "text": "It takes the value of rs1"
+ },
+ {
+  "id": 409,
+  "text": "and adds 0 to it,"
+ },
+ {
+  "id": 410,
+  "text": "and then puts the result into rd."
+ },
+ {
+  "id": 411,
+  "text": "Now think about it,"
+ },
+ {
+  "id": 412,
+  "text": "isn't the value in rd"
+ },
+ {
+  "id": 413,
+  "text": "still just the value of rs1 in the end?"
+ },
+ {
+  "id": 414,
+  "text": "Right?"
+ },
+ {
+  "id": 415,
+  "text": "So in effect, it achieves"
+ },
+ {
+  "id": 416,
+  "text": "the effect of moving"
+ },
+ {
+  "id": 417,
+  "text": "a value between two registers."
+ },
+ {
+  "id": 418,
+  "text": "So,"
+ },
+ {
+  "id": 419,
+  "text": "this is another example of a pseudo-instruction."
+ },
+ {
+  "id": 420,
+  "text": "So the NOP instruction"
+ },
+ {
+  "id": 421,
+  "text": "The NOP instruction"
+ },
+ {
+  "id": 422,
+  "text": "It is a special instruction"
+ },
+ {
+  "id": 423,
+  "text": "It actually does nothing"
+ },
+ {
+  "id": 424,
+  "text": "Now, in RISC-V,"
+ },
+ {
+  "id": 425,
+  "text": "there isn't a dedicated NOP instruction"
+ },
+ {
+  "id": 426,
+  "text": "or a no-op instruction to do this"
+ },
+ {
+  "id": 427,
+  "text": "Instead, it just reuses our ADDI instruction"
+ },
+ {
+  "id": 428,
+  "text": "So how does the ADDI instruction do it?"
+ },
+ {
+  "id": 429,
+  "text": "It uses its rd and rs1 fields,"
+ },
+ {
+  "id": 430,
+  "text": "using the special register x0"
+ },
+ {
+  "id": 431,
+  "text": "And then,"
+ },
+ {
+  "id": 432,
+  "text": "here it uses the immediate value 0"
+ },
+ {
+  "id": 433,
+  "text": "What's the effect of this?"
+ },
+ {
+  "id": 434,
+  "text": "Think about it"
+ },
+ {
+  "id": 435,
+  "text": "You take out the value of x0,"
+ },
+ {
+  "id": 436,
+  "text": "add 0 to it,"
+ },
+ {
+  "id": 437,
+  "text": "and store the result back into x0"
+ },
+ {
+  "id": 438,
+  "text": "Now some students might say,"
+ },
+ {
+  "id": 439,
+  "text": "isn't that still doing something?"
+ },
+ {
+  "id": 440,
+  "text": "But as you know,"
+ },
+ {
+  "id": 441,
+  "text": "the x0 register is very special."
+ },
+ {
+  "id": 442,
+  "text": "We mentioned earlier that"
+ },
+ {
+  "id": 443,
+  "text": "writing into x0"
+ },
+ {
+  "id": 444,
+  "text": "is it meaningful,"
+ },
+ {
+  "id": 445,
+  "text": "or is it meaningless?"
+ },
+ {
+  "id": 446,
+  "text": "It's completely meaningless."
+ },
+ {
+  "id": 447,
+  "text": "So when the CPU is interpreting"
+ },
+ {
+  "id": 448,
+  "text": "this instruction,"
+ },
+ {
+  "id": 449,
+  "text": "it knows"
+ },
+ {
+  "id": 450,
+  "text": "that it really can't do anything."
+ },
+ {
+  "id": 451,
+  "text": "So this instruction"
+ },
+ {
+  "id": 452,
+  "text": "won't do anything at all."
+ },
+ {
+  "id": 453,
+  "text": "So it might just"
+ },
+ {
+  "id": 454,
+  "text": "go through the instruction cycle of the whole machine,"
+ },
+ {
+  "id": 455,
+  "text": "doing nothing but decoding,"
+ },
+ {
+  "id": 456,
+  "text": "and the actual action is to do nothing."
+ },
+ {
+  "id": 457,
+  "text": "Now, some students ask about this instruction:"
+ },
+ {
+  "id": 458,
+  "text": "why did we invent this kind of NOP instruction in the first place?"
+ },
+ {
+  "id": 459,
+  "text": "Well, it's nothing more than something in the code,"
+ },
+ {
+  "id": 460,
+  "text": "It serves as a placeholder."
+ },
+ {
+  "id": 461,
+  "text": "Or in other words, it acts as a no-operation."
+ },
+ {
+  "id": 462,
+  "text": "Sometimes it has that effect."
+ },
+ {
+  "id": 463,
+  "text": "So these are some"
+ },
+ {
+  "id": 464,
+  "text": "things based on arithmetic instructions,"
+ },
+ {
+  "id": 465,
+  "text": "we can implement some pseudo-instructions,"
+ },
+ {
+  "id": 466,
+  "text": "extending the functionality of our arithmetic instructions."
+ },
+ {
+  "id": 467,
+  "text": "Now,"
+ },
+ {
+  "id": 468,
+  "text": "after learning the concepts we've covered so far,"
+ },
+ {
+  "id": 469,
+  "text": "especially after studying this addi instruction,"
+ },
+ {
+  "id": 470,
+  "text": "some of you may have a question."
+ },
+ {
+  "id": 471,
+  "text": "Because we just emphasized this point,"
+ },
+ {
+  "id": 472,
+  "text": "that is, with the addi instruction,"
+ },
+ {
+  "id": 473,
+  "text": "one of its operands is an immediate value."
+ },
+ {
+  "id": 474,
+  "text": "But this immediate value,"
+ },
+ {
+  "id": 475,
+  "text": "as we know, since the instruction is embedded within a single instruction,"
+ },
+ {
+  "id": 476,
+  "text": "its width is limited,"
+ },
+ {
+  "id": 477,
+  "text": "so the range it can express,"
+ },
+ {
+  "id": 478,
+  "text": "is actually quite small."
+ },
+ {
+  "id": 479,
+  "text": "It can only be between 2047 and -2048."
+ },
+ {
+  "id": 480,
+  "text": "Now, if we want to operate on"
+ },
+ {
+  "id": 481,
+  "text": "accessing a large number"
+ },
+ {
+  "id": 482,
+  "text": "By a large number, I mean one greater than 2047"
+ },
+ {
+  "id": 483,
+  "text": "that is, greater than or equal to 2047 and less than negative 2048"
+ },
+ {
+  "id": 484,
+  "text": "then what do we do?"
+ },
+ {
+  "id": 485,
+  "text": "Right?"
+ },
+ {
+  "id": 486,
+  "text": "So in this situation,"
+ },
+ {
+  "id": 487,
+  "text": "to solve this problem, RISC-V"
+ },
+ {
+  "id": 488,
+  "text": "basically addresses how to construct a large number"
+ },
+ {
+  "id": 489,
+  "text": "how do we build a large number?"
+ },
+ {
+  "id": 490,
+  "text": "Now, to solve this problem,"
+ },
+ {
+  "id": 491,
+  "text": "the solution RISC-V came up with is"
+ },
+ {
+  "id": 492,
+  "text": "it introduced a new instruction"
+ },
+ {
+  "id": 493,
+  "text": "As we know, a 32-bit number"
+ },
+ {
+  "id": 494,
+  "text": "can actually be broken down"
+ },
+ {
+  "id": 495,
+  "text": "a 32-bit number"
+ },
+ {
+  "id": 496,
+  "text": "can be split into"
+ },
+ {
+  "id": 497,
+  "text": "a high 20 bits and a low 12 bits"
+ },
+ {
+  "id": 498,
+  "text": "in this kind of arrangement"
+ },
+ {
+  "id": 499,
+  "text": "isn't that right?"
+ },
+ {
+  "id": 500,
+  "text": "Now what about the lower 12 bits?"
+ },
+ {
+  "id": 501,
+  "text": "We can use addi"
+ },
+ {
+  "id": 502,
+  "text": "to provide them here."
+ },
+ {
+  "id": 503,
+  "text": "Because here,"
+ },
+ {
+  "id": 504,
+  "text": "it can represent a 12-bit number."
+ },
+ {
+  "id": 505,
+  "text": "So we can first introduce a new instruction,"
+ },
+ {
+  "id": 506,
+  "text": "which sets the upper 20 bits of a 32-bit number,"
+ },
+ {
+  "id": 507,
+  "text": "and puts them into a register."
+ },
+ {
+  "id": 508,
+  "text": "And then,"
+ },
+ {
+  "id": 509,
+  "text": "for those lower 12 bits,"
+ },
+ {
+  "id": 510,
+  "text": "we use the addi instruction to add them in."
+ },
+ {
+  "id": 511,
+  "text": "You get what I mean, right?"
+ },
+ {
+  "id": 512,
+  "text": "Just add them in, and that's it."
+ },
+ {
+  "id": 513,
+  "text": "So we fill in the rest,"
+ },
+ {
+  "id": 514,
+  "text": "and by filling in, I mean through addi,"
+ },
+ {
+  "id": 515,
+  "text": "that is, adding them in through addition,"
+ },
+ {
+  "id": 516,
+  "text": "adding them in A plus B style,"
+ },
+ {
+  "id": 517,
+  "text": "to fill in the remaining 12 bits."
+ },
+ {
+  "id": 518,
+  "text": "This way, we can construct"
+ },
+ {
+  "id": 519,
+  "text": "a full 32-bit number."
+ },
+ {
+  "id": 520,
+  "text": "Think about it — isn't that how it works?"
+ },
+ {
+  "id": 521,
+  "text": "Let's look at an example."
+ },
+ {
+  "id": 522,
+  "text": "So this command,"
+ },
+ {
+  "id": 523,
+  "text": "first, let's understand"
+ },
+ {
+  "id": 524,
+  "text": "the command that builds these upper 20 bits"
+ },
+ {
+  "id": 525,
+  "text": "— the command that sets these upper 20 bits —"
+ },
+ {
+  "id": 526,
+  "text": "what kind of command is it?"
+ },
+ {
+  "id": 527,
+  "text": "It's implemented with a dedicated instruction"
+ },
+ {
+  "id": 528,
+  "text": "called the LUI instruction."
+ },
+ {
+  "id": 529,
+  "text": "The LUI instruction,"
+ },
+ {
+  "id": 530,
+  "text": "actually, is short for load upper immediate."
+ },
+ {
+  "id": 531,
+  "text": "So that's the LUI instruction."
+ },
+ {
+  "id": 532,
+  "text": "Now, the LUI instruction uses what's called"
+ },
+ {
+  "id": 533,
+  "text": "the U-type instruction format."
+ },
+ {
+  "id": 534,
+  "text": "We won't go into the details here."
+ },
+ {
+  "id": 535,
+  "text": "This instruction,"
+ },
+ {
+  "id": 536,
+  "text": "the effect it achieves,"
+ },
+ {
+  "id": 537,
+  "text": "is that it constructs a"
+ },
+ {
+  "id": 538,
+  "text": "32-bit immediate value"
+ },
+ {
+  "id": 539,
+  "text": "whose upper 20 bits"
+ },
+ {
+  "id": 540,
+  "text": "It stores it on this side"
+ },
+ {
+  "id": 541,
+  "text": "the upper 20 bits, bits 31 to 12, are used for storage"
+ },
+ {
+  "id": 542,
+  "text": "After it's stored in there"
+ },
+ {
+  "id": 543,
+  "text": "bit 12 will be cleared to zero"
+ },
+ {
+  "id": 544,
+  "text": "and then it takes this final immediate value"
+ },
+ {
+  "id": 545,
+  "text": "and puts it into a register"
+ },
+ {
+  "id": 546,
+  "text": "that is, it puts it into this RD"
+ },
+ {
+  "id": 547,
+  "text": "for example, the register X5"
+ },
+ {
+  "id": 548,
+  "text": "On this side,"
+ },
+ {
+  "id": 549,
+  "text": "I've written out an equivalent effect"
+ },
+ {
+  "id": 550,
+  "text": "Suppose I use LUI X5 0X12345"
+ },
+ {
+  "id": 551,
+  "text": "The value in front here is actually a 20-bit number"
+ },
+ {
+  "id": 552,
+  "text": "So it's equivalent to taking this number"
+ },
+ {
+  "id": 553,
+  "text": "and shifting it left by 12 bits"
+ },
+ {
+  "id": 554,
+  "text": "that is, moving it into the upper 20 bits"
+ },
+ {
+  "id": 555,
+  "text": "and then"
+ },
+ {
+  "id": 556,
+  "text": "leaving the lower 12 bits on the right empty"
+ },
+ {
+  "id": 557,
+  "text": "and filling them all with 0"
+ },
+ {
+  "id": 558,
+  "text": "Why fill them with 0?"
+ },
+ {
+  "id": 559,
+  "text": "They're left there for the ADDI to add on top"
+ },
+ {
+  "id": 560,
+  "text": "You see what I mean, right?"
+ },
+ {
+  "id": 561,
+  "text": "That's what LUI does."
+ },
+ {
+  "id": 562,
+  "text": "The specifics of the LUI instruction"
+ },
+ {
+  "id": 563,
+  "text": "and its effect"
+ },
+ {
+  "id": 564,
+  "text": "are covered in our exercise,"
+ },
+ {
+  "id": 565,
+  "text": "which you can go back and look at."
+ },
+ {
+  "id": 566,
+  "text": "We won't go over it again in class."
+ },
+ {
+  "id": 567,
+  "text": "So let's look at"
+ },
+ {
+  "id": 568,
+  "text": "how it's actually used."
+ },
+ {
+  "id": 569,
+  "text": "Say we want to build a very large number,"
+ },
+ {
+  "id": 570,
+  "text": "0x12345678."
+ },
+ {
+  "id": 571,
+  "text": "Now, for this number,"
+ },
+ {
+  "id": 572,
+  "text": "we split it into two parts:"
+ },
+ {
+  "id": 573,
+  "text": "it's really just"
+ },
+ {
+  "id": 574,
+  "text": "the upper 20 bits and the lower 12 bits."
+ },
+ {
+  "id": 575,
+  "text": "Right?"
+ },
+ {
+  "id": 576,
+  "text": "So we can first take 12345678,"
+ },
+ {
+  "id": 577,
+  "text": "or rather 12345,"
+ },
+ {
+  "id": 578,
+  "text": "the number 0x12345,"
+ },
+ {
+  "id": 579,
+  "text": "and first use the LUI instruction"
+ },
+ {
+  "id": 580,
+  "text": "and put it into this register X1"
+ },
+ {
+  "id": 581,
+  "text": "Now, once that's in there,"
+ },
+ {
+  "id": 582,
+  "text": "based on the explanation we just gave,"
+ },
+ {
+  "id": 583,
+  "text": "we know it actually is"
+ },
+ {
+  "id": 584,
+  "text": "filling the upper 20 bits with this number"
+ },
+ {
+  "id": 585,
+  "text": "and at the same time,"
+ },
+ {
+  "id": 586,
+  "text": "clearing the lower 12 bits to zero."
+ },
+ {
+  "id": 587,
+  "text": "After they're cleared,"
+ },
+ {
+  "id": 588,
+  "text": "how do we fill them back in?"
+ },
+ {
+  "id": 589,
+  "text": "We just use addi"
+ },
+ {
+  "id": 590,
+  "text": "to fill them in."
+ },
+ {
+  "id": 591,
+  "text": "To fill them in,"
+ },
+ {
+  "id": 592,
+  "text": "we take 0x678"
+ },
+ {
+  "id": 593,
+  "text": "and add it onto X1."
+ },
+ {
+  "id": 594,
+  "text": "Since X1 currently holds this value,"
+ },
+ {
+  "id": 595,
+  "text": "adding these two values together,"
+ },
+ {
+  "id": 596,
+  "text": "once you add them, as you can probably see,"
+ },
+ {
+  "id": 597,
+  "text": "you've assembled one big number,"
+ },
+ {
+  "id": 598,
+  "text": "right? Think about it,"
+ },
+ {
+  "id": 599,
+  "text": "this is how we use this instruction"
+ },
+ {
+  "id": 600,
+  "text": "to load a large number with this effect."
+ },
+ {
+  "id": 601,
+  "text": "But let's pay attention here,"
+ },
+ {
+  "id": 602,
+  "text": "this is actually not"
+ },
+ {
+  "id": 603,
+  "text": "as simple as we thought."
+ },
+ {
+  "id": 604,
+  "text": "Not as simple as we thought."
+ },
+ {
+  "id": 605,
+  "text": "For example, let's take another case."
+ },
+ {
+  "id": 606,
+  "text": "Suppose we have a number like this."
+ },
+ {
+  "id": 607,
+  "text": "Take a look, it's 0x12345,"
+ },
+ {
+  "id": 608,
+  "text": "and then note that after it there's a"
+ },
+ {
+  "id": 609,
+  "text": "string of all f's."
+ },
+ {
+  "id": 610,
+  "text": "Now, if we want to construct this number,"
+ },
+ {
+  "id": 611,
+  "text": "how do we do it?"
+ },
+ {
+  "id": 612,
+  "text": "Well, if we follow the approach from just now,"
+ },
+ {
+  "id": 613,
+  "text": "some of you would say, that's easy."
+ },
+ {
+  "id": 614,
+  "text": "What do we do first?"
+ },
+ {
+  "id": 615,
+  "text": "First we take the number 12345"
+ },
+ {
+  "id": 616,
+  "text": "and load it into the upper 20 bits using the LUI instruction,"
+ },
+ {
+  "id": 617,
+  "text": "right?"
+ },
+ {
+  "id": 618,
+  "text": "That's fine."
+ },
+ {
+  "id": 619,
+  "text": "That's absolutely fine."
+ },
+ {
+  "id": 620,
+  "text": "And then below that,"
+ },
+ {
+  "id": 621,
+  "text": "we add it in with addi,"
+ },
+ {
+  "id": 622,
+  "text": "adding the number 0xff to it."
+ },
+ {
+  "id": 623,
+  "text": "Haven't we put it together then?"
+ },
+ {
+  "id": 624,
+  "text": "Think about it — does that work?"
+ },
+ {
+  "id": 625,
+  "text": "Let's look back at our addi instruction."
+ },
+ {
+  "id": 626,
+  "text": "How did we define its behavior back then?"
+ },
+ {
+  "id": 627,
+  "text": "Let's quickly take a look."
+ },
+ {
+  "id": 628,
+  "text": "Which sentence here affects our computation result?"
+ },
+ {
+  "id": 629,
+  "text": "Pay attention to this,"
+ },
+ {
+  "id": 630,
+  "text": "we may have gone through it a bit quickly just now."
+ },
+ {
+  "id": 631,
+  "text": "Have you taken another careful look at the meaning of this sentence?"
+ },
+ {
+  "id": 632,
+  "text": "What it says is that before it participates in the operation,"
+ },
+ {
+  "id": 633,
+  "text": "the immediate value gets — what happens to it?"
+ },
+ {
+  "id": 634,
+  "text": "Sign-extended."
+ },
+ {
+  "id": 635,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 636,
+  "text": "Let's go back to this one from just now."
+ },
+ {
+  "id": 637,
+  "text": "What does this number actually mean?"
+ },
+ {
+  "id": 638,
+  "text": "In memory,"
+ },
+ {
+  "id": 639,
+  "text": "for the computer,"
+ },
+ {
+  "id": 640,
+  "text": "Is it a positive number?"
+ },
+ {
+  "id": 641,
+  "text": "See what I mean?"
+ },
+ {
+  "id": 642,
+  "text": "It's actually a negative number."
+ },
+ {
+  "id": 643,
+  "text": "It's actually negative 1."
+ },
+ {
+  "id": 644,
+  "text": "Think about it — isn't that right?"
+ },
+ {
+  "id": 645,
+  "text": "Because its sign bit, the highest bit, is"
+ },
+ {
+  "id": 646,
+  "text": "After sign extension,"
+ },
+ {
+  "id": 647,
+  "text": "it's actually a negative number."
+ },
+ {
+  "id": 648,
+  "text": "And since it's negative,"
+ },
+ {
+  "id": 649,
+  "text": "it's not really like what we humans do"
+ },
+ {
+  "id": 650,
+  "text": "adding a positive number to a positive number."
+ },
+ {
+  "id": 651,
+  "text": "It's actually taking the content in XL3"
+ },
+ {
+  "id": 652,
+  "text": "and adding it together with a negative 1."
+ },
+ {
+  "id": 653,
+  "text": "So you're not actually going to get that result."
+ },
+ {
+  "id": 654,
+  "text": "Do you all see what I mean?"
+ },
+ {
+  "id": 655,
+  "text": "So doing it this way"
+ },
+ {
+  "id": 656,
+  "text": "can't possibly give you that result."
+ },
+ {
+  "id": 657,
+  "text": "Then a student asks,"
+ },
+ {
+  "id": 658,
+  "text": "Well, what if I want to"
+ },
+ {
+  "id": 659,
+  "text": "construct that number? How do I do it?"
+ },
+ {
+  "id": 660,
+  "text": "So actually, it's very simple."
+ },
+ {
+  "id": 661,
+  "text": "We actually still use these two instructions."
+ },
+ {
+  "id": 662,
+  "text": "It's just that, as we said,"
+ },
+ {
+  "id": 663,
+  "text": "we go ahead and..."
+ },
+ {
+  "id": 664,
+  "text": "Think about it mathematically."
+ },
+ {
+  "id": 665,
+  "text": "We want to..."
+ },
+ {
+  "id": 666,
+  "text": "add 999."
+ },
+ {
+  "id": 667,
+  "text": "That can actually be turned into what concept?"
+ },
+ {
+  "id": 668,
+  "text": "It can be obtained as 1000 - 1."
+ },
+ {
+  "id": 669,
+  "text": "You see what I mean?"
+ },
+ {
+  "id": 670,
+  "text": "This 1000,"
+ },
+ {
+  "id": 671,
+  "text": "we can actually first..."
+ },
+ {
+  "id": 672,
+  "text": "add it to this higher position."
+ },
+ {
+  "id": 673,
+  "text": "For example, we use 1000."
+ },
+ {
+  "id": 674,
+  "text": "That 1 in 1000 is actually..."
+ },
+ {
+  "id": 675,
+  "text": "effectively the carry."
+ },
+ {
+  "id": 676,
+  "text": "We can get it by subtracting 1 from 1000."
+ },
+ {
+  "id": 677,
+  "text": "So, to get this number,"
+ },
+ {
+  "id": 678,
+  "text": "we can first construct such a number."
+ },
+ {
+  "id": 679,
+  "text": "We first get 0x12346."
+ },
+ {
+  "id": 680,
+  "text": "This 6 is actually"
+ },
+ {
+  "id": 681,
+  "text": "like borrowing a bit at the front,"
+ },
+ {
+  "id": 682,
+  "text": "right?"
+ },
+ {
+  "id": 683,
+  "text": "And then we add a -1 to it."
+ },
+ {
+  "id": 684,
+  "text": "This way,"
+ },
+ {
+  "id": 685,
+  "text": "we get this result."
+ },
+ {
+  "id": 686,
+  "text": "Think about it, doesn't that make sense?"
+ },
+ {
+  "id": 687,
+  "text": "So for us, actually,"
+ },
+ {
+  "id": 688,
+  "text": "in this kind of special case,"
+ },
+ {
+  "id": 689,
+  "text": "when we construct it,"
+ },
+ {
+  "id": 690,
+  "text": "we need to handle this,"
+ },
+ {
+  "id": 691,
+  "text": "and we have to use this approach to construct it."
+ },
+ {
+  "id": 692,
+  "text": "That way, we can get this result."
+ },
+ {
+  "id": 693,
+  "text": "The key reason is that for this number after addadd,"
+ },
+ {
+  "id": 694,
+  "text": "we have to do sign extension on it."
+ },
+ {
+  "id": 695,
+  "text": "So this is equivalent to..."
+ },
+ {
+  "id": 696,
+  "text": "As you know, this result is effectively the same as sub,"
+ },
+ {
+  "id": 697,
+  "text": "the effect of subadd,"
+ },
+ {
+  "id": 698,
+  "text": "isn't it?"
+ },
+ {
+  "id": 699,
+  "text": "It's subtracting a 3-bit number."
+ },
+ {
+  "id": 700,
+  "text": "the concept of subtracting one"
+ },
+ {
+  "id": 701,
+  "text": "Now, some of you might have a question here"
+ },
+ {
+  "id": 702,
+  "text": "isn't this just way too complicated?"
+ },
+ {
+  "id": 703,
+  "text": "I mean, when I want to construct a number"
+ },
+ {
+  "id": 704,
+  "text": "I actually have to do some special checks"
+ },
+ {
+  "id": 705,
+  "text": "and what do I mean by checks?"
+ },
+ {
+  "id": 706,
+  "text": "I mean checking this data in the lower 12 bits"
+ },
+ {
+  "id": 707,
+  "text": "to see if it has certain characteristics"
+ },
+ {
+  "id": 708,
+  "text": "In some cases it's really simple"
+ },
+ {
+  "id": 709,
+  "text": "you just add, but in other cases you still have to use this"
+ },
+ {
+  "id": 710,
+  "text": "detour — that is, work around it using subtraction"
+ },
+ {
+  "id": 711,
+  "text": "right?"
+ },
+ {
+  "id": 712,
+  "text": "Isn't that way too much hassle?"
+ },
+ {
+  "id": 713,
+  "text": "So, in order to reduce everyone's"
+ },
+ {
+  "id": 714,
+  "text": "effort in constructing an immediate value,"
+ },
+ {
+  "id": 715,
+  "text": "in our assembly instructions"
+ },
+ {
+  "id": 716,
+  "text": "it actually adopts a kind of"
+ },
+ {
+  "id": 717,
+  "text": "pseudo-instruction called LI"
+ },
+ {
+  "id": 718,
+  "text": "With this LI instruction,"
+ },
+ {
+  "id": 719,
+  "text": "LI is actually short for load immediate"
+ },
+ {
+  "id": 720,
+  "text": "That's the idea of loading an immediate."
+ },
+ {
+  "id": 721,
+  "text": "It's basically taking an immediate value"
+ },
+ {
+  "id": 722,
+  "text": "In effect, it's like directly loading a value into a register."
+ },
+ {
+  "id": 723,
+  "text": "So if you write it using this kind of micro-instruction,"
+ },
+ {
+  "id": 724,
+  "text": "then the real decision is whether to do a direct add"
+ },
+ {
+  "id": 725,
+  "text": "or something like a subtract-one operation."
+ },
+ {
+  "id": 726,
+  "text": "This part of the work is really not something you need to worry about."
+ },
+ {
+  "id": 727,
+  "text": "So who actually handles it?"
+ },
+ {
+  "id": 728,
+  "text": "In practice, this processing step"
+ },
+ {
+  "id": 729,
+  "text": "is handed over to the assembler."
+ },
+ {
+  "id": 730,
+  "text": "So during the"
+ },
+ {
+  "id": 731,
+  "text": "assembly process,"
+ },
+ {
+  "id": 732,
+  "text": "the assembler will automatically figure out for you"
+ },
+ {
+  "id": 733,
+  "text": "what kind of method should be used for this number"
+ },
+ {
+  "id": 734,
+  "text": "to construct the final machine instruction,"
+ },
+ {
+  "id": 735,
+  "text": "and achieve the end result."
+ },
+ {
+  "id": 736,
+  "text": "So later on, when we write code,"
+ },
+ {
+  "id": 737,
+  "text": "including in the exercises we did earlier,"
+ },
+ {
+  "id": 738,
+  "text": "you also saw that"
+ },
+ {
+  "id": 739,
+  "text": "when we copy a value into a register,"
+ },
+ {
+  "id": 740,
+  "text": "We don't use that"
+ },
+ {
+  "id": 741,
+  "text": "to do the copying ourselves with a dedicated LUI,"
+ },
+ {
+  "id": 742,
+  "text": "or an addi instruction."
+ },
+ {
+  "id": 743,
+  "text": "What we actually do is"
+ },
+ {
+  "id": 744,
+  "text": "directly use this pseudo-instruction li,"
+ },
+ {
+  "id": 745,
+  "text": "to assign the value."
+ },
+ {
+  "id": 746,
+  "text": "This is where the li instruction"
+ },
+ {
+  "id": 747,
+  "text": "we showed earlier in the code"
+ },
+ {
+  "id": 748,
+  "text": "comes from."
+ },
+ {
+  "id": 749,
+  "text": "This is a pseudo-instruction."
+ },
+ {
+  "id": 750,
+  "text": "Now, by using this approach,"
+ },
+ {
+  "id": 751,
+  "text": "we simply,"
+ },
+ {
+  "id": 752,
+  "text": "essentially reduce"
+ },
+ {
+  "id": 753,
+  "text": "our workload."
+ },
+ {
+  "id": 754,
+  "text": "And you can also use this"
+ },
+ {
+  "id": 755,
+  "text": "to appreciate once more"
+ },
+ {
+  "id": 756,
+  "text": "why we provide"
+ },
+ {
+  "id": 757,
+  "text": "pseudo-instructions and that kind of"
+ },
+ {
+  "id": 758,
+  "text": "functionality."
+ },
+ {
+  "id": 759,
+  "text": "In assembly,"
+ },
+ {
+  "id": 760,
+  "text": "So next,"
+ },
+ {
+  "id": 761,
+  "text": "for this li example,"
+ },
+ {
+  "id": 762,
+  "text": "let's take a look as well."
+ },
+ {
+  "id": 763,
+  "text": "This example,"
+ },
+ {
+  "id": 764,
+  "text": "we were about to cover it,"
+ },
+ {
+  "id": 765,
+  "text": "and we might be a bit tight on time,"
+ },
+ {
+  "id": 766,
+  "text": "but let's go through it together anyway."
+ },
+ {
+  "id": 767,
+  "text": "When you get back,"
+ },
+ {
+  "id": 768,
+  "text": "take a look at it yourselves."
+ },
+ {
+  "id": 769,
+  "text": "This li instruction,"
+ },
+ {
+  "id": 770,
+  "text": "through this example,"
+ },
+ {
+  "id": 771,
+  "text": "let's get a feel for"
+ },
+ {
+  "id": 772,
+  "text": "what the assembler does for us."
+ },
+ {
+  "id": 773,
+  "text": "Depending on the situation,"
+ },
+ {
+  "id": 774,
+  "text": "it turns the li instruction"
+ },
+ {
+  "id": 775,
+  "text": "into different raw machine instructions."
+ },
+ {
+  "id": 776,
+  "text": "For example, right now,"
+ },
+ {
+  "id": 777,
+  "text": "for the variable X5,"
+ },
+ {
+  "id": 778,
+  "text": "we assign a value called 0X80."
+ },
+ {
+  "id": 779,
+  "text": "Well, we know that"
+ },
+ {
+  "id": 780,
+  "text": "The number 0X80"
+ },
+ {
+  "id": 781,
+  "text": "falls within"
+ },
+ {
+  "id": 782,
+  "text": "the range of our D-level"
+ },
+ {
+  "id": 783,
+  "text": "between 2048 and 2047"
+ },
+ {
+  "id": 784,
+  "text": "Now think about it"
+ },
+ {
+  "id": 785,
+  "text": "in this kind of situation"
+ },
+ {
+  "id": 786,
+  "text": "do we still need to bring in"
+ },
+ {
+  "id": 787,
+  "text": "an instruction like LUI"
+ },
+ {
+  "id": 788,
+  "text": "to construct a large number?"
+ },
+ {
+  "id": 789,
+  "text": "It's actually a small number"
+ },
+ {
+  "id": 790,
+  "text": "Do you get what I mean?"
+ },
+ {
+  "id": 791,
+  "text": "It's a very small number"
+ },
+ {
+  "id": 792,
+  "text": "and it falls within this range"
+ },
+ {
+  "id": 793,
+  "text": "So since it's within this range"
+ },
+ {
+  "id": 794,
+  "text": "in fact, as we say"
+ },
+ {
+  "id": 795,
+  "text": "this LRI instruction"
+ },
+ {
+  "id": 796,
+  "text": "if you know how to edit it"
+ },
+ {
+  "id": 797,
+  "text": "you can simply translate it into a single"
+ },
+ {
+  "id": 798,
+  "text": "ADDRI instruction, and that's it"
+ },
+ {
+  "id": 799,
+  "text": "no need for two instructions to construct it"
+ },
+ {
+  "id": 800,
+  "text": "You still get what I mean."
+ },
+ {
+  "id": 801,
+  "text": "Because this 8,"
+ },
+ {
+  "id": 802,
+  "text": "the number 80 in Linux 80,"
+ },
+ {
+  "id": 803,
+  "text": "can be embedded directly into a single instruction."
+ },
+ {
+  "id": 804,
+  "text": "Through the ADDI instruction,"
+ },
+ {
+  "id": 805,
+  "text": "we can attach it straight into x5."
+ },
+ {
+  "id": 806,
+  "text": "Do you still get what I mean?"
+ },
+ {
+  "id": 807,
+  "text": "In your code,"
+ },
+ {
+  "id": 808,
+  "text": "after you compile it,"
+ },
+ {
+  "id": 809,
+  "text": "go back and take a look."
+ },
+ {
+  "id": 810,
+  "text": "These two instructions,"
+ },
+ {
+  "id": 811,
+  "text": "the machine code they generate is exactly identical."
+ },
+ {
+  "id": 812,
+  "text": "That way you can verify what I'm saying."
+ },
+ {
+  "id": 813,
+  "text": "So that's the first case."
+ },
+ {
+  "id": 814,
+  "text": "The second case,"
+ },
+ {
+  "id": 815,
+  "text": "suppose the number is something like this."
+ },
+ {
+  "id": 816,
+  "text": "What's the characteristic of this number?"
+ },
+ {
+  "id": 817,
+  "text": "First of all, this number is a large number."
+ },
+ {
+  "id": 818,
+  "text": "It's definitely outside that range."
+ },
+ {
+  "id": 819,
+  "text": "Right?"
+ },
+ {
+  "id": 820,
+  "text": "This number is very large."
+ },
+ {
+  "id": 821,
+  "text": "At the same time,"
+ },
+ {
+  "id": 822,
+  "text": "what other feature does it have?"
+ },
+ {
+  "id": 823,
+  "text": "The twelfth bit of this number,"
+ },
+ {
+  "id": 824,
+  "text": "its highest bit,"
+ },
+ {
+  "id": 825,
+  "text": "most significant bit,"
+ },
+ {
+  "id": 826,
+  "text": "the highest bit is 0,"
+ },
+ {
+  "id": 827,
+  "text": "which means it is actually a positive number."
+ },
+ {
+  "id": 828,
+  "text": "So for this kind of situation,"
+ },
+ {
+  "id": 829,
+  "text": "we can use our simplest approach to put it together."
+ },
+ {
+  "id": 830,
+  "text": "What I mean by the simplest approach,"
+ },
+ {
+  "id": 831,
+  "text": "is that after splitting this number in two,"
+ },
+ {
+  "id": 832,
+  "text": "you directly combine it using the LUI instruction and the ADDI instruction,"
+ },
+ {
+  "id": 833,
+  "text": "and you get the equivalent result."
+ },
+ {
+  "id": 834,
+  "text": "Go back one step,"
+ },
+ {
+  "id": 835,
+  "text": "and you'll see that the code generated by this instruction,"
+ },
+ {
+  "id": 836,
+  "text": "is just two machine instructions."
+ },
+ {
+  "id": 837,
+  "text": "This is equivalent to that."
+ },
+ {
+  "id": 838,
+  "text": "After you go back and work on it yourselves,"
+ },
+ {
+  "id": 839,
+  "text": "you can try doing this exercise."
+ },
+ {
+  "id": 840,
+  "text": "Let's go back and look at this effect."
+ },
+ {
+  "id": 841,
+  "text": "This is the second case."
+ },
+ {
+  "id": 842,
+  "text": "Now, for the third case,"
+ },
+ {
+  "id": 843,
+  "text": "this is what we just demonstrated for you."
+ },
+ {
+  "id": 844,
+  "text": "Suppose this number is also a large number,"
+ },
+ {
+  "id": 845,
+  "text": "and at the same time, after splitting it in two,"
+ },
+ {
+  "id": 846,
+  "text": "we find that its highest bit"
+ },
+ {
+  "id": 847,
+  "text": "is not zero, but one,"
+ },
+ {
+  "id": 848,
+  "text": "indicating it's a negative number."
+ },
+ {
+  "id": 849,
+  "text": "What should we do then?"
+ },
+ {
+  "id": 850,
+  "text": "If it's a negative number,"
+ },
+ {
+  "id": 851,
+  "text": "then we have to use the approach we just showed,"
+ },
+ {
+  "id": 852,
+  "text": "which is a bit more complicated."
+ },
+ {
+  "id": 853,
+  "text": "We use that method to do it."
+ },
+ {
+  "id": 854,
+  "text": "So through this example,"
+ },
+ {
+  "id": 855,
+  "text": "we can see that"
+ },
+ {
+  "id": 856,
+  "text": "the same li instruction,"
+ },
+ {
+  "id": 857,
+  "text": "in different"
+ },
+ {
+  "id": 858,
+  "text": "situations — when you load a different,"
+ },
+ {
+  "id": 859,
+  "text": "construct a different number,"
+ },
+ {
+  "id": 860,
+  "text": "The machine instructions it generates"
+ },
+ {
+  "id": 861,
+  "text": "may not be the same."
+ },
+ {
+  "id": 862,
+  "text": "That's the effect of this pseudo-instruction."
+ },
+ {
+  "id": 863,
+  "text": "So through this example,"
+ },
+ {
+  "id": 864,
+  "text": "on the one hand, we've understood"
+ },
+ {
+  "id": 865,
+  "text": "what the Lui instruction does,"
+ },
+ {
+  "id": 866,
+  "text": "and on the other hand, we've also understood"
+ },
+ {
+  "id": 867,
+  "text": "that from now on,"
+ },
+ {
+  "id": 868,
+  "text": "in the end, we"
+ },
+ {
+  "id": 869,
+  "text": "will all use the Li pseudo-instruction to"
+ },
+ {
+  "id": 870,
+  "text": "assign values to variables."
+ },
+ {
+  "id": 871,
+  "text": "So what actually happens behind"
+ },
+ {
+  "id": 872,
+  "text": "this variable in the end,"
+ },
+ {
+  "id": 873,
+  "text": "I hope through this you can"
+ },
+ {
+  "id": 874,
+  "text": "get a sense of how our"
+ },
+ {
+  "id": 875,
+  "text": "assembly instructions in RISC-V work,"
+ },
+ {
+  "id": 876,
+  "text": "which is actually determined by RISC-V's"
+ },
+ {
+  "id": 877,
+  "text": "instruction encoding mechanism."
+ },
+ {
+  "id": 878,
+  "text": "Please keep this in mind."
+ },
+ {
+  "id": 879,
+  "text": "Alright, that's all for the Li instruction."
+ },
+ {
+  "id": 880,
+  "text": "So, regarding this arithmetic instruction,"
+ },
+ {
+  "id": 881,
+  "text": "let me check the remaining time."
+ },
+ {
+  "id": 882,
+  "text": "The time seems to be..."
+ },
+ {
+  "id": 883,
+  "text": "Do you all want to take a break?"
+ },
+ {
+  "id": 884,
+  "text": "Given the time,"
+ },
+ {
+  "id": 885,
+  "text": "it feels a bit..."
+ },
+ {
+  "id": 886,
+  "text": "Should we take a break?"
+ },
+ {
+  "id": 887,
+  "text": "No break? OK."
+ },
+ {
+  "id": 888,
+  "text": "Then let's just finish it up."
+ },
+ {
+  "id": 889,
+  "text": "Either way, we'll get out early."
+ },
+ {
+  "id": 890,
+  "text": "We'll wrap up"
+ },
+ {
+  "id": 891,
+  "text": "this morning."
+ },
+ {
+  "id": 892,
+  "text": "So as we just mentioned,"
+ },
+ {
+  "id": 893,
+  "text": "that is to say,"
+ },
+ {
+  "id": 894,
+  "text": "the scenario we just talked about,"
+ },
+ {
+  "id": 895,
+  "text": "namely, we want to construct a large number."
+ },
+ {
+  "id": 896,
+  "text": "For example, when copying to a register,"
+ },
+ {
+  "id": 897,
+  "text": "say x equals 100,"
+ },
+ {
+  "id": 898,
+  "text": "when we need to do an assignment like this,"
+ },
+ {
+  "id": 899,
+  "text": "we'll use this li approach."
+ },
+ {
+  "id": 900,
+  "text": "So when do we need to build a large number?"
+ },
+ {
+  "id": 901,
+  "text": "When do we often need to access a large number?"
+ },
+ {
+  "id": 902,
+  "text": "As you know, besides this kind of"
+ },
+ {
+  "id": 903,
+  "text": "basic addition and subtraction"
+ },
+ {
+  "id": 904,
+  "text": "numeric operations,"
+ },
+ {
+  "id": 905,
+  "text": "we also often access addresses."
+ },
+ {
+  "id": 906,
+  "text": "And these addresses,"
+ },
+ {
+  "id": 907,
+  "text": "as we know,"
+ },
+ {
+  "id": 908,
+  "text": "are often also this kind of large number."
+ },
+ {
+  "id": 909,
+  "text": "Especially on our 32-bit machine,"
+ },
+ {
+  "id": 910,
+  "text": "when the address space is definitely in a very large range,"
+ },
+ {
+  "id": 911,
+  "text": "so how do we construct an address value?"
+ },
+ {
+  "id": 912,
+  "text": "This involves another concept."
+ },
+ {
+  "id": 913,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 914,
+  "text": "When we construct an address,"
+ },
+ {
+  "id": 915,
+  "text": "it's actually not much different from constructing"
+ },
+ {
+  "id": 916,
+  "text": "an ordinary numeric value."
+ },
+ {
+  "id": 917,
+  "text": "Under normal circumstances,"
+ },
+ {
+  "id": 918,
+  "text": "we can actually use that LUI instruction from just now,"
+ },
+ {
+  "id": 919,
+  "text": "that is, the LUI we just talked about."
+ },
+ {
+  "id": 920,
+  "text": "to construct a large number in this way"
+ },
+ {
+  "id": 921,
+  "text": "using li to construct a large number in this way"
+ },
+ {
+  "id": 922,
+  "text": "to construct an address"
+ },
+ {
+  "id": 923,
+  "text": "But as you know,"
+ },
+ {
+  "id": 924,
+  "text": "the address constructed this way"
+ },
+ {
+  "id": 925,
+  "text": "is a kind of what?"
+ },
+ {
+  "id": 926,
+  "text": "It's an absolute value."
+ },
+ {
+  "id": 927,
+  "text": "Because if you use this method,"
+ },
+ {
+  "id": 928,
+  "text": "the address you construct"
+ },
+ {
+  "id": 929,
+  "text": "is definitely something directly specified,"
+ },
+ {
+  "id": 930,
+  "text": "somewhere between 0 and 2 to the power of 32,"
+ },
+ {
+  "id": 931,
+  "text": "that is, the 32-bit range,"
+ },
+ {
+  "id": 932,
+  "text": "an absolute value like that."
+ },
+ {
+  "id": 933,
+  "text": "But sometimes,"
+ },
+ {
+  "id": 934,
+  "text": "when we're actually constructing addresses,"
+ },
+ {
+  "id": 935,
+  "text": "we also want to construct some relative values."
+ },
+ {
+  "id": 936,
+  "text": "This thing is the relative address,"
+ },
+ {
+  "id": 937,
+  "text": "the relative address."
+ },
+ {
+  "id": 938,
+  "text": "Now, for this thing,"
+ },
+ {
+  "id": 939,
+  "text": "you'll probably see it later"
+ },
+ {
+  "id": 940,
+  "text": "For example, when programming,"
+ },
+ {
+  "id": 941,
+  "text": "you may also run into some related concepts."
+ },
+ {
+  "id": 942,
+  "text": "For instance, have any of you come across"
+ },
+ {
+  "id": 943,
+  "text": "dynamic libraries?"
+ },
+ {
+  "id": 944,
+  "text": "The concept of dynamic libraries."
+ },
+ {
+  "id": 945,
+  "text": "We know that with dynamic libraries,"
+ },
+ {
+  "id": 946,
+  "text": "when they are linked,"
+ },
+ {
+  "id": 947,
+  "text": "their addresses"
+ },
+ {
+  "id": 948,
+  "text": "all use a kind of relative address,"
+ },
+ {
+  "id": 949,
+  "text": "because,"
+ },
+ {
+  "id": 950,
+  "text": "because when they are dynamically loaded,"
+ },
+ {
+  "id": 951,
+  "text": "their addresses actually cannot be determined at the linking stage,"
+ },
+ {
+  "id": 952,
+  "text": "the static linking stage cannot determine them,"
+ },
+ {
+  "id": 953,
+  "text": "so it can only use a relative address"
+ },
+ {
+  "id": 954,
+  "text": "to determine them."
+ },
+ {
+  "id": 955,
+  "text": "What this means is that"
+ },
+ {
+  "id": 956,
+  "text": "at compile time,"
+ },
+ {
+  "id": 957,
+  "text": "at link time,"
+ },
+ {
+  "id": 958,
+  "text": "you need to generate address-independent"
+ },
+ {
+  "id": 959,
+  "text": "instruction encodings"
+ },
+ {
+  "id": 960,
+  "text": "Instruction."
+ },
+ {
+  "id": 961,
+  "text": "So how is this way implemented?"
+ },
+ {
+  "id": 962,
+  "text": "What is it relative to?"
+ },
+ {
+  "id": 963,
+  "text": "Well, actually, we say"
+ },
+ {
+  "id": 964,
+  "text": "in the compilation and linking technique,"
+ },
+ {
+  "id": 965,
+  "text": "we generally use"
+ },
+ {
+  "id": 966,
+  "text": "construction relative to the PC value."
+ },
+ {
+  "id": 967,
+  "text": "Construction relative to the current PC value."
+ },
+ {
+  "id": 968,
+  "text": "So how do we"
+ },
+ {
+  "id": 969,
+  "text": "construct an address relative to the current PC value?"
+ },
+ {
+  "id": 970,
+  "text": "We often use a... On RISC-V,"
+ },
+ {
+  "id": 971,
+  "text": "there is an instruction introduced called AUIPC."
+ },
+ {
+  "id": 972,
+  "text": "So what is AUIPC?"
+ },
+ {
+  "id": 973,
+  "text": "The PC at the end here is actually the PC value."
+ },
+ {
+  "id": 974,
+  "text": "Let's take a look at how this PC value..."
+ },
+ {
+  "id": 975,
+  "text": "how, relative to the PC value, it constructs an immediate number."
+ },
+ {
+  "id": 976,
+  "text": "It works very similarly to AUI,"
+ },
+ {
+  "id": 977,
+  "text": "it also uses the U-type format,"
+ },
+ {
+  "id": 978,
+  "text": "similar to it."
+ },
+ {
+  "id": 979,
+  "text": "Similar to that,"
+ },
+ {
+  "id": 980,
+  "text": "It also constructs a 32-bit immediate"
+ },
+ {
+  "id": 981,
+  "text": "And"
+ },
+ {
+  "id": 982,
+  "text": "this 32-bit immediate"
+ },
+ {
+  "id": 983,
+  "text": "is also built by taking the number specified here"
+ },
+ {
+  "id": 984,
+  "text": "and placing it into the upper 20 bits"
+ },
+ {
+  "id": 985,
+  "text": "with bit 12 cleared to zero"
+ },
+ {
+  "id": 986,
+  "text": "But unlike LUI,"
+ },
+ {
+  "id": 987,
+  "text": "there is one distinguishing feature"
+ },
+ {
+  "id": 988,
+  "text": "when it takes this number"
+ },
+ {
+  "id": 989,
+  "text": "we said LUI, after constructing this number,"
+ },
+ {
+  "id": 990,
+  "text": "it simply saves it directly into x5,"
+ },
+ {
+  "id": 991,
+  "text": "right?"
+ },
+ {
+  "id": 992,
+  "text": "But"
+ },
+ {
+  "id": 993,
+  "text": "AUIPC,"
+ },
+ {
+  "id": 994,
+  "text": "it can't do that"
+ },
+ {
+  "id": 995,
+  "text": "After it gets this value,"
+ },
+ {
+  "id": 996,
+  "text": "it has to take this value"
+ },
+ {
+  "id": 997,
+  "text": "and add it to the PC value,"
+ },
+ {
+  "id": 998,
+  "text": "and then save the result of that addition"
+ },
+ {
+  "id": 999,
+  "text": "into the destination register."
+ },
+ {
+  "id": 1000,
+  "text": "So the effect of its construction"
+ },
+ {
+  "id": 1001,
+  "text": "is actually equivalent to"
+ },
+ {
+  "id": 1002,
+  "text": "saying that after it shifts left by 12 bits,"
+ },
+ {
+  "id": 1003,
+  "text": "it adds that to the PC,"
+ },
+ {
+  "id": 1004,
+  "text": "and then puts the result into X5."
+ },
+ {
+  "id": 1005,
+  "text": "Now, what does it mean to add it to the PC?"
+ },
+ {
+  "id": 1006,
+  "text": "Well, as you know, the result you get"
+ },
+ {
+  "id": 1007,
+  "text": "is actually a value that's relative to the PC,"
+ },
+ {
+  "id": 1008,
+  "text": "relative to the current PC."
+ },
+ {
+  "id": 1009,
+  "text": "As for the original LUI,"
+ },
+ {
+  "id": 1010,
+  "text": "you could say"
+ },
+ {
+  "id": 1011,
+  "text": "it's actually not relative—"
+ },
+ {
+  "id": 1012,
+  "text": "well, it is actually relative too,"
+ },
+ {
+  "id": 1013,
+  "text": "except that what it's relative to is just 0."
+ },
+ {
+  "id": 1014,
+  "text": "It's really just adding 0."
+ },
+ {
+  "id": 1015,
+  "text": "But as we know,"
+ },
+ {
+  "id": 1016,
+  "text": "once you add the PC,"
+ },
+ {
+  "id": 1017,
+  "text": "the range it can express becomes much larger,"
+ },
+ {
+  "id": 1018,
+  "text": "because the range of the PC itself"
+ },
+ {
+  "id": 1019,
+  "text": "is from 0 to"
+ },
+ {
+  "id": 1020,
+  "text": "it could be a number between -2G and 2G"
+ },
+ {
+  "id": 1021,
+  "text": "or it could be a"
+ },
+ {
+  "id": 1022,
+  "text": "so on this basis, if you further"
+ },
+ {
+  "id": 1023,
+  "text": "add another value to it"
+ },
+ {
+  "id": 1024,
+  "text": "then the range it can express"
+ },
+ {
+  "id": 1025,
+  "text": "is actually even wider"
+ },
+ {
+  "id": 1026,
+  "text": "so that is the difference between AUIPC and LUI"
+ },
+ {
+  "id": 1027,
+  "text": "it is often used for constructing an address"
+ },
+ {
+  "id": 1028,
+  "text": "especially for constructing a relative address"
+ },
+ {
+  "id": 1029,
+  "text": "just get familiar with this"
+ },
+ {
+  "id": 1030,
+  "text": "because later on"
+ },
+ {
+  "id": 1031,
+  "text": "we will also use this kind of related stuff"
+ },
+ {
+  "id": 1032,
+  "text": "so now that we have this"
+ },
+ {
+  "id": 1033,
+  "text": "knowledge of how to use the AUIPC instruction"
+ },
+ {
+  "id": 1034,
+  "text": "we can take a look at this example"
+ },
+ {
+  "id": 1035,
+  "text": "I won't demonstrate it here"
+ },
+ {
+  "id": 1036,
+  "text": "these instructions are fairly simple"
+ },
+ {
+  "id": 1037,
+  "text": "you can combine what we covered in class"
+ },
+ {
+  "id": 1038,
+  "text": "about its effect and"
+ },
+ {
+  "id": 1039,
+  "text": "step through it in debug mode"
+ },
+ {
+  "id": 1040,
+  "text": "Let's see how the values in its registers change."
+ },
+ {
+  "id": 1041,
+  "text": "So,"
+ },
+ {
+  "id": 1042,
+  "text": "similarly, we"
+ },
+ {
+  "id": 1043,
+  "text": "based on AUIPC,"
+ },
+ {
+  "id": 1044,
+  "text": "in practice we often"
+ },
+ {
+  "id": 1045,
+  "text": "don't use it directly,"
+ },
+ {
+  "id": 1046,
+  "text": "but instead use a pseudo-instruction called LA"
+ },
+ {
+  "id": 1047,
+  "text": "to use this approach,"
+ },
+ {
+  "id": 1048,
+  "text": "to use this command."
+ },
+ {
+  "id": 1049,
+  "text": "LA, this pseudo-instruction,"
+ },
+ {
+  "id": 1050,
+  "text": "it is itself a pseudo-instruction,"
+ },
+ {
+  "id": 1051,
+  "text": "it actually stands for load address."
+ },
+ {
+  "id": 1052,
+  "text": "We often use this command"
+ },
+ {
+  "id": 1053,
+  "text": "to construct an address,"
+ },
+ {
+  "id": 1054,
+  "text": "and then assign it to a register,"
+ },
+ {
+  "id": 1055,
+  "text": "assign it to a variable."
+ },
+ {
+  "id": 1056,
+  "text": "So its effect"
+ },
+ {
+  "id": 1057,
+  "text": "actually comes from using"
+ },
+ {
+  "id": 1058,
+  "text": "the AUIPC instruction together with other instructions,"
+ },
+ {
+  "id": 1059,
+  "text": "combined to generate a"
+ },
+ {
+  "id": 1060,
+  "text": "This is something we'll use later on,"
+ },
+ {
+  "id": 1061,
+  "text": "so I'll explain it to you here."
+ },
+ {
+  "id": 1062,
+  "text": "When it comes to instructions,"
+ },
+ {
+  "id": 1063,
+  "text": "that is, when we need to construct an address,"
+ },
+ {
+  "id": 1064,
+  "text": "we'll use this thing."
+ },
+ {
+  "id": 1065,
+  "text": "As for the usage of this LA command,"
+ },
+ {
+  "id": 1066,
+  "text": "let's take a quick look at this example."
+ },
+ {
+  "id": 1067,
+  "text": "This is the code LA command."
+ },
+ {
+  "id": 1068,
+  "text": "Take a look at this command."
+ },
+ {
+  "id": 1069,
+  "text": "As for this code,"
+ },
+ {
+  "id": 1070,
+  "text": "let me briefly walk you through it."
+ },
+ {
+  "id": 1071,
+  "text": "It's very simple."
+ },
+ {
+  "id": 1072,
+  "text": "This is essentially the effect of an LA load-address operation."
+ },
+ {
+  "id": 1073,
+  "text": "Now, one thing to note when writing it,"
+ },
+ {
+  "id": 1074,
+  "text": "LA x5 here,"
+ },
+ {
+  "id": 1075,
+  "text": "this is the target register we ultimately want to load the address into."
+ },
+ {
+  "id": 1076,
+  "text": "After that,"
+ },
+ {
+  "id": 1077,
+  "text": "you simply follow it with a"
+ },
+ {
+  "id": 1078,
+  "text": "Usually when we write it,"
+ },
+ {
+  "id": 1079,
+  "text": "you just directly follow it with a so-called"
+ },
+ {
+  "id": 1080,
+  "text": "label,"
+ },
+ {
+  "id": 1081,
+  "text": "or a"
+ },
+ {
+  "id": 1082,
+  "text": "you can think of it as essentially an address."
+ },
+ {
+  "id": 1083,
+  "text": "Now, as for what the specific value of this label"
+ },
+ {
+  "id": 1084,
+  "text": "is,"
+ },
+ {
+  "id": 1085,
+  "text": "you don't need to specify it directly"
+ },
+ {
+  "id": 1086,
+  "text": "when writing the code."
+ },
+ {
+  "id": 1087,
+  "text": "During the compilation process,"
+ },
+ {
+  "id": 1088,
+  "text": "the linker will automatically determine"
+ },
+ {
+  "id": 1089,
+  "text": "what this value should be."
+ },
+ {
+  "id": 1090,
+  "text": "Based on the final generated"
+ },
+ {
+  "id": 1091,
+  "text": "executable program's"
+ },
+ {
+  "id": 1092,
+  "text": "address range,"
+ },
+ {
+  "id": 1093,
+  "text": "it will decide what this value is."
+ },
+ {
+  "id": 1094,
+  "text": "So the effect of this is essentially equivalent to"
+ },
+ {
+  "id": 1095,
+  "text": "assigning this address"
+ },
+ {
+  "id": 1096,
+  "text": "to X5."
+ },
+ {
+  "id": 1097,
+  "text": "Now, as you know,"
+ },
+ {
+  "id": 1098,
+  "text": "JR is something we'll talk about later,"
+ },
+ {
+  "id": 1099,
+  "text": "and it's essentially a jump instruction."
+ },
+ {
+  "id": 1100,
+  "text": "So once you understand this effect,"
+ },
+ {
+  "id": 1101,
+  "text": "it actually jumps to"
+ },
+ {
+  "id": 1102,
+  "text": "essentially this thing jumps again to"
+ },
+ {
+  "id": 1103,
+  "text": "this address,"
+ },
+ {
+  "id": 1104,
+  "text": "which in fact forms a loop."
+ },
+ {
+  "id": 1105,
+  "text": "That's basically the effect achieved here."
+ },
+ {
+  "id": 1106,
+  "text": "Now, this next part,"
+ },
+ {
+  "id": 1107,
+  "text": "mainly I want you to get a feel for LA,"
+ },
+ {
+  "id": 1108,
+  "text": "and if you step back and look at it,"
+ },
+ {
+  "id": 1109,
+  "text": "you'll find it's actually made up of the AUIPC instruction."
+ },
+ {
+  "id": 1110,
+  "text": "That's the LA command."
+ },
+ {
+  "id": 1111,
+  "text": "So through what we covered earlier,"
+ },
+ {
+  "id": 1112,
+  "text": "it's really about"
+ },
+ {
+  "id": 1113,
+  "text": "whether we're constructing an address,"
+ },
+ {
+  "id": 1114,
+  "text": "or constructing a specific value,"
+ },
+ {
+  "id": 1115,
+  "text": "what we're really showing you is"
+ },
+ {
+  "id": 1116,
+  "text": "how to construct a large number."
+ },
+ {
+  "id": 1117,
+  "text": "This is one method provided in RISC-V"
+ },
+ {
+  "id": 1118,
+  "text": "for constructing large numbers."
+ },
+ {
+  "id": 1119,
+  "text": "Now, regarding these arithmetic instructions,"
+ },
+ {
+  "id": 1120,
+  "text": "This is also the first category of instructions we talked about."
+ },
+ {
+  "id": 1121,
+  "text": "Basically, that's all I'll cover for now."
+ },
+ {
+  "id": 1122,
+  "text": "There are actually quite a lot of these instructions."
+ },
+ {
+  "id": 1123,
+  "text": "Including both micro-instructions and basic instructions."
+ },
+ {
+  "id": 1124,
+  "text": "So after you get back,"
+ },
+ {
+  "id": 1125,
+  "text": "you can refer to the table I've given you here,"
+ },
+ {
+  "id": 1126,
+  "text": "and look at the basic usage of these instructions."
+ }
+]

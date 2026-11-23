@@ -1,0 +1,6815 @@
+1
+00:00:00,640 --> 00:00:09,400
+Hello everyone, we're now starting Chapter 2, which is really our Chapter 1, since we're starting from scratch.
+
+2
+00:00:09,960 --> 00:00:12,460
+Our first chapter is called A Tour of Computer Systems.
+
+3
+00:00:13,820 --> 00:00:17,760
+This part is the introductory portion of the whole course.
+
+4
+00:00:18,340 --> 00:00:23,460
+This part is mainly a review for everyone, a refresher,
+
+5
+00:00:23,460 --> 00:00:27,880
+basically the material from computer organization principles,
+
+6
+00:00:27,880 --> 00:00:30,040
+the computer architecture part,
+
+7
+00:00:30,040 --> 00:00:33,480
+covering mainly these blocks:
+
+8
+00:00:33,480 --> 00:00:35,460
+first, the hardware components of a computer,
+
+9
+00:00:35,460 --> 00:00:38,600
+then program storage and execution,
+
+10
+00:00:38,600 --> 00:00:41,060
+the design and evolution of programming languages,
+
+11
+00:00:41,060 --> 00:00:43,860
+the memory hierarchy,
+
+12
+00:00:43,860 --> 00:00:46,280
+and finally a brief introduction to the operating system.
+
+13
+00:00:46,280 --> 00:00:50,360
+Let's start with the first part,
+
+14
+00:00:50,360 --> 00:00:52,920
+the hardware components of a computer.
+
+15
+00:00:52,920 --> 00:00:57,400
+As we know,
+
+16
+00:00:58,140 --> 00:00:59,440
+when you learn C,
+
+17
+00:00:59,440 --> 00:01:00,900
+the first program you write,
+
+18
+00:01:00,900 --> 00:01:02,460
+should be Hello World,
+
+19
+00:01:02,460 --> 00:01:02,780
+right?
+
+20
+00:01:02,780 --> 00:01:05,460
+I don't know if
+
+21
+00:01:05,460 --> 00:01:08,000
+Now, as for how this program runs,
+
+22
+00:01:08,000 --> 00:01:10,660
+how far does your understanding go at this point?
+
+23
+00:01:10,660 --> 00:01:13,180
+That is to say, from when we finish writing this program
+
+24
+00:01:13,180 --> 00:01:14,560
+all the way to getting it to run,
+
+25
+00:01:14,560 --> 00:01:17,140
+and a Hello World appears on the screen,
+
+26
+00:01:17,140 --> 00:01:19,020
+what exactly happens along the way?
+
+27
+00:01:19,020 --> 00:01:23,060
+Can you describe it in your own words
+
+28
+00:01:23,060 --> 00:01:25,360
+right now?
+
+29
+00:01:25,360 --> 00:01:26,620
+Right?
+
+30
+00:01:26,620 --> 00:01:27,900
+But I think, that is to say,
+
+31
+00:01:27,900 --> 00:01:32,120
+after you've spent some time studying programming,
+
+32
+00:01:32,120 --> 00:01:34,320
+and running things on Linux,
+
+33
+00:01:34,320 --> 00:01:39,060
+you should have a deeper understanding of how this program runs.
+
+34
+00:01:39,060 --> 00:01:43,300
+So here we just want to walk everyone through it once more.
+
+35
+00:01:43,300 --> 00:01:48,660
+So, the composition of a computer,
+
+36
+00:01:48,660 --> 00:01:54,320
+we can summarize for you with this diagram here,
+
+37
+00:01:54,320 --> 00:01:54,660
+right?
+
+38
+00:01:54,660 --> 00:01:57,260
+What's on this diagram?
+
+39
+00:01:57,900 --> 00:01:59,360
+If I asked you to draw it,
+
+40
+00:01:59,360 --> 00:02:00,140
+that is, a computer —
+
+41
+00:02:00,140 --> 00:02:00,960
+If you want to draw what a computer
+
+42
+00:02:00,960 --> 00:02:01,960
+is made up of,
+
+43
+00:02:01,960 --> 00:02:03,020
+I don't know if everyone
+
+44
+00:02:03,020 --> 00:02:05,140
+can roughly sketch this diagram yourselves.
+
+45
+00:02:05,140 --> 00:02:09,470
+On this diagram,
+
+46
+00:02:09,470 --> 00:02:10,190
+this...
+
+47
+00:02:10,190 --> 00:02:12,290
+what is this?
+
+48
+00:02:12,290 --> 00:02:15,620
+Right?
+
+49
+00:02:15,620 --> 00:02:17,220
+This, we call it the bus.
+
+50
+00:02:17,220 --> 00:02:17,580
+Agreed?
+
+51
+00:02:17,580 --> 00:02:18,700
+That is to say,
+
+52
+00:02:18,700 --> 00:02:20,660
+all those things inside our computer,
+
+53
+00:02:20,660 --> 00:02:21,420
+all of them,
+
+54
+00:02:21,420 --> 00:02:22,540
+the other things are called components.
+
+55
+00:02:22,540 --> 00:02:23,240
+You can think of them as components.
+
+56
+00:02:23,240 --> 00:02:24,080
+Now these components,
+
+57
+00:02:24,080 --> 00:02:25,000
+they're all connected through a single bus,
+
+58
+00:02:25,000 --> 00:02:26,220
+wired together,
+
+59
+00:02:26,220 --> 00:02:27,960
+just like a highway.
+
+60
+00:02:27,960 --> 00:02:30,360
+So this connecting part,
+
+61
+00:02:30,360 --> 00:02:31,040
+there are several big blocks
+
+62
+00:02:31,040 --> 00:02:32,700
+Now, the biggest block of this thing
+
+63
+00:02:32,700 --> 00:02:33,920
+needless to say
+
+64
+00:02:33,920 --> 00:02:36,460
+this is the core of our computer, and what is it called?
+
+65
+00:02:36,460 --> 00:02:38,500
+it's the CPU
+
+66
+00:02:38,500 --> 00:02:40,960
+Now, the CPU is actually...
+
+67
+00:02:40,960 --> 00:02:43,680
+If I ask you right now, what is the CPU?
+
+68
+00:02:43,680 --> 00:02:44,540
+you should still be able to say it
+
+69
+00:02:44,540 --> 00:02:48,500
+it's the Central Processing Unit
+
+70
+00:02:48,500 --> 00:02:50,240
+What does CPU mean?
+
+71
+00:02:50,240 --> 00:02:53,980
+Translated into Chinese, it's called the central processing unit
+
+72
+00:02:53,980 --> 00:02:54,780
+right?
+
+73
+00:02:54,780 --> 00:02:56,760
+If you go out there
+
+74
+00:02:56,760 --> 00:02:58,340
+say, to a job interview
+
+75
+00:02:58,340 --> 00:02:59,940
+do you think anyone would ask about these things?
+
+76
+00:02:59,940 --> 00:03:00,780
+Maybe they will
+
+77
+00:03:00,780 --> 00:03:02,680
+After you've learned these things in school
+
+78
+00:03:02,680 --> 00:03:03,140
+and you go out
+
+79
+00:03:03,140 --> 00:03:04,700
+it'd be good if you can explain them yourselves
+
+80
+00:03:04,700 --> 00:03:06,760
+Now, this
+
+81
+00:03:06,760 --> 00:03:10,860
+What's actually inside this CPU?
+
+82
+00:03:10,860 --> 00:03:14,660
+When you took computer organization,
+
+83
+00:03:14,660 --> 00:03:15,520
+did your instructor cover this?
+
+84
+00:03:15,520 --> 00:03:17,520
+Or on your own,
+
+85
+00:03:17,520 --> 00:03:20,860
+what's your understanding of this part?
+
+86
+00:03:20,860 --> 00:03:23,760
+Let me quickly walk you through it.
+
+87
+00:03:23,760 --> 00:03:25,060
+On our side here,
+
+88
+00:03:25,060 --> 00:03:25,720
+there are these
+
+89
+00:03:25,720 --> 00:03:26,740
+Inside this CPU,
+
+90
+00:03:26,740 --> 00:03:28,040
+there are these main blocks.
+
+91
+00:03:28,040 --> 00:03:29,180
+The first one is called
+
+92
+00:03:29,180 --> 00:03:31,160
+abbreviated as CU.
+
+93
+00:03:31,160 --> 00:03:33,020
+Once you're out in the industry, you'll know
+
+94
+00:03:33,020 --> 00:03:34,140
+what CU means.
+
+95
+00:03:34,140 --> 00:03:35,700
+It's the control unit,
+
+96
+00:03:35,700 --> 00:03:37,020
+the control unit.
+
+97
+00:03:37,020 --> 00:03:38,440
+Understand?
+
+98
+00:03:38,440 --> 00:03:40,800
+The control unit is essentially the control part.
+
+99
+00:03:40,800 --> 00:03:43,540
+To put its main job simply,
+
+100
+00:03:43,540 --> 00:03:45,020
+and this is something we'll cover later,
+
+101
+00:03:45,020 --> 00:03:47,500
+it's basically feeding some stuff into an instruction
+
+102
+00:03:47,500 --> 00:03:49,200
+parsing it into something
+
+103
+00:03:49,200 --> 00:03:50,500
+processing it, running it, right?
+
+104
+00:03:50,500 --> 00:03:52,740
+the control unit is over here
+
+105
+00:03:52,740 --> 00:03:53,720
+now
+
+106
+00:03:53,720 --> 00:03:57,440
+what is this one called?
+
+107
+00:03:57,440 --> 00:04:01,700
+we have an abbreviation for it, ALU
+
+108
+00:04:01,700 --> 00:04:04,480
+that stands for the arithmetic logic unit
+
+109
+00:04:04,480 --> 00:04:06,040
+now for the actual computation
+
+110
+00:04:06,040 --> 00:04:06,960
+our computer
+
+111
+00:04:06,960 --> 00:04:08,100
+a computer is meant for computing
+
+112
+00:04:08,100 --> 00:04:08,480
+to put it plainly
+
+113
+00:04:08,480 --> 00:04:09,960
+it's not meant for playing games
+
+114
+00:04:09,960 --> 00:04:11,580
+so a computer
+
+115
+00:04:11,580 --> 00:04:13,220
+when it was first invented
+
+116
+00:04:13,220 --> 00:04:13,920
+it was for computing
+
+117
+00:04:13,920 --> 00:04:15,060
+so where does that computing happen?
+
+118
+00:04:15,060 --> 00:04:15,920
+which part does it happen in?
+
+119
+00:04:15,920 --> 00:04:16,940
+actually right here
+
+120
+00:04:16,940 --> 00:04:18,100
+the arithmetic logic unit
+
+121
+00:04:18,100 --> 00:04:18,800
+You can tell right away,
+
+122
+00:04:18,800 --> 00:04:19,880
+the computations we do
+
+123
+00:04:19,880 --> 00:04:21,080
+are nothing more than arithmetic operations
+
+124
+00:04:21,080 --> 00:04:21,540
+and what else?
+
+125
+00:04:21,540 --> 00:04:22,880
+Logical operations,
+
+126
+00:04:22,880 --> 00:04:23,460
+right?
+
+127
+00:04:23,460 --> 00:04:25,240
+When you learned C,
+
+128
+00:04:25,240 --> 00:04:26,540
+that addition, subtraction, multiplication, and division,
+
+129
+00:04:26,540 --> 00:04:27,100
+what is that?
+
+130
+00:04:27,100 --> 00:04:28,840
+That falls under arithmetic operations.
+
+131
+00:04:28,840 --> 00:04:30,780
+What else falls under logical operations?
+
+132
+00:04:30,780 --> 00:04:33,540
+AND, OR, NOT, things like that.
+
+133
+00:04:33,540 --> 00:04:34,660
+Think about it, isn't that so?
+
+134
+00:04:34,660 --> 00:04:37,160
+So when you boil everything down to the end,
+
+135
+00:04:37,160 --> 00:04:38,960
+it's nothing more than arithmetic operations and logical operations.
+
+136
+00:04:38,960 --> 00:04:40,700
+So the arithmetic logic unit,
+
+137
+00:04:40,700 --> 00:04:41,920
+that is right here.
+
+138
+00:04:41,920 --> 00:04:44,160
+And then there's...
+
+139
+00:04:44,160 --> 00:04:45,480
+Besides that,
+
+140
+00:04:45,480 --> 00:04:46,500
+there is another very important part.
+
+141
+00:04:46,500 --> 00:04:47,280
+It's basically a bunch of things
+
+142
+00:04:47,280 --> 00:04:49,360
+not just a single thing
+
+143
+00:04:49,360 --> 00:04:50,360
+It's a whole collection of things
+
+144
+00:04:50,360 --> 00:04:50,960
+And this collection,
+
+145
+00:04:50,960 --> 00:04:52,640
+we call them all registers
+
+146
+00:04:52,640 --> 00:04:55,500
+In other words, the data you need to process
+
+147
+00:04:55,500 --> 00:04:56,500
+is actually all in this,
+
+148
+00:04:56,500 --> 00:04:58,260
+all stored in these registers
+
+149
+00:04:58,260 --> 00:04:58,920
+and then,
+
+150
+00:04:58,920 --> 00:05:01,480
+it's handed over to the arithmetic logic unit to perform the computation
+
+151
+00:05:01,480 --> 00:05:05,000
+So that's what a processor is
+
+152
+00:05:05,000 --> 00:05:06,620
+Now, besides that,
+
+153
+00:05:06,620 --> 00:05:08,780
+we'll take a closer look at it later
+
+154
+00:05:08,780 --> 00:05:09,980
+Now let's look at the others
+
+155
+00:05:09,980 --> 00:05:12,260
+This one here is called the IO bridge
+
+156
+00:05:12,260 --> 00:05:13,100
+In practice, it's
+
+157
+00:05:13,100 --> 00:05:17,160
+a bridge for our processor to interact with the outside world
+
+158
+00:05:17,160 --> 00:05:17,900
+a bridge
+
+159
+00:05:17,900 --> 00:05:19,620
+And this bridge,
+
+160
+00:05:19,620 --> 00:05:22,540
+along with the bus, and one other very important component
+
+161
+00:05:22,540 --> 00:05:24,660
+That's our main memory.
+
+162
+00:05:24,660 --> 00:05:26,380
+That's the memory where our data is stored.
+
+163
+00:05:26,380 --> 00:05:28,240
+All connected together.
+
+164
+00:05:28,240 --> 00:05:31,420
+Now, below this bus,
+
+165
+00:05:31,420 --> 00:05:32,960
+there are a large number of
+
+166
+00:05:32,960 --> 00:05:34,960
+what we actually call peripherals.
+
+167
+00:05:34,960 --> 00:05:36,080
+Because with just these,
+
+168
+00:05:36,080 --> 00:05:37,880
+with just a CPU and memory,
+
+169
+00:05:37,880 --> 00:05:39,180
+the computer
+
+170
+00:05:39,180 --> 00:05:40,300
+is basically unusable to us,
+
+171
+00:05:40,300 --> 00:05:40,780
+right?
+
+172
+00:05:40,780 --> 00:05:42,680
+So we need some peripherals,
+
+173
+00:05:42,680 --> 00:05:43,880
+like a keyboard and mouse,
+
+174
+00:05:43,880 --> 00:05:45,500
+and a display,
+
+175
+00:05:45,500 --> 00:05:46,780
+so we can interact with it.
+
+176
+00:05:46,780 --> 00:05:49,280
+So everything down here is peripherals.
+
+177
+00:05:49,280 --> 00:05:51,680
+And that's what makes up a computer.
+
+178
+00:05:51,680 --> 00:05:53,940
+Of course, this is a classic diagram.
+
+179
+00:05:53,940 --> 00:05:57,820
+It's basically the same as our PCs, desktops, and laptops.
+
+180
+00:05:57,820 --> 00:06:01,340
+And some phones have a similar organizational architecture.
+
+181
+00:06:01,340 --> 00:06:02,760
+It might be slightly different from it,
+
+182
+00:06:02,760 --> 00:06:05,120
+but overall it's pretty much like this.
+
+183
+00:06:05,120 --> 00:06:05,880
+A computer is
+
+184
+00:06:05,880 --> 00:06:09,640
+just this kind of thing.
+
+185
+00:06:09,640 --> 00:06:11,920
+If you want to reinforce this impression later,
+
+186
+00:06:11,920 --> 00:06:14,380
+you can go home and try drawing this diagram yourself.
+
+187
+00:06:14,380 --> 00:06:16,380
+Because some things, when described in words,
+
+188
+00:06:16,380 --> 00:06:17,580
+might not be easy to remember,
+
+189
+00:06:17,580 --> 00:06:19,300
+while graphical things tend to be easier to remember.
+
+190
+00:06:19,300 --> 00:06:22,880
+So in our course, we draw a lot of diagrams.
+
+191
+00:06:22,880 --> 00:06:24,440
+Through these diagrams, you can
+
+192
+00:06:24,440 --> 00:06:26,420
+deepen your learning and mastery of the knowledge.
+
+193
+00:06:26,420 --> 00:06:31,770
+Now, this computer we're talking about,
+
+194
+00:06:31,770 --> 00:06:32,990
+the one in the diagram above,
+
+195
+00:06:32,990 --> 00:06:34,690
+this computer thing,
+
+196
+00:06:34,690 --> 00:06:37,010
+we actually often call it the
+
+197
+00:06:37,010 --> 00:06:38,210
+von Neumann architecture.
+
+198
+00:06:38,210 --> 00:06:41,050
+When you learned computer organization and design,
+
+199
+00:06:41,050 --> 00:06:42,010
+you probably still remember this concept, right?
+
+200
+00:06:42,010 --> 00:06:43,930
+That is, the von Neumann...
+
+201
+00:06:43,930 --> 00:06:46,170
+This kind of organization
+
+202
+00:06:46,170 --> 00:06:48,030
+Now, the other corresponding approach is called what?
+
+203
+00:06:48,030 --> 00:06:48,850
+Do you all remember?
+
+204
+00:06:48,850 --> 00:06:51,510
+It's called the Harvard architecture.
+
+205
+00:06:51,510 --> 00:06:52,890
+Right?
+
+206
+00:06:52,890 --> 00:06:55,690
+So von Neumann and Harvard are the two
+
+207
+00:06:55,690 --> 00:06:57,590
+major architectures in our computers.
+
+208
+00:06:57,590 --> 00:06:59,310
+That is, two ways of organizing the hardware.
+
+209
+00:06:59,310 --> 00:07:02,410
+Now, what's the difference between these two architectures?
+
+210
+00:07:02,410 --> 00:07:05,790
+From this diagram, we can
+
+211
+00:07:05,790 --> 00:07:08,450
+see what the difference is.
+
+212
+00:07:08,450 --> 00:07:13,100
+For the von Neumann architecture,
+
+213
+00:07:13,100 --> 00:07:15,380
+you see it only has one bus to the outside.
+
+214
+00:07:15,380 --> 00:07:16,800
+This CPU here
+
+215
+00:07:16,800 --> 00:07:19,700
+only communicates with the outside through a single bus.
+
+216
+00:07:19,700 --> 00:07:20,680
+Everyone see that?
+
+217
+00:07:20,680 --> 00:07:23,080
+And the Harvard architecture,
+
+218
+00:07:23,080 --> 00:07:24,960
+what's its obvious feature?
+
+219
+00:07:24,960 --> 00:07:27,600
+It has two buses to communicate with the outside.
+
+220
+00:07:27,600 --> 00:07:28,400
+Right?
+
+221
+00:07:28,400 --> 00:07:29,600
+So the Harvard
+
+222
+00:07:29,600 --> 00:07:30,440
+Harvard architecture,
+
+223
+00:07:30,440 --> 00:07:33,920
+it separates instructions and data
+
+224
+00:07:33,920 --> 00:07:37,060
+meaning the instructions it runs and the data it operates on
+
+225
+00:07:37,060 --> 00:07:37,740
+are separated,
+
+226
+00:07:37,740 --> 00:07:39,220
+kept in two memory regions,
+
+227
+00:07:39,220 --> 00:07:42,360
+and then they interact through two buses.
+
+228
+00:07:42,360 --> 00:07:45,160
+Whereas the von Neumann,
+
+229
+00:07:45,160 --> 00:07:46,980
+relatively speaking, you can actually understand it as
+
+230
+00:07:46,980 --> 00:07:48,840
+its storage area
+
+231
+00:07:48,840 --> 00:07:51,640
+contains both instructions and data.
+
+232
+00:07:51,640 --> 00:07:52,500
+Does everyone understand?
+
+233
+00:07:52,500 --> 00:07:54,000
+That's how it works.
+
+234
+00:07:54,000 --> 00:07:55,720
+That's the most important difference between them.
+
+235
+00:07:55,720 --> 00:07:56,320
+So, this,
+
+236
+00:07:56,320 --> 00:08:00,140
+we can say
+
+237
+00:08:00,140 --> 00:08:02,520
+in fact, a large number of PCs, servers,
+
+238
+00:08:02,520 --> 00:08:03,220
+and so on,
+
+239
+00:08:03,220 --> 00:08:04,180
+are actually based on
+
+240
+00:08:04,180 --> 00:08:05,340
+the von Neumann architecture
+
+241
+00:08:05,340 --> 00:08:07,040
+the main ones.
+
+242
+00:08:07,040 --> 00:08:07,940
+So going forward,
+
+243
+00:08:07,940 --> 00:08:09,560
+we'll actually focus on this von Neumann architecture
+
+244
+00:08:09,560 --> 00:08:10,920
+for our introduction.
+
+245
+00:08:10,920 --> 00:08:12,220
+Now, this
+
+246
+00:08:12,220 --> 00:08:14,300
+approach it uses,
+
+247
+00:08:14,300 --> 00:08:15,260
+its main advantage,
+
+248
+00:08:15,260 --> 00:08:16,060
+as you know,
+
+249
+00:08:16,060 --> 00:08:17,560
+is that it only has one
+
+250
+00:08:17,560 --> 00:08:18,940
+-- you only need to design one bus.
+
+251
+00:08:18,940 --> 00:08:19,840
+So in this regard,
+
+252
+00:08:19,840 --> 00:08:20,780
+as you can imagine,
+
+253
+00:08:20,780 --> 00:08:23,040
+compared to the Harvard architecture,
+
+254
+00:08:23,040 --> 00:08:25,040
+its hardware design is definitely simpler.
+
+255
+00:08:25,040 --> 00:08:25,800
+Right?
+
+256
+00:08:25,800 --> 00:08:28,200
+The one on the right here looks a bit more complex,
+
+257
+00:08:28,200 --> 00:08:28,500
+doesn't it?
+
+258
+00:08:28,500 --> 00:08:31,960
+So this simplicity,
+
+259
+00:08:31,960 --> 00:08:33,980
+but after that simplicity,
+
+260
+00:08:33,980 --> 00:08:36,380
+the overhead of its bus
+
+261
+00:08:36,380 --> 00:08:37,740
+it tends to be a bit smaller
+
+262
+00:08:37,740 --> 00:08:39,800
+the control logic is simpler to implement
+
+263
+00:08:39,800 --> 00:08:41,760
+basically, the hardware unit design is simpler
+
+264
+00:08:41,760 --> 00:08:43,060
+as for the Harvard architecture,
+
+265
+00:08:43,060 --> 00:08:45,040
+its hardware design is more complex
+
+266
+00:08:45,040 --> 00:08:46,280
+but once that complexity is there,
+
+267
+00:08:46,280 --> 00:08:47,940
+what you get in return is higher execution efficiency
+
+268
+00:08:47,940 --> 00:08:50,480
+because the data and the instructions
+
+269
+00:08:50,480 --> 00:08:51,920
+don't have to compete for the same bus
+
+270
+00:08:51,920 --> 00:08:54,420
+with two separate paths, it's naturally going to run a bit faster
+
+271
+00:08:54,420 --> 00:08:54,980
+think about it, isn't that right?
+
+272
+00:08:54,980 --> 00:08:59,400
+So on some small microcontrollers,
+
+273
+00:08:59,400 --> 00:09:00,960
+on tiny processors,
+
+274
+00:09:00,960 --> 00:09:02,180
+the preference is to use the Harvard architecture
+
+275
+00:09:02,180 --> 00:09:05,220
+whereas large servers and these
+
+276
+00:09:05,220 --> 00:09:07,660
+things like these desktop machines,
+
+277
+00:09:07,660 --> 00:09:09,280
+compared to these small controllers,
+
+278
+00:09:09,280 --> 00:09:10,600
+they are already relatively large processors
+
+279
+00:09:10,600 --> 00:09:12,600
+so they use the von Neumann architecture,
+
+280
+00:09:12,600 --> 00:09:14,320
+but it's not absolute
+
+281
+00:09:14,320 --> 00:09:15,700
+That is to say, these two architectures
+
+282
+00:09:15,700 --> 00:09:16,940
+also see a certain amount of convergence
+
+283
+00:09:16,940 --> 00:09:18,440
+in today's designs.
+
+284
+00:09:18,440 --> 00:09:21,500
+Now, in the rest of this course,
+
+285
+00:09:21,500 --> 00:09:24,020
+we'll mainly focus on the von Neumann architecture
+
+286
+00:09:24,020 --> 00:09:24,900
+for our introduction.
+
+287
+00:09:24,900 --> 00:09:26,920
+Because some of you may have seen this stuff before,
+
+288
+00:09:26,920 --> 00:09:28,500
+or might come up and ask,
+
+289
+00:09:28,500 --> 00:09:30,240
+"So why aren't you teaching us the Harvard architecture?"
+
+290
+00:09:30,240 --> 00:09:31,060
+It's not that we won't cover it at all.
+
+291
+00:09:31,060 --> 00:09:32,060
+It's just that on this part,
+
+292
+00:09:32,060 --> 00:09:33,300
+we do have our limitations,
+
+293
+00:09:33,300 --> 00:09:35,120
+because we can't possibly lay it all out in full.
+
+294
+00:09:35,120 --> 00:09:37,000
+So everyone should just know that this is how it works
+
+295
+00:09:37,000 --> 00:09:41,480
+That's the second part of the hardware components,
+
+296
+00:09:41,480 --> 00:09:43,140
+which I've just briefly introduced to you.
+
+297
+00:09:43,140 --> 00:09:44,200
+All right.
+
+298
+00:09:44,200 --> 00:09:46,040
+Now, next,
+
+299
+00:09:46,040 --> 00:09:49,820
+we'll move on to the second block of this part,
+
+300
+00:09:49,820 --> 00:09:53,140
+which is about program storage and execution.
+
+301
+00:09:53,140 --> 00:09:57,240
+So actually,
+
+302
+00:09:57,240 --> 00:09:58,280
+that is to say, we,
+
+303
+00:09:58,280 --> 00:10:00,780
+as we talked about at the very beginning,
+
+304
+00:10:00,780 --> 00:10:01,800
+a hello world,
+
+305
+00:10:01,800 --> 00:10:03,640
+once you've written a program,
+
+306
+00:10:03,640 --> 00:10:05,640
+how does it actually get running in the end,
+
+307
+00:10:05,640 --> 00:10:07,520
+and how does a
+
+308
+00:10:07,520 --> 00:10:09,000
+hello world get printed on the screen?
+
+309
+00:10:09,000 --> 00:10:09,480
+Right?
+
+310
+00:10:09,480 --> 00:10:11,320
+So what we're really going to do
+
+311
+00:10:11,320 --> 00:10:12,280
+is take this part
+
+312
+00:10:12,280 --> 00:10:13,720
+and tie it all together and walk through it again.
+
+313
+00:10:13,720 --> 00:10:15,400
+So,
+
+314
+00:10:15,400 --> 00:10:16,460
+first, this diagram,
+
+315
+00:10:16,460 --> 00:10:17,560
+it's still the same diagram from before,
+
+316
+00:10:17,560 --> 00:10:18,400
+it's a diagram of
+
+317
+00:10:18,400 --> 00:10:20,760
+how a computer is put together, placed here.
+
+318
+00:10:20,760 --> 00:10:21,980
+So we,
+
+319
+00:10:21,980 --> 00:10:24,400
+let's suppose we've now written a hello.c,
+
+320
+00:10:24,400 --> 00:10:27,020
+so once this C source code is written,
+
+321
+00:10:27,020 --> 00:10:28,340
+Can we just run it directly?
+
+322
+00:10:28,340 --> 00:10:29,700
+Of course not.
+
+323
+00:10:29,700 --> 00:10:30,020
+Right?
+
+324
+00:10:30,020 --> 00:10:32,960
+What do we have to do with it first?
+
+325
+00:10:32,960 --> 00:10:36,160
+First we have to take it and
+
+326
+00:10:36,160 --> 00:10:38,900
+generate an executable program
+
+327
+00:10:38,900 --> 00:10:39,140
+Right?
+
+328
+00:10:39,140 --> 00:10:40,320
+On Linux,
+
+329
+00:10:40,320 --> 00:10:41,280
+it's called a.out
+
+330
+00:10:41,280 --> 00:10:42,520
+By default it's called a.out
+
+331
+00:10:42,520 --> 00:10:44,220
+Now what do we call this process?
+
+332
+00:10:44,220 --> 00:10:45,960
+It's called compilation and linking
+
+333
+00:10:45,960 --> 00:10:46,640
+Right?
+
+334
+00:10:46,640 --> 00:10:49,360
+We compile and link this thing,
+
+335
+00:10:49,360 --> 00:10:51,440
+and once we've generated an a.out,
+
+336
+00:10:51,440 --> 00:10:52,960
+we know this a.out,
+
+337
+00:10:52,960 --> 00:10:54,540
+this thing,
+
+338
+00:10:54,540 --> 00:10:56,440
+where is it placed now?
+
+339
+00:10:56,440 --> 00:10:58,740
+It's placed,
+
+340
+00:10:58,740 --> 00:11:00,940
+we'd say, on the hard disk.
+
+341
+00:11:00,940 --> 00:11:01,120
+Right?
+
+342
+00:11:01,120 --> 00:11:02,720
+So the stuff on the hard disk
+
+343
+00:11:02,720 --> 00:11:04,100
+does it just run directly?
+
+344
+00:11:04,100 --> 00:11:05,660
+Not quite.
+
+345
+00:11:05,660 --> 00:11:07,200
+We say that when we're
+
+346
+00:11:07,200 --> 00:11:08,760
+say you're in the share directory
+
+347
+00:11:08,760 --> 00:11:09,780
+and you type in a.out,
+
+348
+00:11:09,780 --> 00:11:10,560
+after you hit Enter,
+
+349
+00:11:10,560 --> 00:11:11,500
+what happens?
+
+350
+00:11:11,500 --> 00:11:14,560
+Well, this a.out
+
+351
+00:11:14,560 --> 00:11:16,140
+this program,
+
+352
+00:11:16,140 --> 00:11:16,980
+we need to first
+
+353
+00:11:16,980 --> 00:11:18,020
+load it into where?
+
+354
+00:11:18,020 --> 00:11:19,820
+Don't we need to first
+
+355
+00:11:19,820 --> 00:11:21,440
+load it into memory?
+
+356
+00:11:21,440 --> 00:11:21,700
+Right?
+
+357
+00:11:21,700 --> 00:11:24,680
+Now, this a.out,
+
+358
+00:11:24,680 --> 00:11:27,380
+it's an executable program.
+
+359
+00:11:27,380 --> 00:11:28,160
+Now, an executable program,
+
+360
+00:11:28,160 --> 00:11:29,540
+if you open it up,
+
+361
+00:11:29,540 --> 00:11:30,780
+No matter which text editor you use
+
+362
+00:11:30,780 --> 00:11:31,360
+if you open it up,
+
+363
+00:11:31,360 --> 00:11:33,120
+the contents are unreadable to us.
+
+364
+00:11:33,120 --> 00:11:34,760
+In fact, it's a binary thing.
+
+365
+00:11:34,760 --> 00:11:36,220
+Now this kind of thing
+
+366
+00:11:36,220 --> 00:11:37,940
+is actually machine instructions.
+
+367
+00:11:37,940 --> 00:11:42,020
+So these machine instructions,
+
+368
+00:11:42,020 --> 00:11:44,300
+they are placed one by one in this AD-OUT,
+
+369
+00:11:44,300 --> 00:11:45,720
+and loaded into memory.
+
+370
+00:11:45,720 --> 00:11:47,060
+Then next,
+
+371
+00:11:47,060 --> 00:11:48,880
+it starts being executed.
+
+372
+00:11:48,880 --> 00:11:50,680
+Now at this point during execution,
+
+373
+00:11:50,680 --> 00:11:51,760
+it involves what we just mentioned,
+
+374
+00:11:51,760 --> 00:11:52,520
+this control unit,
+
+375
+00:11:52,520 --> 00:11:53,320
+CU.
+
+376
+00:11:53,320 --> 00:11:54,940
+This control unit
+
+377
+00:11:54,940 --> 00:11:56,780
+will go into memory
+
+378
+00:11:56,780 --> 00:11:58,140
+and fetch these machine instructions
+
+379
+00:11:58,140 --> 00:11:59,500
+one by one.
+
+380
+00:11:59,500 --> 00:12:01,960
+And the fetched ones
+
+381
+00:12:01,960 --> 00:12:02,860
+This process,
+
+382
+00:12:02,860 --> 00:12:04,400
+we can actually think of it as
+
+383
+00:12:04,400 --> 00:12:07,880
+the whole process is
+
+384
+00:12:07,880 --> 00:12:08,720
+basically three steps.
+
+385
+00:12:08,720 --> 00:12:10,580
+The first step is called fetch,
+
+386
+00:12:10,580 --> 00:12:13,500
+the second step is called decode,
+
+387
+00:12:13,500 --> 00:12:14,500
+and the third step is execute.
+
+388
+00:12:14,500 --> 00:12:16,160
+So the control unit,
+
+389
+00:12:16,160 --> 00:12:17,640
+is really just doing these three things
+
+390
+00:12:17,640 --> 00:12:18,860
+over and over again.
+
+391
+00:12:18,860 --> 00:12:21,940
+Now, fetching,
+
+392
+00:12:21,940 --> 00:12:23,240
+is called fetch in English,
+
+393
+00:12:23,240 --> 00:12:24,420
+decode is called decode,
+
+394
+00:12:24,420 --> 00:12:25,700
+and execution is called execute.
+
+395
+00:12:25,700 --> 00:12:26,960
+Now, this fetch step,
+
+396
+00:12:26,960 --> 00:12:28,600
+basically,
+
+397
+00:12:28,600 --> 00:12:29,920
+takes the machine instruction,
+
+398
+00:12:29,920 --> 00:12:31,700
+and fetches it from memory into where?
+
+399
+00:12:31,700 --> 00:12:34,760
+It actually fetches it into a register.
+
+400
+00:12:34,760 --> 00:12:38,260
+Into a register.
+
+401
+00:12:38,260 --> 00:12:39,440
+That code,
+
+402
+00:12:39,440 --> 00:12:40,640
+basically, we have to translate it.
+
+403
+00:12:40,640 --> 00:12:41,580
+Because once it's fetched in,
+
+404
+00:12:41,580 --> 00:12:42,900
+this 0101 computer
+
+405
+00:12:42,900 --> 00:12:43,680
+has no idea what it means.
+
+406
+00:12:43,680 --> 00:12:45,400
+It definitely has to translate it,
+
+407
+00:12:45,400 --> 00:12:47,120
+translate it into an action it can recognize.
+
+408
+00:12:47,120 --> 00:12:48,500
+Then, the third step,
+
+409
+00:12:48,500 --> 00:12:50,020
+only then can it execute it,
+
+410
+00:12:50,020 --> 00:12:50,940
+right?
+
+411
+00:12:50,940 --> 00:12:52,660
+These are all fundamentals.
+
+412
+00:12:52,660 --> 00:12:55,200
+If you don't remember them very clearly,
+
+413
+00:12:55,200 --> 00:12:57,420
+let's quickly go over them again.
+
+414
+00:12:57,420 --> 00:12:58,800
+So this,
+
+415
+00:12:58,800 --> 00:13:01,760
+just does this over and over, one instruction at a time.
+
+416
+00:13:01,760 --> 00:13:07,560
+And this process,
+
+417
+00:13:07,560 --> 00:13:08,680
+is when the program starts executing.
+
+418
+00:13:08,680 --> 00:13:12,500
+But some of you might ask,
+
+419
+00:13:12,500 --> 00:13:13,860
+regarding this execution,
+
+420
+00:13:13,860 --> 00:13:15,360
+for example, some students say,
+
+421
+00:13:15,360 --> 00:13:18,200
+How is it that
+
+422
+00:13:18,200 --> 00:13:20,860
+it's as if someone is pushing it to do this?
+
+423
+00:13:20,860 --> 00:13:23,640
+So who is pushing it to do this?
+
+424
+00:13:23,640 --> 00:13:25,360
+Now this brings us to,
+
+425
+00:13:25,360 --> 00:13:27,020
+when we were just talking about
+
+426
+00:13:27,020 --> 00:13:29,260
+the composition of a computer,
+
+427
+00:13:29,260 --> 00:13:30,740
+there was one part I forgot to mention.
+
+428
+00:13:30,740 --> 00:13:32,320
+That is, there is actually one important
+
+429
+00:13:32,320 --> 00:13:33,760
+one important thing in a computer,
+
+430
+00:13:33,760 --> 00:13:35,180
+called a crystal oscillator.
+
+431
+00:13:35,180 --> 00:13:36,400
+It is also a piece of hardware,
+
+432
+00:13:36,400 --> 00:13:37,300
+and this hardware,
+
+433
+00:13:37,300 --> 00:13:38,460
+once power is turned on,
+
+434
+00:13:38,460 --> 00:13:40,840
+it produces things like pulses,
+
+435
+00:13:40,840 --> 00:13:42,260
+at a fixed frequency,
+
+436
+00:13:42,260 --> 00:13:44,260
+to drive our processor
+
+437
+00:13:44,260 --> 00:13:46,620
+to do that repeated cycle
+
+438
+00:13:46,620 --> 00:13:47,900
+of fetching,
+
+439
+00:13:47,900 --> 00:13:49,300
+decoding, and executing instructions,
+
+440
+00:13:49,300 --> 00:13:49,980
+right?
+
+441
+00:13:49,980 --> 00:13:52,100
+When you buy a computer or a phone,
+
+442
+00:13:52,100 --> 00:13:54,180
+you often ask the salesperson,
+
+443
+00:13:54,180 --> 00:13:56,800
+"What's the clock speed of this processor?"
+
+444
+00:13:56,800 --> 00:13:58,420
+You get what I mean, right?
+
+445
+00:13:58,420 --> 00:14:00,520
+The faster the clock frequency,
+
+446
+00:14:00,520 --> 00:14:03,280
+the speed is actually driven by this crystal oscillator thing,
+
+447
+00:14:03,280 --> 00:14:04,820
+that drives it.
+
+448
+00:14:04,820 --> 00:14:06,840
+So the higher the clock speed,
+
+449
+00:14:06,840 --> 00:14:08,360
+the faster the computer computes.
+
+450
+00:14:08,360 --> 00:14:09,280
+It's really just that simple.
+
+451
+00:14:09,280 --> 00:14:11,340
+And sometimes it's not enough for us, so we say,
+
+452
+00:14:11,340 --> 00:14:12,800
+"This frequency isn't enough, I want to overclock it."
+
+453
+00:14:12,800 --> 00:14:14,540
+I don't know if any of you have done that these days.
+
+454
+00:14:14,540 --> 00:14:16,200
+You buy a computer,
+
+455
+00:14:16,200 --> 00:14:18,160
+say it's 2GHz,
+
+456
+00:14:18,160 --> 00:14:19,820
+and you feel 2GHz isn't enough for gaming,
+
+457
+00:14:19,820 --> 00:14:21,660
+so you can go and overclock it.
+
+458
+00:14:21,660 --> 00:14:22,380
+That can be done.
+
+459
+00:14:22,380 --> 00:14:23,620
+Probably not as common now,
+
+460
+00:14:23,620 --> 00:14:24,300
+but in the past,
+
+461
+00:14:24,300 --> 00:14:25,980
+When you bought a computer
+
+462
+00:14:25,980 --> 00:14:26,780
+a lot of people would also
+
+463
+00:14:26,780 --> 00:14:27,520
+take this
+
+464
+00:14:27,520 --> 00:14:29,800
+whether they could modify their own computer
+
+465
+00:14:29,800 --> 00:14:31,240
+and overclock it
+
+466
+00:14:31,240 --> 00:14:32,320
+basically raise its frequency
+
+467
+00:14:32,320 --> 00:14:34,360
+as a way of showing off their skills
+
+468
+00:14:34,360 --> 00:14:36,740
+I don't know if any of you still do this now
+
+469
+00:14:36,740 --> 00:14:38,520
+Back then, I spent the same amount of money
+
+470
+00:14:38,520 --> 00:14:40,060
+and bought the same computer
+
+471
+00:14:40,060 --> 00:14:41,840
+because when it left the factory,
+
+472
+00:14:41,840 --> 00:14:42,580
+its frequency was fixed
+
+473
+00:14:42,580 --> 00:14:45,220
+Now, some of those enthusiasts
+
+474
+00:14:45,220 --> 00:14:46,640
+who were more technically skilled
+
+475
+00:14:46,640 --> 00:14:48,500
+would go into the settings on that CPU,
+
+476
+00:14:48,500 --> 00:14:49,220
+make some changes,
+
+477
+00:14:49,220 --> 00:14:50,340
+and raise its frequency
+
+478
+00:14:50,340 --> 00:14:52,060
+so the CPU would run faster, right?
+
+479
+00:14:52,060 --> 00:14:53,660
+And that made them very happy
+
+480
+00:14:53,660 --> 00:14:54,720
+But doing this...
+
+481
+00:14:54,720 --> 00:14:56,080
+Actually, it's not all that great either
+
+482
+00:14:56,080 --> 00:14:56,860
+because the frequency is high
+
+483
+00:14:56,860 --> 00:14:58,560
+and if it gets too high, the heat can get pretty intense too
+
+484
+00:14:58,560 --> 00:14:59,280
+Sometimes if things go wrong,
+
+485
+00:14:59,280 --> 00:15:00,800
+the computer just burns out.
+
+486
+00:15:00,800 --> 00:15:02,720
+So it's a bit of a gamble for us.
+
+487
+00:15:02,720 --> 00:15:05,220
+But from this we now know,
+
+488
+00:15:05,220 --> 00:15:05,880
+that inside a computer,
+
+489
+00:15:05,880 --> 00:15:07,300
+there's actually this precision thing going on.
+
+490
+00:15:07,300 --> 00:15:10,760
+So overall,
+
+491
+00:15:10,760 --> 00:15:12,020
+our program here,
+
+492
+00:15:12,020 --> 00:15:14,760
+this is how it runs.
+
+493
+00:15:14,760 --> 00:15:15,160
+This
+
+494
+00:15:15,160 --> 00:15:18,180
+is our process of
+
+495
+00:15:18,180 --> 00:15:19,580
+storing and executing a program.
+
+496
+00:15:19,580 --> 00:15:21,560
+Good.
+
+497
+00:15:21,560 --> 00:15:25,900
+Now that we've got this concept down,
+
+498
+00:15:25,900 --> 00:15:28,500
+we
+
+499
+00:15:28,500 --> 00:15:32,510
+move on to the next chapter,
+
+500
+00:15:32,510 --> 00:15:33,310
+which is about
+
+501
+00:15:33,310 --> 00:15:35,810
+Because in the end, we still have to write programs.
+
+502
+00:15:35,810 --> 00:15:37,590
+So as for programming languages,
+
+503
+00:15:37,590 --> 00:15:40,090
+just understanding this hardware
+
+504
+00:15:40,090 --> 00:15:40,750
+really isn't enough.
+
+505
+00:15:40,750 --> 00:15:43,790
+We also need to ask how these programming languages were designed in the first place.
+
+506
+00:15:43,790 --> 00:15:46,850
+Because, as we know, in everything we just covered,
+
+507
+00:15:46,850 --> 00:15:48,890
+we touched on things like machine instructions,
+
+508
+00:15:48,890 --> 00:15:50,790
+and also things like the C language.
+
+509
+00:15:50,790 --> 00:15:51,670
+Now, this,
+
+510
+00:15:51,670 --> 00:15:54,390
+this,
+
+511
+00:15:54,390 --> 00:15:56,990
+that is, machine language,
+
+512
+00:15:56,990 --> 00:15:57,970
+we...
+
+513
+00:15:57,970 --> 00:15:59,530
+Because later on,
+
+514
+00:15:59,530 --> 00:16:00,310
+what I'll be talking to you about
+
+515
+00:16:00,310 --> 00:16:01,150
+will mainly be
+
+516
+00:16:01,150 --> 00:16:03,090
+introducing you to some of this kind of
+
+517
+00:16:03,090 --> 00:16:04,370
+OS-level development.
+
+518
+00:16:04,370 --> 00:16:05,590
+And that involves low-level languages.
+
+519
+00:16:05,590 --> 00:16:06,890
+So this low-level machine language,
+
+520
+00:16:06,890 --> 00:16:08,150
+what exactly is it?
+
+521
+00:16:08,150 --> 00:16:09,730
+Our understanding of it
+
+522
+00:16:09,730 --> 00:16:10,550
+here
+
+523
+00:16:10,550 --> 00:16:11,250
+I'll
+
+524
+00:16:11,250 --> 00:16:13,290
+go into a bit more detail for you
+
+525
+00:16:13,290 --> 00:16:15,850
+So next,
+
+526
+00:16:15,850 --> 00:16:17,250
+let's use a
+
+527
+00:16:17,250 --> 00:16:18,590
+made-up example
+
+528
+00:16:18,590 --> 00:16:21,930
+to get a feel for
+
+529
+00:16:21,930 --> 00:16:22,950
+what machine language
+
+530
+00:16:22,950 --> 00:16:24,830
+actually is as a thing
+
+531
+00:16:24,830 --> 00:16:29,710
+Now, to keep this
+
+532
+00:16:29,710 --> 00:16:31,730
+a bit simpler to explain,
+
+533
+00:16:31,730 --> 00:16:34,830
+we'll invent a small computer
+
+534
+00:16:34,830 --> 00:16:36,650
+This small computer
+
+535
+00:16:36,650 --> 00:16:37,530
+is very simple.
+
+536
+00:16:37,530 --> 00:16:37,950
+As you can see,
+
+537
+00:16:37,950 --> 00:16:39,830
+it's just the things I've drawn in the picture.
+
+538
+00:16:39,830 --> 00:16:41,630
+What is it made of?
+
+539
+00:16:41,630 --> 00:16:43,390
+Well, inside it,
+
+540
+00:16:43,390 --> 00:16:44,330
+there are only two calculators
+
+541
+00:16:44,330 --> 00:16:45,710
+And then,
+
+542
+00:16:45,710 --> 00:16:46,850
+there's an arithmetic logic unit,
+
+543
+00:16:46,850 --> 00:16:47,950
+and then,
+
+544
+00:16:47,950 --> 00:16:49,190
+over here there's a control unit.
+
+545
+00:16:49,190 --> 00:16:52,190
+Inside this control unit,
+
+546
+00:16:52,190 --> 00:16:52,730
+it's also very simple:
+
+547
+00:16:52,730 --> 00:16:55,130
+there's just one instruction register,
+
+548
+00:16:55,130 --> 00:16:58,590
+and something called a program counter,
+
+549
+00:16:58,590 --> 00:16:59,210
+that kind of thing.
+
+550
+00:16:59,210 --> 00:17:01,810
+This is what we commonly call the PC.
+
+551
+00:17:01,810 --> 00:17:02,930
+What it actually does,
+
+552
+00:17:02,930 --> 00:17:05,790
+is record where our program is currently executing,
+
+553
+00:17:05,790 --> 00:17:07,910
+the idea of that position.
+
+554
+00:17:07,910 --> 00:17:09,170
+It's also a register.
+
+555
+00:17:09,170 --> 00:17:09,790
+Now,
+
+556
+00:17:09,790 --> 00:17:12,830
+on the outside,
+
+557
+00:17:12,830 --> 00:17:13,590
+there's a block of memory,
+
+558
+00:17:13,590 --> 00:17:15,150
+and this memory,
+
+559
+00:17:15,150 --> 00:17:16,010
+its contents,
+
+560
+00:17:16,010 --> 00:17:16,790
+are also limited.
+
+561
+00:17:16,790 --> 00:17:19,390
+Actually, if you guys
+
+562
+00:17:19,390 --> 00:17:22,230
+are interested in this kind of low-level hardware
+
+563
+00:17:22,230 --> 00:17:23,870
+and computing stuff,
+
+564
+00:17:23,870 --> 00:17:24,990
+if you're really into it,
+
+565
+00:17:24,990 --> 00:17:25,850
+if you're a real enthusiast,
+
+566
+00:17:25,850 --> 00:17:27,210
+you can search online.
+
+567
+00:17:27,210 --> 00:17:27,610
+That is to say,
+
+568
+00:17:27,610 --> 00:17:29,930
+there are people on the internet
+
+569
+00:17:29,930 --> 00:17:33,530
+who use breadboards—
+
+570
+00:17:33,530 --> 00:17:34,510
+have you all heard of those?
+
+571
+00:17:34,510 --> 00:17:35,590
+Basically, breadboards,
+
+572
+00:17:35,590 --> 00:17:37,230
+and DuPont wires—
+
+573
+00:17:37,230 --> 00:17:37,890
+basically, connecting wires—
+
+574
+00:17:37,890 --> 00:17:39,290
+and very simple electronic components,
+
+575
+00:17:39,290 --> 00:17:40,890
+and they can literally build
+
+576
+00:17:40,890 --> 00:17:41,790
+a CPU by hand,
+
+577
+00:17:41,790 --> 00:17:44,230
+a 4-bit one,
+
+578
+00:17:44,230 --> 00:17:45,650
+or even an 8-bit CPU.
+
+579
+00:17:45,650 --> 00:17:47,550
+Because as we know,
+
+580
+00:17:47,550 --> 00:17:49,810
+a CPU is essentially just transistors.
+
+581
+00:17:49,810 --> 00:17:50,350
+Right?
+
+582
+00:17:50,350 --> 00:17:51,530
+So this thing, the transistor,
+
+583
+00:17:51,530 --> 00:17:52,750
+you can actually assemble it yourself,
+
+584
+00:17:52,750 --> 00:17:54,010
+and you can build one.
+
+585
+00:17:54,010 --> 00:17:55,610
+Of course, with an integrated circuit,
+
+586
+00:17:55,610 --> 00:17:56,870
+it's just that the transistors themselves are
+
+587
+00:17:56,870 --> 00:17:58,270
+etched onto this silicon chip.
+
+588
+00:17:58,270 --> 00:17:59,930
+We can absolutely wire it up ourselves
+
+589
+00:17:59,930 --> 00:18:02,790
+to make a CPU about this big.
+
+590
+00:18:02,790 --> 00:18:04,370
+It's just that this CPU would be very weak as well,
+
+591
+00:18:04,370 --> 00:18:05,050
+right?
+
+592
+00:18:05,050 --> 00:18:08,190
+If I gave you this kind of model right now,
+
+593
+00:18:08,190 --> 00:18:10,190
+you could actually build it out of that too.
+
+594
+00:18:10,190 --> 00:18:10,930
+But of course, for us,
+
+595
+00:18:10,930 --> 00:18:13,930
+this is getting into more hardcore stuff,
+
+596
+00:18:13,930 --> 00:18:14,750
+hardware stuff.
+
+597
+00:18:14,750 --> 00:18:17,230
+We won't have everyone tinker with that here.
+
+598
+00:18:17,230 --> 00:18:19,290
+So let's assume we have this kind of processor,
+
+599
+00:18:19,290 --> 00:18:20,170
+we built it ourselves,
+
+600
+00:18:20,170 --> 00:18:21,650
+and there are two registers in here.
+
+601
+00:18:21,650 --> 00:18:22,890
+A processing unit,
+
+602
+00:18:22,890 --> 00:18:24,130
+and a control unit.
+
+603
+00:18:24,130 --> 00:18:28,430
+Now, the functionality we ask it to implement is also very simple.
+
+604
+00:18:28,430 --> 00:18:30,230
+We don't want it to do anything too complicated either.
+
+605
+00:18:30,230 --> 00:18:32,930
+For example, let's say it's an 8-bit computer.
+
+606
+00:18:32,930 --> 00:18:34,290
+So what do we mean by 8-bit?
+
+607
+00:18:34,290 --> 00:18:36,350
+Well, you can think of it as these registers,
+
+608
+00:18:36,350 --> 00:18:38,730
+each one being only 8 bits long.
+
+609
+00:18:38,730 --> 00:18:43,910
+Its functionality only needs to support addition, and that's enough.
+
+610
+00:18:43,910 --> 00:18:45,650
+So if this thing,
+
+611
+00:18:45,650 --> 00:18:47,450
+asked you to build a CPU out of it,
+
+612
+00:18:47,450 --> 00:18:48,510
+you could absolutely pull it off.
+
+613
+00:18:48,510 --> 00:18:50,010
+Because its functionality is really, truly simple.
+
+614
+00:18:50,010 --> 00:18:52,450
+Now, think about this, everyone.
+
+615
+00:18:52,450 --> 00:18:54,950
+If you were given these components,
+
+616
+00:18:54,950 --> 00:18:58,350
+and asked to complete a simple addition operation,
+
+617
+00:18:58,350 --> 00:18:59,830
+how would that actually happen?
+
+618
+00:18:59,830 --> 00:19:02,190
+I mean, if you write it in a high-level language like C,
+
+619
+00:19:02,190 --> 00:19:04,370
+it's nothing more than a single line: C = A + B.
+
+620
+00:19:04,370 --> 00:19:05,070
+This statement,
+
+621
+00:19:05,070 --> 00:19:07,690
+Now we need to implement this statement in machine language
+
+622
+00:19:07,690 --> 00:19:08,510
+to actually make it work
+
+623
+00:19:08,510 --> 00:19:12,270
+Have you thought about how we would do that?
+
+624
+00:19:12,270 --> 00:19:15,340
+Actually, it's quite simple
+
+625
+00:19:15,340 --> 00:19:18,000
+Think about it: suppose we have
+
+626
+00:19:18,000 --> 00:19:19,140
+two registers
+
+627
+00:19:19,140 --> 00:19:19,820
+and these things
+
+628
+00:19:19,820 --> 00:19:22,880
+So roughly, how many things do we need to do?
+
+629
+00:19:22,880 --> 00:19:25,480
+Actually, just about three or four steps
+
+630
+00:19:25,480 --> 00:19:29,960
+Think about it: suppose we want to
+
+631
+00:19:29,960 --> 00:19:32,480
+just a moment
+
+632
+00:19:32,480 --> 00:19:35,480
+Suppose we now want to implement a
+
+633
+00:19:35,480 --> 00:19:38,360
+A equals B plus C
+
+634
+00:19:38,360 --> 00:19:40,420
+a function like that
+
+635
+00:19:40,420 --> 00:19:46,270
+So the first thing we need to do
+
+636
+00:19:46,270 --> 00:19:49,390
+think about it: is nothing more than taking the data B and C
+
+637
+00:19:49,390 --> 00:19:51,850
+and putting them into registers inside the CPU
+
+638
+00:19:51,850 --> 00:19:52,410
+Isn't that right?
+
+639
+00:19:52,410 --> 00:19:55,850
+Now, generally speaking,
+
+640
+00:19:55,850 --> 00:19:57,310
+when we talk about data
+
+641
+00:19:57,310 --> 00:19:59,890
+It has to be put into memory first, of course.
+
+642
+00:19:59,890 --> 00:20:01,770
+So after the CPU powers on,
+
+643
+00:20:01,770 --> 00:20:03,530
+everything inside it is empty.
+
+644
+00:20:03,530 --> 00:20:05,170
+So the first thing we do,
+
+645
+00:20:05,170 --> 00:20:08,230
+probably nothing more than taking a piece of data like B,
+
+646
+00:20:08,230 --> 00:20:11,650
+moving it from memory into the CPU first,
+
+647
+00:20:11,650 --> 00:20:13,370
+and then the second step,
+
+648
+00:20:13,370 --> 00:20:14,010
+is nothing more than
+
+649
+00:20:14,010 --> 00:20:15,510
+taking another piece of data like C,
+
+650
+00:20:15,510 --> 00:20:18,350
+and moving it from memory into the CPU as well.
+
+651
+00:20:18,350 --> 00:20:21,550
+Then at this point our arithmetic logic unit,
+
+652
+00:20:21,550 --> 00:20:23,790
+can, because the arithmetic logic unit,
+
+653
+00:20:23,790 --> 00:20:24,970
+it only accesses registers;
+
+654
+00:20:24,970 --> 00:20:27,130
+it cannot directly access external memory.
+
+655
+00:20:27,130 --> 00:20:29,130
+So what we need to do, the first thing,
+
+656
+00:20:29,130 --> 00:20:30,770
+is to take the data from memory,
+
+657
+00:20:30,770 --> 00:20:32,350
+and move it into the registers first.
+
+658
+00:20:32,350 --> 00:20:33,710
+Suppose this register holds B,
+
+659
+00:20:33,710 --> 00:20:35,030
+and this one holds C.
+
+660
+00:20:35,030 --> 00:20:38,290
+Then what comes next is to perform an addition operation.
+
+661
+00:20:38,290 --> 00:20:39,350
+So the addition operation, we said,
+
+662
+00:20:39,350 --> 00:20:41,490
+is what the arithmetic logic unit has to do.
+
+663
+00:20:41,490 --> 00:20:43,790
+So it can take B and C
+
+664
+00:20:43,790 --> 00:20:45,330
+out of these registers,
+
+665
+00:20:45,330 --> 00:20:47,030
+then compute them and get an A.
+
+666
+00:20:47,030 --> 00:20:48,510
+So where do we put A?
+
+667
+00:20:48,510 --> 00:20:51,030
+Right now we only have two registers.
+
+668
+00:20:51,030 --> 00:20:52,310
+Where do we put A?
+
+669
+00:20:52,310 --> 00:20:57,360
+Actually, we just find any register,
+
+670
+00:20:57,360 --> 00:20:59,180
+for example, replace B with A, and that's it.
+
+671
+00:20:59,180 --> 00:20:59,760
+Think about it, right?
+
+672
+00:20:59,760 --> 00:21:01,500
+Because B has already been used up,
+
+673
+00:21:01,500 --> 00:21:02,060
+it's no longer useful.
+
+674
+00:21:02,060 --> 00:21:02,580
+Think about it, right?
+
+675
+00:21:02,580 --> 00:21:04,300
+So we put A here.
+
+676
+00:21:04,300 --> 00:21:05,220
+Then finally,
+
+677
+00:21:05,220 --> 00:21:06,060
+after we're done thinking,
+
+678
+00:21:06,060 --> 00:21:07,720
+we say we still need to do what with it?
+
+679
+00:21:07,720 --> 00:21:10,720
+Find a way to move this A out
+
+680
+00:21:10,720 --> 00:21:11,380
+and save it.
+
+681
+00:21:11,380 --> 00:21:12,980
+And that's basically it — we're done.
+
+682
+00:21:12,980 --> 00:21:13,960
+Of course,
+
+683
+00:21:13,960 --> 00:21:15,500
+if you were to design
+
+684
+00:21:15,500 --> 00:21:16,740
+your own small CPU,
+
+685
+00:21:16,740 --> 00:21:18,720
+to accomplish something this simple,
+
+686
+00:21:18,720 --> 00:21:20,420
+you really just need to implement these four instructions.
+
+687
+00:21:20,420 --> 00:21:25,920
+So how should we go about designing these four instructions?
+
+688
+00:21:25,920 --> 00:21:27,680
+Why do we care
+
+689
+00:21:27,680 --> 00:21:28,860
+about how machine instructions are designed?
+
+690
+00:21:28,860 --> 00:21:30,680
+Because when we talk about assembly later on,
+
+691
+00:21:30,680 --> 00:21:32,960
+it's actually closely tied to this.
+
+692
+00:21:32,960 --> 00:21:34,940
+So it's worth everyone getting familiar with
+
+693
+00:21:34,940 --> 00:21:36,800
+some concepts related to machine instructions.
+
+694
+00:21:36,800 --> 00:21:41,200
+Now, the four steps I mentioned earlier
+
+695
+00:21:41,200 --> 00:21:42,240
+actually correspond to
+
+696
+00:21:42,240 --> 00:21:45,320
+these descriptions up here.
+
+697
+00:21:45,320 --> 00:21:46,840
+So the first step,
+
+698
+00:21:46,840 --> 00:21:48,180
+as we just said,
+
+699
+00:21:48,180 --> 00:21:48,940
+what is the first step?
+
+700
+00:21:48,940 --> 00:21:51,080
+Think back to what we just talked about.
+
+701
+00:21:51,080 --> 00:21:53,780
+The first step is to take that b
+
+702
+00:21:53,780 --> 00:21:54,620
+this data,
+
+703
+00:21:54,620 --> 00:21:59,820
+fetch it out of memory,
+
+704
+00:21:59,820 --> 00:22:02,520
+and put it into the first register.
+
+705
+00:22:02,520 --> 00:22:03,060
+Think about it, isn't that right?
+
+706
+00:22:03,060 --> 00:22:05,540
+But this memory,
+
+707
+00:22:05,540 --> 00:22:06,900
+how do we access memory?
+
+708
+00:22:06,900 --> 00:22:08,140
+We know that when a computer accesses
+
+709
+00:22:08,140 --> 00:22:09,120
+these things outside the CPU,
+
+710
+00:22:09,120 --> 00:22:10,820
+it accesses everything through addresses.
+
+711
+00:22:10,820 --> 00:22:13,180
+I need to know whether it's
+
+712
+00:22:13,180 --> 00:22:15,340
+the first byte or the second byte in that memory.
+
+713
+00:22:15,340 --> 00:22:17,640
+So, to sum it up,
+
+714
+00:22:17,640 --> 00:22:18,400
+it's really just this:
+
+715
+00:22:18,400 --> 00:22:20,540
+we have to access an address,
+
+716
+00:22:20,540 --> 00:22:21,880
+and then from that address,
+
+717
+00:22:21,880 --> 00:22:24,360
+take a piece of data and load it,
+
+718
+00:22:24,360 --> 00:22:27,500
+load it into a register.
+
+719
+00:22:27,500 --> 00:22:31,580
+That's the first instruction.
+
+720
+00:22:31,580 --> 00:22:32,980
+Now, what about the second instruction?
+
+721
+00:22:32,980 --> 00:22:34,680
+It's similar; you just swap it out.
+
+722
+00:22:34,680 --> 00:22:37,000
+Load it from another address
+
+723
+00:22:37,000 --> 00:22:39,360
+into this register.
+
+724
+00:22:39,360 --> 00:22:40,660
+Now, the third step,
+
+725
+00:22:40,660 --> 00:22:42,140
+is to perform an addition operation.
+
+726
+00:22:42,140 --> 00:22:45,100
+Take the values in two registers,
+
+727
+00:22:45,100 --> 00:22:46,700
+and after adding them together,
+
+728
+00:22:46,700 --> 00:22:48,140
+the result, as I just said,
+
+729
+00:22:48,140 --> 00:22:50,480
+just use it to replace one of the registers.
+
+730
+00:22:50,480 --> 00:22:51,800
+So the third step,
+
+731
+00:22:51,800 --> 00:22:52,640
+the final step,
+
+732
+00:22:52,640 --> 00:22:53,820
+is to take this result,
+
+733
+00:22:53,820 --> 00:22:55,700
+from register 0,
+
+734
+00:22:55,700 --> 00:22:57,920
+and store it,
+
+735
+00:22:57,920 --> 00:22:59,700
+putting it out into memory.
+
+736
+00:22:59,700 --> 00:23:01,780
+Now this,
+
+737
+00:23:01,780 --> 00:23:03,940
+let's take a look at this instruction.
+
+738
+00:23:03,940 --> 00:23:04,380
+How does it work?
+
+739
+00:23:04,380 --> 00:23:05,240
+If we ourselves,
+
+740
+00:23:05,240 --> 00:23:06,620
+once the hardware is done,
+
+741
+00:23:06,620 --> 00:23:08,260
+How do we design instructions?
+
+742
+00:23:08,260 --> 00:23:09,280
+So this
+
+743
+00:23:09,280 --> 00:23:13,020
+because as we just said,
+
+744
+00:23:13,020 --> 00:23:13,660
+this instruction
+
+745
+00:23:13,660 --> 00:23:14,520
+is placed in memory,
+
+746
+00:23:14,520 --> 00:23:16,140
+and it's also eight bits.
+
+747
+00:23:16,140 --> 00:23:17,480
+So we need to design
+
+748
+00:23:17,480 --> 00:23:18,640
+how these eight bits
+
+749
+00:23:18,640 --> 00:23:20,820
+can express this concept.
+
+750
+00:23:20,820 --> 00:23:21,500
+So really, we
+
+751
+00:23:21,500 --> 00:23:22,880
+have to design this.
+
+752
+00:23:22,880 --> 00:23:26,660
+Now these actions like this,
+
+753
+00:23:26,660 --> 00:23:28,600
+load, add, store,
+
+754
+00:23:28,600 --> 00:23:29,780
+these are actions,
+
+755
+00:23:29,780 --> 00:23:30,280
+wouldn't you say?
+
+756
+00:23:30,280 --> 00:23:31,360
+This kind of action,
+
+757
+00:23:31,360 --> 00:23:32,660
+in our computer's
+
+758
+00:23:32,660 --> 00:23:34,020
+terminology,
+
+759
+00:23:34,020 --> 00:23:34,740
+we call it
+
+760
+00:23:34,740 --> 00:23:35,820
+we call it opcode.
+
+761
+00:23:35,820 --> 00:23:37,680
+That is, the operation, the opcode.
+
+762
+00:23:37,680 --> 00:23:39,120
+In other words, it represents a kind of action.
+
+763
+00:23:39,120 --> 00:23:41,140
+Now, in a computer,
+
+764
+00:23:41,140 --> 00:23:41,660
+everything,
+
+765
+00:23:41,660 --> 00:23:43,740
+absolutely everything, is represented as 0s and 1s.
+
+766
+00:23:43,740 --> 00:23:45,960
+So when it comes to this action,
+
+767
+00:23:45,960 --> 00:23:47,340
+how do we represent it?
+
+768
+00:23:47,340 --> 00:23:48,400
+Well, right now,
+
+769
+00:23:48,400 --> 00:23:49,640
+let's take an instruction,
+
+770
+00:23:49,640 --> 00:23:50,600
+suppose our instruction
+
+771
+00:23:50,600 --> 00:23:52,240
+is 8 bits long,
+
+772
+00:23:52,240 --> 00:23:53,300
+so one bit,
+
+773
+00:23:53,300 --> 00:23:53,720
+one bit,
+
+774
+00:23:53,720 --> 00:23:54,240
+8 bits.
+
+775
+00:23:54,240 --> 00:23:56,040
+Then we can lay it out like this.
+
+776
+00:23:56,040 --> 00:23:57,180
+For example, we could specify that
+
+777
+00:23:57,180 --> 00:23:59,420
+the two lowest-order bits at the front,
+
+778
+00:23:59,420 --> 00:24:00,580
+the 01, these two bits,
+
+779
+00:24:00,580 --> 00:24:02,880
+are used to represent this action.
+
+780
+00:24:02,880 --> 00:24:03,460
+Now, as you know,
+
+781
+00:24:03,460 --> 00:24:04,260
+Two bits
+
+782
+00:24:04,260 --> 00:24:06,080
+Actually, in our computer,
+
+783
+00:24:06,080 --> 00:24:06,720
+that's already enough.
+
+784
+00:24:06,720 --> 00:24:07,660
+Because with two bits,
+
+785
+00:24:07,660 --> 00:24:09,380
+how many operations can you express?
+
+786
+00:24:09,380 --> 00:24:12,120
+You can express four operations.
+
+787
+00:24:12,120 --> 00:24:12,640
+Think about it, right?
+
+788
+00:24:12,640 --> 00:24:15,260
+00 01 10 11
+
+789
+00:24:15,260 --> 00:24:16,620
+Now, these four operations
+
+790
+00:24:16,620 --> 00:24:18,260
+on our computer,
+
+791
+00:24:18,260 --> 00:24:18,880
+are already enough.
+
+792
+00:24:18,880 --> 00:24:19,060
+Why?
+
+793
+00:24:19,060 --> 00:24:20,560
+Because after we analyzed it,
+
+794
+00:24:20,560 --> 00:24:22,260
+we found that we only need a few operations,
+
+795
+00:24:22,260 --> 00:24:24,020
+just three:
+
+796
+00:24:24,020 --> 00:24:26,800
+load, add, and store.
+
+797
+00:24:26,800 --> 00:24:27,940
+Think about it, right?
+
+798
+00:24:27,940 --> 00:24:30,300
+So, in practice, when we use the instruction,
+
+799
+00:24:30,300 --> 00:24:32,480
+we only need to use two of its bits.
+
+800
+00:24:32,480 --> 00:24:33,860
+We only use two of its bits
+
+801
+00:24:33,860 --> 00:24:34,880
+is actually enough. So we just lay out a plan. That is, we use these two low-order bits to encode the action. So for the first command, we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+802
+00:24:34,880 --> 00:24:36,480
+So we just lay out a plan. That is, we use these two low-order bits to encode the action. So for the first command, we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+803
+00:24:36,480 --> 00:24:38,640
+That is, we use these two low-order bits to encode the action. So for the first command, we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+804
+00:24:38,640 --> 00:24:40,140
+to encode the action. So for the first command, we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+805
+00:24:40,140 --> 00:24:43,600
+So for the first command, we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+806
+00:24:43,600 --> 00:24:45,060
+we just said the action is load. But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+807
+00:24:45,060 --> 00:24:46,640
+But we also need to specify who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+808
+00:24:46,640 --> 00:24:48,580
+who is the object being operated on. Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+809
+00:24:48,580 --> 00:24:49,740
+Actually, the object we operate on involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+810
+00:24:49,740 --> 00:24:51,620
+involves a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+811
+00:24:51,620 --> 00:24:54,040
+a register and an address in here. So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+812
+00:24:54,040 --> 00:24:58,260
+So we take the remaining six bits and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+813
+00:24:58,260 --> 00:25:00,340
+and split them up. These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+814
+00:25:00,340 --> 00:25:02,400
+These two bits hold the register number, and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+815
+00:25:02,400 --> 00:25:05,080
+and the four bits after that hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+816
+00:25:05,080 --> 00:25:05,820
+hold the address. Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+817
+00:25:05,820 --> 00:25:08,080
+Now what does this actually mean? It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+818
+00:25:08,080 --> 00:25:10,640
+It means how many registers can we address at most? Isn't it that we can only address at most four registers?
+
+819
+00:25:10,640 --> 00:25:13,850
+Isn't it that we can only address at most four registers?
+
+820
+00:25:13,850 --> 00:25:14,650
+four registers?
+
+821
+00:25:14,650 --> 00:25:16,990
+Because the register codes can only be 00,
+
+822
+00:25:16,990 --> 00:25:18,270
+01, 10, and 11.
+
+823
+00:25:18,270 --> 00:25:21,370
+But these four registers are actually enough for us.
+
+824
+00:25:21,370 --> 00:25:21,550
+Why?
+
+825
+00:25:21,550 --> 00:25:25,030
+Because in the design we have now, there are only a few registers at most.
+
+826
+00:25:25,030 --> 00:25:26,810
+Only two registers.
+
+827
+00:25:26,810 --> 00:25:28,590
+So in our design,
+
+828
+00:25:28,590 --> 00:25:32,570
+putting these two bits
+
+829
+00:25:32,570 --> 00:25:33,290
+is actually enough.
+
+830
+00:25:33,290 --> 00:25:33,710
+Right, everyone?
+
+831
+00:25:33,710 --> 00:25:36,010
+So,
+
+832
+00:25:36,010 --> 00:25:38,690
+this register only needs to hold two bits,
+
+833
+00:25:38,690 --> 00:25:41,110
+and then for the address we set aside four bits.
+
+834
+00:25:41,110 --> 00:25:41,850
+With four bits,
+
+835
+00:25:41,850 --> 00:25:44,670
+think about it — how many bytes of range can we access?
+
+836
+00:25:44,670 --> 00:25:47,630
+Right now, because this is an introductory course,
+
+837
+00:25:47,630 --> 00:25:48,810
+we're designing low-level development,
+
+838
+00:25:48,810 --> 00:25:53,710
+so you'll probably need to cover these concepts a bit more.
+
+839
+00:25:53,710 --> 00:25:56,290
+Because if everyone were developing entirely in a high-level language,
+
+840
+00:25:56,290 --> 00:25:57,970
+these low-level things would probably get covered less.
+
+841
+00:25:57,970 --> 00:25:59,730
+that's the binary handling
+
+842
+00:25:59,730 --> 00:26:01,030
+we're still playing around here
+
+843
+00:26:01,030 --> 00:26:03,150
+I mean these 4 bits
+
+844
+00:26:03,150 --> 00:26:04,650
+how many do you think we can access
+
+845
+00:26:04,650 --> 00:26:07,850
+how many numbers can 4 bits represent
+
+846
+00:26:07,850 --> 00:26:08,670
+think about it
+
+847
+00:26:08,670 --> 00:26:10,890
+they can represent 16 numbers
+
+848
+00:26:10,890 --> 00:26:12,310
+so that means this computer of ours
+
+849
+00:26:12,310 --> 00:26:13,710
+can access at most how many bytes
+
+850
+00:26:13,710 --> 00:26:15,890
+only 16 bytes
+
+851
+00:26:15,890 --> 00:26:16,830
+so primitive
+
+852
+00:26:16,830 --> 00:26:17,010
+isn't it
+
+853
+00:26:17,010 --> 00:26:18,370
+but our
+
+854
+00:26:18,370 --> 00:26:20,110
+our complex computer here
+
+855
+00:26:20,110 --> 00:26:20,830
+this IT world
+
+856
+00:26:20,830 --> 00:26:22,710
+is actually built up bit by bit like this
+
+857
+00:26:22,710 --> 00:26:23,310
+don't you think
+
+858
+00:26:23,310 --> 00:26:25,710
+by learning these simple things
+
+859
+00:26:25,710 --> 00:26:26,850
+and then extrapolating from them
+
+860
+00:26:26,850 --> 00:26:28,130
+I think if you go and learn some
+
+861
+00:26:28,130 --> 00:26:29,850
+These are the fundamentals.
+
+862
+00:26:29,850 --> 00:26:30,830
+Otherwise,
+
+863
+00:26:30,830 --> 00:26:31,990
+if you don't lay a solid foundation,
+
+864
+00:26:31,990 --> 00:26:33,470
+and then go on to tackle advanced stuff,
+
+865
+00:26:33,470 --> 00:26:34,630
+artificial intelligence and things like that,
+
+866
+00:26:34,630 --> 00:26:39,870
+a lot of it may actually end up hindering you instead of helping.
+
+867
+00:26:39,870 --> 00:26:42,950
+So what we really hope is that through this course,
+
+868
+00:26:42,950 --> 00:26:45,770
+you'll get a sense of how computers actually came about.
+
+869
+00:26:45,770 --> 00:26:49,090
+Now, this first instruction,
+
+870
+00:26:49,090 --> 00:26:50,210
+we've actually designed already.
+
+871
+00:26:50,210 --> 00:26:54,430
+That is, we can use the low 2 bits to represent the opcode,
+
+872
+00:26:54,430 --> 00:26:58,510
+and then bits 2 and 3 in the middle to represent registers.
+
+873
+00:26:58,510 --> 00:26:59,450
+Then,
+
+874
+00:26:59,450 --> 00:27:00,970
+the first register,
+
+875
+00:27:00,970 --> 00:27:01,810
+we number it 00.
+
+876
+00:27:01,810 --> 00:27:03,630
+So 01 stands for load,
+
+877
+00:27:03,630 --> 00:27:04,330
+00...
+
+878
+00:27:04,330 --> 00:27:05,350
+and then xx?
+
+879
+00:27:05,350 --> 00:27:06,430
+We haven't decided on that yet for now.
+
+880
+00:27:06,430 --> 00:27:07,650
+This part is used to hold the address.
+
+881
+00:27:07,650 --> 00:27:09,890
+So we've got that instruction figured out.
+
+882
+00:27:09,890 --> 00:27:12,190
+Now, what about the second instruction?
+
+883
+00:27:12,190 --> 00:27:12,870
+It's similar to it.
+
+884
+00:27:12,870 --> 00:27:13,690
+Think about it.
+
+885
+00:27:13,690 --> 00:27:15,550
+The only thing we change is one spot.
+
+886
+00:27:15,550 --> 00:27:19,030
+We just change
+
+887
+00:27:19,030 --> 00:27:21,410
+this right here.
+
+888
+00:27:21,410 --> 00:27:23,790
+The operation actually stays the same.
+
+889
+00:27:23,790 --> 00:27:24,810
+Because what are they both?
+
+890
+00:27:24,810 --> 00:27:26,650
+Because they're both loads.
+
+891
+00:27:26,650 --> 00:27:27,190
+Right?
+
+892
+00:27:27,190 --> 00:27:28,750
+So all that changes
+
+893
+00:27:28,750 --> 00:27:30,950
+is the register it operates on.
+
+894
+00:27:30,950 --> 00:27:32,190
+Before, it was the first register...
+
+895
+00:27:32,190 --> 00:27:33,690
+The zero-th register, called 00.
+
+896
+00:27:33,690 --> 00:27:35,870
+Now it's the first register, which is 01.
+
+897
+00:27:35,870 --> 00:27:36,450
+Right?
+
+898
+00:27:36,450 --> 00:27:38,010
+What about the address?
+
+899
+00:27:38,010 --> 00:27:41,350
+We'll hold off on that and look at it next time.
+
+900
+00:27:41,350 --> 00:27:45,830
+Then, our third instruction is called add.
+
+901
+00:27:45,830 --> 00:27:47,390
+So for this instruction
+
+902
+00:27:47,390 --> 00:27:48,670
+we need to change it slightly
+
+903
+00:27:48,670 --> 00:27:53,170
+because the way it was expressed before isn't quite the same
+
+904
+00:27:53,170 --> 00:27:54,910
+Here what we want to express is that
+
+905
+00:27:54,910 --> 00:27:56,690
+the object being operated on is not
+
+906
+00:27:56,690 --> 00:27:59,590
+Originally the operands were a register
+
+907
+00:27:59,590 --> 00:28:00,490
+plus a memory location
+
+908
+00:28:00,490 --> 00:28:01,050
+Think about it, right?
+
+909
+00:28:01,050 --> 00:28:02,790
+What are the operands now?
+
+910
+00:28:02,790 --> 00:28:04,190
+Two registers
+
+911
+00:28:04,190 --> 00:28:05,430
+Right?
+
+912
+00:28:05,430 --> 00:28:07,610
+So we've re-divided this field
+
+913
+00:28:07,610 --> 00:28:08,610
+again.
+
+914
+00:28:08,610 --> 00:28:10,710
+That is, the low 2 bits stay the same
+
+915
+00:28:10,710 --> 00:28:12,330
+to indicate this operation
+
+916
+00:28:12,330 --> 00:28:13,710
+The operation is add
+
+917
+00:28:13,710 --> 00:28:15,070
+Then we use 11
+
+918
+00:28:15,070 --> 00:28:16,390
+to distinguish it
+
+919
+00:28:16,390 --> 00:28:17,230
+to indicate add
+
+920
+00:28:17,230 --> 00:28:19,730
+Now on this side
+
+921
+00:28:19,730 --> 00:28:23,270
+It's about extracting these two bits and these two bits
+
+922
+00:28:23,270 --> 00:28:24,570
+to represent the registers
+
+923
+00:28:24,570 --> 00:28:26,590
+So the first register,
+
+924
+00:28:26,590 --> 00:28:26,850
+that's 00
+
+925
+00:28:26,850 --> 00:28:27,890
+and the second register is 01
+
+926
+00:28:27,890 --> 00:28:28,490
+Right?
+
+927
+00:28:28,490 --> 00:28:30,130
+And just like that, we've expressed it.
+
+928
+00:28:30,130 --> 00:28:32,610
+Now, since we don't need,
+
+929
+00:28:32,610 --> 00:28:36,330
+uh, these two high-order bits here,
+
+930
+00:28:36,330 --> 00:28:37,410
+in this case,
+
+931
+00:28:37,410 --> 00:28:40,310
+these two high-order bits are actually not used.
+
+932
+00:28:40,310 --> 00:28:40,510
+Right.
+
+933
+00:28:40,510 --> 00:28:43,830
+So as you can see, when we design low-level language,
+
+934
+00:28:43,830 --> 00:28:45,590
+not a single bit gets wasted.
+
+935
+00:28:45,590 --> 00:28:46,430
+Don't waste anything.
+
+936
+00:28:46,430 --> 00:28:47,670
+That's exactly what's happening here.
+
+937
+00:28:47,670 --> 00:28:49,170
+So through this learning,
+
+938
+00:28:49,170 --> 00:28:51,670
+once you understand these things,
+
+939
+00:28:51,670 --> 00:28:53,530
+then when you look at the machine instructions later,
+
+940
+00:28:53,530 --> 00:28:55,210
+I mean, for RISC-V machine instructions like this,
+
+941
+00:28:55,210 --> 00:28:58,650
+So I hope that through this learning
+
+942
+00:28:58,650 --> 00:28:59,890
+you can understand
+
+943
+00:28:59,890 --> 00:29:03,410
+how the more complex machine instructions
+
+944
+00:29:03,410 --> 00:29:06,630
+we'll cover later are designed.
+
+945
+00:29:06,630 --> 00:29:08,290
+Now the final step is
+
+946
+00:29:08,290 --> 00:29:10,710
+putting the data back out.
+
+947
+00:29:10,710 --> 00:29:12,810
+The store operation
+
+948
+00:29:12,810 --> 00:29:15,330
+is actually very similar to the load operation,
+
+949
+00:29:15,330 --> 00:29:18,230
+because all it needs to express
+
+950
+00:29:18,230 --> 00:29:21,790
+is the two objects to store:
+
+951
+00:29:21,790 --> 00:29:28,430
+one register and one address.
+
+952
+00:29:28,430 --> 00:29:31,050
+So we just need to change the opcode
+
+953
+00:29:31,050 --> 00:29:32,730
+to 10, and that's it.
+
+954
+00:29:32,730 --> 00:29:33,350
+And this way,
+
+955
+00:29:33,350 --> 00:29:36,310
+it's essentially like saying
+
+956
+00:29:36,310 --> 00:29:37,550
+once we've designed the hardware,
+
+957
+00:29:37,550 --> 00:29:39,010
+suppose you're designing the software,
+
+958
+00:29:39,010 --> 00:29:41,170
+this set of machine instructions is already designed.
+
+959
+00:29:41,170 --> 00:29:42,670
+Do you see that?
+
+960
+00:29:42,670 --> 00:29:44,410
+In other words, our machine instructions
+
+961
+00:29:44,410 --> 00:29:45,250
+So it's basically like
+
+962
+00:29:45,250 --> 00:29:46,390
+that's how it was designed
+
+963
+00:29:46,390 --> 00:29:48,210
+Right
+
+964
+00:29:48,210 --> 00:29:50,590
+Now, after this thing was designed
+
+965
+00:29:50,590 --> 00:29:52,230
+you can see
+
+966
+00:29:52,230 --> 00:29:53,630
+that throughout our whole process
+
+967
+00:29:53,630 --> 00:29:56,290
+we actually designed two encoding formats
+
+968
+00:29:56,290 --> 00:29:57,330
+Did you notice that?
+
+969
+00:29:57,330 --> 00:29:57,590
+Right?
+
+970
+00:29:57,590 --> 00:30:00,610
+The first encoding format
+
+971
+00:30:00,610 --> 00:30:02,690
+where did we use it?
+
+972
+00:30:02,690 --> 00:30:04,830
+As for the first encoding format
+
+973
+00:30:04,830 --> 00:30:06,150
+what it expresses is
+
+974
+00:30:06,150 --> 00:30:09,390
+it holds a register and an address
+
+975
+00:30:09,390 --> 00:30:12,090
+So for this kind of instruction
+
+976
+00:30:12,090 --> 00:30:13,070
+what we use is
+
+977
+00:30:13,070 --> 00:30:15,570
+let's call this encoding format A
+
+978
+00:30:15,570 --> 00:30:17,070
+and this one format B
+
+979
+00:30:17,070 --> 00:30:18,850
+Then
+
+980
+00:30:18,850 --> 00:30:20,910
+our
+
+981
+00:30:20,910 --> 00:30:22,850
+These several kinds
+
+982
+00:30:22,850 --> 00:30:24,070
+Which one do they all use?
+
+983
+00:30:24,070 --> 00:30:26,610
+They all use method A, right?
+
+984
+00:30:26,610 --> 00:30:28,550
+That one, this one
+
+985
+00:30:28,550 --> 00:30:32,540
+What do we use for this instruction?
+
+986
+00:30:32,540 --> 00:30:33,700
+It's method B.
+
+987
+00:30:33,700 --> 00:30:35,520
+This is what's called the instruction's encoding format.
+
+988
+00:30:35,520 --> 00:30:37,580
+Later, when we talk about assembly,
+
+989
+00:30:37,580 --> 00:30:39,560
+you'll come across this concept as well.
+
+990
+00:30:39,560 --> 00:30:41,760
+That is to say, the same 8 bits,
+
+991
+00:30:41,760 --> 00:30:43,960
+there are several encoding formats in there,
+
+992
+00:30:43,960 --> 00:30:49,650
+and which one we pick determines the information our instruction conveys.
+
+993
+00:30:49,650 --> 00:30:52,870
+So we've finished designing this machine instruction.
+
+994
+00:30:52,870 --> 00:30:53,830
+Now that it's designed,
+
+995
+00:30:53,830 --> 00:30:55,890
+let's look at how this process actually happens.
+
+996
+00:30:55,890 --> 00:30:58,270
+Right now we want to understand how A plus B equals C
+
+997
+00:30:58,270 --> 00:31:01,710
+actually takes place inside a computer.
+
+998
+00:31:01,710 --> 00:31:03,970
+Because this is very low-level, the lowest level,
+
+999
+00:31:03,970 --> 00:31:05,010
+just really fundamental stuff.
+
+1000
+00:31:05,010 --> 00:31:06,150
+One by one, we
+
+1001
+00:31:06,150 --> 00:31:07,910
+Even a very simple operation
+
+1002
+00:31:07,910 --> 00:31:09,590
+is actually quite complex inside a computer.
+
+1003
+00:31:09,590 --> 00:31:11,150
+When you break it down all the way,
+
+1004
+00:31:11,150 --> 00:31:12,230
+it's essentially this kind of process.
+
+1005
+00:31:12,230 --> 00:31:13,130
+Let's take a look
+
+1006
+00:31:13,130 --> 00:31:15,930
+at how this process happens.
+
+1007
+00:31:15,930 --> 00:31:18,230
+This diagram here,
+
+1008
+00:31:18,230 --> 00:31:19,190
+it's actually still the one from before.
+
+1009
+00:31:19,190 --> 00:31:20,050
+Once we finish going through it,
+
+1010
+00:31:20,050 --> 00:31:21,450
+we'll take a break.
+
+1011
+00:31:21,450 --> 00:31:24,960
+If you look at this,
+
+1012
+00:31:24,960 --> 00:31:27,500
+what is the part on the right?
+
+1013
+00:31:27,500 --> 00:31:30,980
+The part on the right is what's in our memory.
+
+1014
+00:31:30,980 --> 00:31:32,640
+You can think of it as,
+
+1015
+00:31:32,640 --> 00:31:34,820
+basically the a.out generated after we compile.
+
+1016
+00:31:34,820 --> 00:31:37,580
+Now, as I mentioned earlier,
+
+1017
+00:31:37,580 --> 00:31:38,720
+our computer architecture,
+
+1018
+00:31:38,720 --> 00:31:40,960
+right now we're using the von Neumann architecture.
+
+1019
+00:31:40,960 --> 00:31:42,800
+So what does that mean?
+
+1020
+00:31:42,800 --> 00:31:45,320
+By now, do you all know what the von Neumann architecture is?
+
+1021
+00:31:45,320 --> 00:31:49,340
+The von Neumann architecture means that instructions and data
+
+1022
+00:31:49,340 --> 00:31:52,200
+are stored in the same place.
+
+1023
+00:31:52,200 --> 00:31:53,300
+Do you still follow what I mean?
+
+1024
+00:31:53,300 --> 00:31:56,520
+What does this yellow part represent?
+
+1025
+00:31:56,520 --> 00:31:58,860
+The 0101 stored in this part is actually instructions.
+
+1026
+00:31:58,860 --> 00:32:03,720
+And the green part stores data.
+
+1027
+00:32:03,720 --> 00:32:06,280
+What is it that we want to compute now?
+
+1028
+00:32:06,280 --> 00:32:07,460
+What we actually want to compute is
+
+1029
+00:32:07,460 --> 00:32:08,420
+1 plus 2 equals 3.
+
+1030
+00:32:08,420 --> 00:32:10,580
+This one...
+
+1031
+00:32:10,580 --> 00:32:13,460
+This is in binary.
+
+1032
+00:32:13,460 --> 00:32:15,280
+0001 — everyone knows what this is, right?
+
+1033
+00:32:15,280 --> 00:32:16,600
+This is in decimal.
+
+1034
+00:32:16,600 --> 00:32:17,580
+It's just 1, don't you think?
+
+1035
+00:32:17,580 --> 00:32:19,540
+This 0001.
+
+1036
+00:32:19,540 --> 00:32:22,320
+And 10 converted to decimal is what?
+
+1037
+00:32:22,320 --> 00:32:23,320
+That's 2.
+
+1038
+00:32:23,320 --> 00:32:24,720
+Later on, for example,
+
+1039
+00:32:24,720 --> 00:32:27,180
+when you really do low-level development,
+
+1040
+00:32:27,180 --> 00:32:28,460
+you'll often be looking at memory.
+
+1041
+00:32:28,460 --> 00:32:29,980
+I don't know if any of you have ever looked at memory
+
+1042
+00:32:29,980 --> 00:32:31,680
+When you look at memory
+
+1043
+00:32:31,680 --> 00:32:33,220
+you often have to do this in your head
+
+1044
+00:32:33,220 --> 00:32:33,980
+binary
+
+1045
+00:32:33,980 --> 00:32:35,340
+hexadecimal
+
+1046
+00:32:35,340 --> 00:32:36,560
+and decimal conversions
+
+1047
+00:32:36,560 --> 00:32:38,340
+Because we humans prefer decimal
+
+1048
+00:32:38,340 --> 00:32:38,680
+right?
+
+1049
+00:32:38,680 --> 00:32:39,960
+But inside a computer
+
+1050
+00:32:39,960 --> 00:32:41,060
+what you see is generally
+
+1051
+00:32:41,060 --> 00:32:41,980
+we use hexadecimal
+
+1052
+00:32:41,980 --> 00:32:42,820
+right?
+
+1053
+00:32:42,820 --> 00:32:44,260
+So now let's go more thoroughly
+
+1054
+00:32:44,260 --> 00:32:45,220
+let's look directly at binary
+
+1055
+00:32:45,220 --> 00:32:46,980
+It's really about the same
+
+1056
+00:32:46,980 --> 00:32:50,440
+So this is 0, 1, and 2
+
+1057
+00:32:50,440 --> 00:32:51,360
+this is where data is placed
+
+1058
+00:32:51,360 --> 00:32:52,660
+And here,
+
+1059
+00:32:52,660 --> 00:32:53,240
+this byte
+
+1060
+00:32:53,240 --> 00:32:55,000
+we're actually planning to put the result in
+
+1061
+00:32:55,000 --> 00:32:57,040
+It's putting 3.
+
+1062
+00:32:57,040 --> 00:32:58,240
+But of course it's not 3 yet.
+
+1063
+00:32:58,240 --> 00:32:59,260
+Because it hasn't been calculated yet.
+
+1064
+00:32:59,260 --> 00:33:01,880
+Now, this thing in front is the instruction.
+
+1065
+00:33:01,880 --> 00:33:05,340
+So think about it — what does this instruction represent?
+
+1066
+00:33:05,340 --> 00:33:07,220
+Based on the design we just did,
+
+1067
+00:33:07,220 --> 00:33:08,340
+let's try to guess for ourselves.
+
+1068
+00:33:08,340 --> 00:33:10,160
+Because later on, when we do disassembly,
+
+1069
+00:33:10,160 --> 00:33:11,760
+it's really about taking the data —
+
+1070
+00:33:11,760 --> 00:33:13,600
+the binary data inside the computer —
+
+1071
+00:33:13,600 --> 00:33:15,400
+and working backwards to figure out what it actually is.
+
+1072
+00:33:15,400 --> 00:33:16,640
+What is this thing?
+
+1073
+00:33:16,640 --> 00:33:17,660
+Based on the analysis we just did,
+
+1074
+00:33:17,660 --> 00:33:20,780
+I'll just go ahead and tell you directly.
+
+1075
+00:33:20,780 --> 00:33:22,440
+You can go home and practice this on your own.
+
+1076
+00:33:22,440 --> 00:33:23,220
+Do some training in this area.
+
+1077
+00:33:23,220 --> 00:33:26,020
+Otherwise, when you have to do these things later,
+
+1078
+00:33:26,020 --> 00:33:27,520
+you might find it pretty painful.
+
+1079
+00:33:27,520 --> 00:33:30,220
+Honestly, I think low-level development,
+
+1080
+00:33:30,220 --> 00:33:31,400
+it's really about pushing through stuff like this.
+
+1081
+00:33:31,400 --> 00:33:33,680
+Because in high-level programming
+
+1082
+00:33:33,680 --> 00:33:35,080
+this is something you never deal with.
+
+1083
+00:33:35,080 --> 00:33:39,180
+This 01 is the binary 010000,
+
+1084
+00:33:39,180 --> 00:33:40,620
+and what does this string of numbers represent?
+
+1085
+00:33:40,620 --> 00:33:42,220
+As we just said,
+
+1086
+00:33:42,220 --> 00:33:44,340
+let's briefly review
+
+1087
+00:33:44,340 --> 00:33:47,820
+that machine code concept from earlier.
+
+1088
+00:33:47,820 --> 00:33:50,680
+So the idea is that through this,
+
+1089
+00:33:50,680 --> 00:33:51,700
+basically what we're doing now is,
+
+1090
+00:33:51,700 --> 00:33:53,340
+you can think of yourself as the CPU.
+
+1091
+00:33:53,340 --> 00:33:54,400
+Right now the CPU is in
+
+1092
+00:33:54,400 --> 00:33:55,340
+how does it see it?
+
+1093
+00:33:55,340 --> 00:33:56,820
+We should look at this thing the same way.
+
+1094
+00:33:56,820 --> 00:33:59,380
+So a bunch of 0s and 1s in the data,
+
+1095
+00:33:59,380 --> 00:34:00,220
+how does it look at them?
+
+1096
+00:34:00,220 --> 00:34:01,160
+As we just said,
+
+1097
+00:34:01,160 --> 00:34:05,060
+the first step of processing is fetch — fetching the code.
+
+1098
+00:34:05,060 --> 00:34:06,480
+What is the second step?
+
+1099
+00:34:06,480 --> 00:34:07,400
+The first step is fetch,
+
+1100
+00:34:07,400 --> 00:34:08,480
+what does the second step do?
+
+1101
+00:34:08,480 --> 00:34:08,980
+that is, decoding
+
+1102
+00:34:08,980 --> 00:34:10,100
+this idea of translating it
+
+1103
+00:34:10,100 --> 00:34:11,500
+that's exactly what we need to do now
+
+1104
+00:34:11,500 --> 00:34:14,820
+suppose after you fetch this data
+
+1105
+00:34:14,820 --> 00:34:15,860
+then as the computer
+
+1106
+00:34:15,860 --> 00:34:17,020
+it's actually very simple
+
+1107
+00:34:17,020 --> 00:34:18,220
+it just looks at the last two bits
+
+1108
+00:34:18,220 --> 00:34:19,300
+right?
+
+1109
+00:34:19,300 --> 00:34:21,160
+because we just analyzed this
+
+1110
+00:34:21,160 --> 00:34:22,880
+we've already defined it in our format
+
+1111
+00:34:22,880 --> 00:34:25,200
+these last two bits are the opcode
+
+1112
+00:34:25,200 --> 00:34:27,820
+they tell us whether we're doing a load
+
+1113
+00:34:27,820 --> 00:34:28,580
+or a store
+
+1114
+00:34:28,580 --> 00:34:29,220
+or an add
+
+1115
+00:34:29,220 --> 00:34:30,160
+right?
+
+1116
+00:34:30,160 --> 00:34:32,980
+so we just look at this 0101 thing
+
+1117
+00:34:32,980 --> 00:34:34,160
+now look at this, everyone
+
+1118
+00:34:34,160 --> 00:34:36,220
+now let's look at this thing here
+
+1119
+00:34:36,220 --> 00:34:38,780
+this is 01 — what does that tell us?
+
+1120
+00:34:38,780 --> 00:34:43,160
+01 is the load concept we just designed
+
+1121
+00:34:43,160 --> 00:34:44,480
+That is, loading
+
+1122
+00:34:44,480 --> 00:34:46,240
+What does loading mean?
+
+1123
+00:34:46,240 --> 00:34:47,760
+We've been a bit wordy in explaining it
+
+1124
+00:34:47,760 --> 00:34:48,760
+Loading means
+
+1125
+00:34:48,760 --> 00:34:52,060
+Reading data from memory into a register
+
+1126
+00:34:52,060 --> 00:34:53,560
+Do you follow what I mean here?
+
+1127
+00:34:53,560 --> 00:34:56,440
+This one is load
+
+1128
+00:34:56,440 --> 00:34:59,680
+Now, what are these two bits of load?
+
+1129
+00:34:59,680 --> 00:35:00,940
+They tell us which
+
+1130
+00:35:00,940 --> 00:35:04,060
+They tell us which register to load into
+
+1131
+00:35:04,060 --> 00:35:05,540
+Right? So what does 00 represent?
+
+1132
+00:35:05,540 --> 00:35:07,040
+That's register zero
+
+1133
+00:35:07,040 --> 00:35:07,920
+That's register one
+
+1134
+00:35:07,920 --> 00:35:09,500
+Right?
+
+1135
+00:35:09,500 --> 00:35:11,260
+Then what is this?
+
+1136
+00:35:11,260 --> 00:35:14,600
+What do these four bits at the end express?
+
+1137
+00:35:14,600 --> 00:35:17,800
+It's the source address for the load
+
+1138
+00:35:17,800 --> 00:35:19,100
+The source address in memory
+
+1139
+00:35:19,100 --> 00:35:21,620
+That is, where in memory it loads from
+
+1140
+00:35:21,620 --> 00:35:23,020
+Into the register
+
+1141
+00:35:23,020 --> 00:35:23,220
+right
+
+1142
+00:35:23,220 --> 00:35:25,620
+So what is 0100?
+
+1143
+00:35:25,620 --> 00:35:27,760
+What does this address translate to in real terms?
+
+1144
+00:35:27,760 --> 00:35:32,090
+What is 0100?
+
+1145
+00:35:32,150 --> 00:35:33,570
+It's 4, right? Think about it.
+
+1146
+00:35:33,570 --> 00:35:35,250
+At address 4,
+
+1147
+00:35:35,250 --> 00:35:36,650
+what's the corresponding value?
+
+1148
+00:35:36,650 --> 00:35:39,270
+It's 11, right? Think about it.
+
+1149
+00:35:39,270 --> 00:35:41,850
+So if you translate this instruction
+
+1150
+00:35:41,850 --> 00:35:42,750
+into human language, what does it mean?
+
+1151
+00:35:42,750 --> 00:35:44,190
+It means
+
+1152
+00:35:44,190 --> 00:35:45,750
+load,
+
+1153
+00:35:45,750 --> 00:35:50,920
+that is, from the byte at address 4
+
+1154
+00:35:50,920 --> 00:35:52,880
+in memory,
+
+1155
+00:35:52,880 --> 00:35:53,840
+load a value,
+
+1156
+00:35:53,840 --> 00:35:55,800
+and load it to where?
+
+1157
+00:35:55,800 --> 00:35:57,320
+Load it into
+
+1158
+00:35:57,320 --> 00:36:02,120
+register number 00.
+
+1159
+00:36:02,120 --> 00:36:03,200
+into the register
+
+1160
+00:36:03,200 --> 00:36:04,700
+Can he figure that out?
+
+1161
+00:36:04,700 --> 00:36:06,560
+Let's go through the first one slowly.
+
+1162
+00:36:06,560 --> 00:36:09,080
+After that, things will actually seem to go faster.
+
+1163
+00:36:09,080 --> 00:36:09,620
+And you'll still be able to work it out.
+
+1164
+00:36:09,620 --> 00:36:11,180
+It's not that complicated.
+
+1165
+00:36:11,180 --> 00:36:13,100
+Because this is already a very simple computer.
+
+1166
+00:36:13,100 --> 00:36:14,540
+A computer with just 8 bits.
+
+1167
+00:36:14,540 --> 00:36:16,700
+Look, today's computers are all 64-bit.
+
+1168
+00:36:16,700 --> 00:36:18,380
+One instruction and you'd have to flip through a whole page.
+
+1169
+00:36:18,380 --> 00:36:19,660
+It's a really complex thing, isn't it?
+
+1170
+00:36:19,660 --> 00:36:21,100
+Now we just have 8 bits.
+
+1171
+00:36:21,100 --> 00:36:22,100
+You flip through them.
+
+1172
+00:36:22,100 --> 00:36:23,780
+What it actually expresses is,
+
+1173
+00:36:23,780 --> 00:36:25,760
+as I just said,
+
+1174
+00:36:25,760 --> 00:36:26,640
+well,
+
+1175
+00:36:26,640 --> 00:36:28,260
+Okay, everyone, think about this.
+
+1176
+00:36:28,260 --> 00:36:29,700
+Now our computer starts running.
+
+1177
+00:36:29,700 --> 00:36:30,380
+Say, the moment it powers on,
+
+1178
+00:36:30,380 --> 00:36:32,360
+what state is it in right after power-on?
+
+1179
+00:36:32,360 --> 00:36:36,060
+Right after power-on,
+
+1180
+00:36:36,060 --> 00:36:40,080
+first, everything inside our computer is reset.
+
+1181
+00:36:40,080 --> 00:36:41,380
+As for resetting,
+
+1182
+00:36:41,380 --> 00:36:44,640
+resetting these registers actually doesn't mean much,
+
+1183
+00:36:44,640 --> 00:36:46,240
+because they're just intermediate values in the process.
+
+1184
+00:36:46,240 --> 00:36:48,820
+But this program counter,
+
+1185
+00:36:48,820 --> 00:36:51,760
+the value in the PC register is absolutely critical.
+
+1186
+00:36:51,760 --> 00:36:54,220
+That is, when the computer powers on and resets,
+
+1187
+00:36:54,220 --> 00:36:57,240
+its value always points to the address of the first instruction you want to run.
+
+1188
+00:36:57,240 --> 00:36:58,780
+Do you follow what I mean?
+
+1189
+00:36:58,780 --> 00:37:02,260
+Now let's suppose after our PC powers on,
+
+1190
+00:37:02,260 --> 00:37:05,440
+its value is definitely — and this is guaranteed by hardware —
+
+1191
+00:37:05,440 --> 00:37:06,780
+set to 0.
+
+1192
+00:37:06,780 --> 00:37:08,620
+So of course, what does 0 mean?
+
+1193
+00:37:08,620 --> 00:37:11,160
+It means we're now going to start executing from
+
+1194
+00:37:11,160 --> 00:37:12,880
+this position in memory.
+
+1195
+00:37:12,880 --> 00:37:14,120
+Do you follow what I mean?
+
+1196
+00:37:14,120 --> 00:37:16,560
+This arrow points to this position.
+
+1197
+00:37:16,560 --> 00:37:18,000
+This arrow, if you imagine it, is really
+
+1198
+00:37:18,000 --> 00:37:20,380
+the memory location
+
+1199
+00:37:20,380 --> 00:37:22,880
+pointed to by the PC register,
+
+1200
+00:37:22,880 --> 00:37:24,960
+which is also where the first instruction we're going to execute is located.
+
+1201
+00:37:24,960 --> 00:37:25,920
+Right?
+
+1202
+00:37:25,920 --> 00:37:27,100
+Good.
+
+1203
+00:37:27,100 --> 00:37:29,640
+Now comes instruction fetch.
+
+1204
+00:37:29,640 --> 00:37:32,660
+It's simply about running this fetch loop.
+
+1205
+00:37:32,660 --> 00:37:33,800
+When fetching an instruction, it takes...
+
+1206
+00:37:33,800 --> 00:37:34,520
+what does it do?
+
+1207
+00:37:34,520 --> 00:37:38,210
+Now, everyone, what just happened here?
+
+1208
+00:37:38,210 --> 00:37:40,790
+Instruction fetch means taking the data from in here...
+
+1209
+00:37:40,790 --> 00:37:43,430
+and taking it out of this memory to where?
+
+1210
+00:37:43,430 --> 00:37:48,070
+It goes into our instruction register.
+
+1211
+00:37:48,070 --> 00:37:50,210
+Because only after it's fetched in can the computer...
+
+1212
+00:37:50,210 --> 00:37:52,410
+the CPU start analyzing it.
+
+1213
+00:37:52,410 --> 00:37:52,930
+Think about it — isn't that right?
+
+1214
+00:37:52,930 --> 00:37:55,210
+Then, at this point,
+
+1215
+00:37:55,210 --> 00:37:57,610
+based on the decoding rules we just saw,
+
+1216
+00:37:57,610 --> 00:37:59,890
+it analyzes it,
+
+1217
+00:37:59,890 --> 00:38:01,950
+decoding it according to the format we just discussed.
+
+1218
+00:38:01,950 --> 00:38:03,050
+This is called decoding.
+
+1219
+00:38:03,050 --> 00:38:04,550
+This is called decode, or decoding.
+
+1220
+00:38:04,550 --> 00:38:05,670
+Now, as for decoding,
+
+1221
+00:38:05,670 --> 00:38:06,850
+Based on the analysis we just did,
+
+1222
+00:38:06,850 --> 00:38:08,610
+this 01 stands for load.
+
+1223
+00:38:08,610 --> 00:38:10,890
+And who does 00 refer to?
+
+1224
+00:38:10,890 --> 00:38:12,270
+00 is this one here.
+
+1225
+00:38:12,270 --> 00:38:13,270
+Think about it, doesn't that make sense?
+
+1226
+00:38:13,270 --> 00:38:15,710
+So what does 0100 point to?
+
+1227
+00:38:15,710 --> 00:38:17,110
+It's this position right here.
+
+1228
+00:38:17,110 --> 00:38:19,170
+So for this instruction,
+
+1229
+00:38:19,170 --> 00:38:20,390
+when it executes,
+
+1230
+00:38:20,390 --> 00:38:21,610
+what action does it perform?
+
+1231
+00:38:21,610 --> 00:38:22,570
+It has to take,
+
+1232
+00:38:22,570 --> 00:38:25,290
+all it has to do is take,
+
+1233
+00:38:25,290 --> 00:38:28,170
+the data in here,
+
+1234
+00:38:28,170 --> 00:38:30,850
+the data at address 4,
+
+1235
+00:38:30,850 --> 00:38:32,070
+and load it into where?
+
+1236
+00:38:32,070 --> 00:38:34,750
+Load it into this register.
+
+1237
+00:38:34,750 --> 00:38:36,170
+Make sense?
+
+1238
+00:38:36,170 --> 00:38:37,630
+So,
+
+1239
+00:38:37,630 --> 00:38:40,290
+the moment this instruction,
+
+1240
+00:38:40,290 --> 00:38:41,610
+executes,
+
+1241
+00:38:41,610 --> 00:38:42,350
+As we can see,
+
+1242
+00:38:42,350 --> 00:38:45,030
+in this register,
+
+1243
+00:38:45,030 --> 00:38:46,690
+its value
+
+1244
+00:38:46,690 --> 00:38:49,230
+this 01000 has been placed here.
+
+1245
+00:38:49,230 --> 00:38:51,370
+Then what happens next is easy to see.
+
+1246
+00:38:51,370 --> 00:38:52,710
+Because the first pass,
+
+1247
+00:38:52,710 --> 00:38:54,550
+the first process I described, is relatively slow.
+
+1248
+00:38:54,550 --> 00:38:55,070
+Then afterwards,
+
+1249
+00:38:55,070 --> 00:38:57,250
+what do you think the second instruction does?
+
+1250
+00:38:57,250 --> 00:38:59,470
+Let's decode it ourselves.
+
+1251
+00:38:59,470 --> 00:39:01,170
+What does 01 mean?
+
+1252
+00:39:01,170 --> 00:39:03,990
+Still load, right?
+
+1253
+00:39:03,990 --> 00:39:06,330
+Load from where?
+
+1254
+00:39:06,330 --> 00:39:08,150
+It loads from this address.
+
+1255
+00:39:08,150 --> 00:39:10,170
+What does 01 01 mean?
+
+1256
+00:39:10,170 --> 00:39:12,250
+That's 5, isn't it?
+
+1257
+00:39:12,250 --> 00:39:14,750
+And 5 is exactly the value in here, isn't it?
+
+1258
+00:39:14,750 --> 00:39:16,310
+Which is 2, right?
+
+1259
+00:39:16,310 --> 00:39:16,490
+Isn't it?
+
+1260
+00:39:16,490 --> 00:39:18,430
+Load it into where?
+
+1261
+00:39:18,430 --> 00:39:19,790
+loaded into 01
+
+1262
+00:39:19,790 --> 00:39:22,350
+this register, which is inside this thing
+
+1263
+00:39:22,350 --> 00:39:23,930
+Is that still clear?
+
+1264
+00:39:23,930 --> 00:39:25,710
+So once this instruction is executed
+
+1265
+00:39:25,710 --> 00:39:27,070
+what happens?
+
+1266
+00:39:27,070 --> 00:39:30,290
+All of these things are changing
+
+1267
+00:39:30,290 --> 00:39:30,930
+Do you all see that?
+
+1268
+00:39:30,930 --> 00:39:32,710
+Because this PC is also incrementing, right?
+
+1269
+00:39:32,710 --> 00:39:33,230
+Think about it, isn't it?
+
+1270
+00:39:33,230 --> 00:39:35,790
+Because this arrow is moving downward
+
+1271
+00:39:35,790 --> 00:39:38,150
+instructions are fetched one by one
+
+1272
+00:39:38,150 --> 00:39:39,590
+and it's this PC that keeps track
+
+1273
+00:39:39,590 --> 00:39:40,950
+of which instruction has been fetched
+
+1274
+00:39:40,950 --> 00:39:42,330
+Then it's fetched in
+
+1275
+00:39:42,330 --> 00:39:43,150
+After it's fetched in,
+
+1276
+00:39:43,150 --> 00:39:44,870
+first we fetch this instruction in
+
+1277
+00:39:44,870 --> 00:39:45,490
+fetch it in and decode it
+
+1278
+00:39:45,490 --> 00:39:46,230
+After decoding,
+
+1279
+00:39:46,230 --> 00:39:46,730
+we start executing
+
+1280
+00:39:46,730 --> 00:39:47,410
+After execution is done
+
+1281
+00:39:47,410 --> 00:39:49,130
+this register changes, right? [1281] And at this point, [1282] the values A and B [1283] are loaded in, right? [1284] Think about it, [1285] what comes next? [1286] Next, this PC, [1287] this one... [1288] this... [1289] this... [1290] it changes, [1291] right? [1292] After it changes, [1293] it points to the third instruction. [1294] The third instruction. [1295] Just now, when we decoded it, [1296] we knew what this 11 meant. [1297] It's addition. [1298] Adding what? [1299] Adding the value in register 00 to the value in register 012.
+
+1282
+00:39:49,130 --> 00:39:50,510
+So at this point
+
+1283
+00:39:50,510 --> 00:39:51,470
+These two values, A and B
+
+1284
+00:39:51,470 --> 00:39:52,370
+have been loaded in for us
+
+1285
+00:39:52,370 --> 00:39:52,930
+Now think about it, right?
+
+1286
+00:39:52,930 --> 00:39:54,930
+What comes next?
+
+1287
+00:39:54,930 --> 00:39:57,870
+Next, this PC
+
+1288
+00:39:57,870 --> 00:39:58,830
+this
+
+1289
+00:39:58,830 --> 00:39:59,350
+this
+
+1290
+00:39:59,350 --> 00:40:00,090
+this
+
+1291
+00:40:00,090 --> 00:40:01,850
+changes
+
+1292
+00:40:01,850 --> 00:40:02,550
+right?
+
+1293
+00:40:02,550 --> 00:40:03,650
+After it changes,
+
+1294
+00:40:03,650 --> 00:40:05,190
+it now points to the third instruction
+
+1295
+00:40:05,190 --> 00:40:05,850
+The third instruction,
+
+1296
+00:40:05,850 --> 00:40:07,690
+after we decoded it just now,
+
+1297
+00:40:07,690 --> 00:40:08,950
+we know what this 11 means
+
+1298
+00:40:08,950 --> 00:40:11,350
+It's an addition
+
+1299
+00:40:11,350 --> 00:40:13,010
+Add what together?
+
+1300
+00:40:13,010 --> 00:40:16,070
+Add the value in register 00 to the value in register 012.
+
+1301
+00:40:16,070 --> 00:40:18,550
+This 00 is meaningless.
+
+1302
+00:40:18,550 --> 00:40:19,610
+We can just ignore it.
+
+1303
+00:40:19,610 --> 00:40:20,530
+So after we add them up,
+
+1304
+00:40:20,530 --> 00:40:21,530
+where did we say we put it?
+
+1305
+00:40:21,530 --> 00:40:23,130
+We still put it in here.
+
+1306
+00:40:23,130 --> 00:40:23,870
+So at this point,
+
+1307
+00:40:23,870 --> 00:40:25,570
+what does the value in here become?
+
+1308
+00:40:25,570 --> 00:40:26,990
+It becomes 3.
+
+1309
+00:40:26,990 --> 00:40:27,230
+Right?
+
+1310
+00:40:27,230 --> 00:40:28,890
+And what about the last step?
+
+1311
+00:40:28,890 --> 00:40:29,490
+What does it do?
+
+1312
+00:40:29,490 --> 00:40:32,310
+The last step is that
+
+1313
+00:40:32,310 --> 00:40:34,430
+we take the value in here
+
+1314
+00:40:34,430 --> 00:40:38,370
+and save it into memory.
+
+1315
+00:40:38,370 --> 00:40:41,430
+And that is done through this
+
+1316
+00:40:41,430 --> 00:40:43,870
+instruction 10 here.
+
+1317
+00:40:43,870 --> 00:40:45,770
+So if you look closely,
+
+1318
+00:40:45,770 --> 00:40:47,270
+it actually just does some very
+
+1319
+00:40:47,270 --> 00:40:48,570
+simple things:
+
+1320
+00:40:48,570 --> 00:40:50,970
+A plus B equals 3.
+
+1321
+00:40:50,970 --> 00:40:52,370
+1 plus 2 equals 3
+
+1322
+00:40:52,370 --> 00:40:53,530
+But this computer,
+
+1323
+00:40:53,530 --> 00:40:54,750
+this process,
+
+1324
+00:40:54,750 --> 00:40:55,530
+it actually, so,
+
+1325
+00:40:55,530 --> 00:40:56,750
+a computer is a pretty dumb thing
+
+1326
+00:40:56,750 --> 00:40:58,010
+It only knows how to do
+
+1327
+00:40:58,010 --> 00:40:59,350
+these very mechanical things
+
+1328
+00:40:59,350 --> 00:41:00,770
+But where does its advantage lie?
+
+1329
+00:41:00,770 --> 00:41:01,370
+It's just fast
+
+1330
+00:41:01,370 --> 00:41:03,930
+The main difference between it and us humans
+
+1331
+00:41:03,930 --> 00:41:04,530
+is speed
+
+1332
+00:41:04,530 --> 00:41:05,010
+Right?
+
+1333
+00:41:05,010 --> 00:41:07,010
+We just talked about it for a long time,
+
+1334
+00:41:07,010 --> 00:41:08,390
+but actually it finishes in an instant
+
+1335
+00:41:08,390 --> 00:41:09,710
+Yet what it does
+
+1336
+00:41:09,710 --> 00:41:10,570
+is really that simple
+
+1337
+00:41:10,570 --> 00:41:12,050
+We just make use of its speed
+
+1338
+00:41:12,050 --> 00:41:15,230
+to help us get things done
+
+1339
+00:41:15,230 --> 00:41:17,890
+Now, in this process,
+
+1340
+00:41:17,890 --> 00:41:18,650
+we can see
+
+1341
+00:41:18,650 --> 00:41:20,270
+The main job of a computer
+
+1342
+00:41:20,270 --> 00:41:21,270
+is really just to take data
+
+1343
+00:41:21,270 --> 00:41:22,910
+and move it from memory into the processor
+
+1344
+00:41:22,910 --> 00:41:24,730
+then process it inside the processor
+
+1345
+00:41:24,730 --> 00:41:26,150
+and then move it to where?
+
+1346
+00:41:26,150 --> 00:41:27,590
+Back out to memory,
+
+1347
+00:41:27,590 --> 00:41:27,750
+right?
+
+1348
+00:41:27,750 --> 00:41:29,410
+So this is
+
+1349
+00:41:29,410 --> 00:41:31,210
+the core operation of a computer.
+
+1350
+00:41:31,210 --> 00:41:32,250
+Now through this process,
+
+1351
+00:41:32,250 --> 00:41:32,890
+we actually
+
+1352
+00:41:32,890 --> 00:41:35,370
+want you to understand a few things.
+
+1353
+00:41:35,370 --> 00:41:38,630
+First, what exactly does a computer's CPU look like?
+
+1354
+00:41:38,630 --> 00:41:39,890
+Take it apart and look inside,
+
+1355
+00:41:39,890 --> 00:41:40,770
+and it's really just these things.
+
+1356
+00:41:40,770 --> 00:41:43,710
+Second, once you have this hardware,
+
+1357
+00:41:43,710 --> 00:41:44,870
+is that all there is to it?
+
+1358
+00:41:44,870 --> 00:41:46,970
+We still need software.
+
+1359
+00:41:46,970 --> 00:41:47,530
+Think about it, isn't that right?
+
+1360
+00:41:47,530 --> 00:41:48,830
+And what exactly is software?
+
+1361
+00:41:48,830 --> 00:41:50,610
+Software is nothing but these 0s and 1s.
+
+1362
+00:41:50,610 --> 00:41:52,550
+These 0s and 1s have meaning.
+
+1363
+00:41:52,550 --> 00:41:54,310
+And who defines that meaning?
+
+1364
+00:41:54,310 --> 00:41:55,570
+Well, we do.
+
+1365
+00:41:55,570 --> 00:41:55,890
+Right?
+
+1366
+00:41:55,890 --> 00:41:57,490
+Once we've defined it,
+
+1367
+00:41:57,490 --> 00:42:00,710
+it goes into the processing units of the processor,
+
+1368
+00:42:00,710 --> 00:42:02,330
+and it decodes accordingly,
+
+1369
+00:42:02,330 --> 00:42:03,790
+then analyzes it,
+
+1370
+00:42:03,790 --> 00:42:04,570
+and it knows
+
+1371
+00:42:04,570 --> 00:42:05,550
+what we want it to do.
+
+1372
+00:42:05,550 --> 00:42:07,350
+Everything
+
+1373
+00:42:07,350 --> 00:42:08,410
+is actually designed by us
+
+1374
+00:42:08,410 --> 00:42:09,550
+and then carried out by the machine.
+
+1375
+00:42:09,550 --> 00:42:10,990
+That's the computer,
+
+1376
+00:42:10,990 --> 00:42:13,950
+and that's the entire workflow of how it operates.
+
+1377
+00:42:13,950 --> 00:42:15,890
+So,
+
+1378
+00:42:15,890 --> 00:42:19,350
+let's wrap up this chapter with
+
+1379
+00:42:19,350 --> 00:42:20,290
+a brief summary.
+
+1380
+00:42:20,290 --> 00:42:21,550
+Basically, what we've been talking about is
+
+1381
+00:42:21,550 --> 00:42:23,450
+How did the evolution of computers come about?
+
+1382
+00:42:23,450 --> 00:42:25,110
+Well, the very earliest
+
+1383
+00:42:25,110 --> 00:42:27,910
+predecessors of our computers
+
+1384
+00:42:27,910 --> 00:42:29,390
+actually worked in that kind of environment.
+
+1385
+00:42:29,390 --> 00:42:30,530
+Their programming
+
+1386
+00:42:30,530 --> 00:42:33,410
+was really binary programming,
+
+1387
+00:42:33,410 --> 00:42:34,990
+extremely primitive.
+
+1388
+00:42:34,990 --> 00:42:35,750
+And back then,
+
+1389
+00:42:35,750 --> 00:42:37,210
+software functionality was also fairly simple.
+
+1390
+00:42:37,210 --> 00:42:40,290
+You've probably seen some materials
+
+1391
+00:42:40,290 --> 00:42:41,390
+about how programming
+
+1392
+00:42:41,390 --> 00:42:42,970
+was actually done back then.
+
+1393
+00:42:42,970 --> 00:42:45,950
+It was punched with a punch machine.
+
+1394
+00:42:45,950 --> 00:42:46,830
+Make sure you understand this,
+
+1395
+00:42:46,830 --> 00:42:48,810
+a hole punched by the machine meant 0,
+
+1396
+00:42:48,810 --> 00:42:50,170
+and a position left unpunched meant 1.
+
+1397
+00:42:50,170 --> 00:42:51,890
+So when they wrote programs,
+
+1398
+00:42:51,890 --> 00:42:52,870
+they would just take that finger
+
+1399
+00:42:52,870 --> 00:42:53,530
+on a paper tape,
+
+1400
+00:42:53,530 --> 00:42:55,270
+and keep punching holes in it.
+
+1401
+00:42:55,270 --> 00:42:56,930
+you punch 01 01 01
+
+1402
+00:42:56,930 --> 00:42:57,850
+This thing is basically our
+
+1403
+00:42:57,850 --> 00:42:58,810
+imagine this
+
+1404
+00:42:58,810 --> 00:42:59,930
+0 means punch a hole
+
+1405
+00:42:59,930 --> 00:43:00,970
+1 means don't punch a hole
+
+1406
+00:43:00,970 --> 00:43:01,610
+and this way
+
+1407
+00:43:01,610 --> 00:43:02,470
+after you finish punching it
+
+1408
+00:43:02,470 --> 00:43:03,250
+put it in front of the light
+
+1409
+00:43:03,250 --> 00:43:04,250
+and shine through it
+
+1410
+00:43:04,250 --> 00:43:05,450
+after the light passes through
+
+1411
+00:43:05,450 --> 00:43:06,490
+there's a receiver on the other side
+
+1412
+00:43:06,490 --> 00:43:07,010
+you get the idea?
+
+1413
+00:43:07,010 --> 00:43:08,530
+and over there it can decode it
+
+1414
+00:43:08,530 --> 00:43:10,690
+you can go search this up yourself
+
+1415
+00:43:10,690 --> 00:43:11,950
+this is the early computers
+
+1416
+00:43:11,950 --> 00:43:13,110
+this is what's called machine language
+
+1417
+00:43:13,110 --> 00:43:15,170
+this machine language,
+
+1418
+00:43:15,170 --> 00:43:16,910
+actually our underlying hardware today
+
+1419
+00:43:16,910 --> 00:43:17,730
+still works this way
+
+1420
+00:43:17,730 --> 00:43:18,510
+but you have to
+
+1421
+00:43:18,510 --> 00:43:19,710
+Writing programs this way is
+
+1422
+00:43:19,710 --> 00:43:21,110
+just too painful for us
+
+1423
+00:43:21,110 --> 00:43:21,470
+right?
+
+1424
+00:43:21,470 --> 00:43:22,890
+So what do we do?
+
+1425
+00:43:22,890 --> 00:43:24,770
+Well, later on
+
+1426
+00:43:24,770 --> 00:43:25,770
+we gradually
+
+1427
+00:43:25,770 --> 00:43:26,610
+got a bit smarter
+
+1428
+00:43:26,610 --> 00:43:28,010
+and invented assembly language.
+
+1429
+00:43:28,010 --> 00:43:31,210
+Now, assembly language is actually very simple.
+
+1430
+00:43:31,210 --> 00:43:33,710
+The only difference between assembly language and machine language
+
+1431
+00:43:33,710 --> 00:43:34,870
+is that it's written
+
+1432
+00:43:34,870 --> 00:43:35,910
+in something we humans can read.
+
+1433
+00:43:35,910 --> 00:43:38,590
+But the two still map one to one.
+
+1434
+00:43:38,590 --> 00:43:40,210
+As you can see,
+
+1435
+00:43:40,210 --> 00:43:41,450
+the first line,
+
+1436
+00:43:41,450 --> 00:43:44,710
+doesn't it look much nicer than this now?
+
+1437
+00:43:45,310 --> 00:43:47,970
+load r0 0x04.
+
+1438
+00:43:47,970 --> 00:43:48,590
+What does that mean?
+
+1439
+00:43:48,590 --> 00:43:50,130
+Let's translate it.
+
+1440
+00:43:50,130 --> 00:43:51,190
+It's really just our
+
+1441
+00:43:51,190 --> 00:43:53,090
+Of course, this is in English.
+
+1442
+00:43:53,090 --> 00:43:55,750
+Because computers were invented by Westerners,
+
+1443
+00:43:55,750 --> 00:43:57,610
+so they're explained in English.
+
+1444
+00:43:57,610 --> 00:43:59,550
+So here's a bit of a side note.
+
+1445
+00:43:59,550 --> 00:44:00,830
+If you want to learn computer science well,
+
+1446
+00:44:00,830 --> 00:44:02,810
+English is actually pretty important.
+
+1447
+00:44:02,810 --> 00:44:04,950
+Because when you're reading materials and things like that,
+
+1448
+00:44:04,950 --> 00:44:06,850
+if you don't approach them from an English perspective,
+
+1449
+00:44:06,850 --> 00:44:08,970
+you'll find it a bit painful.
+
+1450
+00:44:08,970 --> 00:44:10,910
+But you get used to it.
+
+1451
+00:44:10,910 --> 00:44:11,710
+Now, load.
+
+1452
+00:44:11,710 --> 00:44:14,290
+We just spent a while explaining it,
+
+1453
+00:44:14,290 --> 00:44:15,750
+and this instruction is really just doing that.
+
+1454
+00:44:15,750 --> 00:44:16,210
+See?
+
+1455
+00:44:16,210 --> 00:44:18,230
+Load what?
+
+1456
+00:44:18,230 --> 00:44:22,850
+Load the memory address 0x04
+
+1457
+00:44:22,850 --> 00:44:25,490
+into our register 0.
+
+1458
+00:44:25,490 --> 00:44:26,050
+See?
+
+1459
+00:44:26,050 --> 00:44:28,670
+So this assembly instruction
+
+1460
+00:44:28,670 --> 00:44:30,650
+is obviously much easier to read.
+
+1461
+00:44:30,650 --> 00:44:33,290
+When we write it in assembly language,
+
+1462
+00:44:33,290 --> 00:44:36,290
+it's already quite close to human language.
+
+1463
+00:44:36,290 --> 00:44:38,050
+So the second machine instruction,
+
+1464
+00:44:38,050 --> 00:44:41,030
+is simply load r1, 0x05.
+
+1465
+00:44:41,030 --> 00:44:42,670
+The third instruction,
+
+1466
+00:44:42,670 --> 00:44:44,010
+as we just said, is addition.
+
+1467
+00:44:44,010 --> 00:44:46,830
+It adds the two registers r0 and r1,
+
+1468
+00:44:46,830 --> 00:44:48,830
+and then stores the result in r0.
+
+1469
+00:44:48,830 --> 00:44:49,490
+Right, everyone?
+
+1470
+00:44:49,490 --> 00:44:52,410
+we members just have to learn assembly
+
+1471
+00:44:52,410 --> 00:44:55,530
+So you all still need to get used to this kind of language.
+
+1472
+00:44:55,530 --> 00:44:57,030
+And the fourth instruction,
+
+1473
+00:44:57,030 --> 00:44:58,370
+is simply to take
+
+1474
+00:44:58,370 --> 00:45:01,830
+the final result from r0,
+
+1475
+00:45:01,830 --> 00:45:03,410
+and move it to 0x04,
+
+1476
+00:45:03,410 --> 00:45:05,770
+06, that memory location.
+
+1477
+00:45:05,770 --> 00:45:08,010
+And the data,
+
+1478
+00:45:08,010 --> 00:45:09,530
+is simply 0120 placed there.
+
+1479
+00:45:09,530 --> 00:45:10,550
+Through this kind of thing,
+
+1480
+00:45:10,550 --> 00:45:12,370
+when we talk about assembly later,
+
+1481
+00:45:12,370 --> 00:45:13,470
+What exactly are these concepts we've been talking about?
+
+1482
+00:45:13,470 --> 00:45:15,030
+It's really just telling us
+
+1483
+00:45:15,030 --> 00:45:16,190
+here we put a byte,
+
+1484
+00:45:16,190 --> 00:45:16,970
+put a byte,
+
+1485
+00:45:16,970 --> 00:45:17,610
+put a byte,
+
+1486
+00:45:17,610 --> 00:45:19,290
+and in the end,
+
+1487
+00:45:19,290 --> 00:45:21,370
+this part becomes assembly language.
+
+1488
+00:45:21,370 --> 00:45:24,690
+We can no longer see our machine instructions.
+
+1489
+00:45:24,690 --> 00:45:25,970
+But this process,
+
+1490
+00:45:25,970 --> 00:45:27,210
+we say, hasn't really been lost,
+
+1491
+00:45:27,210 --> 00:45:28,170
+because our assembler
+
+1492
+00:45:28,170 --> 00:45:29,170
+did that for us.
+
+1493
+00:45:29,170 --> 00:45:29,650
+Right?
+
+1494
+00:45:29,650 --> 00:45:31,070
+After studying compilation,
+
+1495
+00:45:31,070 --> 00:45:32,270
+you should have some understanding of this.
+
+1496
+00:45:32,270 --> 00:45:33,670
+Now, as you know,
+
+1497
+00:45:33,670 --> 00:45:35,310
+writing in assembly is still painful.
+
+1498
+00:45:35,310 --> 00:45:36,830
+Because, first of all,
+
+1499
+00:45:36,830 --> 00:45:38,070
+as we just saw,
+
+1500
+00:45:38,070 --> 00:45:38,970
+assembly and machine instructions
+
+1501
+00:45:38,970 --> 00:45:40,490
+It's basically a one-to-one result,
+
+1502
+00:45:40,490 --> 00:45:40,910
+right?
+
+1503
+00:45:40,910 --> 00:45:42,250
+If your program
+
+1504
+00:45:42,250 --> 00:45:43,350
+is written to be very complex,
+
+1505
+00:45:43,350 --> 00:45:45,090
+your assembly code will end up very long,
+
+1506
+00:45:45,090 --> 00:45:46,090
+and hard to read.
+
+1507
+00:45:46,090 --> 00:45:46,690
+This stuff—
+
+1508
+00:45:46,690 --> 00:45:48,350
+these four instructions are still easy to read right now,
+
+1509
+00:45:48,350 --> 00:45:49,350
+but
+
+1510
+00:45:49,350 --> 00:45:51,270
+that's why in the end we
+
+1511
+00:45:51,270 --> 00:45:52,810
+ended up with C.
+
+1512
+00:45:52,810 --> 00:45:54,630
+C actually isn't a
+
+1513
+00:45:54,630 --> 00:45:56,350
+very abstract language,
+
+1514
+00:45:56,350 --> 00:45:58,030
+but it's already much easier to read.
+
+1515
+00:45:58,030 --> 00:45:59,250
+Take a look at this C code.
+
+1516
+00:45:59,250 --> 00:46:00,230
+What does it express right now?
+
+1517
+00:46:00,230 --> 00:46:01,630
+This C code—
+
+1518
+00:46:01,630 --> 00:46:02,710
+actually, compared to this code snippet here—
+
+1519
+00:46:02,710 --> 00:46:04,330
+it basically corresponds to it.
+
+1520
+00:46:04,330 --> 00:46:05,370
+Can you all read it?
+
+1521
+00:46:05,370 --> 00:46:07,070
+Now, when we look at C code,
+
+1522
+00:46:07,070 --> 00:46:07,910
+have we already seen
+
+1523
+00:46:07,910 --> 00:46:08,650
+the essence of the computer?
+
+1524
+00:46:08,650 --> 00:46:10,670
+That is to say, when you see
+
+1525
+00:46:10,670 --> 00:46:11,370
+this piece of C code,
+
+1526
+00:46:11,370 --> 00:46:11,850
+in your head,
+
+1527
+00:46:11,850 --> 00:46:12,410
+can you picture
+
+1528
+00:46:12,410 --> 00:46:13,330
+that it is really just 0101?
+
+1529
+00:46:13,330 --> 00:46:16,150
+Look at this.
+
+1530
+00:46:16,150 --> 00:46:17,190
+Now we know that
+
+1531
+00:46:17,190 --> 00:46:19,050
+when we define an array
+
+1532
+00:46:19,050 --> 00:46:20,230
+of bytes —
+
+1533
+00:46:20,230 --> 00:46:21,470
+this byte array,
+
+1534
+00:46:21,470 --> 00:46:22,930
+an array of three bytes,
+
+1535
+00:46:22,930 --> 00:46:23,690
+with value 120,
+
+1536
+00:46:23,690 --> 00:46:25,310
+what is it actually in memory?
+
+1537
+00:46:25,310 --> 00:46:27,770
+It is actually something like this.
+
+1538
+00:46:27,770 --> 00:46:30,610
+Can you picture this thing now?
+
+1539
+00:46:30,610 --> 00:46:32,670
+You must be able to picture this.
+
+1540
+00:46:32,670 --> 00:46:36,090
+When we execute this statement,
+
+1541
+00:46:36,090 --> 00:46:36,770
+What is it doing?
+
+1542
+00:46:36,770 --> 00:46:38,330
+Actually, this one is still fairly
+
+1543
+00:46:38,330 --> 00:46:39,530
+basically still one-to-one,
+
+1544
+00:46:39,530 --> 00:46:41,270
+but written in a more complex way.
+
+1545
+00:46:41,270 --> 00:46:42,250
+In fact, one statement
+
+1546
+00:46:42,250 --> 00:46:43,690
+might turn into many assembly instructions.
+
+1547
+00:46:43,690 --> 00:46:44,670
+So this statement
+
+1548
+00:46:44,670 --> 00:46:46,330
+is actually similar to which instruction?
+
+1549
+00:46:46,330 --> 00:46:48,230
+It's actually equivalent to this instruction,
+
+1550
+00:46:48,230 --> 00:46:48,610
+right?
+
+1551
+00:46:48,610 --> 00:46:50,910
+And then this assembly
+
+1552
+00:46:50,910 --> 00:46:52,510
+actually corresponds to this machine
+
+1553
+00:46:52,510 --> 00:46:54,790
+instruction, right?
+
+1554
+00:46:54,790 --> 00:46:56,990
+And so on,
+
+1555
+00:46:56,990 --> 00:46:59,270
+it's just that this instruction,
+
+1556
+00:46:59,270 --> 00:47:01,150
+taking this instruction as an example, is a bit more complex.
+
+1557
+00:47:01,150 --> 00:47:01,950
+As we know,
+
+1558
+00:47:01,950 --> 00:47:03,970
+one high-level language statement actually corresponds to several assembly instructions.
+
+1559
+00:47:03,970 --> 00:47:07,610
+Can you see that now?
+
+1560
+00:47:07,610 --> 00:47:09,310
+Let me clear the screen.
+
+1561
+00:47:09,310 --> 00:47:09,910
+Let's take a look.
+
+1562
+00:47:09,910 --> 00:47:11,370
+Let's pay attention to this one.
+
+1563
+00:47:11,370 --> 00:47:13,430
+This high-level line.
+
+1564
+00:47:13,430 --> 00:47:15,950
+Actually, one high-level line corresponds to two assembly instructions.
+
+1565
+00:47:15,950 --> 00:47:16,510
+Which two?
+
+1566
+00:47:16,510 --> 00:47:20,490
+Add and store.
+
+1567
+00:47:20,490 --> 00:47:21,050
+Think about it, isn't that right?
+
+1568
+00:47:21,050 --> 00:47:23,930
+Because this thing, arrow2,
+
+1569
+00:47:23,930 --> 00:47:25,470
+actually corresponds to which block of memory?
+
+1570
+00:47:25,470 --> 00:47:27,770
+It's actually this block of memory.
+
+1571
+00:47:27,770 --> 00:47:28,370
+Right?
+
+1572
+00:47:28,370 --> 00:47:32,510
+So these two assembly instructions
+
+1573
+00:47:32,510 --> 00:47:35,630
+actually correspond to this one line of high-level language.
+
+1574
+00:47:35,630 --> 00:47:39,220
+And what these two assembly instructions correspond to
+
+1575
+00:47:39,220 --> 00:47:41,740
+are actually these two machine instructions.
+
+1576
+00:47:41,740 --> 00:47:45,530
+So from here you can see
+
+1577
+00:47:45,530 --> 00:47:47,710
+that high-level language is really getting more and more refined.
+
+1578
+00:47:47,710 --> 00:47:49,230
+Alright, so
+
+1579
+00:47:49,230 --> 00:47:52,030
+this is the evolution of our languages.
+
+1580
+00:47:52,030 --> 00:47:54,310
+From machine language, to assembly language, to high-level language.
+
+1581
+00:47:54,310 --> 00:47:55,210
+So high-level languages might...
+
+1582
+00:47:55,210 --> 00:47:56,990
+Now there are plenty of high-level languages.
+
+1583
+00:47:56,990 --> 00:48:00,630
+C is actually still a relatively low-level high-level language.
+
+1584
+00:48:00,630 --> 00:48:03,550
+If you're developing something these days...
+
+1585
+00:48:03,550 --> 00:48:05,790
+like Java or something...
+
+1586
+00:48:05,790 --> 00:48:06,830
+languages at that higher level...
+
+1587
+00:48:06,830 --> 00:48:08,410
+the abstraction is even more intense.
+
+1588
+00:48:08,410 --> 00:48:11,830
+So the real point of this course is to get everyone...
+
+1589
+00:48:11,830 --> 00:48:13,790
+to look downward.
+
+1590
+00:48:13,790 --> 00:48:17,810
+Once we can see what the essence of a computer really is...
+
+1591
+00:48:17,810 --> 00:48:20,130
+then this course has achieved its goal.
+
+1592
+00:48:20,130 --> 00:48:23,270
+So at this point, let's say...
+
+1593
+00:48:23,270 --> 00:48:25,430
+when you look at that printf statement...
+
+1594
+00:48:25,430 --> 00:48:27,310
+have you ever wondered...
+
+1595
+00:48:27,310 --> 00:48:29,090
+what's actually behind it?
+
+1596
+00:48:29,090 --> 00:48:31,070
+How does this process actually happen?
+
+1597
+00:48:31,070 --> 00:48:33,350
+It's really a reverse...
+
+1598
+00:48:33,350 --> 00:48:34,270
+a backwards process.
+
+1599
+00:48:34,270 --> 00:48:34,550
+Right?
+
+1600
+00:48:34,550 --> 00:48:37,790
+I won't go into that here.
+
+1601
+00:48:37,790 --> 00:48:39,730
+Just now,
+
+1602
+00:48:39,730 --> 00:48:41,230
+what I mainly introduced to you was
+
+1603
+00:48:41,230 --> 00:48:46,070
+how programs developed
+
+1604
+00:48:46,070 --> 00:48:48,450
+from assembly language
+
+1605
+00:48:48,450 --> 00:48:49,910
+from machine language to assembly language
+
+1606
+00:48:49,910 --> 00:48:50,830
+to high-level languages,
+
+1607
+00:48:50,830 --> 00:48:52,170
+such a development process.
+
+1608
+00:48:52,170 --> 00:48:54,250
+Now, next,
+
+1609
+00:48:54,250 --> 00:48:57,670
+I will introduce the fourth part of this chapter,
+
+1610
+00:48:57,670 --> 00:49:00,430
+which is the memory hierarchy.
+
+1611
+00:49:00,430 --> 00:49:01,990
+So, on this,
+
+1612
+00:49:01,990 --> 00:49:05,950
+as we know, in what I just introduced to you
+
+1613
+00:49:05,950 --> 00:49:09,470
+about the composition of a computer's storage devices,
+
+1614
+00:49:09,470 --> 00:49:14,030
+we saw that several parts are related to storage.
+
+1615
+00:49:14,030 --> 00:49:17,290
+The first part is registers,
+
+1616
+00:49:17,290 --> 00:49:19,870
+the second part is memory,
+
+1617
+00:49:19,870 --> 00:49:21,710
+and the third part is the hard disk.
+
+1618
+00:49:21,710 --> 00:49:25,930
+So these parts are all hardware-related parts,
+
+1619
+00:49:25,930 --> 00:49:28,630
+the parts related to storage.
+
+1620
+00:49:28,630 --> 00:49:32,670
+So these parts, during the running of a program,
+
+1621
+00:49:32,670 --> 00:49:34,510
+Both play a very important role.
+
+1622
+00:49:34,510 --> 00:49:40,210
+Between them there is a very important pyramid structure.
+
+1623
+00:49:40,210 --> 00:49:41,170
+Let's take a look at it together.
+
+1624
+00:49:41,170 --> 00:49:45,630
+Now, this diagram is also an important one for our hierarchy.
+
+1625
+00:49:45,630 --> 00:49:46,690
+Take a look, everyone.
+
+1626
+00:49:46,690 --> 00:49:52,970
+In this pyramid diagram, the higher up you go, the closer it is to our processor.
+
+1627
+00:49:52,970 --> 00:49:55,570
+For example, registers and caches.
+
+1628
+00:49:55,570 --> 00:50:00,690
+The further down you go, the further away it is from our processor.
+
+1629
+00:50:00,690 --> 00:50:05,450
+Now, for this part closest to the processor — the registers and caches —
+
+1630
+00:50:05,450 --> 00:50:08,430
+their characteristic is that they are relatively fast,
+
+1631
+00:50:08,430 --> 00:50:10,250
+but their capacity is relatively small.
+
+1632
+00:50:10,250 --> 00:50:12,010
+For example, take typical registers.
+
+1633
+00:50:12,010 --> 00:50:14,930
+In various processor architectures,
+
+1634
+00:50:14,930 --> 00:50:17,990
+there are at most only a few hundred registers.
+
+1635
+00:50:17,990 --> 00:50:20,310
+But this part,
+
+1636
+00:50:20,310 --> 00:50:22,950
+the manufacturing cost is relatively high.
+
+1637
+00:50:22,950 --> 00:50:25,050
+And the further away it is from our processor,
+
+1638
+00:50:25,050 --> 00:50:28,170
+its processing speed gets faster and faster,
+
+1639
+00:50:28,170 --> 00:50:29,310
+slower and slower,
+
+1640
+00:50:29,310 --> 00:50:32,070
+while the capacity can be made larger and larger.
+
+1641
+00:50:32,070 --> 00:50:35,170
+And its cost can also be made lower and lower.
+
+1642
+00:50:35,170 --> 00:50:40,710
+So this is the hierarchy of our storage devices.
+
+1643
+00:50:40,710 --> 00:50:42,390
+Now, from a programmer's point of view,
+
+1644
+00:50:42,390 --> 00:50:44,330
+the reason we understand this hierarchy
+
+1645
+00:50:44,330 --> 00:50:47,470
+is mainly in the process of developing programs,
+
+1646
+00:50:47,470 --> 00:50:50,870
+so that our programs run fast,
+
+1647
+00:50:50,870 --> 00:50:53,890
+we can take the data we operate on frequently
+
+1648
+00:50:53,890 --> 00:50:57,170
+and place it as close to our processor as possible,
+
+1649
+00:50:57,170 --> 00:51:00,930
+for example in memory, cache, or registers.
+
+1650
+00:51:00,930 --> 00:51:05,450
+That way, our programs can run very fast.
+
+1651
+00:51:05,450 --> 00:51:08,470
+This is a kind of optimization technique.
+
+1652
+00:51:08,470 --> 00:51:11,430
+So I hope everyone
+
+1653
+00:51:11,430 --> 00:51:14,870
+can also get an understanding of this diagram.
+
+1654
+00:51:14,870 --> 00:51:18,890
+This is the hierarchy of storage devices.
+
+1655
+00:51:18,890 --> 00:51:24,570
+The last part, as the final section of this chapter,
+
+1656
+00:51:24,570 --> 00:51:25,710
+the last part,
+
+1657
+00:51:25,710 --> 00:51:31,970
+as an important part of our entire computer system,
+
+1658
+00:51:31,970 --> 00:51:32,610
+is the operating system.
+
+1659
+00:51:32,610 --> 00:51:34,110
+This is also an important topic
+
+1660
+00:51:34,110 --> 00:51:39,670
+that I hope everyone will study in this course.
+
+1661
+00:51:39,670 --> 00:51:42,050
+So this is our last operating system.
+
+1662
+00:51:42,050 --> 00:51:44,930
+Now, as for this operating system,
+
+1663
+00:51:44,930 --> 00:51:46,950
+we know that in
+
+1664
+00:51:46,950 --> 00:51:49,530
+in our entire
+
+1665
+00:51:49,530 --> 00:51:52,510
+computer system,
+
+1666
+00:51:52,510 --> 00:51:55,590
+at the very bottom we have our hardware,
+
+1667
+00:51:55,590 --> 00:51:58,610
+and at the very top we have our software.
+
+1668
+00:51:58,610 --> 00:52:00,970
+Now, as software developed,
+
+1669
+00:52:00,970 --> 00:52:02,870
+software split into two parts:
+
+1670
+00:52:02,870 --> 00:52:04,950
+one part is the operating system,
+
+1671
+00:52:04,950 --> 00:52:06,750
+and the other part is application programs.
+
+1672
+00:52:06,750 --> 00:52:09,350
+Now, between the operating system and the application programs,
+
+1673
+00:52:09,350 --> 00:52:13,070
+there is an interface.
+
+1674
+00:52:13,070 --> 00:52:14,130
+And this interface,
+
+1675
+00:52:14,130 --> 00:52:16,150
+we call system calls.
+
+1676
+00:52:16,150 --> 00:52:19,090
+And between our operating system and the hardware,
+
+1677
+00:52:19,090 --> 00:52:21,270
+there is also a layer of interface.
+
+1678
+00:52:21,270 --> 00:52:22,250
+And this layer of interface,
+
+1679
+00:52:22,250 --> 00:52:24,190
+we call the instruction set architecture.
+
+1680
+00:52:24,190 --> 00:52:26,790
+So the instruction set architecture,
+
+1681
+00:52:26,790 --> 00:52:31,170
+which is also what we'll cover in detail in the next chapter
+
+1682
+00:52:31,170 --> 00:52:33,790
+Now, the operating system,
+
+1683
+00:52:33,790 --> 00:52:36,190
+which is the main focus of this course,
+
+1684
+00:52:36,190 --> 00:52:39,370
+its main functions
+
+1685
+00:52:39,370 --> 00:52:42,170
+can be boiled down to two.
+
+1686
+00:52:42,170 --> 00:52:45,910
+The first is to protect the hardware from being abused
+
+1687
+00:52:45,910 --> 00:52:46,890
+by out-of-control software applications and programs.
+
+1688
+00:52:46,890 --> 00:52:52,250
+Because if we let applications access hardware directly,
+
+1689
+00:52:52,250 --> 00:52:57,510
+given varying levels of programmer skill,
+
+1690
+00:52:57,510 --> 00:53:01,070
+or unexpected exceptions in a program,
+
+1691
+00:53:01,070 --> 00:53:03,030
+the hardware could be damaged.
+
+1692
+00:53:03,030 --> 00:53:04,790
+So one of the operating system's main functions
+
+1693
+00:53:04,790 --> 00:53:06,370
+is to
+
+1694
+00:53:06,370 --> 00:53:09,390
+prevent applications from accessing hardware directly,
+
+1695
+00:53:09,390 --> 00:53:10,830
+and instead go through our system calls,
+
+1696
+00:53:10,830 --> 00:53:13,770
+with the operating system accessing the hardware on their behalf,
+
+1697
+00:53:13,770 --> 00:53:17,790
+so the operating system serves to protect the hardware.
+
+1698
+00:53:17,790 --> 00:53:20,150
+On the other hand, going upward,
+
+1699
+00:53:20,150 --> 00:53:24,170
+it provides applications with a simple, consistent abstraction interface,
+
+1700
+00:53:24,170 --> 00:53:25,410
+which is exactly the system call.
+
+1701
+00:53:25,410 --> 00:53:31,050
+so that applications can access the operating system through system calls,
+
+1702
+00:53:31,050 --> 00:53:33,990
+and thereby indirectly access our hardware.
+
+1703
+00:53:33,990 --> 00:53:39,540
+Alright, for today's class,
+
+1704
+00:53:39,540 --> 00:53:40,940
+that's all I'll cover for you.

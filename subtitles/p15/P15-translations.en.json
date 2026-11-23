@@ -1,0 +1,1878 @@
+[
+ {
+  "id": 0,
+  "text": "Chapter 6. From Chapter 1 to Chapter 5, we've basically covered all the prerequisite material for you."
+ },
+ {
+  "id": 1,
+  "text": "That is to say, from here on,"
+ },
+ {
+  "id": 2,
+  "text": "we're going to start"
+ },
+ {
+  "id": 3,
+  "text": "to actually write a"
+ },
+ {
+  "id": 4,
+  "text": "try our hand at writing an operating system from scratch."
+ },
+ {
+  "id": 5,
+  "text": "Now, before writing an operating system,"
+ },
+ {
+  "id": 6,
+  "text": "there's a lot of knowledge we need to lay down first."
+ },
+ {
+  "id": 7,
+  "text": "That's what we covered in the earlier parts."
+ },
+ {
+  "id": 8,
+  "text": "So you can see"
+ },
+ {
+  "id": 9,
+  "text": "there really is quite a lot of content involved."
+ },
+ {
+  "id": 10,
+  "text": "Why do we say writing an operating system is rather hard?"
+ },
+ {
+  "id": 11,
+  "text": "Well, it's because of all the"
+ },
+ {
+  "id": 12,
+  "text": "basic knowledge you have to master beforehand, and there's quite a bit of it."
+ },
+ {
+  "id": 13,
+  "text": "So getting started is not exactly easy."
+ },
+ {
+  "id": 14,
+  "text": "So from Chapter 6 all the way to the end,"
+ },
+ {
+  "id": 15,
+  "text": "what we're going to do is write a"
+ },
+ {
+  "id": 16,
+  "text": "small, simple operating system for you."
+ },
+ {
+  "id": 17,
+  "text": "And through this study,"
+ },
+ {
+  "id": 18,
+  "text": "you'll get to know a bit more,"
+ },
+ {
+  "id": 19,
+  "text": "and go deeper into some of the RISC-V details."
+ },
+ {
+  "id": 20,
+  "text": "especially privileged instructions"
+ },
+ {
+  "id": 21,
+  "text": "and some things in the privileged architecture"
+ },
+ {
+  "id": 22,
+  "text": "Let's first take a look at this Chapter 6"
+ },
+ {
+  "id": 23,
+  "text": "Chapter 6 is actually"
+ },
+ {
+  "id": 24,
+  "text": "still a"
+ },
+ {
+  "id": 25,
+  "text": "kind of introduction to our second part"
+ },
+ {
+  "id": 26,
+  "text": "Let me quickly walk you through it"
+ },
+ {
+  "id": 27,
+  "text": "roughly four parts"
+ },
+ {
+  "id": 28,
+  "text": "namely the definition of the operating system"
+ },
+ {
+  "id": 29,
+  "text": "operating system classification"
+ },
+ {
+  "id": 30,
+  "text": "typical RTOSes"
+ },
+ {
+  "id": 31,
+  "text": "and a brief introduction to the course project"
+ },
+ {
+  "id": 32,
+  "text": "So this covers just this little bit"
+ },
+ {
+  "id": 33,
+  "text": "I won't go into that"
+ },
+ {
+  "id": 34,
+  "text": "the reference manual"
+ },
+ {
+  "id": 35,
+  "text": "As for the operating system,"
+ },
+ {
+  "id": 36,
+  "text": "we mentioned it earlier,"
+ },
+ {
+  "id": 37,
+  "text": "and we'll review it here"
+ },
+ {
+  "id": 38,
+  "text": "That is, the operating system,"
+ },
+ {
+  "id": 39,
+  "text": "which in English is called Operating System"
+ },
+ {
+  "id": 40,
+  "text": "which is short for OS"
+ },
+ {
+  "id": 41,
+  "text": "and so it,"
+ },
+ {
+  "id": 42,
+  "text": "is actually also a collection of software,"
+ },
+ {
+  "id": 43,
+  "text": "right?"
+ },
+ {
+  "id": 44,
+  "text": "We say that the operating system,"
+ },
+ {
+  "id": 45,
+  "text": "actually also branched out from software."
+ },
+ {
+  "id": 46,
+  "text": "The part that floats upward,"
+ },
+ {
+  "id": 47,
+  "text": "became application software,"
+ },
+ {
+  "id": 48,
+  "text": "and the part that sinks down became the operating system."
+ },
+ {
+  "id": 49,
+  "text": "Now this diagram,"
+ },
+ {
+  "id": 50,
+  "text": "is also a figure we found"
+ },
+ {
+  "id": 51,
+  "text": "on Wikipedia,"
+ },
+ {
+  "id": 52,
+  "text": "and you can take a look."
+ },
+ {
+  "id": 53,
+  "text": "It shows where the operating system sits"
+ },
+ {
+  "id": 54,
+  "text": "within the overall software system."
+ },
+ {
+  "id": 55,
+  "text": "That is to say, our operating system,"
+ },
+ {
+  "id": 56,
+  "text": "including this,"
+ },
+ {
+  "id": 57,
+  "text": "especially the operating system in the narrow sense,"
+ },
+ {
+  "id": 58,
+  "text": "namely the kernel of the operating system,"
+ },
+ {
+  "id": 59,
+  "text": "is actually sandwiched between"
+ },
+ {
+  "id": 60,
+  "text": "it actually includes this"
+ },
+ {
+  "id": 61,
+  "text": "the driver is also part of the kernel"
+ },
+ {
+  "id": 62,
+  "text": "so this, between the hardware and"
+ },
+ {
+  "id": 63,
+  "text": "the application program"
+ },
+ {
+  "id": 64,
+  "text": "the application program is on top"
+ },
+ {
+  "id": 65,
+  "text": "and in the middle"
+ },
+ {
+  "id": 66,
+  "text": "through a system call"
+ },
+ {
+  "id": 67,
+  "text": "right"
+ },
+ {
+  "id": 68,
+  "text": "this diagram"
+ },
+ {
+  "id": 69,
+  "text": "should be a classic one to all of you"
+ },
+ {
+  "id": 70,
+  "text": "so as for the operating system"
+ },
+ {
+  "id": 71,
+  "text": "we say"
+ },
+ {
+  "id": 72,
+  "text": "there is a distinction between the broad sense and the narrow sense"
+ },
+ {
+  "id": 73,
+  "text": "so in the narrow sense"
+ },
+ {
+  "id": 74,
+  "text": "it is really just the kernel"
+ },
+ {
+  "id": 75,
+  "text": "that is what we usually talk about"
+ },
+ {
+  "id": 76,
+  "text": "things like Linux"
+ },
+ {
+  "id": 77,
+  "text": "that Linux thing"
+ },
+ {
+  "id": 78,
+  "text": "is really just a kernel"
+ },
+ {
+  "id": 79,
+  "text": "right"
+ },
+ {
+  "id": 80,
+  "text": "There are many kinds of operating systems in the broad sense."
+ },
+ {
+  "id": 81,
+  "text": "For example, what we call Ubuntu,"
+ },
+ {
+  "id": 82,
+  "text": "and things like Debian,"
+ },
+ {
+  "id": 83,
+  "text": "right?"
+ },
+ {
+  "id": 84,
+  "text": "Now, these things,"
+ },
+ {
+  "id": 85,
+  "text": "we also call them operating systems."
+ },
+ {
+  "id": 86,
+  "text": "But actually, that is a broad concept."
+ },
+ {
+  "id": 87,
+  "text": "In other words, it is really a distribution package."
+ },
+ {
+  "id": 88,
+  "text": "You all should know about this, right?"
+ },
+ {
+  "id": 89,
+  "text": "That is to say, take Ubuntu for example,"
+ },
+ {
+  "id": 90,
+  "text": "it is nothing more than a Linux kernel,"
+ },
+ {
+  "id": 91,
+  "text": "plus some upper-layer software,"
+ },
+ {
+  "id": 92,
+  "text": "installation packages and so on, put together."
+ },
+ {
+  "id": 93,
+  "text": "It is actually a distribution package."
+ },
+ {
+  "id": 94,
+  "text": "But in the broad sense, we also call it an operating system."
+ },
+ {
+  "id": 95,
+  "text": "Our Windows is also a broad-sense operating system."
+ },
+ {
+  "id": 96,
+  "text": "Because Windows also has a kernel,"
+ },
+ {
+  "id": 97,
+  "text": "it is just that we probably don't really,"
+ },
+ {
+  "id": 98,
+  "text": "it is not open source,"
+ },
+ {
+  "id": 99,
+  "text": "so we don't really look into it much."
+ },
+ {
+  "id": 100,
+  "text": "But it also has this concept inside it."
+ },
+ {
+  "id": 101,
+  "text": "So that's the basic concept of an operating system."
+ },
+ {
+  "id": 102,
+  "text": "Now, when we talk about operating systems,"
+ },
+ {
+  "id": 103,
+  "text": "based on certain application scenarios,"
+ },
+ {
+  "id": 104,
+  "text": "we can divide them into a few major categories."
+ },
+ {
+  "id": 105,
+  "text": "One classification puts them into three major categories."
+ },
+ {
+  "id": 106,
+  "text": "The first type we call a bare-metal system."
+ },
+ {
+  "id": 107,
+  "text": "This kind of system,"
+ },
+ {
+  "id": 108,
+  "text": "it's very small,"
+ },
+ {
+  "id": 109,
+  "text": "and it doesn't really have any layering."
+ },
+ {
+  "id": 110,
+  "text": "It mainly runs in some"
+ },
+ {
+  "id": 111,
+  "text": "what we'd call small embedded"
+ },
+ {
+  "id": 112,
+  "text": "small-scale controllers,"
+ },
+ {
+  "id": 113,
+  "text": "like microcontrollers, for example,"
+ },
+ {
+  "id": 114,
+  "text": "where it can only control some simple peripherals."
+ },
+ {
+  "id": 115,
+  "text": "So when we talk about these three categories,"
+ },
+ {
+  "id": 116,
+  "text": "we can actually also take the opportunity to review"
+ },
+ {
+  "id": 117,
+  "text": "what we discussed earlier about RISC-V,"
+ },
+ {
+  "id": 118,
+  "text": "namely the concept of so-called privileged modes,"
+ },
+ {
+  "id": 119,
+  "text": "the concept of privilege levels."
+ },
+ {
+  "id": 120,
+  "text": "This diagram,"
+ },
+ {
+  "id": 121,
+  "text": "that is, the diagram below,"
+ },
+ {
+  "id": 122,
+  "text": "I think you still remember it."
+ },
+ {
+  "id": 123,
+  "text": "We talked about it earlier."
+ },
+ {
+  "id": 124,
+  "text": "That is to say,"
+ },
+ {
+  "id": 125,
+  "text": "in RISC-V,"
+ },
+ {
+  "id": 126,
+  "text": "it takes these privilege levels"
+ },
+ {
+  "id": 127,
+  "text": "and divides them"
+ },
+ {
+  "id": 128,
+  "text": "into, currently, three major categories:"
+ },
+ {
+  "id": 129,
+  "text": "Machine,"
+ },
+ {
+  "id": 130,
+  "text": "and Supervisor,"
+ },
+ {
+  "id": 131,
+  "text": "and User Mode,"
+ },
+ {
+  "id": 132,
+  "text": "right?"
+ },
+ {
+  "id": 133,
+  "text": "Still remember?"
+ },
+ {
+  "id": 134,
+  "text": "Now, at the time, in this diagram,"
+ },
+ {
+  "id": 135,
+  "text": "he also mentioned this concept."
+ },
+ {
+  "id": 136,
+  "text": "In fact, it corresponds to ours."
+ },
+ {
+  "id": 137,
+  "text": "For example, this logical system,"
+ },
+ {
+  "id": 138,
+  "text": "let's just use this diagram"
+ },
+ {
+  "id": 139,
+  "text": "and go through it together."
+ },
+ {
+  "id": 140,
+  "text": "Now, for the logical system,"
+ },
+ {
+  "id": 141,
+  "text": "as we just said,"
+ },
+ {
+  "id": 142,
+  "text": "it is a kind of"
+ },
+ {
+  "id": 143,
+  "text": "what actually corresponds to our,"
+ },
+ {
+  "id": 144,
+  "text": "that is, the kind of thing described here,"
+ },
+ {
+  "id": 145,
+  "text": "a simple embedded system,"
+ },
+ {
+  "id": 146,
+  "text": "is what we call a logical system."
+ },
+ {
+  "id": 147,
+  "text": "Now, for this kind of system,"
+ },
+ {
+  "id": 148,
+  "text": "it actually is just,"
+ },
+ {
+  "id": 149,
+  "text": "we actually just directly"
+ },
+ {
+  "id": 150,
+  "text": "only need to implement our RISC-V's,"
+ },
+ {
+  "id": 151,
+  "text": "machine mode,"
+ },
+ {
+  "id": 152,
+  "text": "and that's actually enough."
+ },
+ {
+  "id": 153,
+  "text": "Now, the second category,"
+ },
+ {
+  "id": 154,
+  "text": "it is also mentioned here,"
+ },
+ {
+  "id": 155,
+  "text": "that is, it includes M and,"
+ },
+ {
+  "id": 156,
+  "text": "machine mode and this user mode."
+ },
+ {
+  "id": 157,
+  "text": "Now, it,"
+ },
+ {
+  "id": 158,
+  "text": "the main difference from the one above,"
+ },
+ {
+  "id": 159,
+  "text": "is that"
+ },
+ {
+  "id": 160,
+  "text": "What it mentions is that"
+ },
+ {
+  "id": 161,
+  "text": "it is a kind of"
+ },
+ {
+  "id": 162,
+  "text": "embedded system with a certain level of security"
+ },
+ {
+  "id": 163,
+  "text": "built into it."
+ },
+ {
+  "id": 164,
+  "text": "So what does that mean?"
+ },
+ {
+  "id": 165,
+  "text": "This thing is actually somewhat"
+ },
+ {
+  "id": 166,
+  "text": "similar to what we commonly call"
+ },
+ {
+  "id": 167,
+  "text": "an RTOS,"
+ },
+ {
+  "id": 168,
+  "text": "that is, what we refer to as a"
+ },
+ {
+  "id": 169,
+  "text": "real-time operating system."
+ },
+ {
+  "id": 170,
+  "text": "Now, for this kind of system,"
+ },
+ {
+  "id": 171,
+  "text": "what it has"
+ },
+ {
+  "id": 172,
+  "text": "so-called"
+ },
+ {
+  "id": 173,
+  "text": "a certain level of security"
+ },
+ {
+  "id": 174,
+  "text": "is reflected in the fact that"
+ },
+ {
+  "id": 175,
+  "text": "it can distinguish"
+ },
+ {
+  "id": 176,
+  "text": "at least two modes:"
+ },
+ {
+  "id": 177,
+  "text": "one is machine mode,"
+ },
+ {
+  "id": 178,
+  "text": "and one is user mode."
+ },
+ {
+  "id": 179,
+  "text": "In other words,"
+ },
+ {
+  "id": 180,
+  "text": "Ordinary applications,"
+ },
+ {
+  "id": 181,
+  "text": "they run in User mode."
+ },
+ {
+  "id": 182,
+  "text": "The kernel,"
+ },
+ {
+  "id": 183,
+  "text": "including some low-level drivers,"
+ },
+ {
+  "id": 184,
+  "text": "may run in Machine mode."
+ },
+ {
+  "id": 185,
+  "text": "Now, in User mode,"
+ },
+ {
+  "id": 186,
+  "text": "our access to the underlying layer,"
+ },
+ {
+  "id": 187,
+  "text": "it is protected."
+ },
+ {
+  "id": 188,
+  "text": "We cannot directly access certain special physical devices,"
+ },
+ {
+  "id": 189,
+  "text": "including memory."
+ },
+ {
+  "id": 190,
+  "text": "Under these circumstances,"
+ },
+ {
+  "id": 191,
+  "text": "in general,"
+ },
+ {
+  "id": 192,
+  "text": "we would need the processor to"
+ },
+ {
+  "id": 193,
+  "text": "support what we mentioned for RISC-V,"
+ },
+ {
+  "id": 194,
+  "text": "a feature called physical memory protection."
+ },
+ {
+  "id": 195,
+  "text": "Of course, it doesn't have to be supported."
+ },
+ {
+  "id": 196,
+  "text": "But having it is of course better."
+ },
+ {
+  "id": 197,
+  "text": "Now, the real-time operating systems we often talk about,"
+ },
+ {
+  "id": 198,
+  "text": "most of them fall into this category."
+ },
+ {
+  "id": 199,
+  "text": "In that case,"
+ },
+ {
+  "id": 200,
+  "text": "And the third case below,"
+ },
+ {
+  "id": 201,
+  "text": "the main difference is that"
+ },
+ {
+  "id": 202,
+  "text": "let's look at the third one."
+ },
+ {
+  "id": 203,
+  "text": "The third one"
+ },
+ {
+  "id": 204,
+  "text": "corresponds to what RISC-V calls"
+ },
+ {
+  "id": 205,
+  "text": "an operating system that combines all three modes."
+ },
+ {
+  "id": 206,
+  "text": "Now, for this kind of system,"
+ },
+ {
+  "id": 207,
+  "text": "he believes the main point is this:"
+ },
+ {
+  "id": 208,
+  "text": "the typical application,"
+ },
+ {
+  "id": 209,
+  "text": "that is, so-called Unix-like operating systems,"
+ },
+ {
+  "id": 210,
+  "text": "systems like Linux,"
+ },
+ {
+  "id": 211,
+  "text": "FreeBSD,"
+ },
+ {
+  "id": 212,
+  "text": "these kinds of systems."
+ },
+ {
+  "id": 213,
+  "text": "For this type of system,"
+ },
+ {
+  "id": 214,
+  "text": "the main difference from the ones above is that"
+ },
+ {
+  "id": 215,
+  "text": "it adds one more level in between, called Supervisor Type."
+ },
+ {
+  "id": 216,
+  "text": "This Supervisor Type,"
+ },
+ {
+  "id": 217,
+  "text": "in other words,"
+ },
+ {
+  "id": 218,
+  "text": "when it enters Supervisor Type,"
+ },
+ {
+  "id": 219,
+  "text": "the most crucial thing is"
+ },
+ {
+  "id": 220,
+  "text": "The most important difference is"
+ },
+ {
+  "id": 221,
+  "text": "that it introduces the virtual memory mechanism, that is, virtual addresses"
+ },
+ {
+  "id": 222,
+  "text": "so it can support the concept of processes"
+ },
+ {
+  "id": 223,
+  "text": "It can separate this virtual address"
+ },
+ {
+  "id": 224,
+  "text": "from the physical address, and above that"
+ },
+ {
+  "id": 225,
+  "text": "this mode and the mode above it"
+ },
+ {
+  "id": 226,
+  "text": "In Machine mode, it actually"
+ },
+ {
+  "id": 227,
+  "text": "accesses memory directly using physical addresses"
+ },
+ {
+  "id": 228,
+  "text": "including some modes here"
+ },
+ {
+  "id": 229,
+  "text": "they all use physical addresses for access"
+ },
+ {
+  "id": 230,
+  "text": "Now, this is what we call the classification of hypervisors"
+ },
+ {
+  "id": 231,
+  "text": "roughly like this"
+ },
+ {
+  "id": 232,
+  "text": "In this course"
+ },
+ {
+  "id": 233,
+  "text": "we actually focus more on the two levels above"
+ },
+ {
+  "id": 234,
+  "text": "In this course"
+ },
+ {
+  "id": 235,
+  "text": "since our time is limited"
+ },
+ {
+  "id": 236,
+  "text": "we won't get into concepts related to very complex advanced hypervisors"
+ },
+ {
+  "id": 237,
+  "text": "In this course of ours,"
+ },
+ {
+  "id": 238,
+  "text": "our time is actually limited,"
+ },
+ {
+  "id": 239,
+  "text": "so we won't get into the more complex advanced hypervisor concepts."
+ },
+ {
+  "id": 240,
+  "text": "We actually still build on top of those two kinds."
+ },
+ {
+  "id": 241,
+  "text": "So this one."
+ },
+ {
+  "id": 242,
+  "text": "So let's take a look at what some typical RTOSs are."
+ },
+ {
+  "id": 243,
+  "text": "This is just something for you to be aware of."
+ },
+ {
+  "id": 244,
+  "text": "There are actually quite a lot of RTOSs out there."
+ },
+ {
+  "id": 245,
+  "text": "If you search for them online,"
+ },
+ {
+  "id": 246,
+  "text": "you'll actually find quite a lot."
+ },
+ {
+  "id": 247,
+  "text": "So I'll just"
+ },
+ {
+  "id": 248,
+  "text": "briefly introduce the common ones to you."
+ },
+ {
+  "id": 249,
+  "text": "For example, one of the more famous ones"
+ },
+ {
+  "id": 250,
+  "text": "is called FreeRTOS."
+ },
+ {
+  "id": 251,
+  "text": "I don't know if you've heard of it."
+ },
+ {
+  "id": 252,
+  "text": "FreeRTOS is very popular."
+ },
+ {
+  "id": 253,
+  "text": "It seems that nowadays"
+ },
+ {
+  "id": 254,
+  "text": "Amazon or whoever it is"
+ },
+ {
+  "id": 255,
+  "text": "uses it quite a lot too."
+ },
+ {
+  "id": 256,
+  "text": "When they're developing some small devices,"
+ },
+ {
+  "id": 257,
+  "text": "they tend to prefer this kind of thing."
+ },
+ {
+  "id": 258,
+  "text": "It was created back in 2003,"
+ },
+ {
+  "id": 259,
+  "text": "and it uses this kind of MIT license."
+ },
+ {
+  "id": 260,
+  "text": "This license is also quite flexible,"
+ },
+ {
+  "id": 261,
+  "text": "and fairly open as well."
+ },
+ {
+  "id": 262,
+  "text": "The design is also quite compact."
+ },
+ {
+  "id": 263,
+  "text": "Its entire core code is only about 3 to 4 C files,"
+ },
+ {
+  "id": 264,
+  "text": "so it's very easy to read and understand"
+ },
+ {
+  "id": 265,
+  "text": "the general functionality it implements."
+ },
+ {
+  "id": 266,
+  "text": "Maintainability is very strong,"
+ },
+ {
+  "id": 267,
+  "text": "since most of it is written in C,"
+ },
+ {
+  "id": 268,
+  "text": "so the readability is quite good."
+ },
+ {
+  "id": 269,
+  "text": "But for an operating system,"
+ },
+ {
+  "id": 270,
+  "text": "there are still some parts that cannot do without assembly."
+ },
+ {
+  "id": 271,
+  "text": "So assembly is also very important for us."
+ },
+ {
+  "id": 272,
+  "text": "Now, it implements some"
+ },
+ {
+  "id": 273,
+  "text": "basic features of our operating system,"
+ },
+ {
+  "id": 274,
+  "text": "including, for example, multi-threading,"
+ },
+ {
+  "id": 275,
+  "text": "mutual exclusion, semaphores,"
+ },
+ {
+  "id": 276,
+  "text": "and these concepts"
+ },
+ {
+  "id": 277,
+  "text": "we will also mention later on."
+ },
+ {
+  "id": 278,
+  "text": "Its support for architectures is also quite good,"
+ },
+ {
+  "id": 279,
+  "text": "for some of the popular CPUs we use."
+ },
+ {
+  "id": 280,
+  "text": "They all support it."
+ },
+ {
+  "id": 281,
+  "text": "For example, ARM,"
+ },
+ {
+  "id": 282,
+  "text": "x86 and such,"
+ },
+ {
+  "id": 283,
+  "text": "RISC-V is also supported."
+ },
+ {
+  "id": 284,
+  "text": "And it supports quite a number of microprocessor processors."
+ },
+ {
+  "id": 285,
+  "text": "Now, this RTOS is from abroad,"
+ },
+ {
+  "id": 286,
+  "text": "a fairly typical one."
+ },
+ {
+  "id": 287,
+  "text": "Then, for the corresponding one from our domestic side,"
+ },
+ {
+  "id": 288,
+  "text": "let me introduce it to you as well."
+ },
+ {
+  "id": 289,
+  "text": "Have you heard of"
+ },
+ {
+  "id": 290,
+  "text": "the operating system called RT-Thread?"
+ },
+ {
+  "id": 291,
+  "text": "It is also a real-time operating system,"
+ },
+ {
+  "id": 292,
+  "text": "basically corresponding quite well to the FreeRTOS we just mentioned."
+ },
+ {
+  "id": 293,
+  "text": "Its application scenarios are also similar."
+ },
+ {
+  "id": 294,
+  "text": "As for when it came into being,"
+ },
+ {
+  "id": 295,
+  "text": "it was slightly later than the previous one,"
+ },
+ {
+  "id": 296,
+  "text": "around 2006."
+ },
+ {
+  "id": 297,
+  "text": "The license is Apache."
+ },
+ {
+  "id": 298,
+  "text": "As for the specific features,"
+ },
+ {
+  "id": 299,
+  "text": "I have also listed them here."
+ },
+ {
+  "id": 300,
+  "text": "This is actually copied from its official website."
+ },
+ {
+  "id": 301,
+  "text": "I won't read it out here."
+ },
+ {
+  "id": 302,
+  "text": "As you can see,"
+ },
+ {
+  "id": 303,
+  "text": "for this kind of typical RTOS,"
+ },
+ {
+  "id": 304,
+  "text": "they're basically all like this."
+ },
+ {
+  "id": 305,
+  "text": "And as for RISC-V,"
+ },
+ {
+  "id": 306,
+  "text": "it also has a certain level of support."
+ },
+ {
+  "id": 307,
+  "text": "So those are the two we covered earlier,"
+ },
+ {
+  "id": 308,
+  "text": "which are fairly typical."
+ },
+ {
+  "id": 309,
+  "text": "Now this RTOS,"
+ },
+ {
+  "id": 310,
+  "text": "is actually the system we're going to develop ourselves today."
+ },
+ {
+  "id": 311,
+  "text": "I just gave it a name,"
+ },
+ {
+  "id": 312,
+  "text": "so it's easier to refer to."
+ },
+ {
+  "id": 313,
+  "text": "It's not some real external,"
+ },
+ {
+  "id": 314,
+  "text": "actual project out there."
+ },
+ {
+  "id": 315,
+  "text": "Actually, it's just our—"
+ },
+ {
+  "id": 316,
+  "text": "did I write this link wrong?"
+ },
+ {
+  "id": 317,
+  "text": "I messed it up."
+ },
+ {
+  "id": 318,
+  "text": "I'll go back and fix this link later."
+ },
+ {
+  "id": 319,
+  "text": "Sorry about that."
+ },
+ {
+  "id": 320,
+  "text": "This link seems to use rCore-Tutorial"
+ },
+ {
+  "id": 321,
+  "text": "That's not right."
+ },
+ {
+  "id": 322,
+  "text": "Skip this one."
+ },
+ {
+  "id": 323,
+  "text": "Actually, this thing..."
+ },
+ {
+  "id": 324,
+  "text": "It's actually our..."
+ },
+ {
+  "id": 325,
+  "text": "the little system we wrote ourselves."
+ },
+ {
+  "id": 326,
+  "text": "Well, it..."
+ },
+ {
+  "id": 327,
+  "text": "is really entirely for..."
+ },
+ {
+  "id": 328,
+  "text": "our current teaching and course development."
+ },
+ {
+  "id": 329,
+  "text": "It was born in 2021,"
+ },
+ {
+  "id": 330,
+  "text": "which is this year."
+ },
+ {
+  "id": 331,
+  "text": "In fact, I only wrote it today."
+ },
+ {
+  "id": 332,
+  "text": "It took me some time."
+ },
+ {
+  "id": 333,
+  "text": "To teach you this course,"
+ },
+ {
+  "id": 334,
+  "text": "I just wrote it myself, simply."
+ },
+ {
+  "id": 335,
+  "text": "As for the license,"
+ },
+ {
+  "id": 336,
+  "text": "we use BSD."
+ },
+ {
+  "id": 337,
+  "text": "This license is pretty good too."
+ },
+ {
+  "id": 338,
+  "text": "Basically, it means everyone can use it freely,"
+ },
+ {
+  "id": 339,
+  "text": "though of course it might not be of much use."
+ },
+ {
+  "id": 340,
+  "text": "And so our code is quite small."
+ },
+ {
+  "id": 341,
+  "text": "Actually, our lab has limited functionality,"
+ },
+ {
+  "id": 342,
+  "text": "because we are not"
+ },
+ {
+  "id": 343,
+  "text": "trying to build"
+ },
+ {
+  "id": 344,
+  "text": "actually trying to build"
+ },
+ {
+  "id": 345,
+  "text": "a truly practical system."
+ },
+ {
+  "id": 346,
+  "text": "It is entirely for the purpose of"
+ },
+ {
+  "id": 347,
+  "text": "learning some RISC-V stuff,"
+ },
+ {
+  "id": 348,
+  "text": "and we also"
+ },
+ {
+  "id": 349,
+  "text": "learn how to develop"
+ },
+ {
+  "id": 350,
+  "text": "a small system of our own from scratch."
+ },
+ {
+  "id": 351,
+  "text": "So as for the code part,"
+ },
+ {
+  "id": 352,
+  "text": "we use C and assembly,"
+ },
+ {
+  "id": 353,
+  "text": "and then,"
+ },
+ {
+  "id": 354,
+  "text": "below,"
+ },
+ {
+  "id": 355,
+  "text": "what follows mainly"
+ },
+ {
+  "id": 356,
+  "text": "involves content that we will"
+ },
+ {
+  "id": 357,
+  "text": "cover in the later parts of this course."
+ },
+ {
+  "id": 358,
+  "text": "The first part,"
+ },
+ {
+  "id": 359,
+  "text": "we simply"
+ },
+ {
+  "id": 360,
+  "text": "demonstrated some"
+ },
+ {
+  "id": 361,
+  "text": "basic memory allocation,"
+ },
+ {
+  "id": 362,
+  "text": "how to implement some memory allocation."
+ },
+ {
+  "id": 363,
+  "text": "Now here,"
+ },
+ {
+  "id": 364,
+  "text": "since we are not dealing with"
+ },
+ {
+  "id": 365,
+  "text": "virtual memory management,"
+ },
+ {
+  "id": 366,
+  "text": "so"
+ },
+ {
+  "id": 367,
+  "text": "our approach,"
+ },
+ {
+  "id": 368,
+  "text": "compared to, say,"
+ },
+ {
+  "id": 369,
+  "text": "Linux,"
+ },
+ {
+  "id": 370,
+  "text": "is quite a bit simpler."
+ },
+ {
+  "id": 371,
+  "text": "This is also to"
+ },
+ {
+  "id": 372,
+  "text": "reduce the difficulty of learning for everyone."
+ },
+ {
+  "id": 373,
+  "text": "Time"
+ },
+ {
+  "id": 374,
+  "text": "is still limited here,"
+ },
+ {
+  "id": 375,
+  "text": "and we can't possibly"
+ },
+ {
+  "id": 376,
+  "text": "spend too much"
+ },
+ {
+  "id": 377,
+  "text": "effort discussing"
+ },
+ {
+  "id": 378,
+  "text": "because memory —"
+ },
+ {
+  "id": 379,
+  "text": "the whole memory allocation area"
+ },
+ {
+  "id": 380,
+  "text": "it's a very complicated piece of things."
+ },
+ {
+  "id": 381,
+  "text": "Once virtual memory comes into play,"
+ },
+ {
+  "id": 382,
+  "text": "a lot of things become very complicated."
+ },
+ {
+  "id": 383,
+  "text": "So for now, we've cut this part out."
+ },
+ {
+  "id": 384,
+  "text": "Then if there's a chance later on,"
+ },
+ {
+  "id": 385,
+  "text": "we can come back and introduce it to you."
+ },
+ {
+  "id": 386,
+  "text": "Now, the second thing is,"
+ },
+ {
+  "id": 387,
+  "text": "as far as a so-called hyper system goes,"
+ },
+ {
+  "id": 388,
+  "text": "a very core function"
+ },
+ {
+  "id": 389,
+  "text": "is to implement the concept of multitasking,"
+ },
+ {
+  "id": 390,
+  "text": "that is, multithreading."
+ },
+ {
+  "id": 391,
+  "text": "And we do support this as well."
+ },
+ {
+  "id": 392,
+  "text": "Moreover, we've also implemented"
+ },
+ {
+  "id": 393,
+  "text": "the concept of preemptibility."
+ },
+ {
+  "id": 394,
+  "text": "You can all go check it out;"
+ },
+ {
+  "id": 395,
+  "text": "we'll introduce it to you later on."
+ },
+ {
+  "id": 396,
+  "text": "Now, once we have multithreading,"
+ },
+ {
+  "id": 397,
+  "text": "that brings in the concept of task mutual exclusion."
+ },
+ {
+  "id": 398,
+  "text": "So on that note,"
+ },
+ {
+  "id": 399,
+  "text": "we'll also cover that for you."
+ },
+ {
+  "id": 400,
+  "text": "And then, another thing is that"
+ },
+ {
+  "id": 401,
+  "text": "in our operating system,"
+ },
+ {
+  "id": 402,
+  "text": "an essential"
+ },
+ {
+  "id": 403,
+  "text": "component is the timer."
+ },
+ {
+  "id": 404,
+  "text": "Now, we have hardware timers,"
+ },
+ {
+  "id": 405,
+  "text": "and we also have software timers."
+ },
+ {
+  "id": 406,
+  "text": "We use both of these here."
+ },
+ {
+  "id": 407,
+  "text": "So here,"
+ },
+ {
+  "id": 408,
+  "text": "we also gave you all a"
+ },
+ {
+  "id": 409,
+  "text": "simple demonstration."
+ },
+ {
+  "id": 410,
+  "text": "As we just said,"
+ },
+ {
+  "id": 411,
+  "text": "this M plus U is the kind of"
+ },
+ {
+  "id": 412,
+  "text": "mode with a certain degree of security,"
+ },
+ {
+  "id": 413,
+  "text": "that is, the M plus U mode offers some protection."
+ },
+ {
+  "id": 414,
+  "text": "In other words, even though we haven't implemented virtual memory,"
+ },
+ {
+  "id": 415,
+  "text": "we can still achieve some basic protection."
+ },
+ {
+  "id": 416,
+  "text": "That is, by splitting things into layers internally and using system calls to achieve it."
+ },
+ {
+  "id": 417,
+  "text": "And then, one more thing to mention is that since we're using RISC-V,"
+ },
+ {
+  "id": 418,
+  "text": "what we've implemented so far is RV32."
+ },
+ {
+  "id": 419,
+  "text": "Everyone understands this, right?"
+ },
+ {
+  "id": 420,
+  "text": "That is to say, we're using 32-bit instructions"
+ },
+ {
+  "id": 421,
+  "text": "as the basis for our explanation."
+ },
+ {
+  "id": 422,
+  "text": "As for 32-bit,"
+ },
+ {
+  "id": 423,
+  "text": "in actual practice,"
+ },
+ {
+  "id": 424,
+  "text": "most things"
+ },
+ {
+  "id": 425,
+  "text": "have already moved on to 64-bit."
+ },
+ {
+  "id": 426,
+  "text": "So,"
+ },
+ {
+  "id": 427,
+  "text": "of course, some small CPUs still use 32-bit."
+ },
+ {
+  "id": 428,
+  "text": "Now, for teaching purposes,"
+ },
+ {
+  "id": 429,
+  "text": "we chose 32-bit mainly"
+ },
+ {
+  "id": 430,
+  "text": "to make it easier for you to read,"
+ },
+ {
+  "id": 431,
+  "text": "because, as you know, when we do internal debugging,"
+ },
+ {
+  "id": 432,
+  "text": "we look at the memory inside,"
+ },
+ {
+  "id": 433,
+  "text": "the instructions and so on."
+ },
+ {
+  "id": 434,
+  "text": "64-bit is always a bit harder to read than 32-bit,"
+ },
+ {
+  "id": 435,
+  "text": "because it's so large, right?"
+ },
+ {
+  "id": 436,
+  "text": "32-bit is more compact."
+ },
+ {
+  "id": 437,
+  "text": "So that was one of our goals in choosing it."
+ },
+ {
+  "id": 438,
+  "text": "And for our development,"
+ },
+ {
+  "id": 439,
+  "text": "since it's also based on a"
+ },
+ {
+  "id": 440,
+  "text": "It would have to be based on real hardware anyway"
+ },
+ {
+  "id": 441,
+  "text": "But to make debugging easier for everyone,"
+ },
+ {
+  "id": 442,
+  "text": "we're actually using an emulator to do this."
+ },
+ {
+  "id": 443,
+  "text": "So the way we do it,"
+ },
+ {
+  "id": 444,
+  "text": "the hardware platform we're targeting,"
+ },
+ {
+  "id": 445,
+  "text": "is actually an emulator."
+ },
+ {
+  "id": 446,
+  "text": "But you can imagine that this code,"
+ },
+ {
+  "id": 447,
+  "text": "with just a slight modification,"
+ },
+ {
+  "id": 448,
+  "text": "should have no problem running on real hardware either."
+ },
+ {
+  "id": 449,
+  "text": "If you have some money,"
+ },
+ {
+  "id": 450,
+  "text": "or if time permits,"
+ },
+ {
+  "id": 451,
+  "text": "you can also go and"
+ },
+ {
+  "id": 452,
+  "text": "now that the RISC-V"
+ },
+ {
+  "id": 453,
+  "text": "chips are out,"
+ },
+ {
+  "id": 454,
+  "text": "and there are some small boards available,"
+ },
+ {
+  "id": 455,
+  "text": "you can go buy one."
+ },
+ {
+  "id": 456,
+  "text": "If, that is to say,"
+ },
+ {
+  "id": 457,
+  "text": "you have the means,"
+ },
+ {
+  "id": 458,
+  "text": "you can also give it a try."
+ },
+ {
+  "id": 459,
+  "text": "Alright, so about this"
+ },
+ {
+  "id": 460,
+  "text": "So for this project,"
+ },
+ {
+  "id": 461,
+  "text": "that's actually all we'll cover in our course introduction."
+ },
+ {
+  "id": 462,
+  "text": "I'll stop here for today."
+ },
+ {
+  "id": 463,
+  "text": "Let's take a break."
+ },
+ {
+  "id": 464,
+  "text": "Then next,"
+ },
+ {
+  "id": 465,
+  "text": "in the final lecture,"
+ },
+ {
+  "id": 466,
+  "text": "we'll move on to our"
+ },
+ {
+  "id": 467,
+  "text": "combined part of the course,"
+ },
+ {
+  "id": 468,
+  "text": "alright."
+ }
+]

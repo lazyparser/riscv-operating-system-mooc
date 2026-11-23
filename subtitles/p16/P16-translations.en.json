@@ -1,0 +1,5150 @@
+[
+ {
+  "id": 0,
+  "text": "Let's get started right away. Now we enter Chapter 1 of developing a small operating system. Of course, the whole course is Chapter 7, called HelloRVOS. As I mentioned earlier, RVOS is the name of our system, and we'll use it to refer to it from now on."
+ },
+ {
+  "id": 1,
+  "text": "So for this part of the course,"
+ },
+ {
+  "id": 2,
+  "text": "in this chapter,"
+ },
+ {
+  "id": 3,
+  "text": "we mainly deal with system boot,"
+ },
+ {
+  "id": 4,
+  "text": "and we need to, for this operating system of ours,"
+ },
+ {
+  "id": 5,
+  "text": "for our operating system,"
+ },
+ {
+  "id": 6,
+  "text": "we need to be able to see a hello world,"
+ },
+ {
+  "id": 7,
+  "text": "of course, what we print is hello rbos,"
+ },
+ {
+  "id": 8,
+  "text": "that is, the first step is to get it printed out."
+ },
+ {
+  "id": 9,
+  "text": "And of course, we print it out through the serial port."
+ },
+ {
+  "id": 10,
+  "text": "We can see a most basic display process."
+ },
+ {
+  "id": 11,
+  "text": "Now, these are our reference materials."
+ },
+ {
+  "id": 12,
+  "text": "1 and 2,"
+ },
+ {
+  "id": 13,
+  "text": "these are all basic instructions."
+ },
+ {
+  "id": 14,
+  "text": "As for the third part,"
+ },
+ {
+  "id": 15,
+  "text": "it mainly covers some serial port content."
+ },
+ {
+  "id": 16,
+  "text": "It's a technical manual for our serial port."
+ },
+ {
+  "id": 17,
+  "text": "We'll come back and look at it later when we get to that."
+ },
+ {
+  "id": 18,
+  "text": "Let's first look at the first part, which is system boot."
+ },
+ {
+  "id": 19,
+  "text": "As we said, for an operating system to run,"
+ },
+ {
+  "id": 20,
+  "text": "So the first part is"
+ },
+ {
+  "id": 21,
+  "text": "how to boot it up"
+ },
+ {
+  "id": 22,
+  "text": "how to boot up the hardware."
+ },
+ {
+  "id": 23,
+  "text": "Now, since we need to talk about these boot concepts,"
+ },
+ {
+  "id": 24,
+  "text": "when it comes to the hardware,"
+ },
+ {
+  "id": 25,
+  "text": "we need to have some understanding of it."
+ },
+ {
+  "id": 26,
+  "text": "Because if you don't understand the hardware,"
+ },
+ {
+  "id": 27,
+  "text": "you won't be able to develop low-level software."
+ },
+ {
+  "id": 28,
+  "text": "So let's first take a look at"
+ },
+ {
+  "id": 29,
+  "text": "some basic concepts of the hardware."
+ },
+ {
+  "id": 30,
+  "text": "Now, the concept of hart,"
+ },
+ {
+  "id": 31,
+  "text": "we've already mentioned to you before."
+ },
+ {
+  "id": 32,
+  "text": "As you know now,"
+ },
+ {
+  "id": 33,
+  "text": "a hart is actually, you can think of it as a processor."
+ },
+ {
+  "id": 34,
+  "text": "Inside this hart there are some registers and so on."
+ },
+ {
+  "id": 35,
+  "text": "Of course, my diagram here isn't very accurate,"
+ },
+ {
+  "id": 36,
+  "text": "but the idea is basically this:"
+ },
+ {
+  "id": 37,
+  "text": "the hart we're talking about now,"
+ },
+ {
+  "id": 38,
+  "text": "in the RISC-V field that we're in,"
+ },
+ {
+  "id": 39,
+  "text": "it's essentially the concept of a processor."
+ },
+ {
+  "id": 40,
+  "text": "So, when we talk about"
+ },
+ {
+  "id": 41,
+  "text": "the board we're working with,"
+ },
+ {
+  "id": 42,
+  "text": "this emulator,"
+ },
+ {
+  "id": 43,
+  "text": "inside it, it's actually made up of multiple harts."
+ },
+ {
+  "id": 44,
+  "text": "It supports multiple harts."
+ },
+ {
+  "id": 45,
+  "text": "Now, besides the processor,"
+ },
+ {
+  "id": 46,
+  "text": "there are also things like"
+ },
+ {
+  "id": 47,
+  "text": "memory,"
+ },
+ {
+  "id": 48,
+  "text": "and IO, which stands for input/output,"
+ },
+ {
+  "id": 49,
+  "text": "and various devices,"
+ },
+ {
+  "id": 50,
+  "text": "and so on. Down at the bottom,"
+ },
+ {
+  "id": 51,
+  "text": "you can think of these as peripherals."
+ },
+ {
+  "id": 52,
+  "text": "Now, these peripherals,"
+ },
+ {
+  "id": 53,
+  "text": "as we know, on a computer,"
+ },
+ {
+  "id": 54,
+  "text": "are connected"
+ },
+ {
+  "id": 55,
+  "text": "to the processor through a bus,"
+ },
+ {
+  "id": 56,
+  "text": "right?"
+ },
+ {
+  "id": 57,
+  "text": "So let's separate them out,"
+ },
+ {
+  "id": 58,
+  "text": "to make things clearer."
+ },
+ {
+  "id": 59,
+  "text": "So, in the end, we take the processor cores"
+ },
+ {
+  "id": 60,
+  "text": "plus some external devices"
+ },
+ {
+  "id": 61,
+  "text": "and then package it all up"
+ },
+ {
+  "id": 62,
+  "text": "so what's exposed to the outside"
+ },
+ {
+  "id": 63,
+  "text": "may just look like a single chip"
+ },
+ {
+  "id": 64,
+  "text": "So, on this chip,"
+ },
+ {
+  "id": 65,
+  "text": "in this embedded development of ours,"
+ },
+ {
+  "id": 66,
+  "text": "we often use a term called platform."
+ },
+ {
+  "id": 67,
+  "text": "Of course, if we translate it directly, it's called 'platform'."
+ },
+ {
+  "id": 68,
+  "text": "But in reality, it represents a kind of chip,"
+ },
+ {
+  "id": 69,
+  "text": "the concept of a chip,"
+ },
+ {
+  "id": 70,
+  "text": "or you could say a..."
+ },
+ {
+  "id": 71,
+  "text": "Why"
+ },
+ {
+  "id": 72,
+  "text": "is it called a platform?"
+ },
+ {
+  "id": 73,
+  "text": "Well, we can actually start from this,"
+ },
+ {
+  "id": 74,
+  "text": "from the development process of our processors,"
+ },
+ {
+  "id": 75,
+  "text": "and I'll briefly explain it to you."
+ },
+ {
+  "id": 76,
+  "text": "That is,"
+ },
+ {
+  "id": 77,
+  "text": "if we look at the early days,"
+ },
+ {
+  "id": 78,
+  "text": "because there wasn't that kind of,"
+ },
+ {
+  "id": 79,
+  "text": "say, things like mobile phones or anything"
+ },
+ {
+  "id": 80,
+  "text": "Not that many."
+ },
+ {
+  "id": 81,
+  "text": "The one we come into contact with most is the PC."
+ },
+ {
+  "id": 82,
+  "text": "And a PC works the same way."
+ },
+ {
+  "id": 83,
+  "text": "That is, it has one processor,"
+ },
+ {
+  "id": 84,
+  "text": "right?"
+ },
+ {
+  "id": 85,
+  "text": "And then, plus a lot of peripherals."
+ },
+ {
+  "id": 86,
+  "text": "So this,"
+ },
+ {
+  "id": 87,
+  "text": "we call it a motherboard."
+ },
+ {
+  "id": 88,
+  "text": "So this thing can be seen as a kind of platform concept."
+ },
+ {
+  "id": 89,
+  "text": "Now, this thing,"
+ },
+ {
+  "id": 90,
+  "text": "we say that with the development of computers today,"
+ },
+ {
+  "id": 91,
+  "text": "these peripheral devices,"
+ },
+ {
+  "id": 92,
+  "text": "they are getting more and more integrated."
+ },
+ {
+  "id": 93,
+  "text": "More and more integrated."
+ },
+ {
+  "id": 94,
+  "text": "In the end,"
+ },
+ {
+  "id": 95,
+  "text": "you'll see that in some of the typical small boards today,"
+ },
+ {
+  "id": 96,
+  "text": "these highly integrated boards,"
+ },
+ {
+  "id": 97,
+  "text": "there are fewer and fewer peripheral components on them."
+ },
+ {
+  "id": 98,
+  "text": "Of course, comparing the picture above with the one below,"
+ },
+ {
+  "id": 99,
+  "text": "see if you can spot the difference."
+ },
+ {
+  "id": 100,
+  "text": "In other words, in the picture below,"
+ },
+ {
+  "id": 101,
+  "text": "apart from the big"
+ },
+ {
+  "id": 102,
+  "text": "black chip in the middle,"
+ },
+ {
+  "id": 103,
+  "text": "there are very few peripheral devices around it."
+ },
+ {
+  "id": 104,
+  "text": "Have you noticed that?"
+ },
+ {
+  "id": 105,
+  "text": "So where did the peripherals go?"
+ },
+ {
+  "id": 106,
+  "text": "Actually, the peripherals haven't disappeared."
+ },
+ {
+  "id": 107,
+  "text": "They've just been integrated at a higher level"
+ },
+ {
+  "id": 108,
+  "text": "onto this chip."
+ },
+ {
+  "id": 109,
+  "text": "Do you understand what I mean?"
+ },
+ {
+  "id": 110,
+  "text": "Now, for this kind of chip,"
+ },
+ {
+  "id": 111,
+  "text": "we now"
+ },
+ {
+  "id": 112,
+  "text": "often, in the embedded industry,"
+ },
+ {
+  "id": 113,
+  "text": "call it"
+ },
+ {
+  "id": 114,
+  "text": "and you can see a term here,"
+ },
+ {
+  "id": 115,
+  "text": "which is called SoC."
+ },
+ {
+  "id": 116,
+  "text": "It is actually"
+ },
+ {
+  "id": 117,
+  "text": "an abbreviation for System on Chip."
+ },
+ {
+  "id": 118,
+  "text": "So what is System on Chip?"
+ },
+ {
+  "id": 119,
+  "text": "It means that an entire system has been put onto a single chip."
+ },
+ {
+  "id": 120,
+  "text": "Understand what I mean by this."
+ },
+ {
+  "id": 121,
+  "text": "Now, this thing,"
+ },
+ {
+  "id": 122,
+  "text": "the SoC is what we call the platform."
+ },
+ {
+  "id": 123,
+  "text": "In practice, the term 'platform' usually refers to exactly this kind of thing."
+ },
+ {
+  "id": 124,
+  "text": "It's a concept."
+ },
+ {
+  "id": 125,
+  "text": "Now, our current emulator,"
+ },
+ {
+  "id": 126,
+  "text": "our QEMU virt,"
+ },
+ {
+  "id": 127,
+  "text": "this 'V-I-R-T' is actually 'virtual',"
+ },
+ {
+  "id": 128,
+  "text": "meaning the concept of virtual."
+ },
+ {
+  "id": 129,
+  "text": "So on this QEMU emulator,"
+ },
+ {
+  "id": 130,
+  "text": "there's a simulated platform called 'virt'."
+ },
+ {
+  "id": 131,
+  "text": "Similarly,"
+ },
+ {
+  "id": 132,
+  "text": "this thing also contains a lot of"
+ },
+ {
+  "id": 133,
+  "text": "it actually contains a lot of processor cores,"
+ },
+ {
+  "id": 134,
+  "text": "as well as some peripherals,"
+ },
+ {
+  "id": 135,
+  "text": "including memory."
+ },
+ {
+  "id": 136,
+  "text": "ROM is read-only memory,"
+ },
+ {
+  "id": 137,
+  "text": "and DRAM is dynamic memory."
+ },
+ {
+  "id": 138,
+  "text": "ROM means that,"
+ },
+ {
+  "id": 139,
+  "text": "after power-off, its contents are still retained."
+ },
+ {
+  "id": 140,
+  "text": "RAM, on the other hand, loses everything when the power goes off."
+ },
+ {
+  "id": 141,
+  "text": "When we usually talk about memory,"
+ },
+ {
+  "id": 142,
+  "text": "we mostly mean RAM."
+ },
+ {
+  "id": 143,
+  "text": "ROM, you can think of it as a small storage chip,"
+ },
+ {
+  "id": 144,
+  "text": "something like a tiny hard drive."
+ },
+ {
+  "id": 145,
+  "text": "Now, this QEMU"
+ },
+ {
+  "id": 146,
+  "text": "platform,"
+ },
+ {
+  "id": 147,
+  "text": "this virt platform,"
+ },
+ {
+  "id": 148,
+  "text": "has a total of 8 cores in it."
+ },
+ {
+  "id": 149,
+  "text": "A total of 8 cores."
+ },
+ {
+  "id": 150,
+  "text": "So first, everyone should get"
+ },
+ {
+  "id": 151,
+  "text": "a basic understanding of our hardware here."
+ },
+ {
+  "id": 152,
+  "text": "Now, when we go and operate"
+ },
+ {
+  "id": 153,
+  "text": "on these components on top of it,"
+ },
+ {
+  "id": 154,
+  "text": "pay attention to one concept,"
+ },
+ {
+  "id": 155,
+  "text": "which is the concept of address mapping."
+ },
+ {
+  "id": 156,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 157,
+  "text": "It means that in the design of our hardware,"
+ },
+ {
+  "id": 158,
+  "text": "the currently popular kind of platform,"
+ },
+ {
+  "id": 159,
+  "text": "it maps all of these peripherals"
+ },
+ {
+  "id": 160,
+  "text": "What it operates on,"
+ },
+ {
+  "id": 161,
+  "text": "the objects of those operations,"
+ },
+ {
+  "id": 162,
+  "text": "we know that a peripheral,"
+ },
+ {
+  "id": 163,
+  "text": "say a processor,"
+ },
+ {
+  "id": 164,
+  "text": "or a controller,"
+ },
+ {
+  "id": 165,
+  "text": "may have some registers on it that need to be operated on."
+ },
+ {
+  "id": 166,
+  "text": "These registers have all been assigned,"
+ },
+ {
+  "id": 167,
+  "text": "and when we access them,"
+ },
+ {
+  "id": 168,
+  "text": "in the past, each register"
+ },
+ {
+  "id": 169,
+  "text": "had its own separate address for access."
+ },
+ {
+  "id": 170,
+  "text": "Now, all of these peripherals"
+ },
+ {
+  "id": 171,
+  "text": "have been given a unified addressing scheme."
+ },
+ {
+  "id": 172,
+  "text": "These are physical addresses,"
+ },
+ {
+  "id": 173,
+  "text": "not virtual addresses."
+ },
+ {
+  "id": 174,
+  "text": "A unified addressing."
+ },
+ {
+  "id": 175,
+  "text": "So we can see that,"
+ },
+ {
+  "id": 176,
+  "text": "that is to say,"
+ },
+ {
+  "id": 177,
+  "text": "this structure,"
+ },
+ {
+  "id": 178,
+  "text": "actually comes from,"
+ },
+ {
+  "id": 179,
+  "text": "I was from the QML..."
+ },
+ {
+  "id": 180,
+  "text": "It was extracted from the original file,"
+ },
+ {
+  "id": 181,
+  "text": "cut out from there,"
+ },
+ {
+  "id": 182,
+  "text": "and what it actually shows is this:"
+ },
+ {
+  "id": 183,
+  "text": "all of its"
+ },
+ {
+  "id": 184,
+  "text": "on the platform,"
+ },
+ {
+  "id": 185,
+  "text": "the various peripherals involved,"
+ },
+ {
+  "id": 186,
+  "text": "such as the ROM,"
+ },
+ {
+  "id": 187,
+  "text": "right? And then,"
+ },
+ {
+  "id": 188,
+  "text": "and then"
+ },
+ {
+  "id": 189,
+  "text": "down here is the RAM."
+ },
+ {
+  "id": 190,
+  "text": "In fact, there is a..."
+ },
+ {
+  "id": 191,
+  "text": "each peripheral,"
+ },
+ {
+  "id": 192,
+  "text": "it corresponds to"
+ },
+ {
+  "id": 193,
+  "text": "an address range."
+ },
+ {
+  "id": 194,
+  "text": "Now, for the RAM,"
+ },
+ {
+  "id": 195,
+  "text": "this address range is straightforward,"
+ },
+ {
+  "id": 196,
+  "text": "meaning that its..."
+ },
+ {
+  "id": 197,
+  "text": "for example, for this RAM,"
+ },
+ {
+  "id": 198,
+  "text": "on the actual hardware,"
+ },
+ {
+  "id": 199,
+  "text": "it should be 128 megabytes in size."
+ },
+ {
+  "id": 200,
+  "text": "a chunk of memory like this"
+ },
+ {
+  "id": 201,
+  "text": "so this 128 megabytes of memory"
+ },
+ {
+  "id": 202,
+  "text": "it is actually laid out in a unified way"
+ },
+ {
+  "id": 203,
+  "text": "in terms of how it's addressed"
+ },
+ {
+  "id": 204,
+  "text": "meaning its starting address"
+ },
+ {
+  "id": 205,
+  "text": "is 0x8000"
+ },
+ {
+  "id": 206,
+  "text": "and the end address is written like this"
+ },
+ {
+  "id": 207,
+  "text": "even though it says 0"
+ },
+ {
+  "id": 208,
+  "text": "in reality there is a range"
+ },
+ {
+  "id": 209,
+  "text": "it's 0x8000 plus 0x8000"
+ },
+ {
+  "id": 210,
+  "text": "plus 128 megabytes"
+ },
+ {
+  "id": 211,
+  "text": "roughly this kind of range"
+ },
+ {
+  "id": 212,
+  "text": "so every component"
+ },
+ {
+  "id": 213,
+  "text": "has a unified"
+ },
+ {
+  "id": 214,
+  "text": "physical address"
+ },
+ {
+  "id": 215,
+  "text": "mapping"
+ },
+ {
+  "id": 216,
+  "text": "you can just picture it like this"
+ },
+ {
+  "id": 217,
+  "text": "that is, all of our"
+ },
+ {
+  "id": 218,
+  "text": "physical addresses from 0 to"
+ },
+ {
+  "id": 219,
+  "text": "the highest address are allocated"
+ },
+ {
+  "id": 220,
+  "text": "allocated away in chunks,"
+ },
+ {
+  "id": 221,
+  "text": "for example, take this ROM chip:"
+ },
+ {
+  "id": 222,
+  "text": "it,"
+ },
+ {
+  "id": 223,
+  "text": "the storage space inside it,"
+ },
+ {
+  "id": 224,
+  "text": "it corresponds to the range"
+ },
+ {
+  "id": 225,
+  "text": "from Linux100 to Linux,"
+ },
+ {
+  "id": 226,
+  "text": "FF00 — that kind of range."
+ },
+ {
+  "id": 227,
+  "text": "This range"
+ },
+ {
+  "id": 228,
+  "text": "is actually shown on this table here —"
+ },
+ {
+  "id": 229,
+  "text": "it has this one range."
+ },
+ {
+  "id": 230,
+  "text": "And then,"
+ },
+ {
+  "id": 231,
+  "text": "the RAM"
+ },
+ {
+  "id": 232,
+  "text": "also has a range like that."
+ },
+ {
+  "id": 233,
+  "text": "So 0x8800 up to that,"
+ },
+ {
+  "id": 234,
+  "text": "if you work it out,"
+ },
+ {
+  "id": 235,
+  "text": "this space is about 128 megabytes."
+ },
+ {
+  "id": 236,
+  "text": "If I remember correctly,"
+ },
+ {
+  "id": 237,
+  "text": "you can go back and check,"
+ },
+ {
+  "id": 238,
+  "text": "a 128 megabyte range —"
+ },
+ {
+  "id": 239,
+  "text": "meaning it can only take a maximum of 128 megabytes of memory."
+ },
+ {
+  "id": 240,
+  "text": "So it's basically like this."
+ },
+ {
+  "id": 241,
+  "text": "Then all the address lines"
+ },
+ {
+  "id": 242,
+  "text": "are given a unified numbering"
+ },
+ {
+  "id": 243,
+  "text": "And this kind of address,"
+ },
+ {
+  "id": 244,
+  "text": "that's the concept of a physical address."
+ },
+ {
+  "id": 245,
+  "text": "The concept of a physical address"
+ },
+ {
+  "id": 246,
+  "text": "is a fixed mapping"
+ },
+ {
+  "id": 247,
+  "text": "So later, when we want to access"
+ },
+ {
+  "id": 248,
+  "text": "these things,"
+ },
+ {
+  "id": 249,
+  "text": "we do it all through these addresses"
+ },
+ {
+  "id": 250,
+  "text": "to access these components."
+ },
+ {
+  "id": 251,
+  "text": "This is something you all need to understand."
+ },
+ {
+  "id": 252,
+  "text": "So right now,"
+ },
+ {
+  "id": 253,
+  "text": "we're mainly discussing"
+ },
+ {
+  "id": 254,
+  "text": "the system boot process."
+ },
+ {
+  "id": 255,
+  "text": "Now, in the system boot process,"
+ },
+ {
+  "id": 256,
+  "text": "what's mainly involved is"
+ },
+ {
+  "id": 257,
+  "text": "the ROM component"
+ },
+ {
+  "id": 258,
+  "text": "and the RAM component."
+ },
+ {
+  "id": 259,
+  "text": "So, as for everything else,"
+ },
+ {
+  "id": 260,
+  "text": "Let's set that aside for now"
+ },
+ {
+  "id": 261,
+  "text": "So how does this boot process"
+ },
+ {
+  "id": 262,
+  "text": "actually happen?"
+ },
+ {
+  "id": 263,
+  "text": "You can think of it this way:"
+ },
+ {
+  "id": 264,
+  "text": "when we power on"
+ },
+ {
+  "id": 265,
+  "text": "when we power on,"
+ },
+ {
+  "id": 266,
+  "text": "our CPU starts running, right?"
+ },
+ {
+  "id": 267,
+  "text": "Right?"
+ },
+ {
+  "id": 268,
+  "text": "Now, when our CPU starts running,"
+ },
+ {
+  "id": 269,
+  "text": "these are all things at the hardware level."
+ },
+ {
+  "id": 270,
+  "text": "We can't see them from software."
+ },
+ {
+  "id": 271,
+  "text": "On the hardware side,"
+ },
+ {
+  "id": 272,
+  "text": "first it will jump to"
+ },
+ {
+  "id": 273,
+  "text": "the address 0x00001000."
+ },
+ {
+  "id": 274,
+  "text": "We know this address is actually"
+ },
+ {
+  "id": 275,
+  "text": "mapped to the ROM device,"
+ },
+ {
+  "id": 276,
+  "text": "right?"
+ },
+ {
+  "id": 277,
+  "text": "This ROM,"
+ },
+ {
+  "id": 278,
+  "text": "we say it's really just a"
+ },
+ {
+  "id": 279,
+  "text": "you can think of it as a small hard drive."
+ },
+ {
+  "id": 280,
+  "text": "It stores a small piece of stuff inside."
+ },
+ {
+  "id": 281,
+  "text": "This stuff,"
+ },
+ {
+  "id": 282,
+  "text": "after power is lost, it will not be lost."
+ },
+ {
+  "id": 283,
+  "text": "It's always there at that location."
+ },
+ {
+  "id": 284,
+  "text": "Every time you power on,"
+ },
+ {
+  "id": 285,
+  "text": "it will go to that location and execute the instructions inside."
+ },
+ {
+  "id": 286,
+  "text": "Does everyone understand?"
+ },
+ {
+  "id": 287,
+  "text": "It's executing the instructions inside there."
+ },
+ {
+  "id": 288,
+  "text": "So the instructions in there,"
+ },
+ {
+  "id": 289,
+  "text": "the stuff stored there, we call it"
+ },
+ {
+  "id": 290,
+  "text": "a kind of bootloader,"
+ },
+ {
+  "id": 291,
+  "text": "a bootstrapper, a boot loader."
+ },
+ {
+  "id": 292,
+  "text": "At this point, what's inside is not our kernel yet,"
+ },
+ {
+  "id": 293,
+  "text": "because our kernel is over here."
+ },
+ {
+  "id": 294,
+  "text": "So the instructions in this section"
+ },
+ {
+  "id": 295,
+  "text": "are hardwired into our chip,"
+ },
+ {
+  "id": 296,
+  "text": "they cannot be changed."
+ },
+ {
+  "id": 297,
+  "text": "Then it starts running,"
+ },
+ {
+  "id": 298,
+  "text": "and while it's running,"
+ },
+ {
+  "id": 299,
+  "text": "the work it needs to do next"
+ },
+ {
+  "id": 300,
+  "text": "we can actually go and look at what's inside it"
+ },
+ {
+  "id": 301,
+  "text": "of course, since we're using a software simulation"
+ },
+ {
+  "id": 302,
+  "text": "take a look at this"
+ },
+ {
+  "id": 303,
+  "text": "if you're interested, you can go and take a look"
+ },
+ {
+  "id": 304,
+  "text": "at this source file, boot.c"
+ },
+ {
+  "id": 305,
+  "text": "it actually contains"
+ },
+ {
+  "id": 306,
+  "text": "a piece of assembly instructions from the bootloader"
+ },
+ {
+  "id": 307,
+  "text": "as for its main job"
+ },
+ {
+  "id": 308,
+  "text": "I won't explain it here"
+ },
+ {
+  "id": 309,
+  "text": "if you're interested, you can take a look yourself"
+ },
+ {
+  "id": 310,
+  "text": "the effect it actually achieves is that"
+ },
+ {
+  "id": 311,
+  "text": "after it gets our program running"
+ },
+ {
+  "id": 312,
+  "text": "it then jumps to the address 8000"
+ },
+ {
+  "id": 313,
+  "text": "to continue execution"
+ },
+ {
+  "id": 314,
+  "text": "of course, if this were real hardware"
+ },
+ {
+  "id": 315,
+  "text": "the bootloader"
+ },
+ {
+  "id": 316,
+  "text": "might do quite a bit more work"
+ },
+ {
+  "id": 317,
+  "text": "but since what we have here is a software emulator"
+ },
+ {
+  "id": 318,
+  "text": "it doesn't really do that much in there"
+ },
+ {
+  "id": 319,
+  "text": "strictly speaking"
+ },
+ {
+  "id": 320,
+  "text": "If it's hardware,"
+ },
+ {
+  "id": 321,
+  "text": "you can imagine this bootloader"
+ },
+ {
+  "id": 322,
+  "text": "actually has to do a few more things."
+ },
+ {
+  "id": 323,
+  "text": "For example, it has to initialize the hardware,"
+ },
+ {
+  "id": 324,
+  "text": "and at the same time it probably needs to move things from the RAM"
+ },
+ {
+  "id": 325,
+  "text": "and copy the real code into this memory."
+ },
+ {
+  "id": 326,
+  "text": "Of course, right?"
+ },
+ {
+  "id": 327,
+  "text": "Because this memory,"
+ },
+ {
+  "id": 328,
+  "text": "inside this memory, in fact,"
+ },
+ {
+  "id": 329,
+  "text": "there is nothing at the very beginning."
+ },
+ {
+  "id": 330,
+  "text": "The real stuff,"
+ },
+ {
+  "id": 331,
+  "text": "it might be sitting on a hard disk outside,"
+ },
+ {
+  "id": 332,
+  "text": "or it might be on an SD card."
+ },
+ {
+  "id": 333,
+  "text": "So when this thing needs to be loaded in,"
+ },
+ {
+  "id": 334,
+  "text": "who does this job?"
+ },
+ {
+  "id": 335,
+  "text": "Of course, it has to be done by"
+ },
+ {
+  "id": 336,
+  "text": "the bootloader and things like that."
+ },
+ {
+  "id": 337,
+  "text": "Right?"
+ },
+ {
+  "id": 338,
+  "text": "But for our software simulator,"
+ },
+ {
+  "id": 339,
+  "text": "there is no such process."
+ },
+ {
+  "id": 340,
+  "text": "But you have to understand,"
+ },
+ {
+  "id": 341,
+  "text": "the process is roughly like this."
+ },
+ {
+  "id": 342,
+  "text": "It will also jump to this place to execute."
+ },
+ {
+  "id": 343,
+  "text": "So we can see that"
+ },
+ {
+  "id": 344,
+  "text": "when we run the emulator,"
+ },
+ {
+  "id": 345,
+  "text": "combining that with our earlier use of QEMU,"
+ },
+ {
+  "id": 346,
+  "text": "in our QEMU command,"
+ },
+ {
+  "id": 347,
+  "text": "why do we include a"
+ },
+ {
+  "id": 348,
+  "text": "-kernel parameter,"
+ },
+ {
+  "id": 349,
+  "text": "followed by OS.EF?"
+ },
+ {
+  "id": 350,
+  "text": "This thing, OS.EF,"
+ },
+ {
+  "id": 351,
+  "text": "is actually what we compiled,"
+ },
+ {
+  "id": 352,
+  "text": "the code of this kernel."
+ },
+ {
+  "id": 353,
+  "text": "Now, the -kernel option,"
+ },
+ {
+  "id": 354,
+  "text": "essentially tells our QEMU that"
+ },
+ {
+  "id": 355,
+  "text": "for our kernel, we just need"
+ },
+ {
+  "id": 356,
+  "text": "to load this thing."
+ },
+ {
+  "id": 357,
+  "text": "Because when we actually run it,"
+ },
+ {
+  "id": 358,
+  "text": "it will jump there to execute."
+ },
+ {
+  "id": 359,
+  "text": "So, at this point,"
+ },
+ {
+  "id": 360,
+  "text": "So what this actually tells us is,"
+ },
+ {
+  "id": 361,
+  "text": "once it jumps here to run,"
+ },
+ {
+  "id": 362,
+  "text": "then our kernel instructions,"
+ },
+ {
+  "id": 363,
+  "text": "which instructions are they?"
+ },
+ {
+  "id": 364,
+  "text": "then QEMU will automatically"
+ },
+ {
+  "id": 365,
+  "text": "take this portion of instructions"
+ },
+ {
+  "id": 366,
+  "text": "and load them into this address space,"
+ },
+ {
+  "id": 367,
+  "text": "and then it can continue running from there."
+ },
+ {
+  "id": 368,
+  "text": "You see what I mean, everyone?"
+ },
+ {
+  "id": 369,
+  "text": "But this is entirely a"
+ },
+ {
+  "id": 370,
+  "text": "software simulation process."
+ },
+ {
+  "id": 371,
+  "text": "With actual hardware,"
+ },
+ {
+  "id": 372,
+  "text": "of course it is the hardware that carries out"
+ },
+ {
+  "id": 373,
+  "text": "this loading work,"
+ },
+ {
+  "id": 374,
+  "text": "this boot work."
+ },
+ {
+  "id": 375,
+  "text": "But in any case,"
+ },
+ {
+  "id": 376,
+  "text": "our program here,"
+ },
+ {
+  "id": 377,
+  "text": "as you can see,"
+ },
+ {
+  "id": 378,
+  "text": "it is the address 0x800,"
+ },
+ {
+  "id": 379,
+  "text": "and why is it so special?"
+ },
+ {
+  "id": 380,
+  "text": "This address is where we"
+ },
+ {
+  "id": 381,
+  "text": "everything we compile"
+ },
+ {
+  "id": 382,
+  "text": "the address of the kernel's first instruction"
+ },
+ {
+  "id": 383,
+  "text": "must be this address"
+ },
+ {
+  "id": 384,
+  "text": "the position of the first instruction"
+ },
+ {
+  "id": 385,
+  "text": "must be right here"
+ },
+ {
+  "id": 386,
+  "text": "because when it finally runs,"
+ },
+ {
+  "id": 387,
+  "text": "it jumps here to start executing"
+ },
+ {
+  "id": 388,
+  "text": "that's the idea"
+ },
+ {
+  "id": 389,
+  "text": "so this is also why we"
+ },
+ {
+  "id": 390,
+  "text": "why is it that when we link,"
+ },
+ {
+  "id": 391,
+  "text": "all these concepts tie together"
+ },
+ {
+  "id": 392,
+  "text": "this is what we talked about earlier"
+ },
+ {
+  "id": 393,
+  "text": "when we link,"
+ },
+ {
+  "id": 394,
+  "text": "why do we need to"
+ },
+ {
+  "id": 395,
+  "text": "including when we wrote that assembly earlier,"
+ },
+ {
+  "id": 396,
+  "text": "why do we need to at compile time"
+ },
+ {
+  "id": 397,
+  "text": "everyone go back and take another look"
+ },
+ {
+  "id": 398,
+  "text": "why use -Ttext?"
+ },
+ {
+  "id": 399,
+  "text": "it's really telling our linker"
+ },
+ {
+  "id": 400,
+  "text": "In the end, because ultimately"
+ },
+ {
+  "id": 401,
+  "text": "the address of every instruction"
+ },
+ {
+  "id": 402,
+  "text": "is determined by the linker"
+ },
+ {
+  "id": 403,
+  "text": "the linker does this for us"
+ },
+ {
+  "id": 404,
+  "text": "right?"
+ },
+ {
+  "id": 405,
+  "text": "Of course, what we use"
+ },
+ {
+  "id": 406,
+  "text": "right now is static linking."
+ },
+ {
+  "id": 407,
+  "text": "So with a static linker,"
+ },
+ {
+  "id": 408,
+  "text": "when statically linking,"
+ },
+ {
+  "id": 409,
+  "text": "the linker has to decide"
+ },
+ {
+  "id": 410,
+  "text": "the address of every instruction,"
+ },
+ {
+  "id": 411,
+  "text": "and it always needs a"
+ },
+ {
+  "id": 412,
+  "text": "place where the addresses start from."
+ },
+ {
+  "id": 413,
+  "text": "And this address,"
+ },
+ {
+  "id": 414,
+  "text": "this is what we tell it"
+ },
+ {
+  "id": 415,
+  "text": "through this command here."
+ },
+ {
+  "id": 416,
+  "text": "So why is it 0x80000000?"
+ },
+ {
+  "id": 417,
+  "text": "Now you understand, right?"
+ },
+ {
+  "id": 418,
+  "text": "It's simply because our emulator"
+ },
+ {
+  "id": 419,
+  "text": "will place it at this location."
+ },
+ {
+  "id": 420,
+  "text": "and execute it."
+ },
+ {
+  "id": 421,
+  "text": "So we need to make this address"
+ },
+ {
+  "id": 422,
+  "text": "match up with that address."
+ },
+ {
+  "id": 423,
+  "text": "So this value isn't something you just write arbitrarily."
+ },
+ {
+  "id": 424,
+  "text": "Now, through this process,"
+ },
+ {
+  "id": 425,
+  "text": "on the one hand, you've understood"
+ },
+ {
+  "id": 426,
+  "text": "the whole boot process of our emulator,"
+ },
+ {
+  "id": 427,
+  "text": "and on the other hand, you've also learned"
+ },
+ {
+  "id": 428,
+  "text": "why, when we compile and link,"
+ },
+ {
+  "id": 429,
+  "text": "we have to specify this link address,"
+ },
+ {
+  "id": 430,
+  "text": "and how our QEMU"
+ },
+ {
+  "id": 431,
+  "text": "loads our kernel."
+ },
+ {
+  "id": 432,
+  "text": "That's basically the whole process."
+ },
+ {
+  "id": 433,
+  "text": "So the entire system boot process"
+ },
+ {
+  "id": 434,
+  "text": "is pretty much everything I wanted to cover for you."
+ },
+ {
+  "id": 435,
+  "text": "At the same time,"
+ },
+ {
+  "id": 436,
+  "text": "I want to mention one more thing here,"
+ },
+ {
+  "id": 437,
+  "text": "which is that"
+ },
+ {
+  "id": 438,
+  "text": "since we have 8 cores,"
+ },
+ {
+  "id": 439,
+  "text": "you all understand, right?"
+ },
+ {
+  "id": 440,
+  "text": "We have 8 cores."
+ },
+ {
+  "id": 441,
+  "text": "Each of these cores, after power-on,"
+ },
+ {
+  "id": 442,
+  "text": "these 8 cores run independently."
+ },
+ {
+  "id": 443,
+  "text": "As we mentioned earlier,"
+ },
+ {
+  "id": 444,
+  "text": "what is a hart?"
+ },
+ {
+  "id": 445,
+  "text": "A hart means that"
+ },
+ {
+  "id": 446,
+  "text": "it can fetch and execute independently."
+ },
+ {
+  "id": 447,
+  "text": "So each core"
+ },
+ {
+  "id": 448,
+  "text": "will repeat this process,"
+ },
+ {
+  "id": 449,
+  "text": "this boot process."
+ },
+ {
+  "id": 450,
+  "text": "So this boot process"
+ },
+ {
+  "id": 451,
+  "text": "is actually 8 cores running at the same time."
+ },
+ {
+  "id": 452,
+  "text": "As soon as power is on, they are all running simultaneously."
+ },
+ {
+  "id": 453,
+  "text": "This is a concept we need to understand."
+ },
+ {
+  "id": 454,
+  "text": "Once we understand these things,"
+ },
+ {
+  "id": 455,
+  "text": "these are hardware concepts."
+ },
+ {
+  "id": 456,
+  "text": "Now what we mean is,"
+ },
+ {
+  "id": 457,
+  "text": "how do we use software?"
+ },
+ {
+  "id": 458,
+  "text": "By software, what we mean is,"
+ },
+ {
+  "id": 459,
+  "text": "the code that we've entered here."
+ },
+ {
+  "id": 460,
+  "text": "How should we write it?"
+ },
+ {
+  "id": 461,
+  "text": "The code that we compile"
+ },
+ {
+  "id": 462,
+  "text": "How should it be written"
+ },
+ {
+  "id": 463,
+  "text": "to carry out the kernel initialization process?"
+ },
+ {
+  "id": 464,
+  "text": "So this is our boot program,"
+ },
+ {
+  "id": 465,
+  "text": "that is, the boot program of our kernel,"
+ },
+ {
+  "id": 466,
+  "text": "and the question of how to write it."
+ },
+ {
+  "id": 467,
+  "text": "Now, our basic idea"
+ },
+ {
+  "id": 468,
+  "text": "is actually very simple."
+ },
+ {
+  "id": 469,
+  "text": "As soon as it powers on,"
+ },
+ {
+  "id": 470,
+  "text": "for now, because of our course,"
+ },
+ {
+  "id": 471,
+  "text": "just to simplify"
+ },
+ {
+  "id": 472,
+  "text": "the difficulty of debugging and explaining,"
+ },
+ {
+  "id": 473,
+  "text": "we actually only want to support a single core."
+ },
+ {
+  "id": 474,
+  "text": "That is to say, you can think of it this way,"
+ },
+ {
+  "id": 475,
+  "text": "in hardware,"
+ },
+ {
+  "id": 476,
+  "text": "although all 8 cores power on at the same time,"
+ },
+ {
+  "id": 477,
+  "text": "and run at the same time,"
+ },
+ {
+  "id": 478,
+  "text": "we only let one core operate."
+ },
+ {
+  "id": 479,
+  "text": "You see what I mean?"
+ },
+ {
+  "id": 480,
+  "text": "The other seven cores,"
+ },
+ {
+  "id": 481,
+  "text": "we just let them"
+ },
+ {
+  "id": 482,
+  "text": "how should I put it,"
+ },
+ {
+  "id": 483,
+  "text": "keep them in a state where they're just idling,"
+ },
+ {
+  "id": 484,
+  "text": "not letting them run our program."
+ },
+ {
+  "id": 485,
+  "text": "That's all we need."
+ },
+ {
+  "id": 486,
+  "text": "This is one of our design principles."
+ },
+ {
+  "id": 487,
+  "text": "Of course,"
+ },
+ {
+  "id": 488,
+  "text": "if you really want to get that core running,"
+ },
+ {
+  "id": 489,
+  "text": "that's also fine."
+ },
+ {
+  "id": 490,
+  "text": "Right now, in order to simplify"
+ },
+ {
+  "id": 491,
+  "text": "our later explanations"
+ },
+ {
+  "id": 492,
+  "text": "and the learning of the material,"
+ },
+ {
+  "id": 493,
+  "text": "we'll keep this issue simple."
+ },
+ {
+  "id": 494,
+  "text": "Even though there are eight cores in the hardware,"
+ },
+ {
+  "id": 495,
+  "text": "we'll only let one core run."
+ },
+ {
+  "id": 496,
+  "text": "That's the idea."
+ },
+ {
+  "id": 497,
+  "text": "Now, the basic setup is actually very simple."
+ },
+ {
+  "id": 498,
+  "text": "That is, as we just talked about,"
+ },
+ {
+  "id": 499,
+  "text": "the meaning of the previous diagram is that"
+ },
+ {
+  "id": 500,
+  "text": "This boot process,"
+ },
+ {
+  "id": 501,
+  "text": "all eight cores are running at the same time,"
+ },
+ {
+  "id": 502,
+  "text": "so how do we make..."
+ },
+ {
+  "id": 503,
+  "text": "think about it this way:"
+ },
+ {
+  "id": 504,
+  "text": "our boot program,"
+ },
+ {
+  "id": 505,
+  "text": "the program we're going to write,"
+ },
+ {
+  "id": 506,
+  "text": "is executed once by every single"
+ },
+ {
+  "id": 507,
+  "text": "core — every core runs through it once."
+ },
+ {
+  "id": 508,
+  "text": "Do you understand what I mean?"
+ },
+ {
+  "id": 509,
+  "text": "This logic,"
+ },
+ {
+  "id": 510,
+  "text": "every core will execute it once."
+ },
+ {
+  "id": 511,
+  "text": "So what do we do?"
+ },
+ {
+  "id": 512,
+  "text": "Well, we can do this:"
+ },
+ {
+  "id": 513,
+  "text": "once this program starts running,"
+ },
+ {
+  "id": 514,
+  "text": "we can check,"
+ },
+ {
+  "id": 515,
+  "text": "say if there are eight cores,"
+ },
+ {
+  "id": 516,
+  "text": "then we can check whether this piece,"
+ },
+ {
+  "id": 517,
+  "text": "whether the core currently running this is the first core."
+ },
+ {
+  "id": 518,
+  "text": "If it's the first core,"
+ },
+ {
+  "id": 519,
+  "text": "we let it continue on and execute the rest."
+ },
+ {
+  "id": 520,
+  "text": "That is, it goes into our normal kernel processing logic,"
+ },
+ {
+  "id": 521,
+  "text": "but if it finds that it is not the first hart,"
+ },
+ {
+  "id": 522,
+  "text": "then we just enter a spin loop."
+ },
+ {
+  "id": 523,
+  "text": "I don't know if everyone can still follow what I mean by this concept."
+ },
+ {
+  "id": 524,
+  "text": "For example, suppose there are eight students in your row,"
+ },
+ {
+  "id": 525,
+  "text": "and you are the eight harts."
+ },
+ {
+  "id": 526,
+  "text": "Among you,"
+ },
+ {
+  "id": 527,
+  "text": "we only let the first student"
+ },
+ {
+  "id": 528,
+  "text": "run our operating system code,"
+ },
+ {
+  "id": 529,
+  "text": "and the other seven students just spin."
+ },
+ {
+  "id": 530,
+  "text": "So how do we do that?"
+ },
+ {
+  "id": 531,
+  "text": "Moreover, for all eight of you students,"
+ },
+ {
+  "id": 532,
+  "text": "as soon as each one powers on,"
+ },
+ {
+  "id": 533,
+  "text": "it will execute the boot logic."
+ },
+ {
+  "id": 534,
+  "text": "Think about it."
+ },
+ {
+  "id": 535,
+  "text": "Suppose the one on the far left,"
+ },
+ {
+  "id": 536,
+  "text": "you are the first student."
+ },
+ {
+  "id": 537,
+  "text": "Then when you judge,"
+ },
+ {
+  "id": 538,
+  "text": "when you execute the boot logic,"
+ },
+ {
+  "id": 539,
+  "text": "you are able to read out"
+ },
+ {
+  "id": 540,
+  "text": "What this currently executes is"
+ },
+ {
+  "id": 541,
+  "text": "the code number of which core,"
+ },
+ {
+  "id": 542,
+  "text": "you see?"
+ },
+ {
+  "id": 543,
+  "text": "So the moment you look at it,"
+ },
+ {
+  "id": 544,
+  "text": "I am the first core."
+ },
+ {
+  "id": 545,
+  "text": "OK,"
+ },
+ {
+  "id": 546,
+  "text": "then I won't spin idly."
+ },
+ {
+  "id": 547,
+  "text": "I'll go off and do the real work."
+ },
+ {
+  "id": 548,
+  "text": "So it goes into our"
+ },
+ {
+  "id": 549,
+  "text": "per-core logic."
+ },
+ {
+  "id": 550,
+  "text": "Now, the second core,"
+ },
+ {
+  "id": 551,
+  "text": "if it is also executing"
+ },
+ {
+  "id": 552,
+  "text": "this piece of logic,"
+ },
+ {
+  "id": 553,
+  "text": "look at my core —"
+ },
+ {
+  "id": 554,
+  "text": "right now I am not the first core."
+ },
+ {
+  "id": 555,
+  "text": "The first core's code number, say, is 0,"
+ },
+ {
+  "id": 556,
+  "text": "and my code number is 1."
+ },
+ {
+  "id": 557,
+  "text": "So I am not equal to it."
+ },
+ {
+  "id": 558,
+  "text": "Not being equal, I go off and spin idly."
+ },
+ {
+  "id": 559,
+  "text": "Understand?"
+ },
+ {
+  "id": 560,
+  "text": "So what this achieves is"
+ },
+ {
+  "id": 561,
+  "text": "that the other seven cores"
+ },
+ {
+  "id": 562,
+  "text": "just spin idle the whole time,"
+ },
+ {
+  "id": 563,
+  "text": "and only one core runs."
+ },
+ {
+  "id": 564,
+  "text": "This is our"
+ },
+ {
+  "id": 565,
+  "text": "current bootloader's"
+ },
+ {
+  "id": 566,
+  "text": "basic design idea."
+ },
+ {
+  "id": 567,
+  "text": "As you read the code,"
+ },
+ {
+  "id": 568,
+  "text": "keep this concept in mind,"
+ },
+ {
+  "id": 569,
+  "text": "and you'll be fine."
+ },
+ {
+  "id": 570,
+  "text": "Now the question becomes,"
+ },
+ {
+  "id": 571,
+  "text": "how do I figure out"
+ },
+ {
+  "id": 572,
+  "text": "whether the current"
+ },
+ {
+  "id": 573,
+  "text": "core is the first one?"
+ },
+ {
+  "id": 574,
+  "text": "And how to initialize,"
+ },
+ {
+  "id": 575,
+  "text": "and how to jump into the C execution environment?"
+ },
+ {
+  "id": 576,
+  "text": "Because for the large chunks of code that follow,"
+ },
+ {
+  "id": 577,
+  "text": "we definitely want to write them in C,"
+ },
+ {
+  "id": 578,
+  "text": "not in assembly,"
+ },
+ {
+  "id": 579,
+  "text": "since writing it in assembly is too complicated."
+ },
+ {
+  "id": 580,
+  "text": "Now, the next two questions are actually fairly easy to solve."
+ },
+ {
+  "id": 581,
+  "text": "Because the earlier material,"
+ },
+ {
+  "id": 582,
+  "text": "the relevant knowledge,"
+ },
+ {
+  "id": 583,
+  "text": "has actually all been covered before."
+ },
+ {
+  "id": 584,
+  "text": "Right, everyone gets that?"
+ },
+ {
+  "id": 585,
+  "text": "But the trickiest part,"
+ },
+ {
+  "id": 586,
+  "text": "probably the first one,"
+ },
+ {
+  "id": 587,
+  "text": "is how to determine whether the current hart is the first one — this concept of 'hart'."
+ },
+ {
+  "id": 588,
+  "text": "Let's focus on that question next."
+ },
+ {
+  "id": 589,
+  "text": "That is, how to determine whether the current hart is the first one."
+ },
+ {
+  "id": 590,
+  "text": "Now this involves some concepts that we didn't cover,"
+ },
+ {
+  "id": 591,
+  "text": "when we talked about the RISC-V architecture earlier,"
+ },
+ {
+  "id": 592,
+  "text": "some concepts we haven't discussed."
+ },
+ {
+  "id": 593,
+  "text": "As we mentioned before,"
+ },
+ {
+  "id": 594,
+  "text": "besides the 32 general-purpose registers,"
+ },
+ {
+  "id": 595,
+  "text": "that is, x0 through x31,"
+ },
+ {
+  "id": 596,
+  "text": "for each privilege level, in fact,"
+ },
+ {
+  "id": 597,
+  "text": "we actually have our own set of specific registers."
+ },
+ {
+  "id": 598,
+  "text": "Right now we have machine,"
+ },
+ {
+  "id": 599,
+  "text": "and we have user,"
+ },
+ {
+  "id": 600,
+  "text": "What supervisor"
+ },
+ {
+  "id": 601,
+  "text": "These modes."
+ },
+ {
+  "id": 602,
+  "text": "Each mode has its own set of registers."
+ },
+ {
+  "id": 603,
+  "text": "This set of registers"
+ },
+ {
+  "id": 604,
+  "text": "we call them control registers."
+ },
+ {
+  "id": 605,
+  "text": "As for how we read"
+ },
+ {
+  "id": 606,
+  "text": "your hart ID,"
+ },
+ {
+  "id": 607,
+  "text": "this number,"
+ },
+ {
+  "id": 608,
+  "text": "it is actually read from these registers."
+ },
+ {
+  "id": 609,
+  "text": "Does everyone understand?"
+ },
+ {
+  "id": 610,
+  "text": "These are some special registers,"
+ },
+ {
+  "id": 611,
+  "text": "called CSRs,"
+ },
+ {
+  "id": 612,
+  "text": "CSR for short."
+ },
+ {
+  "id": 613,
+  "text": "Now for these registers,"
+ },
+ {
+  "id": 614,
+  "text": "we"
+ },
+ {
+  "id": 615,
+  "text": "we have also written it here,"
+ },
+ {
+  "id": 616,
+  "text": "that is, each level"
+ },
+ {
+  "id": 617,
+  "text": "has its own set."
+ },
+ {
+  "id": 618,
+  "text": "And then,"
+ },
+ {
+  "id": 619,
+  "text": "at a higher privilege level,"
+ },
+ {
+  "id": 620,
+  "text": "it can access the lower level,"
+ },
+ {
+  "id": 621,
+  "text": "but not the other way around."
+ },
+ {
+  "id": 622,
+  "text": "Right?"
+ },
+ {
+  "id": 623,
+  "text": "That's easy to understand,"
+ },
+ {
+  "id": 624,
+  "text": "since it's about access control."
+ },
+ {
+  "id": 625,
+  "text": "In user mode,"
+ },
+ {
+  "id": 626,
+  "text": "of course you cannot access"
+ },
+ {
+  "id": 627,
+  "text": "registers of machine mode or"
+ },
+ {
+  "id": 628,
+  "text": "supervisor mode,"
+ },
+ {
+  "id": 629,
+  "text": "can you?"
+ },
+ {
+  "id": 630,
+  "text": "Just like user mode"
+ },
+ {
+  "id": 631,
+  "text": "cannot access kernel mode."
+ },
+ {
+  "id": 632,
+  "text": "So,"
+ },
+ {
+  "id": 633,
+  "text": "how do we access these registers?"
+ },
+ {
+  "id": 634,
+  "text": "Well, there are special instructions."
+ },
+ {
+  "id": 635,
+  "text": "These are not standard integer operation instructions."
+ },
+ {
+  "id": 636,
+  "text": "They are a type of instruction called the CSR extension instructions."
+ },
+ {
+  "id": 637,
+  "text": "We said that RISC-V's"
+ },
+ {
+  "id": 638,
+  "text": "instruction design is modular, right?"
+ },
+ {
+  "id": 639,
+  "text": "So for these special requirements,"
+ },
+ {
+  "id": 640,
+  "text": "It defines a set of special instructions"
+ },
+ {
+  "id": 641,
+  "text": "to carry out these operations."
+ },
+ {
+  "id": 642,
+  "text": "When we implement these operations later,"
+ },
+ {
+  "id": 643,
+  "text": "we will mostly be dealing with"
+ },
+ {
+  "id": 644,
+  "text": "these privileged instructions and privileged registers."
+ },
+ {
+  "id": 645,
+  "text": "So let's first look at"
+ },
+ {
+  "id": 646,
+  "text": "Machine mode,"
+ },
+ {
+  "id": 647,
+  "text": "because we know that"
+ },
+ {
+  "id": 648,
+  "text": "as soon as the power comes on,"
+ },
+ {
+  "id": 649,
+  "text": "the CPU runs in Machine mode by default."
+ },
+ {
+  "id": 650,
+  "text": "It's a bit like the real mode in x86."
+ },
+ {
+  "id": 651,
+  "text": "So what we need to focus on"
+ },
+ {
+  "id": 652,
+  "text": "is what happens right at power-on,"
+ },
+ {
+  "id": 653,
+  "text": "since we are currently in that power-on state."
+ },
+ {
+  "id": 654,
+  "text": "At power-on,"
+ },
+ {
+  "id": 655,
+  "text": "how do we operate in Machine mode"
+ },
+ {
+  "id": 656,
+  "text": "to perform the relevant operations?"
+ },
+ {
+  "id": 657,
+  "text": "As for Machine mode,"
+ },
+ {
+  "id": 658,
+  "text": "the registers"
+ },
+ {
+  "id": 659,
+  "text": "are quite numerous."
+ },
+ {
+  "id": 660,
+  "text": "You can see that it's listed here"
+ },
+ {
+  "id": 661,
+  "text": "in this specific"
+ },
+ {
+  "id": 662,
+  "text": "you can go and refer to it"
+ },
+ {
+  "id": 663,
+  "text": "Reference 2 is the privileged instructions"
+ },
+ {
+  "id": 664,
+  "text": "chapter 2.4 of that specification"
+ },
+ {
+  "id": 665,
+  "text": "this table in chapter 2"
+ },
+ {
+  "id": 666,
+  "text": "I've listed it right here"
+ },
+ {
+  "id": 667,
+  "text": "Now among them"
+ },
+ {
+  "id": 668,
+  "text": "look here, there are a bunch of"
+ },
+ {
+  "id": 669,
+  "text": "these Machine Information Registers"
+ },
+ {
+  "id": 670,
+  "text": "that is to say,"
+ },
+ {
+  "id": 671,
+  "text": "things about the CPU, like the Hart"
+ },
+ {
+  "id": 672,
+  "text": "and some ID values"
+ },
+ {
+  "id": 673,
+  "text": "can be read out from"
+ },
+ {
+  "id": 674,
+  "text": "these registers"
+ },
+ {
+  "id": 675,
+  "text": "Let's get a basic understanding first"
+ },
+ {
+  "id": 676,
+  "text": "we'll cover the details later"
+ },
+ {
+  "id": 677,
+  "text": "So the key point is,"
+ },
+ {
+  "id": 678,
+  "text": "how do we read these registers?"
+ },
+ {
+  "id": 679,
+  "text": "As we just mentioned,"
+ },
+ {
+  "id": 680,
+  "text": "These registers cannot be accessed"
+ },
+ {
+  "id": 681,
+  "text": "using the ones we talked about earlier,"
+ },
+ {
+  "id": 682,
+  "text": "the arithmetic instructions"
+ },
+ {
+  "id": 683,
+  "text": "and so on."
+ },
+ {
+  "id": 684,
+  "text": "We have a set of special instructions"
+ },
+ {
+  "id": 685,
+  "text": "for accessing these special registers."
+ },
+ {
+  "id": 686,
+  "text": "So here,"
+ },
+ {
+  "id": 687,
+  "text": "there are just a few of them,"
+ },
+ {
+  "id": 688,
+  "text": "like CSR,"
+ },
+ {
+  "id": 689,
+  "text": "RWCSRS."
+ },
+ {
+  "id": 690,
+  "text": "And correspondingly,"
+ },
+ {
+  "id": 691,
+  "text": "there are also some"
+ },
+ {
+  "id": 692,
+  "text": "that can be accessed"
+ },
+ {
+  "id": 693,
+  "text": "using a bit-manipulation style."
+ },
+ {
+  "id": 694,
+  "text": "We won't go into"
+ },
+ {
+  "id": 695,
+  "text": "the details here."
+ },
+ {
+  "id": 696,
+  "text": "We mainly focus on"
+ },
+ {
+  "id": 697,
+  "text": "the ones we care about."
+ },
+ {
+  "id": 698,
+  "text": "Two of them are especially relevant,"
+ },
+ {
+  "id": 699,
+  "text": "namely these two."
+ },
+ {
+  "id": 700,
+  "text": "These two"
+ },
+ {
+  "id": 701,
+  "text": "These two instructions"
+ },
+ {
+  "id": 702,
+  "text": "Let's first take a look at"
+ },
+ {
+  "id": 703,
+  "text": "the CSRW instruction"
+ },
+ {
+  "id": 704,
+  "text": "This instruction"
+ },
+ {
+  "id": 705,
+  "text": "its full name is"
+ },
+ {
+  "id": 706,
+  "text": "Atomic Read Write CSR"
+ },
+ {
+  "id": 707,
+  "text": "So this RW"
+ },
+ {
+  "id": 708,
+  "text": "you can actually understand it as"
+ },
+ {
+  "id": 709,
+  "text": "the abbreviation for Read Write"
+ },
+ {
+  "id": 710,
+  "text": "And CSR is simply CSR,"
+ },
+ {
+  "id": 711,
+  "text": "Control and Status Register"
+ },
+ {
+  "id": 712,
+  "text": "Now here,"
+ },
+ {
+  "id": 713,
+  "text": "there is also an atomic operation"
+ },
+ {
+  "id": 714,
+  "text": "Atomic refers to the concept of an atomic operation"
+ },
+ {
+  "id": 715,
+  "text": "Let's take a look together at what this means"
+ },
+ {
+  "id": 716,
+  "text": "So this CSRW instruction"
+ },
+ {
+  "id": 717,
+  "text": "how does it actually work?"
+ },
+ {
+  "id": 718,
+  "text": "We have an explanation here"
+ },
+ {
+  "id": 719,
+  "text": "Let's all take a look at it together"
+ },
+ {
+  "id": 720,
+  "text": "That is to say,"
+ },
+ {
+  "id": 721,
+  "text": "it first reads the value in the CSR."
+ },
+ {
+  "id": 722,
+  "text": "Because this instruction"
+ },
+ {
+  "id": 723,
+  "text": "its specification works like this:"
+ },
+ {
+  "id": 724,
+  "text": "RD CSR RS1"
+ },
+ {
+  "id": 725,
+  "text": "it first takes out the value in here,"
+ },
+ {
+  "id": 726,
+  "text": "and zero-extends it to the width of the XLEN bits."
+ },
+ {
+  "id": 727,
+  "text": "This is easy to explain."
+ },
+ {
+  "id": 728,
+  "text": "You've already seen this many times before."
+ },
+ {
+  "id": 729,
+  "text": "What does zero-extension mean?"
+ },
+ {
+  "id": 730,
+  "text": "It means the missing bits are filled with zeros."
+ },
+ {
+  "id": 731,
+  "text": "And then,"
+ },
+ {
+  "id": 732,
+  "text": "where is it written to?"
+ },
+ {
+  "id": 733,
+  "text": "It's written into RD."
+ },
+ {
+  "id": 734,
+  "text": "It's written into RD."
+ },
+ {
+  "id": 735,
+  "text": "Then the value in RS1 is written into the CSR."
+ },
+ {
+  "id": 736,
+  "text": "How many steps is this?"
+ },
+ {
+  "id": 737,
+  "text": "This is two steps."
+ },
+ {
+  "id": 738,
+  "text": "That is, the first step is to"
+ },
+ {
+  "id": 739,
+  "text": "move the content over here first."
+ },
+ {
+  "id": 740,
+  "text": "Second step."
+ },
+ {
+  "id": 741,
+  "text": "Move the content over here again."
+ },
+ {
+  "id": 742,
+  "text": "Everyone gets it, right?"
+ },
+ {
+  "id": 743,
+  "text": "It's very simple—just these two steps."
+ },
+ {
+  "id": 744,
+  "text": "But here's one thing to note."
+ },
+ {
+  "id": 745,
+  "text": "The concept of atomic."
+ },
+ {
+  "id": 746,
+  "text": "That is to say,"
+ },
+ {
+  "id": 747,
+  "text": "these two steps must be atomic."
+ },
+ {
+  "id": 748,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 749,
+  "text": "It means that these two steps,"
+ },
+ {
+  "id": 750,
+  "text": "the so-called atomicity,"
+ },
+ {
+  "id": 751,
+  "text": "means they are completed within a single instruction,"
+ },
+ {
+  "id": 752,
+  "text": "and cannot be interrupted."
+ },
+ {
+  "id": 753,
+  "text": "This is what makes this instruction"
+ },
+ {
+  "id": 754,
+  "text": "slightly special."
+ },
+ {
+  "id": 755,
+  "text": "It actually accomplishes the effect of two steps of"
+ },
+ {
+  "id": 756,
+  "text": "moving registers in one atomic operation."
+ },
+ {
+  "id": 757,
+  "text": "Let me give a simple example."
+ },
+ {
+  "id": 758,
+  "text": "For instance, here is an example,"
+ },
+ {
+  "id": 759,
+  "text": "say there's an example right here."
+ },
+ {
+  "id": 760,
+  "text": "What does this mean?"
+ },
+ {
+  "id": 761,
+  "text": "This mscratch,"
+ },
+ {
+  "id": 762,
+  "text": "this is a code name for a CSR,"
+ },
+ {
+  "id": 763,
+  "text": "so it's a kind of"
+ },
+ {
+  "id": 764,
+  "text": "register we'll be using later on,"
+ },
+ {
+  "id": 765,
+  "text": "a CSR register."
+ },
+ {
+  "id": 766,
+  "text": "Now, based on the explanation we just gave,"
+ },
+ {
+  "id": 767,
+  "text": "the effect it achieves is this:"
+ },
+ {
+  "id": 768,
+  "text": "first take the value inside mscratch"
+ },
+ {
+  "id": 769,
+  "text": "and put it into the t6 register,"
+ },
+ {
+  "id": 770,
+  "text": "which is a general-purpose register."
+ },
+ {
+  "id": 771,
+  "text": "First do that,"
+ },
+ {
+  "id": 772,
+  "text": "and then take the value of t6"
+ },
+ {
+  "id": 773,
+  "text": "and put it back into here."
+ },
+ {
+  "id": 774,
+  "text": "We can write the equivalent like this."
+ },
+ {
+  "id": 775,
+  "text": "Now think about it — what effect"
+ },
+ {
+  "id": 776,
+  "text": "does this actually achieve?"
+ },
+ {
+  "id": 777,
+  "text": "It swaps the values"
+ },
+ {
+  "id": 778,
+  "text": "of the two registers."
+ },
+ {
+  "id": 779,
+  "text": "Do you all understand what I mean?"
+ },
+ {
+  "id": 780,
+  "text": "But what we need to note is"
+ },
+ {
+  "id": 781,
+  "text": "this swap operation"
+ },
+ {
+  "id": 782,
+  "text": "is completed within a single atomic process"
+ },
+ {
+  "id": 783,
+  "text": "and cannot be interrupted"
+ },
+ {
+  "id": 784,
+  "text": "Its only difference is right here"
+ },
+ {
+  "id": 785,
+  "text": "Now, in the rd position"
+ },
+ {
+  "id": 786,
+  "text": "we can also place x0"
+ },
+ {
+  "id": 787,
+  "text": "We talked about x0 earlier"
+ },
+ {
+  "id": 788,
+  "text": "So if that is the case"
+ },
+ {
+  "id": 789,
+  "text": "then in fact,"
+ },
+ {
+  "id": 790,
+  "text": "the first step we just mentioned"
+ },
+ {
+  "id": 791,
+  "text": "becomes completely meaningless"
+ },
+ {
+  "id": 792,
+  "text": "Sometimes we use this"
+ },
+ {
+  "id": 793,
+  "text": "We will see it later"
+ },
+ {
+  "id": 794,
+  "text": "and when we do, we will go over it again"
+ },
+ {
+  "id": 795,
+  "text": "So this is our basic instruction"
+ },
+ {
+  "id": 796,
+  "text": "that is, CSRR"
+ },
+ {
+  "id": 797,
+  "text": "This is our basic instruction"
+ },
+ {
+  "id": 798,
+  "text": "Now, in common situations,"
+ },
+ {
+  "id": 799,
+  "text": "here comes another instruction"
+ },
+ {
+  "id": 800,
+  "text": "In the usual case,"
+ },
+ {
+  "id": 801,
+  "text": "we use this instruction to implement"
+ },
+ {
+  "id": 802,
+  "text": "a write operation to the CSRSR instruction"
+ },
+ {
+  "id": 803,
+  "text": "called CSRSR."
+ },
+ {
+  "id": 804,
+  "text": "This is a pseudo-instruction,"
+ },
+ {
+  "id": 805,
+  "text": "and it is actually equivalent to writing it this way."
+ },
+ {
+  "id": 806,
+  "text": "Now, think about this form,"
+ },
+ {
+  "id": 807,
+  "text": "here it writes to x0."
+ },
+ {
+  "id": 808,
+  "text": "Based on what we just explained,"
+ },
+ {
+  "id": 809,
+  "text": "how is it actually implemented?"
+ },
+ {
+  "id": 810,
+  "text": "It writes this value over here,"
+ },
+ {
+  "id": 811,
+  "text": "that's the first step."
+ },
+ {
+  "id": 812,
+  "text": "Then it brings this value back over,"
+ },
+ {
+  "id": 813,
+  "text": "that's the second step."
+ },
+ {
+  "id": 814,
+  "text": "Right?"
+ },
+ {
+  "id": 815,
+  "text": "Now, as we covered just now,"
+ },
+ {
+  "id": 816,
+  "text": "if rd is x0,"
+ },
+ {
+  "id": 817,
+  "text": "the first step is actually meaningless."
+ },
+ {
+  "id": 818,
+  "text": "You see what I mean?"
+ },
+ {
+  "id": 819,
+  "text": "So this first step"
+ },
+ {
+  "id": 820,
+  "text": "Actually, there won't be any"
+ },
+ {
+  "id": 821,
+  "text": "any activity at all"
+ },
+ {
+  "id": 822,
+  "text": "In fact, at the hardware level, it means that"
+ },
+ {
+  "id": 823,
+  "text": "it simply doesn't consume power"
+ },
+ {
+  "id": 824,
+  "text": "Put simply,"
+ },
+ {
+  "id": 825,
+  "text": "in this situation, it won't"
+ },
+ {
+  "id": 826,
+  "text": "it won't perform any action at all"
+ },
+ {
+  "id": 827,
+  "text": "It will only perform the second step,"
+ },
+ {
+  "id": 828,
+  "text": "writing RS into this"
+ },
+ {
+  "id": 829,
+  "text": "Now think about this effect:"
+ },
+ {
+  "id": 830,
+  "text": "isn't it essentially equivalent to"
+ },
+ {
+  "id": 831,
+  "text": "performing a write operation on this CSR, this special register"
+ },
+ {
+  "id": 832,
+  "text": "performing a write operation?"
+ },
+ {
+  "id": 833,
+  "text": "Don't you think so?"
+ },
+ {
+  "id": 834,
+  "text": "So this instruction"
+ },
+ {
+  "id": 835,
+  "text": "is actually what we frequently use"
+ },
+ {
+  "id": 836,
+  "text": "this command to write to a CSR register"
+ },
+ {
+  "id": 837,
+  "text": "This is what I want to"
+ },
+ {
+  "id": 838,
+  "text": "highlight for you as a key point"
+ },
+ {
+  "id": 839,
+  "text": "Of course, this instruction"
+ },
+ {
+  "id": 840,
+  "text": "It also has other uses,"
+ },
+ {
+  "id": 841,
+  "text": "and when we come to use it later,"
+ },
+ {
+  "id": 842,
+  "text": "we'll take another look."
+ },
+ {
+  "id": 843,
+  "text": "So this is CSR RW,"
+ },
+ {
+  "id": 844,
+  "text": "and then there is another instruction"
+ },
+ {
+  "id": 845,
+  "text": "called CSRS."
+ },
+ {
+  "id": 846,
+  "text": "Now, this one"
+ },
+ {
+  "id": 847,
+  "text": "is called Read and Set Bits in the CSR."
+ },
+ {
+  "id": 848,
+  "text": "So let's take a look at the idea behind it."
+ },
+ {
+  "id": 849,
+  "text": "What it means is,"
+ },
+ {
+  "id": 850,
+  "text": "it first reads out the value in the CSR,"
+ },
+ {
+  "id": 851,
+  "text": "and after extending it,"
+ },
+ {
+  "id": 852,
+  "text": "it writes it into rd."
+ },
+ {
+  "id": 853,
+  "text": "In other words, there's nothing special here;"
+ },
+ {
+  "id": 854,
+  "text": "that's just how it works."
+ },
+ {
+  "id": 855,
+  "text": "The first step does exactly this."
+ },
+ {
+  "id": 856,
+  "text": "It's essentially just doing some zero-extension,"
+ },
+ {
+  "id": 857,
+  "text": "which is not our main focus here."
+ },
+ {
+  "id": 858,
+  "text": "And then,"
+ },
+ {
+  "id": 859,
+  "text": "however,"
+ },
+ {
+  "id": 860,
+  "text": "For the next step,"
+ },
+ {
+  "id": 861,
+  "text": "it is different from the previous command."
+ },
+ {
+  "id": 862,
+  "text": "It checks the bits of RC one by one,"
+ },
+ {
+  "id": 863,
+  "text": "and if a certain bit is 1,"
+ },
+ {
+  "id": 864,
+  "text": "it sets the corresponding bit in RC to 1."
+ },
+ {
+  "id": 865,
+  "text": "That is to say,"
+ },
+ {
+  "id": 866,
+  "text": "it embodies this idea of setting a bit."
+ },
+ {
+  "id": 867,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 868,
+  "text": "You can think of it this way:"
+ },
+ {
+  "id": 869,
+  "text": "this part here,"
+ },
+ {
+  "id": 870,
+  "text": "it is essentially a,"
+ },
+ {
+  "id": 871,
+  "text": "it has the effect of a mask."
+ },
+ {
+  "id": 872,
+  "text": "I don't know if you have encountered"
+ },
+ {
+  "id": 873,
+  "text": "this kind of thing in C,"
+ },
+ {
+  "id": 874,
+  "text": "the concept of a mask."
+ },
+ {
+  "id": 875,
+  "text": "When we run commands,"
+ },
+ {
+  "id": 876,
+  "text": "there is this kind of concept,"
+ },
+ {
+  "id": 877,
+  "text": "that is, when you change the mode,"
+ },
+ {
+  "id": 878,
+  "text": "like 777, 666, 664,"
+ },
+ {
+  "id": 879,
+  "text": "you remember that mask concept, right?"
+ },
+ {
+  "id": 880,
+  "text": "There's a command called MUSK, right?"
+ },
+ {
+  "id": 881,
+  "text": "So it's basically like"
+ },
+ {
+  "id": 882,
+  "text": "let me explain it here"
+ },
+ {
+  "id": 883,
+  "text": "Basically, this is doing a mask operation"
+ },
+ {
+  "id": 884,
+  "text": "What does that mean?"
+ },
+ {
+  "id": 885,
+  "text": "It means that if a certain bit in this is 1,"
+ },
+ {
+  "id": 886,
+  "text": "then that bit will actually become 1,"
+ },
+ {
+  "id": 887,
+  "text": "meaning a certain bit in this register becomes 1."
+ },
+ {
+  "id": 888,
+  "text": "If it's 0,"
+ },
+ {
+  "id": 889,
+  "text": "that bit actually stays unchanged."
+ },
+ {
+  "id": 890,
+  "text": "So that's the effect it has."
+ },
+ {
+  "id": 891,
+  "text": "Also, let me emphasize again:"
+ },
+ {
+  "id": 892,
+  "text": "these two steps are still carried out atomically."
+ },
+ {
+  "id": 893,
+  "text": "Now, later on,"
+ },
+ {
+  "id": 894,
+  "text": "in our exercises,"
+ },
+ {
+  "id": 895,
+  "text": "we actually won't focus much on"
+ },
+ {
+  "id": 896,
+  "text": "this setting of bits."
+ },
+ {
+  "id": 897,
+  "text": "When we use the CSRS command,"
+ },
+ {
+  "id": 898,
+  "text": "what we mostly want"
+ },
+ {
+  "id": 899,
+  "text": "is to use this command"
+ },
+ {
+  "id": 900,
+  "text": "Now, for CSR registers,"
+ },
+ {
+  "id": 901,
+  "text": "to perform a read operation,"
+ },
+ {
+  "id": 902,
+  "text": "let's take a look."
+ },
+ {
+  "id": 903,
+  "text": "We actually have this"
+ },
+ {
+  "id": 904,
+  "text": "instruction"
+ },
+ {
+  "id": 905,
+  "text": "called CSRR."
+ },
+ {
+  "id": 906,
+  "text": "The R stands for read,"
+ },
+ {
+  "id": 907,
+  "text": "which is just the opposite"
+ },
+ {
+  "id": 908,
+  "text": "of the write one we saw earlier."
+ },
+ {
+  "id": 909,
+  "text": "Now, as we explained earlier,"
+ },
+ {
+  "id": 910,
+  "text": "it is actually equivalent to"
+ },
+ {
+  "id": 911,
+  "text": "taking the rs1 field,"
+ },
+ {
+  "id": 912,
+  "text": "and replacing it with x0."
+ },
+ {
+  "id": 913,
+  "text": "So we know that,"
+ },
+ {
+  "id": 914,
+  "text": "what effect does it actually achieve?"
+ },
+ {
+  "id": 915,
+  "text": "As we explained earlier,"
+ },
+ {
+  "id": 916,
+  "text": "the first step is to take"
+ },
+ {
+  "id": 917,
+  "text": "the value in the register specified by this CSR instruction,"
+ },
+ {
+  "id": 918,
+  "text": "read it out, and put it into rd."
+ },
+ {
+  "id": 919,
+  "text": "But here, since it's x0,"
+ },
+ {
+  "id": 920,
+  "text": "But for x0,"
+ },
+ {
+  "id": 921,
+  "text": "its value is simply 0."
+ },
+ {
+  "id": 922,
+  "text": "Think about it —"
+ },
+ {
+  "id": 923,
+  "text": "if we use 0 as the mask to AND it,"
+ },
+ {
+  "id": 924,
+  "text": "will that actually affect"
+ },
+ {
+  "id": 925,
+  "text": "the contents of the CSR?"
+ },
+ {
+  "id": 926,
+  "text": "In fact, it will not cause any effect at all."
+ },
+ {
+  "id": 927,
+  "text": "Right?"
+ },
+ {
+  "id": 928,
+  "text": "So this second step,"
+ },
+ {
+  "id": 929,
+  "text": "in effect, does nothing at all."
+ },
+ {
+  "id": 930,
+  "text": "What we care about is here,"
+ },
+ {
+  "id": 931,
+  "text": "conversely, we care about its first step."
+ },
+ {
+  "id": 932,
+  "text": "Now, what this step actually achieves"
+ },
+ {
+  "id": 933,
+  "text": "is that it takes the value in the CSR register,"
+ },
+ {
+  "id": 934,
+  "text": "reads it out,"
+ },
+ {
+  "id": 935,
+  "text": "and puts it into rd."
+ },
+ {
+  "id": 936,
+  "text": "That's exactly the effect we get."
+ },
+ {
+  "id": 937,
+  "text": "So we often use this instruction"
+ },
+ {
+  "id": 938,
+  "text": "to implement read operations on CSR instructions."
+ },
+ {
+  "id": 939,
+  "text": "Now that we understand these two instructions,"
+ },
+ {
+  "id": 940,
+  "text": "So we can actually go ahead and do our thing"
+ },
+ {
+  "id": 941,
+  "text": "Because what we need to do next"
+ },
+ {
+  "id": 942,
+  "text": "is to figure out whether the current hart"
+ },
+ {
+  "id": 943,
+  "text": "is the first hart"
+ },
+ {
+  "id": 944,
+  "text": "Now, how do you think we should do that?"
+ },
+ {
+  "id": 945,
+  "text": "It basically comes down to, during execution"
+ },
+ {
+  "id": 946,
+  "text": "we first take this"
+ },
+ {
+  "id": 947,
+  "text": "there is a register"
+ },
+ {
+  "id": 948,
+  "text": "a CSR register"
+ },
+ {
+  "id": 949,
+  "text": "we read it out and take a look"
+ },
+ {
+  "id": 950,
+  "text": "right?"
+ },
+ {
+  "id": 951,
+  "text": "We definitely need to read it"
+ },
+ {
+  "id": 952,
+  "text": "Now, this register"
+ },
+ {
+  "id": 953,
+  "text": "is what we mentioned earlier"
+ },
+ {
+  "id": 954,
+  "text": "there is a special CSR register called the hart ID register"
+ },
+ {
+  "id": 955,
+  "text": "Its code name is mhartid"
+ },
+ {
+  "id": 956,
+  "text": "The m stands for Machine mode"
+ },
+ {
+  "id": 957,
+  "text": "This register is from Machine mode"
+ },
+ {
+  "id": 958,
+  "text": "the hart ID"
+ },
+ {
+  "id": 959,
+  "text": "So when we read this name"
+ },
+ {
+  "id": 960,
+  "text": "If we split it into three parts, it becomes easier to understand."
+ },
+ {
+  "id": 961,
+  "text": "Now, as for this register,"
+ },
+ {
+  "id": 962,
+  "text": "it is read-only."
+ },
+ {
+  "id": 963,
+  "text": "It holds the hart ID of the hart executing the current instruction."
+ },
+ {
+  "id": 964,
+  "text": "Right?"
+ },
+ {
+  "id": 965,
+  "text": "So once we read it,"
+ },
+ {
+  "id": 966,
+  "text": "we can find out who we are."
+ },
+ {
+  "id": 967,
+  "text": "In other words, reading it tells us who we are."
+ },
+ {
+  "id": 968,
+  "text": "Do you all get what I mean?"
+ },
+ {
+  "id": 969,
+  "text": "Now, the specification states"
+ },
+ {
+  "id": 970,
+  "text": "that each hart ID must be unique,"
+ },
+ {
+  "id": 971,
+  "text": "and there must be one hart with ID 0."
+ },
+ {
+  "id": 972,
+  "text": "So in general,"
+ },
+ {
+  "id": 973,
+  "text": "in our hardware implementation,"
+ },
+ {
+  "id": 974,
+  "text": "the first hart ID is 0."
+ },
+ {
+  "id": 975,
+  "text": "There isn't much ambiguity about this."
+ },
+ {
+  "id": 976,
+  "text": "Good."
+ },
+ {
+  "id": 977,
+  "text": "So what we need to do now is"
+ },
+ {
+  "id": 978,
+  "text": "read it out,"
+ },
+ {
+  "id": 979,
+  "text": "and then check it."
+ },
+ {
+  "id": 980,
+  "text": "Right?"
+ },
+ {
+  "id": 981,
+  "text": "So how do we implement this?"
+ },
+ {
+  "id": 982,
+  "text": "Of course, at this point, since"
+ },
+ {
+  "id": 983,
+  "text": "we haven't entered the C language programming environment yet,"
+ },
+ {
+  "id": 984,
+  "text": "we can only write it in assembly."
+ },
+ {
+  "id": 985,
+  "text": "As we learned earlier,"
+ },
+ {
+  "id": 986,
+  "text": "the assembly syntax is very simple."
+ },
+ {
+  "id": 987,
+  "text": "The logic in the previous part—"
+ },
+ {
+  "id": 988,
+  "text": "when our program starts running after power-on and"
+ },
+ {
+  "id": 989,
+  "text": "say, it jumps to our kernel,"
+ },
+ {
+  "id": 990,
+  "text": "at that NX8000 location,"
+ },
+ {
+  "id": 991,
+  "text": "it starts executing the first instruction."
+ },
+ {
+  "id": 992,
+  "text": "And that instruction is this CSR instruction."
+ },
+ {
+  "id": 993,
+  "text": "We talked earlier about what this instruction does."
+ },
+ {
+  "id": 994,
+  "text": "It takes the value in that register"
+ },
+ {
+  "id": 995,
+  "text": "and reads it out into t0."
+ },
+ {
+  "id": 996,
+  "text": "Right?"
+ },
+ {
+  "id": 997,
+  "text": "After reading it out,"
+ },
+ {
+  "id": 998,
+  "text": "our second statement here,"
+ },
+ {
+  "id": 999,
+  "text": "actually isn't really related to this logic."
+ },
+ {
+  "id": 1000,
+  "text": "Let's not go too fast for now."
+ },
+ {
+  "id": 1001,
+  "text": "So next up is BNE."
+ },
+ {
+  "id": 1002,
+  "text": "What does this mean?"
+ },
+ {
+  "id": 1003,
+  "text": "We covered this earlier."
+ },
+ {
+  "id": 1004,
+  "text": "What is this doing?"
+ },
+ {
+  "id": 1005,
+  "text": "This is a branch instruction."
+ },
+ {
+  "id": 1006,
+  "text": "What is it doing?"
+ },
+ {
+  "id": 1007,
+  "text": "It is checking the value in t0."
+ },
+ {
+  "id": 1008,
+  "text": "If it's not equal to 0, it branches."
+ },
+ {
+  "id": 1009,
+  "text": "That's what it means, right?"
+ },
+ {
+  "id": 1010,
+  "text": "Not equal."
+ },
+ {
+  "id": 1011,
+  "text": "Branch if not equal to 0."
+ },
+ {
+  "id": 1012,
+  "text": "That is, if it's not equal to 0, branch."
+ },
+ {
+  "id": 1013,
+  "text": "Now for the first CPU, its value is 0."
+ },
+ {
+  "id": 1014,
+  "text": "It is 0."
+ },
+ {
+  "id": 1015,
+  "text": "So it does not branch."
+ },
+ {
+  "id": 1016,
+  "text": "If it's anything else,"
+ },
+ {
+  "id": 1017,
+  "text": "it naturally branches to the PAC label."
+ },
+ {
+  "id": 1018,
+  "text": "Isn't that right?"
+ },
+ {
+  "id": 1019,
+  "text": "Now as for the label,"
+ },
+ {
+  "id": 1020,
+  "text": "What we wrote here,"
+ },
+ {
+  "id": 1021,
+  "text": "what it actually jumps to is exactly this kind of logic."
+ },
+ {
+  "id": 1022,
+  "text": "This piece of logic is just an infinite loop."
+ },
+ {
+  "id": 1023,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1024,
+  "text": "if I am not the first hart,"
+ },
+ {
+  "id": 1025,
+  "text": "then I'm sorry,"
+ },
+ {
+  "id": 1026,
+  "text": "all I can do is just spin there."
+ },
+ {
+  "id": 1027,
+  "text": "And the others,"
+ },
+ {
+  "id": 1028,
+  "text": "and that first hart,"
+ },
+ {
+  "id": 1029,
+  "text": "it will execute this normal logic."
+ },
+ {
+  "id": 1030,
+  "text": "This is the normal logic."
+ },
+ {
+  "id": 1031,
+  "text": "The others just jump over here."
+ },
+ {
+  "id": 1032,
+  "text": "And when they jump over here,"
+ },
+ {
+  "id": 1033,
+  "text": "it's again a loop."
+ },
+ {
+  "id": 1034,
+  "text": "The loop just spins away frantically right there."
+ },
+ {
+  "id": 1035,
+  "text": "It just jumps to itself, right?"
+ },
+ {
+  "id": 1036,
+  "text": "Isn't that an infinite loop?"
+ },
+ {
+  "id": 1037,
+  "text": "Right?"
+ },
+ {
+  "id": 1038,
+  "text": "It's just that,"
+ },
+ {
+  "id": 1039,
+  "text": "when we have the infinite loop,"
+ },
+ {
+  "id": 1040,
+  "text": "Everyone, take note here."
+ },
+ {
+  "id": 1041,
+  "text": "We used a WFI instruction."
+ },
+ {
+  "id": 1042,
+  "text": "This WFI instruction,"
+ },
+ {
+  "id": 1043,
+  "text": "is not the focus of our study."
+ },
+ {
+  "id": 1044,
+  "text": "You can look it up on your own."
+ },
+ {
+  "id": 1045,
+  "text": "What it actually does is"
+ },
+ {
+  "id": 1046,
+  "text": "put our CPU into a"
+ },
+ {
+  "id": 1047,
+  "text": "low-power sleep state."
+ },
+ {
+  "id": 1048,
+  "text": "Because as you all know,"
+ },
+ {
+  "id": 1049,
+  "text": "if it just spins blindly,"
+ },
+ {
+  "id": 1050,
+  "text": "that consumes a lot of power."
+ },
+ {
+  "id": 1051,
+  "text": "Think about it, isn't that true?"
+ },
+ {
+  "id": 1052,
+  "text": "If there were no"
+ },
+ {
+  "id": 1053,
+  "text": "if there were no"
+ },
+ {
+  "id": 1054,
+  "text": "if there were no"
+ },
+ {
+  "id": 1055,
+  "text": "WFI instruction here,"
+ },
+ {
+  "id": 1056,
+  "text": "without this,"
+ },
+ {
+  "id": 1057,
+  "text": "then it would just be spinning blindly."
+ },
+ {
+  "id": 1058,
+  "text": "Spinning blindly like that,"
+ },
+ {
+  "id": 1059,
+  "text": "that would consume a lot of power."
+ },
+ {
+  "id": 1060,
+  "text": "which is completely pointless"
+ },
+ {
+  "id": 1061,
+  "text": "and it just wastes power"
+ },
+ {
+  "id": 1062,
+  "text": "So after we added WFI,"
+ },
+ {
+  "id": 1063,
+  "text": "it actually enters a dormant state"
+ },
+ {
+  "id": 1064,
+  "text": "So it's not really spinning blindly"
+ },
+ {
+  "id": 1065,
+  "text": "It actually enters a dormant state"
+ },
+ {
+  "id": 1066,
+  "text": "What this means is"
+ },
+ {
+  "id": 1067,
+  "text": "unless there is an external interrupt to"
+ },
+ {
+  "id": 1068,
+  "text": "wake up this CPU,"
+ },
+ {
+  "id": 1069,
+  "text": "otherwise this CPU will enter a"
+ },
+ {
+  "id": 1070,
+  "text": "low-power sleep state"
+ },
+ {
+  "id": 1071,
+  "text": "So this achieves the effect we want"
+ },
+ {
+  "id": 1072,
+  "text": "So that's why we say here,"
+ },
+ {
+  "id": 1073,
+  "text": "calling it idle spinning is not entirely accurate"
+ },
+ {
+  "id": 1074,
+  "text": "We should say we let it"
+ },
+ {
+  "id": 1075,
+  "text": "if it's not the first CPU,"
+ },
+ {
+  "id": 1076,
+  "text": "we let it enter a dormant state"
+ },
+ {
+  "id": 1077,
+  "text": "a low-power dormant state"
+ },
+ {
+  "id": 1078,
+  "text": "That way,"
+ },
+ {
+  "id": 1079,
+  "text": "the basic logic of our leader program"
+ },
+ {
+  "id": 1080,
+  "text": "It's really that simple."
+ },
+ {
+  "id": 1081,
+  "text": "But there are some concepts involved behind it,"
+ },
+ {
+  "id": 1082,
+  "text": "which we'll walk you through."
+ },
+ {
+  "id": 1083,
+  "text": "Now, as for how to initialize,"
+ },
+ {
+  "id": 1084,
+  "text": "and how to jump into C,"
+ },
+ {
+  "id": 1085,
+  "text": "we won't cover that here."
+ },
+ {
+  "id": 1086,
+  "text": "The earlier exercises actually already touched on that."
+ },
+ {
+  "id": 1087,
+  "text": "If we look at the code ourselves, we should be able to understand it."
+ },
+ {
+  "id": 1088,
+  "text": "So jumping to a function,"
+ },
+ {
+  "id": 1089,
+  "text": "that just means jumping into that function."
+ },
+ {
+  "id": 1090,
+  "text": "Let's take a quick look over here at"
+ },
+ {
+  "id": 1091,
+  "text": "our code."
+ },
+ {
+  "id": 1092,
+  "text": "As you can see,"
+ },
+ {
+  "id": 1093,
+  "text": "the code for this OS of ours,"
+ },
+ {
+  "id": 1094,
+  "text": "is kept separate from the ASM part."
+ },
+ {
+  "id": 1095,
+  "text": "On our OS side,"
+ },
+ {
+  "id": 1096,
+  "text": "there are roughly a total of,"
+ },
+ {
+  "id": 1097,
+  "text": "11 exercises in total."
+ },
+ {
+  "id": 1098,
+  "text": "Now, these 11 exercises,"
+ },
+ {
+  "id": 1099,
+  "text": "were actually designed in a special way."
+ },
+ {
+  "id": 1100,
+  "text": "So each 01 is actually"
+ },
+ {
+  "id": 1101,
+  "text": "built on top of 00 as an"
+ },
+ {
+  "id": 1102,
+  "text": "iteration"
+ },
+ {
+  "id": 1103,
+  "text": "So they're really added on step by step"
+ },
+ {
+  "id": 1104,
+  "text": "and finally"
+ },
+ {
+  "id": 1105,
+  "text": "we reach this 11 step state"
+ },
+ {
+  "id": 1106,
+  "text": "So when you do the exercises"
+ },
+ {
+  "id": 1107,
+  "text": "you can also"
+ },
+ {
+  "id": 1108,
+  "text": "compare the two directories"
+ },
+ {
+  "id": 1109,
+  "text": "to see exactly what we changed at each step"
+ },
+ {
+  "id": 1110,
+  "text": "which helps your understanding"
+ },
+ {
+  "id": 1111,
+  "text": "After all, isn't this course called step by step?"
+ },
+ {
+  "id": 1112,
+  "text": "What does step by step mean?"
+ },
+ {
+  "id": 1113,
+  "text": "Well, what was changed at each step"
+ },
+ {
+  "id": 1114,
+  "text": "is something you can compare"
+ },
+ {
+  "id": 1115,
+  "text": "to understand what we actually did"
+ },
+ {
+  "id": 1116,
+  "text": "So this first step, the bootstrap, is really what it's all about"
+ },
+ {
+  "id": 1117,
+  "text": "We are at..."
+ },
+ {
+  "id": 1118,
+  "text": "Today we can probably only cover this much"
+ },
+ {
+  "id": 1119,
+  "text": "So this"
+ },
+ {
+  "id": 1120,
+  "text": "Now, in our code,"
+ },
+ {
+  "id": 1121,
+  "text": "you can see that"
+ },
+ {
+  "id": 1122,
+  "text": "our first little project is very simple,"
+ },
+ {
+  "id": 1123,
+  "text": "just four files."
+ },
+ {
+  "id": 1124,
+  "text": "Among them, the makefile"
+ },
+ {
+  "id": 1125,
+  "text": "is our"
+ },
+ {
+  "id": 1126,
+  "text": "well, the makefile isn't really our source code."
+ },
+ {
+  "id": 1127,
+  "text": "Actually, only"
+ },
+ {
+  "id": 1128,
+  "text": "for the core code,"
+ },
+ {
+  "id": 1129,
+  "text": "there is just"
+ },
+ {
+  "id": 1130,
+  "text": "one header file,"
+ },
+ {
+  "id": 1131,
+  "text": "plus one assembly file,"
+ },
+ {
+  "id": 1132,
+  "text": "plus one .c file."
+ },
+ {
+  "id": 1133,
+  "text": "Now, this platform,"
+ },
+ {
+  "id": 1134,
+  "text": "this header file,"
+ },
+ {
+  "id": 1135,
+  "text": "we covered the concept of platform earlier."
+ },
+ {
+  "id": 1136,
+  "text": "This header file"
+ },
+ {
+  "id": 1137,
+  "text": "is used to hold some platform-related"
+ },
+ {
+  "id": 1138,
+  "text": "hardware definitions."
+ },
+ {
+  "id": 1139,
+  "text": "Right now this file is fairly small,"
+ },
+ {
+  "id": 1140,
+  "text": "Because right now, we don't involve that many things."
+ },
+ {
+  "id": 1141,
+  "text": "We've only defined one thing."
+ },
+ {
+  "id": 1142,
+  "text": "We've only defined what we just talked about."
+ },
+ {
+  "id": 1143,
+  "text": "We said, how many CPUs are there on this platform?"
+ },
+ {
+  "id": 1144,
+  "text": "Eight. Just this little bit to go on."
+ },
+ {
+  "id": 1145,
+  "text": "That's enough."
+ },
+ {
+  "id": 1146,
+  "text": "Later on, we'll gradually expand this file."
+ },
+ {
+  "id": 1147,
+  "text": "And then, this .s file,"
+ },
+ {
+  "id": 1148,
+  "text": "it's our"
+ },
+ {
+  "id": 1149,
+  "text": "starting address after power-on."
+ },
+ {
+  "id": 1150,
+  "text": "It's all in here."
+ },
+ {
+  "id": 1151,
+  "text": "The first line of code that runs is all in this place."
+ },
+ {
+  "id": 1152,
+  "text": "Now, everything here is assembly."
+ },
+ {
+  "id": 1153,
+  "text": "Now, everyone, pay attention."
+ },
+ {
+  "id": 1154,
+  "text": "Our .S here uses an uppercase S."
+ },
+ {
+  "id": 1155,
+  "text": "Now, why is it an uppercase S?"
+ },
+ {
+  "id": 1156,
+  "text": "Why not a lowercase s?"
+ },
+ {
+  "id": 1157,
+  "text": "As we mentioned before, the uppercase S,"
+ },
+ {
+  "id": 1158,
+  "text": "inside it, you can support this kind of thing."
+ },
+ {
+  "id": 1159,
+  "text": "What's this called?"
+ },
+ {
+  "id": 1160,
+  "text": "Preprocessor directives."
+ },
+ {
+  "id": 1161,
+  "text": "The lowercase .s file doesn't have any of these things."
+ },
+ {
+  "id": 1162,
+  "text": "To make things easier for us,"
+ },
+ {
+  "id": 1163,
+  "text": "because we'll be using the macros defined in here."
+ },
+ {
+  "id": 1164,
+  "text": "You can use macros in assembly too."
+ },
+ {
+  "id": 1165,
+  "text": "See?"
+ },
+ {
+  "id": 1166,
+  "text": "It's very much like C."
+ },
+ {
+  "id": 1167,
+  "text": "You'll notice that C and assembly really"
+ },
+ {
+  "id": 1168,
+  "text": "aren't that different."
+ },
+ {
+  "id": 1169,
+  "text": "Now, this"
+ },
+ {
+  "id": 1170,
+  "text": "start.s is just the logic we had earlier."
+ },
+ {
+  "id": 1171,
+  "text": "Now down here,"
+ },
+ {
+  "id": 1172,
+  "text": "stack here actually defines a stack region."
+ },
+ {
+  "id": 1173,
+  "text": "This is very much like the earlier example."
+ },
+ {
+  "id": 1174,
+  "text": "We won't say more about it."
+ },
+ {
+  "id": 1175,
+  "text": "So in this code of ours,"
+ },
+ {
+  "id": 1176,
+  "text": "right at the beginning,"
+ },
+ {
+  "id": 1177,
+  "text": "there's a piece of logic down below"
+ },
+ {
+  "id": 1178,
+  "text": "that sets up this stack pointer,"
+ },
+ {
+  "id": 1179,
+  "text": "see?"
+ },
+ {
+  "id": 1180,
+  "text": "We've covered all of these earlier,"
+ },
+ {
+  "id": 1181,
+  "text": "so I won't say much about them."
+ },
+ {
+  "id": 1182,
+  "text": "There are comments alongside,"
+ },
+ {
+  "id": 1183,
+  "text": "which are written fairly clearly."
+ },
+ {
+  "id": 1184,
+  "text": "In case some of you can't see them clearly,"
+ },
+ {
+  "id": 1185,
+  "text": "so this piece of logic"
+ },
+ {
+  "id": 1186,
+  "text": "is exactly what we just talked about."
+ },
+ {
+  "id": 1187,
+  "text": "We first read out the value of this m hat,"
+ },
+ {
+  "id": 1188,
+  "text": "and then,"
+ },
+ {
+  "id": 1189,
+  "text": "we compare this value against this 0,"
+ },
+ {
+  "id": 1190,
+  "text": "to decide whether we need to enter the Park state."
+ },
+ {
+  "id": 1191,
+  "text": "So actually, this statement here,"
+ },
+ {
+  "id": 1192,
+  "text": "is nothing more than taking this T0 value,"
+ },
+ {
+  "id": 1193,
+  "text": "and saving it into a special TP,"
+ },
+ {
+  "id": 1194,
+  "text": "into this register,"
+ },
+ {
+  "id": 1195,
+  "text": "for use later on."
+ },
+ {
+  "id": 1196,
+  "text": "We'll talk about it when we actually use it later."
+ },
+ {
+  "id": 1197,
+  "text": "Let's just skip it for now."
+ },
+ {
+  "id": 1198,
+  "text": "Then over here is the Park logic,"
+ },
+ {
+  "id": 1199,
+  "text": "and then we enter this FI sleep state."
+ },
+ {
+  "id": 1200,
+  "text": "And we should know"
+ },
+ {
+  "id": 1201,
+  "text": "this code is executed by every CPU."
+ },
+ {
+  "id": 1202,
+  "text": "So if you happen to be the first CPU,"
+ },
+ {
+  "id": 1203,
+  "text": "as we just said,"
+ },
+ {
+  "id": 1204,
+  "text": "for the first CPU,"
+ },
+ {
+  "id": 1205,
+  "text": "it will not enter the idle state."
+ },
+ {
+  "id": 1206,
+  "text": "So it will execute"
+ },
+ {
+  "id": 1207,
+  "text": "the following part,"
+ },
+ {
+  "id": 1208,
+  "text": "that is, the following section,"
+ },
+ {
+  "id": 1209,
+  "text": "these few instructions,"
+ },
+ {
+  "id": 1210,
+  "text": "only the first CPU will run them."
+ },
+ {
+  "id": 1211,
+  "text": "Can everyone understand this?"
+ },
+ {
+  "id": 1212,
+  "text": "Can you follow this?"
+ },
+ {
+  "id": 1213,
+  "text": "That is to say, the code below,"
+ },
+ {
+  "id": 1214,
+  "text": "only the first CPU can run it."
+ },
+ {
+  "id": 1215,
+  "text": "That is, hart 0 will run it."
+ },
+ {
+  "id": 1216,
+  "text": "What will it do?"
+ },
+ {
+  "id": 1217,
+  "text": "Only then will it,"
+ },
+ {
+  "id": 1218,
+  "text": "at this point it will go and execute"
+ },
+ {
+  "id": 1219,
+  "text": "the actual operations of this .text section."
+ },
+ {
+  "id": 1220,
+  "text": "As for why it's written this way"
+ },
+ {
+  "id": 1221,
+  "text": "I'll leave that for you to look into on your own"
+ },
+ {
+  "id": 1222,
+  "text": "And then,"
+ },
+ {
+  "id": 1223,
+  "text": "get this stack pointer ready"
+ },
+ {
+  "id": 1224,
+  "text": "These three sections above"
+ },
+ {
+  "id": 1225,
+  "text": "are all just preparing this stack pointer"
+ },
+ {
+  "id": 1226,
+  "text": "And then,"
+ },
+ {
+  "id": 1227,
+  "text": "finally,"
+ },
+ {
+  "id": 1228,
+  "text": "with a jump instruction"
+ },
+ {
+  "id": 1229,
+  "text": "it jumps to start_kernel"
+ },
+ {
+  "id": 1230,
+  "text": "this function,"
+ },
+ {
+  "id": 1231,
+  "text": "to execute our kernel"
+ },
+ {
+  "id": 1232,
+  "text": "Basically, it's booting into"
+ },
+ {
+  "id": 1233,
+  "text": "our kernel"
+ },
+ {
+  "id": 1234,
+  "text": "Everyone follow me on that?"
+ },
+ {
+  "id": 1235,
+  "text": "At this point, our kernel"
+ },
+ {
+  "id": 1236,
+  "text": "basically,"
+ },
+ {
+  "id": 1237,
+  "text": "from here on out,"
+ },
+ {
+  "id": 1238,
+  "text": "actually, most of the code"
+ },
+ {
+  "id": 1239,
+  "text": "is written in C"
+ },
+ {
+  "id": 1240,
+  "text": "start_kernel is a C function."
+ },
+ {
+  "id": 1241,
+  "text": "And the C part,"
+ },
+ {
+  "id": 1242,
+  "text": "is shown in a file"
+ },
+ {
+  "id": 1243,
+  "text": "called kernel.c,"
+ },
+ {
+  "id": 1244,
+  "text": "a source file like that."
+ },
+ {
+  "id": 1245,
+  "text": "Right now in there"
+ },
+ {
+  "id": 1246,
+  "text": "what we implement is very simple,"
+ },
+ {
+  "id": 1247,
+  "text": "just a while loop,"
+ },
+ {
+  "id": 1248,
+  "text": "because at this point"
+ },
+ {
+  "id": 1249,
+  "text": "we can't really do anything yet."
+ },
+ {
+  "id": 1250,
+  "text": "For now, the first step is simply to"
+ },
+ {
+  "id": 1251,
+  "text": "— that is to say, we —"
+ },
+ {
+  "id": 1252,
+  "text": "and the same goes for you later on,"
+ },
+ {
+  "id": 1253,
+  "text": "when you write a kernel yourself,"
+ },
+ {
+  "id": 1254,
+  "text": "it's the same idea."
+ },
+ {
+  "id": 1255,
+  "text": "The first step"
+ },
+ {
+  "id": 1256,
+  "text": "is nothing more than getting"
+ },
+ {
+  "id": 1257,
+  "text": "your environment"
+ },
+ {
+  "id": 1258,
+  "text": "to run all the way to the"
+ },
+ {
+  "id": 1259,
+  "text": "first line of C code."
+ },
+ {
+  "id": 1260,
+  "text": "As for when to stop doing that,"
+ },
+ {
+  "id": 1261,
+  "text": "well, at least your success"
+ },
+ {
+  "id": 1262,
+  "text": "has reached the first step,"
+ },
+ {
+  "id": 1263,
+  "text": "you can already see the light at the end of the tunnel."
+ },
+ {
+  "id": 1264,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1265,
+  "text": "suppose,"
+ },
+ {
+  "id": 1266,
+  "text": "later on we"
+ },
+ {
+  "id": 1267,
+  "text": "will of course add"
+ },
+ {
+  "id": 1268,
+  "text": "some debug prints here,"
+ },
+ {
+  "id": 1269,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1270,
+  "text": "but right now we have"
+ },
+ {
+  "id": 1271,
+  "text": "a debugger that can step through it."
+ },
+ {
+  "id": 1272,
+  "text": "If, when you single-step through it,"
+ },
+ {
+  "id": 1273,
+  "text": "you can get to this step,"
+ },
+ {
+  "id": 1274,
+  "text": "then it means you're basically able to,"
+ },
+ {
+  "id": 1275,
+  "text": "well, our kernel is now up and running,"
+ },
+ {
+  "id": 1276,
+  "text": "even though it's extremely, extremely simple."
+ },
+ {
+  "id": 1277,
+  "text": "So basically,"
+ },
+ {
+  "id": 1278,
+  "text": "our first example,"
+ },
+ {
+  "id": 1279,
+  "text": "that's pretty much it."
+ },
+ {
+  "id": 1280,
+  "text": "It looks like we're running a bit short on time to cover that today."
+ },
+ {
+  "id": 1281,
+  "text": "There's quite a lot of material in the next part."
+ },
+ {
+  "id": 1282,
+  "text": "I'd rather not break it up."
+ },
+ {
+  "id": 1283,
+  "text": "Let's save it for the next class."
+ },
+ {
+  "id": 1284,
+  "text": "Let's not interrupt it."
+ },
+ {
+  "id": 1285,
+  "text": "Alright then."
+ },
+ {
+  "id": 1286,
+  "text": "Maybe we should just stop here for today."
+ }
+]

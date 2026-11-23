@@ -1,0 +1,7151 @@
+1
+00:00:00,340 --> 00:00:07,540
+Now let's move on to the next chapter, Chapter 8.
+
+2
+00:00:09,640 --> 00:00:19,920
+In Chapter 7, through introducing the boot of our system and printing a basic HelloRV OS on top of it,
+
+3
+00:00:20,380 --> 00:00:27,460
+we learned how to get a RISC-V board up and running,
+
+4
+00:00:27,460 --> 00:00:28,540
+on top of it,
+
+5
+00:00:28,540 --> 00:00:31,160
+and then used its most basic peripheral,
+
+6
+00:00:31,160 --> 00:00:32,180
+the serial port device.
+
+7
+00:00:32,180 --> 00:00:33,540
+Next,
+
+8
+00:00:33,540 --> 00:00:34,640
+let's turn to Chapter 8,
+
+9
+00:00:34,640 --> 00:00:35,840
+which mainly introduces,
+
+10
+00:00:35,840 --> 00:00:37,240
+building on the previous foundation,
+
+11
+00:00:37,240 --> 00:00:39,180
+how we can further
+
+12
+00:00:39,180 --> 00:00:41,020
+manage the memory of our system,
+
+13
+00:00:41,020 --> 00:00:42,320
+taking that management a step further.
+
+14
+00:00:42,320 --> 00:00:47,770
+This part of the content
+
+15
+00:00:47,770 --> 00:00:48,910
+is mainly divided into two parts.
+
+16
+00:00:48,910 --> 00:00:50,150
+One part
+
+17
+00:00:50,150 --> 00:00:51,850
+is an introduction to
+
+18
+00:00:51,850 --> 00:00:55,990
+how to implement dynamic memory allocation,
+
+19
+00:00:55,990 --> 00:00:56,790
+and then,
+
+20
+00:00:56,790 --> 00:00:58,650
+based on this first part,
+
+21
+00:00:58,650 --> 00:01:00,910
+in terms of implementing the concepts we introduced,
+
+22
+00:01:00,910 --> 00:01:04,530
+we can implement, at the page level,
+
+23
+00:01:04,530 --> 00:01:05,690
+at the configuration level,
+
+24
+00:01:05,690 --> 00:01:08,690
+some calling interfaces for memory allocation and management.
+
+25
+00:01:08,690 --> 00:01:11,350
+I'll mainly cover this in two steps.
+
+26
+00:01:11,350 --> 00:01:13,890
+As for the relevant reference materials,
+
+27
+00:01:13,890 --> 00:01:15,050
+I've listed some of them here as well.
+
+28
+00:01:15,050 --> 00:01:18,830
+In our slides, they'll actually be listed too.
+
+29
+00:01:18,830 --> 00:01:20,210
+When we get to some important concepts,
+
+30
+00:01:20,210 --> 00:01:22,550
+I'll show some of the figures and tables,
+
+31
+00:01:22,550 --> 00:01:24,010
+and where they come from in the references.
+
+32
+00:01:24,010 --> 00:01:25,270
+You can go back and take a look.
+
+33
+00:01:25,270 --> 00:01:29,120
+So let's start with the first part.
+
+34
+00:01:29,120 --> 00:01:30,720
+That is, further management of memory.
+
+35
+00:01:30,720 --> 00:01:35,310
+So here,
+
+36
+00:01:35,310 --> 00:01:40,450
+before we continue further development,
+
+37
+00:01:40,450 --> 00:01:42,510
+we need to take the memory
+
+38
+00:01:42,510 --> 00:01:44,510
+and manage it further.
+
+39
+00:01:44,510 --> 00:01:45,570
+Why is that?
+
+40
+00:01:45,570 --> 00:01:47,470
+It's because from what we saw earlier,
+
+41
+00:01:47,470 --> 00:01:48,830
+What we've been learning is that
+
+42
+00:01:48,830 --> 00:01:51,530
+when it comes to memory management,
+
+43
+00:01:51,530 --> 00:01:54,230
+up to this point,
+
+44
+00:01:54,230 --> 00:01:55,710
+we've actually already encountered
+
+45
+00:01:55,710 --> 00:01:57,530
+two kinds of memory management approaches,
+
+46
+00:01:57,530 --> 00:01:57,810
+right?
+
+47
+00:01:57,810 --> 00:02:00,730
+The first one is called automatic memory management.
+
+48
+00:02:00,730 --> 00:02:02,210
+Now, this way of managing memory,
+
+49
+00:02:02,210 --> 00:02:04,450
+we actually implement through the stack,
+
+50
+00:02:04,450 --> 00:02:06,690
+through this mechanism.
+
+51
+00:02:06,690 --> 00:02:08,990
+This actually corresponds in our C language,
+
+52
+00:02:08,990 --> 00:02:10,870
+to what is essentially used,
+
+53
+00:02:10,870 --> 00:02:13,190
+namely the automatic variables defined inside functions.
+
+54
+00:02:13,190 --> 00:02:14,690
+Now, we know that these automatic variables,
+
+55
+00:02:14,690 --> 00:02:15,290
+this kind of memory,
+
+56
+00:02:15,290 --> 00:02:18,190
+when you enter a function,
+
+57
+00:02:18,190 --> 00:02:21,250
+it gets allocated inside the function stack,
+
+58
+00:02:21,250 --> 00:02:22,350
+and when the function exits,
+
+59
+00:02:22,350 --> 00:02:24,210
+it is actually released,
+
+60
+00:02:24,210 --> 00:02:24,430
+right?
+
+61
+00:02:24,430 --> 00:02:25,810
+Once it goes out of scope, it's released.
+
+62
+00:02:25,810 --> 00:02:27,190
+You can think of it as a kind of automatic management.
+
+63
+00:02:27,190 --> 00:02:28,450
+Now, there's another kind.
+
+64
+00:02:28,450 --> 00:02:30,290
+What we're studying is static memory.
+
+65
+00:02:30,290 --> 00:02:33,030
+In our code, this corresponds to,
+
+66
+00:02:33,030 --> 00:02:34,850
+basically, defining some global variables,
+
+67
+00:02:34,850 --> 00:02:35,930
+or static variables.
+
+68
+00:02:35,930 --> 00:02:37,230
+Now, for these variables,
+
+69
+00:02:37,230 --> 00:02:40,010
+we're actually using them in a static way.
+
+70
+00:02:40,010 --> 00:02:41,630
+We know where this static memory is placed.
+
+71
+00:02:41,630 --> 00:02:44,310
+It's actually placed after we compile,
+
+72
+00:02:44,310 --> 00:02:47,090
+in some special data segments.
+
+73
+00:02:47,090 --> 00:02:47,710
+Right?
+
+74
+00:02:47,710 --> 00:02:48,630
+In the data sections.
+
+75
+00:02:48,630 --> 00:02:49,570
+Then they get loaded into memory,
+
+76
+00:02:49,570 --> 00:02:50,810
+placed in these data segments.
+
+77
+00:02:50,810 --> 00:02:52,230
+Okay.
+
+78
+00:02:52,230 --> 00:02:54,170
+So, for these things,
+
+79
+00:02:54,170 --> 00:02:55,650
+what we can see is that,
+
+80
+00:02:55,650 --> 00:02:58,350
+beyond this way of using memory,
+
+81
+00:02:58,350 --> 00:03:00,590
+Actually, there's another kind of
+
+82
+00:03:00,590 --> 00:03:02,210
+demand for memory
+
+83
+00:03:02,210 --> 00:03:03,310
+which is that we might need to
+
+84
+00:03:03,310 --> 00:03:04,650
+at runtime
+
+85
+00:03:04,650 --> 00:03:07,070
+dynamically allocate some memory.
+
+86
+00:03:07,070 --> 00:03:09,770
+Because in real-world programming,
+
+87
+00:03:09,770 --> 00:03:12,230
+we know there are some data structures
+
+88
+00:03:12,230 --> 00:03:13,570
+whose memory size
+
+89
+00:03:13,570 --> 00:03:16,190
+actually, at the point when the program starts running,
+
+90
+00:03:16,190 --> 00:03:18,270
+cannot simply be placed
+
+91
+00:03:18,270 --> 00:03:20,030
+entirely into static memory,
+
+92
+00:03:20,030 --> 00:03:21,930
+or stored on the stack.
+
+93
+00:03:21,930 --> 00:03:24,490
+So in C, for example,
+
+94
+00:03:24,490 --> 00:03:25,410
+what we have inside is, say,
+
+95
+00:03:25,410 --> 00:03:26,210
+we use malloc,
+
+96
+00:03:26,210 --> 00:03:27,650
+or free, that kind of
+
+97
+00:03:27,650 --> 00:03:28,590
+dynamic approach.
+
+98
+00:03:28,590 --> 00:03:30,150
+Now, this dynamic approach
+
+99
+00:03:30,150 --> 00:03:32,030
+brings in the concept of a heap.
+
+100
+00:03:32,030 --> 00:03:33,730
+And this heap,
+
+101
+00:03:33,730 --> 00:03:35,250
+under the hood, exactly where
+
+102
+00:03:35,250 --> 00:03:37,070
+So, for example, when we
+
+103
+00:03:37,070 --> 00:03:38,270
+normally call malloc
+
+104
+00:03:38,270 --> 00:03:38,870
+and free,
+
+105
+00:03:38,870 --> 00:03:40,310
+behind that, exactly where
+
+106
+00:03:40,310 --> 00:03:42,750
+is that heap located in memory?
+
+107
+00:03:42,750 --> 00:03:44,790
+Well, in fact, in our
+
+108
+00:03:44,790 --> 00:03:46,730
+at the very lowest level,
+
+109
+00:03:46,730 --> 00:03:48,170
+it's actually maintained for you
+
+110
+00:03:48,170 --> 00:03:49,770
+by our operating system.
+
+111
+00:03:49,770 --> 00:03:51,730
+So how do we
+
+112
+00:03:51,730 --> 00:03:53,710
+build that heap?
+
+113
+00:03:53,710 --> 00:03:54,470
+Today,
+
+114
+00:03:54,470 --> 00:03:55,950
+we'll mainly focus on that topic.
+
+115
+00:03:55,950 --> 00:04:00,990
+Alright, let's first look at this table.
+
+116
+00:04:00,990 --> 00:04:02,490
+We've seen this table several times before,
+
+117
+00:04:02,490 --> 00:04:03,330
+the memory map.
+
+118
+00:04:03,330 --> 00:04:05,050
+From what we learned earlier,
+
+119
+00:04:05,050 --> 00:04:07,150
+we know that on this table,
+
+120
+00:04:07,150 --> 00:04:08,550
+the Bootloader ROM region
+
+121
+00:04:08,550 --> 00:04:09,650
+We actually can't touch it.
+
+122
+00:04:09,650 --> 00:04:11,050
+Because you can think of it as
+
+123
+00:04:11,050 --> 00:04:12,930
+a block of read-only memory that's baked in there.
+
+124
+00:04:12,930 --> 00:04:16,050
+What we actually work with more is the DRAM.
+
+125
+00:04:16,050 --> 00:04:16,950
+That is, this block up here.
+
+126
+00:04:16,950 --> 00:04:18,030
+This block up here.
+
+127
+00:04:18,030 --> 00:04:19,270
+Now for this block up here,
+
+128
+00:04:19,270 --> 00:04:20,890
+we know that after going through the mapping,
+
+129
+00:04:20,890 --> 00:04:23,230
+it gets mapped to our physical memory,
+
+130
+00:04:23,230 --> 00:04:29,530
+from 0x8000 up to 0x88000000,
+
+131
+00:04:29,530 --> 00:04:31,790
+over this range of addresses.
+
+132
+00:04:31,790 --> 00:04:33,630
+Now for the memory in this address range,
+
+133
+00:04:33,630 --> 00:04:36,170
+actually, how it's used internally,
+
+134
+00:04:36,170 --> 00:04:38,370
+we haven't done any deeper management of it.
+
+135
+00:04:38,370 --> 00:04:38,990
+Think about it, right?
+
+136
+00:04:38,990 --> 00:04:43,230
+Because as you know, let's look at this diagram down here.
+
+137
+00:04:43,230 --> 00:04:48,290
+Actually, for this whole area on this side,
+
+138
+00:04:48,290 --> 00:04:52,210
+like on this Virtual board we're currently using,
+
+139
+00:04:52,210 --> 00:04:54,750
+for this memory in this 128-megabyte range,
+
+140
+00:04:54,750 --> 00:04:57,270
+we haven't actually done any further or deeper management.
+
+141
+00:04:57,270 --> 00:04:58,450
+Why do I say that?
+
+142
+00:04:58,450 --> 00:04:59,510
+Well, as you know,
+
+143
+00:04:59,510 --> 00:05:02,610
+after we compile a program,
+
+144
+00:05:02,610 --> 00:05:04,330
+and those of you who did the earlier ones,
+
+145
+00:05:04,330 --> 00:05:08,790
+you know that what we compile here is actually an OS.ELF,
+
+146
+00:05:08,790 --> 00:05:11,030
+an executable file like that.
+
+147
+00:05:11,030 --> 00:05:12,750
+Now, this file, as we know,
+
+148
+00:05:12,750 --> 00:05:14,070
+based on what we covered earlier,
+
+149
+00:05:14,070 --> 00:05:16,030
+is actually in ELF format,
+
+150
+00:05:16,030 --> 00:05:16,330
+right?
+
+151
+00:05:16,330 --> 00:05:18,630
+And in this ELF format,
+
+152
+00:05:18,630 --> 00:05:21,250
+there are corresponding sections.
+
+153
+00:05:21,250 --> 00:05:23,190
+Then during loading,
+
+154
+00:05:23,190 --> 00:05:24,670
+it is loaded segment by segment.
+
+155
+00:05:24,670 --> 00:05:25,470
+When this data,
+
+156
+00:05:25,470 --> 00:05:27,050
+is loaded into memory,
+
+157
+00:05:27,050 --> 00:05:29,630
+it will actually only take up
+
+158
+00:05:29,630 --> 00:05:31,230
+a portion of our 128 megabytes,
+
+159
+00:05:31,230 --> 00:05:32,410
+part of the space,
+
+160
+00:05:32,410 --> 00:05:35,330
+and the rest
+
+161
+00:05:35,330 --> 00:05:37,170
+There is actually a large chunk of space
+
+162
+00:05:37,170 --> 00:05:37,910
+This chunk of space
+
+163
+00:05:37,910 --> 00:05:38,970
+we actually have not
+
+164
+00:05:38,970 --> 00:05:40,610
+made use of it
+
+165
+00:05:40,610 --> 00:05:42,430
+So later on,
+
+166
+00:05:42,430 --> 00:05:44,030
+for the dynamic allocation we want to do,
+
+167
+00:05:44,030 --> 00:05:46,150
+the idea is basically to find a way
+
+168
+00:05:46,150 --> 00:05:48,090
+to use this memory at the back,
+
+169
+00:05:48,090 --> 00:05:50,330
+which is what we call the heap,
+
+170
+00:05:50,330 --> 00:05:51,970
+this memory heap,
+
+171
+00:05:51,970 --> 00:05:53,890
+and put it to use.
+
+172
+00:05:53,890 --> 00:05:55,690
+And by using a dynamic approach,
+
+173
+00:05:55,690 --> 00:05:57,170
+we can, in our programs,
+
+174
+00:05:57,170 --> 00:05:58,890
+allocate when we need it,
+
+175
+00:05:58,890 --> 00:06:00,530
+and return it when we no longer need it.
+
+176
+00:06:00,530 --> 00:06:02,730
+For the sections below, as we know,
+
+177
+00:06:02,730 --> 00:06:03,870
+once they are loaded into memory,
+
+178
+00:06:03,870 --> 00:06:06,070
+their size cannot be changed.
+
+179
+00:06:06,070 --> 00:06:11,210
+So if we want to make use of this part,
+
+180
+00:06:11,210 --> 00:06:15,270
+then the next question arises
+
+181
+00:06:15,270 --> 00:06:17,130
+So if we want to make use of this region,
+
+182
+00:06:17,130 --> 00:06:18,630
+what do we need to do first?
+
+183
+00:06:18,630 --> 00:06:18,990
+As you all know,
+
+184
+00:06:18,990 --> 00:06:20,130
+first you have to know
+
+185
+00:06:20,130 --> 00:06:21,150
+where this region
+
+186
+00:06:21,150 --> 00:06:23,090
+actually starts,
+
+187
+00:06:23,090 --> 00:06:24,570
+and how much space is actually left.
+
+188
+00:06:24,570 --> 00:06:26,550
+These are all things we need to know,
+
+189
+00:06:26,550 --> 00:06:28,150
+because only after knowing this information
+
+190
+00:06:28,150 --> 00:06:30,250
+can we take this chunk of memory
+
+191
+00:06:30,250 --> 00:06:32,850
+and manage it in a finer-grained way.
+
+192
+00:06:32,850 --> 00:06:34,810
+Now, some of you might say,
+
+193
+00:06:34,810 --> 00:06:36,870
+can't we just calculate it ourselves?
+
+194
+00:06:36,870 --> 00:06:39,390
+Well, of course you can.
+
+195
+00:06:39,390 --> 00:06:41,170
+Because in our...
+
+196
+00:06:41,170 --> 00:06:42,270
+But of course, that's really cumbersome,
+
+197
+00:06:42,270 --> 00:06:43,370
+because basically you'd have to know
+
+198
+00:06:43,370 --> 00:06:44,250
+the sizes of all the variables
+
+199
+00:06:44,250 --> 00:06:45,630
+that were allocated in there,
+
+200
+00:06:45,630 --> 00:06:47,810
+and then compute it yourself based on that.
+
+201
+00:06:47,810 --> 00:06:50,110
+But in fact, there's really no need to do that.
+
+202
+00:06:50,110 --> 00:06:52,550
+Because as everyone knows, once you have a compiler and a linker,
+
+203
+00:06:52,550 --> 00:06:54,270
+during the compilation and linking process,
+
+204
+00:06:54,270 --> 00:06:57,490
+the compiler and linker can actually figure out these sizes for you automatically.
+
+205
+00:06:57,490 --> 00:07:00,370
+We don't need to calculate them by hand.
+
+206
+00:07:00,370 --> 00:07:02,450
+So what we'll do next is look at
+
+207
+00:07:02,450 --> 00:07:05,990
+how to get the size of this region and its starting address.
+
+208
+00:07:05,990 --> 00:07:08,630
+At the same time, we actually make full use of
+
+209
+00:07:08,630 --> 00:07:11,610
+some features of the compiler and linker to help us do this.
+
+210
+00:07:11,610 --> 00:07:16,150
+So let's now
+
+211
+00:07:16,150 --> 00:07:18,590
+briefly review
+
+212
+00:07:18,590 --> 00:07:20,150
+the compilation and linking process,
+
+213
+00:07:20,150 --> 00:07:21,730
+as well as some related concepts.
+
+214
+00:07:21,730 --> 00:07:23,590
+Let's see how to get this done.
+
+215
+00:07:23,590 --> 00:07:24,230
+That is to say,
+
+216
+00:07:24,230 --> 00:07:26,410
+this diagram should be quite familiar to all of you.
+
+217
+00:07:26,410 --> 00:07:27,650
+Basically, we
+
+218
+00:07:27,650 --> 00:07:29,670
+no matter how complex your project is,
+
+219
+00:07:29,670 --> 00:07:30,750
+actually the whole
+
+220
+00:07:30,750 --> 00:07:32,690
+compilation and linking process
+
+221
+00:07:32,690 --> 00:07:33,690
+It's all pretty much like this
+
+222
+00:07:33,690 --> 00:07:34,990
+a diagram like this one
+
+223
+00:07:34,990 --> 00:07:35,670
+That is to say,
+
+224
+00:07:35,670 --> 00:07:38,610
+you might have multiple source files,
+
+225
+00:07:38,610 --> 00:07:39,770
+and each source file,
+
+226
+00:07:39,770 --> 00:07:41,290
+you turn it into one
+
+227
+00:07:41,290 --> 00:07:43,310
+they each become a .o file.
+
+228
+00:07:43,310 --> 00:07:43,970
+And then in the end,
+
+229
+00:07:43,970 --> 00:07:44,870
+these multiple dot-o files
+
+230
+00:07:44,870 --> 00:07:45,490
+get linked together,
+
+231
+00:07:45,490 --> 00:07:46,790
+and become one executable file,
+
+232
+00:07:46,790 --> 00:07:47,170
+right?
+
+233
+00:07:47,170 --> 00:07:48,430
+This is the basic process.
+
+234
+00:07:48,430 --> 00:07:50,130
+Now, in this process, as we know,
+
+235
+00:07:50,130 --> 00:07:53,130
+if we show it with a diagram,
+
+236
+00:07:53,130 --> 00:07:54,510
+we know that every dot-o file
+
+237
+00:07:54,510 --> 00:07:56,110
+is essentially something like this,
+
+238
+00:07:56,110 --> 00:07:57,670
+because we said each dot-o file
+
+239
+00:07:57,670 --> 00:08:00,750
+is in the ELF file format.
+
+240
+00:08:00,750 --> 00:08:01,730
+So this diagram,
+
+241
+00:08:01,730 --> 00:08:02,210
+As you can see,
+
+242
+00:08:02,210 --> 00:08:07,070
+compared with the complete ELF format we had earlier,
+
+243
+00:08:07,070 --> 00:08:08,110
+what's the difference?
+
+244
+00:08:08,110 --> 00:08:09,330
+In this one,
+
+245
+00:08:09,330 --> 00:08:12,050
+there is no program head table,
+
+246
+00:08:12,050 --> 00:08:12,850
+right?
+
+247
+00:08:12,850 --> 00:08:13,970
+What does it have?
+
+248
+00:08:13,970 --> 00:08:15,690
+It only has the section table.
+
+249
+00:08:15,690 --> 00:08:18,650
+This,
+
+250
+00:08:18,650 --> 00:08:20,610
+mainly because of what we covered earlier,
+
+251
+00:08:20,610 --> 00:08:21,410
+that is, a .o file,
+
+252
+00:08:21,410 --> 00:08:23,270
+since it's not the final executable program,
+
+253
+00:08:23,270 --> 00:08:25,450
+that program table,
+
+254
+00:08:25,450 --> 00:08:26,570
+it's used for loading.
+
+255
+00:08:26,570 --> 00:08:28,770
+So only when it's an executable program,
+
+256
+00:08:28,770 --> 00:08:31,250
+will there be that program head table,
+
+257
+00:08:31,250 --> 00:08:31,950
+right?
+
+258
+00:08:31,950 --> 00:08:33,470
+Just a brief mention of that.
+
+259
+00:08:33,470 --> 00:08:35,490
+With multiple .o files,
+
+260
+00:08:35,490 --> 00:08:37,330
+naturally there will be multiple of these
+
+261
+00:08:37,330 --> 00:08:39,070
+the file of that ELF
+
+262
+00:08:39,070 --> 00:08:41,810
+Now, in the end,
+
+263
+00:08:41,810 --> 00:08:44,010
+we want to turn it into
+
+264
+00:08:44,010 --> 00:08:45,110
+an executable file,
+
+265
+00:08:45,110 --> 00:08:46,510
+and inside this executable file,
+
+266
+00:08:46,510 --> 00:08:47,970
+there are these program headers.
+
+267
+00:08:47,970 --> 00:08:48,590
+See? Am I right?
+
+268
+00:08:48,590 --> 00:08:51,150
+So now here is a question:
+
+269
+00:08:51,150 --> 00:08:53,710
+when we actually need to construct
+
+270
+00:08:53,710 --> 00:08:54,890
+such a final
+
+271
+00:08:54,890 --> 00:08:57,450
+executable file like this,
+
+272
+00:08:57,450 --> 00:08:59,990
+what exactly do we need to do?
+
+273
+00:08:59,990 --> 00:09:01,250
+Think about it — as a linker,
+
+274
+00:09:01,250 --> 00:09:02,330
+what do you have to do?
+
+275
+00:09:02,330 --> 00:09:04,270
+You actually need to take
+
+276
+00:09:04,270 --> 00:09:06,210
+each one of these,
+
+277
+00:09:06,210 --> 00:09:07,850
+which in fact has its .text section,
+
+278
+00:09:07,850 --> 00:09:10,570
+and has some .data sections,
+
+279
+00:09:10,570 --> 00:09:11,630
+and .bss sections, right?
+
+280
+00:09:11,630 --> 00:09:13,430
+Then it needs to take what is in here and
+
+281
+00:09:13,430 --> 00:09:16,810
+Gather up all of the .text sections
+
+282
+00:09:16,810 --> 00:09:17,610
+and merge them together.
+
+283
+00:09:17,610 --> 00:09:18,850
+In fact, in the final
+
+284
+00:09:18,850 --> 00:09:20,030
+executable file we produce,
+
+285
+00:09:20,030 --> 00:09:22,950
+there is only one .text section.
+
+286
+00:09:22,950 --> 00:09:23,810
+So in reality, the linker takes it
+
+287
+00:09:23,810 --> 00:09:26,150
+and merges it all together,
+
+288
+00:09:26,150 --> 00:09:29,150
+merging it all together.
+
+289
+00:09:29,150 --> 00:09:30,410
+And accordingly, for the other sections,
+
+290
+00:09:30,410 --> 00:09:31,550
+there are similar operations as well.
+
+291
+00:09:31,550 --> 00:09:33,950
+So what we actually need to do
+
+292
+00:09:33,950 --> 00:09:35,090
+during the linking process
+
+293
+00:09:35,090 --> 00:09:36,270
+is the following.
+
+294
+00:09:36,270 --> 00:09:37,070
+That is, we need to take
+
+295
+00:09:37,070 --> 00:09:39,610
+the sections with the same name
+
+296
+00:09:39,610 --> 00:09:42,230
+that are scattered across different .o files,
+
+297
+00:09:42,230 --> 00:09:43,670
+and bring them all together.
+
+298
+00:09:43,670 --> 00:09:44,750
+At the same time,
+
+299
+00:09:44,750 --> 00:09:45,790
+we also need to
+
+300
+00:09:45,790 --> 00:09:49,270
+during this linking process
+
+301
+00:09:49,270 --> 00:09:50,430
+Actually, we also need to tell
+
+302
+00:09:50,430 --> 00:09:53,170
+our linker
+
+303
+00:09:53,170 --> 00:09:54,410
+where these sections
+
+304
+00:09:54,410 --> 00:09:55,710
+should be placed.
+
+305
+00:09:55,710 --> 00:09:56,870
+Think about it — isn't that right?
+
+306
+00:09:56,870 --> 00:09:58,590
+Because ultimately we know
+
+307
+00:09:58,590 --> 00:09:59,850
+this thing has to be loaded
+
+308
+00:09:59,850 --> 00:10:01,110
+through the program header table,
+
+309
+00:10:01,110 --> 00:10:02,290
+and we need to load this thing
+
+310
+00:10:02,290 --> 00:10:03,950
+into memory to run it.
+
+311
+00:10:03,950 --> 00:10:04,870
+So then, this loading —
+
+312
+00:10:04,870 --> 00:10:06,510
+loading it to where?
+
+313
+00:10:06,510 --> 00:10:07,730
+Loading it to what location?
+
+314
+00:10:07,730 --> 00:10:08,750
+All of these details
+
+315
+00:10:08,750 --> 00:10:10,430
+actually need to be reflected
+
+316
+00:10:10,430 --> 00:10:11,170
+in this file.
+
+317
+00:10:11,170 --> 00:10:12,910
+So how does the linker
+
+318
+00:10:12,910 --> 00:10:16,530
+know all of this information?
+
+319
+00:10:16,530 --> 00:10:20,470
+Well, our linker knows it through
+
+320
+00:10:20,470 --> 00:10:23,490
+something called a linker script.
+
+321
+00:10:23,490 --> 00:10:25,150
+to describe this information,
+
+322
+00:10:25,150 --> 00:10:27,710
+all of the files up here
+
+323
+00:10:27,710 --> 00:10:30,030
+are what we call input files,
+
+324
+00:10:30,030 --> 00:10:30,850
+input files.
+
+325
+00:10:30,850 --> 00:10:33,070
+And the final executable file we generate,
+
+326
+00:10:33,070 --> 00:10:35,090
+we call that output files.
+
+327
+00:10:35,090 --> 00:10:37,150
+These related concepts
+
+328
+00:10:37,150 --> 00:10:41,130
+are all covered in the GNU linker documentation.
+
+329
+00:10:41,130 --> 00:10:42,490
+The reason I bring them up here,
+
+330
+00:10:42,490 --> 00:10:44,170
+is to make it easier for you to go read
+
+331
+00:10:44,170 --> 00:10:46,050
+the terminology in the relevant documentation later.
+
+332
+00:10:46,050 --> 00:10:50,230
+So describing these input files—
+
+333
+00:10:50,230 --> 00:10:51,250
+what sections they have,
+
+334
+00:10:51,250 --> 00:10:54,390
+where in the output file they should be placed,
+
+335
+00:10:54,390 --> 00:10:56,250
+and when they are loaded,
+
+336
+00:10:56,250 --> 00:10:57,770
+what information they get loaded to in memory—
+
+337
+00:10:57,770 --> 00:10:58,770
+all of this information
+
+338
+00:10:58,770 --> 00:11:01,550
+is described through something called a link script,
+
+339
+00:11:01,550 --> 00:11:04,090
+a so-called linker script,
+
+340
+00:11:04,090 --> 00:11:06,610
+which is how it's described to you.
+
+341
+00:11:06,610 --> 00:11:09,190
+As for this linker script,
+
+342
+00:11:09,190 --> 00:11:10,450
+you can actually write it yourself.
+
+343
+00:11:10,450 --> 00:11:12,790
+When we normally type GCC,
+
+344
+00:11:12,790 --> 00:11:14,290
+why don't we write this thing?
+
+345
+00:11:14,290 --> 00:11:18,130
+It's because GCC actually provides a default linker script.
+
+346
+00:11:18,130 --> 00:11:20,070
+If any of you are interested,
+
+347
+00:11:20,070 --> 00:11:21,730
+you can actually, that is to say,
+
+348
+00:11:21,730 --> 00:11:28,060
+when you normally type GCC,
+
+349
+00:11:28,060 --> 00:11:30,640
+if you add an argument after GCC,
+
+350
+00:11:30,640 --> 00:11:32,260
+for example, something called Verbos,
+
+351
+00:11:32,260 --> 00:11:35,520
+with this Verbos argument,
+
+352
+00:11:35,520 --> 00:11:36,800
+when you hit enter,
+
+353
+00:11:36,800 --> 00:11:39,740
+let me see,
+
+354
+00:11:39,740 --> 00:11:42,720
+this should be the linker script, right?
+
+355
+00:11:42,720 --> 00:11:48,880
+Normally, if you type L,
+
+356
+00:11:48,880 --> 00:11:50,640
+that is, we know that this,
+
+357
+00:11:50,640 --> 00:11:53,480
+this GCC,
+
+358
+00:11:53,480 --> 00:11:54,900
+when we type GCC,
+
+359
+00:11:54,900 --> 00:11:56,340
+actually, in the final linking step,
+
+360
+00:11:56,340 --> 00:11:58,220
+it will actually go and call a...
+
+361
+00:11:58,220 --> 00:12:00,740
+is implemented by a program called ld.
+
+362
+00:12:00,740 --> 00:12:01,860
+Now, with this ld program,
+
+363
+00:12:01,860 --> 00:12:03,460
+look — if at this ld step,
+
+364
+00:12:03,460 --> 00:12:04,860
+if I print out,
+
+365
+00:12:04,860 --> 00:12:06,480
+adding a verbose flag,
+
+366
+00:12:06,480 --> 00:12:07,620
+that is, printing out
+
+367
+00:12:07,620 --> 00:12:08,340
+all the detailed information,
+
+368
+00:12:08,340 --> 00:12:10,660
+you can see that at this ld stage,
+
+369
+00:12:10,660 --> 00:12:13,720
+it prints out some very interesting information.
+
+370
+00:12:13,720 --> 00:12:14,660
+This information,
+
+371
+00:12:14,660 --> 00:12:16,360
+in fact, comes from its default
+
+372
+00:12:16,360 --> 00:12:17,700
+linker script —
+
+373
+00:12:17,700 --> 00:12:18,480
+it is the information pulled out of it.
+
+374
+00:12:18,480 --> 00:12:21,360
+That is to say, we actually
+
+375
+00:12:21,360 --> 00:12:22,980
+don't have to write this linker script ourselves.
+
+376
+00:12:22,980 --> 00:12:25,400
+But,
+
+377
+00:12:25,400 --> 00:12:26,840
+for us,
+
+378
+00:12:26,840 --> 00:12:28,560
+since we are now writing a kernel,
+
+379
+00:12:28,560 --> 00:12:29,560
+this kernel,
+
+380
+00:12:29,560 --> 00:12:33,360
+it's actually not like when we write applications.
+
+381
+00:12:33,360 --> 00:12:34,500
+Just now I demonstrated to everyone,
+
+382
+00:12:34,500 --> 00:12:36,280
+that is, when we compile an application program,
+
+383
+00:12:36,280 --> 00:12:38,080
+there is a default linker script.
+
+384
+00:12:38,080 --> 00:12:39,340
+We can just use it directly.
+
+385
+00:12:39,340 --> 00:12:41,040
+But since we are now writing a kernel,
+
+386
+00:12:41,040 --> 00:12:42,100
+then this kernel's
+
+387
+00:12:42,100 --> 00:12:44,220
+the final file of this kernel,
+
+388
+00:12:44,220 --> 00:12:45,520
+it is also an ELF file.
+
+389
+00:12:45,520 --> 00:12:48,100
+How should this ELF file be organized?
+
+390
+00:12:48,100 --> 00:12:49,600
+Where in memory should it be placed?
+
+391
+00:12:49,600 --> 00:12:50,920
+This is something that
+
+392
+00:12:50,920 --> 00:12:52,400
+we generally need to
+
+393
+00:12:52,400 --> 00:12:53,860
+write ourselves at the low level.
+
+394
+00:12:53,860 --> 00:12:54,600
+There is no default one.
+
+395
+00:12:54,600 --> 00:12:56,300
+It varies depending on different boards,
+
+396
+00:12:56,300 --> 00:12:58,980
+it varies depending on different hardware.
+
+397
+00:12:58,980 --> 00:13:01,580
+This is the concept of the linker script.
+
+398
+00:13:01,580 --> 00:13:02,460
+So later on,
+
+399
+00:13:02,460 --> 00:13:04,120
+we will actually use the linker script
+
+400
+00:13:04,120 --> 00:13:05,220
+to obtain our
+
+401
+00:13:05,220 --> 00:13:06,920
+Like we mentioned earlier,
+
+402
+00:13:06,920 --> 00:13:08,160
+take the heap, for example,
+
+403
+00:13:08,160 --> 00:13:11,500
+the memory location and size information of where it lives,
+
+404
+00:13:11,500 --> 00:13:12,740
+we don't have to
+
+405
+00:13:12,740 --> 00:13:14,660
+As long as it's all clearly described in here,
+
+406
+00:13:14,660 --> 00:13:15,880
+we don't have to in our code
+
+407
+00:13:15,880 --> 00:13:17,660
+compute any of that ourselves.
+
+408
+00:13:17,660 --> 00:13:19,120
+So how is it actually done?
+
+409
+00:13:19,120 --> 00:13:19,800
+We'll look at that later.
+
+410
+00:13:19,800 --> 00:13:21,940
+So for this linker script,
+
+411
+00:13:21,940 --> 00:13:22,820
+when we compile,
+
+412
+00:13:22,820 --> 00:13:24,480
+how do we tell the linker about it?
+
+413
+00:13:24,480 --> 00:13:25,580
+Say we've written this script,
+
+414
+00:13:25,580 --> 00:13:27,160
+this script we wrote is a text file,
+
+415
+00:13:27,160 --> 00:13:28,580
+how do we tell the linker about it?
+
+416
+00:13:28,580 --> 00:13:30,140
+Well, we can actually use a
+
+417
+00:13:30,140 --> 00:13:31,560
+-T argument,
+
+418
+00:13:31,560 --> 00:13:34,520
+that is, GCC's -T argument,
+
+419
+00:13:34,520 --> 00:13:35,880
+which we actually touched on earlier,
+
+420
+00:13:35,880 --> 00:13:37,420
+so you can go back and review that.
+
+421
+00:13:37,420 --> 00:13:38,940
+So, earlier on,
+
+422
+00:13:38,940 --> 00:13:41,800
+in those hello rbos exercises,
+
+423
+00:13:41,800 --> 00:13:43,340
+if you actually take a look,
+
+424
+00:13:43,340 --> 00:13:44,960
+including that earlier one,
+
+425
+00:13:44,960 --> 00:13:46,720
+when we were writing assembly,
+
+426
+00:13:46,720 --> 00:13:48,440
+in those test examples,
+
+427
+00:13:48,440 --> 00:13:50,260
+they all had a
+
+428
+00:13:50,260 --> 00:13:51,620
+-Ttext thing, right?
+
+429
+00:13:51,620 --> 00:13:53,840
+Why is that value 0x8000?
+
+430
+00:13:53,840 --> 00:13:54,980
+Now everyone should understand it, right?
+
+431
+00:13:54,980 --> 00:13:57,540
+So there is this -T parameter,
+
+432
+00:13:57,540 --> 00:14:00,080
+but when we used this -T parameter back then,
+
+433
+00:14:00,080 --> 00:14:01,060
+we used it in a very simple way.
+
+434
+00:14:01,060 --> 00:14:03,340
+It really just simply specified,
+
+435
+00:14:03,340 --> 00:14:05,300
+that is, for the executable file we were compiling,
+
+436
+00:14:05,300 --> 00:14:06,540
+its starting position,
+
+437
+00:14:06,540 --> 00:14:08,900
+we just told it a starting position of 800,
+
+438
+00:14:08,900 --> 00:14:11,160
+and actually nothing else was specifically specified for it.
+
+439
+00:14:11,160 --> 00:14:12,600
+But now,
+
+440
+00:14:12,600 --> 00:14:14,900
+since we need to build a kernel,
+
+441
+00:14:14,900 --> 00:14:16,640
+we need to tell the linker more information
+
+442
+00:14:16,640 --> 00:14:18,740
+it's not enough to just give it a starting address
+
+443
+00:14:18,740 --> 00:14:19,520
+so
+
+444
+00:14:19,520 --> 00:14:22,360
+we need to write all of that information into a special file to describe it
+
+445
+00:14:22,360 --> 00:14:24,260
+and once we have this file
+
+446
+00:14:24,260 --> 00:14:25,840
+our original -T parameter
+
+447
+00:14:25,840 --> 00:14:26,900
+will become a bit more complex
+
+448
+00:14:26,900 --> 00:14:29,400
+what we actually need to change it to is
+
+449
+00:14:29,400 --> 00:14:30,480
+a -T followed by
+
+450
+00:14:30,480 --> 00:14:32,780
+that OSLD file
+
+451
+00:14:32,780 --> 00:14:33,920
+this file is our
+
+452
+00:14:33,920 --> 00:14:36,740
+the linker script file for the OS we've been building here
+
+453
+00:14:36,740 --> 00:14:39,420
+change it to this form
+
+454
+00:14:39,420 --> 00:14:41,040
+and that's it
+
+455
+00:14:41,040 --> 00:14:42,420
+so if any of you are interested
+
+456
+00:14:42,420 --> 00:14:43,940
+you can go and take a look at our example
+
+457
+00:14:43,940 --> 00:14:46,560
+that is, starting from the third step
+
+458
+00:14:46,560 --> 00:14:47,260
+our
+
+459
+00:14:47,260 --> 00:14:49,980
+starting from our example today
+
+460
+00:14:49,980 --> 00:14:51,920
+in our Makefile
+
+461
+00:14:51,920 --> 00:14:53,200
+Now the -T parameter changes
+
+462
+00:14:53,200 --> 00:14:55,180
+to point to an OSLD,
+
+463
+00:14:55,180 --> 00:14:57,280
+a linker script file.
+
+464
+00:14:57,280 --> 00:15:02,660
+This is what we want to show you now.
+
+465
+00:15:02,660 --> 00:15:03,280
+So next,
+
+466
+00:15:03,280 --> 00:15:04,420
+let me introduce to you
+
+467
+00:15:04,420 --> 00:15:05,520
+this linker script file,
+
+468
+00:15:05,520 --> 00:15:06,580
+roughly how to write it.
+
+469
+00:15:06,580 --> 00:15:10,310
+Now, for the linker script,
+
+470
+00:15:10,310 --> 00:15:12,990
+the detailed usage instructions for this file
+
+471
+00:15:12,990 --> 00:15:14,850
+you can refer to
+
+472
+00:15:14,850 --> 00:15:16,610
+the reference 1 we listed for you earlier,
+
+473
+00:15:16,610 --> 00:15:19,390
+in that GNU binutils manual,
+
+474
+00:15:19,390 --> 00:15:21,750
+there is a whole chapter dedicated to this topic.
+
+475
+00:15:21,750 --> 00:15:25,390
+Now, since the tools we use here
+
+476
+00:15:25,390 --> 00:15:26,830
+are mainly GNU tools,
+
+477
+00:15:26,830 --> 00:15:29,130
+I'll introduce GNU's LD,
+
+478
+00:15:29,130 --> 00:15:31,950
+the syntax of its link script.
+
+479
+00:15:31,950 --> 00:15:33,910
+Now, this link script,
+
+480
+00:15:33,910 --> 00:15:36,450
+it's just a simple plain text file.
+
+481
+00:15:36,450 --> 00:15:39,370
+Actually, you can use whatever editor you like,
+
+482
+00:15:39,370 --> 00:15:40,830
+and you'll be able to write this thing.
+
+483
+00:15:40,830 --> 00:15:42,490
+But inside it,
+
+484
+00:15:42,490 --> 00:15:43,450
+it has a certain,
+
+485
+00:15:43,450 --> 00:15:44,930
+it defines its own special
+
+486
+00:15:44,930 --> 00:15:47,030
+special syntax,
+
+487
+00:15:47,030 --> 00:15:48,090
+a special syntax.
+
+488
+00:15:48,090 --> 00:15:51,960
+Now, its syntax
+
+489
+00:15:51,960 --> 00:15:52,840
+is also fairly simple.
+
+490
+00:15:52,840 --> 00:15:54,220
+We can think of it this way:
+
+491
+00:15:54,220 --> 00:15:56,820
+a complete link script,
+
+492
+00:15:56,820 --> 00:15:57,780
+this script,
+
+493
+00:15:57,780 --> 00:16:00,580
+is actually made up of multiple commands.
+
+494
+00:16:00,580 --> 00:16:02,400
+And each command
+
+495
+00:16:02,400 --> 00:16:03,400
+has its own keyword,
+
+496
+00:16:03,400 --> 00:16:04,600
+along with some of its parameters,
+
+497
+00:16:04,600 --> 00:16:06,880
+just one command after another.
+
+498
+00:16:06,880 --> 00:16:09,820
+Then, apart from these commands,
+
+499
+00:16:09,820 --> 00:16:11,760
+there are just some comments.
+
+500
+00:16:11,760 --> 00:16:12,640
+And the comments,
+
+501
+00:16:12,640 --> 00:16:13,960
+It supports the same thing as C
+
+502
+00:16:13,960 --> 00:16:16,760
+using that pair of slashes to comment it out
+
+503
+00:16:16,760 --> 00:16:18,080
+and just wrapping it up like that will work
+
+504
+00:16:18,080 --> 00:16:20,380
+Now, when it comes to using it
+
+505
+00:16:20,380 --> 00:16:21,120
+as I mentioned just now
+
+506
+00:16:21,120 --> 00:16:23,820
+you just follow GCC with that -T parameter
+
+507
+00:16:23,820 --> 00:16:28,660
+to tell it the path of that linker script file
+
+508
+00:16:28,660 --> 00:16:30,120
+and that's it
+
+509
+00:16:30,120 --> 00:16:31,180
+So, here
+
+510
+00:16:31,180 --> 00:16:32,860
+let me show you a simple example
+
+511
+00:16:32,860 --> 00:16:33,700
+For instance, this SECTIONS
+
+512
+00:16:33,700 --> 00:16:36,920
+you can think of this thing as just a single command
+
+513
+00:16:36,920 --> 00:16:40,400
+This is the simplest linker script
+
+514
+00:16:40,400 --> 00:16:42,900
+In this linker script there is only one command
+
+515
+00:16:42,900 --> 00:16:45,260
+and that command is the SECTIONS command
+
+516
+00:16:45,260 --> 00:16:46,000
+Inside it
+
+517
+00:16:46,000 --> 00:16:48,020
+these can be considered as some parameters of this command
+
+518
+00:16:48,020 --> 00:16:49,940
+As for the specific meaning inside this
+
+519
+00:16:49,940 --> 00:16:52,540
+when we get to the examples later
+
+520
+00:16:52,540 --> 00:16:53,560
+we'll introduce them to you then
+
+521
+00:16:53,560 --> 00:16:56,320
+So this is the simplest lab script.
+
+522
+00:16:56,320 --> 00:17:02,320
+Now, before we go through this lab script in detail,
+
+523
+00:17:02,320 --> 00:17:05,040
+what we mainly want to tell you is this.
+
+524
+00:17:05,040 --> 00:17:07,960
+Because if you go look at the Tiger documentation,
+
+525
+00:17:07,960 --> 00:17:09,000
+the commands in it
+
+526
+00:17:09,000 --> 00:17:10,280
+are quite a few,
+
+527
+00:17:10,280 --> 00:17:10,900
+there are a lot of them,
+
+528
+00:17:10,900 --> 00:17:12,620
+but we don't use all of them.
+
+529
+00:17:12,620 --> 00:17:14,960
+We only pick the ones we care about,
+
+530
+00:17:14,960 --> 00:17:18,040
+that is, some of the ones used in this lab,
+
+531
+00:17:18,040 --> 00:17:19,620
+and we pick a few to explain to you.
+
+532
+00:17:19,620 --> 00:17:21,760
+Now where is this OS
+
+533
+00:17:21,760 --> 00:17:23,420
+lab file located?
+
+534
+00:17:23,420 --> 00:17:24,620
+Right here in this spot.
+
+535
+00:17:24,620 --> 00:17:30,600
+Starting from the second one,
+
+536
+00:17:30,600 --> 00:17:34,280
+which is the memory management project,
+
+537
+00:17:34,280 --> 00:17:36,860
+we brought in this OSLD,
+
+538
+00:17:36,860 --> 00:17:37,600
+which is this file.
+
+539
+00:17:37,600 --> 00:17:43,940
+So let's follow this example
+
+540
+00:17:43,940 --> 00:17:46,520
+and go through some of the things inside it for you.
+
+541
+00:17:46,520 --> 00:17:48,820
+So this is the comment
+
+542
+00:17:48,820 --> 00:17:49,740
+Its comment syntax
+
+543
+00:17:49,740 --> 00:17:52,340
+is basically the same as C syntax
+
+544
+00:17:52,340 --> 00:17:53,240
+We'll just
+
+545
+00:17:53,240 --> 00:17:55,240
+just mention this briefly here
+
+546
+00:17:55,240 --> 00:17:58,140
+Here I've listed different commands
+
+547
+00:17:58,140 --> 00:17:59,660
+This is one command
+
+548
+00:17:59,660 --> 00:18:03,260
+This is one command
+
+549
+00:18:03,260 --> 00:18:04,500
+This is one command
+
+550
+00:18:04,500 --> 00:18:05,740
+Now for each command
+
+551
+00:18:05,740 --> 00:18:08,900
+I've given some of its origins
+
+552
+00:18:08,900 --> 00:18:10,100
+and a brief description
+
+553
+00:18:10,100 --> 00:18:11,080
+You can also look at this
+
+554
+00:18:11,080 --> 00:18:11,880
+Of course, in our class
+
+555
+00:18:11,880 --> 00:18:13,560
+I will also go over them briefly for everyone
+
+556
+00:18:13,560 --> 00:18:17,330
+Next, let's take a look at
+
+557
+00:18:17,330 --> 00:18:18,510
+which commands are commonly used
+
+558
+00:18:18,510 --> 00:18:21,830
+So the first one I want to introduce to you is
+
+559
+00:18:21,830 --> 00:18:23,870
+a commonly used linker script command called entry
+
+560
+00:18:23,870 --> 00:18:26,290
+entry, as we know, in English means
+
+561
+00:18:26,290 --> 00:18:27,250
+which means entry point
+
+562
+00:18:27,250 --> 00:18:29,230
+Now, since it's the entry point
+
+563
+00:18:29,230 --> 00:18:31,150
+it's actually through this command
+
+564
+00:18:31,150 --> 00:18:33,910
+that we're setting, telling the linker
+
+565
+00:18:33,910 --> 00:18:36,670
+the first instruction of our program to run
+
+566
+00:18:36,670 --> 00:18:40,450
+should be placed at which position in memory
+
+567
+00:18:40,450 --> 00:18:41,570
+That's actually what it expresses
+
+568
+00:18:41,570 --> 00:18:43,430
+Its syntax is very simple
+
+569
+00:18:43,430 --> 00:18:45,450
+It's just ENTRY followed by a symbol
+
+570
+00:18:45,450 --> 00:18:47,030
+symbol means a symbol
+
+571
+00:18:47,030 --> 00:18:49,030
+It doesn't write a value directly
+
+572
+00:18:49,030 --> 00:18:50,170
+That is, because we know
+
+573
+00:18:50,170 --> 00:18:51,890
+as programmers
+
+574
+00:18:51,890 --> 00:18:54,210
+we actually can't determine right away
+
+575
+00:18:54,210 --> 00:18:55,330
+at what position this value is
+
+576
+00:18:55,330 --> 00:18:57,090
+So here we actually use a symbol
+
+577
+00:18:57,090 --> 00:18:58,690
+to tell this linker
+
+578
+00:18:58,690 --> 00:19:00,930
+Now let's take a look
+
+579
+00:19:00,930 --> 00:19:02,310
+where this place of ours is
+
+580
+00:19:02,310 --> 00:19:02,930
+Well, it's right here
+
+581
+00:19:02,930 --> 00:19:04,750
+Now, as you can see, this is our
+
+582
+00:19:04,750 --> 00:19:06,370
+in here, it's
+
+583
+00:19:06,370 --> 00:19:07,750
+written as start
+
+584
+00:19:07,750 --> 00:19:08,910
+And as soon as we see start
+
+585
+00:19:08,910 --> 00:19:09,890
+it should be quite familiar to everyone
+
+586
+00:19:09,890 --> 00:19:10,430
+because we know
+
+587
+00:19:10,430 --> 00:19:11,710
+that this symbol, start,
+
+588
+00:19:11,710 --> 00:19:12,710
+where did we define it?
+
+589
+00:19:12,710 --> 00:19:14,670
+Actually, it's defined in our
+
+590
+00:19:14,670 --> 00:19:16,910
+first assembly file
+
+591
+00:19:16,910 --> 00:19:18,930
+for instance, this one of ours,
+
+592
+00:19:18,930 --> 00:19:21,630
+the .S file in here,
+
+593
+00:19:21,630 --> 00:19:22,470
+right?
+
+594
+00:19:22,470 --> 00:19:27,900
+Back when we were talking about
+
+595
+00:19:27,900 --> 00:19:29,140
+the first example,
+
+596
+00:19:29,140 --> 00:19:29,740
+we already covered this
+
+597
+00:19:29,740 --> 00:19:30,400
+that is to say, right here,
+
+598
+00:19:30,400 --> 00:19:32,220
+this is actually where our
+
+599
+00:19:32,220 --> 00:19:33,880
+program runs,
+
+600
+00:19:33,880 --> 00:19:35,260
+where our kernel runs
+
+601
+00:19:35,260 --> 00:19:36,160
+the first one specifies the location
+
+602
+00:19:36,160 --> 00:19:38,040
+we just take this identifier
+
+603
+00:19:38,040 --> 00:19:40,020
+and fill it in here,
+
+604
+00:19:40,020 --> 00:19:42,960
+and then the linker will know
+
+605
+00:19:42,960 --> 00:19:44,200
+where our program
+
+606
+00:19:44,200 --> 00:19:44,900
+starts running.
+
+607
+00:19:44,900 --> 00:19:46,600
+Alright,
+
+608
+00:19:46,600 --> 00:19:48,120
+this part is relatively simple.
+
+609
+00:19:48,120 --> 00:19:52,500
+Now there's another one,
+
+610
+00:19:52,500 --> 00:19:54,240
+called OUTPUT_ARCH,
+
+611
+00:19:54,240 --> 00:19:57,020
+which is basically telling us
+
+612
+00:19:57,020 --> 00:19:57,880
+that the output file,
+
+613
+00:19:57,880 --> 00:19:58,560
+the output file, as we know,
+
+614
+00:19:58,560 --> 00:20:00,720
+is the os.erf that we generate,
+
+615
+00:20:00,720 --> 00:20:01,560
+this ELF file,
+
+616
+00:20:01,560 --> 00:20:02,860
+this output file,
+
+617
+00:20:02,860 --> 00:20:05,080
+the computer architecture it is intended for,
+
+618
+00:20:05,080 --> 00:20:06,640
+because it needs to know
+
+619
+00:20:06,640 --> 00:20:08,600
+whether this final thing we generate is,
+
+620
+00:20:08,600 --> 00:20:10,140
+say, for x86,
+
+621
+00:20:10,140 --> 00:20:10,760
+or ARM's,
+
+622
+00:20:10,760 --> 00:20:12,300
+or this RISC-V,
+
+623
+00:20:12,300 --> 00:20:13,500
+so what we need here,
+
+624
+00:20:13,500 --> 00:20:14,220
+in our case,
+
+625
+00:20:14,220 --> 00:20:15,640
+since this targets RISC-V,
+
+626
+00:20:15,640 --> 00:20:17,020
+so at this place,
+
+627
+00:20:17,020 --> 00:20:20,880
+we just fill in a string it defines itself,
+
+628
+00:20:20,880 --> 00:20:22,120
+called Risk5, and that's it.
+
+629
+00:20:22,120 --> 00:20:23,060
+Now, note one thing:
+
+630
+00:20:23,060 --> 00:20:24,980
+it doesn't specify here whether it's Risk5,
+
+631
+00:20:24,980 --> 00:20:26,420
+32 or 64, right?
+
+632
+00:20:26,420 --> 00:20:28,380
+So when we compile,
+
+633
+00:20:28,380 --> 00:20:30,820
+how do we tell it whether we're generating 32 or 64?
+
+634
+00:20:30,820 --> 00:20:33,660
+Actually, it's through a further specification
+
+635
+00:20:33,660 --> 00:20:35,140
+in the GCC options.
+
+636
+00:20:35,140 --> 00:20:36,100
+Let me mention this as well.
+
+637
+00:20:36,100 --> 00:20:37,800
+That is, in our Makefile,
+
+638
+00:20:37,800 --> 00:20:39,200
+when we compile at this point,
+
+639
+00:20:39,200 --> 00:20:41,080
+didn't we add some of these parameters?
+
+640
+00:20:41,080 --> 00:20:41,900
+You can take a look.
+
+641
+00:20:41,900 --> 00:20:43,480
+If any of you later
+
+642
+00:20:43,480 --> 00:20:45,200
+want to ask about this,
+
+643
+00:20:45,200 --> 00:20:46,900
+let's just explain it right here.
+
+644
+00:20:46,900 --> 00:20:49,660
+Because I saw some of you asking in the group chat as well,
+
+645
+00:20:49,660 --> 00:20:55,140
+basically why we're using this RISC-V GCC.
+
+646
+00:20:55,140 --> 00:20:56,480
+What did we fill in here?
+
+647
+00:20:56,480 --> 00:20:57,180
+Let me take a look.
+
+648
+00:20:57,180 --> 00:20:59,020
+Here we have
+
+649
+00:20:59,020 --> 00:21:01,820
+it says 64 here.
+
+650
+00:21:01,820 --> 00:21:03,860
+So why does it compile to 32-bit?
+
+651
+00:21:03,860 --> 00:21:05,680
+Well, the 64 here
+
+652
+00:21:05,680 --> 00:21:06,860
+only indicates that we
+
+653
+00:21:06,860 --> 00:21:08,940
+our toolchain that we're running
+
+654
+00:21:08,940 --> 00:21:12,780
+is running on a 64-bit host machine.
+
+655
+00:21:12,780 --> 00:21:14,240
+This concept of cross-compilation,
+
+656
+00:21:14,240 --> 00:21:16,100
+we talked about it earlier, right?
+
+657
+00:21:16,100 --> 00:21:18,400
+Our toolchain runs on a 64-bit machine,
+
+658
+00:21:18,400 --> 00:21:21,440
+but the target program we generate is 32-bit.
+
+659
+00:21:21,440 --> 00:21:22,900
+Don't get confused about this concept.
+
+660
+00:21:22,900 --> 00:21:27,460
+So how do we tell a machine running 64-bit,
+
+661
+00:21:27,460 --> 00:21:29,400
+If it wants to generate a 32-bit target,
+
+662
+00:21:29,400 --> 00:21:31,740
+it's actually conveyed through these parameters.
+
+663
+00:21:31,740 --> 00:21:33,360
+What these 32s mean,
+
+664
+00:21:33,360 --> 00:21:36,880
+I think everyone should be clear about by now,
+
+665
+00:21:36,880 --> 00:21:38,060
+so I won't go over it again.
+
+666
+00:21:38,060 --> 00:21:39,880
+You can look up the concept of ABI yourself,
+
+667
+00:21:39,880 --> 00:21:41,460
+it's in the manuals, you'll find it.
+
+668
+00:21:41,460 --> 00:21:45,420
+Well, since it's mentioned here, let me just say it.
+
+669
+00:21:45,420 --> 00:21:47,440
+Now, here,
+
+670
+00:21:47,440 --> 00:21:49,480
+we only specify RISC-V,
+
+671
+00:21:49,480 --> 00:21:51,020
+but we don't say 32 or 64.
+
+672
+00:21:51,020 --> 00:21:53,980
+The specific 32 or 64 is specified through GCC's compiler options.
+
+673
+00:21:53,980 --> 00:21:55,040
+Just want to point that out to everyone.
+
+674
+00:21:55,040 --> 00:21:56,420
+Alright.
+
+675
+00:21:56,420 --> 00:21:58,980
+So that was the second point,
+
+676
+00:21:58,980 --> 00:22:01,820
+specifying the generated architecture.
+
+677
+00:22:01,820 --> 00:22:05,220
+Third,
+
+678
+00:22:05,220 --> 00:22:06,800
+the memory command.
+
+679
+00:22:06,800 --> 00:22:08,020
+This command is very important.
+
+680
+00:22:08,020 --> 00:22:10,120
+It's actually telling
+
+681
+00:22:10,120 --> 00:22:11,920
+Because, as you know, a linker
+
+682
+00:22:11,920 --> 00:22:14,800
+has no idea about the actual target machine we run on
+
+683
+00:22:14,800 --> 00:22:16,400
+and what its memory really looks like.
+
+684
+00:22:16,400 --> 00:22:18,460
+So how do we let the linker know?
+
+685
+00:22:18,460 --> 00:22:22,220
+We need to tell it through the MEMORY command.
+
+686
+00:22:22,220 --> 00:22:24,140
+Now, the syntax of MEMORY
+
+687
+00:22:24,140 --> 00:22:24,840
+is very simple.
+
+688
+00:22:24,840 --> 00:22:25,840
+First comes a name.
+
+689
+00:22:25,840 --> 00:22:29,840
+Talking about this directly might be a bit dry,
+
+690
+00:22:29,840 --> 00:22:30,760
+so let's just look at an example.
+
+691
+00:22:30,760 --> 00:22:32,300
+Let's look at the meaning of this example below.
+
+692
+00:22:32,300 --> 00:22:36,220
+Each line of this thing can actually be thought of as
+
+693
+00:22:36,220 --> 00:22:39,360
+defining one memory region.
+
+694
+00:22:39,360 --> 00:22:42,220
+So the two lines below it,
+
+695
+00:22:42,220 --> 00:22:44,420
+effectively define two pieces of memory:
+
+696
+00:22:44,420 --> 00:22:45,740
+one is ROM,
+
+697
+00:22:45,740 --> 00:22:46,440
+and the other is RAM.
+
+698
+00:22:46,440 --> 00:22:47,760
+You can tell just from the names.
+
+699
+00:22:47,760 --> 00:22:49,140
+What it defines is, let's say,
+
+700
+00:22:49,140 --> 00:22:50,080
+the first block of memory is
+
+701
+00:22:50,080 --> 00:22:51,020
+is a read-only memory
+
+702
+00:22:51,020 --> 00:22:51,920
+The second block of memory,
+
+703
+00:22:51,920 --> 00:22:54,580
+is a read-write memory.
+
+704
+00:22:54,580 --> 00:22:55,520
+RAM, that is.
+
+705
+00:22:55,520 --> 00:22:56,000
+ROM.
+
+706
+00:22:56,000 --> 00:22:58,100
+So, origin,
+
+707
+00:22:58,100 --> 00:22:59,140
+length,
+
+708
+00:22:59,140 --> 00:23:00,940
+if you just know some English,
+
+709
+00:23:00,940 --> 00:23:01,920
+you should be able to read this.
+
+710
+00:23:01,920 --> 00:23:02,220
+Right?
+
+711
+00:23:02,220 --> 00:23:03,000
+What is it actually telling us?
+
+712
+00:23:03,000 --> 00:23:04,680
+It's saying that this block of memory,
+
+713
+00:23:04,680 --> 00:23:05,640
+its starting address,
+
+714
+00:23:05,640 --> 00:23:07,120
+origin is the starting address,
+
+715
+00:23:07,120 --> 00:23:07,520
+is 0.
+
+716
+00:23:07,520 --> 00:23:10,940
+And the length is 256K.
+
+717
+00:23:10,940 --> 00:23:12,340
+Of course, this address
+
+718
+00:23:12,340 --> 00:23:13,400
+definitely refers to a physical address.
+
+719
+00:23:13,400 --> 00:23:15,560
+Basically, in our course,
+
+720
+00:23:15,560 --> 00:23:18,200
+we don't really want to introduce the notion of virtual addresses.
+
+721
+00:23:18,200 --> 00:23:19,940
+Because that would drag in a lot more stuff.
+
+722
+00:23:19,940 --> 00:23:21,600
+Here we only talk about physical addresses.
+
+723
+00:23:21,600 --> 00:23:22,740
+That keeps things simpler.
+
+724
+00:23:22,740 --> 00:23:24,280
+And easier for everyone to pick up.
+
+725
+00:23:24,280 --> 00:23:25,380
+So then,
+
+726
+00:23:25,380 --> 00:23:27,480
+the first block of memory,
+
+727
+00:23:27,480 --> 00:23:28,700
+you can think of it as,
+
+728
+00:23:28,700 --> 00:23:30,340
+in our address space,
+
+729
+00:23:30,340 --> 00:23:32,100
+at the very beginning,
+
+730
+00:23:32,100 --> 00:23:33,620
+this is ROM,
+
+731
+00:23:33,620 --> 00:23:37,310
+and its actual address is 0.
+
+732
+00:23:37,310 --> 00:23:38,570
+And then,
+
+733
+00:23:38,570 --> 00:23:40,170
+it is 256K in total.
+
+734
+00:23:40,170 --> 00:23:42,590
+And then,
+
+735
+00:23:42,590 --> 00:23:43,450
+the second block is RAM,
+
+736
+00:23:43,450 --> 00:23:44,450
+and its address is,
+
+737
+00:23:44,450 --> 00:23:46,290
+let's say it starts from here.
+
+738
+00:23:46,290 --> 00:23:47,070
+This range of memory.
+
+739
+00:23:47,070 --> 00:23:52,170
+Its starting address is,
+
+740
+00:23:52,170 --> 00:23:52,410
+simply,
+
+741
+00:23:52,410 --> 00:23:53,750
+That's this thing.
+
+742
+00:23:53,750 --> 00:23:54,810
+And the range
+
+743
+00:23:54,810 --> 00:23:55,310
+is four megabytes.
+
+744
+00:23:55,310 --> 00:23:57,170
+So it's really just describing this information,
+
+745
+00:23:57,170 --> 00:23:57,770
+that is,
+
+746
+00:23:57,770 --> 00:23:59,090
+this way,
+
+747
+00:23:59,090 --> 00:24:00,630
+we pass this information to our linker,
+
+748
+00:24:00,630 --> 00:24:01,370
+and then our linker knows
+
+749
+00:24:01,370 --> 00:24:02,830
+our memory layout.
+
+750
+00:24:02,830 --> 00:24:03,410
+Then,
+
+751
+00:24:03,410 --> 00:24:04,830
+at the final loading stage,
+
+752
+00:24:04,830 --> 00:24:05,310
+the loading has to
+
+753
+00:24:05,310 --> 00:24:07,090
+rely on this information
+
+754
+00:24:07,090 --> 00:24:07,770
+to perform the loading.
+
+755
+00:24:07,770 --> 00:24:09,010
+Now, this one,
+
+756
+00:24:09,010 --> 00:24:10,070
+this thing here,
+
+757
+00:24:10,070 --> 00:24:11,170
+this RX thing,
+
+758
+00:24:11,170 --> 00:24:12,390
+what is it actually telling us?
+
+759
+00:24:12,390 --> 00:24:12,830
+Well,
+
+760
+00:24:12,830 --> 00:24:15,010
+this is a bit complicated to explain.
+
+761
+00:24:15,010 --> 00:24:15,690
+That is to say,
+
+762
+00:24:15,690 --> 00:24:16,110
+its
+
+763
+00:24:16,110 --> 00:24:18,470
+let me briefly describe it.
+
+764
+00:24:18,470 --> 00:24:19,950
+If you feel it's not explained clearly,
+
+765
+00:24:19,950 --> 00:24:21,470
+take a careful look at the manual,
+
+766
+00:24:21,470 --> 00:24:24,550
+which has a detailed description of this parameter.
+
+767
+00:24:24,550 --> 00:24:25,910
+It actually,
+
+768
+00:24:25,910 --> 00:24:27,630
+for example, let's take this as an example,
+
+769
+00:24:27,630 --> 00:24:28,750
+take this as an example.
+
+770
+00:24:28,750 --> 00:24:29,670
+It's actually saying that
+
+771
+00:24:29,670 --> 00:24:30,810
+we know that
+
+772
+00:24:30,810 --> 00:24:33,170
+all of our
+
+773
+00:24:33,170 --> 00:24:36,010
+this linker script concept,
+
+774
+00:24:36,010 --> 00:24:36,730
+it's nothing more than saying,
+
+775
+00:24:36,730 --> 00:24:38,430
+take some input sections,
+
+776
+00:24:38,430 --> 00:24:41,170
+and finally, put them
+
+777
+00:24:41,170 --> 00:24:43,250
+into an output section,
+
+778
+00:24:43,250 --> 00:24:43,550
+right?
+
+779
+00:24:43,550 --> 00:24:44,670
+So in here,
+
+780
+00:24:44,670 --> 00:24:46,090
+aren't there a lot of sections?
+
+781
+00:24:46,110 --> 00:24:46,750
+right?
+
+782
+00:24:46,750 --> 00:24:48,030
+There's also this in there,
+
+783
+00:24:48,030 --> 00:24:50,190
+the final target we want to generate.
+
+784
+00:24:50,190 --> 00:24:50,810
+Now,
+
+785
+00:24:50,810 --> 00:24:53,230
+later on we actually have
+
+786
+00:24:53,230 --> 00:24:54,550
+a section command
+
+787
+00:24:54,550 --> 00:24:55,330
+that is meant to describe
+
+788
+00:24:55,330 --> 00:24:56,130
+which of these in here
+
+789
+00:24:56,130 --> 00:24:58,270
+go into which of those in there.
+
+790
+00:24:58,270 --> 00:25:00,350
+We'll definitely need to talk about that.
+
+791
+00:25:00,350 --> 00:25:01,910
+We haven't covered that command yet.
+
+792
+00:25:01,910 --> 00:25:03,590
+Now there could be a situation
+
+793
+00:25:03,590 --> 00:25:04,030
+where,
+
+794
+00:25:04,030 --> 00:25:05,110
+you might not have described it.
+
+795
+00:25:05,110 --> 00:25:06,130
+Say we, in this
+
+796
+00:25:06,130 --> 00:25:07,750
+in this linker script,
+
+797
+00:25:07,750 --> 00:25:08,350
+we didn't describe
+
+798
+00:25:08,350 --> 00:25:09,250
+for example, this chunk of memory
+
+799
+00:25:09,250 --> 00:25:10,730
+I got this
+
+800
+00:25:10,730 --> 00:25:12,330
+we might not have described it.
+
+801
+00:25:12,330 --> 00:25:13,550
+put it into this one here
+
+802
+00:25:13,550 --> 00:25:14,370
+which section does it go into?
+
+803
+00:25:14,370 --> 00:25:15,790
+you didn't specify that
+
+804
+00:25:15,790 --> 00:25:16,090
+Right.
+
+805
+00:25:16,090 --> 00:25:18,270
+So if our linker
+
+806
+00:25:18,270 --> 00:25:19,710
+finds that you didn't specify it,
+
+807
+00:25:19,710 --> 00:25:21,430
+it will go by what's in here,
+
+808
+00:25:21,430 --> 00:25:24,030
+that is to say, if this section of yours
+
+809
+00:25:24,030 --> 00:25:24,770
+is not specified by you,
+
+810
+00:25:24,770 --> 00:25:26,590
+if it finds that this spot
+
+811
+00:25:26,590 --> 00:25:31,670
+is a section with read-only attributes,
+
+812
+00:25:31,670 --> 00:25:33,950
+then by default it will just put it
+
+813
+00:25:33,950 --> 00:25:35,710
+into the ROM area to be loaded.
+
+814
+00:25:35,710 --> 00:25:37,330
+That's actually what it means to express.
+
+815
+00:25:37,330 --> 00:25:40,910
+It's used to handle some default ranges.
+
+816
+00:25:40,910 --> 00:25:42,850
+So under default conditions,
+
+817
+00:25:42,850 --> 00:25:44,310
+in the default case,
+
+818
+00:25:44,310 --> 00:25:45,150
+normally,
+
+819
+00:25:45,150 --> 00:25:47,290
+we will override the information in here,
+
+820
+00:25:47,290 --> 00:25:50,770
+so this may not have a particularly obvious effect.
+
+821
+00:25:50,770 --> 00:25:53,770
+Some of them are mainly used to handle certain default cases.
+
+822
+00:25:53,770 --> 00:25:55,450
+I'll just briefly go over this.
+
+823
+00:25:55,450 --> 00:25:56,470
+If any of you are interested,
+
+824
+00:25:56,470 --> 00:25:58,150
+you can go and look at it yourselves later.
+
+825
+00:25:58,150 --> 00:26:01,050
+The key thing is to understand this origin and length,
+
+826
+00:26:01,050 --> 00:26:05,350
+and what information each line is expressing.
+
+827
+00:26:05,350 --> 00:26:07,650
+That's the memory command.
+
+828
+00:26:07,650 --> 00:26:10,310
+Now correspondingly, our
+
+829
+00:26:10,310 --> 00:26:12,430
+linker script,
+
+830
+00:26:12,430 --> 00:26:13,810
+we also have a memory command.
+
+831
+00:26:13,810 --> 00:26:15,210
+Where can you see it? Here it is.
+
+832
+00:26:15,210 --> 00:26:15,810
+Right here.
+
+833
+00:26:15,810 --> 00:26:17,790
+Now here,
+
+834
+00:26:17,790 --> 00:26:19,610
+we actually only defined one RAM block,
+
+835
+00:26:19,610 --> 00:26:20,370
+right?
+
+836
+00:26:20,370 --> 00:26:21,290
+This RAM block,
+
+837
+00:26:21,290 --> 00:26:22,890
+its address is 0x80000000.
+
+838
+00:26:22,890 --> 00:26:24,710
+We've mentioned this value multiple times already.
+
+839
+00:26:24,710 --> 00:26:25,830
+Its range,
+
+840
+00:26:25,830 --> 00:26:26,510
+is 128 megabytes.
+
+841
+00:26:26,510 --> 00:26:28,210
+So on this virtual board of ours,
+
+842
+00:26:28,210 --> 00:26:30,250
+this memory region has exactly this size.
+
+843
+00:26:30,250 --> 00:26:34,530
+Now, the name here,
+
+844
+00:26:34,530 --> 00:26:35,810
+we'll use it later on.
+
+845
+00:26:35,810 --> 00:26:37,510
+Just to mention it here,
+
+846
+00:26:37,510 --> 00:26:40,350
+when we talk about sections later,
+
+847
+00:26:40,350 --> 00:26:42,110
+we will actually use this.
+
+848
+00:26:42,110 --> 00:26:43,790
+Keep that in mind as you read through it.
+
+849
+00:26:43,790 --> 00:26:45,090
+It gets used right here.
+
+850
+00:26:45,090 --> 00:26:46,950
+So what's used here,
+
+851
+00:26:46,950 --> 00:26:48,090
+is basically telling us,
+
+852
+00:26:48,090 --> 00:26:50,450
+for this text section,
+
+853
+00:26:50,450 --> 00:26:52,810
+it will actually be placed into RAM,
+
+854
+00:26:52,810 --> 00:26:54,290
+into this memory region.
+
+855
+00:26:54,290 --> 00:26:57,610
+That's really all it does.
+
+856
+00:26:57,610 --> 00:26:58,530
+Just to clarify that.
+
+857
+00:26:58,530 --> 00:27:01,270
+All right.
+
+858
+00:27:01,270 --> 00:27:04,410
+So that's the memory command.
+
+859
+00:27:04,410 --> 00:27:06,610
+And this one here,
+
+860
+00:27:06,610 --> 00:27:07,370
+is the section command.
+
+861
+00:27:07,370 --> 00:27:08,670
+This command is the one in our
+
+862
+00:27:08,670 --> 00:27:10,410
+general linker script that is
+
+863
+00:27:10,410 --> 00:27:12,590
+also the most important,
+
+864
+00:27:12,590 --> 00:27:14,970
+and takes up the most space
+
+865
+00:27:14,970 --> 00:27:16,290
+as a command.
+
+866
+00:27:16,290 --> 00:27:17,530
+It is essentially
+
+867
+00:27:17,530 --> 00:27:19,190
+telling our linker
+
+868
+00:27:19,190 --> 00:27:21,470
+how to take the sections
+
+869
+00:27:21,470 --> 00:27:22,490
+in the input file,
+
+870
+00:27:22,490 --> 00:27:23,330
+these sections,
+
+871
+00:27:23,330 --> 00:27:24,590
+and map them into
+
+872
+00:27:24,590 --> 00:27:25,810
+the sections
+
+873
+00:27:25,810 --> 00:27:26,670
+of the output file,
+
+874
+00:27:26,670 --> 00:27:29,330
+and how to place these sections
+
+875
+00:27:29,330 --> 00:27:30,450
+in memory,
+
+876
+00:27:30,450 --> 00:27:31,530
+that is, load them
+
+877
+00:27:31,530 --> 00:27:32,050
+at what position in memory.
+
+878
+00:27:32,050 --> 00:27:33,890
+It is really just specifying this information.
+
+879
+00:27:33,890 --> 00:27:37,680
+Now it says that besides being able to
+
+880
+00:27:37,680 --> 00:27:38,800
+describe the output sections
+
+881
+00:27:38,800 --> 00:27:40,560
+It can also be a symbol copy command,
+
+882
+00:27:40,560 --> 00:27:41,180
+or other forms.
+
+883
+00:27:41,180 --> 00:27:42,440
+We'll cover that in a moment.
+
+884
+00:27:42,440 --> 00:27:45,060
+Let's take this example.
+
+885
+00:27:45,060 --> 00:27:46,080
+Let me briefly walk through it.
+
+886
+00:27:46,080 --> 00:27:48,500
+For instance, taking this example,
+
+887
+00:27:48,500 --> 00:27:49,200
+let's look at
+
+888
+00:27:49,200 --> 00:27:51,400
+what this is actually saying.
+
+889
+00:27:51,400 --> 00:27:53,480
+So this basically means that
+
+890
+00:27:53,480 --> 00:27:54,940
+this section command begins here,
+
+891
+00:27:54,940 --> 00:27:57,760
+and it wraps a bunch of braces around it.
+
+892
+00:27:57,760 --> 00:27:59,640
+We just explained this part,
+
+893
+00:27:59,640 --> 00:28:00,860
+which is that it essentially means that
+
+894
+00:28:00,860 --> 00:28:02,000
+the contents in here
+
+895
+00:28:02,000 --> 00:28:03,220
+will ultimately be placed into rem,
+
+896
+00:28:03,220 --> 00:28:05,180
+this block of memory.
+
+897
+00:28:05,180 --> 00:28:07,120
+Now, as you can see here,
+
+898
+00:28:07,120 --> 00:28:08,700
+there are many things starting with a dot.
+
+899
+00:28:08,700 --> 00:28:10,080
+This thing,
+
+900
+00:28:10,080 --> 00:28:11,500
+you can understand it as meaning
+
+901
+00:28:11,500 --> 00:28:12,580
+It's describing
+
+902
+00:28:12,580 --> 00:28:13,920
+because what it's actually describing is
+
+903
+00:28:13,920 --> 00:28:16,720
+in our final memory
+
+904
+00:28:16,720 --> 00:28:19,260
+how things are laid out there
+
+905
+00:28:19,260 --> 00:28:21,660
+how these sections are laid out in memory
+
+906
+00:28:21,660 --> 00:28:23,100
+So you can think of it this way:
+
+907
+00:28:23,100 --> 00:28:24,020
+during the layout process
+
+908
+00:28:24,020 --> 00:28:25,240
+we always have a
+
+909
+00:28:25,240 --> 00:28:27,240
+we have a current position
+
+910
+00:28:27,240 --> 00:28:28,760
+current position
+
+911
+00:28:28,760 --> 00:28:33,520
+current position,
+
+912
+00:28:33,520 --> 00:28:34,880
+or the concept of a counter
+
+913
+00:28:34,880 --> 00:28:37,670
+a counter,
+
+914
+00:28:37,670 --> 00:28:40,210
+or you could say a pointer
+
+915
+00:28:40,210 --> 00:28:41,770
+and this pointer points to
+
+916
+00:28:41,770 --> 00:28:43,230
+during the layout process,
+
+917
+00:28:43,230 --> 00:28:44,150
+that current position
+
+918
+00:28:44,150 --> 00:28:48,790
+So when this dot equals 0x100,
+
+919
+00:28:48,790 --> 00:28:49,730
+that just means
+
+920
+00:28:49,730 --> 00:28:51,410
+as I'm laying things out right now
+
+921
+00:28:51,410 --> 00:28:54,490
+I'm going to start placing things at 0x1000.
+
+922
+00:28:54,490 --> 00:28:56,610
+So let's say down here is the low address,
+
+923
+00:28:56,610 --> 00:28:59,930
+and up here is the high address.
+
+924
+00:28:59,930 --> 00:29:02,390
+Then this pointer
+
+925
+00:29:02,390 --> 00:29:04,570
+moves from the bottom upward.
+
+926
+00:29:04,570 --> 00:29:06,590
+So say it reaches this position,
+
+927
+00:29:06,590 --> 00:29:09,110
+and let's assume this position is 0x1000,
+
+928
+00:29:09,110 --> 00:29:10,570
+a value like that.
+
+929
+00:29:10,570 --> 00:29:13,050
+So what do we do starting from this position?
+
+930
+00:29:13,050 --> 00:29:16,410
+I'm going to start placing my text section.
+
+931
+00:29:16,410 --> 00:29:18,050
+We're going to start placing our text section.
+
+932
+00:29:18,050 --> 00:29:19,390
+So this text section,
+
+933
+00:29:19,390 --> 00:29:20,670
+it goes right here,
+
+934
+00:29:20,670 --> 00:29:21,150
+this dot,
+
+935
+00:29:21,150 --> 00:29:23,270
+this place is the .txt text section.
+
+936
+00:29:23,270 --> 00:29:25,670
+So here,
+
+937
+00:29:25,670 --> 00:29:27,470
+it actually describes our
+
+938
+00:29:27,470 --> 00:29:29,970
+section name in the output file,
+
+939
+00:29:29,970 --> 00:29:31,230
+for example, called .txt,
+
+940
+00:29:31,230 --> 00:29:33,010
+and then followed by a colon.
+
+941
+00:29:33,010 --> 00:29:34,690
+After the colon,
+
+942
+00:29:34,690 --> 00:29:35,470
+there's a pattern.
+
+943
+00:29:35,470 --> 00:29:36,890
+What is this?
+
+944
+00:29:36,890 --> 00:29:37,970
+The content in here,
+
+945
+00:29:37,970 --> 00:29:39,690
+you can actually think of it as describing,
+
+946
+00:29:39,690 --> 00:29:40,770
+because as we know,
+
+947
+00:29:40,770 --> 00:29:42,690
+all the sections in the output file
+
+948
+00:29:42,690 --> 00:29:43,870
+come from
+
+949
+00:29:43,870 --> 00:29:45,610
+the sections in the input files,
+
+950
+00:29:45,610 --> 00:29:46,290
+right?
+
+951
+00:29:46,290 --> 00:29:48,910
+Now this * is a wildcard,
+
+952
+00:29:48,910 --> 00:29:53,050
+meaning all the text sections from the input files
+
+953
+00:29:53,050 --> 00:29:57,010
+get placed into the text section of the output file.
+
+954
+00:29:57,010 --> 00:29:58,230
+And the location where it's placed,
+
+955
+00:29:58,230 --> 00:29:59,190
+at load time,
+
+956
+00:29:59,190 --> 00:30:03,450
+will be put at the memory location 0x001000.
+
+957
+00:30:03,450 --> 00:30:05,510
+Actually, it's describing this information.
+
+958
+00:30:05,510 --> 00:30:07,690
+It's really describing this information.
+
+959
+00:30:07,690 --> 00:30:09,270
+Okay.
+
+960
+00:30:09,270 --> 00:30:10,410
+So after that's described,
+
+961
+00:30:10,410 --> 00:30:12,350
+Now look at the next line, it's a dot again.
+
+962
+00:30:12,350 --> 00:30:14,470
+In other words, this takes the pointer
+
+963
+00:30:14,470 --> 00:30:16,370
+and moves it up again,
+
+964
+00:30:16,370 --> 00:30:17,730
+moved to what position?
+
+965
+00:30:17,730 --> 00:30:19,690
+It's moved to 0x8000.
+
+966
+00:30:19,690 --> 00:30:22,050
+Assume this position is 0x8000.
+
+967
+00:30:22,050 --> 00:30:23,990
+Assume this position is 0x8000.
+
+968
+00:30:23,990 --> 00:30:26,090
+Then, starting from this position,
+
+969
+00:30:26,090 --> 00:30:28,290
+what do we place further up?
+
+970
+00:30:28,290 --> 00:30:30,970
+We place the .data section and the .bss section.
+
+971
+00:30:30,970 --> 00:30:32,510
+So this is where the data section is,
+
+972
+00:30:32,510 --> 00:30:34,790
+this is where the data section is.
+
+973
+00:30:34,790 --> 00:30:35,910
+Then further up,
+
+974
+00:30:35,910 --> 00:30:38,030
+what goes here is the .bss section.
+
+975
+00:30:38,030 --> 00:30:40,730
+Now, where does the content of the data section
+
+976
+00:30:40,730 --> 00:30:41,890
+come from?
+
+977
+00:30:41,890 --> 00:30:42,690
+It's described right here:
+
+978
+00:30:42,690 --> 00:30:44,990
+it's the Data sections of all the input sections.
+
+979
+00:30:44,990 --> 00:30:46,510
+And the BSS section?
+
+980
+00:30:46,510 --> 00:30:49,610
+It's the BSS sections of all the input sections.
+
+981
+00:30:49,610 --> 00:30:51,290
+Actually, through this description,
+
+982
+00:30:51,290 --> 00:30:52,070
+we can actually see
+
+983
+00:30:52,070 --> 00:30:54,010
+how, in memory,
+
+984
+00:30:54,010 --> 00:30:56,510
+our program is laid out,
+
+985
+00:30:56,510 --> 00:30:57,670
+and it is through this method
+
+986
+00:30:57,670 --> 00:30:58,670
+that it gets described.
+
+987
+00:30:58,670 --> 00:31:02,510
+This is what the linker script
+
+988
+00:31:02,510 --> 00:31:04,990
+achieves.
+
+989
+00:31:04,990 --> 00:31:07,470
+Now,
+
+990
+00:31:07,470 --> 00:31:10,530
+in our actual code,
+
+991
+00:31:10,530 --> 00:31:12,170
+our content
+
+992
+00:31:12,170 --> 00:31:13,190
+is a bit richer than that.
+
+993
+00:31:13,190 --> 00:31:13,650
+As you can see,
+
+994
+00:31:13,650 --> 00:31:15,670
+here we start defining our sections,
+
+995
+00:31:15,670 --> 00:31:16,450
+and right here,
+
+996
+00:31:16,450 --> 00:31:17,670
+quite a few are defined,
+
+997
+00:31:17,670 --> 00:31:18,850
+including the text section,
+
+998
+00:31:18,850 --> 00:31:20,790
+our rodata section,
+
+999
+00:31:20,790 --> 00:31:21,510
+and so on and so forth.
+
+1000
+00:31:21,510 --> 00:31:23,090
+It is through this single line
+
+1001
+00:31:23,090 --> 00:31:26,050
+to describe it,
+
+1002
+00:31:26,050 --> 00:31:27,870
+and so,
+
+1003
+00:31:27,870 --> 00:31:29,630
+as you can see,
+
+1004
+00:31:29,630 --> 00:31:30,770
+apart from the earlier
+
+1005
+00:31:30,770 --> 00:31:32,070
+things I just mentioned,
+
+1006
+00:31:32,070 --> 00:31:33,230
+we also see that in here
+
+1007
+00:31:33,230 --> 00:31:35,050
+statements like this are defined:
+
+1008
+00:31:35,050 --> 00:31:36,670
+provide,
+
+1009
+00:31:36,670 --> 00:31:37,990
+which is also a command.
+
+1010
+00:31:37,990 --> 00:31:39,930
+This command is really the
+
+1011
+00:31:39,930 --> 00:31:42,590
+one we talked about here.
+
+1012
+00:31:42,590 --> 00:31:45,230
+Besides the autosign description,
+
+1013
+00:31:45,230 --> 00:31:47,330
+there can also be symbol assignment commands.
+
+1014
+00:31:47,330 --> 00:31:50,110
+For symbol assignment commands,
+
+1015
+00:31:50,110 --> 00:31:53,150
+we use a new command here,
+
+1016
+00:31:53,150 --> 00:31:54,530
+called the provide command.
+
+1017
+00:31:54,530 --> 00:31:56,590
+The meaning of this provide command
+
+1018
+00:31:56,590 --> 00:31:57,170
+is very simple.
+
+1019
+00:31:57,170 --> 00:31:58,010
+It is actually equivalent to
+
+1020
+00:31:58,010 --> 00:31:59,050
+what we do in the C language
+
+1021
+00:31:59,050 --> 00:32:00,530
+to assign a variable
+
+1022
+00:32:00,530 --> 00:32:01,270
+for it
+
+1023
+00:32:01,270 --> 00:32:02,070
+And later,
+
+1024
+00:32:02,070 --> 00:32:02,850
+its syntax is simply
+
+1025
+00:32:02,850 --> 00:32:05,770
+an equals sign
+
+1026
+00:32:05,770 --> 00:32:08,670
+taking the content of this expression
+
+1027
+00:32:08,670 --> 00:32:10,790
+and assigning it to such a symbol
+
+1028
+00:32:10,790 --> 00:32:11,550
+a variable name.
+
+1029
+00:32:11,550 --> 00:32:14,110
+So for example, right here
+
+1030
+00:32:14,110 --> 00:32:15,610
+we gave an example like this.
+
+1031
+00:32:15,610 --> 00:32:18,010
+So it assigns this thing to it.
+
+1032
+00:32:18,010 --> 00:32:19,110
+Now we know that this dot
+
+1033
+00:32:19,110 --> 00:32:20,470
+actually represents
+
+1034
+00:32:20,470 --> 00:32:21,730
+the concept of the current location.
+
+1035
+00:32:21,730 --> 00:32:22,990
+This location may be
+
+1036
+00:32:22,990 --> 00:32:25,270
+changing during the description
+
+1037
+00:32:25,270 --> 00:32:25,890
+of this section.
+
+1038
+00:32:25,890 --> 00:32:27,470
+So this is definitely also a value,
+
+1039
+00:32:27,470 --> 00:32:28,210
+and this value
+
+1040
+00:32:28,210 --> 00:32:29,630
+is assigned to such a symbol.
+
+1041
+00:32:29,630 --> 00:32:30,490
+So this symbol,
+
+1042
+00:32:30,490 --> 00:32:33,910
+when we program later on,
+
+1043
+00:32:33,910 --> 00:32:35,150
+we can use it.
+
+1044
+00:32:35,150 --> 00:32:37,110
+That's because to the linker,
+
+1045
+00:32:37,110 --> 00:32:41,210
+it puts this thing into the final symbol table.
+
+1046
+00:32:41,210 --> 00:32:42,530
+And in the symbol table,
+
+1047
+00:32:42,530 --> 00:32:44,690
+we can use it like a variable.
+
+1048
+00:32:44,690 --> 00:32:49,030
+Now as for our related code example,
+
+1049
+00:32:49,030 --> 00:32:51,670
+we can see it right here.
+
+1050
+00:32:51,670 --> 00:32:54,230
+Look, here actually,
+
+1051
+00:32:54,230 --> 00:32:55,550
+if we take this as an example,
+
+1052
+00:32:55,550 --> 00:32:56,070
+we can see
+
+1053
+00:32:56,070 --> 00:32:57,090
+that it's essentially saying,
+
+1054
+00:32:57,090 --> 00:32:58,510
+it's defining a variable name,
+
+1055
+00:32:58,510 --> 00:32:59,790
+defining a variable, defining a symbol.
+
+1056
+00:32:59,790 --> 00:33:00,510
+This symbol,
+
+1057
+00:33:00,510 --> 00:33:02,270
+starts from this location,
+
+1058
+00:33:02,270 --> 00:33:03,890
+and then,
+
+1059
+00:33:03,890 --> 00:33:04,810
+here,
+
+1060
+00:33:04,810 --> 00:33:05,810
+it defines another one.
+
+1061
+00:33:05,810 --> 00:33:07,150
+So basically, as you can see,
+
+1062
+00:33:07,150 --> 00:33:09,550
+these two lines actually express something.
+
+1063
+00:33:09,550 --> 00:33:11,910
+We now know
+
+1064
+00:33:11,910 --> 00:33:14,230
+the start position of this BSS section
+
+1065
+00:33:14,230 --> 00:33:15,670
+and its end position.
+
+1066
+00:33:15,670 --> 00:33:18,970
+We take the start position
+
+1067
+00:33:18,970 --> 00:33:20,330
+and put it into this symbol,
+
+1068
+00:33:20,330 --> 00:33:22,330
+and the end position goes into this symbol.
+
+1069
+00:33:22,330 --> 00:33:24,150
+So we've essentially obtained this information.
+
+1070
+00:33:24,150 --> 00:33:26,150
+Now, with this information,
+
+1071
+00:33:26,150 --> 00:33:27,950
+we can go further and compute
+
+1072
+00:33:27,950 --> 00:33:29,650
+the starting position of the entire memory,
+
+1073
+00:33:29,650 --> 00:33:30,670
+right?
+
+1074
+00:33:30,670 --> 00:33:31,430
+Origin —
+
+1075
+00:33:31,430 --> 00:33:32,490
+this RAM —
+
+1076
+00:33:32,490 --> 00:33:33,990
+we know where the starting position of this RAM is.
+
+1077
+00:33:33,990 --> 00:33:34,570
+This value,
+
+1078
+00:33:34,570 --> 00:33:35,290
+what is
+
+1079
+00:33:35,290 --> 00:33:36,670
+the value of this expression?
+
+1080
+00:33:36,670 --> 00:33:38,390
+The value of this expression is actually
+
+1081
+00:33:38,390 --> 00:33:41,770
+We just defined the origin earlier in the memory section
+
+1082
+00:33:41,770 --> 00:33:42,650
+which is 0x8000
+
+1083
+00:33:42,650 --> 00:33:43,990
+right?
+
+1084
+00:33:43,990 --> 00:33:48,030
+And at the same time
+
+1085
+00:33:48,030 --> 00:33:48,870
+we can also get
+
+1086
+00:33:48,870 --> 00:33:50,930
+at the same time we also get the heap start
+
+1087
+00:33:50,930 --> 00:33:52,410
+we know because our
+
+1088
+00:33:52,410 --> 00:33:54,350
+our heap memory
+
+1089
+00:33:54,350 --> 00:33:57,210
+is actually placed right after the BSS
+
+1090
+00:33:57,210 --> 00:33:58,650
+so once we have the BSS end
+
+1091
+00:33:58,650 --> 00:34:00,510
+after we get its end position
+
+1092
+00:34:00,510 --> 00:34:01,810
+we can take that end position
+
+1093
+00:34:01,810 --> 00:34:04,370
+and actually use it as the starting position of the heap
+
+1094
+00:34:04,370 --> 00:34:07,570
+this way we get the correct address
+
+1095
+00:34:07,570 --> 00:34:09,550
+as for what this value actually is
+
+1096
+00:34:09,550 --> 00:34:10,970
+we don't really need to calculate it ourselves
+
+1097
+00:34:10,970 --> 00:34:14,250
+the linker, based on this linker script
+
+1098
+00:34:14,250 --> 00:34:16,590
+during the linking process
+
+1099
+00:34:16,590 --> 00:34:18,310
+it will automatically compute this value for us
+
+1100
+00:34:18,310 --> 00:34:21,330
+and store it into these symbols
+
+1101
+00:34:21,330 --> 00:34:24,270
+So that achieves our goal
+
+1102
+00:34:24,270 --> 00:34:24,550
+Right?
+
+1103
+00:34:24,550 --> 00:34:28,290
+So these are just some
+
+1104
+00:34:28,290 --> 00:34:31,630
+introductions to using linker scripts
+
+1105
+00:34:31,630 --> 00:34:32,930
+Of course, right now
+
+1106
+00:34:32,930 --> 00:34:34,350
+the main focus is to show you
+
+1107
+00:34:34,350 --> 00:34:35,830
+how we use this linker script
+
+1108
+00:34:35,830 --> 00:34:38,130
+to compute these memory layouts
+
+1109
+00:34:38,130 --> 00:34:39,270
+and ultimately,
+
+1110
+00:34:39,270 --> 00:34:40,130
+achieve our goal,
+
+1111
+00:34:40,130 --> 00:34:43,170
+which is to get the starting position and size of the heap
+
+1112
+00:34:43,170 --> 00:34:46,260
+So,
+
+1113
+00:34:46,260 --> 00:34:48,340
+let's take a look at
+
+1114
+00:34:48,340 --> 00:34:49,700
+how we can get this information
+
+1115
+00:34:49,700 --> 00:34:50,740
+in the code.
+
+1116
+00:34:50,740 --> 00:34:52,880
+Now, this diagram of ours,
+
+1117
+00:34:52,880 --> 00:34:54,240
+we should always keep it
+
+1118
+00:34:54,240 --> 00:34:54,840
+in our minds.
+
+1119
+00:34:54,840 --> 00:34:55,760
+So now,
+
+1120
+00:34:55,760 --> 00:34:57,240
+through the linker script,
+
+1121
+00:34:57,240 --> 00:34:58,620
+So what did we actually do?
+
+1122
+00:34:58,620 --> 00:34:59,860
+First of all, as we know,
+
+1123
+00:34:59,860 --> 00:35:01,360
+based on what we just described,
+
+1124
+00:35:01,360 --> 00:35:02,900
+in the linker script,
+
+1125
+00:35:02,900 --> 00:35:04,140
+we defined the size of the memory,
+
+1126
+00:35:04,140 --> 00:35:06,340
+starting at 0x8000,
+
+1127
+00:35:06,340 --> 00:35:08,080
+with a length of 128 megabytes.
+
+1128
+00:35:08,080 --> 00:35:09,680
+So through this,
+
+1129
+00:35:09,680 --> 00:35:10,920
+and then further down below,
+
+1130
+00:35:10,920 --> 00:35:13,420
+combined with these two provide commands below,
+
+1131
+00:35:13,420 --> 00:35:15,360
+we can get two symbols.
+
+1132
+00:35:15,360 --> 00:35:17,780
+One is the symbol start,
+
+1133
+00:35:17,780 --> 00:35:19,860
+and the other is the symbol end.
+
+1134
+00:35:19,860 --> 00:35:20,980
+This symbol,
+
+1135
+00:35:20,980 --> 00:35:21,720
+with these two symbols,
+
+1136
+00:35:21,720 --> 00:35:22,900
+we can actually obtain
+
+1137
+00:35:22,900 --> 00:35:23,880
+the entire memory,
+
+1138
+00:35:23,880 --> 00:35:26,780
+our entire memory space.
+
+1139
+00:35:26,780 --> 00:35:30,840
+This seems to be written wrong.
+
+1140
+00:35:30,840 --> 00:35:32,700
+The diagram here is drawn wrong.
+
+1141
+00:35:32,700 --> 00:35:34,780
+It should be this, it should be this place
+
+1142
+00:35:34,780 --> 00:35:35,320
+Sorry about that.
+
+1143
+00:35:35,320 --> 00:35:36,820
+This should be this position.
+
+1144
+00:35:36,820 --> 00:35:37,600
+No, that's not it.
+
+1145
+00:35:37,600 --> 00:35:40,280
+We then get the entire
+
+1146
+00:35:40,280 --> 00:35:44,200
+size of this.
+
+1147
+00:35:44,200 --> 00:35:47,020
+Right, we get this size,
+
+1148
+00:35:47,020 --> 00:35:51,240
+and the end position of the entire memory, the 70 position,
+
+1149
+00:35:51,240 --> 00:35:53,140
+the ending position.
+
+1150
+00:35:53,140 --> 00:35:55,280
+This is the first step.
+
+1151
+00:35:55,280 --> 00:35:57,280
+Then, at the same time,
+
+1152
+00:35:57,280 --> 00:35:59,340
+based on what we defined over here,
+
+1153
+00:35:59,340 --> 00:36:00,400
+these section positions we set up,
+
+1154
+00:36:00,400 --> 00:36:03,020
+what else can we naturally get?
+
+1155
+00:36:03,020 --> 00:36:06,120
+We can get these text sections,
+
+1156
+00:36:06,120 --> 00:36:07,500
+data sections,
+
+1157
+00:36:07,500 --> 00:36:10,320
+and the starting and ending positions of these bss sections,
+
+1158
+00:36:10,320 --> 00:36:11,200
+right?
+
+1159
+00:36:11,200 --> 00:36:14,120
+We just introduced these to you earlier.
+
+1160
+00:36:14,120 --> 00:36:16,220
+So once we have this information,
+
+1161
+00:36:16,220 --> 00:36:19,860
+So naturally, we can use this approach
+
+1162
+00:36:19,860 --> 00:36:24,080
+to further calculate the size of this heap
+
+1163
+00:36:24,080 --> 00:36:26,020
+its size,
+
+1164
+00:36:26,020 --> 00:36:27,940
+as well as its starting location.
+
+1165
+00:36:27,940 --> 00:36:30,160
+So in this way,
+
+1166
+00:36:30,160 --> 00:36:32,520
+through the linker script,
+
+1167
+00:36:32,520 --> 00:36:33,640
+we have obtained
+
+1168
+00:36:33,640 --> 00:36:38,780
+the specific locations of these regions that we care about.
+
+1169
+00:36:38,780 --> 00:36:40,200
+We don't have to compute them ourselves.
+
+1170
+00:36:40,200 --> 00:36:42,700
+But just having this is not enough,
+
+1171
+00:36:42,700 --> 00:36:43,640
+because what we ultimately need
+
+1172
+00:36:43,640 --> 00:36:45,860
+is to be able to get these values in our code.
+
+1173
+00:36:45,860 --> 00:36:47,360
+So how do we get these values?
+
+1174
+00:36:47,360 --> 00:36:48,840
+It's actually quite simple.
+
+1175
+00:36:48,840 --> 00:36:51,720
+Once we are in the linker script,
+
+1176
+00:36:51,720 --> 00:36:52,440
+you can see this diagram here,
+
+1177
+00:36:52,440 --> 00:36:53,960
+which is really just the
+
+1178
+00:36:53,960 --> 00:36:55,600
+information described in a linker script.
+
+1179
+00:36:55,600 --> 00:36:58,160
+So this diagram is actually just,
+
+1180
+00:36:58,160 --> 00:37:00,160
+you can think of it as the descriptive information of the linker script.
+
+1181
+00:37:00,160 --> 00:37:02,420
+So once we have this linker script information,
+
+1182
+00:37:02,420 --> 00:37:03,780
+we can actually
+
+1183
+00:37:03,780 --> 00:37:05,340
+do one thing:
+
+1184
+00:37:05,340 --> 00:37:08,080
+in our code,
+
+1185
+00:37:08,080 --> 00:37:09,020
+and this code,
+
+1186
+00:37:09,020 --> 00:37:11,580
+is actually written in assembly,
+
+1187
+00:37:11,580 --> 00:37:14,500
+we can actually define these corresponding variables.
+
+1188
+00:37:14,500 --> 00:37:18,280
+We know that this .word is actually
+
+1189
+00:37:18,280 --> 00:37:19,340
+allocating a space,
+
+1190
+00:37:19,340 --> 00:37:20,720
+you can think of it as defining a variable,
+
+1191
+00:37:20,720 --> 00:37:22,820
+and this variable is actually 32 bits,
+
+1192
+00:37:22,820 --> 00:37:25,100
+4 bytes.
+
+1193
+00:37:25,100 --> 00:37:26,240
+For these bytes,
+
+1194
+00:37:26,240 --> 00:37:28,180
+we can actually take this symbol,
+
+1195
+00:37:28,180 --> 00:37:29,300
+we now know
+
+1196
+00:37:29,300 --> 00:37:31,240
+the linker knows the value of this symbol,
+
+1197
+00:37:31,240 --> 00:37:32,440
+and we take the value of this symbol
+
+1198
+00:37:32,440 --> 00:37:33,680
+and assign it to this variable,
+
+1199
+00:37:33,680 --> 00:37:34,900
+right?
+
+1200
+00:37:34,900 --> 00:37:36,840
+So basically what we're doing is
+
+1201
+00:37:36,840 --> 00:37:38,020
+Now, this piece of code,
+
+1202
+00:37:38,020 --> 00:37:38,740
+where is it?
+
+1203
+00:37:38,740 --> 00:37:39,680
+Let me walk you through this code.
+
+1204
+00:37:39,680 --> 00:37:43,560
+It's in this new project of ours,
+
+1205
+00:37:43,560 --> 00:37:45,400
+in memory.s.
+
+1206
+00:37:45,400 --> 00:37:48,240
+It's in this file.
+
+1207
+00:37:51,160 --> 00:37:52,840
+In this file,
+
+1208
+00:37:52,840 --> 00:37:54,080
+we're actually defining some variables,
+
+1209
+00:37:54,080 --> 00:37:54,820
+some global variables.
+
+1210
+00:37:54,820 --> 00:37:56,460
+You can think of these global variables as
+
+1211
+00:37:56,460 --> 00:37:57,700
+whose values are essentially obtained
+
+1212
+00:37:57,700 --> 00:37:58,980
+through this method,
+
+1213
+00:37:58,980 --> 00:38:01,240
+so we don't have to compute them ourselves.
+
+1214
+00:38:01,240 --> 00:38:02,080
+Now, the actual values,
+
+1215
+00:38:02,080 --> 00:38:03,080
+they're actually calculated by the linker,
+
+1216
+00:38:03,080 --> 00:38:03,800
+during the linking process,
+
+1217
+00:38:03,800 --> 00:38:05,220
+computed for us.
+
+1218
+00:38:05,220 --> 00:38:07,660
+So once we have these global variables,
+
+1219
+00:38:07,660 --> 00:38:08,460
+we can then
+
+1220
+00:38:08,460 --> 00:38:10,280
+go ahead and use them further.
+
+1221
+00:38:10,280 --> 00:38:11,840
+We actually just
+
+1222
+00:38:11,840 --> 00:38:12,700
+you can think of it as
+
+1223
+00:38:12,700 --> 00:38:13,320
+we just said
+
+1224
+00:38:13,320 --> 00:38:14,320
+this is assembly code
+
+1225
+00:38:14,320 --> 00:38:16,060
+so in our C language code,
+
+1226
+00:38:16,060 --> 00:38:17,260
+how do we use these variables?
+
+1227
+00:38:17,260 --> 00:38:18,380
+Actually, you can just think of them
+
+1228
+00:38:18,380 --> 00:38:19,240
+as global variables
+
+1229
+00:38:19,240 --> 00:38:20,020
+right?
+
+1230
+00:38:20,020 --> 00:38:21,160
+Just declare them
+
+1231
+00:38:21,160 --> 00:38:22,840
+as global 32-bit variables.
+
+1232
+00:38:22,840 --> 00:38:24,320
+Then in
+
+1233
+00:38:24,320 --> 00:38:25,500
+our C language code,
+
+1234
+00:38:25,500 --> 00:38:26,680
+we can use these variables directly.
+
+1235
+00:38:26,680 --> 00:38:27,920
+As you can see,
+
+1236
+00:38:27,920 --> 00:38:30,240
+why are we able to use these variables
+
+1237
+00:38:30,240 --> 00:38:31,800
+to compute these values,
+
+1238
+00:38:31,800 --> 00:38:34,700
+getting the starting address of the heap?
+
+1239
+00:38:34,700 --> 00:38:36,560
+Actually, it comes from here,
+
+1240
+00:38:36,560 --> 00:38:37,540
+from these heap values above.
+
+1241
+00:38:37,540 --> 00:38:38,620
+So where do these things come from?
+
+1242
+00:38:38,620 --> 00:38:39,520
+They come from here.
+
+1243
+00:38:39,520 --> 00:38:40,580
+So ultimately, where do these things come from?
+
+1244
+00:38:40,580 --> 00:38:42,740
+They're actually calculated from the linker script.
+
+1245
+00:38:42,740 --> 00:38:44,960
+Our entire logic here,
+
+1246
+00:38:44,960 --> 00:38:46,880
+is really just this process.
+
+1247
+00:38:46,880 --> 00:38:48,240
+Once you understand this,
+
+1248
+00:38:48,240 --> 00:38:51,140
+reading this code becomes pretty straightforward.
+
+1249
+00:38:51,140 --> 00:38:55,230
+So this is using the linker
+
+1250
+00:38:55,230 --> 00:38:57,450
+to obtain all this relevant information.
+
+1251
+00:38:57,450 --> 00:39:01,130
+But this is only
+
+1252
+00:39:01,130 --> 00:39:02,570
+Actually, this only implements
+
+1253
+00:39:02,570 --> 00:39:03,870
+the first step of our dynamic memory allocation.
+
+1254
+00:39:03,870 --> 00:39:04,550
+This is the first step.
+
+1255
+00:39:04,550 --> 00:39:05,950
+Because right now we've only obtained
+
+1256
+00:39:05,950 --> 00:39:06,930
+the size of this memory,
+
+1257
+00:39:06,930 --> 00:39:08,530
+that is, the size of this heap,
+
+1258
+00:39:08,530 --> 00:39:09,330
+and its starting position.
+
+1259
+00:39:09,330 --> 00:39:10,970
+So how do we actually implement it?
+
+1260
+00:39:10,970 --> 00:39:12,850
+Well, next
+
+1261
+00:39:12,850 --> 00:39:14,570
+So let me walk you through
+
+1262
+00:39:14,570 --> 00:39:15,650
+how to implement
+
+1263
+00:39:15,650 --> 00:39:18,650
+the related interface.
+
+1264
+00:39:18,650 --> 00:39:20,850
+Now, at the configurable granularity level,
+
+1265
+00:39:20,850 --> 00:39:23,010
+let's take a look
+
+1266
+00:39:23,010 --> 00:39:25,510
+at how we implement
+
+1267
+00:39:25,510 --> 00:39:28,190
+so-called configurable-level
+
+1268
+00:39:28,190 --> 00:39:29,570
+memory allocation and deallocation.
+
+1269
+00:39:29,570 --> 00:39:30,910
+This,
+
+1270
+00:39:30,910 --> 00:39:33,270
+let me first explain to everyone,
+
+1271
+00:39:33,270 --> 00:39:35,290
+namely, when we normally call
+
+1272
+00:39:35,290 --> 00:39:37,410
+malloc and free,
+
+1273
+00:39:37,410 --> 00:39:38,930
+this kind of allocation,
+
+1274
+00:39:38,930 --> 00:39:41,270
+at what granularity level do we actually allocate?
+
+1275
+00:39:41,270 --> 00:39:43,150
+We actually allocate at the granularity
+
+1276
+00:39:43,150 --> 00:39:44,150
+of our own units,
+
+1277
+00:39:44,150 --> 00:39:44,430
+right?
+
+1278
+00:39:44,430 --> 00:39:46,210
+That's a very fine-grained
+
+1279
+00:39:46,210 --> 00:39:47,110
+allocation.
+
+1280
+00:39:47,110 --> 00:39:50,250
+But if we look at it from the lower level,
+
+1281
+00:39:50,250 --> 00:39:51,730
+So in our operating system,
+
+1282
+00:39:51,730 --> 00:39:54,470
+allocation actually happens first at the page level.
+
+1283
+00:39:54,470 --> 00:39:55,110
+And page allocation
+
+1284
+00:39:55,110 --> 00:39:58,110
+is usually done with a size of 4K,
+
+1285
+00:39:58,110 --> 00:40:00,430
+that is, 4K bytes as the allocation unit.
+
+1286
+00:40:00,430 --> 00:40:01,190
+Then,
+
+1287
+00:40:01,190 --> 00:40:02,850
+actually, malloc and free
+
+1288
+00:40:02,850 --> 00:40:06,330
+are built on top of this 4K page-level allocation,
+
+1289
+00:40:06,330 --> 00:40:07,130
+going one step further
+
+1290
+00:40:07,130 --> 00:40:09,270
+with what is essentially a second round of allocation,
+
+1291
+00:40:09,270 --> 00:40:12,730
+a finer-grained allocation on top of it.
+
+1292
+00:40:12,730 --> 00:40:14,350
+Here,
+
+1293
+00:40:14,350 --> 00:40:17,550
+first let me walk you through page-level allocation.
+
+1294
+00:40:17,550 --> 00:40:19,870
+As for byte-level malloc,
+
+1295
+00:40:19,870 --> 00:40:22,790
+we actually leave that
+
+1296
+00:40:22,790 --> 00:40:24,270
+as an exercise for you to do on your own.
+
+1297
+00:40:24,270 --> 00:40:27,750
+So let's first look at the page level,
+
+1298
+00:40:27,750 --> 00:40:28,910
+that is, coarse-grained allocation,
+
+1299
+00:40:28,910 --> 00:40:29,630
+and how it is done.
+
+1300
+00:40:29,630 --> 00:40:30,950
+The idea is
+
+1301
+00:40:30,950 --> 00:40:31,870
+It's actually pretty simple.
+
+1302
+00:40:31,870 --> 00:40:33,650
+Let's take a look at it together.
+
+1303
+00:40:33,650 --> 00:40:35,110
+So once we have this,
+
+1304
+00:40:35,110 --> 00:40:37,610
+now that we know the HIP,
+
+1305
+00:40:37,610 --> 00:40:40,590
+its size and starting position,
+
+1306
+00:40:40,590 --> 00:40:41,390
+in that situation,
+
+1307
+00:40:41,390 --> 00:40:42,830
+we can actually take this HIP region,
+
+1308
+00:40:42,830 --> 00:40:44,790
+the area shown in blue,
+
+1309
+00:40:44,790 --> 00:40:46,210
+and build
+
+1310
+00:40:46,210 --> 00:40:48,010
+our own dynamic allocation management on top of it.
+
+1311
+00:40:48,010 --> 00:40:49,790
+In terms of how we implemented it,
+
+1312
+00:40:49,790 --> 00:40:51,210
+we wrapped it up and
+
+1313
+00:40:51,210 --> 00:40:53,150
+provided two interfaces.
+
+1314
+00:40:53,150 --> 00:40:54,090
+One is,
+
+1315
+00:40:54,090 --> 00:40:56,650
+PageElect, which is the allocation interface,
+
+1316
+00:40:56,650 --> 00:40:57,570
+and the other one is free,
+
+1317
+00:40:57,570 --> 00:40:58,730
+which is the deallocation interface.
+
+1318
+00:40:58,730 --> 00:41:00,190
+Now for this allocation function,
+
+1319
+00:41:00,190 --> 00:41:01,450
+its parameter
+
+1320
+00:41:01,450 --> 00:41:04,470
+is an int value.
+
+1321
+00:41:04,470 --> 00:41:05,310
+Actually, what this means is
+
+1322
+00:41:05,310 --> 00:41:06,190
+we can
+
+1323
+00:41:06,190 --> 00:41:07,390
+since we are allocating
+
+1324
+00:41:07,390 --> 00:41:08,470
+in units of pages, right
+
+1325
+00:41:08,470 --> 00:41:09,810
+we essentially tell our
+
+1326
+00:41:09,810 --> 00:41:11,810
+upper-level users, that is,
+
+1327
+00:41:11,810 --> 00:41:12,710
+when you call this interface,
+
+1328
+00:41:12,710 --> 00:41:13,550
+it's basically like saying
+
+1329
+00:41:13,550 --> 00:41:14,590
+you're telling us
+
+1330
+00:41:14,590 --> 00:41:16,410
+how many pages we should allocate,
+
+1331
+00:41:16,410 --> 00:41:17,450
+for example,
+
+1332
+00:41:17,450 --> 00:41:18,830
+whether you want one 4K
+
+1333
+00:41:18,830 --> 00:41:20,590
+or two 4Ks like that.
+
+1334
+00:41:20,590 --> 00:41:22,730
+Now, the return value,
+
+1335
+00:41:22,730 --> 00:41:23,630
+it's a pointer
+
+1336
+00:41:23,630 --> 00:41:24,850
+that essentially points to the allocated
+
+1337
+00:41:24,850 --> 00:41:26,630
+region,
+
+1338
+00:41:26,630 --> 00:41:28,070
+which can be a single page
+
+1339
+00:41:28,070 --> 00:41:28,810
+or multiple pages.
+
+1340
+00:41:28,810 --> 00:41:29,570
+So please pay attention to this.
+
+1341
+00:41:29,570 --> 00:41:30,590
+this region
+
+1342
+00:41:30,590 --> 00:41:31,730
+its start address
+
+1343
+00:41:31,730 --> 00:41:35,930
+Then when it comes to freeing,
+
+1344
+00:41:35,930 --> 00:41:37,390
+that is, we take the one from just now
+
+1345
+00:41:37,390 --> 00:41:38,490
+the address that was returned,
+
+1346
+00:41:38,490 --> 00:41:40,170
+and pass it back in,
+
+1347
+00:41:40,170 --> 00:41:41,270
+and then our kernel
+
+1348
+00:41:41,270 --> 00:41:42,590
+takes this region,
+
+1349
+00:41:42,590 --> 00:41:43,870
+essentially, so to speak,
+
+1350
+00:41:43,870 --> 00:41:44,710
+and recycles it.
+
+1351
+00:41:44,710 --> 00:41:45,510
+Then next time we can
+
+1352
+00:41:45,510 --> 00:41:46,510
+keep using it again.
+
+1353
+00:41:46,510 --> 00:41:47,750
+That is actually the effect we achieve,
+
+1354
+00:41:47,750 --> 00:41:48,710
+and that's all it takes.
+
+1355
+00:41:48,710 --> 00:41:50,350
+These are the two interfaces
+
+1356
+00:41:50,350 --> 00:41:52,070
+we need to implement in the lab.
+
+1357
+00:41:52,070 --> 00:41:54,230
+Now, as for the actual implementation,
+
+1358
+00:41:54,230 --> 00:41:55,290
+there are actually many different approaches.
+
+1359
+00:41:55,290 --> 00:41:57,750
+We will briefly introduce one approach to you,
+
+1360
+00:41:57,750 --> 00:41:59,970
+and we'll explain everything using the simplest possible way.
+
+1361
+00:41:59,970 --> 00:42:01,710
+So one approach is through a linked list
+
+1362
+00:42:01,710 --> 00:42:02,190
+right
+
+1363
+00:42:02,190 --> 00:42:05,350
+We've all studied this data structure
+
+1364
+00:42:05,350 --> 00:42:05,630
+haven't we
+
+1365
+00:42:05,630 --> 00:42:07,070
+So with the linked list,
+
+1366
+00:42:07,070 --> 00:42:08,450
+the ones in red represent
+
+1367
+00:42:08,450 --> 00:42:11,890
+the memory that has been allocated,
+
+1368
+00:42:11,890 --> 00:42:14,630
+and we just link the blocks together one by one.
+
+1369
+00:42:14,630 --> 00:42:15,450
+Then,
+
+1370
+00:42:15,450 --> 00:42:16,250
+the ones in blue
+
+1371
+00:42:16,250 --> 00:42:18,230
+are essentially another linked list,
+
+1372
+00:42:18,230 --> 00:42:20,690
+which maintains the blocks that have not been allocated.
+
+1373
+00:42:20,690 --> 00:42:21,430
+So we can
+
+1374
+00:42:21,430 --> 00:42:22,570
+— this is one way of doing it,
+
+1375
+00:42:22,570 --> 00:42:22,890
+right?
+
+1376
+00:42:22,890 --> 00:42:25,590
+But actually, we can also use a
+
+1377
+00:42:25,590 --> 00:42:26,530
+bit-map based approach,
+
+1378
+00:42:26,530 --> 00:42:27,430
+a simpler approach,
+
+1379
+00:42:27,430 --> 00:42:29,110
+which is that we can actually take
+
+1380
+00:42:29,110 --> 00:42:30,630
+the chunk of memory to be allocated
+
+1381
+00:42:30,630 --> 00:42:33,450
+We can think of it this way.
+
+1382
+00:42:33,450 --> 00:42:35,350
+Up front, we use some
+
+1383
+00:42:35,350 --> 00:42:38,890
+a region like this,
+
+1384
+00:42:38,890 --> 00:42:39,630
+which can actually be considered
+
+1385
+00:42:39,630 --> 00:42:41,370
+to be a piece of description information,
+
+1386
+00:42:41,370 --> 00:42:43,030
+that is, it describes what comes after it —
+
+1387
+00:42:43,030 --> 00:42:45,010
+the real configuration is placed at this position.
+
+1388
+00:42:45,010 --> 00:42:46,710
+These are the individual 4K configurations.
+
+1389
+00:42:46,710 --> 00:42:48,310
+So this red part
+
+1390
+00:42:48,310 --> 00:42:52,030
+is describing which ones we have,
+
+1391
+00:42:52,030 --> 00:42:54,250
+through indexing,
+
+1392
+00:42:54,250 --> 00:42:55,930
+through indexing,
+
+1393
+00:42:55,930 --> 00:42:56,330
+that is to say,
+
+1394
+00:42:56,330 --> 00:42:57,070
+if, let's say,
+
+1395
+00:42:57,070 --> 00:42:58,490
+this is configuration 0,
+
+1396
+00:42:58,490 --> 00:42:59,370
+then over here
+
+1397
+00:42:59,370 --> 00:43:00,610
+what it corresponds to is number 0,
+
+1398
+00:43:00,610 --> 00:43:02,390
+1, 2, 3, 4,
+
+1399
+00:43:02,390 --> 00:43:03,830
+like this.
+
+1400
+00:43:03,830 --> 00:43:06,550
+They are managed through indexing.
+
+1401
+00:43:06,550 --> 00:43:08,150
+So in here,
+
+1402
+00:43:08,150 --> 00:43:08,690
+it's actually just
+
+1403
+00:43:08,690 --> 00:43:10,770
+used to describe
+
+1404
+00:43:10,770 --> 00:43:12,130
+whether a particular configuration
+
+1405
+00:43:12,130 --> 00:43:13,210
+has been allocated
+
+1406
+00:43:13,210 --> 00:43:14,130
+or has not been allocated,
+
+1407
+00:43:14,130 --> 00:43:15,250
+and that's all you need.
+
+1408
+00:43:15,250 --> 00:43:16,310
+This way,
+
+1409
+00:43:16,310 --> 00:43:17,050
+you don't need
+
+1410
+00:43:17,050 --> 00:43:18,430
+you don't need to use pointers
+
+1411
+00:43:18,430 --> 00:43:19,290
+or linked lists.
+
+1412
+00:43:19,290 --> 00:43:20,630
+The advantage,
+
+1413
+00:43:20,630 --> 00:43:21,870
+is that it's relatively fast
+
+1414
+00:43:21,870 --> 00:43:23,190
+and quite simple to implement.
+
+1415
+00:43:23,190 --> 00:43:24,130
+What we
+
+1416
+00:43:24,130 --> 00:43:25,190
+actually do later on is
+
+1417
+00:43:25,190 --> 00:43:27,390
+to use an array-based approach
+
+1418
+00:43:27,390 --> 00:43:29,770
+to implement this configuration for you —
+
+1419
+00:43:29,770 --> 00:43:32,350
+the allocation and release at the configuration level,
+
+1420
+00:43:32,350 --> 00:43:34,530
+we do it using an array-based approach.
+
+1421
+00:43:34,530 --> 00:43:36,190
+So this,
+
+1422
+00:43:36,190 --> 00:43:37,850
+now we know,
+
+1423
+00:43:37,850 --> 00:43:40,950
+actually, all of this information,
+
+1424
+00:43:40,950 --> 00:43:44,010
+we actually put it in our heap,
+
+1425
+00:43:44,010 --> 00:43:45,030
+in the heap.
+
+1426
+00:43:45,030 --> 00:43:47,090
+So as for KeepStart,
+
+1427
+00:43:47,090 --> 00:43:48,910
+from our earlier analysis,
+
+1428
+00:43:48,910 --> 00:43:50,010
+it actually marks
+
+1429
+00:43:50,010 --> 00:43:50,910
+the start of this heap,
+
+1430
+00:43:50,910 --> 00:43:51,330
+right?
+
+1431
+00:43:51,330 --> 00:43:53,790
+To that end, we also need to define a
+
+1432
+00:43:53,790 --> 00:43:56,730
+because our real, the actual configuration,
+
+1433
+00:43:56,730 --> 00:43:58,250
+is actually placed here,
+
+1434
+00:43:58,250 --> 00:43:59,930
+starting from here,
+
+1435
+00:43:59,930 --> 00:44:03,330
+the memory actually given to users
+
+1436
+00:44:03,330 --> 00:44:05,270
+actually starts from this area here.
+
+1437
+00:44:05,270 --> 00:44:07,030
+The part before it, you can think of it as
+
+1438
+00:44:07,030 --> 00:44:11,630
+memory we use for some internal management data.
+
+1439
+00:44:11,630 --> 00:44:13,350
+So this area,
+
+1440
+00:44:13,350 --> 00:44:15,310
+we actually don't expose it.
+
+1441
+00:44:15,310 --> 00:44:17,410
+for the end users to use.
+
+1442
+00:44:17,410 --> 00:44:20,490
+So we defined another new position here,
+
+1443
+00:44:20,490 --> 00:44:21,450
+which is allocated_start,
+
+1444
+00:44:21,450 --> 00:44:22,430
+and this region
+
+1445
+00:44:22,430 --> 00:44:25,250
+corresponds to the memory we actually hand out.
+
+1446
+00:44:25,250 --> 00:44:27,490
+Then this block,
+
+1447
+00:44:27,490 --> 00:44:29,970
+this block is actually described by this thing here.
+
+1448
+00:44:29,970 --> 00:44:31,130
+And this block,
+
+1449
+00:44:31,130 --> 00:44:33,210
+in turn, is described through this position here.
+
+1450
+00:44:33,210 --> 00:44:34,990
+So this information,
+
+1451
+00:44:34,990 --> 00:44:36,050
+the thing in front here,
+
+1452
+00:44:36,050 --> 00:44:36,830
+we can think of
+
+1453
+00:44:36,830 --> 00:44:39,350
+as individual items used internally for management,
+
+1454
+00:44:39,350 --> 00:44:41,070
+call them descriptors, for example,
+
+1455
+00:44:41,070 --> 00:44:41,850
+that works too.
+
+1456
+00:44:41,850 --> 00:44:46,550
+So we have this setup.
+
+1457
+00:44:46,550 --> 00:44:51,820
+Now this heap_start,
+
+1458
+00:44:51,820 --> 00:44:53,480
+we can compute it from this,
+
+1459
+00:44:53,480 --> 00:44:56,000
+which we already explained to you earlier.
+
+1460
+00:44:56,000 --> 00:44:57,340
+And this allocated_start,
+
+1461
+00:44:57,340 --> 00:45:00,840
+So we actually compute it in this way.
+
+1462
+00:45:00,840 --> 00:45:01,480
+Now, this part,
+
+1463
+00:45:01,480 --> 00:45:02,920
+let me briefly go over the code here,
+
+1464
+00:45:02,920 --> 00:45:05,860
+that is, these 8 page sizes here
+
+1465
+00:45:05,860 --> 00:45:06,600
+means that
+
+1466
+00:45:06,600 --> 00:45:08,980
+we use the front part to store management information.
+
+1467
+00:45:08,980 --> 00:45:11,540
+We reserved about 8 page sizes.
+
+1468
+00:45:11,540 --> 00:45:13,220
+One page size is 4K.
+
+1469
+00:45:13,220 --> 00:45:16,920
+So we used this large area here,
+
+1470
+00:45:16,920 --> 00:45:20,020
+to store this descriptive management information.
+
+1471
+00:45:20,020 --> 00:45:23,360
+And since we can roughly estimate it,
+
+1472
+00:45:23,360 --> 00:45:26,240
+because we know the whole memory is only 128 megabytes,
+
+1473
+00:45:26,240 --> 00:45:29,060
+so if we put this much information up front,
+
+1474
+00:45:29,060 --> 00:45:30,780
+and based on each one of these,
+
+1475
+00:45:30,780 --> 00:45:34,080
+how much space one entry of management information roughly takes,
+
+1476
+00:45:34,080 --> 00:45:35,400
+we can actually roughly calculate that
+
+1477
+00:45:35,400 --> 00:45:37,620
+this space here is sufficient.
+
+1478
+00:45:37,620 --> 00:45:38,980
+So we reserved this much.
+
+1479
+00:45:38,980 --> 00:45:41,920
+Then, starting from this position,
+
+1480
+00:45:41,920 --> 00:45:43,940
+plus this thing.
+
+1481
+00:45:43,940 --> 00:45:45,920
+Add that, and we get this position
+
+1482
+00:45:45,920 --> 00:45:47,160
+we get this position
+
+1483
+00:45:47,160 --> 00:45:47,920
+Now here, we
+
+1484
+00:45:47,920 --> 00:45:49,940
+at the same time, we also took this position
+
+1485
+00:45:49,940 --> 00:45:51,540
+and did an alignment operation on it
+
+1486
+00:45:51,540 --> 00:45:55,240
+Because on a computer,
+
+1487
+00:45:55,240 --> 00:45:58,700
+if it is aligned to 4K,
+
+1488
+00:45:58,700 --> 00:46:00,700
+the processing efficiency is higher
+
+1489
+00:46:00,700 --> 00:46:03,120
+So we did a little bit of alignment first
+
+1490
+00:46:03,120 --> 00:46:04,560
+to make sure these addresses
+
+1491
+00:46:04,560 --> 00:46:06,580
+are all four-byte aligned
+
+1492
+00:46:06,580 --> 00:46:10,960
+So we got this position
+
+1493
+00:46:10,960 --> 00:46:14,300
+This is related to the code
+
+1494
+00:46:14,300 --> 00:46:15,720
+Let me briefly explain it to you
+
+1495
+00:46:15,720 --> 00:46:17,680
+Next,
+
+1496
+00:46:17,680 --> 00:46:18,560
+we are going to
+
+1497
+00:46:18,560 --> 00:46:20,660
+look at how to implement
+
+1498
+00:46:20,660 --> 00:46:22,680
+our final allocation and deallocation
+
+1499
+00:46:22,680 --> 00:46:22,940
+right?
+
+1500
+00:46:22,940 --> 00:46:26,040
+Now, when drawing this diagram,
+
+1501
+00:46:26,040 --> 00:46:27,000
+Because if everyone draws it this way
+
+1502
+00:46:27,000 --> 00:46:27,680
+it looks rather awkward.
+
+1503
+00:46:27,680 --> 00:46:28,640
+Because as we know, in reality
+
+1504
+00:46:28,640 --> 00:46:30,360
+there is a correspondence here.
+
+1505
+00:46:30,360 --> 00:46:31,320
+As we just mentioned,
+
+1506
+00:46:31,320 --> 00:46:32,580
+that is to say, this thing
+
+1507
+00:46:32,580 --> 00:46:35,240
+this thing actually corresponds to this one here,
+
+1508
+00:46:35,240 --> 00:46:36,120
+this one.
+
+1509
+00:46:36,120 --> 00:46:37,780
+And then the second one
+
+1510
+00:46:37,780 --> 00:46:38,660
+corresponds to this one here,
+
+1511
+00:46:38,660 --> 00:46:39,420
+the column group,
+
+1512
+00:46:39,420 --> 00:46:40,060
+the index.
+
+1513
+00:46:40,060 --> 00:46:42,140
+So drawn this way, it looks rather awkward.
+
+1514
+00:46:42,140 --> 00:46:43,940
+So later, when we draw our diagrams,
+
+1515
+00:46:43,940 --> 00:46:45,160
+we'll use a different way of drawing it.
+
+1516
+00:46:45,160 --> 00:46:46,420
+It's just a different way of drawing it.
+
+1517
+00:46:46,420 --> 00:46:48,100
+We'll take that memory in the front
+
+1518
+00:46:48,100 --> 00:46:49,300
+that's used for management,
+
+1519
+00:46:49,300 --> 00:46:50,220
+and draw it at the top,
+
+1520
+00:46:50,220 --> 00:46:51,680
+and put the actual memory at the
+
+1521
+00:46:51,680 --> 00:46:52,980
+The memory allocation goes down here.
+
+1522
+00:46:52,980 --> 00:46:54,500
+Now, this one,
+
+1523
+00:46:54,500 --> 00:46:55,140
+it's actually not.
+
+1524
+00:46:55,140 --> 00:46:56,660
+This doesn't mean
+
+1525
+00:46:56,660 --> 00:46:58,780
+there's a pointer-linked list.
+
+1526
+00:46:58,780 --> 00:46:59,800
+What it actually means is just
+
+1527
+00:46:59,800 --> 00:47:00,500
+there's a correspondence.
+
+1528
+00:47:00,500 --> 00:47:01,280
+Because we said,
+
+1529
+00:47:01,280 --> 00:47:02,520
+if we use the array approach,
+
+1530
+00:47:02,520 --> 00:47:04,160
+we're actually avoiding a linked list.
+
+1531
+00:47:04,160 --> 00:47:05,300
+That is, no pointers at all.
+
+1532
+00:47:05,300 --> 00:47:06,080
+For us, it's really just an
+
+1533
+00:47:06,080 --> 00:47:06,900
+index-based relationship.
+
+1534
+00:47:06,900 --> 00:47:07,400
+Because its
+
+1535
+00:47:07,400 --> 00:47:08,340
+this region,
+
+1536
+00:47:08,340 --> 00:47:09,700
+its index in here is 0,
+
+1537
+00:47:09,700 --> 00:47:11,180
+and the index of this region is also 0,
+
+1538
+00:47:11,180 --> 00:47:11,800
+right?
+
+1539
+00:47:11,800 --> 00:47:12,680
+Through this index,
+
+1540
+00:47:12,680 --> 00:47:13,480
+it's actually quite easy.
+
+1541
+00:47:13,480 --> 00:47:15,060
+work out the correspondence between them.
+
+1542
+00:47:15,060 --> 00:47:16,100
+So that means,
+
+1543
+00:47:16,100 --> 00:47:17,680
+there is implicitly a pointer,
+
+1544
+00:47:17,680 --> 00:47:19,160
+just like it,
+
+1545
+00:47:19,160 --> 00:47:20,320
+but it does not mean
+
+1546
+00:47:20,320 --> 00:47:21,060
+there is actually a pointer there.
+
+1547
+00:47:21,060 --> 00:47:22,300
+Let me explain this to you.
+
+1548
+00:47:22,300 --> 00:47:24,780
+We will base ourselves on this kind of diagram
+
+1549
+00:47:24,780 --> 00:47:28,660
+to introduce to you the allocation and free algorithm below.
+
+1550
+00:47:28,660 --> 00:47:31,410
+So,
+
+1551
+00:47:31,410 --> 00:47:34,490
+now that we have this concept,
+
+1552
+00:47:34,490 --> 00:47:37,990
+first of all, we need to design some related important data structures,
+
+1553
+00:47:37,990 --> 00:47:38,350
+right?
+
+1554
+00:47:38,350 --> 00:47:40,130
+When we write code,
+
+1555
+00:47:40,130 --> 00:47:42,010
+we generally design the data structures first.
+
+1556
+00:47:42,010 --> 00:47:44,290
+The functions are actually relatively secondary,
+
+1557
+00:47:44,290 --> 00:47:45,010
+right?
+
+1558
+00:47:45,010 --> 00:47:46,630
+As for the data structures,
+
+1559
+00:47:46,630 --> 00:47:47,750
+it is really about our
+
+1560
+00:47:47,750 --> 00:47:50,170
+the internal management of this part here
+
+1561
+00:47:50,170 --> 00:47:51,270
+So how should we design it?
+
+1562
+00:47:51,270 --> 00:47:53,490
+How do we use it to describe this stuff?
+
+1563
+00:47:53,490 --> 00:47:55,310
+Now, as for this thing,
+
+1564
+00:47:55,310 --> 00:47:56,710
+as we all know,
+
+1565
+00:47:56,710 --> 00:47:58,630
+the first thing we need to express is this:
+
+1566
+00:47:58,630 --> 00:48:01,510
+we need to mark whether this region is in use or not,
+
+1567
+00:48:01,510 --> 00:48:03,910
+whether it has been allocated or not.
+
+1568
+00:48:03,910 --> 00:48:06,090
+So therefore,
+
+1569
+00:48:06,090 --> 00:48:07,850
+we can define a page,
+
+1570
+00:48:07,850 --> 00:48:09,010
+and note carefully,
+
+1571
+00:48:09,010 --> 00:48:12,270
+this page is used to describe this information.
+
+1572
+00:48:12,270 --> 00:48:15,730
+This stuff over here is what gets allocated to the user for storing data.
+
+1573
+00:48:15,730 --> 00:48:18,150
+So this page doesn't refer to this thing.
+
+1574
+00:48:18,150 --> 00:48:19,590
+It actually refers to this thing.
+
+1575
+00:48:19,590 --> 00:48:20,510
+It's this thing.
+
+1576
+00:48:20,510 --> 00:48:23,930
+So inside this page,
+
+1577
+00:48:23,930 --> 00:48:25,470
+we can define a flag.
+
+1578
+00:48:25,470 --> 00:48:26,590
+For this flag,
+
+1579
+00:48:26,590 --> 00:48:27,790
+for now we only
+
+1580
+00:48:27,790 --> 00:48:29,750
+since we only need to indicate
+
+1581
+00:48:29,750 --> 00:48:31,350
+Whether it's allocated or not allocated
+
+1582
+00:48:31,350 --> 00:48:33,530
+So we can use one of the bits in here
+
+1583
+00:48:33,530 --> 00:48:35,170
+To save a bit of space
+
+1584
+00:48:35,170 --> 00:48:37,210
+Use one bit to represent it
+
+1585
+00:48:37,210 --> 00:48:38,430
+If it's 0, that means
+
+1586
+00:48:38,430 --> 00:48:40,630
+This represents its first bit
+
+1587
+00:48:40,630 --> 00:48:41,490
+The first bit
+
+1588
+00:48:41,490 --> 00:48:42,370
+That is, bit zero
+
+1589
+00:48:42,370 --> 00:48:44,570
+That is its bit zero
+
+1590
+00:48:44,570 --> 00:48:49,590
+Used to indicate whether it's allocated or not allocated
+
+1591
+00:48:49,590 --> 00:48:52,810
+But we say that this is actually not enough
+
+1592
+00:48:52,810 --> 00:48:54,050
+Why is that?
+
+1593
+00:48:54,050 --> 00:48:56,350
+Because sometimes, as we said,
+
+1594
+00:48:56,350 --> 00:48:59,090
+a region may be contiguous,
+
+1595
+00:48:59,090 --> 00:49:00,350
+and we need to represent whether it is or not.
+
+1596
+00:49:00,350 --> 00:49:02,310
+We said it might be allocated as
+
+1597
+00:49:02,310 --> 00:49:04,630
+a contiguous block of multiple allocations,
+
+1598
+00:49:04,630 --> 00:49:06,490
+so how do we represent
+
+1599
+00:49:06,490 --> 00:49:08,290
+a contiguous allocation?
+
+1600
+00:49:08,290 --> 00:49:11,430
+We can actually use one more bit to represent that.
+
+1601
+00:49:11,430 --> 00:49:13,250
+This diagram might not be drawn very well.
+
+1602
+00:49:13,250 --> 00:49:14,410
+But just imagine it.
+
+1603
+00:49:14,410 --> 00:49:17,730
+Suppose this one is also red.
+
+1604
+00:49:17,730 --> 00:49:23,350
+Then this whole region might be allocated to the user as a single unit.
+
+1605
+00:49:23,350 --> 00:49:28,110
+So besides marking it here,
+
+1606
+00:49:28,110 --> 00:49:29,570
+to show that it is in use,
+
+1607
+00:49:29,570 --> 00:49:31,610
+red meaning it has already been allocated,
+
+1608
+00:49:31,610 --> 00:49:32,830
+we usually need to mark it out,
+
+1609
+00:49:32,830 --> 00:49:35,690
+because the address 70 that we allocated to the user is right here,
+
+1610
+00:49:35,690 --> 00:49:36,230
+right?
+
+1611
+00:49:36,230 --> 00:49:37,950
+Address 70 is right here.
+
+1612
+00:49:37,950 --> 00:49:43,450
+So how do we indicate that this entire region is one whole block?
+
+1613
+00:49:43,450 --> 00:49:47,330
+Then we probably need to mark it here,
+
+1614
+00:49:47,330 --> 00:49:49,530
+that this thing is its last block,
+
+1615
+00:49:49,530 --> 00:49:50,050
+right?
+
+1616
+00:49:50,050 --> 00:49:50,750
+It's the last block.
+
+1617
+00:49:50,750 --> 00:49:54,010
+So since we need to represent this information,
+
+1618
+00:49:54,010 --> 00:49:58,950
+we need to use another bit of this flag to indicate
+
+1619
+00:49:58,950 --> 00:50:01,970
+whether the current descriptor
+
+1620
+00:50:01,970 --> 00:50:05,410
+is the last block of information for the whole region.
+
+1621
+00:50:05,410 --> 00:50:07,090
+So, with that,
+
+1622
+00:50:07,090 --> 00:50:10,850
+we've basically designed the structure to look like this.
+
+1623
+00:50:10,850 --> 00:50:11,770
+This part is fairly simple,
+
+1624
+00:50:11,770 --> 00:50:13,370
+so we'll go through it a bit faster.
+
+1625
+00:50:13,370 --> 00:50:15,730
+Mainly, you can go back and read the code yourselves.
+
+1626
+00:50:15,730 --> 00:50:18,490
+Now that we have this information,
+
+1627
+00:50:18,490 --> 00:50:19,950
+it comes down to the actual implementation.
+
+1628
+00:50:19,950 --> 00:50:21,170
+For example, let's say we want to implement
+
+1629
+00:50:21,170 --> 00:50:23,990
+this allocate function.
+
+1630
+00:50:23,990 --> 00:50:25,810
+The parameter it takes
+
+1631
+00:50:25,810 --> 00:50:28,910
+is the number of pages to allocate,
+
+1632
+00:50:28,910 --> 00:50:31,130
+the number of contiguous pages.
+
+1633
+00:50:31,130 --> 00:50:32,710
+So let's assume that here
+
+1634
+00:50:32,710 --> 00:50:34,610
+we pass in 2.
+
+1635
+00:50:34,610 --> 00:50:36,390
+Now, if you look at this diagram, it basically means that
+
+1636
+00:50:36,390 --> 00:50:37,610
+what we're really doing is
+
+1637
+00:50:37,610 --> 00:50:39,930
+looking for a usable region.
+
+1638
+00:50:39,930 --> 00:50:41,690
+The red color indicates what's already been used up,
+
+1639
+00:50:41,690 --> 00:50:42,770
+so what's available is
+
+1640
+00:50:42,770 --> 00:50:44,030
+these blue parts.
+
+1641
+00:50:44,030 --> 00:50:45,250
+So here, actually,
+
+1642
+00:50:45,250 --> 00:50:47,290
+this block is the part we can use.
+
+1643
+00:50:47,290 --> 00:50:47,850
+Because here,
+
+1644
+00:50:47,850 --> 00:50:49,290
+there are two consecutive blue parts,
+
+1645
+00:50:49,290 --> 00:50:49,650
+right?
+
+1646
+00:50:49,650 --> 00:50:50,570
+So let's see,
+
+1647
+00:50:50,570 --> 00:50:52,310
+how do we find this region
+
+1648
+00:50:52,310 --> 00:50:52,970
+and bring it out?
+
+1649
+00:50:52,970 --> 00:50:54,730
+Well, it's actually quite simple.
+
+1650
+00:50:54,730 --> 00:50:55,870
+Once we have this,
+
+1651
+00:50:55,870 --> 00:50:58,930
+after we have the start information and the locate start information,
+
+1652
+00:50:58,930 --> 00:51:00,090
+we can actually,
+
+1653
+00:51:00,090 --> 00:51:01,130
+and once we've defined
+
+1654
+00:51:01,130 --> 00:51:02,150
+this data structure,
+
+1655
+00:51:02,150 --> 00:51:03,250
+we can
+
+1656
+00:51:03,250 --> 00:51:05,870
+first set a pointer starting from this start,
+
+1657
+00:51:05,870 --> 00:51:07,290
+and then search backwards from there,
+
+1658
+00:51:07,290 --> 00:51:08,170
+looking backwards.
+
+1659
+00:51:08,170 --> 00:51:10,410
+So we search,
+
+1660
+00:51:10,410 --> 00:51:11,230
+search for what?
+
+1661
+00:51:11,230 --> 00:51:12,290
+So we go find its
+
+1662
+00:51:12,290 --> 00:51:14,530
+basically in the management structure at the front,
+
+1663
+00:51:14,530 --> 00:51:17,270
+within this chunk of managed memory
+
+1664
+00:51:17,270 --> 00:51:19,730
+we go look for the parts that are blue.
+
+1665
+00:51:19,730 --> 00:51:21,050
+In practice, it's really a check
+
+1666
+00:51:21,050 --> 00:51:22,890
+of whether the corresponding 'taken' bit
+
+1667
+00:51:22,890 --> 00:51:24,390
+is 0.
+
+1668
+00:51:24,390 --> 00:51:26,630
+And once we find it,
+
+1669
+00:51:26,630 --> 00:51:28,670
+once we find the first available spot,
+
+1670
+00:51:28,670 --> 00:51:30,210
+we effectively get
+
+1671
+00:51:30,210 --> 00:51:31,570
+its actual starting position.
+
+1672
+00:51:31,570 --> 00:51:32,930
+But at this point we can't be completely sure yet,
+
+1673
+00:51:32,930 --> 00:51:33,610
+because as everyone knows,
+
+1674
+00:51:33,610 --> 00:51:36,570
+it could be like this situation,
+
+1675
+00:51:36,570 --> 00:51:38,490
+where just one is not enough, right?
+
+1676
+00:51:38,490 --> 00:51:41,110
+So we need to use another pointer
+
+1677
+00:51:41,110 --> 00:51:42,410
+to check the part after it,
+
+1678
+00:51:42,410 --> 00:51:45,330
+whether it's still, consecutively, still blue.
+
+1679
+00:51:45,330 --> 00:51:47,030
+So in this case,
+
+1680
+00:51:47,030 --> 00:51:48,050
+this way
+
+1681
+00:51:48,050 --> 00:51:49,650
+Only then can we finalize it.
+
+1682
+00:51:49,650 --> 00:51:52,210
+This region then returns the pointer.
+
+1683
+00:51:52,210 --> 00:51:53,490
+So once it's returned,
+
+1684
+00:51:53,490 --> 00:51:54,390
+it essentially means that
+
+1685
+00:51:54,390 --> 00:51:56,850
+this chunk of memory is fixed.
+
+1686
+00:51:56,850 --> 00:51:58,530
+We hand it to the user,
+
+1687
+00:51:58,530 --> 00:52:00,410
+and the user can start using it.
+
+1688
+00:52:00,410 --> 00:52:03,070
+This is allocation.
+
+1689
+00:52:03,070 --> 00:52:04,930
+This part is quite simple.
+
+1690
+00:52:04,930 --> 00:52:07,770
+Deallocation works in a similar way.
+
+1691
+00:52:07,770 --> 00:52:10,570
+So if we want to take a
+
+1692
+00:52:10,570 --> 00:52:11,510
+take a pointer,
+
+1693
+00:52:11,510 --> 00:52:12,390
+and then free it,
+
+1694
+00:52:12,390 --> 00:52:14,210
+what we actually do is,
+
+1695
+00:52:14,210 --> 00:52:16,650
+combined with the structure we saw earlier,
+
+1696
+00:52:16,650 --> 00:52:19,270
+we have to start from this
+
+1697
+00:52:19,270 --> 00:52:20,450
+because we can calculate it,
+
+1698
+00:52:20,450 --> 00:52:21,230
+based on this position,
+
+1699
+00:52:21,230 --> 00:52:22,730
+we can actually figure out this position,
+
+1700
+00:52:22,730 --> 00:52:23,330
+right?
+
+1701
+00:52:23,330 --> 00:52:25,050
+Think about this position.
+
+1702
+00:52:25,050 --> 00:52:27,130
+After we get this address,
+
+1703
+00:52:27,130 --> 00:52:29,530
+why can we compute this position?
+
+1704
+00:52:29,530 --> 00:52:31,570
+Because we can compute this offset,
+
+1705
+00:52:31,570 --> 00:52:34,070
+and then based on each of its configuration sizes being 4K,
+
+1706
+00:52:34,070 --> 00:52:35,970
+we can work out that its interval is 3.
+
+1707
+00:52:35,970 --> 00:52:38,110
+So this 3 is the index.
+
+1708
+00:52:38,110 --> 00:52:40,230
+And then this 3, based on this mechanism,
+
+1709
+00:52:40,230 --> 00:52:41,850
+we can compute this position.
+
+1710
+00:52:41,850 --> 00:52:42,230
+Right?
+
+1711
+00:52:42,230 --> 00:52:44,450
+Once we have this position, it's easy.
+
+1712
+00:52:44,450 --> 00:52:45,970
+It's essentially just saying,
+
+1713
+00:52:45,970 --> 00:52:49,150
+we won't do a live demo of this for you.
+
+1714
+00:52:49,150 --> 00:52:50,810
+You can look at the code yourself.
+
+1715
+00:52:50,810 --> 00:52:51,670
+It's about releasing.
+
+1716
+00:52:51,670 --> 00:52:52,910
+Releasing is essentially just saying,
+
+1717
+00:52:52,910 --> 00:52:53,890
+you have to look backwards,
+
+1718
+00:52:53,890 --> 00:52:56,150
+find each of its contiguous blocks,
+
+1719
+00:52:56,150 --> 00:52:58,650
+and keep going until you reach the last one here.
+
+1720
+00:52:58,650 --> 00:53:03,290
+You find it through this last flag.
+
+1721
+00:53:03,290 --> 00:53:05,210
+until you find the part that is not a single blue color
+
+1722
+00:53:05,210 --> 00:53:07,530
+then turn each of them back into blue
+
+1723
+00:53:07,530 --> 00:53:08,530
+and just release it
+
+1724
+00:53:08,530 --> 00:53:09,130
+so, everyone
+
+1725
+00:53:09,130 --> 00:53:11,930
+we'll leave this function for you to look at on your own
+
+1726
+00:53:11,930 --> 00:53:18,830
+so as for this, basically
+
+1727
+00:53:18,830 --> 00:53:19,770
+page allocation
+
+1728
+00:53:19,770 --> 00:53:20,590
+that's all we'll cover for now
+
+1729
+00:53:20,590 --> 00:53:23,210
+so as for memory management
+
+1730
+00:53:23,210 --> 00:53:24,970
+on RISC-V there are actually
+
+1731
+00:53:24,970 --> 00:53:28,110
+some more complex operations
+
+1732
+00:53:28,110 --> 00:53:29,870
+for example, memory protection
+
+1733
+00:53:29,870 --> 00:53:31,590
+and virtual memory
+
+1734
+00:53:31,590 --> 00:53:33,970
+as for memory protection
+
+1735
+00:53:33,970 --> 00:53:36,370
+it essentially means we can set
+
+1736
+00:53:36,370 --> 00:53:38,410
+for our memory region
+
+1737
+00:53:38,410 --> 00:53:40,270
+we can configure separately
+
+1738
+00:53:40,270 --> 00:53:41,570
+whether it is readable or writable
+
+1739
+00:53:41,570 --> 00:53:42,610
+these attributes
+
+1740
+00:53:42,610 --> 00:53:44,370
+because we know that when we
+
+1741
+00:53:44,370 --> 00:53:48,450
+in a section to describe it as readable and writable,
+
+1742
+00:53:48,450 --> 00:53:51,890
+that doesn't actually give you real read/write control over memory.
+
+1743
+00:53:51,890 --> 00:53:54,750
+The real control actually has to happen at the physical level.
+
+1744
+00:53:54,750 --> 00:53:57,510
+So we actually need this,
+
+1745
+00:53:57,510 --> 00:54:02,570
+but this feature requires support from the underlying hardware.
+
+1746
+00:54:02,570 --> 00:54:03,430
+That is, the question is whether this CPU
+
+1747
+00:54:03,430 --> 00:54:08,930
+supports this kind of PNP memory protection mechanism.
+
+1748
+00:54:08,930 --> 00:54:10,470
+And by using this mechanism,
+
+1749
+00:54:10,470 --> 00:54:12,270
+we can actually achieve the effect of
+
+1750
+00:54:12,270 --> 00:54:14,950
+controlling the read/write attributes,
+
+1751
+00:54:14,950 --> 00:54:17,150
+and the executable attributes of a specified region.
+
+1752
+00:54:17,150 --> 00:54:21,930
+We won't cover this part in the course material.
+
+1753
+00:54:21,930 --> 00:54:23,510
+If you're interested, you can look at
+
+1754
+00:54:23,510 --> 00:54:28,250
+sections 3.5 and 3.6 of the RISC-V privileged instructions manual.
+
+1755
+00:54:28,250 --> 00:54:32,050
+Another very important topic is virtual memory.
+
+1756
+00:54:32,050 --> 00:54:32,790
+As for virtual memory,
+
+1757
+00:54:32,790 --> 00:54:35,490
+since time is limited in this course,
+
+1758
+00:54:35,490 --> 00:54:39,330
+we didn't implement the virtual memory part.
+
+1759
+00:54:39,330 --> 00:54:42,030
+So we won't cover it in the course material either.
+
+1760
+00:54:42,030 --> 00:54:43,690
+If you're interested,
+
+1761
+00:54:43,690 --> 00:54:44,730
+You can take a look at that.
+
+1762
+00:54:44,730 --> 00:54:47,610
+Sections 4.3, 4.4 to 4.5 on privileged instructions.
+
+1763
+00:54:47,610 --> 00:54:51,250
+Because once you introduce virtual memory,
+
+1764
+00:54:51,250 --> 00:54:53,630
+you can actually implement more complex things,
+
+1765
+00:54:53,630 --> 00:54:54,930
+such as the concept of a process.
+
+1766
+00:54:54,930 --> 00:54:56,970
+But for this small
+
+1767
+00:54:56,970 --> 00:54:58,210
+operating system of ours,
+
+1768
+00:54:58,210 --> 00:54:59,530
+as I mentioned to you earlier,
+
+1769
+00:54:59,530 --> 00:55:02,790
+we only implement up to the RTOS level.
+
+1770
+00:55:02,790 --> 00:55:04,990
+Just be aware of that.
+
+1771
+00:55:04,990 --> 00:55:07,050
+So that's all for memory
+
+1772
+00:55:07,050 --> 00:55:09,870
+management for now.
+
+1773
+00:55:09,870 --> 00:55:10,970
+After class,
+
+1774
+00:55:10,970 --> 00:55:12,150
+you can work on 8.1.
+
+1775
+00:55:12,150 --> 00:55:13,290
+That is, on top of the
+
+1776
+00:55:13,290 --> 00:55:14,750
+configuration we have,
+
+1777
+00:55:14,750 --> 00:55:16,630
+we can implement one with a finer granularity.
+
+1778
+00:55:16,630 --> 00:55:17,470
+Implement one yourselves,
+
+1779
+00:55:17,470 --> 00:55:19,690
+that malloc and free,
+
+1780
+00:55:19,690 --> 00:55:21,310
+with your own granularity.
+
+1781
+00:55:21,310 --> 00:55:22,950
+to handle memory allocation and management
+
+1782
+00:55:22,950 --> 00:55:24,450
+I think this one
+
+1783
+00:55:24,450 --> 00:55:26,390
+doesn't really involve much
+
+1784
+00:55:26,390 --> 00:55:27,770
+of the actual low-level architecture
+
+1785
+00:55:27,770 --> 00:55:29,290
+knowledge of the architecture
+
+1786
+00:55:29,290 --> 00:55:30,810
+they can just do it themselves through
+
+1787
+00:55:30,810 --> 00:55:32,430
+purely software approaches
+
+1788
+00:55:32,430 --> 00:55:36,090
+so I won't go into that here

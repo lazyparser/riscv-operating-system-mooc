@@ -1,0 +1,4614 @@
+[
+ {
+  "id": 0,
+  "text": "All right, good morning everyone. In the last class, we mainly talked about some concepts on computer organization principles, right?"
+ },
+ {
+  "id": 1,
+  "text": "So today we're moving on to Chapter 2, because as we know, the goal of this course is to develop an operating system."
+ },
+ {
+  "id": 2,
+  "text": "Now, at the end of last class we talked about, if you want to develop an operating system,"
+ },
+ {
+  "id": 3,
+  "text": "you first need to have some understanding of the interface to the underlying hardware."
+ },
+ {
+  "id": 4,
+  "text": "And the interface between the operating system and the underlying hardware,"
+ },
+ {
+  "id": 5,
+  "text": "we call it what?"
+ },
+ {
+  "id": 6,
+  "text": "It's called IC, that is, the instruction set, right?"
+ },
+ {
+  "id": 7,
+  "text": "So today we're going to give you an introduction"
+ },
+ {
+  "id": 8,
+  "text": "to some related concepts about instruction sets."
+ },
+ {
+  "id": 9,
+  "text": "This class has two main parts."
+ },
+ {
+  "id": 10,
+  "text": "First, I'll introduce to you"
+ },
+ {
+  "id": 11,
+  "text": "roughly what the concept of IC, the instruction set, is."
+ },
+ {
+  "id": 12,
+  "text": "And the second part,"
+ },
+ {
+  "id": 13,
+  "text": "because this course targets a"
+ },
+ {
+  "id": 14,
+  "text": "specific instruction set called RISC-V."
+ },
+ {
+  "id": 15,
+  "text": "So we will also give you an introduction"
+ },
+ {
+  "id": 16,
+  "text": "to the RISC-V instruction set."
+ },
+ {
+  "id": 17,
+  "text": "That's how it is."
+ },
+ {
+  "id": 18,
+  "text": "Now, this is ours."
+ },
+ {
+  "id": 19,
+  "text": "Starting from this chapter, we'll have some reference manuals."
+ },
+ {
+  "id": 20,
+  "text": "the referenced material"
+ },
+ {
+  "id": 21,
+  "text": "you should take a look"
+ },
+ {
+  "id": 22,
+  "text": "after class, that is"
+ },
+ {
+  "id": 23,
+  "text": "and it will also be noted in the slides"
+ },
+ {
+  "id": 24,
+  "text": "that is, some content or figures"
+ },
+ {
+  "id": 25,
+  "text": "referenced which sources, Reference 1, Reference 2"
+ },
+ {
+  "id": 26,
+  "text": "they'll be listed right here"
+ },
+ {
+  "id": 27,
+  "text": "among them,"
+ },
+ {
+  "id": 28,
+  "text": "Reference 1 and Reference 2"
+ },
+ {
+  "id": 29,
+  "text": "are actually the RISC-V"
+ },
+ {
+  "id": 30,
+  "text": "privileged architecture standard specification"
+ },
+ {
+  "id": 31,
+  "text": "this is in our"
+ },
+ {
+  "id": 32,
+  "text": "I don't know if after you go back"
+ },
+ {
+  "id": 33,
+  "text": "that is,"
+ },
+ {
+  "id": 34,
+  "text": "did you download the thing on Yun and above?"
+ },
+ {
+  "id": 35,
+  "text": "that under reference"
+ },
+ {
+  "id": 36,
+  "text": "in the references there are these two"
+ },
+ {
+  "id": 37,
+  "text": "should I go over this for you?"
+ },
+ {
+  "id": 38,
+  "text": "let me point it out"
+ },
+ {
+  "id": 39,
+  "text": "under this REFS, which is reference"
+ },
+ {
+  "id": 40,
+  "text": "Right below here, there's this thing."
+ },
+ {
+  "id": 41,
+  "text": "The first two are called Reference 1 and Reference 2."
+ },
+ {
+  "id": 42,
+  "text": "These actually refer to these two documents."
+ },
+ {
+  "id": 43,
+  "text": "This one and this one."
+ },
+ {
+  "id": 44,
+  "text": "Hold on a second."
+ },
+ {
+  "id": 45,
+  "text": "This one and, I believe, this one."
+ },
+ {
+  "id": 46,
+  "text": "These two."
+ },
+ {
+  "id": 47,
+  "text": "Then there's one more."
+ },
+ {
+  "id": 48,
+  "text": "There's one more called Reference 3."
+ },
+ {
+  "id": 49,
+  "text": "Reference 3 is the RISC-V manual."
+ },
+ {
+  "id": 50,
+  "text": "This should be it."
+ },
+ {
+  "id": 51,
+  "text": "It should be this one."
+ },
+ {
+  "id": 52,
+  "text": "It's this one."
+ },
+ {
+  "id": 53,
+  "text": "This one is in Chinese."
+ },
+ {
+  "id": 54,
+  "text": "The other two are in English."
+ },
+ {
+  "id": 55,
+  "text": "As for this third one, the Chinese one,"
+ },
+ {
+  "id": 56,
+  "text": "you can actually use it as"
+ },
+ {
+  "id": 57,
+  "text": "an introductory manual for learning"
+ },
+ {
+  "id": 58,
+  "text": "the RISC-V instruction set."
+ },
+ {
+  "id": 59,
+  "text": "It was translated by people here in China."
+ },
+ {
+  "id": 60,
+  "text": "The original was written in English"
+ },
+ {
+  "id": 61,
+  "text": "and has been translated into Chinese."
+ },
+ {
+  "id": 62,
+  "text": "Relatively speaking, it might be more accessible to students in China,"
+ },
+ {
+  "id": 63,
+  "text": "so you can start with this document"
+ },
+ {
+  "id": 64,
+  "text": "to get a general sense of the whole picture first."
+ },
+ {
+  "id": 65,
+  "text": "Then the first two are the standard specifications,"
+ },
+ {
+  "id": 66,
+  "text": "and they're entirely in English."
+ },
+ {
+  "id": 67,
+  "text": "During the course, we'll go through this reference document together,"
+ },
+ {
+  "id": 68,
+  "text": "and"
+ },
+ {
+  "id": 69,
+  "text": "we'll also refer back to these materials often later on."
+ },
+ {
+  "id": 70,
+  "text": "So let's start with the first part,"
+ },
+ {
+  "id": 71,
+  "text": "which is a basic introduction to the ISA."
+ },
+ {
+  "id": 72,
+  "text": "It mainly covers a few sections."
+ },
+ {
+  "id": 73,
+  "text": "First, an introduction to exactly what RISC-V is."
+ },
+ {
+  "id": 74,
+  "text": "Second, why we want to design RISC-V."
+ },
+ {
+  "id": 75,
+  "text": "And then it introduces some related concepts about the RISC-V instruction set,"
+ },
+ {
+  "id": 76,
+  "text": "such as the classification of instruction sets,"
+ },
+ {
+  "id": 77,
+  "text": "instruction set width,"
+ },
+ {
+  "id": 78,
+  "text": "and also some things about instruction sets —"
+ },
+ {
+  "id": 79,
+  "text": "that is, we have many kinds of instruction sets today."
+ },
+ {
+  "id": 80,
+  "text": "Now let me also introduce some of the more well-known instruction sets to you."
+ },
+ {
+  "id": 81,
+  "text": "So first, let's look at exactly what RISC-V is."
+ },
+ {
+  "id": 82,
+  "text": "Well, RISC-V"
+ },
+ {
+  "id": 83,
+  "text": "is actually an English abbreviation."
+ },
+ {
+  "id": 84,
+  "text": "In this course of ours,"
+ },
+ {
+  "id": 85,
+  "text": "we'll run into a lot of English abbreviations."
+ },
+ {
+  "id": 86,
+  "text": "So in the lecture slides,"
+ },
+ {
+  "id": 87,
+  "text": "we've spelled out these English abbreviations"
+ },
+ {
+  "id": 88,
+  "text": "for you in detail as well."
+ },
+ {
+  "id": 89,
+  "text": "You should still get familiar with them,"
+ },
+ {
+  "id": 90,
+  "text": "because when you're..."
+ },
+ {
+  "id": 91,
+  "text": "since this kind of, how should I put it,"
+ },
+ {
+  "id": 92,
+  "text": "I mean, material on computer systems"
+ },
+ {
+  "id": 93,
+  "text": "is mostly in English."
+ },
+ {
+  "id": 94,
+  "text": "And in English,"
+ },
+ {
+  "id": 95,
+  "text": "these abbreviations"
+ },
+ {
+  "id": 96,
+  "text": "are used very heavily."
+ },
+ {
+  "id": 97,
+  "text": "Plus, once you understand what the abbreviation stands for,"
+ },
+ {
+  "id": 98,
+  "text": "you'll grasp the concept itself better."
+ },
+ {
+  "id": 99,
+  "text": "So I do recommend that you..."
+ },
+ {
+  "id": 100,
+  "text": "So try to memorize the original English term."
+ },
+ {
+  "id": 101,
+  "text": "And that will also help everyone improve their English a bit."
+ },
+ {
+  "id": 102,
+  "text": "Just a little boost."
+ },
+ {
+  "id": 103,
+  "text": "So what is ISA?"
+ },
+ {
+  "id": 104,
+  "text": "In Chinese we translate it as 指令集架构, or instruction set architecture."
+ },
+ {
+  "id": 105,
+  "text": "It's the abbreviation of the English phrase \"instruction set architecture\"."
+ },
+ {
+  "id": 106,
+  "text": "Right?"
+ },
+ {
+  "id": 107,
+  "text": "Once you see that, you'll remember it."
+ },
+ {
+  "id": 108,
+  "text": "And the concept of ISA becomes very easy to understand."
+ },
+ {
+  "id": 109,
+  "text": "So, when we talk about the instruction set architecture,"
+ },
+ {
+  "id": 110,
+  "text": "what exactly is it?"
+ },
+ {
+  "id": 111,
+  "text": "Well, right here,"
+ },
+ {
+  "id": 112,
+  "text": "I've written it in bold for you,"
+ },
+ {
+  "id": 113,
+  "text": "just to emphasize the point."
+ },
+ {
+  "id": 114,
+  "text": "That is to say,"
+ },
+ {
+  "id": 115,
+  "text": "it is not..."
+ },
+ {
+  "id": 116,
+  "text": "it is not some simple..."
+ },
+ {
+  "id": 117,
+  "text": "in other words, what is it? Some of you might treat the instruction set architecture,"
+ },
+ {
+  "id": 118,
+  "text": "that is,"
+ },
+ {
+  "id": 119,
+  "text": "well,"
+ },
+ {
+  "id": 120,
+  "text": "Because you've all learned some assembly and such,"
+ },
+ {
+  "id": 121,
+  "text": "you might simply understand it as"
+ },
+ {
+  "id": 122,
+  "text": "just some, like,"
+ },
+ {
+  "id": 123,
+  "text": "assembly language,"
+ },
+ {
+  "id": 124,
+  "text": "or something used for programming."
+ },
+ {
+  "id": 125,
+  "text": "But in reality,"
+ },
+ {
+  "id": 126,
+  "text": "it's far more than that."
+ },
+ {
+  "id": 127,
+  "text": "I should say that we call it..."
+ },
+ {
+  "id": 128,
+  "text": "its fundamental concept"
+ },
+ {
+  "id": 129,
+  "text": "is that it is a specification of an interface."
+ },
+ {
+  "id": 130,
+  "text": "Now, since it's a set of interface specifications,"
+ },
+ {
+  "id": 131,
+  "text": "it is actually a standard."
+ },
+ {
+  "id": 132,
+  "text": "You see what I mean?"
+ },
+ {
+  "id": 133,
+  "text": "Don't confuse it with a kind of assembly language"
+ },
+ {
+  "id": 134,
+  "text": "and mix the two up."
+ },
+ {
+  "id": 135,
+  "text": "So on this,"
+ },
+ {
+  "id": 136,
+  "text": "we can actually see it from the figure on the right."
+ },
+ {
+  "id": 137,
+  "text": "You can really tell from it,"
+ },
+ {
+  "id": 138,
+  "text": "and in fact this figure was mentioned in the last class too."
+ },
+ {
+  "id": 139,
+  "text": "That is, which level RISC-V sits at."
+ },
+ {
+  "id": 140,
+  "text": "We've talked about this diagram before."
+ },
+ {
+  "id": 141,
+  "text": "The top part is actually the software part,"
+ },
+ {
+  "id": 142,
+  "text": "and the bottom is the hardware part,"
+ },
+ {
+  "id": 143,
+  "text": "right?"
+ },
+ {
+  "id": 144,
+  "text": "Now, once the software part on top is layered,"
+ },
+ {
+  "id": 145,
+  "text": "the very top layer is the application layer,"
+ },
+ {
+  "id": 146,
+  "text": "meaning the applications we write, this concept."
+ },
+ {
+  "id": 147,
+  "text": "And in the middle is the operating system."
+ },
+ {
+  "id": 148,
+  "text": "Now, between the operating system and the application layer,"
+ },
+ {
+  "id": 149,
+  "text": "there is also an interface,"
+ },
+ {
+  "id": 150,
+  "text": "right?"
+ },
+ {
+  "id": 151,
+  "text": "There is also a set of specifications."
+ },
+ {
+  "id": 152,
+  "text": "What is that set of interfaces called?"
+ },
+ {
+  "id": 153,
+  "text": "Someone mentioned it last class:"
+ },
+ {
+  "id": 154,
+  "text": "it's called system calls,"
+ },
+ {
+  "id": 155,
+  "text": "right?"
+ },
+ {
+  "id": 156,
+  "text": "Now, system calls,"
+ },
+ {
+  "id": 157,
+  "text": "as we know,"
+ },
+ {
+  "id": 158,
+  "text": "should really also be a standard,"
+ },
+ {
+  "id": 159,
+  "text": "not just a simple set of functions."
+ },
+ {
+  "id": 160,
+  "text": "Why is that?"
+ },
+ {
+  "id": 161,
+  "text": "Because you've all heard of"
+ },
+ {
+  "id": 162,
+  "text": "the concept of POSIX, right?"
+ },
+ {
+  "id": 163,
+  "text": "POSIX."
+ },
+ {
+  "id": 164,
+  "text": "POSIX is a set of standards."
+ },
+ {
+  "id": 165,
+  "text": "You get that, right?"
+ },
+ {
+  "id": 166,
+  "text": "It's just that its form"
+ },
+ {
+  "id": 167,
+  "text": "manifests as a set of C-language function calls."
+ },
+ {
+  "id": 168,
+  "text": "But actually,"
+ },
+ {
+  "id": 169,
+  "text": "if you go look at the POSIX standard,"
+ },
+ {
+  "id": 170,
+  "text": "it's really a body of text,"
+ },
+ {
+  "id": 171,
+  "text": "a book."
+ },
+ {
+  "id": 172,
+  "text": "It spells out in there"
+ },
+ {
+  "id": 173,
+  "text": "this is what you should do, and this, and this."
+ },
+ {
+  "id": 174,
+  "text": "That's what it means."
+ },
+ {
+  "id": 175,
+  "text": "So RSA is something like that."
+ },
+ {
+  "id": 176,
+  "text": "It's also a set of standards,"
+ },
+ {
+  "id": 177,
+  "text": "not just simply telling you"
+ },
+ {
+  "id": 178,
+  "text": "some assembly language instructions."
+ },
+ {
+  "id": 179,
+  "text": "It's not limited to just those things."
+ },
+ {
+  "id": 180,
+  "text": "So beneath this RISC-V"
+ },
+ {
+  "id": 181,
+  "text": "is what we call the hardware."
+ },
+ {
+  "id": 182,
+  "text": "Now, as for the hardware,"
+ },
+ {
+  "id": 183,
+  "text": "on this diagram here we"
+ },
+ {
+  "id": 184,
+  "text": "have already given you a hint about this hardware."
+ },
+ {
+  "id": 185,
+  "text": "Actually, in the industry,"
+ },
+ {
+  "id": 186,
+  "text": "we call it"
+ },
+ {
+  "id": 187,
+  "text": "Microarchitecture."
+ },
+ {
+  "id": 188,
+  "text": "So, from now on,"
+ },
+ {
+  "id": 189,
+  "text": "if you get involved in some low-level development,"
+ },
+ {
+  "id": 190,
+  "text": "this microarchitecture"
+ },
+ {
+  "id": 191,
+  "text": "is what we often refer to as the concept of microarchitecture."
+ },
+ {
+  "id": 192,
+  "text": "So what is microarchitecture?"
+ },
+ {
+  "id": 193,
+  "text": "As for microarchitecture,"
+ },
+ {
+  "id": 194,
+  "text": "you can take an example."
+ },
+ {
+  "id": 195,
+  "text": "That is to say,"
+ },
+ {
+  "id": 196,
+  "text": "the one you may have used a lot before,"
+ },
+ {
+  "id": 197,
+  "text": "is probably something like x86,"
+ },
+ {
+  "id": 198,
+  "text": "that instruction set architecture,"
+ },
+ {
+  "id": 199,
+  "text": "right?"
+ },
+ {
+  "id": 200,
+  "text": "So we know that for the x86 instruction set architecture,"
+ },
+ {
+  "id": 201,
+  "text": "it's"
+ },
+ {
+  "id": 202,
+  "text": "it's just a standard,"
+ },
+ {
+  "id": 203,
+  "text": "and someone actually has to implement it,"
+ },
+ {
+  "id": 204,
+  "text": "right?"
+ },
+ {
+  "id": 205,
+  "text": "And the one who implements it,"
+ },
+ {
+  "id": 206,
+  "text": "is actually not necessarily only Intel."
+ },
+ {
+  "id": 207,
+  "text": "Are you familiar with this concept?"
+ },
+ {
+  "id": 208,
+  "text": "I mean, for this x86 instruction set architecture,"
+ },
+ {
+  "id": 209,
+  "text": "apart from Intel implementing it,"
+ },
+ {
+  "id": 210,
+  "text": "I mean, apart from Intel's chips implementing it,"
+ },
+ {
+  "id": 211,
+  "text": "what other company also does x86?"
+ },
+ {
+  "id": 212,
+  "text": "A fairly well-known company."
+ },
+ {
+  "id": 213,
+  "text": "There's a company called AMD, right?"
+ },
+ {
+  "id": 214,
+  "text": "So both it and Intel implement"
+ },
+ {
+  "id": 215,
+  "text": "the x86 instruction set architecture,"
+ },
+ {
+  "id": 216,
+  "text": "but the specific implementation underneath"
+ },
+ {
+  "id": 217,
+  "text": "is different, right?"
+ },
+ {
+  "id": 218,
+  "text": "And their specific implementation"
+ },
+ {
+  "id": 219,
+  "text": "is a concept called microarchitecture."
+ },
+ {
+  "id": 220,
+  "text": "it's something tied to the hardware"
+ },
+ {
+  "id": 221,
+  "text": "everyone follow me there"
+ },
+ {
+  "id": 222,
+  "text": "now, as for microarchitecture,"
+ },
+ {
+  "id": 223,
+  "text": "what is it actually concerned with?"
+ },
+ {
+  "id": 224,
+  "text": "you can think about what it cares about,"
+ },
+ {
+  "id": 225,
+  "text": "since it's tied to the hardware,"
+ },
+ {
+  "id": 226,
+  "text": "then it must be related to"
+ },
+ {
+  "id": 227,
+  "text": "the manufacturing side of things, right?"
+ },
+ {
+  "id": 228,
+  "text": "so what does it care about?"
+ },
+ {
+  "id": 229,
+  "text": "for example, this chip,"
+ },
+ {
+  "id": 230,
+  "text": "if you want to build this chip,"
+ },
+ {
+  "id": 231,
+  "text": "if you want to implement this interface,"
+ },
+ {
+  "id": 232,
+  "text": "it's just like our software,"
+ },
+ {
+  "id": 233,
+  "text": "if software wants to implement the POSIX interface,"
+ },
+ {
+  "id": 234,
+  "text": "we have plenty of C library functions, right?"
+ },
+ {
+  "id": 235,
+  "text": "and those C library functions could be made by this vendor,"
+ },
+ {
+  "id": 236,
+  "text": "or by that vendor."
+ },
+ {
+  "id": 237,
+  "text": "Right now we have many kinds of C libraries,"
+ },
+ {
+  "id": 238,
+  "text": "there's the GNU C library,"
+ },
+ {
+  "id": 239,
+  "text": "and there are other C libraries as well."
+ },
+ {
+  "id": 240,
+  "text": "Now, the instruction set architecture is like this too"
+ },
+ {
+  "id": 241,
+  "text": "The microarchitecture is hardware"
+ },
+ {
+  "id": 242,
+  "text": "It's one implementation of the instruction set architecture"
+ },
+ {
+  "id": 243,
+  "text": "And what it mainly cares about is"
+ },
+ {
+  "id": 244,
+  "text": "For example, things like power consumption per unit area"
+ },
+ {
+  "id": 245,
+  "text": "For example, how the execution is actually implemented"
+ },
+ {
+  "id": 246,
+  "text": "Everyone builds the same set of X86 CPUs"
+ },
+ {
+  "id": 247,
+  "text": "Why might Intel's be a bit faster"
+ },
+ {
+  "id": 248,
+  "text": "While the other one is slower"
+ },
+ {
+  "id": 249,
+  "text": "Why does one generate more heat"
+ },
+ {
+  "id": 250,
+  "text": "While the other generates less"
+ },
+ {
+  "id": 251,
+  "text": "And the thing they care about most"
+ },
+ {
+  "id": 252,
+  "text": "In the end, what is it"
+ },
+ {
+  "id": 253,
+  "text": "It's the issue of cost"
+ },
+ {
+  "id": 254,
+  "text": "Think about it, isn't that right"
+ },
+ {
+  "id": 255,
+  "text": "So"
+ },
+ {
+  "id": 256,
+  "text": "These are the things the microarchitecture cares about"
+ },
+ {
+  "id": 257,
+  "text": "Of course"
+ },
+ {
+  "id": 258,
+  "text": "For us as software programmers"
+ },
+ {
+  "id": 259,
+  "text": "We may not care that much"
+ },
+ {
+  "id": 260,
+  "text": "the reality of this microarchitecture,"
+ },
+ {
+  "id": 261,
+  "text": "what we mainly care about is"
+ },
+ {
+  "id": 262,
+  "text": "still this set of interfaces."
+ },
+ {
+  "id": 263,
+  "text": "So once we have this set of IAC interfaces,"
+ },
+ {
+  "id": 264,
+  "text": "we no longer have to deal with"
+ },
+ {
+  "id": 265,
+  "text": "this microarchitecture underneath"
+ },
+ {
+  "id": 266,
+  "text": "—the specific microarchitecture."
+ },
+ {
+  "id": 267,
+  "text": "You see what I mean, right?"
+ },
+ {
+  "id": 268,
+  "text": "Our world,"
+ },
+ {
+  "id": 269,
+  "text": "or at least the world of computers,"
+ },
+ {
+  "id": 270,
+  "text": "is layered just like this."
+ },
+ {
+  "id": 271,
+  "text": "It's wrapped up layer by layer."
+ },
+ {
+  "id": 272,
+  "text": "So everyone just does their job at each layer."
+ },
+ {
+  "id": 273,
+  "text": "So when we say this microprice"
+ },
+ {
+  "id": 274,
+  "text": "—not microprice—"
+ },
+ {
+  "id": 275,
+  "text": "meaning the instruction set,"
+ },
+ {
+  "id": 276,
+  "text": "what exactly does it define?"
+ },
+ {
+  "id": 277,
+  "text": "Let's just list it briefly here."
+ },
+ {
+  "id": 278,
+  "text": "Later on, when we get to the details,"
+ },
+ {
+  "id": 279,
+  "text": "we'll go through them one by one."
+ },
+ {
+  "id": 280,
+  "text": "Let me briefly explain here."
+ },
+ {
+  "id": 281,
+  "text": "For example, it defines some basic data types."
+ },
+ {
+  "id": 282,
+  "text": "For instance, this byte."
+ },
+ {
+  "id": 283,
+  "text": "Or what a word is."
+ },
+ {
+  "id": 284,
+  "text": "These names actually come from the microarchitecture,"
+ },
+ {
+  "id": 285,
+  "text": "and they're defined for you from the instruction set perspective."
+ },
+ {
+  "id": 286,
+  "text": "For example, one byte is 8 bits,"
+ },
+ {
+  "id": 287,
+  "text": "right?"
+ },
+ {
+  "id": 288,
+  "text": "How much is one word?"
+ },
+ {
+  "id": 289,
+  "text": "It's 32 bits,"
+ },
+ {
+  "id": 290,
+  "text": "correct?"
+ },
+ {
+  "id": 291,
+  "text": "A halfword."
+ },
+ {
+  "id": 292,
+  "text": "We'll run into this concept a lot later on."
+ },
+ {
+  "id": 293,
+  "text": "A halfword is 16 bits."
+ },
+ {
+  "id": 294,
+  "text": "They're all multiples of 8."
+ },
+ {
+  "id": 295,
+  "text": "What else is there?"
+ },
+ {
+  "id": 296,
+  "text": "What else does the ISA define?"
+ },
+ {
+  "id": 297,
+  "text": "Registers."
+ },
+ {
+  "id": 298,
+  "text": "Because as we said,"
+ },
+ {
+  "id": 299,
+  "text": "when we interact with the hardware to operate it,"
+ },
+ {
+  "id": 300,
+  "text": "When it comes to the CPU,"
+ },
+ {
+  "id": 301,
+  "text": "it is mainly about operating its registers."
+ },
+ {
+  "id": 302,
+  "text": "For example, this"
+ },
+ {
+  "id": 303,
+  "text": "given architecture,"
+ },
+ {
+  "id": 304,
+  "text": "that is, on this CPU,"
+ },
+ {
+  "id": 305,
+  "text": "how many kinds of registers it implements,"
+ },
+ {
+  "id": 306,
+  "text": "those have also been standardized."
+ },
+ {
+  "id": 307,
+  "text": "Then what each register is for,"
+ },
+ {
+  "id": 308,
+  "text": "and so on."
+ },
+ {
+  "id": 309,
+  "text": "Then there is"
+ },
+ {
+  "id": 310,
+  "text": "a third thing,"
+ },
+ {
+  "id": 311,
+  "text": "which is what everyone cares about most,"
+ },
+ {
+  "id": 312,
+  "text": "and that is instructions."
+ },
+ {
+  "id": 313,
+  "text": "Because when we write assembly,"
+ },
+ {
+  "id": 314,
+  "text": "it is mainly programming,"
+ },
+ {
+  "id": 315,
+  "text": "and how each of its"
+ },
+ {
+  "id": 316,
+  "text": "statements is written out."
+ },
+ {
+  "id": 317,
+  "text": "That is really the concept of instructions."
+ },
+ {
+  "id": 318,
+  "text": "Then there are addressing modes,"
+ },
+ {
+  "id": 319,
+  "text": "and how exceptions and interrupts are handled."
+ },
+ {
+  "id": 320,
+  "text": "and so on and so forth"
+ },
+ {
+  "id": 321,
+  "text": "Let me just list a few things here."
+ },
+ {
+  "id": 322,
+  "text": "So the main thing we want to..."
+ },
+ {
+  "id": 323,
+  "text": "This is mainly to get a better feel for..."
+ },
+ {
+  "id": 324,
+  "text": "That is, what is..."
+ },
+ {
+  "id": 325,
+  "text": "What I mean is, an instruction set architecture..."
+ },
+ {
+  "id": 326,
+  "text": "is a standard."
+ },
+ {
+  "id": 327,
+  "text": "It defines a lot of things..."
+ },
+ {
+  "id": 328,
+  "text": "rather than just being simply..."
+ },
+ {
+  "id": 329,
+  "text": "an assembly language."
+ },
+ {
+  "id": 330,
+  "text": "So everyone..."
+ },
+ {
+  "id": 331,
+  "text": "This slide is mainly to emphasize this point to you."
+ },
+ {
+  "id": 332,
+  "text": "Now, as we said..."
+ },
+ {
+  "id": 333,
+  "text": "why do we design this instruction set architecture?"
+ },
+ {
+  "id": 334,
+  "text": "Actually, we mentioned it just now."
+ },
+ {
+  "id": 335,
+  "text": "It's the concept of layering."
+ },
+ {
+  "id": 336,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 337,
+  "text": "Once we have this thing..."
+ },
+ {
+  "id": 338,
+  "text": "we can say that for the upper-layer software..."
+ },
+ {
+  "id": 339,
+  "text": "so this upper-layer software..."
+ },
+ {
+  "id": 340,
+  "text": "It actually refers to writing an operating system,"
+ },
+ {
+  "id": 341,
+  "text": "this kind of low-level stuff like a bootloader,"
+ },
+ {
+  "id": 342,
+  "text": "the developers involved in this kind of work."
+ },
+ {
+  "id": 343,
+  "text": "They also do software,"
+ },
+ {
+  "id": 344,
+  "text": "so they don't need to care about"
+ },
+ {
+  "id": 345,
+  "text": "the underlying circuit structure."
+ },
+ {
+  "id": 346,
+  "text": "And that circuit structure"
+ },
+ {
+  "id": 347,
+  "text": "is what we just talked about,"
+ },
+ {
+  "id": 348,
+  "text": "the concept of microarchitecture."
+ },
+ {
+  "id": 349,
+  "text": "We actually just interact with the underlying layer through a standard set of interfaces,"
+ },
+ {
+  "id": 350,
+  "text": "and that's all we need to do."
+ },
+ {
+  "id": 351,
+  "text": "Now, on this diagram,"
+ },
+ {
+  "id": 352,
+  "text": "let me point something out to you,"
+ },
+ {
+  "id": 353,
+  "text": "which is that we should also understand"
+ },
+ {
+  "id": 354,
+  "text": "the development history of this RSA instruction set architecture."
+ },
+ {
+  "id": 355,
+  "text": "That is, the first to propose"
+ },
+ {
+  "id": 356,
+  "text": "this instruction set architecture"
+ },
+ {
+  "id": 357,
+  "text": "was who?"
+ },
+ {
+  "id": 358,
+  "text": "It was the company IBM."
+ },
+ {
+  "id": 359,
+  "text": "Do you all know the full name of IBM?"
+ },
+ {
+  "id": 360,
+  "text": "that is, International Business Machines"
+ },
+ {
+  "id": 361,
+  "text": "it was actually originally a hardware company"
+ },
+ {
+  "id": 362,
+  "text": "it made machines"
+ },
+ {
+  "id": 363,
+  "text": "you can tell just from the name"
+ },
+ {
+  "id": 364,
+  "text": "it made computers"
+ },
+ {
+  "id": 365,
+  "text": "so back when it was doing this"
+ },
+ {
+  "id": 366,
+  "text": "probably in the last century"
+ },
+ {
+  "id": 367,
+  "text": "which decade was that again"
+ },
+ {
+  "id": 368,
+  "text": "I don't know, the 60s"
+ },
+ {
+  "id": 369,
+  "text": "or maybe the 70s"
+ },
+ {
+  "id": 370,
+  "text": "so when it was developing"
+ },
+ {
+  "id": 371,
+  "text": "this kind of computer"
+ },
+ {
+  "id": 372,
+  "text": "being a pioneer, it was like this"
+ },
+ {
+  "id": 373,
+  "text": "before there were instruction set architectures"
+ },
+ {
+  "id": 374,
+  "text": "as everyone knows, for every model of computer"
+ },
+ {
+  "id": 375,
+  "text": "its processor"
+ },
+ {
+  "id": 376,
+  "text": "its operating interface"
+ },
+ {
+  "id": 377,
+  "text": "was different"
+ },
+ {
+  "id": 378,
+  "text": "say this computer"
+ },
+ {
+  "id": 379,
+  "text": "there were, for example, 10 computers"
+ },
+ {
+  "id": 380,
+  "text": "That company had 20 computers"
+ },
+ {
+  "id": 381,
+  "text": "and each computer served a different purpose."
+ },
+ {
+  "id": 382,
+  "text": "So things were pretty chaotic."
+ },
+ {
+  "id": 383,
+  "text": "Now, for IBM,"
+ },
+ {
+  "id": 384,
+  "text": "by that time they had already grown to the point"
+ },
+ {
+  "id": 385,
+  "text": "where their company's products"
+ },
+ {
+  "id": 386,
+  "text": "had reached three or four models,"
+ },
+ {
+  "id": 387,
+  "text": "and they found this problem was getting more and more serious."
+ },
+ {
+  "id": 388,
+  "text": "Think about it,"
+ },
+ {
+  "id": 389,
+  "text": "because of this—"
+ },
+ {
+  "id": 390,
+  "text": "since the underlying interfaces were different,"
+ },
+ {
+  "id": 391,
+  "text": "they had to have four teams,"
+ },
+ {
+  "id": 392,
+  "text": "at least four teams."
+ },
+ {
+  "id": 393,
+  "text": "The software teams had to develop different"
+ },
+ {
+  "id": 394,
+  "text": "compilers,"
+ },
+ {
+  "id": 395,
+  "text": "operating systems, and so on."
+ },
+ {
+  "id": 396,
+  "text": "So the cost was just too high for them."
+ },
+ {
+  "id": 397,
+  "text": "So starting with the IBM 360 machine—"
+ },
+ {
+  "id": 398,
+  "text": "this machine, which is this one in this picture—"
+ },
+ {
+  "id": 399,
+  "text": "let's take a look at what early computers looked like."
+ },
+ {
+  "id": 400,
+  "text": "This is the machine"
+ },
+ {
+  "id": 401,
+  "text": "and it really doesn't look much like our computers today."
+ },
+ {
+  "id": 402,
+  "text": "Do you all see that?"
+ },
+ {
+  "id": 403,
+  "text": "There are so many buttons on it."
+ },
+ {
+  "id": 404,
+  "text": "You can think of these buttons as,"
+ },
+ {
+  "id": 405,
+  "text": "how should I put it,"
+ },
+ {
+  "id": 406,
+  "text": "this thing is actually"
+ },
+ {
+  "id": 407,
+  "text": "the early concept of the console."
+ },
+ {
+  "id": 408,
+  "text": "You know, our computers today have what's called a"
+ },
+ {
+  "id": 409,
+  "text": "Console,"
+ },
+ {
+  "id": 410,
+  "text": "that console,"
+ },
+ {
+  "id": 411,
+  "text": "the one where you're always typing away at the keyboard,"
+ },
+ {
+  "id": 412,
+  "text": "that input interface."
+ },
+ {
+  "id": 413,
+  "text": "Don't we call that the console?"
+ },
+ {
+  "id": 414,
+  "text": "Well, the early console"
+ },
+ {
+  "id": 415,
+  "text": "was really just this thing."
+ },
+ {
+  "id": 416,
+  "text": "It had a lot of buttons on it,"
+ },
+ {
+  "id": 417,
+  "text": "for controlling the computer,"
+ },
+ {
+  "id": 418,
+  "text": "for making it do things,"
+ },
+ {
+  "id": 419,
+  "text": "switches and so on."
+ },
+ {
+  "id": 420,
+  "text": "So this machine is called the 360."
+ },
+ {
+  "id": 421,
+  "text": "So IBM, starting from this machine,"
+ },
+ {
+  "id": 422,
+  "text": "defined the first instruction set architecture."
+ },
+ {
+  "id": 423,
+  "text": "And what it defined,"
+ },
+ {
+  "id": 424,
+  "text": "is basically what we just talked about:"
+ },
+ {
+  "id": 425,
+  "text": "what registers there are,"
+ },
+ {
+  "id": 426,
+  "text": "these instructions,"
+ },
+ {
+  "id": 427,
+  "text": "and also the concept of a byte."
+ },
+ {
+  "id": 428,
+  "text": "So in all the computing we've done so far,"
+ },
+ {
+  "id": 429,
+  "text": "this concept of a byte"
+ },
+ {
+  "id": 430,
+  "text": "actually started with this computer."
+ },
+ {
+  "id": 431,
+  "text": "Before that,"
+ },
+ {
+  "id": 432,
+  "text": "everyone's standards were kind of all over the place."
+ },
+ {
+  "id": 433,
+  "text": "So starting from this computer,"
+ },
+ {
+  "id": 434,
+  "text": "we defined it:"
+ },
+ {
+  "id": 435,
+  "text": "one byte"
+ },
+ {
+  "id": 436,
+  "text": "is eight bits."
+ },
+ {
+  "id": 437,
+  "text": "This standard was set right there,"
+ },
+ {
+  "id": 438,
+  "text": "and we've been using it ever since."
+ },
+ {
+  "id": 439,
+  "text": "That's how it is."
+ },
+ {
+  "id": 440,
+  "text": "That's how history played out."
+ },
+ {
+  "id": 441,
+  "text": "So it created a kind of abstraction between hardware and software."
+ },
+ {
+  "id": 442,
+  "text": "So after RISC came along,"
+ },
+ {
+  "id": 443,
+  "text": "we're still in that situation today."
+ },
+ {
+  "id": 444,
+  "text": "Alright, so now that we understand what an instruction set architecture is,"
+ },
+ {
+  "id": 445,
+  "text": "and why instruction set architectures were invented in the first place,"
+ },
+ {
+  "id": 446,
+  "text": "let's look at some concepts related to instruction set architectures."
+ },
+ {
+  "id": 447,
+  "text": "Because they'll come up from time to time later on,"
+ },
+ {
+  "id": 448,
+  "text": "so we should get familiar with them."
+ },
+ {
+  "id": 449,
+  "text": "So mainly what I want to talk about here"
+ },
+ {
+  "id": 450,
+  "text": "is the classification"
+ },
+ {
+  "id": 451,
+  "text": "of instruction set architectures."
+ },
+ {
+  "id": 452,
+  "text": "Typically,"
+ },
+ {
+  "id": 453,
+  "text": "this is actually covered in many textbooks"
+ },
+ {
+  "id": 454,
+  "text": "as well,"
+ },
+ {
+  "id": 455,
+  "text": "the typical split is into two types:"
+ },
+ {
+  "id": 456,
+  "text": "one is called CISC,"
+ },
+ {
+  "id": 457,
+  "text": "and the other is called RISC."
+ },
+ {
+  "id": 458,
+  "text": "So CISC,"
+ },
+ {
+  "id": 459,
+  "text": "its full name is"
+ },
+ {
+  "id": 460,
+  "text": "Complex Instruction Set Computing."
+ },
+ {
+  "id": 461,
+  "text": "In other words, the complex instruction set."
+ },
+ {
+  "id": 462,
+  "text": "Now, RISC"
+ },
+ {
+  "id": 463,
+  "text": "stands for Reduced Instruction Set Computing,"
+ },
+ {
+  "id": 464,
+  "text": "which is the reduced instruction set."
+ },
+ {
+  "id": 465,
+  "text": "Now, the one we'll talk about later,"
+ },
+ {
+  "id": 466,
+  "text": "that RISC-5,"
+ },
+ {
+  "id": 467,
+  "text": "you can tell just from the name"
+ },
+ {
+  "id": 468,
+  "text": "which category our RISC-5"
+ },
+ {
+  "id": 469,
+  "text": "belongs to."
+ },
+ {
+  "id": 470,
+  "text": "It falls under this classic instruction set category."
+ },
+ {
+  "id": 471,
+  "text": "Now, the main"
+ },
+ {
+  "id": 472,
+  "text": "difference between the two, where does it lie?"
+ },
+ {
+  "id": 473,
+  "text": "It's written up here too."
+ },
+ {
+  "id": 474,
+  "text": "With the complex instruction set,"
+ },
+ {
+  "id": 475,
+  "text": "you can think of it this way:"
+ },
+ {
+  "id": 476,
+  "text": "its instructions,"
+ },
+ {
+  "id": 477,
+  "text": "its..."
+ },
+ {
+  "id": 478,
+  "text": "you can understand it like this:"
+ },
+ {
+  "id": 479,
+  "text": "in order to implement,"
+ },
+ {
+  "id": 480,
+  "text": "Take a computer, for example,"
+ },
+ {
+  "id": 481,
+  "text": "it has many functions, right?"
+ },
+ {
+  "id": 482,
+  "text": "And for each of these functions,"
+ },
+ {
+  "id": 483,
+  "text": "you design a dedicated instruction"
+ },
+ {
+  "id": 484,
+  "text": "to go with it."
+ },
+ {
+  "id": 485,
+  "text": "Now, as you can imagine, as computers develop,"
+ },
+ {
+  "id": 486,
+  "text": "and their functions become more and more complex,"
+ },
+ {
+  "id": 487,
+  "text": "a certain trend is bound to emerge."
+ },
+ {
+  "id": 488,
+  "text": "That is, when the CPU is implemented based on a complex instruction set,"
+ },
+ {
+  "id": 489,
+  "text": "built around this concept,"
+ },
+ {
+  "id": 490,
+  "text": "the number of instructions it supports grows,"
+ },
+ {
+  "id": 491,
+  "text": "and keeps getting larger and larger,"
+ },
+ {
+  "id": 492,
+  "text": "more and more bloated, right?"
+ },
+ {
+  "id": 493,
+  "text": "Now, a classic instruction set"
+ },
+ {
+  "id": 494,
+  "text": "takes a different approach."
+ },
+ {
+  "id": 495,
+  "text": "The idea is to use a few—"
+ },
+ {
+  "id": 496,
+  "text": "to define a set of common, basic instructions,"
+ },
+ {
+  "id": 497,
+  "text": "and then for more complex functions,"
+ },
+ {
+  "id": 498,
+  "text": "you use those basic instructions—"
+ },
+ {
+  "id": 499,
+  "text": "combining them through addition, subtraction, multiplication, division"
+ },
+ {
+  "id": 500,
+  "text": "Like these basic instructions,"
+ },
+ {
+  "id": 501,
+  "text": "you put them together."
+ },
+ {
+  "id": 502,
+  "text": "So this way,"
+ },
+ {
+  "id": 503,
+  "text": "it keeps the instructions... that is, the number of instructions,"
+ },
+ {
+  "id": 504,
+  "text": "the number of them,"
+ },
+ {
+  "id": 505,
+  "text": "the variety,"
+ },
+ {
+  "id": 506,
+  "text": "from growing too fast."
+ },
+ {
+  "id": 507,
+  "text": "Now, some of you might ask,"
+ },
+ {
+  "id": 508,
+  "text": "why does this happen?"
+ },
+ {
+  "id": 509,
+  "text": "This is also for historical reasons,"
+ },
+ {
+  "id": 510,
+  "text": "because back in the early days,"
+ },
+ {
+  "id": 511,
+  "text": "actually the first ones to come out were"
+ },
+ {
+  "id": 512,
+  "text": "the complex instruction set computers."
+ },
+ {
+  "id": 513,
+  "text": "They came out early on."
+ },
+ {
+  "id": 514,
+  "text": "So why is that?"
+ },
+ {
+  "id": 515,
+  "text": "It's mainly because,"
+ },
+ {
+  "id": 516,
+  "text": "as you know, in that era,"
+ },
+ {
+  "id": 517,
+  "text": "inside a computer,"
+ },
+ {
+  "id": 518,
+  "text": "what was the most precious resource?"
+ },
+ {
+  "id": 519,
+  "text": "Actually, even looking at it now,"
+ },
+ {
+  "id": 520,
+  "text": "In fact, this phenomenon still exists,"
+ },
+ {
+  "id": 521,
+  "text": "that is, its memory is extremely precious,"
+ },
+ {
+  "id": 522,
+  "text": "because back then, given the manufacturing process"
+ },
+ {
+  "id": 523,
+  "text": "and cost issues,"
+ },
+ {
+  "id": 524,
+  "text": "a computer, like the one we just saw,"
+ },
+ {
+  "id": 525,
+  "text": "inside such a complex computer,"
+ },
+ {
+  "id": 526,
+  "text": "its memory could be pitifully small."
+ },
+ {
+  "id": 527,
+  "text": "That was caused by the conditions at the time."
+ },
+ {
+  "id": 528,
+  "text": "So, since memory was scarce,"
+ },
+ {
+  "id": 529,
+  "text": "then, as you know,"
+ },
+ {
+  "id": 530,
+  "text": "when writing programs,"
+ },
+ {
+  "id": 531,
+  "text": "what did they have to do?"
+ },
+ {
+  "id": 532,
+  "text": "They had to be extremely frugal."
+ },
+ {
+  "id": 533,
+  "text": "Right?"
+ },
+ {
+  "id": 534,
+  "text": "If I want to implement a very complex function,"
+ },
+ {
+  "id": 535,
+  "text": "the program I write to generate this,"
+ },
+ {
+  "id": 536,
+  "text": "it has to be as short as possible."
+ },
+ {
+  "id": 537,
+  "text": "Because the storage,"
+ },
+ {
+  "id": 538,
+  "text": "probably, even on a mainframe like this,"
+ },
+ {
+  "id": 539,
+  "text": "it was probably only a few tens of..."
+ },
+ {
+  "id": 540,
+  "text": "I'm not sure if it ever reached the megabyte level"
+ },
+ {
+  "id": 541,
+  "text": "it was pitifully small"
+ },
+ {
+  "id": 542,
+  "text": "We might not really feel this nowadays,"
+ },
+ {
+  "id": 543,
+  "text": "but back in the day, even a single byte"
+ },
+ {
+  "id": 544,
+  "text": "had to be saved."
+ },
+ {
+  "id": 545,
+  "text": "So think about it — given that starting point,"
+ },
+ {
+  "id": 546,
+  "text": "they wanted the instructions"
+ },
+ {
+  "id": 547,
+  "text": "that is, the code you write,"
+ },
+ {
+  "id": 548,
+  "text": "the machine instructions generated from it,"
+ },
+ {
+  "id": 549,
+  "text": "to be as short as possible,"
+ },
+ {
+  "id": 550,
+  "text": "so every single instruction"
+ },
+ {
+  "id": 551,
+  "text": "had to be fully utilized"
+ },
+ {
+  "id": 552,
+  "text": "to accomplish a specific function."
+ },
+ {
+  "id": 553,
+  "text": "Think about it — isn't that the case?"
+ },
+ {
+  "id": 554,
+  "text": "So naturally, this phenomenon emerged."
+ },
+ {
+  "id": 555,
+  "text": "And later on,"
+ },
+ {
+  "id": 556,
+  "text": "as our technology advanced,"
+ },
+ {
+  "id": 557,
+  "text": "as we know,"
+ },
+ {
+  "id": 558,
+  "text": "memory"
+ },
+ {
+  "id": 559,
+  "text": "and everything became cheap."
+ },
+ {
+  "id": 560,
+  "text": "Now, as for the size of this program,"
+ },
+ {
+  "id": 561,
+  "text": "we actually don't care that much anymore."
+ },
+ {
+  "id": 562,
+  "text": "What we care about more is what?"
+ },
+ {
+  "id": 563,
+  "text": "What we care about more is"
+ },
+ {
+  "id": 564,
+  "text": "its,"
+ },
+ {
+  "id": 565,
+  "text": "for us programmers, a kind of"
+ },
+ {
+  "id": 566,
+  "text": "comprehensibility,"
+ },
+ {
+  "id": 567,
+  "text": "readability,"
+ },
+ {
+  "id": 568,
+  "text": "including that,"
+ },
+ {
+  "id": 569,
+  "text": "this compiler,"
+ },
+ {
+  "id": 570,
+  "text": "its,"
+ },
+ {
+  "id": 571,
+  "text": "since the compiler is also getting more and more complex,"
+ },
+ {
+  "id": 572,
+  "text": "then we can actually design this instruction"
+ },
+ {
+  "id": 573,
+  "text": "to be very simple,"
+ },
+ {
+  "id": 574,
+  "text": "and let the compiler help us"
+ },
+ {
+  "id": 575,
+  "text": "assemble these complex functions."
+ },
+ {
+  "id": 576,
+  "text": "Don't you think so?"
+ },
+ {
+  "id": 577,
+  "text": "This,"
+ },
+ {
+  "id": 578,
+  "text": "or let's say,"
+ },
+ {
+  "id": 579,
+  "text": "let me give you an example from our daily life."
+ },
+ {
+  "id": 580,
+  "text": "Actually, this might make it easier for everyone to understand."
+ },
+ {
+  "id": 581,
+  "text": "You all know,"
+ },
+ {
+  "id": 582,
+  "text": "for example, take Chinese characters."
+ },
+ {
+  "id": 583,
+  "text": "You've all studied Chinese in school, right?"
+ },
+ {
+  "id": 584,
+  "text": "In the early days of Chinese writing,"
+ },
+ {
+  "id": 585,
+  "text": "classical Chinese versus modern vernacular Chinese,"
+ },
+ {
+  "id": 586,
+  "text": "what's the relationship there?"
+ },
+ {
+  "id": 587,
+  "text": "Well, it's actually kind of similar to,"
+ },
+ {
+  "id": 588,
+  "text": "the idea of complex instruction sets versus,"
+ },
+ {
+  "id": 589,
+  "text": "simple instruction sets."
+ },
+ {
+  "id": 590,
+  "text": "With the classical Chinese of the past,"
+ },
+ {
+  "id": 591,
+  "text": "as you know,"
+ },
+ {
+  "id": 592,
+  "text": "a single Chinese character had to convey,"
+ },
+ {
+  "id": 593,
+  "text": "a really complex meaning."
+ },
+ {
+  "id": 594,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 595,
+  "text": "Why?"
+ },
+ {
+  "id": 596,
+  "text": "Why did our Chinese,"
+ },
+ {
+  "id": 597,
+  "text": "our ancestors,"
+ },
+ {
+  "id": 598,
+  "text": "design our classical writing,"
+ },
+ {
+  "id": 599,
+  "text": "to be like that?"
+ },
+ {
+  "id": 600,
+  "text": "Because as everyone knows,"
+ },
+ {
+  "id": 601,
+  "text": "in the early days, paper was too expensive."
+ },
+ {
+  "id": 602,
+  "text": "And it wasn't even paper — what was it?"
+ },
+ {
+  "id": 603,
+  "text": "It was those bamboo strips,"
+ },
+ {
+  "id": 604,
+  "text": "that kind of thing, right?"
+ },
+ {
+  "id": 605,
+  "text": "In the West, they didn't even have that."
+ },
+ {
+  "id": 606,
+  "text": "They wrote on parchment and so on."
+ },
+ {
+  "id": 607,
+  "text": "Only highly educated people could write."
+ },
+ {
+  "id": 608,
+  "text": "Common people simply had no chance to write at all."
+ },
+ {
+  "id": 609,
+  "text": "So since these bamboo strips"
+ },
+ {
+  "id": 610,
+  "text": "were so complicated to produce,"
+ },
+ {
+  "id": 611,
+  "text": "every single character had to fully express a meaning."
+ },
+ {
+  "id": 612,
+  "text": "That is to say, each character"
+ },
+ {
+  "id": 613,
+  "text": "packed in a particularly rich set of meanings."
+ },
+ {
+  "id": 614,
+  "text": "We used to talk about that saying,"
+ },
+ {
+  "id": 615,
+  "text": "the one about 'sweating oxen crossing the ford' —"
+ },
+ {
+  "id": 616,
+  "text": "or 'learning rich enough to fill five carts'."
+ },
+ {
+  "id": 617,
+  "text": "Do you know how many books five carts could hold?"
+ },
+ {
+  "id": 618,
+  "text": "Actually, those books didn't have that many characters."
+ },
+ {
+  "id": 619,
+  "text": "Do you all know that?"
+ },
+ {
+  "id": 620,
+  "text": "In the past, educated people"
+ },
+ {
+  "id": 621,
+  "text": "probably didn't read all that many books in their whole lives."
+ },
+ {
+  "id": 622,
+  "text": "But because every character carries so many meanings,"
+ },
+ {
+  "id": 623,
+  "text": "the amount of information conveyed was actually quite large."
+ },
+ {
+  "id": 624,
+  "text": "Then later on,"
+ },
+ {
+  "id": 625,
+  "text": "with vernacular writing and cheaper paper,"
+ },
+ {
+  "id": 626,
+  "text": "the cost of learning kept dropping,"
+ },
+ {
+  "id": 627,
+  "text": "and that's how vernacular writing came about."
+ },
+ {
+  "id": 628,
+  "text": "Why use vernacular writing?"
+ },
+ {
+  "id": 629,
+  "text": "Simply because it's easier to understand."
+ },
+ {
+  "id": 630,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 631,
+  "text": "So this classic instruction set,"
+ },
+ {
+  "id": 632,
+  "text": "the trend now is to develop toward the classic instruction set."
+ },
+ {
+  "id": 633,
+  "text": "And there's a similar reason behind that, too."
+ },
+ {
+  "id": 634,
+  "text": "Of course, the two of them"
+ },
+ {
+  "id": 635,
+  "text": "are also converging with each other."
+ },
+ {
+  "id": 636,
+  "text": "So this one,"
+ },
+ {
+  "id": 637,
+  "text": "if we look at it from a historical perspective,"
+ },
+ {
+  "id": 638,
+  "text": "there is this classification,"
+ },
+ {
+  "id": 639,
+  "text": "and that is the complex instruction set."
+ },
+ {
+  "id": 640,
+  "text": "the concept of a classic instruction set"
+ },
+ {
+  "id": 641,
+  "text": "Now, the RISC-V we'll be learning later on,"
+ },
+ {
+  "id": 642,
+  "text": "should be a"
+ },
+ {
+  "id": 643,
+  "text": "it's also a standard classic instruction set."
+ },
+ {
+  "id": 644,
+  "text": "As for complex instruction sets,"
+ },
+ {
+  "id": 645,
+  "text": "early on, for example, Intel's"
+ },
+ {
+  "id": 646,
+  "text": "processor,"
+ },
+ {
+  "id": 647,
+  "text": "it was, from the very beginning, a complex instruction set."
+ },
+ {
+  "id": 648,
+  "text": "And now,"
+ },
+ {
+  "id": 649,
+  "text": "it's also slowly shifting towards a classic instruction set."
+ },
+ {
+  "id": 650,
+  "text": "So that's what we just talked about—"
+ },
+ {
+  "id": 651,
+  "text": "the classification of instruction sets."
+ },
+ {
+  "id": 652,
+  "text": "Now the next one,"
+ },
+ {
+  "id": 653,
+  "text": "is about this instruction set's"
+ },
+ {
+  "id": 654,
+  "text": "concept of width."
+ },
+ {
+  "id": 655,
+  "text": "Because when we buy computers these days,"
+ },
+ {
+  "id": 656,
+  "text": "we actually often care about this too,"
+ },
+ {
+  "id": 657,
+  "text": "like, say, this notion of 32-bit"
+ },
+ {
+  "id": 658,
+  "text": "and 64-bit."
+ },
+ {
+  "id": 659,
+  "text": "Well, this actually has to do with the instruction set."
+ },
+ {
+  "id": 660,
+  "text": "And later, when we write code,"
+ },
+ {
+  "id": 661,
+  "text": "we'll keep bringing up this concept too."
+ },
+ {
+  "id": 662,
+  "text": "So now we need to be clear on,"
+ },
+ {
+  "id": 663,
+  "text": "what exactly does this width refer to?"
+ },
+ {
+  "id": 664,
+  "text": "When we say this width, what does it actually mean?"
+ },
+ {
+  "id": 665,
+  "text": "It actually refers to the CPU—"
+ },
+ {
+  "id": 666,
+  "text": "the general-purpose registers in the processor,"
+ },
+ {
+  "id": 667,
+  "text": "their width."
+ },
+ {
+  "id": 668,
+  "text": "We know that a register,"
+ },
+ {
+  "id": 669,
+  "text": "you can think of it as basically a storage unit,"
+ },
+ {
+  "id": 670,
+  "text": "individual storage units,"
+ },
+ {
+  "id": 671,
+  "text": "storage units inside the CPU."
+ },
+ {
+  "id": 672,
+  "text": "This concept—our concept of registers—"
+ },
+ {
+  "id": 673,
+  "text": "in the diagram from last class,"
+ },
+ {
+  "id": 674,
+  "text": "go back and take another look at it."
+ },
+ {
+  "id": 675,
+  "text": "Where does it sit?"
+ },
+ {
+  "id": 676,
+  "text": "What role does it play inside?"
+ },
+ {
+  "id": 677,
+  "text": "Still remember?"
+ },
+ {
+  "id": 678,
+  "text": "Think back to what we went through last class,"
+ },
+ {
+  "id": 679,
+  "text": "the one I demonstrated to you."
+ },
+ {
+  "id": 680,
+  "text": "the execution process of a program"
+ },
+ {
+  "id": 681,
+  "text": "what role does that register play in it"
+ },
+ {
+  "id": 682,
+  "text": "because as we said,"
+ },
+ {
+  "id": 683,
+  "text": "when the CPU is actually processing data,"
+ },
+ {
+  "id": 684,
+  "text": "it can't just directly take that"
+ },
+ {
+  "id": 685,
+  "text": "data out of memory"
+ },
+ {
+  "id": 686,
+  "text": "and start using it right away."
+ },
+ {
+  "id": 687,
+  "text": "It first has to take the data in memory"
+ },
+ {
+  "id": 688,
+  "text": "and put it into the registers inside the CPU,"
+ },
+ {
+  "id": 689,
+  "text": "and only then can it work on it"
+ },
+ {
+  "id": 690,
+  "text": "from the registers."
+ },
+ {
+  "id": 691,
+  "text": "Right?"
+ },
+ {
+  "id": 692,
+  "text": "So registers are extremely important."
+ },
+ {
+  "id": 693,
+  "text": "Now, the size of this register"
+ },
+ {
+  "id": 694,
+  "text": "determines the"
+ },
+ {
+  "id": 695,
+  "text": "so-called"
+ },
+ {
+  "id": 696,
+  "text": "width of the ISA instruction set,"
+ },
+ {
+  "id": 697,
+  "text": "and it actually also determines"
+ },
+ {
+  "id": 698,
+  "text": "the processing power of this CPU."
+ },
+ {
+  "id": 699,
+  "text": "Now, a typical"
+ },
+ {
+  "id": 700,
+  "text": "Now, as for the size of this register,"
+ },
+ {
+  "id": 701,
+  "text": "we've listed it here:"
+ },
+ {
+  "id": 702,
+  "text": "there are 8-bit, 16-bit, 32-bit, and 64-bit."
+ },
+ {
+  "id": 703,
+  "text": "What that actually refers to is,"
+ },
+ {
+  "id": 704,
+  "text": "a 'bit' is just one binary digit."
+ },
+ {
+  "id": 705,
+  "text": "One binary digit,"
+ },
+ {
+  "id": 706,
+  "text": "one bit,"
+ },
+ {
+  "id": 707,
+  "text": "which is a 0 or a 1 — one bit."
+ },
+ {
+  "id": 708,
+  "text": "Now over here,"
+ },
+ {
+  "id": 709,
+  "text": "I've just laid out a simple list,"
+ },
+ {
+  "id": 710,
+  "text": "meaning that one 8-bit value..."
+ },
+ {
+  "id": 711,
+  "text": "and you'll often need to have this"
+ },
+ {
+  "id": 712,
+  "text": "in your head,"
+ },
+ {
+  "id": 713,
+  "text": "you need to be familiar with this kind of calculation,"
+ },
+ {
+  "id": 714,
+  "text": "because in low-level development,"
+ },
+ {
+  "id": 715,
+  "text": "you're very often dealing with individual bits,"
+ },
+ {
+  "id": 716,
+  "text": "calculating bit by bit,"
+ },
+ {
+  "id": 717,
+  "text": "and encoding things."
+ },
+ {
+  "id": 718,
+  "text": "So these numbers,"
+ },
+ {
+  "id": 719,
+  "text": "you should all get quite familiar with them going forward."
+ },
+ {
+  "id": 720,
+  "text": "256, 6536"
+ },
+ {
+  "id": 721,
+  "text": "But that second number is too long"
+ },
+ {
+  "id": 722,
+  "text": "so we won't memorize it."
+ },
+ {
+  "id": 723,
+  "text": "But these are all powers of 2."
+ },
+ {
+  "id": 724,
+  "text": "What do they look like in hexadecimal?"
+ },
+ {
+  "id": 725,
+  "text": "When you see these numbers,"
+ },
+ {
+  "id": 726,
+  "text": "you should develop a kind of professional instinct."
+ },
+ {
+  "id": 727,
+  "text": "What do I mean by professional instinct?"
+ },
+ {
+  "id": 728,
+  "text": "You'll gradually cultivate this sense over time."
+ },
+ {
+  "id": 729,
+  "text": "Then low-level development"
+ },
+ {
+  "id": 730,
+  "text": "will probably become easier to get into."
+ },
+ {
+  "id": 731,
+  "text": "Now, as for 8-bit CPUs,"
+ },
+ {
+  "id": 732,
+  "text": "in the early days they were definitely all..."
+ },
+ {
+  "id": 733,
+  "text": "There were even 4-bit ones,"
+ },
+ {
+  "id": 734,
+  "text": "for example, from Intel,"
+ },
+ {
+  "id": 735,
+  "text": "there was a chip called 4004."
+ },
+ {
+  "id": 736,
+  "text": "You can tell from the 4 at the beginning that it's 4-bit."
+ },
+ {
+  "id": 737,
+  "text": "As for the 8-bit ones,"
+ },
+ {
+  "id": 738,
+  "text": "they were actually the first to become more practical."
+ },
+ {
+  "id": 739,
+  "text": "So we say"
+ },
+ {
+  "id": 740,
+  "text": "The classic 8-bit machine is what"
+ },
+ {
+  "id": 741,
+  "text": "the 8051."
+ },
+ {
+  "id": 742,
+  "text": "As for the 8051,"
+ },
+ {
+  "id": 743,
+  "text": "I don't know if you guys at school now"
+ },
+ {
+  "id": 744,
+  "text": "still cover this chip in class."
+ },
+ {
+  "id": 745,
+  "text": "I think it should probably be phased out by now,"
+ },
+ {
+  "id": 746,
+  "text": "because it's just too old."
+ },
+ {
+  "id": 747,
+  "text": "Really too old."
+ },
+ {
+  "id": 748,
+  "text": "But back in our day,"
+ },
+ {
+  "id": 749,
+  "text": "when we were learning microcontrollers,"
+ },
+ {
+  "id": 750,
+  "text": "this chip was still around,"
+ },
+ {
+  "id": 751,
+  "text": "and we actually used this one,"
+ },
+ {
+  "id": 752,
+  "text": "because this chip was so famous,"
+ },
+ {
+  "id": 753,
+  "text": "it was used incredibly widely,"
+ },
+ {
+  "id": 754,
+  "text": "both internationally and,"
+ },
+ {
+  "id": 755,
+  "text": "in particular, here in China."
+ },
+ {
+  "id": 756,
+  "text": "So it's an 8-bit machine,"
+ },
+ {
+  "id": 757,
+  "text": "meaning that inside it,"
+ },
+ {
+  "id": 758,
+  "text": "each register"
+ },
+ {
+  "id": 759,
+  "text": "is only 8 bits wide."
+ },
+ {
+  "id": 760,
+  "text": "It can only read 8 bits at a time."
+ },
+ {
+  "id": 761,
+  "text": "That much data into it."
+ },
+ {
+  "id": 762,
+  "text": "So you can imagine its processing power."
+ },
+ {
+  "id": 763,
+  "text": "Then later it became 16-bit."
+ },
+ {
+  "id": 764,
+  "text": "With 16-bit,"
+ },
+ {
+  "id": 765,
+  "text": "the more typical ones"
+ },
+ {
+  "id": 766,
+  "text": "are the 8086,"
+ },
+ {
+  "id": 767,
+  "text": "and also MSP,"
+ },
+ {
+  "id": 768,
+  "text": "which are some microcontrollers from TI."
+ },
+ {
+  "id": 769,
+  "text": "So for something like the 8086,"
+ },
+ {
+  "id": 770,
+  "text": "what we call x86, x86,"
+ },
+ {
+  "id": 771,
+  "text": "actually started from the 8086 generation."
+ },
+ {
+  "id": 772,
+  "text": "8086, 80286, 386, 486."
+ },
+ {
+  "id": 773,
+  "text": "That's where it comes from."
+ },
+ {
+  "id": 774,
+  "text": "Now, this 8086,"
+ },
+ {
+  "id": 775,
+  "text": "was the earliest one,"
+ },
+ {
+  "id": 776,
+  "text": "and it was actually still 16-bit."
+ },
+ {
+  "id": 777,
+  "text": "Then later,"
+ },
+ {
+  "id": 778,
+  "text": "moving on to the 286 and 386,"
+ },
+ {
+  "id": 779,
+  "text": "32-bit ones started to appear."
+ },
+ {
+  "id": 780,
+  "text": "So at that time,"
+ },
+ {
+  "id": 781,
+  "text": "after we entered the 32-bit era,"
+ },
+ {
+  "id": 782,
+  "text": "our computers and the like,"
+ },
+ {
+  "id": 783,
+  "text": "that era started to arrive,"
+ },
+ {
+  "id": 784,
+  "text": "the PC started to come along."
+ },
+ {
+  "id": 785,
+  "text": "And now,"
+ },
+ {
+  "id": 786,
+  "text": "we can say that the mainstream processors,"
+ },
+ {
+  "id": 787,
+  "text": "have actually all transitioned to 64-bit."
+ },
+ {
+  "id": 788,
+  "text": "Now, as we know,"
+ },
+ {
+  "id": 789,
+  "text": "when it comes to the kind of"
+ },
+ {
+  "id": 790,
+  "text": "chips we buy these days,"
+ },
+ {
+  "id": 791,
+  "text": "their 64-bit"
+ },
+ {
+  "id": 792,
+  "text": "actually refers to"
+ },
+ {
+  "id": 793,
+  "text": "the width of their general-purpose registers,"
+ },
+ {
+  "id": 794,
+  "text": "which is 64 bits."
+ },
+ {
+  "id": 795,
+  "text": "The range that a single 64-bit number"
+ },
+ {
+  "id": 796,
+  "text": "can represent,"
+ },
+ {
+  "id": 797,
+  "text": "that is quite astounding."
+ },
+ {
+  "id": 798,
+  "text": "Right now, the mainstream devices,"
+ },
+ {
+  "id": 799,
+  "text": "including our phones"
+ },
+ {
+  "id": 800,
+  "text": "I won't say anything about PCs"
+ },
+ {
+  "id": 801,
+  "text": "And then there are servers"
+ },
+ {
+  "id": 802,
+  "text": "Those are generally 64-bit"
+ },
+ {
+  "id": 803,
+  "text": "Now some of you might say,"
+ },
+ {
+  "id": 804,
+  "text": "why don't we have 128-bit yet?"
+ },
+ {
+  "id": 805,
+  "text": "Indeed, we don't"
+ },
+ {
+  "id": 806,
+  "text": "Unfortunately"
+ },
+ {
+  "id": 807,
+  "text": "Strictly speaking, there is no 128-bit general-purpose computer,"
+ },
+ {
+  "id": 808,
+  "text": "no 128-bit general-purpose processor"
+ },
+ {
+  "id": 809,
+  "text": "Not yet"
+ },
+ {
+  "id": 810,
+  "text": "The reason is very simple"
+ },
+ {
+  "id": 811,
+  "text": "It's just not practical yet"
+ },
+ {
+  "id": 812,
+  "text": "Because human needs"
+ },
+ {
+  "id": 813,
+  "text": "haven't reached that level"
+ },
+ {
+  "id": 814,
+  "text": "I remember reading an article,"
+ },
+ {
+  "id": 815,
+  "text": "someone said"
+ },
+ {
+  "id": 816,
+  "text": "that even if you take"
+ },
+ {
+  "id": 817,
+  "text": "all the atoms"
+ },
+ {
+  "id": 818,
+  "text": "on the entire Earth"
+ },
+ {
+  "id": 819,
+  "text": "and add them all up,"
+ },
+ {
+  "id": 820,
+  "text": "it's not much bigger than 128 bits"
+ },
+ {
+  "id": 821,
+  "text": "the number of values it can represent isn't that much larger"
+ },
+ {
+  "id": 822,
+  "text": "what this really means is"
+ },
+ {
+  "id": 823,
+  "text": "there's just no real possibility"
+ },
+ {
+  "id": 824,
+  "text": "of doing computations with 128-bit data"
+ },
+ {
+  "id": 825,
+  "text": "but then again, it's hard to say for sure"
+ },
+ {
+  "id": 826,
+  "text": "maybe as technology advances"
+ },
+ {
+  "id": 827,
+  "text": "128-bit will come along at some point too"
+ },
+ {
+  "id": 828,
+  "text": "for now, at least, let's not worry about any of that"
+ },
+ {
+  "id": 829,
+  "text": "later on, when we"
+ },
+ {
+  "id": 830,
+  "text": "when we actually build the operating system,"
+ },
+ {
+  "id": 831,
+  "text": "we'll choose a 32-bit system"
+ },
+ {
+  "id": 832,
+  "text": "64-bit"
+ },
+ {
+  "id": 833,
+  "text": "the reason we choose a 32-bit system"
+ },
+ {
+  "id": 834,
+  "text": "is really just to make the calculations easier for you"
+ },
+ {
+  "id": 835,
+  "text": "when you do those calculations"
+ },
+ {
+  "id": 836,
+  "text": "you see what I mean? if you had a 64-bit number"
+ },
+ {
+  "id": 837,
+  "text": "and I asked you to"
+ },
+ {
+  "id": 838,
+  "text": "do the arithmetic on it"
+ },
+ {
+  "id": 839,
+  "text": "perform some operations"
+ },
+ {
+  "id": 840,
+  "text": "it might get a little tricky"
+ },
+ {
+  "id": 841,
+  "text": "it's not that we can't do it"
+ },
+ {
+  "id": 842,
+  "text": "but from a teaching standpoint,"
+ },
+ {
+  "id": 843,
+  "text": "we've decided 32-bit is enough."
+ },
+ {
+  "id": 844,
+  "text": "Besides, 32-bit still has its place"
+ },
+ {
+  "id": 845,
+  "text": "in today's industry."
+ },
+ {
+  "id": 846,
+  "text": "For example, in embedded systems,"
+ },
+ {
+  "id": 847,
+  "text": "it's still used extensively."
+ },
+ {
+  "id": 848,
+  "text": "So we went with 32-bit"
+ },
+ {
+  "id": 849,
+  "text": "for you to practice with."
+ },
+ {
+  "id": 850,
+  "text": "That's the concept of instruction set width."
+ },
+ {
+  "id": 851,
+  "text": "Now at the same time, keep this in mind:"
+ },
+ {
+  "id": 852,
+  "text": "often when students learn this concept,"
+ },
+ {
+  "id": 853,
+  "text": "they confuse two things."
+ },
+ {
+  "id": 854,
+  "text": "The width of the instruction set and the length"
+ },
+ {
+  "id": 855,
+  "text": "of each instruction are two different concepts."
+ },
+ {
+  "id": 856,
+  "text": "For instance, some students say,"
+ },
+ {
+  "id": 857,
+  "text": "when they hear the CPU is 32-bit,"
+ },
+ {
+  "id": 858,
+  "text": "or the CPU is 64-bit,"
+ },
+ {
+  "id": 859,
+  "text": "does that mean each instruction is 32 or 64"
+ },
+ {
+  "id": 860,
+  "text": "That's not necessarily the case."
+ },
+ {
+  "id": 861,
+  "text": "For example, the RISC 5"
+ },
+ {
+  "id": 862,
+  "text": "instruction set that we're going to learn,"
+ },
+ {
+  "id": 863,
+  "text": "whether it's a 32-bit processor"
+ },
+ {
+  "id": 864,
+  "text": "or a 64-bit processor,"
+ },
+ {
+  "id": 865,
+  "text": "the instruction encoding,"
+ },
+ {
+  "id": 866,
+  "text": "each instruction is 32 bits."
+ },
+ {
+  "id": 867,
+  "text": "You really need to keep that in mind."
+ },
+ {
+  "id": 868,
+  "text": "So don't get that mixed up."
+ },
+ {
+  "id": 869,
+  "text": "That's the concept of the width of the instruction set."
+ },
+ {
+  "id": 870,
+  "text": "Now, moving on,"
+ },
+ {
+  "id": 871,
+  "text": "let's take a look at"
+ },
+ {
+  "id": 872,
+  "text": "let me see here,"
+ },
+ {
+  "id": 873,
+  "text": "let's take a look at"
+ },
+ {
+  "id": 874,
+  "text": "what famous instruction sets there are."
+ },
+ {
+  "id": 875,
+  "text": "Now, I don't know if any of you have come across these before."
+ },
+ {
+  "id": 876,
+  "text": "Which ones have you encountered?"
+ },
+ {
+  "id": 877,
+  "text": "When you learned assembly at your school,"
+ },
+ {
+  "id": 878,
+  "text": "which one did you learn?"
+ },
+ {
+  "id": 879,
+  "text": "What was it?"
+ },
+ {
+  "id": 880,
+  "text": "Is it x86?"
+ },
+ {
+  "id": 881,
+  "text": "It should be."
+ },
+ {
+  "id": 882,
+  "text": "Because x86, in our country,"
+ },
+ {
+  "id": 883,
+  "text": "is used relatively more."
+ },
+ {
+  "id": 884,
+  "text": "So, we won't say much more about x86."
+ },
+ {
+  "id": 885,
+  "text": "It actually just is"
+ },
+ {
+  "id": 886,
+  "text": "I even got some icons here."
+ },
+ {
+  "id": 887,
+  "text": "How nice they look."
+ },
+ {
+  "id": 888,
+  "text": "So this is x86, right."
+ },
+ {
+  "id": 889,
+  "text": "Let's play a matching game."
+ },
+ {
+  "id": 890,
+  "text": "Can everyone connect them?"
+ },
+ {
+  "id": 891,
+  "text": "Which one is x86?"
+ },
+ {
+  "id": 892,
+  "text": "Is it this one?"
+ },
+ {
+  "id": 893,
+  "text": "It's definitely this one."
+ },
+ {
+  "id": 894,
+  "text": "Intel Inside."
+ },
+ {
+  "id": 895,
+  "text": "That advertisement is plastered everywhere."
+ },
+ {
+  "id": 896,
+  "text": "It has squeezed out our entire domestic market."
+ },
+ {
+  "id": 897,
+  "text": "Every bit of it."
+ },
+ {
+  "id": 898,
+  "text": "So, we won't say much more about x86."
+ },
+ {
+  "id": 899,
+  "text": "Have you all heard of this, SPARC?"
+ },
+ {
+  "id": 900,
+  "text": "Does anyone know who it connected to?"
+ },
+ {
+  "id": 901,
+  "text": "Speak a bit louder, can I hear you?"
+ },
+ {
+  "id": 902,
+  "text": "Sun, is that right?"
+ },
+ {
+  "id": 903,
+  "text": "Good, you all still remember."
+ },
+ {
+  "id": 904,
+  "text": "That's not easy."
+ },
+ {
+  "id": 905,
+  "text": "This Sun..."
+ },
+ {
+  "id": 906,
+  "text": "Sun, actually, in the history of our computing development..."
+ },
+ {
+  "id": 907,
+  "text": "it was once a..."
+ },
+ {
+  "id": 908,
+  "text": "played a very pivotal role."
+ },
+ {
+  "id": 909,
+  "text": "It was a... wasn't it the dominant leader?"
+ },
+ {
+  "id": 910,
+  "text": "I don't know if it can really count as the dominant leader."
+ },
+ {
+  "id": 911,
+  "text": "Back in its day, it was actually very powerful in the market."
+ },
+ {
+  "id": 912,
+  "text": "And its..."
+ },
+ {
+  "id": 913,
+  "text": "founder, I think, was also a university professor."
+ },
+ {
+  "id": 914,
+  "text": "I remember."
+ },
+ {
+  "id": 915,
+  "text": "After he built this thing,"
+ },
+ {
+  "id": 916,
+  "text": "he went and founded a company himself."
+ },
+ {
+  "id": 917,
+  "text": "He left the university."
+ },
+ {
+  "id": 918,
+  "text": "And so he founded this..."
+ },
+ {
+  "id": 919,
+  "text": "But, unfortunately..."
+ },
+ {
+  "id": 920,
+  "text": "This company,"
+ },
+ {
+  "id": 921,
+  "text": "like all of you"
+ },
+ {
+  "id": 922,
+  "text": "are probably still using Java and such,"
+ },
+ {
+  "id": 923,
+  "text": "it actually did not just do hardware,"
+ },
+ {
+  "id": 924,
+  "text": "it did software too,"
+ },
+ {
+  "id": 925,
+  "text": "including operating systems."
+ },
+ {
+  "id": 926,
+  "text": "It had an operating system called Solaris."
+ },
+ {
+  "id": 927,
+  "text": "And the Java language that we use,"
+ },
+ {
+  "id": 928,
+  "text": "was actually invented by this company too."
+ },
+ {
+  "id": 929,
+  "text": "Unfortunately,"
+ },
+ {
+  "id": 930,
+  "text": "it ran into some commercial problems,"
+ },
+ {
+  "id": 931,
+  "text": "and eventually, as we say, the company couldn't hold on anymore."
+ },
+ {
+  "id": 932,
+  "text": "So which company ended up swallowing it up?"
+ },
+ {
+  "id": 933,
+  "text": "You probably know,"
+ },
+ {
+  "id": 934,
+  "text": "it's Oracle, right?"
+ },
+ {
+  "id": 935,
+  "text": "Oracle swallowed it up."
+ },
+ {
+  "id": 936,
+  "text": "Now, after Oracle acquired this,"
+ },
+ {
+  "id": 937,
+  "text": "unfortunately it didn't carry on with this,"
+ },
+ {
+  "id": 938,
+  "text": "its CPU business,"
+ },
+ {
+  "id": 939,
+  "text": "that is, the hardware side of the business."
+ },
+ {
+  "id": 940,
+  "text": "it was able to continue and carry that on"
+ },
+ {
+  "id": 941,
+  "text": "but later it was terminated"
+ },
+ {
+  "id": 942,
+  "text": "so this"
+ },
+ {
+  "id": 943,
+  "text": "this chip, in fact,"
+ },
+ {
+  "id": 944,
+  "text": "is rarely seen nowadays"
+ },
+ {
+  "id": 945,
+  "text": "but"
+ },
+ {
+  "id": 946,
+  "text": "not that many years ago,"
+ },
+ {
+  "id": 947,
+  "text": "actually, in many of our domestic"
+ },
+ {
+  "id": 948,
+  "text": "large"
+ },
+ {
+  "id": 949,
+  "text": "it was mainly pushed for some"
+ },
+ {
+  "id": 950,
+  "text": "building servers and such,"
+ },
+ {
+  "id": 951,
+  "text": "things like that,"
+ },
+ {
+  "id": 952,
+  "text": "like some of our telecom equipment,"
+ },
+ {
+  "id": 953,
+  "text": "the servers inside banking equipment,"
+ },
+ {
+  "id": 954,
+  "text": "it was used quite a lot there"
+ },
+ {
+  "id": 955,
+  "text": "Now, which one is Power?"
+ },
+ {
+  "id": 956,
+  "text": "Which company is it from?"
+ },
+ {
+  "id": 957,
+  "text": "It's from IBM."
+ },
+ {
+  "id": 958,
+  "text": "Oh, I forgot to mention earlier,"
+ },
+ {
+  "id": 959,
+  "text": "this X86"
+ },
+ {
+  "id": 960,
+  "text": "We say it's a classic complex instruction set architecture."
+ },
+ {
+  "id": 961,
+  "text": "And as for the ones below,"
+ },
+ {
+  "id": 962,
+  "text": "most of these are classic instruction set architectures too."
+ },
+ {
+  "id": 963,
+  "text": "These are all classic instruction sets,"
+ },
+ {
+  "id": 964,
+  "text": "that is, reduced instruction set architectures."
+ },
+ {
+  "id": 965,
+  "text": "Now, Power is from IBM,"
+ },
+ {
+  "id": 966,
+  "text": "and it's still used in these 64-bit systems."
+ },
+ {
+  "id": 967,
+  "text": "That's because IBM,"
+ },
+ {
+  "id": 968,
+  "text": "well, it actually does everything from hardware to software."
+ },
+ {
+  "id": 969,
+  "text": "Its products are still in use today."
+ },
+ {
+  "id": 970,
+  "text": "It's just that we don't usually come into contact with them much,"
+ },
+ {
+  "id": 971,
+  "text": "because they're mainly used in large enterprises,"
+ },
+ {
+  "id": 972,
+  "text": "like banking and power companies,"
+ },
+ {
+  "id": 973,
+  "text": "running on those big servers."
+ },
+ {
+  "id": 974,
+  "text": "Now, ARM goes without saying,"
+ },
+ {
+  "id": 975,
+  "text": "because we should all be fairly familiar with it."
+ },
+ {
+  "id": 976,
+  "text": "And as for ARM as a company,"
+ },
+ {
+  "id": 977,
+  "text": "it actually came along quite late,"
+ },
+ {
+  "id": 978,
+  "text": "but you could say that"
+ },
+ {
+  "id": 979,
+  "text": "its market positioning has been quite accurate."
+ },
+ {
+  "id": 980,
+  "text": "It was mainly aimed at that point in time"
+ },
+ {
+  "id": 981,
+  "text": "that is, at handheld devices and mobile computing"
+ },
+ {
+  "id": 982,
+  "text": "which is really our mobile phones"
+ },
+ {
+  "id": 983,
+  "text": "At that time, in the course of mobile phone development,"
+ },
+ {
+  "id": 984,
+  "text": "it seized this opportunity"
+ },
+ {
+  "id": 985,
+  "text": "while other companies did not seize it."
+ },
+ {
+  "id": 986,
+  "text": "The most classic example is a company like Intel,"
+ },
+ {
+  "id": 987,
+  "text": "Intel"
+ },
+ {
+  "id": 988,
+  "text": "simply failed to seize this mobile phone"
+ },
+ {
+  "id": 989,
+  "text": "opportunity in the development of mobile devices."
+ },
+ {
+  "id": 990,
+  "text": "It's not that they didn't see it—"
+ },
+ {
+  "id": 991,
+  "text": "they did see it,"
+ },
+ {
+  "id": 992,
+  "text": "because everyone is smart,"
+ },
+ {
+  "id": 993,
+  "text": "and they all knew they should do it."
+ },
+ {
+  "id": 994,
+  "text": "But why didn't Intel do it?"
+ },
+ {
+  "id": 995,
+  "text": "The reason is that they"
+ },
+ {
+  "id": 996,
+  "text": "had done so well in PCs and servers."
+ },
+ {
+  "id": 997,
+  "text": "As we know, when they"
+ },
+ {
+  "id": 998,
+  "text": "when you've done something so well,"
+ },
+ {
+  "id": 999,
+  "text": "asking you to immediately change course"
+ },
+ {
+  "id": 1000,
+  "text": "when you go do an unfamiliar line of business,"
+ },
+ {
+  "id": 1001,
+  "text": "there's actually a psychological resistance to it."
+ },
+ {
+  "id": 1002,
+  "text": "You all understand what I mean by that, right?"
+ },
+ {
+  "id": 1003,
+  "text": "So, that being said,"
+ },
+ {
+  "id": 1004,
+  "text": "but ARM,"
+ },
+ {
+  "id": 1005,
+  "text": "it had no baggage."
+ },
+ {
+  "id": 1006,
+  "text": "The moment it got started,"
+ },
+ {
+  "id": 1007,
+  "text": "it jumped straight into doing this."
+ },
+ {
+  "id": 1008,
+  "text": "Because if it didn't do this,"
+ },
+ {
+  "id": 1009,
+  "text": "it would be dead."
+ },
+ {
+  "id": 1010,
+  "text": "You see what I mean."
+ },
+ {
+  "id": 1011,
+  "text": "And as for Intel,"
+ },
+ {
+  "id": 1012,
+  "text": "it had that..."
+ },
+ {
+  "id": 1013,
+  "text": "that business was just too profitable."
+ },
+ {
+  "id": 1014,
+  "text": "Back then, PCs,"
+ },
+ {
+  "id": 1015,
+  "text": "servers and all that,"
+ },
+ {
+  "id": 1016,
+  "text": "it was making way too much money."
+ },
+ {
+  "id": 1017,
+  "text": "So it looked down on that business."
+ },
+ {
+  "id": 1018,
+  "text": "It just didn't care for it."
+ },
+ {
+  "id": 1019,
+  "text": "And as a result, ARM rose right up."
+ },
+ {
+  "id": 1020,
+  "text": "so this is kind of a happy coincidence"
+ },
+ {
+  "id": 1021,
+  "text": "there is no deep reason behind it"
+ },
+ {
+  "id": 1022,
+  "text": "so what about ARM?"
+ },
+ {
+  "id": 1023,
+  "text": "well, riding on"
+ },
+ {
+  "id": 1024,
+  "text": "the spring breeze of mobile computing,"
+ },
+ {
+  "id": 1025,
+  "text": "it took off all at once"
+ },
+ {
+  "id": 1026,
+  "text": "and now our"
+ },
+ {
+  "id": 1027,
+  "text": "small devices,"
+ },
+ {
+  "id": 1028,
+  "text": "lightweight devices,"
+ },
+ {
+  "id": 1029,
+  "text": "mobile devices of this kind,"
+ },
+ {
+  "id": 1030,
+  "text": "mobile phones are basically all ARM"
+ },
+ {
+  "id": 1031,
+  "text": "ARM chips"
+ },
+ {
+  "id": 1032,
+  "text": "so its main characteristic"
+ },
+ {
+  "id": 1033,
+  "text": "is that"
+ },
+ {
+  "id": 1034,
+  "text": "its chips,"
+ },
+ {
+  "id": 1035,
+  "text": "because it uses a reduced instruction set architecture,"
+ },
+ {
+  "id": 1036,
+  "text": "its"
+ },
+ {
+  "id": 1037,
+  "text": "power consumption and everything is very low,"
+ },
+ {
+  "id": 1038,
+  "text": "and furthermore,"
+ },
+ {
+  "id": 1039,
+  "text": "what it adopts is quite different from other companies"
+ },
+ {
+  "id": 1040,
+  "text": "It's not like that."
+ },
+ {
+  "id": 1041,
+  "text": "ARM, as we know,"
+ },
+ {
+  "id": 1042,
+  "text": "it doesn't make chips."
+ },
+ {
+  "id": 1043,
+  "text": "What does it actually do?"
+ },
+ {
+  "id": 1044,
+  "text": "It sells something"
+ },
+ {
+  "id": 1045,
+  "text": "like intellectual property,"
+ },
+ {
+  "id": 1046,
+  "text": "this kind of IP concept."
+ },
+ {
+  "id": 1047,
+  "text": "Right?"
+ },
+ {
+  "id": 1048,
+  "text": "They design the stuff,"
+ },
+ {
+  "id": 1049,
+  "text": "provide the solution,"
+ },
+ {
+  "id": 1050,
+  "text": "and then"
+ },
+ {
+  "id": 1051,
+  "text": "sell that solution to others,"
+ },
+ {
+  "id": 1052,
+  "text": "and others build with it."
+ },
+ {
+  "id": 1053,
+  "text": "That's actually how it works."
+ },
+ {
+  "id": 1054,
+  "text": "Take the chips Huawei makes, for example."
+ },
+ {
+  "id": 1055,
+  "text": "They've really just bought ARM's solution."
+ },
+ {
+  "id": 1056,
+  "text": "But Huawei,"
+ },
+ {
+  "id": 1057,
+  "text": "it does make chips,"
+ },
+ {
+  "id": 1058,
+  "text": "but in reality, Huawei,"
+ },
+ {
+  "id": 1059,
+  "text": "to make chips, uses the instruction set architecture"
+ },
+ {
+  "id": 1060,
+  "text": "It's still ARM's intellectual property."
+ },
+ {
+  "id": 1061,
+  "text": "So,"
+ },
+ {
+  "id": 1062,
+  "text": "another one is MIPS."
+ },
+ {
+  "id": 1063,
+  "text": "MIPS is this one."
+ },
+ {
+  "id": 1064,
+  "text": "This MIPS,"
+ },
+ {
+  "id": 1065,
+  "text": "this is,"
+ },
+ {
+  "id": 1066,
+  "text": "let me see which American university this was from."
+ },
+ {
+  "id": 1067,
+  "text": "I've forgotten all of a sudden."
+ },
+ {
+  "id": 1068,
+  "text": "He was also at a university."
+ },
+ {
+  "id": 1069,
+  "text": "Was it in California?"
+ },
+ {
+  "id": 1070,
+  "text": "Or which university was it?"
+ },
+ {
+  "id": 1071,
+  "text": "A professor at an American university"
+ },
+ {
+  "id": 1072,
+  "text": "invented this whole thing."
+ },
+ {
+  "id": 1073,
+  "text": "Then later he started a business,"
+ },
+ {
+  "id": 1074,
+  "text": "founded a company,"
+ },
+ {
+  "id": 1075,
+  "text": "and created MIPS."
+ },
+ {
+  "id": 1076,
+  "text": "Now, MIPS,"
+ },
+ {
+  "id": 1077,
+  "text": "its history has been quite a winding road."
+ },
+ {
+  "id": 1078,
+  "text": "Actually, in its early days it was technologically very advanced."
+ },
+ {
+  "id": 1079,
+  "text": "It used a reduced instruction set architecture."
+ },
+ {
+  "id": 1080,
+  "text": "So it went into a lot of our embedded devices"
+ },
+ {
+  "id": 1081,
+  "text": "including especially chips used in routers, where it was really common"
+ },
+ {
+  "id": 1082,
+  "text": "But later on, for market reasons as well,"
+ },
+ {
+  "id": 1083,
+  "text": "it just didn't continue"
+ },
+ {
+  "id": 1084,
+  "text": "and after that it kept getting acquired and bought up by other companies"
+ },
+ {
+  "id": 1085,
+  "text": "until in the end it just couldn't go on"
+ },
+ {
+  "id": 1086,
+  "text": "And now,"
+ },
+ {
+  "id": 1087,
+  "text": "MIPS, the company,"
+ },
+ {
+  "id": 1088,
+  "text": "there's a piece of recent news"
+ },
+ {
+  "id": 1089,
+  "text": "saying that"
+ },
+ {
+  "id": 1090,
+  "text": "it's also preparing to move over"
+ },
+ {
+  "id": 1091,
+  "text": "to RISC-V,"
+ },
+ {
+  "id": 1092,
+  "text": "so that's how it turned out"
+ },
+ {
+  "id": 1093,
+  "text": "So it's quite a pity, really"
+ },
+ {
+  "id": 1094,
+  "text": "But actually, MIPS,"
+ },
+ {
+  "id": 1095,
+  "text": "this instruction set architecture,"
+ },
+ {
+  "id": 1096,
+  "text": "in the course of our computer's"
+ },
+ {
+  "id": 1097,
+  "text": "development,"
+ },
+ {
+  "id": 1098,
+  "text": "still played a very significant role"
+ },
+ {
+  "id": 1099,
+  "text": "In particular, I mean,"
+ },
+ {
+  "id": 1100,
+  "text": "For example, some of our classic"
+ },
+ {
+  "id": 1101,
+  "text": "early classic"
+ },
+ {
+  "id": 1102,
+  "text": "computer science textbooks,"
+ },
+ {
+  "id": 1103,
+  "text": "because it was invented by a university professor,"
+ },
+ {
+  "id": 1104,
+  "text": "in the textbooks,"
+ },
+ {
+  "id": 1105,
+  "text": "actually many textbooks use MIPS to teach,"
+ },
+ {
+  "id": 1106,
+  "text": "including what we're going to cover later,"
+ },
+ {
+  "id": 1107,
+  "text": "the RISC-V instruction set architecture,"
+ },
+ {
+  "id": 1108,
+  "text": "it actually borrowed many concepts from MIPS."
+ },
+ {
+  "id": 1109,
+  "text": "So these two,"
+ },
+ {
+  "id": 1110,
+  "text": "MIPS and RISC-V, these two things,"
+ },
+ {
+  "id": 1111,
+  "text": "they actually share quite a history."
+ },
+ {
+  "id": 1112,
+  "text": "Quite a history."
+ },
+ {
+  "id": 1113,
+  "text": "Which university was it?"
+ },
+ {
+  "id": 1114,
+  "text": "Let me think,"
+ },
+ {
+  "id": 1115,
+  "text": "I can't recall it right now."
+ },
+ {
+  "id": 1116,
+  "text": "I think it was at"
+ },
+ {
+  "id": 1117,
+  "text": "it was that..."
+ },
+ {
+  "id": 1118,
+  "text": "I actually forgot it."
+ },
+ {
+  "id": 1119,
+  "text": "It's Stanford University."
+ },
+ {
+  "id": 1120,
+  "text": "There's a person at Stanford University called"
+ },
+ {
+  "id": 1121,
+  "text": "The Chinese translation is"
+ },
+ {
+  "id": 1122,
+  "text": "Have you heard of it?"
+ },
+ {
+  "id": 1123,
+  "text": "What seems more familiar is a"
+ },
+ {
+  "id": 1124,
+  "text": "famous wine, right?"
+ },
+ {
+  "id": 1125,
+  "text": "Actually,"
+ },
+ {
+  "id": 1126,
+  "text": "you may also know this name,"
+ },
+ {
+  "id": 1127,
+  "text": "which is"
+ },
+ {
+  "id": 1128,
+  "text": "Xuan,"
+ },
+ {
+  "id": 1129,
+  "text": "is it this Xuan?"
+ },
+ {
+  "id": 1130,
+  "text": "Xuannisi,"
+ },
+ {
+  "id": 1131,
+  "text": "have you heard this name?"
+ },
+ {
+  "id": 1132,
+  "text": "A luxury brand,"
+ },
+ {
+  "id": 1133,
+  "text": "a luxury brand,"
+ },
+ {
+  "id": 1134,
+  "text": "but actually it's a foreign person's"
+ },
+ {
+  "id": 1135,
+  "text": "surname, I think,"
+ },
+ {
+  "id": 1136,
+  "text": "Is this the surname or the given name?"
+ },
+ {
+  "id": 1137,
+  "text": "So this professor is actually called Xuenishi,"
+ },
+ {
+  "id": 1138,
+  "text": "and he invented this thing at Stanford University."
+ },
+ {
+  "id": 1139,
+  "text": "Alright then,"
+ },
+ {
+  "id": 1140,
+  "text": "That covers most of the better-known ones."
+ },
+ {
+  "id": 1141,
+  "text": "Of course, there are some others,"
+ },
+ {
+  "id": 1142,
+  "text": "but since our time is limited,"
+ },
+ {
+  "id": 1143,
+  "text": "I won't go on about them here."
+ },
+ {
+  "id": 1144,
+  "text": "So mainly,"
+ },
+ {
+  "id": 1145,
+  "text": "this course is about learning RISC-V."
+ },
+ {
+  "id": 1146,
+  "text": "RISC-V is a new instruction set architecture that has been rising recently."
+ },
+ {
+  "id": 1147,
+  "text": "As for the content related to this instruction set architecture,"
+ },
+ {
+  "id": 1148,
+  "text": "I'll stop the brief introduction right here."
+ },
+ {
+  "id": 1149,
+  "text": "How about we take a break first?"
+ },
+ {
+  "id": 1150,
+  "text": "Because last time it seemed like the lecture went on too long."
+ },
+ {
+  "id": 1151,
+  "text": "Let's try to keep each lecture to around 40 minutes."
+ },
+ {
+  "id": 1152,
+  "text": "Let's take a break first."
+ }
+]

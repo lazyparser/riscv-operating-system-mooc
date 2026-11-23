@@ -1,0 +1,1746 @@
+[
+ {
+  "id": 0,
+  "text": "Let's move on to the next chapter. We said interrupts fall into three categories: external interrupts, software interrupts, and timer interrupts. Timer interrupts are also very important, so we have a separate chapter to introduce them."
+ },
+ {
+  "id": 1,
+  "text": "So, as for timer interrupts,"
+ },
+ {
+  "id": 2,
+  "text": "I'll introduce them to you in these three parts."
+ },
+ {
+  "id": 3,
+  "text": "First, let's look at what a timer interrupt is."
+ },
+ {
+  "id": 4,
+  "text": "Now, as mentioned earlier,"
+ },
+ {
+  "id": 5,
+  "text": "the timer interrupt is a type of interrupt."
+ },
+ {
+  "id": 6,
+  "text": "Right?"
+ },
+ {
+  "id": 7,
+  "text": "And it belongs to a type called local interrupts."
+ },
+ {
+  "id": 8,
+  "text": "That much is straightforward."
+ },
+ {
+  "id": 9,
+  "text": "So why do we call it a local interrupt?"
+ },
+ {
+  "id": 10,
+  "text": "Basically, it's because it isn't triggered by a peripheral."
+ },
+ {
+  "id": 11,
+  "text": "It isn't triggered by those ordinary external devices."
+ },
+ {
+  "id": 12,
+  "text": "Rather, there is a dedicated"
+ },
+ {
+  "id": 13,
+  "text": "component inside our chip,"
+ },
+ {
+  "id": 14,
+  "text": "a special device called the CLINT,"
+ },
+ {
+  "id": 15,
+  "text": "a device built into the SoC chip,"
+ },
+ {
+  "id": 16,
+  "text": "and it is this device that raises the interrupt."
+ },
+ {
+  "id": 17,
+  "text": "It's called the Core Local Interruptor,"
+ },
+ {
+  "id": 18,
+  "text": "which is what the abbreviation stands for."
+ },
+ {
+  "id": 19,
+  "text": "CLINT is short for Core Local Interruptor."
+ },
+ {
+  "id": 20,
+  "text": "So this thing,"
+ },
+ {
+  "id": 21,
+  "text": "it comes with our chip specifically"
+ },
+ {
+  "id": 22,
+  "text": "as a device attached to it."
+ },
+ {
+  "id": 23,
+  "text": "As for this device,"
+ },
+ {
+  "id": 24,
+  "text": "it is responsible for generating two kinds of interrupts:"
+ },
+ {
+  "id": 25,
+  "text": "one kind is called software interrupt,"
+ },
+ {
+  "id": 26,
+  "text": "and the other is called timer interrupt."
+ },
+ {
+  "id": 27,
+  "text": "We can see the blue line and the red line in the diagram."
+ },
+ {
+  "id": 28,
+  "text": "Now let's focus mainly on its timer interrupt."
+ },
+ {
+  "id": 29,
+  "text": "Now, for this device, we do the same thing."
+ },
+ {
+  "id": 30,
+  "text": "Similarly, in order to access it,"
+ },
+ {
+  "id": 31,
+  "text": "you also need to access the set of registers it provides."
+ },
+ {
+  "id": 32,
+  "text": "Now, this register,"
+ },
+ {
+  "id": 33,
+  "text": "is also accessed through memory-mapped I/O."
+ },
+ {
+  "id": 34,
+  "text": "Its range starts at 0x200060,"
+ },
+ {
+  "id": 35,
+  "text": "so there is a range like this."
+ },
+ {
+  "id": 36,
+  "text": "From this diagram, we can see"
+ },
+ {
+  "id": 37,
+  "text": "which registers it provides."
+ },
+ {
+  "id": 38,
+  "text": "Let's take a look together."
+ },
+ {
+  "id": 39,
+  "text": "Of course, as we mentioned earlier,"
+ },
+ {
+  "id": 40,
+  "text": "Because the CLIC, this local interrupt device,"
+ },
+ {
+  "id": 41,
+  "text": "can both generate software interrupts for us"
+ },
+ {
+  "id": 42,
+  "text": "and provide timer interrupts."
+ },
+ {
+  "id": 43,
+  "text": "Today,"
+ },
+ {
+  "id": 44,
+  "text": "in this chapter,"
+ },
+ {
+  "id": 45,
+  "text": "we're mainly going to talk about the timer interrupt part."
+ },
+ {
+  "id": 46,
+  "text": "So the registers introduced here"
+ },
+ {
+  "id": 47,
+  "text": "are all related to timer interrupts."
+ },
+ {
+  "id": 48,
+  "text": "First, let's look at the one called Mtime."
+ },
+ {
+  "id": 49,
+  "text": "M still stands for the machine concept,"
+ },
+ {
+  "id": 50,
+  "text": "and time,"
+ },
+ {
+  "id": 51,
+  "text": "it's a so-called real-time,"
+ },
+ {
+  "id": 52,
+  "text": "that is, a real-time counter."
+ },
+ {
+  "id": 53,
+  "text": "It's actually a"
+ },
+ {
+  "id": 54,
+  "text": "clock driven by a crystal oscillator."
+ },
+ {
+  "id": 55,
+  "text": "This clock,"
+ },
+ {
+  "id": 56,
+  "text": "it runs at a fixed frequency,"
+ },
+ {
+  "id": 57,
+  "text": "constantly ticking inside,"
+ },
+ {
+  "id": 58,
+  "text": "it's actually a counter,"
+ },
+ {
+  "id": 59,
+  "text": "it's a counter, right?"
+ },
+ {
+  "id": 60,
+  "text": "It just increments at a fixed frequency."
+ },
+ {
+  "id": 61,
+  "text": "And this counter,"
+ },
+ {
+  "id": 62,
+  "text": "it's what you'd call globally unique."
+ },
+ {
+  "id": 63,
+  "text": "That is to say,"
+ },
+ {
+  "id": 64,
+  "text": "suppose we have quite a few cores in here,"
+ },
+ {
+  "id": 65,
+  "text": "there is still only this single, unified counter."
+ },
+ {
+  "id": 66,
+  "text": "So this counter,"
+ },
+ {
+  "id": 67,
+  "text": "it is actually"
+ },
+ {
+  "id": 68,
+  "text": "a counter that is 64 bits wide."
+ },
+ {
+  "id": 69,
+  "text": "The reason it's designed to be 64 bits,"
+ },
+ {
+  "id": 70,
+  "text": "is that the range it can represent is very large."
+ },
+ {
+  "id": 71,
+  "text": "I mean, suppose you're incrementing it at a very high frequency,"
+ },
+ {
+  "id": 72,
+  "text": "as it counts up,"
+ },
+ {
+  "id": 73,
+  "text": "for a very long time,"
+ },
+ {
+  "id": 74,
+  "text": "it will never overflow."
+ },
+ {
+  "id": 75,
+  "text": "That's because its width is so large,"
+ },
+ {
+  "id": 76,
+  "text": "64 bits wide."
+ },
+ {
+  "id": 77,
+  "text": "And then,"
+ },
+ {
+  "id": 78,
+  "text": "according to the convention in the specification,"
+ },
+ {
+  "id": 79,
+  "text": "which is to say,"
+ },
+ {
+  "id": 80,
+  "text": "When power-on reset happens,"
+ },
+ {
+  "id": 81,
+  "text": "the value of this register"
+ },
+ {
+  "id": 82,
+  "text": "will automatically reset to zero."
+ },
+ {
+  "id": 83,
+  "text": "So"
+ },
+ {
+  "id": 84,
+  "text": "it"
+ },
+ {
+  "id": 85,
+  "text": "doesn't actually require any initialization from our software."
+ },
+ {
+  "id": 86,
+  "text": "After power-on,"
+ },
+ {
+  "id": 87,
+  "text": "it automatically starts incrementing from zero,"
+ },
+ {
+  "id": 88,
+  "text": "at a fixed frequency."
+ },
+ {
+  "id": 89,
+  "text": "That's the first one,"
+ },
+ {
+  "id": 90,
+  "text": "called the counter,"
+ },
+ {
+  "id": 91,
+  "text": "the real-time counter."
+ },
+ {
+  "id": 92,
+  "text": "On some platforms it's also called ITC and so on,"
+ },
+ {
+  "id": 93,
+  "text": "all similar things."
+ },
+ {
+  "id": 94,
+  "text": "We can go and read"
+ },
+ {
+  "id": 95,
+  "text": "read this value."
+ },
+ {
+  "id": 96,
+  "text": "Now, as we said,"
+ },
+ {
+  "id": 97,
+  "text": "don't we want to generate a timer?"
+ },
+ {
+  "id": 98,
+  "text": "Right?"
+ },
+ {
+  "id": 99,
+  "text": "So how do we generate a timer?"
+ },
+ {
+  "id": 100,
+  "text": "It only has that counter"
+ },
+ {
+  "id": 101,
+  "text": "which is actually not enough."
+ },
+ {
+  "id": 102,
+  "text": "We also need something called"
+ },
+ {
+  "id": 103,
+  "text": "a register called Time Compare."
+ },
+ {
+  "id": 104,
+  "text": "It is used to store a comparison value for the timer."
+ },
+ {
+  "id": 105,
+  "text": "How exactly do we use it?"
+ },
+ {
+  "id": 106,
+  "text": "We'll see that in a bit."
+ },
+ {
+  "id": 107,
+  "text": "First, let's understand"
+ },
+ {
+  "id": 108,
+  "text": "what this thing actually is."
+ },
+ {
+  "id": 109,
+  "text": "This register,"
+ },
+ {
+  "id": 110,
+  "text": "just like the other one,"
+ },
+ {
+  "id": 111,
+  "text": "is also 64 bits."
+ },
+ {
+  "id": 112,
+  "text": "But when it powers up,"
+ },
+ {
+  "id": 113,
+  "text": "it does not automatically reset to 0."
+ },
+ {
+  "id": 114,
+  "text": "So we need to"
+ },
+ {
+  "id": 115,
+  "text": "set its initial value ourselves."
+ },
+ {
+  "id": 116,
+  "text": "Now, below,"
+ },
+ {
+  "id": 117,
+  "text": "this code,"
+ },
+ {
+  "id": 118,
+  "text": "in fact, demonstrates"
+ },
+ {
+  "id": 119,
+  "text": "that is to say,"
+ },
+ {
+  "id": 120,
+  "text": "How do we set this value?"
+ },
+ {
+  "id": 121,
+  "text": "We actually"
+ },
+ {
+  "id": 122,
+  "text": "in the code,"
+ },
+ {
+  "id": 123,
+  "text": "we actually defined a"
+ },
+ {
+  "id": 124,
+  "text": "function called timer_load"
+ },
+ {
+  "id": 125,
+  "text": "—a function like that,"
+ },
+ {
+  "id": 126,
+  "text": "which takes an interval as a parameter."
+ },
+ {
+  "id": 127,
+  "text": "This interval,"
+ },
+ {
+  "id": 128,
+  "text": "its unit,"
+ },
+ {
+  "id": 129,
+  "text": "is just"
+ },
+ {
+  "id": 130,
+  "text": "a number."
+ },
+ {
+  "id": 131,
+  "text": "A number."
+ },
+ {
+  "id": 132,
+  "text": "This number,"
+ },
+ {
+  "id": 133,
+  "text": "depending on, that is,"
+ },
+ {
+  "id": 134,
+  "text": "the"
+ },
+ {
+  "id": 135,
+  "text": "frequency,"
+ },
+ {
+  "id": 136,
+  "text": "you set it yourself accordingly."
+ },
+ {
+  "id": 137,
+  "text": "As you can see,"
+ },
+ {
+  "id": 138,
+  "text": "this value,"
+ },
+ {
+  "id": 139,
+  "text": "it is per"
+ },
+ {
+  "id": 140,
+  "text": "It is one per HART."
+ },
+ {
+  "id": 141,
+  "text": "Please note this."
+ },
+ {
+  "id": 142,
+  "text": "So,"
+ },
+ {
+  "id": 143,
+  "text": "on this side,"
+ },
+ {
+  "id": 144,
+  "text": "when we define this macro,"
+ },
+ {
+  "id": 145,
+  "text": "it takes a parameter,"
+ },
+ {
+  "id": 146,
+  "text": "which is the HART ID."
+ },
+ {
+  "id": 147,
+  "text": "So,"
+ },
+ {
+  "id": 148,
+  "text": "first, through this,"
+ },
+ {
+  "id": 149,
+  "text": "we get a HART ID,"
+ },
+ {
+  "id": 150,
+  "text": "for example,"
+ },
+ {
+  "id": 151,
+  "text": "if there are multiple HARTs,"
+ },
+ {
+  "id": 152,
+  "text": "then a value like 0, 1, 2,"
+ },
+ {
+  "id": 153,
+  "text": "a value like that."
+ },
+ {
+  "id": 154,
+  "text": "And then,"
+ },
+ {
+  "id": 155,
+  "text": "when it is passed into this macro,"
+ },
+ {
+  "id": 156,
+  "text": "we can read out,"
+ },
+ {
+  "id": 157,
+  "text": "when we actually load it,"
+ },
+ {
+  "id": 158,
+  "text": "we actually use this to,"
+ },
+ {
+  "id": 159,
+  "text": "mtime"
+ },
+ {
+  "id": 160,
+  "text": "That's the timer value we talked about earlier."
+ },
+ {
+  "id": 161,
+  "text": "Plus this."
+ },
+ {
+  "id": 162,
+  "text": "This interval."
+ },
+ {
+  "id": 163,
+  "text": "For example, say we want an interval of one second."
+ },
+ {
+  "id": 164,
+  "text": "If we want a one-second interval."
+ },
+ {
+  "id": 165,
+  "text": "Then this becomes a"
+ },
+ {
+  "id": 166,
+  "text": "corresponding one-second"
+ },
+ {
+  "id": 167,
+  "text": "tick count."
+ },
+ {
+  "id": 168,
+  "text": "Then, after adding this value,"
+ },
+ {
+  "id": 169,
+  "text": "we write it back"
+ },
+ {
+  "id": 170,
+  "text": "and that initializes it."
+ },
+ {
+  "id": 171,
+  "text": "It loads a timer."
+ },
+ {
+  "id": 172,
+  "text": "During initialization,"
+ },
+ {
+  "id": 173,
+  "text": "when they initialize,"
+ },
+ {
+  "id": 174,
+  "text": "we call this function."
+ },
+ {
+  "id": 175,
+  "text": "And then,"
+ },
+ {
+  "id": 176,
+  "text": "in the start function, that is to say,"
+ },
+ {
+  "id": 177,
+  "text": "when we come in,"
+ },
+ {
+  "id": 178,
+  "text": "we call this init."
+ },
+ {
+  "id": 179,
+  "text": "So this is the call sequence."
+ },
+ {
+  "id": 180,
+  "text": "That's exactly how the process works."
+ },
+ {
+  "id": 181,
+  "text": "The calling process is just like this."
+ },
+ {
+  "id": 182,
+  "text": "So once this timer is set up,"
+ },
+ {
+  "id": 183,
+  "text": "what is it used for?"
+ },
+ {
+  "id": 184,
+  "text": "That brings us to what we're going to introduce next,"
+ },
+ {
+  "id": 185,
+  "text": "namely, this CLINT,"
+ },
+ {
+  "id": 186,
+  "text": "this local interrupt device,"
+ },
+ {
+  "id": 187,
+  "text": "and how it works."
+ },
+ {
+  "id": 188,
+  "text": "Basically, it will check,"
+ },
+ {
+  "id": 189,
+  "text": "it will go and"
+ },
+ {
+  "id": 190,
+  "text": "every time it increments the value of mtime by one,"
+ },
+ {
+  "id": 191,
+  "text": "since this mtime value keeps incrementing at a fixed frequency,"
+ },
+ {
+  "id": 192,
+  "text": "each time this value goes up by one,"
+ },
+ {
+  "id": 193,
+  "text": "it checks whether this value and the mtimecmp value we set earlier,"
+ },
+ {
+  "id": 194,
+  "text": "have a greater-than-or-equal relationship."
+ },
+ {
+  "id": 195,
+  "text": "In other words, once this value is greater than or equal to it,"
+ },
+ {
+  "id": 196,
+  "text": "it will generate an interrupt."
+ },
+ {
+  "id": 197,
+  "text": "It will trigger an interrupt."
+ },
+ {
+  "id": 198,
+  "text": "In fact, we use this mechanism,"
+ },
+ {
+  "id": 199,
+  "text": "to generate a timer interrupt."
+ },
+ {
+  "id": 200,
+  "text": "Now, one thing to note"
+ },
+ {
+  "id": 201,
+  "text": "this timer interrupt is only generated once."
+ },
+ {
+  "id": 202,
+  "text": "So it requires us to, every time"
+ },
+ {
+  "id": 203,
+  "text": "if you want to generate a periodic timer interrupt,"
+ },
+ {
+  "id": 204,
+  "text": "you need to, after each time it is handled,"
+ },
+ {
+  "id": 205,
+  "text": "keep feeding this value,"
+ },
+ {
+  "id": 206,
+  "text": "reloading it yourself again."
+ },
+ {
+  "id": 207,
+  "text": "Then, when the timer interrupt occurs,"
+ },
+ {
+  "id": 208,
+  "text": "the hardware sets this MTIP,"
+ },
+ {
+  "id": 209,
+  "text": "as we discussed earlier,"
+ },
+ {
+  "id": 210,
+  "text": "this bit in the MIP register."
+ },
+ {
+  "id": 211,
+  "text": "When we write a new value into MtimeCmp,"
+ },
+ {
+  "id": 212,
+  "text": "when we write a new value in there,"
+ },
+ {
+  "id": 213,
+  "text": "it will clear that bit again,"
+ },
+ {
+  "id": 214,
+  "text": "marking that the timer has been dealt with."
+ },
+ {
+  "id": 215,
+  "text": "So what we have here is essentially"
+ },
+ {
+  "id": 216,
+  "text": "some related examples in the code."
+ },
+ {
+  "id": 217,
+  "text": "One is the handler."
+ },
+ {
+  "id": 218,
+  "text": "Inside the handler,"
+ },
+ {
+  "id": 219,
+  "text": "we need to reload the timer again."
+ },
+ {
+  "id": 220,
+  "text": "After it's loaded,"
+ },
+ {
+  "id": 221,
+  "text": "it will generate the next timer value."
+ },
+ {
+  "id": 222,
+  "text": "If we look at the logic of this timer loader,"
+ },
+ {
+  "id": 223,
+  "text": "which we saw earlier,"
+ },
+ {
+  "id": 224,
+  "text": "it actually takes the value of time,"
+ },
+ {
+  "id": 225,
+  "text": "and adds an interval to it again."
+ },
+ {
+  "id": 226,
+  "text": "So after adding,"
+ },
+ {
+  "id": 227,
+  "text": "this value is now larger than it again."
+ },
+ {
+  "id": 228,
+  "text": "mtime is smaller than it again."
+ },
+ {
+  "id": 229,
+  "text": "Then mtime starts incrementing again."
+ },
+ {
+  "id": 230,
+  "text": "After it accumulates to a certain value,"
+ },
+ {
+  "id": 231,
+  "text": "it will trigger another one."
+ },
+ {
+  "id": 232,
+  "text": "So, in this handler,"
+ },
+ {
+  "id": 233,
+  "text": "if we load it again,"
+ },
+ {
+  "id": 234,
+  "text": "it will actually produce a periodic timer."
+ },
+ {
+  "id": 235,
+  "text": "That's the effect we achieve."
+ },
+ {
+  "id": 236,
+  "text": "Similarly, we need to"
+ },
+ {
+  "id": 237,
+  "text": "there's one more thing to do,"
+ },
+ {
+  "id": 238,
+  "text": "that is, in the handler processing,"
+ },
+ {
+  "id": 239,
+  "text": "we need to handle the cost of 7"
+ },
+ {
+  "id": 240,
+  "text": "It's actually the timer interrupt under machine mode."
+ },
+ {
+  "id": 241,
+  "text": "We need to call this time handler."
+ },
+ {
+  "id": 242,
+  "text": "That's actually the trigger logic."
+ },
+ {
+  "id": 243,
+  "text": "This is how it comes in."
+ },
+ {
+  "id": 244,
+  "text": "This part is all pretty simple."
+ },
+ {
+  "id": 245,
+  "text": "We just need to get a general idea of it."
+ },
+ {
+  "id": 246,
+  "text": "So overall, looking at the whole picture,"
+ },
+ {
+  "id": 247,
+  "text": "if we want to implement a periodic timer,"
+ },
+ {
+  "id": 248,
+  "text": "what is it that we need to do?"
+ },
+ {
+  "id": 249,
+  "text": "I mean, logically speaking,"
+ },
+ {
+  "id": 250,
+  "text": "first we need to do an initialization."
+ },
+ {
+  "id": 251,
+  "text": "The initialization,"
+ },
+ {
+  "id": 252,
+  "text": "the initialization,"
+ },
+ {
+  "id": 253,
+  "text": "that is to say,"
+ },
+ {
+  "id": 254,
+  "text": "this being set to zero,"
+ },
+ {
+  "id": 255,
+  "text": "is actually handled by the hardware for us."
+ },
+ {
+  "id": 256,
+  "text": "We actually don't need to write it."
+ },
+ {
+  "id": 257,
+  "text": "And then,"
+ },
+ {
+  "id": 258,
+  "text": "here,"
+ },
+ {
+  "id": 259,
+  "text": "what we're actually doing is taking this compat value"
+ },
+ {
+  "id": 260,
+  "text": "First, add an interval value."
+ },
+ {
+  "id": 261,
+  "text": "So,"
+ },
+ {
+  "id": 262,
+  "text": "and then,"
+ },
+ {
+  "id": 263,
+  "text": "make sure to enable the interrupts at every privilege level."
+ },
+ {
+  "id": 264,
+  "text": "Then,"
+ },
+ {
+  "id": 265,
+  "text": "this,"
+ },
+ {
+  "id": 266,
+  "text": "as you can see,"
+ },
+ {
+  "id": 267,
+  "text": "after this initialization is done,"
+ },
+ {
+  "id": 268,
+  "text": "this,"
+ },
+ {
+  "id": 269,
+  "text": "this device,"
+ },
+ {
+  "id": 270,
+  "text": "it will run at a fixed frequency,"
+ },
+ {
+  "id": 271,
+  "text": "constantly incrementing mtime,"
+ },
+ {
+  "id": 272,
+  "text": "adding 1, adding 1, adding 1,"
+ },
+ {
+  "id": 273,
+  "text": "all the way until,"
+ },
+ {
+  "id": 274,
+  "text": "when its value,"
+ },
+ {
+  "id": 275,
+  "text": "becomes equal to the value of mcompare,"
+ },
+ {
+  "id": 276,
+  "text": "once they are equal,"
+ },
+ {
+  "id": 277,
+  "text": "it will trigger an interrupt."
+ },
+ {
+  "id": 278,
+  "text": "So at that point, the interrupt is generated."
+ },
+ {
+  "id": 279,
+  "text": "And then, after this timer interrupt arrives,"
+ },
+ {
+  "id": 280,
+  "text": "Of course,"
+ },
+ {
+  "id": 281,
+  "text": "what you want to do"
+ },
+ {
+  "id": 282,
+  "text": "is up to you."
+ },
+ {
+  "id": 283,
+  "text": "Then, after the handling is done,"
+ },
+ {
+  "id": 284,
+  "text": "if you still want to generate it,"
+ },
+ {
+  "id": 285,
+  "text": "if you want this timer interrupt"
+ },
+ {
+  "id": 286,
+  "text": "to keep firing,"
+ },
+ {
+  "id": 287,
+  "text": "then you have to manually"
+ },
+ {
+  "id": 288,
+  "text": "update the mtime value yourself."
+ },
+ {
+  "id": 289,
+  "text": "So what this means is that,"
+ },
+ {
+  "id": 290,
+  "text": "if you add an interval again,"
+ },
+ {
+  "id": 291,
+  "text": "then this thing will repeat and keep happening."
+ },
+ {
+  "id": 292,
+  "text": "This is how a periodic timer"
+ },
+ {
+  "id": 293,
+  "text": "interrupt is generated."
+ },
+ {
+  "id": 294,
+  "text": "That's the logic of it."
+ },
+ {
+  "id": 295,
+  "text": "This logic is also very simple."
+ },
+ {
+  "id": 296,
+  "text": "Now, in an operating system, we generally"
+ },
+ {
+  "id": 297,
+  "text": "make a lot of use of this hardware timer,"
+ },
+ {
+  "id": 298,
+  "text": "with many applications for it."
+ },
+ {
+  "id": 299,
+  "text": "The most basic application"
+ },
+ {
+  "id": 300,
+  "text": "Let's say, this is basically a"
+ },
+ {
+  "id": 301,
+  "text": "We know that the time management in our operating system"
+ },
+ {
+  "id": 302,
+  "text": "is actually done using this kind of hardware timer."
+ },
+ {
+  "id": 303,
+  "text": "So let me briefly introduce to you"
+ },
+ {
+  "id": 304,
+  "text": "that within this operating system,"
+ },
+ {
+  "id": 305,
+  "text": "we deal with some concepts,"
+ },
+ {
+  "id": 306,
+  "text": "for example, what is called a clock tick,"
+ },
+ {
+  "id": 307,
+  "text": "the concept of a tick, the concept of a TIC."
+ },
+ {
+  "id": 308,
+  "text": "Now, this TIC"
+ },
+ {
+  "id": 309,
+  "text": "is a concept often mentioned in our operating system."
+ },
+ {
+  "id": 310,
+  "text": "This TIC"
+ },
+ {
+  "id": 311,
+  "text": "is actually a unit of time period."
+ },
+ {
+  "id": 312,
+  "text": "And this unit of time period"
+ },
+ {
+  "id": 313,
+  "text": "is generally determined by what we just introduced to you,"
+ },
+ {
+  "id": 314,
+  "text": "the period of the hardware timer."
+ },
+ {
+  "id": 315,
+  "text": "We can configure this ourselves."
+ },
+ {
+  "id": 316,
+  "text": "And in general,"
+ },
+ {
+  "id": 317,
+  "text": "it can be somewhere between 1 and 100 milliseconds."
+ },
+ {
+  "id": 318,
+  "text": "If it's 100 milliseconds,"
+ },
+ {
+  "id": 319,
+  "text": "that means it happens 10 times per second."
+ },
+ {
+  "id": 320,
+  "text": "If it's 1,"
+ },
+ {
+  "id": 321,
+  "text": "then it's once every 1 millisecond,"
+ },
+ {
+  "id": 322,
+  "text": "which means in 1 second there will be 1000 of them,"
+ },
+ {
+  "id": 323,
+  "text": "1000 of these ticks generated."
+ },
+ {
+  "id": 324,
+  "text": "Now, as we know, with this tick value,"
+ },
+ {
+  "id": 325,
+  "text": "the smaller you configure it,"
+ },
+ {
+  "id": 326,
+  "text": "the higher the system precision."
+ },
+ {
+  "id": 327,
+  "text": "But as we know,"
+ },
+ {
+  "id": 328,
+  "text": "why does the overhead get larger?"
+ },
+ {
+  "id": 329,
+  "text": "The point is, the smaller this tick value is,"
+ },
+ {
+  "id": 330,
+  "text": "the more interrupts per second"
+ },
+ {
+  "id": 331,
+  "text": "you generate."
+ },
+ {
+  "id": 332,
+  "text": "And every time there's an interrupt,"
+ },
+ {
+  "id": 333,
+  "text": "as everyone knows,"
+ },
+ {
+  "id": 334,
+  "text": "whether it's hardware or software,"
+ },
+ {
+  "id": 335,
+  "text": "both have to take part in handling the interrupt."
+ },
+ {
+  "id": 336,
+  "text": "So our normal flow"
+ },
+ {
+  "id": 337,
+  "text": "gets interrupted,"
+ },
+ {
+  "id": 338,
+  "text": "which causes some extra overhead."
+ },
+ {
+  "id": 339,
+  "text": "So when it comes to configuring this tick value,"
+ },
+ {
+  "id": 340,
+  "text": "We need to configure it based on the actual scenario."
+ },
+ {
+  "id": 341,
+  "text": "That is to say, we can't let the system get too busy,"
+ },
+ {
+  "id": 342,
+  "text": "but at the same time we need to ensure"
+ },
+ {
+  "id": 343,
+  "text": "it has a certain level of accuracy, and that's enough."
+ },
+ {
+  "id": 344,
+  "text": "So generally, it might be 10 milliseconds,"
+ },
+ {
+  "id": 345,
+  "text": "or 100 milliseconds, which is usually sufficient."
+ },
+ {
+  "id": 346,
+  "text": "Then, inside the operating system,"
+ },
+ {
+  "id": 347,
+  "text": "we usually maintain a"
+ },
+ {
+  "id": 348,
+  "text": "current tick value."
+ },
+ {
+  "id": 349,
+  "text": "At the beginning, this tick value"
+ },
+ {
+  "id": 350,
+  "text": "might be set to zero first,"
+ },
+ {
+  "id": 351,
+  "text": "or it could be that,"
+ },
+ {
+  "id": 352,
+  "text": "if you possibly"
+ },
+ {
+  "id": 353,
+  "text": "want to display this time as well,"
+ },
+ {
+  "id": 354,
+  "text": "then you might have to"
+ },
+ {
+  "id": 355,
+  "text": "at the very beginning,"
+ },
+ {
+  "id": 356,
+  "text": "read the"
+ },
+ {
+  "id": 357,
+  "text": "current time we have,"
+ },
+ {
+  "id": 358,
+  "text": "and then"
+ },
+ {
+  "id": 359,
+  "text": "this tick count increases at a certain frequency"
+ },
+ {
+  "id": 360,
+  "text": "After the accumulation happens,"
+ },
+ {
+  "id": 361,
+  "text": "we can maintain a clock internally."
+ },
+ {
+  "id": 362,
+  "text": "That works."
+ },
+ {
+  "id": 363,
+  "text": "So this clock of ours,"
+ },
+ {
+  "id": 364,
+  "text": "it's actually implemented through this hardware timer,"
+ },
+ {
+  "id": 365,
+  "text": "plus some extra processing."
+ },
+ {
+  "id": 366,
+  "text": "For example, on our PC,"
+ },
+ {
+  "id": 367,
+  "text": "on a computer, if"
+ },
+ {
+  "id": 368,
+  "text": "how do we get the time?"
+ },
+ {
+  "id": 369,
+  "text": "Normally,"
+ },
+ {
+  "id": 370,
+  "text": "we can have a peripheral on the PC,"
+ },
+ {
+  "id": 371,
+  "text": "powered by something like a battery,"
+ },
+ {
+  "id": 372,
+  "text": "and it can let this,"
+ },
+ {
+  "id": 373,
+  "text": "on our system, just,"
+ },
+ {
+  "id": 374,
+  "text": "even after the power is cut off,"
+ },
+ {
+  "id": 375,
+  "text": "it can maintain a,"
+ },
+ {
+  "id": 376,
+  "text": "remember the current time."
+ },
+ {
+  "id": 377,
+  "text": "Then every time the system comes up,"
+ },
+ {
+  "id": 378,
+  "text": "we go and read this time,"
+ },
+ {
+  "id": 379,
+  "text": "and then take this time and"
+ },
+ {
+  "id": 380,
+  "text": "Then, as this hardware timer"
+ },
+ {
+  "id": 381,
+  "text": "starts running,"
+ },
+ {
+  "id": 382,
+  "text": "we take this time"
+ },
+ {
+  "id": 383,
+  "text": "and the time we read,"
+ },
+ {
+  "id": 384,
+  "text": "accumulate them together,"
+ },
+ {
+  "id": 385,
+  "text": "and then record the current"
+ },
+ {
+  "id": 386,
+  "text": "latest time."
+ },
+ {
+  "id": 387,
+  "text": "Of course, in the example we demonstrate to you,"
+ },
+ {
+  "id": 388,
+  "text": "we didn't actually make it that complicated."
+ },
+ {
+  "id": 389,
+  "text": "We actually just simply"
+ },
+ {
+  "id": 390,
+  "text": "let everyone see"
+ },
+ {
+  "id": 391,
+  "text": "that we can maintain a tick count internally,"
+ },
+ {
+  "id": 392,
+  "text": "and every time the hardware timer fires,"
+ },
+ {
+  "id": 393,
+  "text": "we increment this tick count,"
+ },
+ {
+  "id": 394,
+  "text": "and then print out this tick count."
+ },
+ {
+  "id": 395,
+  "text": "So this is one of the most basic operations in our system timer."
+ },
+ {
+  "id": 396,
+  "text": "As for more complex operations,"
+ },
+ {
+  "id": 397,
+  "text": "we may use them later as demonstrations,"
+ },
+ {
+  "id": 398,
+  "text": "but we won't demonstrate them here."
+ },
+ {
+  "id": 399,
+  "text": "So you can, in the exercises,"
+ },
+ {
+  "id": 400,
+  "text": "Go ahead and extend these features on your own."
+ },
+ {
+  "id": 401,
+  "text": "But we know"
+ },
+ {
+  "id": 402,
+  "text": "that in terms of the underlying principle here,"
+ },
+ {
+  "id": 403,
+  "text": "at the hardware level it's really because"
+ },
+ {
+  "id": 404,
+  "text": "it's implemented through this timer interrupt."
+ },
+ {
+  "id": 405,
+  "text": "On our side here,"
+ },
+ {
+  "id": 406,
+  "text": "let me just give you a quick demonstration"
+ },
+ {
+  "id": 407,
+  "text": "of chapter 12,"
+ },
+ {
+  "id": 408,
+  "text": "our corresponding example here,"
+ },
+ {
+  "id": 409,
+  "text": "just a quick demonstration."
+ },
+ {
+  "id": 410,
+  "text": "So the corresponding example"
+ },
+ {
+  "id": 411,
+  "text": "is 07,"
+ },
+ {
+  "id": 412,
+  "text": "which is the hardware timer."
+ },
+ {
+  "id": 413,
+  "text": "Hardware timer."
+ },
+ {
+  "id": 414,
+  "text": "Now, with this hardware timer,"
+ },
+ {
+  "id": 415,
+  "text": "you can see"
+ },
+ {
+  "id": 416,
+  "text": "that once it's up and running,"
+ },
+ {
+  "id": 417,
+  "text": "at the very beginning,"
+ },
+ {
+  "id": 418,
+  "text": "the tick count is 0,"
+ },
+ {
+  "id": 419,
+  "text": "and then"
+ },
+ {
+  "id": 420,
+  "text": "So every time it generates an interrupt,"
+ },
+ {
+  "id": 421,
+  "text": "here we"
+ },
+ {
+  "id": 422,
+  "text": "every time an interrupt is generated,"
+ },
+ {
+  "id": 423,
+  "text": "after the interrupt,"
+ },
+ {
+  "id": 424,
+  "text": "once we increment the tick count,"
+ },
+ {
+  "id": 425,
+  "text": "we print it out."
+ },
+ {
+  "id": 426,
+  "text": "So this,"
+ },
+ {
+  "id": 427,
+  "text": "this example"
+ },
+ {
+  "id": 428,
+  "text": "is very simple."
+ },
+ {
+  "id": 429,
+  "text": "Basically, through this example,"
+ },
+ {
+  "id": 430,
+  "text": "you just get a feel for"
+ },
+ {
+  "id": 431,
+  "text": "how we"
+ },
+ {
+  "id": 432,
+  "text": "control the CLINT device,"
+ },
+ {
+  "id": 433,
+  "text": "and make it generate interrupts periodically, and that's it."
+ },
+ {
+  "id": 434,
+  "text": "So this is our"
+ },
+ {
+  "id": 435,
+  "text": "example on the hardware timer."
+ }
+]

@@ -1,0 +1,8582 @@
+[
+ {
+  "id": 0,
+  "text": "Alright, let's get started. Today we're going to begin Chapter 10. Let me quickly recap: in Chapter 9, we introduced how to implement what's called a cooperative multitasking system, right? A mutual-aid, cooperative multitasking system."
+ },
+ {
+  "id": 1,
+  "text": "Now, we also mentioned"
+ },
+ {
+  "id": 2,
+  "text": "that when it comes to multitasking,"
+ },
+ {
+  "id": 3,
+  "text": "aside from this cooperative approach,"
+ },
+ {
+  "id": 4,
+  "text": "in modern operating systems,"
+ },
+ {
+  "id": 5,
+  "text": "what's actually used more often"
+ },
+ {
+  "id": 6,
+  "text": "is preemptive multitasking."
+ },
+ {
+  "id": 7,
+  "text": "Now, since we're going to talk about preemption,"
+ },
+ {
+  "id": 8,
+  "text": "there are some concepts"
+ },
+ {
+  "id": 9,
+  "text": "we need to understand first,"
+ },
+ {
+  "id": 10,
+  "text": "namely, the knowledge"
+ },
+ {
+  "id": 11,
+  "text": "about exceptions,"
+ },
+ {
+  "id": 12,
+  "text": "interrupts,"
+ },
+ {
+  "id": 13,
+  "text": "and related topics."
+ },
+ {
+  "id": 14,
+  "text": "So today,"
+ },
+ {
+  "id": 15,
+  "text": "our entire lecture,"
+ },
+ {
+  "id": 16,
+  "text": "all of these chapters,"
+ },
+ {
+  "id": 17,
+  "text": "will revolve around implementing a"
+ },
+ {
+  "id": 18,
+  "text": "preemptive multitasking system."
+ },
+ {
+  "id": 19,
+  "text": "So first of all,"
+ },
+ {
+  "id": 20,
+  "text": "let's take a look at"
+ },
+ {
+  "id": 21,
+  "text": "the topics related to interrupts and exceptions"
+ },
+ {
+  "id": 22,
+  "text": "in this type of system"
+ },
+ {
+  "id": 23,
+  "text": "So in the upcoming chapter 10"
+ },
+ {
+  "id": 24,
+  "text": "Traps and Exceptions"
+ },
+ {
+  "id": 25,
+  "text": "we mainly divide it into these parts"
+ },
+ {
+  "id": 26,
+  "text": "First, let me introduce"
+ },
+ {
+  "id": 27,
+  "text": "what control flow is"
+ },
+ {
+  "id": 28,
+  "text": "and what a trap is"
+ },
+ {
+  "id": 29,
+  "text": "Then, second,"
+ },
+ {
+  "id": 30,
+  "text": "I'll explain how in RISC-V"
+ },
+ {
+  "id": 31,
+  "text": "handling a trap"
+ },
+ {
+  "id": 32,
+  "text": "involves which programming interfaces"
+ },
+ {
+  "id": 33,
+  "text": "that is, the use of registers"
+ },
+ {
+  "id": 34,
+  "text": "And then we'll look at"
+ },
+ {
+  "id": 35,
+  "text": "the trap handling flow in RISC-V"
+ },
+ {
+  "id": 36,
+  "text": "I'll roughly cover it in three parts"
+ },
+ {
+  "id": 37,
+  "text": "Related reference materials"
+ },
+ {
+  "id": 38,
+  "text": "mainly the standard specifications"
+ },
+ {
+  "id": 39,
+  "text": "I won't go into those again"
+ },
+ {
+  "id": 40,
+  "text": "Good, let's first take a look"
+ },
+ {
+  "id": 41,
+  "text": "at the concepts of control flow and traps."
+ },
+ {
+  "id": 42,
+  "text": "So first, let's understand what control flow is."
+ },
+ {
+  "id": 43,
+  "text": "Control flow,"
+ },
+ {
+  "id": 44,
+  "text": "as we call it in English, is called control flow."
+ },
+ {
+  "id": 45,
+  "text": "Actually,"
+ },
+ {
+  "id": 46,
+  "text": "it corresponds to what we'll talk about later,"
+ },
+ {
+  "id": 47,
+  "text": "exceptional control flow."
+ },
+ {
+  "id": 48,
+  "text": "That is to say, the so-called control flow"
+ },
+ {
+  "id": 49,
+  "text": "is the non-exceptional kind,"
+ },
+ {
+  "id": 50,
+  "text": "the normal kind of control flow."
+ },
+ {
+  "id": 51,
+  "text": "So when we talk about our programming,"
+ },
+ {
+  "id": 52,
+  "text": "our programs,"
+ },
+ {
+  "id": 53,
+  "text": "the programs we write ourselves,"
+ },
+ {
+  "id": 54,
+  "text": "the process of their execution"
+ },
+ {
+  "id": 55,
+  "text": "can actually be thought of"
+ },
+ {
+  "id": 56,
+  "text": "as a kind of normal control flow,"
+ },
+ {
+  "id": 57,
+  "text": "that is, control flow."
+ },
+ {
+  "id": 58,
+  "text": "Of course, in this process,"
+ },
+ {
+  "id": 59,
+  "text": "apart from some arithmetic instructions,"
+ },
+ {
+  "id": 60,
+  "text": "Beyond these basic instructions,"
+ },
+ {
+  "id": 61,
+  "text": "we also have things like branch instructions."
+ },
+ {
+  "id": 62,
+  "text": "You've studied jump by now, right?"
+ },
+ {
+  "id": 63,
+  "text": "That is, conditional branch instructions,"
+ },
+ {
+  "id": 64,
+  "text": "as well as unconditional jump instructions."
+ },
+ {
+  "id": 65,
+  "text": "Now, whether it's an unconditional jump"
+ },
+ {
+  "id": 66,
+  "text": "or a conditional jump,"
+ },
+ {
+  "id": 67,
+  "text": "as long as it's a control flow"
+ },
+ {
+  "id": 68,
+  "text": "that our own program controls itself,"
+ },
+ {
+  "id": 69,
+  "text": "it belongs to normal control flow,"
+ },
+ {
+  "id": 70,
+  "text": "the normal execution flow."
+ },
+ {
+  "id": 71,
+  "text": "Now, corresponding to this normal control flow,"
+ },
+ {
+  "id": 72,
+  "text": "on the other hand,"
+ },
+ {
+  "id": 73,
+  "text": "we have what we call exceptional control flow,"
+ },
+ {
+  "id": 74,
+  "text": "called Exceptional Control Flow,"
+ },
+ {
+  "id": 75,
+  "text": "abbreviated as ECP."
+ },
+ {
+  "id": 76,
+  "text": "Now, this exceptional control flow,"
+ },
+ {
+  "id": 77,
+  "text": "what it actually means is that"
+ },
+ {
+  "id": 78,
+  "text": "it is outside the control scope of our program,"
+ },
+ {
+  "id": 79,
+  "text": "and it is mainly divided into two major categories."
+ },
+ {
+  "id": 80,
+  "text": "One category is called exception"
+ },
+ {
+  "id": 81,
+  "text": "which is 异常, that is, exceptions"
+ },
+ {
+  "id": 82,
+  "text": "The other category is called interrupt"
+ },
+ {
+  "id": 83,
+  "text": "which is 中断, that is, interrupts"
+ },
+ {
+  "id": 84,
+  "text": "Now, going forward,"
+ },
+ {
+  "id": 85,
+  "text": "we're going to learn together"
+ },
+ {
+  "id": 86,
+  "text": "exactly what an exception is,"
+ },
+ {
+  "id": 87,
+  "text": "and what an interrupt is."
+ },
+ {
+  "id": 88,
+  "text": "Now, in this chapter,"
+ },
+ {
+  "id": 89,
+  "text": "we'll mainly focus on"
+ },
+ {
+  "id": 90,
+  "text": "exceptions, that's what we'll mostly talk about."
+ },
+ {
+  "id": 91,
+  "text": "Later on, I'll introduce to you"
+ },
+ {
+  "id": 92,
+  "text": "the concepts related to interrupts."
+ },
+ {
+  "id": 93,
+  "text": "Now, in our"
+ },
+ {
+  "id": 94,
+  "text": "RISC-V architecture,"
+ },
+ {
+  "id": 95,
+  "text": "this notion of exceptional control flow,"
+ },
+ {
+  "id": 96,
+  "text": "this term from the computing world,"
+ },
+ {
+  "id": 97,
+  "text": "it has its own name, called trap."
+ },
+ {
+  "id": 98,
+  "text": "Now, as for trap,"
+ },
+ {
+  "id": 99,
+  "text": "if you just take the word literally,"
+ },
+ {
+  "id": 100,
+  "text": "That is to say, it is a concept of a trap."
+ },
+ {
+  "id": 101,
+  "text": "The idea of falling down."
+ },
+ {
+  "id": 102,
+  "text": "As for why it's called falling down,"
+ },
+ {
+  "id": 103,
+  "text": "and not flying up,"
+ },
+ {
+  "id": 104,
+  "text": "or going upward,"
+ },
+ {
+  "id": 105,
+  "text": "once we learn the concepts that come later,"
+ },
+ {
+  "id": 106,
+  "text": "you will all understand."
+ },
+ {
+  "id": 107,
+  "text": "Let me first introduce a few of these terms to you."
+ },
+ {
+  "id": 108,
+  "text": "So in this RISC-V,"
+ },
+ {
+  "id": 109,
+  "text": "regarding the trap,"
+ },
+ {
+  "id": 110,
+  "text": "we now know that a trap covers both exceptions and interrupts."
+ },
+ {
+  "id": 111,
+  "text": "They are all called traps."
+ },
+ {
+  "id": 112,
+  "text": "Collectively called a trap."
+ },
+ {
+  "id": 113,
+  "text": "Now, for this trap,"
+ },
+ {
+  "id": 114,
+  "text": "how does it operate the related interface?"
+ },
+ {
+  "id": 115,
+  "text": "That is, which registers does it involve?"
+ },
+ {
+  "id": 116,
+  "text": "Let's take a look at that first."
+ },
+ {
+  "id": 117,
+  "text": "Now this here,"
+ },
+ {
+  "id": 118,
+  "text": "is a table."
+ },
+ {
+  "id": 119,
+  "text": "And over here as well,"
+ },
+ {
+  "id": 120,
+  "text": "I also mentioned to you along the way,"
+ },
+ {
+  "id": 121,
+  "text": "that is, we are in Machine mode."
+ },
+ {
+  "id": 122,
+  "text": "Think back for a moment."
+ },
+ {
+  "id": 123,
+  "text": "Earlier, when we were covering"
+ },
+ {
+  "id": 124,
+  "text": "the RISC-V instruction set architecture,"
+ },
+ {
+  "id": 125,
+  "text": "we also learned about this."
+ },
+ {
+  "id": 126,
+  "text": "RISC-V has several operating modes,"
+ },
+ {
+  "id": 127,
+  "text": "right?"
+ },
+ {
+  "id": 128,
+  "text": "You still remember, right?"
+ },
+ {
+  "id": 129,
+  "text": "How many are there?"
+ },
+ {
+  "id": 130,
+  "text": "There are three, right?"
+ },
+ {
+  "id": 131,
+  "text": "Isn't that so?"
+ },
+ {
+  "id": 132,
+  "text": "User mode,"
+ },
+ {
+  "id": 133,
+  "text": "supervisor mode,"
+ },
+ {
+  "id": 134,
+  "text": "and machine mode."
+ },
+ {
+  "id": 135,
+  "text": "Now, in this course,"
+ },
+ {
+  "id": 136,
+  "text": "that is, our work,"
+ },
+ {
+  "id": 137,
+  "text": "is mainly focused on machine mode."
+ },
+ {
+  "id": 138,
+  "text": "So in each of these modes,"
+ },
+ {
+  "id": 139,
+  "text": "it has its own set of CSRs."
+ },
+ {
+  "id": 140,
+  "text": "Do you still remember what CSRs are?"
+ },
+ {
+  "id": 141,
+  "text": "Let's recall that for a moment."
+ },
+ {
+  "id": 142,
+  "text": "Let's review it."
+ },
+ {
+  "id": 143,
+  "text": "CSR stands for Control and Status Register."
+ },
+ {
+  "id": 144,
+  "text": "Right?"
+ },
+ {
+  "id": 145,
+  "text": "As opposed to the general-purpose registers,"
+ },
+ {
+  "id": 146,
+  "text": "the general-purpose registers,"
+ },
+ {
+  "id": 147,
+  "text": "meaning x0 to x31,"
+ },
+ {
+  "id": 148,
+  "text": "those 32 registers."
+ },
+ {
+  "id": 149,
+  "text": "So beyond those,"
+ },
+ {
+  "id": 150,
+  "text": "in some privilege modes,"
+ },
+ {
+  "id": 151,
+  "text": "that is, machine mode,"
+ },
+ {
+  "id": 152,
+  "text": "Supervisor mode,"
+ },
+ {
+  "id": 153,
+  "text": "modes like these,"
+ },
+ {
+  "id": 154,
+  "text": "each one has its own set of"
+ },
+ {
+  "id": 155,
+  "text": "special control registers."
+ },
+ {
+  "id": 156,
+  "text": "Those are the CSRs."
+ },
+ {
+  "id": 157,
+  "text": "And mainly,"
+ },
+ {
+  "id": 158,
+  "text": "since we're introducing machine mode,"
+ },
+ {
+  "id": 159,
+  "text": "let's focus on understanding them."
+ },
+ {
+  "id": 160,
+  "text": "the related registers in the machine mode"
+ },
+ {
+  "id": 161,
+  "text": "Now, these registers"
+ },
+ {
+  "id": 162,
+  "text": "are related to our trap handling in the CHAP,"
+ },
+ {
+  "id": 163,
+  "text": "and this table simply lists them."
+ },
+ {
+  "id": 164,
+  "text": "For more details, you can refer"
+ },
+ {
+  "id": 165,
+  "text": "to the privileged instruction set"
+ },
+ {
+  "id": 166,
+  "text": "manual, specifically Table 2.4,"
+ },
+ {
+  "id": 167,
+  "text": "for the specific registers inside it."
+ },
+ {
+  "id": 168,
+  "text": "Later on, we will"
+ },
+ {
+  "id": 169,
+  "text": "introduce them to you separately."
+ },
+ {
+  "id": 170,
+  "text": "So among these,"
+ },
+ {
+  "id": 171,
+  "text": "in the earlier calculator example,"
+ },
+ {
+  "id": 172,
+  "text": "there are actually quite a few registers,"
+ },
+ {
+  "id": 173,
+  "text": "but,"
+ },
+ {
+  "id": 174,
+  "text": "the ones related to trap handling,"
+ },
+ {
+  "id": 175,
+  "text": "we have gathered and listed them out"
+ },
+ {
+  "id": 176,
+  "text": "right here."
+ },
+ {
+  "id": 177,
+  "text": "For example, mtvec,"
+ },
+ {
+  "id": 178,
+  "text": "mepc,"
+ },
+ {
+  "id": 179,
+  "text": "and so on and so forth."
+ },
+ {
+  "id": 180,
+  "text": "So this is actually a summary table"
+ },
+ {
+  "id": 181,
+  "text": "Now, you guys"
+ },
+ {
+  "id": 182,
+  "text": "may take a look at it right now"
+ },
+ {
+  "id": 183,
+  "text": "and it might not be immediately clear"
+ },
+ {
+  "id": 184,
+  "text": "what exactly it is for"
+ },
+ {
+  "id": 185,
+  "text": "After we finish the later content,"
+ },
+ {
+  "id": 186,
+  "text": "we'll come back to it"
+ },
+ {
+  "id": 187,
+  "text": "This is actually more or less a summary table"
+ },
+ {
+  "id": 188,
+  "text": "so I won't belabor it here"
+ },
+ {
+  "id": 189,
+  "text": "Let me just say that"
+ },
+ {
+  "id": 190,
+  "text": "the registers we covered today"
+ },
+ {
+  "id": 191,
+  "text": "those registers"
+ },
+ {
+  "id": 192,
+  "text": "are mainly the ones listed above"
+ },
+ {
+  "id": 193,
+  "text": "These last two"
+ },
+ {
+  "id": 194,
+  "text": "when we get to interrupts"
+ },
+ {
+  "id": 195,
+  "text": "like MIE,"
+ },
+ {
+  "id": 196,
+  "text": "MIP and the like"
+ },
+ {
+  "id": 197,
+  "text": "when it comes to interrupt handling,"
+ },
+ {
+  "id": 198,
+  "text": "we will cover them in the next lecture"
+ },
+ {
+  "id": 199,
+  "text": "and introduce them to you then"
+ },
+ {
+  "id": 200,
+  "text": "So let's first look at"
+ },
+ {
+  "id": 201,
+  "text": "the registers we covered earlier."
+ },
+ {
+  "id": 202,
+  "text": "Among them,"
+ },
+ {
+  "id": 203,
+  "text": "we introduced to you"
+ },
+ {
+  "id": 204,
+  "text": "the first register related to TRAP,"
+ },
+ {
+  "id": 205,
+  "text": "the register related to traps,"
+ },
+ {
+  "id": 206,
+  "text": "called MTVC."
+ },
+ {
+  "id": 207,
+  "text": "Now all these registers have a leading"
+ },
+ {
+  "id": 208,
+  "text": "letter M in their names,"
+ },
+ {
+  "id": 209,
+  "text": "and this M means it belongs to Machine mode."
+ },
+ {
+  "id": 210,
+  "text": "If it were in another mode,"
+ },
+ {
+  "id": 211,
+  "text": "it might be replaced,"
+ },
+ {
+  "id": 212,
+  "text": "with an S, for example, or something else."
+ },
+ {
+  "id": 213,
+  "text": "So here we see this M,"
+ },
+ {
+  "id": 214,
+  "text": "and it stands for Machine mode."
+ },
+ {
+  "id": 215,
+  "text": "Now the TVEC that follows,"
+ },
+ {
+  "id": 216,
+  "text": "is actually an abbreviation of English words as well."
+ },
+ {
+  "id": 217,
+  "text": "The T,"
+ },
+ {
+  "id": 218,
+  "text": "is short for Trap, as we call it."
+ },
+ {
+  "id": 219,
+  "text": "And VEC,"
+ },
+ {
+  "id": 220,
+  "text": "It's actually Vector."
+ },
+ {
+  "id": 221,
+  "text": "Vector expresses the idea of a vector or an array."
+ },
+ {
+  "id": 222,
+  "text": "We'll come back to that in detail later."
+ },
+ {
+  "id": 223,
+  "text": "So what is this register used to hold?"
+ },
+ {
+  "id": 224,
+  "text": "As we can see here, it's mainly used to hold some base values."
+ },
+ {
+  "id": 225,
+  "text": "So this is the description of the register from the specification."
+ },
+ {
+  "id": 226,
+  "text": "Now, as we mentioned earlier, things like this MXLEN"
+ },
+ {
+  "id": 227,
+  "text": "are related to the CPU's word length."
+ },
+ {
+  "id": 228,
+  "text": "It could be 32, or it could be 64."
+ },
+ {
+  "id": 229,
+  "text": "So they use a single red symbol to represent it."
+ },
+ {
+  "id": 230,
+  "text": "And what this is saying is that"
+ },
+ {
+  "id": 231,
+  "text": "the front part of this register is divided into two parts."
+ },
+ {
+  "id": 232,
+  "text": "The latter part has two bits,"
+ },
+ {
+  "id": 233,
+  "text": "01, two bits, used to hold something called MODE."
+ },
+ {
+  "id": 234,
+  "text": "And the remaining part at the front is used to hold this BASE."
+ },
+ {
+  "id": 235,
+  "text": "What exactly that means, I'll explain to you later."
+ },
+ {
+  "id": 236,
+  "text": "Also, there's one more thing mentioned here, which is that"
+ },
+ {
+  "id": 237,
+  "text": "there's also a special term that appears here,"
+ },
+ {
+  "id": 238,
+  "text": "called WARL."
+ },
+ {
+  "id": 239,
+  "text": "This is also one of the special things in the specification."
+ },
+ {
+  "id": 240,
+  "text": "this term in the spec"
+ },
+ {
+  "id": 241,
+  "text": "there are a few more later on"
+ },
+ {
+  "id": 242,
+  "text": "Now let's briefly talk about WAR"
+ },
+ {
+  "id": 243,
+  "text": "What it actually expresses is this"
+ },
+ {
+  "id": 244,
+  "text": "It is actually an abbreviation called"
+ },
+ {
+  "id": 245,
+  "text": "Write Any Value Reads Legal Value"
+ },
+ {
+  "id": 246,
+  "text": "So what it specifically means is"
+ },
+ {
+  "id": 247,
+  "text": "this field,"
+ },
+ {
+  "id": 248,
+  "text": "this base field,"
+ },
+ {
+  "id": 249,
+  "text": "you can write any value to it"
+ },
+ {
+  "id": 250,
+  "text": "but the value you read back"
+ },
+ {
+  "id": 251,
+  "text": "is always legal"
+ },
+ {
+  "id": 252,
+  "text": "That's what it expresses"
+ },
+ {
+  "id": 253,
+  "text": "As for the specific meaning,"
+ },
+ {
+  "id": 254,
+  "text": "I won't go into it further here"
+ },
+ {
+  "id": 255,
+  "text": "Those of you who are interested"
+ },
+ {
+  "id": 256,
+  "text": "can go take a look"
+ },
+ {
+  "id": 257,
+  "text": "at section 2.3 of the privileged spec"
+ },
+ {
+  "id": 258,
+  "text": "for the related content"
+ },
+ {
+  "id": 259,
+  "text": "about this CS,"
+ },
+ {
+  "id": 260,
+  "text": "Now, this is a standard description,"
+ },
+ {
+  "id": 261,
+  "text": "and from its wording,"
+ },
+ {
+  "id": 262,
+  "text": "it's actually pretty easy to understand."
+ },
+ {
+  "id": 263,
+  "text": "It's basically about this part here."
+ },
+ {
+  "id": 264,
+  "text": "Because this register,"
+ },
+ {
+  "id": 265,
+  "text": "it can be both readable and writable,"
+ },
+ {
+  "id": 266,
+  "text": "which means that"
+ },
+ {
+  "id": 267,
+  "text": "for the content in this part,"
+ },
+ {
+  "id": 268,
+  "text": "you can write to it however you like."
+ },
+ {
+  "id": 269,
+  "text": "And then,"
+ },
+ {
+  "id": 270,
+  "text": "to make sure that,"
+ },
+ {
+  "id": 271,
+  "text": "it guarantees that what you read out"
+ },
+ {
+  "id": 272,
+  "text": "is always legal content."
+ },
+ {
+  "id": 273,
+  "text": "So,"
+ },
+ {
+  "id": 274,
+  "text": "sorry about that,"
+ },
+ {
+  "id": 275,
+  "text": "I accidentally turned it off earlier."
+ },
+ {
+  "id": 276,
+  "text": "So let's now mainly look at,"
+ },
+ {
+  "id": 277,
+  "text": "that is to say, this,"
+ },
+ {
+  "id": 278,
+  "text": "the parts of this register,"
+ },
+ {
+  "id": 279,
+  "text": "these two parts respectively,"
+ },
+ {
+  "id": 280,
+  "text": "what is it used for"
+ },
+ {
+  "id": 281,
+  "text": "So let's first look at"
+ },
+ {
+  "id": 282,
+  "text": "this base on the left"
+ },
+ {
+  "id": 283,
+  "text": "As for base,"
+ },
+ {
+  "id": 284,
+  "text": "it is actually used to hold"
+ },
+ {
+  "id": 285,
+  "text": "what it says on it is"
+ },
+ {
+  "id": 286,
+  "text": "called"
+ },
+ {
+  "id": 287,
+  "text": "the base value of the trap entry function"
+ },
+ {
+  "id": 288,
+  "text": "What does this mean?"
+ },
+ {
+  "id": 289,
+  "text": "Well, you can imagine"
+ },
+ {
+  "id": 290,
+  "text": "that when an exception occurs,"
+ },
+ {
+  "id": 291,
+  "text": "or an interrupt,"
+ },
+ {
+  "id": 292,
+  "text": "its main purpose is"
+ },
+ {
+  "id": 293,
+  "text": "to make the whole machine,"
+ },
+ {
+  "id": 294,
+  "text": "the entire execution flow of the machine,"
+ },
+ {
+  "id": 295,
+  "text": "jump to a special handler function,"
+ },
+ {
+  "id": 296,
+  "text": "to execute this special trap handler function."
+ },
+ {
+  "id": 297,
+  "text": "Now, where this trap handler function"
+ },
+ {
+  "id": 298,
+  "text": "is placed,"
+ },
+ {
+  "id": 299,
+  "text": "this location can actually be customized yourself."
+ },
+ {
+  "id": 300,
+  "text": "So how do we tell the"
+ },
+ {
+  "id": 301,
+  "text": "CPU about our"
+ },
+ {
+  "id": 302,
+  "text": "base address of this function? Where is it?"
+ },
+ {
+  "id": 303,
+  "text": "In fact, we just need to fill it in here."
+ },
+ {
+  "id": 304,
+  "text": "Then,"
+ },
+ {
+  "id": 305,
+  "text": "it says"
+ },
+ {
+  "id": 306,
+  "text": "it also says we must ensure 4-byte alignment."
+ },
+ {
+  "id": 307,
+  "text": "That's mainly because"
+ },
+ {
+  "id": 308,
+  "text": "as you can see,"
+ },
+ {
+  "id": 309,
+  "text": "this register,"
+ },
+ {
+  "id": 310,
+  "text": "it actually"
+ },
+ {
+  "id": 311,
+  "text": "in total it's"
+ },
+ {
+  "id": 312,
+  "text": "let's say if ours is 32-bit,"
+ },
+ {
+  "id": 313,
+  "text": "then in total it only has 30 bits of length,"
+ },
+ {
+  "id": 314,
+  "text": "because the last two bits are used for other content,"
+ },
+ {
+  "id": 315,
+  "text": "right?"
+ },
+ {
+  "id": 316,
+  "text": "So what that actually means is,"
+ },
+ {
+  "id": 317,
+  "text": "since it's"
+ },
+ {
+  "id": 318,
+  "text": "in other words,"
+ },
+ {
+  "id": 319,
+  "text": "if a complete address"
+ },
+ {
+  "id": 320,
+  "text": "It should be 32 bits"
+ },
+ {
+  "id": 321,
+  "text": "on a 32-bit machine,"
+ },
+ {
+  "id": 322,
+  "text": "its full address"
+ },
+ {
+  "id": 323,
+  "text": "length should be 32 bits."
+ },
+ {
+  "id": 324,
+  "text": "So if the last two bits"
+ },
+ {
+  "id": 325,
+  "text": "are not used,"
+ },
+ {
+  "id": 326,
+  "text": "or are used to hold something else,"
+ },
+ {
+  "id": 327,
+  "text": "then by default,"
+ },
+ {
+  "id": 328,
+  "text": "the last two bits"
+ },
+ {
+  "id": 329,
+  "text": "are both 0."
+ },
+ {
+  "id": 330,
+  "text": "So by default, if the last two bits"
+ },
+ {
+  "id": 331,
+  "text": "are 0,"
+ },
+ {
+  "id": 332,
+  "text": "then according to binary representation,"
+ },
+ {
+  "id": 333,
+  "text": "if the lowest two bits are 0,"
+ },
+ {
+  "id": 334,
+  "text": "that means the whole address"
+ },
+ {
+  "id": 335,
+  "text": "must be a multiple of 4."
+ },
+ {
+  "id": 336,
+  "text": "In other words, if what is stored in front is 5,"
+ },
+ {
+  "id": 337,
+  "text": "then its actual address"
+ },
+ {
+  "id": 338,
+  "text": "is 20,"
+ },
+ {
+  "id": 339,
+  "text": "because the way it is expressed here"
+ },
+ {
+  "id": 340,
+  "text": "So he expressed it this way."
+ },
+ {
+  "id": 341,
+  "text": "What's stored here is"
+ },
+ {
+  "id": 342,
+  "text": "the upper 30 bits of a 32-bit number,"
+ },
+ {
+  "id": 343,
+  "text": "the high 30 bits,"
+ },
+ {
+  "id": 344,
+  "text": "and the last two bits are actually 0 by default,"
+ },
+ {
+  "id": 345,
+  "text": "so he used them to hold other content."
+ },
+ {
+  "id": 346,
+  "text": "Pay attention to this."
+ },
+ {
+  "id": 347,
+  "text": "This way we can, so to speak,"
+ },
+ {
+  "id": 348,
+  "text": "express an address using just 30 bits,"
+ },
+ {
+  "id": 349,
+  "text": "and the last two bits,"
+ },
+ {
+  "id": 350,
+  "text": "being left empty, can hold other content."
+ },
+ {
+  "id": 351,
+  "text": "That's where this four-byte alignment comes from."
+ },
+ {
+  "id": 352,
+  "text": "And then,"
+ },
+ {
+  "id": 353,
+  "text": "the two bits after that,"
+ },
+ {
+  "id": 354,
+  "text": "they're called mode."
+ },
+ {
+  "id": 355,
+  "text": "As for mode,"
+ },
+ {
+  "id": 356,
+  "text": "it's defined as follows:"
+ },
+ {
+  "id": 357,
+  "text": "it can be used to control how the entry function's address is configured,"
+ },
+ {
+  "id": 358,
+  "text": "that is, the address of this entry function,"
+ },
+ {
+  "id": 359,
+  "text": "the way it's stored."
+ },
+ {
+  "id": 360,
+  "text": "It has two modes."
+ },
+ {
+  "id": 361,
+  "text": "One of them"
+ },
+ {
+  "id": 362,
+  "text": "uses what's called direct mode,"
+ },
+ {
+  "id": 363,
+  "text": "and the other is called vectored mode."
+ },
+ {
+  "id": 364,
+  "text": "Now, as for the values,"
+ },
+ {
+  "id": 365,
+  "text": "they're also on this table."
+ },
+ {
+  "id": 366,
+  "text": "If it's direct mode,"
+ },
+ {
+  "id": 367,
+  "text": "then the last two bits are 0."
+ },
+ {
+  "id": 368,
+  "text": "If it's vectored mode,"
+ },
+ {
+  "id": 369,
+  "text": "then that means it's just 1."
+ },
+ {
+  "id": 370,
+  "text": "And 1 means this side here"
+ },
+ {
+  "id": 371,
+  "text": "holds 01 in binary,"
+ },
+ {
+  "id": 372,
+  "text": "right?"
+ },
+ {
+  "id": 373,
+  "text": "So specifically, what is direct mode,"
+ },
+ {
+  "id": 374,
+  "text": "and what is vectored mode?"
+ },
+ {
+  "id": 375,
+  "text": "Let me explain that to you."
+ },
+ {
+  "id": 376,
+  "text": "So, direct mode"
+ },
+ {
+  "id": 377,
+  "text": "is described in the text like this:"
+ },
+ {
+  "id": 378,
+  "text": "after all exceptions and interrupts occur,"
+ },
+ {
+  "id": 379,
+  "text": "the PC jumps to the address specified by base."
+ },
+ {
+  "id": 380,
+  "text": "So let's draw a diagram to illustrate it."
+ },
+ {
+  "id": 381,
+  "text": "It's actually in this form."
+ },
+ {
+  "id": 382,
+  "text": "That is, you can imagine"
+ },
+ {
+  "id": 383,
+  "text": "in memory,"
+ },
+ {
+  "id": 384,
+  "text": "we take this exception handler,"
+ },
+ {
+  "id": 385,
+  "text": "which we call the interrupt handler here,"
+ },
+ {
+  "id": 386,
+  "text": "strictly speaking,"
+ },
+ {
+  "id": 387,
+  "text": "it should be a trap handler."
+ },
+ {
+  "id": 388,
+  "text": "So this trap handler,"
+ },
+ {
+  "id": 389,
+  "text": "this function is placed"
+ },
+ {
+  "id": 390,
+  "text": "in the memory region starting at the ebase address."
+ },
+ {
+  "id": 391,
+  "text": "And then we tell this address"
+ },
+ {
+  "id": 392,
+  "text": "through this register to our CPU,"
+ },
+ {
+  "id": 393,
+  "text": "and at the same time fill in this mode value as 0."
+ },
+ {
+  "id": 394,
+  "text": "Then when a trap occurs on the CPU,"
+ },
+ {
+  "id": 395,
+  "text": "it will jump to the location at the base address,"
+ },
+ {
+  "id": 396,
+  "text": "and start executing this trap handler."
+ },
+ {
+  "id": 397,
+  "text": "So as you know,"
+ },
+ {
+  "id": 398,
+  "text": "this base direct method,"
+ },
+ {
+  "id": 399,
+  "text": "this base direct method"
+ },
+ {
+  "id": 400,
+  "text": "It means this handler function is only one."
+ },
+ {
+  "id": 401,
+  "text": "We just need to give it an address, and that's it."
+ },
+ {
+  "id": 402,
+  "text": "So as we all know,"
+ },
+ {
+  "id": 403,
+  "text": "there are many kinds of exceptions and interrupts."
+ },
+ {
+  "id": 404,
+  "text": "For different exception handlers,"
+ },
+ {
+  "id": 405,
+  "text": "we might need to provide different handler functions."
+ },
+ {
+  "id": 406,
+  "text": "So how can we, within a single handler function,"
+ },
+ {
+  "id": 407,
+  "text": "handle multiple exceptions and interrupts?"
+ },
+ {
+  "id": 408,
+  "text": "Well, you can imagine,"
+ },
+ {
+  "id": 409,
+  "text": "that inside this interrupt handler function,"
+ },
+ {
+  "id": 410,
+  "text": "if we were to write it in C,"
+ },
+ {
+  "id": 411,
+  "text": "then there must be a"
+ },
+ {
+  "id": 412,
+  "text": "switch-case type of logic in here,"
+ },
+ {
+  "id": 413,
+  "text": "right?"
+ },
+ {
+  "id": 414,
+  "text": "And then, based on"
+ },
+ {
+  "id": 415,
+  "text": "the different exceptions and interrupts,"
+ },
+ {
+  "id": 416,
+  "text": "which we'll talk about later,"
+ },
+ {
+  "id": 417,
+  "text": "the CPU will use other means"
+ },
+ {
+  "id": 418,
+  "text": "to tell us,"
+ },
+ {
+  "id": 419,
+  "text": "when this interrupt occurs."
+ },
+ {
+  "id": 420,
+  "text": "When this trap occurs,"
+ },
+ {
+  "id": 421,
+  "text": "what interrupt it is,"
+ },
+ {
+  "id": 422,
+  "text": "and/or what exception it is,"
+ },
+ {
+  "id": 423,
+  "text": "then we can go through"
+ },
+ {
+  "id": 424,
+  "text": "this kind of switch-case to determine,"
+ },
+ {
+  "id": 425,
+  "text": "and then in this handler function,"
+ },
+ {
+  "id": 426,
+  "text": "take the branch."
+ },
+ {
+  "id": 427,
+  "text": "This is what's called the direct method."
+ },
+ {
+  "id": 428,
+  "text": "Now, corresponding to it,"
+ },
+ {
+  "id": 429,
+  "text": "there's what's called the vector method."
+ },
+ {
+  "id": 430,
+  "text": "What do we mean by the vector method?"
+ },
+ {
+  "id": 431,
+  "text": "Actually, it's very simple."
+ },
+ {
+  "id": 432,
+  "text": "That is, it doesn't provide"
+ },
+ {
+  "id": 433,
+  "text": "just a single function;"
+ },
+ {
+  "id": 434,
+  "text": "it provides multiple functions."
+ },
+ {
+  "id": 435,
+  "text": "And at this base address,"
+ },
+ {
+  "id": 436,
+  "text": "what's actually stored is an array."
+ },
+ {
+  "id": 437,
+  "text": "You can also understand it this way:"
+ },
+ {
+  "id": 438,
+  "text": "that is, I can have in memory"
+ },
+ {
+  "id": 439,
+  "text": "an array defined"
+ },
+ {
+  "id": 440,
+  "text": "This array,"
+ },
+ {
+  "id": 441,
+  "text": "each entry is 4 bytes,"
+ },
+ {
+  "id": 442,
+  "text": "and each one actually holds an address."
+ },
+ {
+  "id": 443,
+  "text": "So it's a pointer array."
+ },
+ {
+  "id": 444,
+  "text": "We take the base address of this pointer array,"
+ },
+ {
+  "id": 445,
+  "text": "as the base,"
+ },
+ {
+  "id": 446,
+  "text": "and fill it into this register,"
+ },
+ {
+  "id": 447,
+  "text": "and then tell the CPU."
+ },
+ {
+  "id": 448,
+  "text": "When a trap happens, the CPU,"
+ },
+ {
+  "id": 449,
+  "text": "it will jump to this base location,"
+ },
+ {
+  "id": 450,
+  "text": "jump to this base location."
+ },
+ {
+  "id": 451,
+  "text": "And then, based on this,"
+ },
+ {
+  "id": 452,
+  "text": "the specific kind of trap,"
+ },
+ {
+  "id": 453,
+  "text": "exactly what it is,"
+ },
+ {
+  "id": 454,
+  "text": "we'll talk about this later,"
+ },
+ {
+  "id": 455,
+  "text": "that is, for different exceptions and interrupts,"
+ },
+ {
+  "id": 456,
+  "text": "there is actually a code,"
+ },
+ {
+  "id": 457,
+  "text": "which is really just an index value."
+ },
+ {
+  "id": 458,
+  "text": "Based on this index value,"
+ },
+ {
+  "id": 459,
+  "text": "it is then used as an index into this array."
+ },
+ {
+  "id": 460,
+  "text": "And then based on this,"
+ },
+ {
+  "id": 461,
+  "text": "you can find the corresponding"
+ },
+ {
+  "id": 462,
+  "text": "entry in the vector table where this exception lives."
+ },
+ {
+  "id": 463,
+  "text": "So this"
+ },
+ {
+  "id": 464,
+  "text": "is exactly the idea of a vector."
+ },
+ {
+  "id": 465,
+  "text": "Now, each entry in here"
+ },
+ {
+  "id": 466,
+  "text": "is really just an address."
+ },
+ {
+  "id": 467,
+  "text": "Suppose I get this"
+ },
+ {
+  "id": 468,
+  "text": "exception number,"
+ },
+ {
+  "id": 469,
+  "text": "say it is 2,"
+ },
+ {
+  "id": 470,
+  "text": "then based on this base address,"
+ },
+ {
+  "id": 471,
+  "text": "it offsets by one,"
+ },
+ {
+  "id": 472,
+  "text": "offsets by two,"
+ },
+ {
+  "id": 473,
+  "text": "2 times 4 bytes, right?"
+ },
+ {
+  "id": 474,
+  "text": "If it is 3,"
+ },
+ {
+  "id": 475,
+  "text": "then it offsets by 3 times 4 bytes."
+ },
+ {
+  "id": 476,
+  "text": "So say it is 2,"
+ },
+ {
+  "id": 477,
+  "text": "then for 2 it offsets by this much,"
+ },
+ {
+  "id": 478,
+  "text": "and after offsetting this much,"
+ },
+ {
+  "id": 479,
+  "text": "it arrives at this position."
+ },
+ {
+  "id": 480,
+  "text": "right?..."
+ },
+ {
+  "id": 481,
+  "text": "So after we get to this location,"
+ },
+ {
+  "id": 482,
+  "text": "what's stored there is another address."
+ },
+ {
+  "id": 483,
+  "text": "And this address,"
+ },
+ {
+  "id": 484,
+  "text": "in fact, points to a"
+ },
+ {
+  "id": 485,
+  "text": "handler function that actually corresponds to it."
+ },
+ {
+  "id": 486,
+  "text": "In other words, it actually means"
+ },
+ {
+  "id": 487,
+  "text": "it replaces the approach where, in our code,"
+ },
+ {
+  "id": 488,
+  "text": "we write switch-case statements ourselves"
+ },
+ {
+  "id": 489,
+  "text": "and implements it as a"
+ },
+ {
+  "id": 490,
+  "text": "pointer table style."
+ },
+ {
+  "id": 491,
+  "text": "Now think about it,"
+ },
+ {
+  "id": 492,
+  "text": "these two approaches"
+ },
+ {
+  "id": 493,
+  "text": "definitely have"
+ },
+ {
+  "id": 494,
+  "text": "definitely have a purpose."
+ },
+ {
+  "id": 495,
+  "text": "Why is one called the"
+ },
+ {
+  "id": 496,
+  "text": "direct mode,"
+ },
+ {
+  "id": 497,
+  "text": "and the other called the vector mode?"
+ },
+ {
+  "id": 498,
+  "text": "Think about why."
+ },
+ {
+  "id": 499,
+  "text": "Well, it's actually pretty easy to see,"
+ },
+ {
+  "id": 500,
+  "text": "That is to say, if we use the vector method,"
+ },
+ {
+  "id": 501,
+  "text": "if we use the approach I'm using now,"
+ },
+ {
+  "id": 502,
+  "text": "compared to the earlier version where we formally write a switch case,"
+ },
+ {
+  "id": 503,
+  "text": "its handling efficiency is definitely a bit higher."
+ },
+ {
+  "id": 504,
+  "text": "So when, if in our system,"
+ },
+ {
+  "id": 505,
+  "text": "the interrupt or exception frequency is relatively high,"
+ },
+ {
+  "id": 506,
+  "text": "and we frequently jump into this kind of"
+ },
+ {
+  "id": 507,
+  "text": "interrupt and exception handler to execute,"
+ },
+ {
+  "id": 508,
+  "text": "we actually recommend that you use this vector method"
+ },
+ {
+  "id": 509,
+  "text": "to configure its entry address."
+ },
+ {
+  "id": 510,
+  "text": "In normal situations,"
+ },
+ {
+  "id": 511,
+  "text": "we just use"
+ },
+ {
+  "id": 512,
+  "text": "the simple base method,"
+ },
+ {
+  "id": 513,
+  "text": "and that's actually enough."
+ },
+ {
+  "id": 514,
+  "text": "So the vector method"
+ },
+ {
+  "id": 515,
+  "text": "is more suited to this kind of"
+ },
+ {
+  "id": 516,
+  "text": "interrupt handling"
+ },
+ {
+  "id": 517,
+  "text": "where faster response is required,"
+ },
+ {
+  "id": 518,
+  "text": "and where interrupts occur frequently,"
+ },
+ {
+  "id": 519,
+  "text": "and when higher efficiency is needed."
+ },
+ {
+  "id": 520,
+  "text": "We configure it this way,"
+ },
+ {
+  "id": 521,
+  "text": "and that's it."
+ },
+ {
+  "id": 522,
+  "text": "The effect is actually the same."
+ },
+ {
+  "id": 523,
+  "text": "Now this one,"
+ },
+ {
+  "id": 524,
+  "text": "is a register called MTVEC,"
+ },
+ {
+  "id": 525,
+  "text": "which stands for Machine Trap Vector"
+ },
+ {
+  "id": 526,
+  "text": "Base Address."
+ },
+ {
+  "id": 527,
+  "text": "That's what this register is."
+ },
+ {
+  "id": 528,
+  "text": "Very simple,"
+ },
+ {
+  "id": 529,
+  "text": "it's used to configure"
+ },
+ {
+  "id": 530,
+  "text": "the entry address of the trap handler."
+ },
+ {
+  "id": 531,
+  "text": "That's the first register."
+ },
+ {
+  "id": 532,
+  "text": "Now the second register,"
+ },
+ {
+  "id": 533,
+  "text": "is called MEPC."
+ },
+ {
+  "id": 534,
+  "text": "What it means,"
+ },
+ {
+  "id": 535,
+  "text": "is a kind of exception program counter"
+ },
+ {
+  "id": 536,
+  "text": "in machine mode."
+ },
+ {
+  "id": 537,
+  "text": "Program counter,"
+ },
+ {
+  "id": 538,
+  "text": "we've mentioned it many times before,"
+ },
+ {
+  "id": 539,
+  "text": "it actually represents"
+ },
+ {
+  "id": 540,
+  "text": "The execution of this program,"
+ },
+ {
+  "id": 541,
+  "text": "the concept of the current position"
+ },
+ {
+  "id": 542,
+  "text": "— right?"
+ },
+ {
+  "id": 543,
+  "text": "So it is actually also used"
+ },
+ {
+  "id": 544,
+  "text": "to hold this kind of information"
+ },
+ {
+  "id": 545,
+  "text": "about the program's execution position."
+ },
+ {
+  "id": 546,
+  "text": "So its length is,"
+ },
+ {
+  "id": 547,
+  "text": "for example, right now we are only using 32-bit,"
+ },
+ {
+  "id": 548,
+  "text": "so it is 32 bits long."
+ },
+ {
+  "id": 549,
+  "text": "So when exactly"
+ },
+ {
+  "id": 550,
+  "text": "is this register used?"
+ },
+ {
+  "id": 551,
+  "text": "It is described very clearly here:"
+ },
+ {
+  "id": 552,
+  "text": "that is, when a trap occurs,"
+ },
+ {
+  "id": 553,
+  "text": "we know"
+ },
+ {
+  "id": 554,
+  "text": "our program will definitely jump to"
+ },
+ {
+  "id": 555,
+  "text": "that mtvec,"
+ },
+ {
+  "id": 556,
+  "text": "the register we just mentioned,"
+ },
+ {
+  "id": 557,
+  "text": "and execute at the address it holds."
+ },
+ {
+  "id": 558,
+  "text": "Now, as for jumping to that address to execute,"
+ },
+ {
+  "id": 559,
+  "text": "well, everyone can imagine,"
+ },
+ {
+  "id": 560,
+  "text": "So what actually happens is that our normal PC"
+ },
+ {
+  "id": 561,
+  "text": "the PC we keep mentioning earlier"
+ },
+ {
+  "id": 562,
+  "text": "the value inside it actually gets replaced"
+ },
+ {
+  "id": 563,
+  "text": "So this is what the so-called jump refers to"
+ },
+ {
+  "id": 564,
+  "text": "that's really what this sentence means"
+ },
+ {
+  "id": 565,
+  "text": "Now, since this PC has been replaced"
+ },
+ {
+  "id": 566,
+  "text": "we know that exceptions and interrupts"
+ },
+ {
+  "id": 567,
+  "text": "actually express a very fundamental concept"
+ },
+ {
+  "id": 568,
+  "text": "We may have gone a bit too fast just now"
+ },
+ {
+  "id": 569,
+  "text": "and skipped over it in passing"
+ },
+ {
+  "id": 570,
+  "text": "It's this figure from earlier"
+ },
+ {
+  "id": 571,
+  "text": "this figure right here"
+ },
+ {
+  "id": 572,
+  "text": "that is to say, whether it's an exception or an interrupt"
+ },
+ {
+  "id": 573,
+  "text": "it actually follows this same basic idea right here"
+ },
+ {
+  "id": 574,
+  "text": "meaning that when our normal"
+ },
+ {
+  "id": 575,
+  "text": "these two lines actually represent our normal control flow"
+ },
+ {
+  "id": 576,
+  "text": "and this is our trap handler"
+ },
+ {
+  "id": 577,
+  "text": "this is the exception control flow"
+ },
+ {
+  "id": 578,
+  "text": "So what this dotted line expresses is"
+ },
+ {
+  "id": 579,
+  "text": "that when, say, an interrupt or an exception occurs"
+ },
+ {
+  "id": 580,
+  "text": "our execution flow will jump from the normal control flow to"
+ },
+ {
+  "id": 581,
+  "text": "this exception control flow"
+ },
+ {
+  "id": 582,
+  "text": "to execute a special handler function"
+ },
+ {
+  "id": 583,
+  "text": "but after the handling is done,"
+ },
+ {
+  "id": 584,
+  "text": "it's actually not finished"
+ },
+ {
+  "id": 585,
+  "text": "it still has to come back"
+ },
+ {
+  "id": 586,
+  "text": "see what I mean?"
+ },
+ {
+  "id": 587,
+  "text": "it still has to come back"
+ },
+ {
+  "id": 588,
+  "text": "so this jumping out and coming back,"
+ },
+ {
+  "id": 589,
+  "text": "this process is a bit like our"
+ },
+ {
+  "id": 590,
+  "text": "function call execution"
+ },
+ {
+  "id": 591,
+  "text": "but,"
+ },
+ {
+  "id": 592,
+  "text": "as you know, this call and execution"
+ },
+ {
+  "id": 593,
+  "text": "is not something that happens"
+ },
+ {
+  "id": 594,
+  "text": "under our control"
+ },
+ {
+  "id": 595,
+  "text": "it's a hardware handling behavior of the CPU"
+ },
+ {
+  "id": 596,
+  "text": "so since it has to jump out,"
+ },
+ {
+  "id": 597,
+  "text": "when it jumps out,"
+ },
+ {
+  "id": 598,
+  "text": "as we just said,"
+ },
+ {
+  "id": 599,
+  "text": "when it jumps out,"
+ },
+ {
+  "id": 600,
+  "text": "Our PC value will actually be replaced"
+ },
+ {
+  "id": 601,
+  "text": "Then, when we come back,"
+ },
+ {
+  "id": 602,
+  "text": "for it to continue executing,"
+ },
+ {
+  "id": 603,
+  "text": "this PC value must be restored"
+ },
+ {
+  "id": 604,
+  "text": "Think about it, right?"
+ },
+ {
+  "id": 605,
+  "text": "It must be restored"
+ },
+ {
+  "id": 606,
+  "text": "And since it needs to be restored,"
+ },
+ {
+  "id": 607,
+  "text": "that means at the time of the jump,"
+ },
+ {
+  "id": 608,
+  "text": "this original PC value"
+ },
+ {
+  "id": 609,
+  "text": "because we've already jumped to here,"
+ },
+ {
+  "id": 610,
+  "text": "the PC value gets replaced with the value at this location"
+ },
+ {
+  "id": 611,
+  "text": "Right?"
+ },
+ {
+  "id": 612,
+  "text": "So this PC value has to be saved"
+ },
+ {
+  "id": 613,
+  "text": "And saved where?"
+ },
+ {
+  "id": 614,
+  "text": "Actually, it's saved into what we just mentioned,"
+ },
+ {
+  "id": 615,
+  "text": "this thing called EPC"
+ },
+ {
+  "id": 616,
+  "text": "which is specifically used for exceptions,"
+ },
+ {
+  "id": 617,
+  "text": "used to save, when an exception occurs,"
+ },
+ {
+  "id": 618,
+  "text": "at the moment it occurs,"
+ },
+ {
+  "id": 619,
+  "text": "the PC value of that exception"
+ },
+ {
+  "id": 620,
+  "text": "So when it comes back,"
+ },
+ {
+  "id": 621,
+  "text": "we restore the values that were in here,"
+ },
+ {
+  "id": 622,
+  "text": "and then it can continue executing downward."
+ },
+ {
+  "id": 623,
+  "text": "There is actually a game like this,"
+ },
+ {
+  "id": 624,
+  "text": "which maybe just now,"
+ },
+ {
+  "id": 625,
+  "text": "when we were talking about this register,"
+ },
+ {
+  "id": 626,
+  "text": "was mentioned briefly in passing."
+ },
+ {
+  "id": 627,
+  "text": "Let me go over it for you again."
+ },
+ {
+  "id": 628,
+  "text": "Okay."
+ },
+ {
+  "id": 629,
+  "text": "So let's go back to this MEPC we were just talking about."
+ },
+ {
+  "id": 630,
+  "text": "So now everyone knows,"
+ },
+ {
+  "id": 631,
+  "text": "this MEPC, this register,"
+ },
+ {
+  "id": 632,
+  "text": "is actually used to save"
+ },
+ {
+  "id": 633,
+  "text": "when a trap occurs,"
+ },
+ {
+  "id": 634,
+  "text": "since this PC gets replaced,"
+ },
+ {
+  "id": 635,
+  "text": "we have to take that"
+ },
+ {
+  "id": 636,
+  "text": "original PC value and save it."
+ },
+ {
+  "id": 637,
+  "text": "Where do we save it?"
+ },
+ {
+  "id": 638,
+  "text": "It gets saved into this MEPC register."
+ },
+ {
+  "id": 639,
+  "text": "So what we just mentioned"
+ },
+ {
+  "id": 640,
+  "text": "That is, exiting this CHAP."
+ },
+ {
+  "id": 641,
+  "text": "So after the CHAP processing is done,"
+ },
+ {
+  "id": 642,
+  "text": "we have to come back."
+ },
+ {
+  "id": 643,
+  "text": "When we come back,"
+ },
+ {
+  "id": 644,
+  "text": "how do we make that PC value"
+ },
+ {
+  "id": 645,
+  "text": "get restored back to the MEPC value we saved?"
+ },
+ {
+  "id": 646,
+  "text": "Well, we'll talk about that later."
+ },
+ {
+  "id": 647,
+  "text": "It uses a special instruction,"
+ },
+ {
+  "id": 648,
+  "text": "called Mret here."
+ },
+ {
+  "id": 649,
+  "text": "Ret just means return."
+ },
+ {
+  "id": 650,
+  "text": "This one,"
+ },
+ {
+  "id": 651,
+  "text": "we'll talk about it again later."
+ },
+ {
+  "id": 652,
+  "text": "It's not quite the same as the return instruction"
+ },
+ {
+  "id": 653,
+  "text": "that we normally call."
+ },
+ {
+  "id": 654,
+  "text": "It's a special instruction"
+ },
+ {
+  "id": 655,
+  "text": "used when returning from an exception"
+ },
+ {
+  "id": 656,
+  "text": "back to normal execution."
+ },
+ {
+  "id": 657,
+  "text": "So when this instruction is called,"
+ },
+ {
+  "id": 658,
+  "text": "it actually makes use of the MEPC"
+ },
+ {
+  "id": 659,
+  "text": "that we just talked about."
+ },
+ {
+  "id": 660,
+  "text": "So it will take that original"
+ },
+ {
+  "id": 661,
+  "text": "value and restore it into PC,"
+ },
+ {
+  "id": 662,
+  "text": "which achieves the effect of returning."
+ },
+ {
+  "id": 663,
+  "text": "Combine this with that diagram from earlier"
+ },
+ {
+  "id": 664,
+  "text": "and take a moment to understand it again."
+ },
+ {
+  "id": 665,
+  "text": "This is the effect of mepc,"
+ },
+ {
+  "id": 666,
+  "text": "the effect that mepc is meant to achieve."
+ },
+ {
+  "id": 667,
+  "text": "Now, on this point,"
+ },
+ {
+  "id": 668,
+  "text": "I should also mention here on my end,"
+ },
+ {
+  "id": 669,
+  "text": "namely that"
+ },
+ {
+  "id": 670,
+  "text": "this restoration,"
+ },
+ {
+  "id": 671,
+  "text": "that is, at the time of saving,"
+ },
+ {
+  "id": 672,
+  "text": "what mepc saves"
+ },
+ {
+  "id": 673,
+  "text": "might be the current instruction,"
+ },
+ {
+  "id": 674,
+  "text": "or it might be the address of the next instruction."
+ },
+ {
+  "id": 675,
+  "text": "As for when the current address gets saved,"
+ },
+ {
+  "id": 676,
+  "text": "and when the next address gets saved,"
+ },
+ {
+  "id": 677,
+  "text": "we will cover that with you later on."
+ },
+ {
+  "id": 678,
+  "text": "But in any case, to sum up,"
+ },
+ {
+  "id": 679,
+  "text": "it is always used to save"
+ },
+ {
+  "id": 680,
+  "text": "a value related to the PC"
+ },
+ {
+  "id": 681,
+  "text": "Now, what happens next?"
+ },
+ {
+  "id": 682,
+  "text": "When we return,"
+ },
+ {
+  "id": 683,
+  "text": "the value is restored into the PC,"
+ },
+ {
+  "id": 684,
+  "text": "achieving the effect of a return."
+ },
+ {
+  "id": 685,
+  "text": "So in the normal handling process,"
+ },
+ {
+  "id": 686,
+  "text": "it's mentioned here"
+ },
+ {
+  "id": 687,
+  "text": "that its value can also be modified"
+ },
+ {
+  "id": 688,
+  "text": "to change its return address."
+ },
+ {
+  "id": 689,
+  "text": "In our later examples,"
+ },
+ {
+  "id": 690,
+  "text": "we'll also cover this kind of usage."
+ },
+ {
+  "id": 691,
+  "text": "So when we get to it,"
+ },
+ {
+  "id": 692,
+  "text": "we'll look at it then."
+ },
+ {
+  "id": 693,
+  "text": "For now, here,"
+ },
+ {
+  "id": 694,
+  "text": "just knowing that this exists is enough."
+ },
+ {
+  "id": 695,
+  "text": "This is what we need to understand,"
+ },
+ {
+  "id": 696,
+  "text": "that is, the second register"
+ },
+ {
+  "id": 697,
+  "text": "related to exception handling,"
+ },
+ {
+  "id": 698,
+  "text": "called MEPC."
+ },
+ {
+  "id": 699,
+  "text": "Now, the third one we need to understand"
+ },
+ {
+  "id": 700,
+  "text": "It's called Machine Cause."
+ },
+ {
+  "id": 701,
+  "text": "Cause means the reason."
+ },
+ {
+  "id": 702,
+  "text": "Because, because, right?"
+ },
+ {
+  "id": 703,
+  "text": "It means the reason."
+ },
+ {
+  "id": 704,
+  "text": "Now, as we mentioned earlier,"
+ },
+ {
+  "id": 705,
+  "text": "when a trap occurs,"
+ },
+ {
+  "id": 706,
+  "text": "just like that one earlier,"
+ },
+ {
+  "id": 707,
+  "text": "when we were talking about mtvec,"
+ },
+ {
+  "id": 708,
+  "text": "we also mentioned that"
+ },
+ {
+  "id": 709,
+  "text": "the CPU"
+ },
+ {
+  "id": 710,
+  "text": "will record the cause of this exception"
+ },
+ {
+  "id": 711,
+  "text": "— specifically, what kind of exception it is,"
+ },
+ {
+  "id": 712,
+  "text": "what kind of interrupt it is —"
+ },
+ {
+  "id": 713,
+  "text": "and tell us through this register."
+ },
+ {
+  "id": 714,
+  "text": "So we can read the value in this register"
+ },
+ {
+  "id": 715,
+  "text": "and just do a switch case,"
+ },
+ {
+  "id": 716,
+  "text": "right?"
+ },
+ {
+  "id": 717,
+  "text": "Taking different branches."
+ },
+ {
+  "id": 718,
+  "text": "So this is used to tell us"
+ },
+ {
+  "id": 719,
+  "text": "and store the exception code."
+ },
+ {
+  "id": 720,
+  "text": "The so-called exception code,"
+ },
+ {
+  "id": 721,
+  "text": "that is, the register holding the cause value."
+ },
+ {
+  "id": 722,
+  "text": "Now, one thing mentioned here is that"
+ },
+ {
+  "id": 723,
+  "text": "on this side they have written another one,"
+ },
+ {
+  "id": 724,
+  "text": "the spec says that"
+ },
+ {
+  "id": 725,
+  "text": "this field,"
+ },
+ {
+  "id": 726,
+  "text": "its attribute is called WRL."
+ },
+ {
+  "id": 727,
+  "text": "Now, as for WRL,"
+ },
+ {
+  "id": 728,
+  "text": "what they write here is"
+ },
+ {
+  "id": 729,
+  "text": "it stands for write read only legal values."
+ },
+ {
+  "id": 730,
+  "text": "So what it really means is that"
+ },
+ {
+  "id": 731,
+  "text": "when we read or write this field,"
+ },
+ {
+  "id": 732,
+  "text": "it must ensure that its value"
+ },
+ {
+  "id": 733,
+  "text": "for example, when you write to it,"
+ },
+ {
+  "id": 734,
+  "text": "its value must be legal."
+ },
+ {
+  "id": 735,
+  "text": "If it is an illegal value,"
+ },
+ {
+  "id": 736,
+  "text": "meaning one not defined in our spec,"
+ },
+ {
+  "id": 737,
+  "text": "or some value it does not recognize,"
+ },
+ {
+  "id": 738,
+  "text": "it may trigger a further exception."
+ },
+ {
+  "id": 739,
+  "text": "Please keep this in mind."
+ },
+ {
+  "id": 740,
+  "text": "This is the meaning of WRL."
+ },
+ {
+  "id": 741,
+  "text": "Let's talk about it briefly."
+ },
+ {
+  "id": 742,
+  "text": "So this"
+ },
+ {
+  "id": 743,
+  "text": "this register,"
+ },
+ {
+  "id": 744,
+  "text": "that is, when an exception occurs,"
+ },
+ {
+  "id": 745,
+  "text": "this Hart, that is, the CPU,"
+ },
+ {
+  "id": 746,
+  "text": "it will set this register,"
+ },
+ {
+  "id": 747,
+  "text": "to tell us about this trap,"
+ },
+ {
+  "id": 748,
+  "text": "the specific reason it happened."
+ },
+ {
+  "id": 749,
+  "text": "The specific reason is actually a value,"
+ },
+ {
+  "id": 750,
+  "text": "this value."
+ },
+ {
+  "id": 751,
+  "text": "And then when it encodes it,"
+ },
+ {
+  "id": 752,
+  "text": "that is, the whole thing,"
+ },
+ {
+  "id": 753,
+  "text": "for example, if it's 32 bits,"
+ },
+ {
+  "id": 754,
+  "text": "its most significant bit,"
+ },
+ {
+  "id": 755,
+  "text": "the most significant bit is used to tell us"
+ },
+ {
+  "id": 756,
+  "text": "whether it is an exception"
+ },
+ {
+  "id": 757,
+  "text": "or an interrupt,"
+ },
+ {
+  "id": 758,
+  "text": "because as we mentioned earlier,"
+ },
+ {
+  "id": 759,
+  "text": "traps fall into two categories."
+ },
+ {
+  "id": 760,
+  "text": "It's either an interrupt or an exception."
+ },
+ {
+  "id": 761,
+  "text": "So here,"
+ },
+ {
+  "id": 762,
+  "text": "if this highest bit"
+ },
+ {
+  "id": 763,
+  "text": "that is, the highest bit of this 32-bit field"
+ },
+ {
+  "id": 764,
+  "text": "is 1,"
+ },
+ {
+  "id": 765,
+  "text": "it means the trap that just occurred is an interrupt."
+ },
+ {
+  "id": 766,
+  "text": "Otherwise,"
+ },
+ {
+  "id": 767,
+  "text": "if it is 0,"
+ },
+ {
+  "id": 768,
+  "text": "otherwise it's 0,"
+ },
+ {
+  "id": 769,
+  "text": "and 0 means it's an exception."
+ },
+ {
+  "id": 770,
+  "text": "So by looking at this highest field, we can quickly tell apart"
+ },
+ {
+  "id": 771,
+  "text": "whether what just happened is an interrupt or an exception."
+ },
+ {
+  "id": 772,
+  "text": "Now, what about the remaining part?"
+ },
+ {
+  "id": 773,
+  "text": "As we just said, it's the specific"
+ },
+ {
+  "id": 774,
+  "text": "which interrupt it actually is,"
+ },
+ {
+  "id": 775,
+  "text": "or which exception it actually is,"
+ },
+ {
+  "id": 776,
+  "text": "the specific value."
+ },
+ {
+  "id": 777,
+  "text": "For this value,"
+ },
+ {
+  "id": 778,
+  "text": "the specification also has a table"
+ },
+ {
+  "id": 779,
+  "text": "that defines"
+ },
+ {
+  "id": 780,
+  "text": "You can take a look"
+ },
+ {
+  "id": 781,
+  "text": "at this table in the privileged spec, section 3.6,"
+ },
+ {
+  "id": 782,
+  "text": "Table 3.6."
+ },
+ {
+  "id": 783,
+  "text": "Now, as you can see from this table,"
+ },
+ {
+  "id": 784,
+  "text": "what it actually means is that"
+ },
+ {
+  "id": 785,
+  "text": "this highest bit here,"
+ },
+ {
+  "id": 786,
+  "text": "meaning that this side is all ones,"
+ },
+ {
+  "id": 787,
+  "text": "right?"
+ },
+ {
+  "id": 788,
+  "text": "If it's all ones,"
+ },
+ {
+  "id": 789,
+  "text": "then that means this side is"
+ },
+ {
+  "id": 790,
+  "text": "this category is interrupts."
+ },
+ {
+  "id": 791,
+  "text": "And if the highest bit of this category is 0,"
+ },
+ {
+  "id": 792,
+  "text": "then they are all exceptions."
+ },
+ {
+  "id": 793,
+  "text": "And it also defines,"
+ },
+ {
+  "id": 794,
+  "text": "for instance, these 0, 1, 2, 3, 4, 5 respectively."
+ },
+ {
+  "id": 795,
+  "text": "When the front part is an interrupt,"
+ },
+ {
+  "id": 796,
+  "text": "what do 0, 1, 2, 3, 4, 5 each mean?"
+ },
+ {
+  "id": 797,
+  "text": "And when it's an exception,"
+ },
+ {
+  "id": 798,
+  "text": "what exactly do the exception values 0, 1, 2, 3, 4, 5, 6, 7 mean?"
+ },
+ {
+  "id": 799,
+  "text": "Now, for us,"
+ },
+ {
+  "id": 800,
+  "text": "Today we're mainly going to talk about exceptions."
+ },
+ {
+  "id": 801,
+  "text": "So for interrupts,"
+ },
+ {
+  "id": 802,
+  "text": "we'll leave them aside for now."
+ },
+ {
+  "id": 803,
+  "text": "As we can see, exceptions are divided into many kinds."
+ },
+ {
+  "id": 804,
+  "text": "For example, instruction address misaligned,"
+ },
+ {
+  "id": 805,
+  "text": "instruction access fault,"
+ },
+ {
+  "id": 806,
+  "text": "that is, the access failed,"
+ },
+ {
+  "id": 807,
+  "text": "and illegal instruction, and so on."
+ },
+ {
+  "id": 808,
+  "text": "In other words, when the CPU detects that our program"
+ },
+ {
+  "id": 809,
+  "text": "has triggered one of these problems,"
+ },
+ {
+  "id": 810,
+  "text": "it will raise an exception,"
+ },
+ {
+  "id": 811,
+  "text": "and notify us."
+ },
+ {
+  "id": 812,
+  "text": "It then jumps to the specific exception handler"
+ },
+ {
+  "id": 813,
+  "text": "logic to execute."
+ },
+ {
+  "id": 814,
+  "text": "That's roughly what it means."
+ },
+ {
+  "id": 815,
+  "text": "This is the third register,"
+ },
+ {
+  "id": 816,
+  "text": "which is mcause."
+ },
+ {
+  "id": 817,
+  "text": "Then there is also one called mtval."
+ },
+ {
+  "id": 818,
+  "text": "What this actually means is that"
+ },
+ {
+  "id": 819,
+  "text": "it assists that mcause register."
+ },
+ {
+  "id": 820,
+  "text": "Because mcause is just a single value that tells us specifically about this exception—"
+ },
+ {
+  "id": 821,
+  "text": "for instance, what kind of exception it is."
+ },
+ {
+  "id": 822,
+  "text": "For example, what kind of exception it is."
+ },
+ {
+  "id": 823,
+  "text": "Now, when certain exceptions occur,"
+ },
+ {
+  "id": 824,
+  "text": "it may also need to give us more detailed information."
+ },
+ {
+  "id": 825,
+  "text": "So that single register from earlier might not be enough."
+ },
+ {
+  "id": 826,
+  "text": "So this mtval register,"
+ },
+ {
+  "id": 827,
+  "text": "together with mcause,"
+ },
+ {
+  "id": 828,
+  "text": "acts as a supplementary use of mcause—"
+ },
+ {
+  "id": 829,
+  "text": "an additional description."
+ },
+ {
+  "id": 830,
+  "text": "Through it, the CPU can"
+ },
+ {
+  "id": 831,
+  "text": "that is, the CPU can use this register,"
+ },
+ {
+  "id": 832,
+  "text": "along with the mcause from before,"
+ },
+ {
+  "id": 833,
+  "text": "to give us more detailed"
+ },
+ {
+  "id": 834,
+  "text": "information about the exception."
+ },
+ {
+  "id": 835,
+  "text": "Just get a rough idea of this,"
+ },
+ {
+  "id": 836,
+  "text": "and I won't say more about it."
+ },
+ {
+  "id": 837,
+  "text": "Now there is another register,"
+ },
+ {
+  "id": 838,
+  "text": "which is also quite important,"
+ },
+ {
+  "id": 839,
+  "text": "called mstatus."
+ },
+ {
+  "id": 840,
+  "text": "It is used to describe some status information."
+ },
+ {
+  "id": 841,
+  "text": "It describes some status information."
+ },
+ {
+  "id": 842,
+  "text": "So let's look at it,"
+ },
+ {
+  "id": 843,
+  "text": "let's take a look."
+ },
+ {
+  "id": 844,
+  "text": "That is to say, the whole thing is 32 bits,"
+ },
+ {
+  "id": 845,
+  "text": "and it is divided very finely."
+ },
+ {
+  "id": 846,
+  "text": "Every bit has a specific meaning."
+ },
+ {
+  "id": 847,
+  "text": "Among them,"
+ },
+ {
+  "id": 848,
+  "text": "here another special one appears."
+ },
+ {
+  "id": 849,
+  "text": "This term is called WPRI."
+ },
+ {
+  "id": 850,
+  "text": "So what is written here is,"
+ },
+ {
+  "id": 851,
+  "text": "WPRI means,"
+ },
+ {
+  "id": 852,
+  "text": "Write Positive,"
+ },
+ {
+  "id": 853,
+  "text": "that is, on writes it keeps the reserved value."
+ },
+ {
+  "id": 854,
+  "text": "When reading, it is ignored."
+ },
+ {
+  "id": 855,
+  "text": "So in fact, that is to say,"
+ },
+ {
+  "id": 856,
+  "text": "for this part,"
+ },
+ {
+  "id": 857,
+  "text": "it actually does not,"
+ },
+ {
+  "id": 858,
+  "text": "the specification does not actually use it."
+ },
+ {
+  "id": 859,
+  "text": "That is to say,"
+ },
+ {
+  "id": 860,
+  "text": "when it comes to writing"
+ },
+ {
+  "id": 861,
+  "text": "for us programmers, actually,"
+ },
+ {
+  "id": 862,
+  "text": "what it really means is"
+ },
+ {
+  "id": 863,
+  "text": "when we operate on this timer,"
+ },
+ {
+  "id": 864,
+  "text": "then this part,"
+ },
+ {
+  "id": 865,
+  "text": "as much as possible,"
+ },
+ {
+  "id": 866,
+  "text": "don't write to it"
+ },
+ {
+  "id": 867,
+  "text": "and if there is a write operation,"
+ },
+ {
+  "id": 868,
+  "text": "try not to touch it"
+ },
+ {
+  "id": 869,
+  "text": "whatever value was there originally,"
+ },
+ {
+  "id": 870,
+  "text": "preserve it"
+ },
+ {
+  "id": 871,
+  "text": "so the real idea is this:"
+ },
+ {
+  "id": 872,
+  "text": "when we write to this timer,"
+ },
+ {
+  "id": 873,
+  "text": "first read out the timer value,"
+ },
+ {
+  "id": 874,
+  "text": "then modify just the bits you need,"
+ },
+ {
+  "id": 875,
+  "text": "and then write it back, and that's it"
+ },
+ {
+  "id": 876,
+  "text": "so this"
+ },
+ {
+  "id": 877,
+  "text": "means when you write, you must ensure the values inside stay unchanged,"
+ },
+ {
+  "id": 878,
+  "text": "don't disturb the original values in there"
+ },
+ {
+  "id": 879,
+  "text": "and when reading,"
+ },
+ {
+  "id": 880,
+  "text": "The values read out of here"
+ },
+ {
+  "id": 881,
+  "text": "are meaningless to you right now,"
+ },
+ {
+  "id": 882,
+  "text": "so you can just ignore them for the moment."
+ },
+ {
+  "id": 883,
+  "text": "This part is actually reserved by the specification,"
+ },
+ {
+  "id": 884,
+  "text": "so let's just leave it alone."
+ },
+ {
+  "id": 885,
+  "text": "As for the rest,"
+ },
+ {
+  "id": 886,
+  "text": "the parts that are already defined,"
+ },
+ {
+  "id": 887,
+  "text": "those are what we can read and write."
+ },
+ {
+  "id": 888,
+  "text": "Now, among them,"
+ },
+ {
+  "id": 889,
+  "text": "it splits this into many fields."
+ },
+ {
+  "id": 890,
+  "text": "We'll just pick out"
+ },
+ {
+  "id": 891,
+  "text": "the ones we're dealing with"
+ },
+ {
+  "id": 892,
+  "text": "and walk through them for you."
+ },
+ {
+  "id": 893,
+  "text": "The parts that aren't highlighted in that color"
+ },
+ {
+  "id": 894,
+  "text": "also have specific meanings,"
+ },
+ {
+  "id": 895,
+  "text": "but since we're not using them,"
+ },
+ {
+  "id": 896,
+  "text": "we won't talk about them here."
+ },
+ {
+  "id": 897,
+  "text": "Now this one, for instance, let's first look at the red part."
+ },
+ {
+  "id": 898,
+  "text": "That is, these lowest bits,"
+ },
+ {
+  "id": 899,
+  "text": "namely bit 0, bit 1, and bit 3."
+ },
+ {
+  "id": 900,
+  "text": "So it actually follows a very regular pattern."
+ },
+ {
+  "id": 901,
+  "text": "Take a look, everyone."
+ },
+ {
+  "id": 902,
+  "text": "That is, if you look at the naming, it's all like this:"
+ },
+ {
+  "id": 903,
+  "text": "You see, they all come in these groups."
+ },
+ {
+  "id": 904,
+  "text": "Group by group."
+ },
+ {
+  "id": 905,
+  "text": "For example, over here they are all IEI."
+ },
+ {
+  "id": 906,
+  "text": "Things like IEIE."
+ },
+ {
+  "id": 907,
+  "text": "And it's only the front part"
+ },
+ {
+  "id": 908,
+  "text": "where they swap in a USM."
+ },
+ {
+  "id": 909,
+  "text": "Now, you can probably guess what USM stands for."
+ },
+ {
+  "id": 910,
+  "text": "It's actually what we've been talking about —"
+ },
+ {
+  "id": 911,
+  "text": "these privilege modes:"
+ },
+ {
+  "id": 912,
+  "text": "the user mode,"
+ },
+ {
+  "id": 913,
+  "text": "the super mode, and"
+ },
+ {
+  "id": 914,
+  "text": "the machine mode."
+ },
+ {
+  "id": 915,
+  "text": "They all follow this pattern."
+ },
+ {
+  "id": 916,
+  "text": "MSU."
+ },
+ {
+  "id": 917,
+  "text": "So when we discuss them here,"
+ },
+ {
+  "id": 918,
+  "text": "we just use an X in front as a placeholder."
+ },
+ {
+  "id": 919,
+  "text": "Just keep that in mind."
+ },
+ {
+  "id": 920,
+  "text": "It's divided into xIE, xPIE, and xPP"
+ },
+ {
+  "id": 921,
+  "text": "That's what it means"
+ },
+ {
+  "id": 922,
+  "text": "So these specific three fields are split into three categories"
+ },
+ {
+  "id": 923,
+  "text": "What do these three categories actually represent?"
+ },
+ {
+  "id": 924,
+  "text": "Let's look at IE first"
+ },
+ {
+  "id": 925,
+  "text": "As for IE,"
+ },
+ {
+  "id": 926,
+  "text": "it's actually an English abbreviation"
+ },
+ {
+  "id": 927,
+  "text": "which stands for interrupt enable"
+ },
+ {
+  "id": 928,
+  "text": "that is, the interrupt enable bit"
+ },
+ {
+  "id": 929,
+  "text": "meaning that this"
+ },
+ {
+  "id": 930,
+  "text": "these three bits"
+ },
+ {
+  "id": 931,
+  "text": "actually control our"
+ },
+ {
+  "id": 932,
+  "text": "under different modes,"
+ },
+ {
+  "id": 933,
+  "text": "whether the global interrupt"
+ },
+ {
+  "id": 934,
+  "text": "should be enabled or disabled"
+ },
+ {
+  "id": 935,
+  "text": "So when we want to"
+ },
+ {
+  "id": 936,
+  "text": "for example, when we want to"
+ },
+ {
+  "id": 937,
+  "text": "take the interrupts in"
+ },
+ {
+  "id": 938,
+  "text": "machine mode and enable them,"
+ },
+ {
+  "id": 939,
+  "text": "we set this bit"
+ },
+ {
+  "id": 940,
+  "text": "That is, at this MRE field,"
+ },
+ {
+  "id": 941,
+  "text": "just set it to 1,"
+ },
+ {
+  "id": 942,
+  "text": "and that expresses this meaning."
+ },
+ {
+  "id": 943,
+  "text": "If you want to disable it,"
+ },
+ {
+  "id": 944,
+  "text": "just set it to 0."
+ },
+ {
+  "id": 945,
+  "text": "At the same time,"
+ },
+ {
+  "id": 946,
+  "text": "we can also, by reading"
+ },
+ {
+  "id": 947,
+  "text": "one of these fields,"
+ },
+ {
+  "id": 948,
+  "text": "know whether the current interrupt"
+ },
+ {
+  "id": 949,
+  "text": "is enabled or disabled."
+ },
+ {
+  "id": 950,
+  "text": "That is to say, when writing,"
+ },
+ {
+  "id": 951,
+  "text": "you are setting the interrupt,"
+ },
+ {
+  "id": 952,
+  "text": "disabling or enabling it."
+ },
+ {
+  "id": 953,
+  "text": "And when reading,"
+ },
+ {
+  "id": 954,
+  "text": "you can find out whether this interrupt"
+ },
+ {
+  "id": 955,
+  "text": "is currently enabled or disabled."
+ },
+ {
+  "id": 956,
+  "text": "This is XRE."
+ },
+ {
+  "id": 957,
+  "text": "Now, what about XPRE?"
+ },
+ {
+  "id": 958,
+  "text": "This P here,"
+ },
+ {
+  "id": 959,
+  "text": "it is connected with this RE that follows it."
+ },
+ {
+  "id": 960,
+  "text": "Also the concept of interrupt enable,"
+ },
+ {
+  "id": 961,
+  "text": "and this P actually stands for 'previous'."
+ },
+ {
+  "id": 962,
+  "text": "It means previous,"
+ },
+ {
+  "id": 963,
+  "text": "as in the state of the previous interrupt enable bit."
+ },
+ {
+  "id": 964,
+  "text": "What it's saying here is essentially that"
+ },
+ {
+  "id": 965,
+  "text": "when a trap occurs, it is used to save the"
+ },
+ {
+  "id": 966,
+  "text": "xRE value from before the trap occurred."
+ },
+ {
+  "id": 967,
+  "text": "In other words, suppose this,"
+ },
+ {
+  "id": 968,
+  "text": "for instance, at the very beginning,"
+ },
+ {
+  "id": 969,
+  "text": "the interrupt is enabled."
+ },
+ {
+  "id": 970,
+  "text": "Say the value here was originally enabled,"
+ },
+ {
+  "id": 971,
+  "text": "say it was 1."
+ },
+ {
+  "id": 972,
+  "text": "Then, when we are in machine mode and"
+ },
+ {
+  "id": 973,
+  "text": "an interrupt"
+ },
+ {
+  "id": 974,
+  "text": "or an exception occurs,"
+ },
+ {
+  "id": 975,
+  "text": "it will take the value in here"
+ },
+ {
+  "id": 976,
+  "text": "and first save it into this one,"
+ },
+ {
+  "id": 977,
+  "text": "save it into this one."
+ },
+ {
+  "id": 978,
+  "text": "Then, once the exception has been handled,"
+ },
+ {
+  "id": 979,
+  "text": "it will use the value in this one"
+ },
+ {
+  "id": 980,
+  "text": "and then perform the corresponding restoration."
+ },
+ {
+  "id": 981,
+  "text": "It has this kind of use built into it."
+ },
+ {
+  "id": 982,
+  "text": "This is XPI."
+ },
+ {
+  "id": 983,
+  "text": "Then XPP,"
+ },
+ {
+  "id": 984,
+  "text": "as for the P,"
+ },
+ {
+  "id": 985,
+  "text": "this P actually,"
+ },
+ {
+  "id": 986,
+  "text": "in English it should be,"
+ },
+ {
+  "id": 987,
+  "text": "the first P is still previous,"
+ },
+ {
+  "id": 988,
+  "text": "meaning the previous one."
+ },
+ {
+  "id": 989,
+  "text": "As for the second P,"
+ },
+ {
+  "id": 990,
+  "text": "it's privilege,"
+ },
+ {
+  "id": 991,
+  "text": "which means access rights."
+ },
+ {
+  "id": 992,
+  "text": "So it's previous privilege."
+ },
+ {
+  "id": 993,
+  "text": "Now, for this one,"
+ },
+ {
+  "id": 994,
+  "text": "it's also written right here,"
+ },
+ {
+  "id": 995,
+  "text": "it is used to store"
+ },
+ {
+  "id": 996,
+  "text": "the privilege level from before this trap occurred,"
+ },
+ {
+  "id": 997,
+  "text": "the previous privilege level from before,"
+ },
+ {
+  "id": 998,
+  "text": "this privilege value."
+ },
+ {
+  "id": 999,
+  "text": "In other words,"
+ },
+ {
+  "id": 1000,
+  "text": "So, for example,"
+ },
+ {
+  "id": 1001,
+  "text": "when a trap occurs,"
+ },
+ {
+  "id": 1002,
+  "text": "then we know"
+ },
+ {
+  "id": 1003,
+  "text": "we need to bring this up here,"
+ },
+ {
+  "id": 1004,
+  "text": "and that is, when a trap occurs,"
+ },
+ {
+  "id": 1005,
+  "text": "what happens on this side is,"
+ },
+ {
+  "id": 1006,
+  "text": "let me explain this to everyone,"
+ },
+ {
+  "id": 1007,
+  "text": "the question is, why is there no UPP?"
+ },
+ {
+  "id": 1008,
+  "text": "Because, as you can see,"
+ },
+ {
+  "id": 1009,
+  "text": "there are only SPP and MPP here,"
+ },
+ {
+  "id": 1010,
+  "text": "meaning there is only the"
+ },
+ {
+  "id": 1011,
+  "text": "previous privilege in machine mode"
+ },
+ {
+  "id": 1012,
+  "text": "and the"
+ },
+ {
+  "id": 1013,
+  "text": "previous privilege in supervisor mode,"
+ },
+ {
+  "id": 1014,
+  "text": "but no UPP."
+ },
+ {
+  "id": 1015,
+  "text": "Now, let me explain this to everyone,"
+ },
+ {
+  "id": 1016,
+  "text": "that is, we say that"
+ },
+ {
+  "id": 1017,
+  "text": "when an exception occurs,"
+ },
+ {
+  "id": 1018,
+  "text": "there is actually a concept behind it,"
+ },
+ {
+  "id": 1019,
+  "text": "namely, it always goes from this"
+ },
+ {
+  "id": 1020,
+  "text": "That is to say, when an exception occurs,"
+ },
+ {
+  "id": 1021,
+  "text": "its overall privilege,"
+ },
+ {
+  "id": 1022,
+  "text": "this level,"
+ },
+ {
+  "id": 1023,
+  "text": "it always goes from a higher,"
+ },
+ {
+  "id": 1024,
+  "text": "from a lower privilege level to a higher privilege level,"
+ },
+ {
+  "id": 1025,
+  "text": "and never the other way around."
+ },
+ {
+  "id": 1026,
+  "text": "To give you an example,"
+ },
+ {
+  "id": 1027,
+  "text": "let's say,"
+ },
+ {
+  "id": 1028,
+  "text": "you are currently working in user mode,"
+ },
+ {
+  "id": 1029,
+  "text": "then while in this user mode,"
+ },
+ {
+  "id": 1030,
+  "text": "say an exception is triggered,"
+ },
+ {
+  "id": 1031,
+  "text": "for instance, you execute an illegal instruction,"
+ },
+ {
+  "id": 1032,
+  "text": "or an interrupt comes in,"
+ },
+ {
+  "id": 1033,
+  "text": "then at that moment,"
+ },
+ {
+  "id": 1034,
+  "text": "the CPU,"
+ },
+ {
+  "id": 1035,
+  "text": "it will jump from user mode"
+ },
+ {
+  "id": 1036,
+  "text": "into M mode."
+ },
+ {
+  "id": 1037,
+  "text": "We'll cover this later on,"
+ },
+ {
+  "id": 1038,
+  "text": "it always jumps into M mode,"
+ },
+ {
+  "id": 1039,
+  "text": "but it won't just"
+ },
+ {
+  "id": 1040,
+  "text": "When an interrupt occurs in M-mode,"
+ },
+ {
+  "id": 1041,
+  "text": "it jumps back."
+ },
+ {
+  "id": 1042,
+  "text": "That is impossible."
+ },
+ {
+  "id": 1043,
+  "text": "That's impossible."
+ },
+ {
+  "id": 1044,
+  "text": "So think about it,"
+ },
+ {
+  "id": 1045,
+  "text": "since it is"
+ },
+ {
+  "id": 1046,
+  "text": "this kind of"
+ },
+ {
+  "id": 1047,
+  "text": "since it has this kind of effect,"
+ },
+ {
+  "id": 1048,
+  "text": "then it's a downward"
+ },
+ {
+  "id": 1049,
+  "text": "you can think of it as"
+ },
+ {
+  "id": 1050,
+  "text": "the top is"
+ },
+ {
+  "id": 1051,
+  "text": "the one above is below"
+ },
+ {
+  "id": 1052,
+  "text": "so since this goes downward,"
+ },
+ {
+  "id": 1053,
+  "text": "it's the concept of falling into a trap."
+ },
+ {
+  "id": 1054,
+  "text": "So this is what a trap means here."
+ },
+ {
+  "id": 1055,
+  "text": "That's where this meaning comes from."
+ },
+ {
+  "id": 1056,
+  "text": "trap literally means a pitfall."
+ },
+ {
+  "id": 1057,
+  "text": "It means falling down."
+ },
+ {
+  "id": 1058,
+  "text": "So this"
+ },
+ {
+  "id": 1059,
+  "text": "always goes from a lower privilege level"
+ },
+ {
+  "id": 1060,
+  "text": "to a higher privilege level."
+ },
+ {
+  "id": 1061,
+  "text": "Because usually when we draw diagrams,"
+ },
+ {
+  "id": 1062,
+  "text": "we always put"
+ },
+ {
+  "id": 1063,
+  "text": "say, kernel mode"
+ },
+ {
+  "id": 1064,
+  "text": "always at the bottom,"
+ },
+ {
+  "id": 1065,
+  "text": "and user mode at the top."
+ },
+ {
+  "id": 1066,
+  "text": "So it is always a"
+ },
+ {
+  "id": 1067,
+  "text": "switch from top to bottom,"
+ },
+ {
+  "id": 1068,
+  "text": "a process like that."
+ },
+ {
+  "id": 1069,
+  "text": "That is why this is called a trap."
+ },
+ {
+  "id": 1070,
+  "text": "Now, maybe"
+ },
+ {
+  "id": 1071,
+  "text": "having reached this point,"
+ },
+ {
+  "id": 1072,
+  "text": "you may wonder why"
+ },
+ {
+  "id": 1073,
+  "text": "it is called a trap,"
+ },
+ {
+  "id": 1074,
+  "text": "and that is exactly where the name comes from."
+ },
+ {
+  "id": 1075,
+  "text": "So this way,"
+ },
+ {
+  "id": 1076,
+  "text": "we can go a step further to understand."
+ },
+ {
+  "id": 1077,
+  "text": "That is to say, as we just mentioned,"
+ },
+ {
+  "id": 1078,
+  "text": "it can only be from U to M,"
+ },
+ {
+  "id": 1079,
+  "text": "so trapping into this M mode"
+ },
+ {
+  "id": 1080,
+  "text": "How many possibilities are there?"
+ },
+ {
+  "id": 1081,
+  "text": "One is U to M."
+ },
+ {
+  "id": 1082,
+  "text": "It can also be S to M."
+ },
+ {
+  "id": 1083,
+  "text": "And then there's another one, M to M."
+ },
+ {
+  "id": 1084,
+  "text": "That means it was already running in M mode,"
+ },
+ {
+  "id": 1085,
+  "text": "and then an interrupt occurs,"
+ },
+ {
+  "id": 1086,
+  "text": "so it still enters M mode."
+ },
+ {
+  "id": 1087,
+  "text": "So for this M"
+ },
+ {
+  "id": 1088,
+  "text": "MPP,"
+ },
+ {
+  "id": 1089,
+  "text": "there are three possibilities."
+ },
+ {
+  "id": 1090,
+  "text": "And since there are three possibilities,"
+ },
+ {
+  "id": 1091,
+  "text": "we need at least two bits to represent them,"
+ },
+ {
+  "id": 1092,
+  "text": "right?"
+ },
+ {
+  "id": 1093,
+  "text": "Because two bits can represent up to four cases."
+ },
+ {
+  "id": 1094,
+  "text": "Since we have three cases to represent,"
+ },
+ {
+  "id": 1095,
+  "text": "that's why this field needs two bits."
+ },
+ {
+  "id": 1096,
+  "text": "Why do we use two bits to represent it?"
+ },
+ {
+  "id": 1097,
+  "text": "That's exactly the reason."
+ },
+ {
+  "id": 1098,
+  "text": "Now, for S mode,"
+ },
+ {
+  "id": 1099,
+  "text": "does anyone know when we would trap into S mode?"
+ },
+ {
+  "id": 1100,
+  "text": "So there are only two possibilities."
+ },
+ {
+  "id": 1101,
+  "text": "Either it switched over from U,"
+ },
+ {
+  "id": 1102,
+  "text": "or S switched over by itself."
+ },
+ {
+  "id": 1103,
+  "text": "Right?"
+ },
+ {
+  "id": 1104,
+  "text": "We say it can't have come from M,"
+ },
+ {
+  "id": 1105,
+  "text": "because you can't go from high to low."
+ },
+ {
+  "id": 1106,
+  "text": "So, since there are only two possibilities,"
+ },
+ {
+  "id": 1107,
+  "text": "we only need a single bit to represent them here."
+ },
+ {
+  "id": 1108,
+  "text": "0 and 1 can represent them, right?"
+ },
+ {
+  "id": 1109,
+  "text": "Because look here, U is 0,"
+ },
+ {
+  "id": 1110,
+  "text": "and S is 1."
+ },
+ {
+  "id": 1111,
+  "text": "So for S, there are only"
+ },
+ {
+  "id": 1112,
+  "text": "its previous mode,"
+ },
+ {
+  "id": 1113,
+  "text": "the type of the previous mode before the switch,"
+ },
+ {
+  "id": 1114,
+  "text": "there can only be two."
+ },
+ {
+  "id": 1115,
+  "text": "It's either U,"
+ },
+ {
+  "id": 1116,
+  "text": "or it's S, right?"
+ },
+ {
+  "id": 1117,
+  "text": "It can't be M."
+ },
+ {
+  "id": 1118,
+  "text": "Now as for U,"
+ },
+ {
+  "id": 1119,
+  "text": "since we said"
+ },
+ {
+  "id": 1120,
+  "text": "As for its trap,"
+ },
+ {
+  "id": 1121,
+  "text": "it can only trap into itself."
+ },
+ {
+  "id": 1122,
+  "text": "So since that's the case,"
+ },
+ {
+  "id": 1123,
+  "text": "there's actually no need for us to"
+ },
+ {
+  "id": 1124,
+  "text": "use a dedicated bit to represent"
+ },
+ {
+  "id": 1125,
+  "text": "its previous one,"
+ },
+ {
+  "id": 1126,
+  "text": "because the one before it can only be itself."
+ },
+ {
+  "id": 1127,
+  "text": "Think about it — isn't that right?"
+ },
+ {
+  "id": 1128,
+  "text": "So we save where we can."
+ },
+ {
+  "id": 1129,
+  "text": "When designing this register, we have to be frugal,"
+ },
+ {
+  "id": 1130,
+  "text": "because every bit is very precious."
+ },
+ {
+  "id": 1131,
+  "text": "So as you can see,"
+ },
+ {
+  "id": 1132,
+  "text": "this UPP is not needed,"
+ },
+ {
+  "id": 1133,
+  "text": "and that's the reason why."
+ },
+ {
+  "id": 1134,
+  "text": "Moving on to here,"
+ },
+ {
+  "id": 1135,
+  "text": "it actually also involves this TRAP —"
+ },
+ {
+  "id": 1136,
+  "text": "what kind of process it really is."
+ },
+ {
+  "id": 1137,
+  "text": "In that case,"
+ },
+ {
+  "id": 1138,
+  "text": "as we know,"
+ },
+ {
+  "id": 1139,
+  "text": "this mstatus register,"
+ },
+ {
+  "id": 1140,
+  "text": "It actually contains a lot of information."
+ },
+ {
+  "id": 1141,
+  "text": "It can be used to control whether interrupts are enabled."
+ },
+ {
+  "id": 1142,
+  "text": "It can also indicate some status of the interrupt."
+ },
+ {
+  "id": 1143,
+  "text": "As well as the interrupt status before the interrupt occurred."
+ },
+ {
+  "id": 1144,
+  "text": "As well as, before the interrupt or exception occurred,"
+ },
+ {
+  "id": 1145,
+  "text": "the privilege level information."
+ },
+ {
+  "id": 1146,
+  "text": "We will use these later on."
+ },
+ {
+  "id": 1147,
+  "text": "So,"
+ },
+ {
+  "id": 1148,
+  "text": "this register is also very important."
+ },
+ {
+  "id": 1149,
+  "text": "This is mstatus."
+ },
+ {
+  "id": 1150,
+  "text": "So, for the design of the registers,"
+ },
+ {
+  "id": 1151,
+  "text": "we'll just stop our brief introduction here."
+ },
+ {
+  "id": 1152,
+  "text": "Next,"
+ },
+ {
+  "id": 1153,
+  "text": "let's take a look at the trap handling flow."
+ },
+ {
+  "id": 1154,
+  "text": "The trap handling flow."
+ },
+ {
+  "id": 1155,
+  "text": "As for the trap handling flow,"
+ },
+ {
+  "id": 1156,
+  "text": "it's actually quite simple."
+ },
+ {
+  "id": 1157,
+  "text": "That is, first of all,"
+ },
+ {
+  "id": 1158,
+  "text": "we need to initialize it."
+ },
+ {
+  "id": 1159,
+  "text": "Initialize"
+ },
+ {
+  "id": 1160,
+  "text": "The initialization process"
+ },
+ {
+  "id": 1161,
+  "text": "actually includes"
+ },
+ {
+  "id": 1162,
+  "text": "for example, setting up its entry address"
+ },
+ {
+  "id": 1163,
+  "text": "and other related concepts."
+ },
+ {
+  "id": 1164,
+  "text": "Then,"
+ },
+ {
+  "id": 1165,
+  "text": "the second stage"
+ },
+ {
+  "id": 1166,
+  "text": "is what we call the top half,"
+ },
+ {
+  "id": 1167,
+  "text": "the upper part of the trap."
+ },
+ {
+  "id": 1168,
+  "text": "Now, the top half of the trap"
+ },
+ {
+  "id": 1169,
+  "text": "is essentially saying that,"
+ },
+ {
+  "id": 1170,
+  "text": "the actual process of it happening"
+ },
+ {
+  "id": 1171,
+  "text": "takes place inside the hardware."
+ },
+ {
+  "id": 1172,
+  "text": "It is a processing flow inside the hardware."
+ },
+ {
+  "id": 1173,
+  "text": "It is not something we control."
+ },
+ {
+  "id": 1174,
+  "text": "It is a hardware processing flow."
+ },
+ {
+  "id": 1175,
+  "text": "So after this hardware processing flow"
+ },
+ {
+  "id": 1176,
+  "text": "is completed,"
+ },
+ {
+  "id": 1177,
+  "text": "only then does it jump to our"
+ },
+ {
+  "id": 1178,
+  "text": "software part."
+ },
+ {
+  "id": 1179,
+  "text": "This is what we call"
+ },
+ {
+  "id": 1180,
+  "text": "The bottom half of this trap,"
+ },
+ {
+  "id": 1181,
+  "text": "so the bottom half of this trap,"
+ },
+ {
+  "id": 1182,
+  "text": "this part in blue,"
+ },
+ {
+  "id": 1183,
+  "text": "you can think of it as a piece of"
+ },
+ {
+  "id": 1184,
+  "text": "program logic that we wrote."
+ },
+ {
+  "id": 1185,
+  "text": "Whereas the top half just now,"
+ },
+ {
+  "id": 1186,
+  "text": "actually happens inside the hardware CPU,"
+ },
+ {
+  "id": 1187,
+  "text": "so it is not under our control."
+ },
+ {
+  "id": 1188,
+  "text": "Then this bottom half part,"
+ },
+ {
+  "id": 1189,
+  "text": "that is the logic we execute."
+ },
+ {
+  "id": 1190,
+  "text": "After that execution is done,"
+ },
+ {
+  "id": 1191,
+  "text": "please note that,"
+ },
+ {
+  "id": 1192,
+  "text": "there is one last thing, that is,"
+ },
+ {
+  "id": 1193,
+  "text": "there must be a return."
+ },
+ {
+  "id": 1194,
+  "text": "Because as we have emphasized many times before,"
+ },
+ {
+  "id": 1195,
+  "text": "in the execution process of this TRAP,"
+ },
+ {
+  "id": 1196,
+  "text": "it has a return step,"
+ },
+ {
+  "id": 1197,
+  "text": "that is, it returns to the original normal control flow."
+ },
+ {
+  "id": 1198,
+  "text": "So its whole processing flow,"
+ },
+ {
+  "id": 1199,
+  "text": "we can simply summarize it as"
+ },
+ {
+  "id": 1200,
+  "text": "These four major steps"
+ },
+ {
+  "id": 1201,
+  "text": "So next, let's take a look"
+ },
+ {
+  "id": 1202,
+  "text": "and look in detail"
+ },
+ {
+  "id": 1203,
+  "text": "at what happens in the process of these four major steps"
+ },
+ {
+  "id": 1204,
+  "text": "what exactly we need to do"
+ },
+ {
+  "id": 1205,
+  "text": "or, in other words, what actually happens"
+ },
+ {
+  "id": 1206,
+  "text": "Let's start with the first one"
+ },
+ {
+  "id": 1207,
+  "text": "which is trap initialization"
+ },
+ {
+  "id": 1208,
+  "text": "Now, as for the trap initialization,"
+ },
+ {
+  "id": 1209,
+  "text": "it's actually very simple"
+ },
+ {
+  "id": 1210,
+  "text": "Combined with what we just covered"
+ },
+ {
+  "id": 1211,
+  "text": "about these registers,"
+ },
+ {
+  "id": 1212,
+  "text": "the first step is actually"
+ },
+ {
+  "id": 1213,
+  "text": "to set the entry function"
+ },
+ {
+  "id": 1214,
+  "text": "which is our"
+ },
+ {
+  "id": 1215,
+  "text": "bottom half code,"
+ },
+ {
+  "id": 1216,
+  "text": "its starting address"
+ },
+ {
+  "id": 1217,
+  "text": "because this address"
+ },
+ {
+  "id": 1218,
+  "text": "needs to be told to our CPU,"
+ },
+ {
+  "id": 1219,
+  "text": "so that when a trap occurs on this chip,"
+ },
+ {
+  "id": 1220,
+  "text": "it will only then jump to this address"
+ },
+ {
+  "id": 1221,
+  "text": "to execute the second half of our handler."
+ },
+ {
+  "id": 1222,
+  "text": "Does everyone understand that?"
+ },
+ {
+  "id": 1223,
+  "text": "So we need to tell it"
+ },
+ {
+  "id": 1224,
+  "text": "this address,"
+ },
+ {
+  "id": 1225,
+  "text": "and this address is what we call the base"
+ },
+ {
+  "id": 1226,
+  "text": "address."
+ },
+ {
+  "id": 1227,
+  "text": "So this base address,"
+ },
+ {
+  "id": 1228,
+  "text": "how do we tell it to the hardware?"
+ },
+ {
+  "id": 1229,
+  "text": "We actually need to set"
+ },
+ {
+  "id": 1230,
+  "text": "the register I just introduced to you,"
+ },
+ {
+  "id": 1231,
+  "text": "the mtvec register."
+ },
+ {
+  "id": 1232,
+  "text": "Now this"
+ },
+ {
+  "id": 1233,
+  "text": "is something I extracted from the code."
+ },
+ {
+  "id": 1234,
+  "text": "This is actually a"
+ },
+ {
+  "id": 1235,
+  "text": "it's a function,"
+ },
+ {
+  "id": 1236,
+  "text": "it's a function."
+ },
+ {
+  "id": 1237,
+  "text": "How exactly it is"
+ },
+ {
+  "id": 1238,
+  "text": "operated inside this function,"
+ },
+ {
+  "id": 1239,
+  "text": "we'll go look at it ourselves."
+ },
+ {
+  "id": 1240,
+  "text": "I won't go into that again."
+ },
+ {
+  "id": 1241,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1242,
+  "text": "what this actually means is"
+ },
+ {
+  "id": 1243,
+  "text": "we need to write this,"
+ },
+ {
+  "id": 1244,
+  "text": "write the MTVC register,"
+ },
+ {
+  "id": 1245,
+  "text": "and set inside this register our"
+ },
+ {
+  "id": 1246,
+  "text": "base address of this entry address,"
+ },
+ {
+  "id": 1247,
+  "text": "that is, the base address."
+ },
+ {
+  "id": 1248,
+  "text": "Now, here you can see"
+ },
+ {
+  "id": 1249,
+  "text": "this entry address,"
+ },
+ {
+  "id": 1250,
+  "text": "this function is actually a piece of assembly logic"
+ },
+ {
+  "id": 1251,
+  "text": "that we wrote in entry.s, the assembly file."
+ },
+ {
+  "id": 1252,
+  "text": "Now, this assembly logic,"
+ },
+ {
+  "id": 1253,
+  "text": "as we mentioned before,"
+ },
+ {
+  "id": 1254,
+  "text": "in the syntax of this assembly,"
+ },
+ {
+  "id": 1255,
+  "text": "this label is actually this,"
+ },
+ {
+  "id": 1256,
+  "text": "it's actually just an address."
+ },
+ {
+  "id": 1257,
+  "text": "Think about it, isn't that right?"
+ },
+ {
+  "id": 1258,
+  "text": "This label, in fact, in terms of"
+ },
+ {
+  "id": 1259,
+  "text": "the concept of relocatable linking,"
+ },
+ {
+  "id": 1260,
+  "text": "It is actually just an address."
+ },
+ {
+  "id": 1261,
+  "text": "So we take this label,"
+ },
+ {
+  "id": 1262,
+  "text": "fill the label into this place,"
+ },
+ {
+  "id": 1263,
+  "text": "which is essentially putting the address of this function"
+ },
+ {
+  "id": 1264,
+  "text": "into this calculator."
+ },
+ {
+  "id": 1265,
+  "text": "That's its initialization."
+ },
+ {
+  "id": 1266,
+  "text": "Very simple."
+ },
+ {
+  "id": 1267,
+  "text": "Now for the second part,"
+ },
+ {
+  "id": 1268,
+  "text": "we say it's the top half."
+ },
+ {
+  "id": 1269,
+  "text": "The top half,"
+ },
+ {
+  "id": 1270,
+  "text": "this part is actually done by the hardware."
+ },
+ {
+  "id": 1271,
+  "text": "Our software part is not involved here."
+ },
+ {
+  "id": 1272,
+  "text": "But we need to understand what this part is doing,"
+ },
+ {
+  "id": 1273,
+  "text": "so that we can better understand"
+ },
+ {
+  "id": 1274,
+  "text": "what our bottom half should do."
+ },
+ {
+  "id": 1275,
+  "text": "So let's first take a look"
+ },
+ {
+  "id": 1276,
+  "text": "at what this top half does."
+ },
+ {
+  "id": 1277,
+  "text": "So for the top half,"
+ },
+ {
+  "id": 1278,
+  "text": "we say the hardware automatically performs the following state transitions,"
+ },
+ {
+  "id": 1279,
+  "text": "meaning this is what the CPU does."
+ },
+ {
+  "id": 1280,
+  "text": "So let's look at what it does."
+ },
+ {
+  "id": 1281,
+  "text": "Its first step"
+ },
+ {
+  "id": 1282,
+  "text": "is that it copies the MIE value of mstatus into MPIE."
+ },
+ {
+  "id": 1283,
+  "text": "Now, what does that mean?"
+ },
+ {
+  "id": 1284,
+  "text": "We mentioned earlier that the concept of MIE is that"
+ },
+ {
+  "id": 1285,
+  "text": "when this trap occurs,"
+ },
+ {
+  "id": 1286,
+  "text": "the state of our interrupt enable bit"
+ },
+ {
+  "id": 1287,
+  "text": "tells us whether interrupts are currently on or off."
+ },
+ {
+  "id": 1288,
+  "text": "It copies that value into here."
+ },
+ {
+  "id": 1289,
+  "text": "Copying it must be because it will be used later."
+ },
+ {
+  "id": 1290,
+  "text": "Let's set that aside for now."
+ },
+ {
+  "id": 1291,
+  "text": "Then it clears its MIE flag."
+ },
+ {
+  "id": 1292,
+  "text": "Now, as you know,"
+ },
+ {
+  "id": 1293,
+  "text": "we know that this MIE flag,"
+ },
+ {
+  "id": 1294,
+  "text": "if you just write a 0 into it,"
+ },
+ {
+  "id": 1295,
+  "text": "that actually means interrupts are disabled."
+ },
+ {
+  "id": 1296,
+  "text": "So this action,"
+ },
+ {
+  "id": 1297,
+  "text": "this first action of the CPU,"
+ },
+ {
+  "id": 1298,
+  "text": "is actually quite clear."
+ },
+ {
+  "id": 1299,
+  "text": "It is telling us what?"
+ },
+ {
+  "id": 1300,
+  "text": "That is to say, when we go and execute"
+ },
+ {
+  "id": 1301,
+  "text": "the second half of its work,"
+ },
+ {
+  "id": 1302,
+  "text": "our CPU is actually in a state where"
+ },
+ {
+  "id": 1303,
+  "text": "interrupts have been disabled."
+ },
+ {
+  "id": 1304,
+  "text": "Because at this point, even if an interrupt occurs,"
+ },
+ {
+  "id": 1305,
+  "text": "it won't come and interrupt us."
+ },
+ {
+  "id": 1306,
+  "text": "This concept is very important."
+ },
+ {
+  "id": 1307,
+  "text": "So what this step achieves is that interrupts are disabled."
+ },
+ {
+  "id": 1308,
+  "text": "That's the first action."
+ },
+ {
+  "id": 1309,
+  "text": "Now, what does the CPU do as the second action?"
+ },
+ {
+  "id": 1310,
+  "text": "It will set MEPC,"
+ },
+ {
+  "id": 1311,
+  "text": "and at the same time, PC will be set to this value here."
+ },
+ {
+  "id": 1312,
+  "text": "Now, this setting of MEPC,"
+ },
+ {
+  "id": 1313,
+  "text": "is actually also for use when we return later."
+ },
+ {
+  "id": 1314,
+  "text": "Because we know that this MEPC is essentially"
+ },
+ {
+  "id": 1315,
+  "text": "where, when we return,"
+ },
+ {
+  "id": 1316,
+  "text": "when we execute mret,"
+ },
+ {
+  "id": 1317,
+  "text": "it will read out the corresponding value from here,"
+ },
+ {
+  "id": 1318,
+  "text": "and then jump back."
+ },
+ {
+  "id": 1319,
+  "text": "Now, as for the setting,"
+ },
+ {
+  "id": 1320,
+  "text": "So, as for the specific setting,"
+ },
+ {
+  "id": 1321,
+  "text": "the specific setting,"
+ },
+ {
+  "id": 1322,
+  "text": "does it set the PC value"
+ },
+ {
+  "id": 1323,
+  "text": "or the value of the next instruction? Well,"
+ },
+ {
+  "id": 1324,
+  "text": "it will depend on this:"
+ },
+ {
+  "id": 1325,
+  "text": "whether what we currently have is"
+ },
+ {
+  "id": 1326,
+  "text": "an exception or an interrupt, and handle them differently."
+ },
+ {
+  "id": 1327,
+  "text": "We've written this out for you as well,"
+ },
+ {
+  "id": 1328,
+  "text": "meaning that if it is an exception,"
+ },
+ {
+  "id": 1329,
+  "text": "then the MPC points to the instruction that caused the exception,"
+ },
+ {
+  "id": 1330,
+  "text": "whereas if it is an interrupt,"
+ },
+ {
+  "id": 1331,
+  "text": "it points to the instruction after the interrupt."
+ },
+ {
+  "id": 1332,
+  "text": "What does this mean? Well,"
+ },
+ {
+  "id": 1333,
+  "text": "we've drawn the two figures below for you,"
+ },
+ {
+  "id": 1334,
+  "text": "so let's work through them."
+ },
+ {
+  "id": 1335,
+  "text": "The meaning expressed by the figure on the left"
+ },
+ {
+  "id": 1336,
+  "text": "is that when an exception occurs,"
+ },
+ {
+  "id": 1337,
+  "text": "for example, while it is executing this instruction,"
+ },
+ {
+  "id": 1338,
+  "text": "this instruction instruction2,"
+ },
+ {
+  "id": 1339,
+  "text": "say this instruction is an exception instruction,"
+ },
+ {
+  "id": 1340,
+  "text": "You made a mistake when you compiled it"
+ },
+ {
+  "id": 1341,
+  "text": "You wrote an exception instruction"
+ },
+ {
+  "id": 1342,
+  "text": "An instruction we don't recognize got written in there"
+ },
+ {
+  "id": 1343,
+  "text": "But if it's assembled at compile time,"
+ },
+ {
+  "id": 1344,
+  "text": "it will definitely tell you"
+ },
+ {
+  "id": 1345,
+  "text": "Suppose we hard-code it,"
+ },
+ {
+  "id": 1346,
+  "text": "and we just write an exception instruction,"
+ },
+ {
+  "id": 1347,
+  "text": "or say we write something that"
+ },
+ {
+  "id": 1348,
+  "text": "accesses something it shouldn't access,"
+ },
+ {
+  "id": 1349,
+  "text": "all of these are possible,"
+ },
+ {
+  "id": 1350,
+  "text": "triggering an exception."
+ },
+ {
+  "id": 1351,
+  "text": "Now, when this instruction is executed,"
+ },
+ {
+  "id": 1352,
+  "text": "assume this PC,"
+ },
+ {
+  "id": 1353,
+  "text": "the PC is currently pointing here."
+ },
+ {
+  "id": 1354,
+  "text": "So the PC is likely the address of this instruction."
+ },
+ {
+  "id": 1355,
+  "text": "Now, when an exception is triggered,"
+ },
+ {
+  "id": 1356,
+  "text": "it will save the value of this PC"
+ },
+ {
+  "id": 1357,
+  "text": "into mepc."
+ },
+ {
+  "id": 1358,
+  "text": "And once it's saved there,"
+ },
+ {
+  "id": 1359,
+  "text": "as you know, when it triggers an exception,"
+ },
+ {
+  "id": 1360,
+  "text": "it goes off to execute an exception handler."
+ },
+ {
+  "id": 1361,
+  "text": "After the exception is handled,"
+ },
+ {
+  "id": 1362,
+  "text": "it will come back."
+ },
+ {
+  "id": 1363,
+  "text": "Now, when it comes back,"
+ },
+ {
+  "id": 1364,
+  "text": "it actually returns based on this,"
+ },
+ {
+  "id": 1365,
+  "text": "based on the MEPC you saved."
+ },
+ {
+  "id": 1366,
+  "text": "So, since when you jumped away,"
+ },
+ {
+  "id": 1367,
+  "text": "what you saved was the value of this instruction,"
+ },
+ {
+  "id": 1368,
+  "text": "then think about it — when it comes back,"
+ },
+ {
+  "id": 1369,
+  "text": "it actually returns to this same instruction,"
+ },
+ {
+  "id": 1370,
+  "text": "and starts executing this instruction again."
+ },
+ {
+  "id": 1371,
+  "text": "So that is actually the effect an exception has."
+ },
+ {
+  "id": 1372,
+  "text": "Now, there is definitely a reason for doing it this way."
+ },
+ {
+  "id": 1373,
+  "text": "Because if you think about it,"
+ },
+ {
+  "id": 1374,
+  "text": "for example, we..."
+ },
+ {
+  "id": 1375,
+  "text": "what is it actually trying to achieve here?"
+ },
+ {
+  "id": 1376,
+  "text": "That is to say, right when this exception occurs,"
+ },
+ {
+  "id": 1377,
+  "text": "it gives us an opportunity —"
+ },
+ {
+  "id": 1378,
+  "text": "from the programmer's,"
+ },
+ {
+  "id": 1379,
+  "text": "from the CPU's perspective —"
+ },
+ {
+  "id": 1380,
+  "text": "You can actually understand it this way:"
+ },
+ {
+  "id": 1381,
+  "text": "that is to say,"
+ },
+ {
+  "id": 1382,
+  "text": "when it executes this instruction,"
+ },
+ {
+  "id": 1383,
+  "text": "it decides that this instruction"
+ },
+ {
+  "id": 1384,
+  "text": "has triggered some abnormal behavior,"
+ },
+ {
+  "id": 1385,
+  "text": "and so it goes"
+ },
+ {
+  "id": 1386,
+  "text": "and gives us a chance."
+ },
+ {
+  "id": 1387,
+  "text": "This chance"
+ },
+ {
+  "id": 1388,
+  "text": "is the programmer's."
+ },
+ {
+  "id": 1389,
+  "text": "When the programmer gets this chance,"
+ },
+ {
+  "id": 1390,
+  "text": "they go and write an"
+ },
+ {
+  "id": 1391,
+  "text": "exception handler function."
+ },
+ {
+  "id": 1392,
+  "text": "This,"
+ },
+ {
+  "id": 1393,
+  "text": "it expects you to, within this"
+ },
+ {
+  "id": 1394,
+  "text": "exception handler function,"
+ },
+ {
+  "id": 1395,
+  "text": "take this exception,"
+ },
+ {
+  "id": 1396,
+  "text": "this problem that was triggered,"
+ },
+ {
+  "id": 1397,
+  "text": "and solve it."
+ },
+ {
+  "id": 1398,
+  "text": "After it's solved,"
+ },
+ {
+  "id": 1399,
+  "text": "then it comes back,"
+ },
+ {
+  "id": 1400,
+  "text": "So it's like saying,"
+ },
+ {
+  "id": 1401,
+  "text": "it gives you one more"
+ },
+ {
+  "id": 1402,
+  "text": "chance to retry"
+ },
+ {
+  "id": 1403,
+  "text": "and execute it once again."
+ },
+ {
+  "id": 1404,
+  "text": "Then it's possible that"
+ },
+ {
+  "id": 1405,
+  "text": "when handling this exception,"
+ },
+ {
+  "id": 1406,
+  "text": "it will actually fix"
+ },
+ {
+  "id": 1407,
+  "text": "the problem that caused"
+ },
+ {
+  "id": 1408,
+  "text": "the exception in the first place."
+ },
+ {
+  "id": 1409,
+  "text": "So,"
+ },
+ {
+  "id": 1410,
+  "text": "this is what we call an exception."
+ },
+ {
+  "id": 1411,
+  "text": "So an exception,"
+ },
+ {
+  "id": 1412,
+  "text": "what it actually interrupts is"
+ },
+ {
+  "id": 1413,
+  "text": "the current instruction."
+ },
+ {
+  "id": 1414,
+  "text": "After it's done,"
+ },
+ {
+  "id": 1415,
+  "text": "it will come back,"
+ },
+ {
+  "id": 1416,
+  "text": "and re-execute the instruction"
+ },
+ {
+  "id": 1417,
+  "text": "that triggered the exception."
+ },
+ {
+  "id": 1418,
+  "text": "If we go a bit deeper,"
+ },
+ {
+  "id": 1419,
+  "text": "for example, you might"
+ },
+ {
+  "id": 1420,
+  "text": "If you've also learned about"
+ },
+ {
+  "id": 1421,
+  "text": "for example, a page fault exception,"
+ },
+ {
+  "id": 1422,
+  "text": "which gets triggered all the time in Linux"
+ },
+ {
+  "id": 1423,
+  "text": "this page fault exception,"
+ },
+ {
+  "id": 1424,
+  "text": "actually, think about it,"
+ },
+ {
+  "id": 1425,
+  "text": "a page fault means"
+ },
+ {
+  "id": 1426,
+  "text": "you find that the current instruction"
+ },
+ {
+  "id": 1427,
+  "text": "is not in your memory,"
+ },
+ {
+  "id": 1428,
+  "text": "then it might"
+ },
+ {
+  "id": 1429,
+  "text": "this is the exception being triggered,"
+ },
+ {
+  "id": 1430,
+  "text": "and it will make you do what? Go"
+ },
+ {
+  "id": 1431,
+  "text": "fetch the page,"
+ },
+ {
+  "id": 1432,
+  "text": "swap the page in."
+ },
+ {
+  "id": 1433,
+  "text": "After the page has been swapped in,"
+ },
+ {
+  "id": 1434,
+  "text": "this instruction is simply re"
+ },
+ {
+  "id": 1435,
+  "text": "if it gets re-executed,"
+ },
+ {
+  "id": 1436,
+  "text": "doesn't that solve the problem?"
+ },
+ {
+  "id": 1437,
+  "text": "Think about it, isn't that the case?"
+ },
+ {
+  "id": 1438,
+  "text": "So this kind of thing is an exception."
+ },
+ {
+  "id": 1439,
+  "text": "An interrupt, on the other hand,"
+ },
+ {
+  "id": 1440,
+  "text": "That is not the idea here."
+ },
+ {
+  "id": 1441,
+  "text": "Because with an interrupt,"
+ },
+ {
+  "id": 1442,
+  "text": "the actual intent is,"
+ },
+ {
+  "id": 1443,
+  "text": "what it wants to achieve is this kind of effect:"
+ },
+ {
+  "id": 1444,
+  "text": "that is,"
+ },
+ {
+  "id": 1445,
+  "text": "say it is executing this instruction,"
+ },
+ {
+  "id": 1446,
+  "text": "and an interrupt is triggered."
+ },
+ {
+  "id": 1447,
+  "text": "Now, an interrupt,"
+ },
+ {
+  "id": 1448,
+  "text": "in fact, is generated by an external peripheral."
+ },
+ {
+  "id": 1449,
+  "text": "So it has to go and run a piece of logic for that peripheral,"
+ },
+ {
+  "id": 1450,
+  "text": "maybe to read a piece of data from an external device,"
+ },
+ {
+  "id": 1451,
+  "text": "or something like that."
+ },
+ {
+  "id": 1452,
+  "text": "So,"
+ },
+ {
+  "id": 1453,
+  "text": "when it is handling the interrupt,"
+ },
+ {
+  "id": 1454,
+  "text": "and it saves this MEPC,"
+ },
+ {
+  "id": 1455,
+  "text": "what it actually saves is the address of the next instruction."
+ },
+ {
+  "id": 1456,
+  "text": "So this way,"
+ },
+ {
+  "id": 1457,
+  "text": "after it finishes this one,"
+ },
+ {
+  "id": 1458,
+  "text": "of course it will finish executing this instruction first,"
+ },
+ {
+  "id": 1459,
+  "text": "and after it finishes,"
+ },
+ {
+  "id": 1460,
+  "text": "It goes off to execute an interrupt handler"
+ },
+ {
+  "id": 1461,
+  "text": "and once that's done, once the handling is finished,"
+ },
+ {
+  "id": 1462,
+  "text": "it comes back."
+ },
+ {
+  "id": 1463,
+  "text": "And when it comes back,"
+ },
+ {
+  "id": 1464,
+  "text": "it actually returns to the next instruction."
+ },
+ {
+  "id": 1465,
+  "text": "So in this way,"
+ },
+ {
+  "id": 1466,
+  "text": "the effect it achieves is that,"
+ },
+ {
+  "id": 1467,
+  "text": "from the point of view of our normal execution flow,"
+ },
+ {
+  "id": 1468,
+  "text": "it's basically as if"
+ },
+ {
+  "id": 1469,
+  "text": "nothing ever happened in between."
+ },
+ {
+  "id": 1470,
+  "text": "Because it's actually an interrupt,"
+ },
+ {
+  "id": 1471,
+  "text": "not an exception."
+ },
+ {
+  "id": 1472,
+  "text": "Does everyone get this?"
+ },
+ {
+  "id": 1473,
+  "text": "So this interrupt"
+ },
+ {
+  "id": 1474,
+  "text": "actually went and did something else,"
+ },
+ {
+  "id": 1475,
+  "text": "but while it was doing that,"
+ },
+ {
+  "id": 1476,
+  "text": "it didn't want us —"
+ },
+ {
+  "id": 1477,
+  "text": "from the programmer's point of view,"
+ },
+ {
+  "id": 1478,
+  "text": "that is, you should feel"
+ },
+ {
+  "id": 1479,
+  "text": "like this whole thing"
+ },
+ {
+  "id": 1480,
+  "text": "as if nothing ever happened"
+ },
+ {
+  "id": 1481,
+  "text": "So it actually"
+ },
+ {
+  "id": 1482,
+  "text": "when it comes back, it executes"
+ },
+ {
+  "id": 1483,
+  "text": "directly executes the next instruction"
+ },
+ {
+  "id": 1484,
+  "text": "at this point"
+ },
+ {
+  "id": 1485,
+  "text": "So this setup of MEPC"
+ },
+ {
+  "id": 1486,
+  "text": "could be a different value"
+ },
+ {
+  "id": 1487,
+  "text": "Later, when we talk about interrupts,"
+ },
+ {
+  "id": 1488,
+  "text": "I'll explain to you again"
+ },
+ {
+  "id": 1489,
+  "text": "this related concept"
+ },
+ {
+  "id": 1490,
+  "text": "just mentioning this to you here"
+ },
+ {
+  "id": 1491,
+  "text": "So this automatic step"
+ },
+ {
+  "id": 1492,
+  "text": "the second step is setting MEPC,"
+ },
+ {
+  "id": 1493,
+  "text": "and at the same time, PC is set to this"
+ },
+ {
+  "id": 1494,
+  "text": "Now, knowing this,"
+ },
+ {
+  "id": 1495,
+  "text": "once you know that PC is set to this,"
+ },
+ {
+  "id": 1496,
+  "text": "it actually achieves this jump"
+ },
+ {
+  "id": 1497,
+  "text": "it actually performs the jump"
+ },
+ {
+  "id": 1498,
+  "text": "jumping to the exception handler to execute"
+ },
+ {
+  "id": 1499,
+  "text": "And then this"
+ },
+ {
+  "id": 1500,
+  "text": "The next step,"
+ },
+ {
+  "id": 1501,
+  "text": "it sets mcause according to the type of this trap."
+ },
+ {
+  "id": 1502,
+  "text": "There's nothing much to say about this."
+ },
+ {
+  "id": 1503,
+  "text": "It just tells us this:"
+ },
+ {
+  "id": 1504,
+  "text": "the specific exception or interrupt that occurred,"
+ },
+ {
+  "id": 1505,
+  "text": "exactly what kind of exception it is,"
+ },
+ {
+  "id": 1506,
+  "text": "or what kind of interrupt it is."
+ },
+ {
+  "id": 1507,
+  "text": "Then later, when we go to the bottom half,"
+ },
+ {
+  "id": 1508,
+  "text": "we'll know how to handle it."
+ },
+ {
+  "id": 1509,
+  "text": "And the last one,"
+ },
+ {
+  "id": 1510,
+  "text": "it saves the privilege mode from before the trap occurred"
+ },
+ {
+  "id": 1511,
+  "text": "in its MPP field."
+ },
+ {
+  "id": 1512,
+  "text": "This is also used for restoring it later."
+ },
+ {
+  "id": 1513,
+  "text": "Then,"
+ },
+ {
+  "id": 1514,
+  "text": "it changes the privilege mode to Machine mode."
+ },
+ {
+  "id": 1515,
+  "text": "What this actually means is that"
+ },
+ {
+  "id": 1516,
+  "text": "no matter which privilege level a trap is triggered at,"
+ },
+ {
+  "id": 1517,
+  "text": "the hart first switches to M-mode to handle it."
+ },
+ {
+  "id": 1518,
+  "text": "Now, some of you might say,"
+ },
+ {
+  "id": 1519,
+  "text": "doesn't it sometimes also enter"
+ },
+ {
+  "id": 1520,
+  "text": "What about supervisor mode? This one,"
+ },
+ {
+  "id": 1521,
+  "text": "as you can see,"
+ },
+ {
+  "id": 1522,
+  "text": "it is actually implemented through"
+ },
+ {
+  "id": 1523,
+  "text": "a so-called delegation mechanism."
+ },
+ {
+  "id": 1524,
+  "text": "This is"
+ },
+ {
+  "id": 1525,
+  "text": "not something we use in our course,"
+ },
+ {
+  "id": 1526,
+  "text": "so I will just mention it briefly here."
+ },
+ {
+  "id": 1527,
+  "text": "But at the very least, we need to know"
+ },
+ {
+  "id": 1528,
+  "text": "that no matter what mode you are in"
+ },
+ {
+  "id": 1529,
+  "text": "at the moment,"
+ },
+ {
+  "id": 1530,
+  "text": "once a trap occurs,"
+ },
+ {
+  "id": 1531,
+  "text": "it will first definitely enter machine mode."
+ },
+ {
+  "id": 1532,
+  "text": "It enters machine mode first."
+ },
+ {
+  "id": 1533,
+  "text": "You all need to keep this in mind."
+ },
+ {
+  "id": 1534,
+  "text": "Alright."
+ },
+ {
+  "id": 1535,
+  "text": "This is what we call the"
+ },
+ {
+  "id": 1536,
+  "text": "first part of the trap handling process."
+ },
+ {
+  "id": 1537,
+  "text": "As for this part of the process,"
+ },
+ {
+  "id": 1538,
+  "text": "it is all done automatically by the hardware."
+ },
+ {
+  "id": 1539,
+  "text": "Then, once the final"
+ },
+ {
+  "id": 1540,
+  "text": "So what's the final, final result?"
+ },
+ {
+  "id": 1541,
+  "text": "Well, it will jump"
+ },
+ {
+  "id": 1542,
+  "text": "— it starts jumping to our"
+ },
+ {
+  "id": 1543,
+  "text": "trap entry function,"
+ },
+ {
+  "id": 1544,
+  "text": "to execute our program."
+ },
+ {
+  "id": 1545,
+  "text": "So then we enter this second half."
+ },
+ {
+  "id": 1546,
+  "text": "The second half, as we said,"
+ },
+ {
+  "id": 1547,
+  "text": "is about executing a piece of our program."
+ },
+ {
+  "id": 1548,
+  "text": "Next,"
+ },
+ {
+  "id": 1549,
+  "text": "let's take a look at"
+ },
+ {
+  "id": 1550,
+  "text": "the third part of trap,"
+ },
+ {
+  "id": 1551,
+  "text": "which is the bottom half."
+ },
+ {
+  "id": 1552,
+  "text": "The bottom half,"
+ },
+ {
+  "id": 1553,
+  "text": "as the name implies,"
+ },
+ {
+  "id": 1554,
+  "text": "means that this part"
+ },
+ {
+  "id": 1555,
+  "text": "needs to be written"
+ },
+ {
+  "id": 1556,
+  "text": "by us software programmers,"
+ },
+ {
+  "id": 1557,
+  "text": "a trap handler function"
+ },
+ {
+  "id": 1558,
+  "text": "that we write ourselves."
+ },
+ {
+  "id": 1559,
+  "text": "So today,"
+ },
+ {
+  "id": 1560,
+  "text": "We're mainly talking about exceptions,"
+ },
+ {
+  "id": 1561,
+  "text": "so we"
+ },
+ {
+  "id": 1562,
+  "text": "actually have a piece of"
+ },
+ {
+  "id": 1563,
+  "text": "exception handler code."
+ },
+ {
+  "id": 1564,
+  "text": "Now,"
+ },
+ {
+  "id": 1565,
+  "text": "we say that whether it's an interrupt"
+ },
+ {
+  "id": 1566,
+  "text": "or an exception,"
+ },
+ {
+  "id": 1567,
+  "text": "as a"
+ },
+ {
+  "id": 1568,
+  "text": "unified trap,"
+ },
+ {
+  "id": 1569,
+  "text": "what should it actually do?"
+ },
+ {
+  "id": 1570,
+  "text": "Well,"
+ },
+ {
+  "id": 1571,
+  "text": "we can actually"
+ },
+ {
+  "id": 1572,
+  "text": "take the entire process"
+ },
+ {
+  "id": 1573,
+  "text": "and summarize it"
+ },
+ {
+  "id": 1574,
+  "text": "roughly into the following five steps."
+ },
+ {
+  "id": 1575,
+  "text": "So the first step,"
+ },
+ {
+  "id": 1576,
+  "text": "we say, is to save"
+ },
+ {
+  "id": 1577,
+  "text": "the control flow"
+ },
+ {
+  "id": 1578,
+  "text": "context information."
+ },
+ {
+  "id": 1579,
+  "text": "Now this concept of context"
+ },
+ {
+  "id": 1580,
+  "text": "In the last class, when we were talking about"
+ },
+ {
+  "id": 1581,
+  "text": "context switching,"
+ },
+ {
+  "id": 1582,
+  "text": "we already covered this, right?"
+ },
+ {
+  "id": 1583,
+  "text": "That context,"
+ },
+ {
+  "id": 1584,
+  "text": "in fact, is just"
+ },
+ {
+  "id": 1585,
+  "text": "when this exception occurs,"
+ },
+ {
+  "id": 1586,
+  "text": "on its processor,"
+ },
+ {
+  "id": 1587,
+  "text": "what's in the hardware --"
+ },
+ {
+  "id": 1588,
+  "text": "you can think of it as"
+ },
+ {
+  "id": 1589,
+  "text": "the values of those general-purpose registers."
+ },
+ {
+  "id": 1590,
+  "text": "So in fact,"
+ },
+ {
+  "id": 1591,
+  "text": "x0, we don't need to save,"
+ },
+ {
+  "id": 1592,
+  "text": "right?"
+ },
+ {
+  "id": 1593,
+  "text": "So x1 through x31 --"
+ },
+ {
+  "id": 1594,
+  "text": "the values of these registers,"
+ },
+ {
+  "id": 1595,
+  "text": "we save them."
+ },
+ {
+  "id": 1596,
+  "text": "That's what we call saving"
+ },
+ {
+  "id": 1597,
+  "text": "the context information."
+ },
+ {
+  "id": 1598,
+  "text": "As for mscratch,"
+ },
+ {
+  "id": 1599,
+  "text": "we also mentioned it earlier."
+ },
+ {
+  "id": 1600,
+  "text": "That is to say, we use this"
+ },
+ {
+  "id": 1601,
+  "text": "this register,"
+ },
+ {
+  "id": 1602,
+  "text": "we actually use it"
+ },
+ {
+  "id": 1603,
+  "text": "to save this."
+ },
+ {
+  "id": 1604,
+  "text": "This is actually also"
+ },
+ {
+  "id": 1605,
+  "text": "in mode mode, this"
+ },
+ {
+  "id": 1606,
+  "text": "Trap-related register."
+ },
+ {
+  "id": 1607,
+  "text": "We use this register"
+ },
+ {
+  "id": 1608,
+  "text": "to save this,"
+ },
+ {
+  "id": 1609,
+  "text": "the current"
+ },
+ {
+  "id": 1610,
+  "text": "memory pointing to the current context,"
+ },
+ {
+  "id": 1611,
+  "text": "so we use it to save its information."
+ },
+ {
+  "id": 1612,
+  "text": "And correspondingly, on our side here,"
+ },
+ {
+  "id": 1613,
+  "text": "correspondingly, our"
+ },
+ {
+  "id": 1614,
+  "text": "right side is actually some sample code."
+ },
+ {
+  "id": 1615,
+  "text": "You can take a look at this code yourselves."
+ },
+ {
+  "id": 1616,
+  "text": "And actually it's reflected right here,"
+ },
+ {
+  "id": 1617,
+  "text": "it's this piece of logic."
+ },
+ {
+  "id": 1618,
+  "text": "Now, this piece of logic,"
+ },
+ {
+  "id": 1619,
+  "text": "what we actually do at its core is call a"
+ },
+ {
+  "id": 1620,
+  "text": "REG underline Save"
+ },
+ {
+  "id": 1621,
+  "text": "This is a macro for register save"
+ },
+ {
+  "id": 1622,
+  "text": "This macro is defined in the assembly like this"
+ },
+ {
+  "id": 1623,
+  "text": "Now, this macro we're writing here"
+ },
+ {
+  "id": 1624,
+  "text": "we introduced to you earlier"
+ },
+ {
+  "id": 1625,
+  "text": "Now, this is actually a parameter"
+ },
+ {
+  "id": 1626,
+  "text": "In other words, the macro takes a parameter"
+ },
+ {
+  "id": 1627,
+  "text": "You can understand this parameter as"
+ },
+ {
+  "id": 1628,
+  "text": "it is actually the value"
+ },
+ {
+  "id": 1629,
+  "text": "swapped out of mscratch"
+ },
+ {
+  "id": 1630,
+  "text": "So what it actually is"
+ },
+ {
+  "id": 1631,
+  "text": "is a pointer to the base address of a piece of memory"
+ },
+ {
+  "id": 1632,
+  "text": "the base address of the memory"
+ },
+ {
+  "id": 1633,
+  "text": "and inside this piece of memory"
+ },
+ {
+  "id": 1634,
+  "text": "is where the context is stored"
+ },
+ {
+  "id": 1635,
+  "text": "Now, within the context"
+ },
+ {
+  "id": 1636,
+  "text": "starting from x1"
+ },
+ {
+  "id": 1637,
+  "text": "all the way to x31"
+ },
+ {
+  "id": 1638,
+  "text": "these registers"
+ },
+ {
+  "id": 1639,
+  "text": "are placed in this context"
+ },
+ {
+  "id": 1640,
+  "text": "So we just take from the CPU"
+ },
+ {
+  "id": 1641,
+  "text": "these data"
+ },
+ {
+  "id": 1642,
+  "text": "and by saving,"
+ },
+ {
+  "id": 1643,
+  "text": "what we mean is taking the values on the CPU,"
+ },
+ {
+  "id": 1644,
+  "text": "the values in the CPU registers,"
+ },
+ {
+  "id": 1645,
+  "text": "and saving them into here"
+ },
+ {
+  "id": 1646,
+  "text": "so that's the save"
+ },
+ {
+  "id": 1647,
+  "text": "And naturally, corresponding to the save,"
+ },
+ {
+  "id": 1648,
+  "text": "what that means is that"
+ },
+ {
+  "id": 1649,
+  "text": "once the processing is done,"
+ },
+ {
+  "id": 1650,
+  "text": "there has to be a restore, right?"
+ },
+ {
+  "id": 1651,
+  "text": "So let me mention this in advance,"
+ },
+ {
+  "id": 1652,
+  "text": "the restore"
+ },
+ {
+  "id": 1653,
+  "text": "is done right here,"
+ },
+ {
+  "id": 1654,
+  "text": "also using a corresponding macro"
+ },
+ {
+  "id": 1655,
+  "text": "to carry it out"
+ },
+ {
+  "id": 1656,
+  "text": "That is the restore"
+ },
+ {
+  "id": 1657,
+  "text": "Now, between these two,"
+ },
+ {
+  "id": 1658,
+  "text": "what we say is"
+ },
+ {
+  "id": 1659,
+  "text": "the main core here is that"
+ },
+ {
+  "id": 1660,
+  "text": "It's going to call our handler function."
+ },
+ {
+  "id": 1661,
+  "text": "Now, because the handler"
+ },
+ {
+  "id": 1662,
+  "text": "is generally already fairly complex,"
+ },
+ {
+  "id": 1663,
+  "text": "this part"
+ },
+ {
+  "id": 1664,
+  "text": "is usually written in the C language."
+ },
+ {
+  "id": 1665,
+  "text": "So we actually call a C-language function to implement it."
+ },
+ {
+  "id": 1666,
+  "text": "Now, this calling process"
+ },
+ {
+  "id": 1667,
+  "text": "is actually what we covered earlier when we talked about assembly,"
+ },
+ {
+  "id": 1668,
+  "text": "which I introduced to you back then."
+ },
+ {
+  "id": 1669,
+  "text": "That is, how to call a C-language function from assembly,"
+ },
+ {
+  "id": 1670,
+  "text": "right?"
+ },
+ {
+  "id": 1671,
+  "text": "Now, a0, a1,"
+ },
+ {
+  "id": 1672,
+  "text": "you still remember these, right?"
+ },
+ {
+  "id": 1673,
+  "text": "They must be what?"
+ },
+ {
+  "id": 1674,
+  "text": "What are they used for?"
+ },
+ {
+  "id": 1675,
+  "text": "They're actually for passing parameters."
+ },
+ {
+  "id": 1676,
+  "text": "This trap handler,"
+ },
+ {
+  "id": 1677,
+  "text": "we'll see in a moment,"
+ },
+ {
+  "id": 1678,
+  "text": "actually takes two parameters."
+ },
+ {
+  "id": 1679,
+  "text": "One is used for"
+ },
+ {
+  "id": 1680,
+  "text": "We actually just take"
+ },
+ {
+  "id": 1681,
+  "text": "the values of mepc and mcause,"
+ },
+ {
+  "id": 1682,
+  "text": "and pass them in."
+ },
+ {
+  "id": 1683,
+  "text": "Now, as for mcause,"
+ },
+ {
+  "id": 1684,
+  "text": "we know it is actually used to"
+ },
+ {
+  "id": 1685,
+  "text": "hold"
+ },
+ {
+  "id": 1686,
+  "text": "the specific type of"
+ },
+ {
+  "id": 1687,
+  "text": "the exception"
+ },
+ {
+  "id": 1688,
+  "text": "or interrupt."
+ },
+ {
+  "id": 1689,
+  "text": "Once we pass it in,"
+ },
+ {
+  "id": 1690,
+  "text": "inside that function there will definitely be"
+ },
+ {
+  "id": 1691,
+  "text": "a switch-case."
+ },
+ {
+  "id": 1692,
+  "text": "As for mepc,"
+ },
+ {
+  "id": 1693,
+  "text": "when we pass it in,"
+ },
+ {
+  "id": 1694,
+  "text": "later on I will show you"
+ },
+ {
+  "id": 1695,
+  "text": "that actually inside this function,"
+ },
+ {
+  "id": 1696,
+  "text": "we may modify this value."
+ },
+ {
+  "id": 1697,
+  "text": "And the return value of this function,"
+ },
+ {
+  "id": 1698,
+  "text": "is actually mepc,"
+ },
+ {
+  "id": 1699,
+  "text": "so after it returns,"
+ },
+ {
+  "id": 1700,
+  "text": "We will take this return value"
+ },
+ {
+  "id": 1701,
+  "text": "We return it through a0."
+ },
+ {
+  "id": 1702,
+  "text": "This is all stuff I've introduced to you before."
+ },
+ {
+  "id": 1703,
+  "text": "These are the function calling conventions of RISC-V,"
+ },
+ {
+  "id": 1704,
+  "text": "the function calling convention, right?"
+ },
+ {
+  "id": 1705,
+  "text": "If you're not familiar with it,"
+ },
+ {
+  "id": 1706,
+  "text": "go back and take another look."
+ },
+ {
+  "id": 1707,
+  "text": "In other words, why do we put it in a0?"
+ },
+ {
+  "id": 1708,
+  "text": "Why do we put it in a1?"
+ },
+ {
+  "id": 1709,
+  "text": "All of this was covered earlier."
+ },
+ {
+  "id": 1710,
+  "text": "So what's actually going on here is"
+ },
+ {
+  "id": 1711,
+  "text": "this part corresponds to calling a trap function"
+ },
+ {
+  "id": 1712,
+  "text": "and handling its return value."
+ },
+ {
+  "id": 1713,
+  "text": "Then the final step"
+ },
+ {
+  "id": 1714,
+  "text": "is returning by executing the mret instruction."
+ },
+ {
+  "id": 1715,
+  "text": "What exactly mret means,"
+ },
+ {
+  "id": 1716,
+  "text": "we'll cover that later."
+ },
+ {
+  "id": 1717,
+  "text": "In short,"
+ },
+ {
+  "id": 1718,
+  "text": "our entire trap handler,"
+ },
+ {
+  "id": 1719,
+  "text": "no matter how it's written"
+ },
+ {
+  "id": 1720,
+  "text": "So the overall framework"
+ },
+ {
+  "id": 1721,
+  "text": "is really just these few steps."
+ },
+ {
+  "id": 1722,
+  "text": "The change,"
+ },
+ {
+  "id": 1723,
+  "text": "the change is in this"
+ },
+ {
+  "id": 1724,
+  "text": "trap handler function."
+ },
+ {
+  "id": 1725,
+  "text": "As for our function,"
+ },
+ {
+  "id": 1726,
+  "text": "we'll take a look at it later."
+ },
+ {
+  "id": 1727,
+  "text": "This is the second half,"
+ },
+ {
+  "id": 1728,
+  "text": "what our software needs to do."
+ },
+ {
+  "id": 1729,
+  "text": "It's really about writing a"
+ },
+ {
+  "id": 1730,
+  "text": "handling function,"
+ },
+ {
+  "id": 1731,
+  "text": "this vector,"
+ },
+ {
+  "id": 1732,
+  "text": "and then taking this vector,"
+ },
+ {
+  "id": 1733,
+  "text": "which is a vector,"
+ },
+ {
+  "id": 1734,
+  "text": "and taking this function,"
+ },
+ {
+  "id": 1735,
+  "text": "putting it up front,"
+ },
+ {
+  "id": 1736,
+  "text": "during initialization,"
+ },
+ {
+  "id": 1737,
+  "text": "saving it into"
+ },
+ {
+  "id": 1738,
+  "text": "that mtvec"
+ },
+ {
+  "id": 1739,
+  "text": "register."
+ },
+ {
+  "id": 1740,
+  "text": "Of course, right now we're using that direct mode,"
+ },
+ {
+  "id": 1741,
+  "text": "not the vector mode."
+ },
+ {
+  "id": 1742,
+  "text": "Because ours is relatively simple."
+ },
+ {
+  "id": 1743,
+  "text": "That's the third step."
+ },
+ {
+  "id": 1744,
+  "text": "So the final step is returning."
+ },
+ {
+  "id": 1745,
+  "text": "Returning is actually reflected in the code we just saw,"
+ },
+ {
+  "id": 1746,
+  "text": "the call of that mret instruction."
+ },
+ {
+  "id": 1747,
+  "text": "So this instruction,"
+ },
+ {
+  "id": 1748,
+  "text": "it's very important for us,"
+ },
+ {
+  "id": 1749,
+  "text": "and we should understand it."
+ },
+ {
+  "id": 1750,
+  "text": "That is to say, this instruction,"
+ },
+ {
+  "id": 1751,
+  "text": "it belongs to the privileged instructions."
+ },
+ {
+  "id": 1752,
+  "text": "This privileged instruction,"
+ },
+ {
+  "id": 1753,
+  "text": "it's specifically used to help us return from this,"
+ },
+ {
+  "id": 1754,
+  "text": "this exception,"
+ },
+ {
+  "id": 1755,
+  "text": "or rather, return from an interrupt trap."
+ },
+ {
+  "id": 1756,
+  "text": "So this instruction,"
+ },
+ {
+  "id": 1757,
+  "text": "there are several kinds."
+ },
+ {
+  "id": 1758,
+  "text": "As we can also see here,"
+ },
+ {
+  "id": 1759,
+  "text": "there's mret and sret."
+ },
+ {
+  "id": 1760,
+  "text": "There is 'rewritten'"
+ },
+ {
+  "id": 1761,
+  "text": "So what it really means is"
+ },
+ {
+  "id": 1762,
+  "text": "it corresponds to"
+ },
+ {
+  "id": 1763,
+  "text": "which privilege"
+ },
+ {
+  "id": 1764,
+  "text": "mode you are returning from"
+ },
+ {
+  "id": 1765,
+  "text": "If you are returning from machine mode,"
+ },
+ {
+  "id": 1766,
+  "text": "you use this one."
+ },
+ {
+  "id": 1767,
+  "text": "If you are returning from supervisor mode,"
+ },
+ {
+  "id": 1768,
+  "text": "you use this one."
+ },
+ {
+  "id": 1769,
+  "text": "That's what it means."
+ },
+ {
+  "id": 1770,
+  "text": "But in what we are doing here,"
+ },
+ {
+  "id": 1771,
+  "text": "all the demos I show you use mret,"
+ },
+ {
+  "id": 1772,
+  "text": "so for different privilege levels,"
+ },
+ {
+  "id": 1773,
+  "text": "how they exit,"
+ },
+ {
+  "id": 1774,
+  "text": "each has its own return instruction."
+ },
+ {
+  "id": 1775,
+  "text": "Please keep that in mind."
+ },
+ {
+  "id": 1776,
+  "text": "Now, if it is,"
+ },
+ {
+  "id": 1777,
+  "text": "what we are talking about now is mret,"
+ },
+ {
+  "id": 1778,
+  "text": "then when mret executes,"
+ },
+ {
+  "id": 1779,
+  "text": "what happens?"
+ },
+ {
+  "id": 1780,
+  "text": "This is what we need to focus on understanding."
+ },
+ {
+  "id": 1781,
+  "text": "We simply called an M return."
+ },
+ {
+  "id": 1782,
+  "text": "So what does the CPU do?"
+ },
+ {
+  "id": 1783,
+  "text": "It does a few things."
+ },
+ {
+  "id": 1784,
+  "text": "The first thing,"
+ },
+ {
+  "id": 1785,
+  "text": "it will take the privilege level that was held,"
+ },
+ {
+  "id": 1786,
+  "text": "as you remember,"
+ },
+ {
+  "id": 1787,
+  "text": "before we entered the handler function,"
+ },
+ {
+  "id": 1788,
+  "text": "the CPU would save its privilege level into this field."
+ },
+ {
+  "id": 1789,
+  "text": "So now, putting it back at this point,"
+ },
+ {
+  "id": 1790,
+  "text": "is actually restoring it."
+ },
+ {
+  "id": 1791,
+  "text": "It restores the original mode."
+ },
+ {
+  "id": 1792,
+  "text": "Because whenever an exception or an interrupt occurs,"
+ },
+ {
+  "id": 1793,
+  "text": "it always wants that, after exiting the trap,"
+ },
+ {
+  "id": 1794,
+  "text": "the original state is restored."
+ },
+ {
+  "id": 1795,
+  "text": "So it also restores the privilege level."
+ },
+ {
+  "id": 1796,
+  "text": "And then, after this value"
+ },
+ {
+  "id": 1797,
+  "text": "has been used up,"
+ },
+ {
+  "id": 1798,
+  "text": "it will set it to a value,"
+ },
+ {
+  "id": 1799,
+  "text": "setting it to user mode."
+ },
+ {
+  "id": 1800,
+  "text": "If user mode is not supported,"
+ },
+ {
+  "id": 1801,
+  "text": "it will just fall back"
+ },
+ {
+  "id": 1802,
+  "text": "and write it as M-mode, and that's fine."
+ },
+ {
+  "id": 1803,
+  "text": "So that's the first thing."
+ },
+ {
+  "id": 1804,
+  "text": "The second one is,"
+ },
+ {
+  "id": 1805,
+  "text": "the first thing is to restore the privilege level."
+ },
+ {
+  "id": 1806,
+  "text": "The second thing,"
+ },
+ {
+  "id": 1807,
+  "text": "actually, is to restore the interrupt status."
+ },
+ {
+  "id": 1808,
+  "text": "It saves this in mpp,"
+ },
+ {
+  "id": 1809,
+  "text": "and restores this value back into mpp."
+ },
+ {
+  "id": 1810,
+  "text": "Now, as you know,"
+ },
+ {
+  "id": 1811,
+  "text": "if from the very beginning,"
+ },
+ {
+  "id": 1812,
+  "text": "under normal circumstances,"
+ },
+ {
+  "id": 1813,
+  "text": "we generally have interrupts enabled,"
+ },
+ {
+  "id": 1814,
+  "text": "and then an interrupt occurs."
+ },
+ {
+  "id": 1815,
+  "text": "Once an interrupt occurs,"
+ },
+ {
+  "id": 1816,
+  "text": "as we discussed earlier,"
+ },
+ {
+  "id": 1817,
+  "text": "it will disable the interrupts."
+ },
+ {
+  "id": 1818,
+  "text": "So this is what this sentence means:"
+ },
+ {
+  "id": 1819,
+  "text": "when it returns,"
+ },
+ {
+  "id": 1820,
+  "text": "Actually, it's just"
+ },
+ {
+  "id": 1821,
+  "text": "it was originally enabling interrupts"
+ },
+ {
+  "id": 1822,
+  "text": "so it's basically saying the interrupt gets enabled again"
+ },
+ {
+  "id": 1823,
+  "text": "So this instruction"
+ },
+ {
+  "id": 1824,
+  "text": "in most cases achieves"
+ },
+ {
+  "id": 1825,
+  "text": "the effect of enabling interrupts"
+ },
+ {
+  "id": 1826,
+  "text": "Of course, you have to look at"
+ },
+ {
+  "id": 1827,
+  "text": "before entering the interrupt"
+ },
+ {
+  "id": 1828,
+  "text": "before entering this trap"
+ },
+ {
+  "id": 1829,
+  "text": "the original state of the interrupt"
+ },
+ {
+  "id": 1830,
+  "text": "it is restored based on the original value"
+ },
+ {
+  "id": 1831,
+  "text": "And after the restore is done"
+ },
+ {
+  "id": 1832,
+  "text": "it will also set the MPIE back to 1"
+ },
+ {
+  "id": 1833,
+  "text": "If you're interested, you can debug it yourself"
+ },
+ {
+  "id": 1834,
+  "text": "and take a look while stepping through"
+ },
+ {
+  "id": 1835,
+  "text": "at the values in these registers"
+ },
+ {
+  "id": 1836,
+  "text": "and compare them with the spec and what we covered in class"
+ },
+ {
+  "id": 1837,
+  "text": "to cross-check"
+ },
+ {
+  "id": 1838,
+  "text": "and deepen your understanding of it"
+ },
+ {
+  "id": 1839,
+  "text": "This is the second step"
+ },
+ {
+  "id": 1840,
+  "text": "So after restoring the privilege level and the interrupt, right,"
+ },
+ {
+  "id": 1841,
+  "text": "the last step,"
+ },
+ {
+  "id": 1842,
+  "text": "it takes mepc,"
+ },
+ {
+  "id": 1843,
+  "text": "which we know was also saved"
+ },
+ {
+  "id": 1844,
+  "text": "before entering the interrupt,"
+ },
+ {
+  "id": 1845,
+  "text": "right?"
+ },
+ {
+  "id": 1846,
+  "text": "So it takes that saved value"
+ },
+ {
+  "id": 1847,
+  "text": "and restores it back into the PC."
+ },
+ {
+  "id": 1848,
+  "text": "You can imagine what effect that has, right?"
+ },
+ {
+  "id": 1849,
+  "text": "It jumps back."
+ },
+ {
+  "id": 1850,
+  "text": "It returns to the state before the interrupt occurred."
+ },
+ {
+  "id": 1851,
+  "text": "Now for an exception,"
+ },
+ {
+  "id": 1852,
+  "text": "as we mentioned earlier,"
+ },
+ {
+  "id": 1853,
+  "text": "it returns to the position of the instruction that triggered the exception."
+ },
+ {
+  "id": 1854,
+  "text": "So that instruction which triggered the exception"
+ },
+ {
+  "id": 1855,
+  "text": "will be executed again."
+ },
+ {
+  "id": 1856,
+  "text": "That is where exceptions differ from interrupts."
+ },
+ {
+  "id": 1857,
+  "text": "What we're covering today,"
+ },
+ {
+  "id": 1858,
+  "text": "mainly starting with exception handling,"
+ },
+ {
+  "id": 1859,
+  "text": "this is our trap,"
+ },
+ {
+  "id": 1860,
+  "text": "The fourth step of this handling,"
+ },
+ {
+  "id": 1861,
+  "text": "the last step, is calling mret."
+ },
+ {
+  "id": 1862,
+  "text": "That is what happens."
+ },
+ {
+  "id": 1863,
+  "text": "So once the whole process is done,"
+ },
+ {
+  "id": 1864,
+  "text": "we say that this"
+ },
+ {
+  "id": 1865,
+  "text": "entire trap handling process"
+ },
+ {
+  "id": 1866,
+  "text": "is actually complete."
+ },
+ {
+  "id": 1867,
+  "text": "So that is the whole process"
+ },
+ {
+  "id": 1868,
+  "text": "—it's just this one process."
+ },
+ {
+  "id": 1869,
+  "text": "Take this diagram,"
+ },
+ {
+  "id": 1870,
+  "text": "when we go back ourselves"
+ },
+ {
+  "id": 1871,
+  "text": "combine it with what we covered in class,"
+ },
+ {
+  "id": 1872,
+  "text": "and go through it yourself."
+ },
+ {
+  "id": 1873,
+  "text": "Now next,"
+ },
+ {
+  "id": 1874,
+  "text": "we will take"
+ },
+ {
+  "id": 1875,
+  "text": "the corresponding code"
+ },
+ {
+  "id": 1876,
+  "text": "and walk through it briefly."
+ },
+ {
+  "id": 1877,
+  "text": "As for the related"
+ },
+ {
+  "id": 1878,
+  "text": "initialization code,"
+ },
+ {
+  "id": 1879,
+  "text": "we have already covered it."
+ },
+ {
+  "id": 1880,
+  "text": "Today we're covering this one."
+ },
+ {
+  "id": 1881,
+  "text": "The fifth one, 05-traps."
+ },
+ {
+  "id": 1882,
+  "text": "It's this example."
+ },
+ {
+  "id": 1883,
+  "text": "This example."
+ },
+ {
+  "id": 1884,
+  "text": "corresponds to what we're covering in today's lecture."
+ },
+ {
+  "id": 1885,
+  "text": "In here, 01, 2, 3, 4,"
+ },
+ {
+  "id": 1886,
+  "text": "don't map exactly to our chapters."
+ },
+ {
+  "id": 1887,
+  "text": "This side matches our steps."
+ },
+ {
+  "id": 1888,
+  "text": "As for the chapters,"
+ },
+ {
+  "id": 1889,
+  "text": "for today's material,"
+ },
+ {
+  "id": 1890,
+  "text": "it should be Chapter 10."
+ },
+ {
+  "id": 1891,
+  "text": "Now, for traps,"
+ },
+ {
+  "id": 1892,
+  "text": "we won't go into the initialization part here."
+ },
+ {
+  "id": 1893,
+  "text": "For this code,"
+ },
+ {
+  "id": 1894,
+  "text": "the main difference from the previous step,"
+ },
+ {
+  "id": 1895,
+  "text": "is that we've introduced a trap.c."
+ },
+ {
+  "id": 1896,
+  "text": "This contains the trap-related logic,"
+ },
+ {
+  "id": 1897,
+  "text": "including initialization and so on."
+ },
+ {
+  "id": 1898,
+  "text": "Initialization is very simple."
+ },
+ {
+  "id": 1899,
+  "text": "So the main thing here is the trap handler."
+ },
+ {
+  "id": 1900,
+  "text": "This is the C code inside the trap handler function."
+ },
+ {
+  "id": 1901,
+  "text": "As we know, in the middle,"
+ },
+ {
+  "id": 1902,
+  "text": "it will jump to this function to execute."
+ },
+ {
+  "id": 1903,
+  "text": "Let's take a look."
+ },
+ {
+  "id": 1904,
+  "text": "What does it actually do in here?"
+ },
+ {
+  "id": 1905,
+  "text": "The example we're giving you now"
+ },
+ {
+  "id": 1906,
+  "text": "is very simple."
+ },
+ {
+  "id": 1907,
+  "text": "It actually takes two parameters."
+ },
+ {
+  "id": 1908,
+  "text": "One is the EPC passed in,"
+ },
+ {
+  "id": 1909,
+  "text": "and the other is CAUSE, right?"
+ },
+ {
+  "id": 1910,
+  "text": "So what this really is,"
+ },
+ {
+  "id": 1911,
+  "text": "well, the most core part,"
+ },
+ {
+  "id": 1912,
+  "text": "is that it makes a judgment based on this CAUSE."
+ },
+ {
+  "id": 1913,
+  "text": "Now, as we mentioned earlier, this CAUSE,"
+ },
+ {
+  "id": 1914,
+  "text": "which is MCAUSE,"
+ },
+ {
+  "id": 1915,
+  "text": "with MCAUSE, the highest bit,"
+ },
+ {
+  "id": 1916,
+  "text": "if it is 1, it means it came in as a"
+ },
+ {
+  "id": 1917,
+  "text": "that is, what happened this time is an interrupt."
+ },
+ {
+  "id": 1918,
+  "text": "If it is 0, it means it's an exception."
+ },
+ {
+  "id": 1919,
+  "text": "So it will take this CAUSE and 0X8000"
+ },
+ {
+  "id": 1920,
+  "text": "We do a bitwise operation on this value"
+ },
+ {
+  "id": 1921,
+  "text": "So this process actually figures out"
+ },
+ {
+  "id": 1922,
+  "text": "If it is true"
+ },
+ {
+  "id": 1923,
+  "text": "Then what just came in is actually an interrupt"
+ },
+ {
+  "id": 1924,
+  "text": "Otherwise, it is an exception"
+ },
+ {
+  "id": 1925,
+  "text": "Otherwise, it is an exception"
+ },
+ {
+  "id": 1926,
+  "text": "So I just wrote here"
+ },
+ {
+  "id": 1927,
+  "text": "That is, this part of the logic is actually interrupt handling"
+ },
+ {
+  "id": 1928,
+  "text": "Now, here"
+ },
+ {
+  "id": 1929,
+  "text": "In this lecture, we'll leave it aside for now"
+ },
+ {
+  "id": 1930,
+  "text": "We'll focus below on exceptions"
+ },
+ {
+  "id": 1931,
+  "text": "So if it is an exception"
+ },
+ {
+  "id": 1932,
+  "text": "We call it"
+ },
+ {
+  "id": 1933,
+  "text": "Generally, we have a term for it called a synchronous trap"
+ },
+ {
+  "id": 1934,
+  "text": "Because we know an exception is actually triggered"
+ },
+ {
+  "id": 1935,
+  "text": "when you execute this instruction"
+ },
+ {
+  "id": 1936,
+  "text": "Right"
+ },
+ {
+  "id": 1937,
+  "text": "An interrupt, on the other hand, can be asynchronous"
+ },
+ {
+  "id": 1938,
+  "text": "It can happen at any time"
+ },
+ {
+  "id": 1939,
+  "text": "So this exception"
+ },
+ {
+  "id": 1940,
+  "text": "We also call it a synchronous trap,"
+ },
+ {
+  "id": 1941,
+  "text": "and that is exactly the reason."
+ },
+ {
+  "id": 1942,
+  "text": "Now, for this part,"
+ },
+ {
+  "id": 1943,
+  "text": "as we mentioned earlier,"
+ },
+ {
+  "id": 1944,
+  "text": "if on this side,"
+ },
+ {
+  "id": 1945,
+  "text": "I actually added a panic here."
+ },
+ {
+  "id": 1946,
+  "text": "The panic here,"
+ },
+ {
+  "id": 1947,
+  "text": "you can take a look at the code,"
+ },
+ {
+  "id": 1948,
+  "text": "is actually an infinite loop."
+ },
+ {
+  "id": 1949,
+  "text": "Let me give you a quick demonstration."
+ },
+ {
+  "id": 1950,
+  "text": "That is to say,"
+ },
+ {
+  "id": 1951,
+  "text": "once an exception is triggered,"
+ },
+ {
+  "id": 1952,
+  "text": "it will come into this logic."
+ },
+ {
+  "id": 1953,
+  "text": "The reason I added an infinite loop here,"
+ },
+ {
+  "id": 1954,
+  "text": "is actually to make sure that"
+ },
+ {
+  "id": 1955,
+  "text": "it won't be executed repeatedly,"
+ },
+ {
+  "id": 1956,
+  "text": "because as we mentioned earlier,"
+ },
+ {
+  "id": 1957,
+  "text": "once an exception occurs and is handled,"
+ },
+ {
+  "id": 1958,
+  "text": "when it returns,"
+ },
+ {
+  "id": 1959,
+  "text": "it will go back to the very instruction that triggered the exception."
+ },
+ {
+  "id": 1960,
+  "text": "We can first take this panic"
+ },
+ {
+  "id": 1961,
+  "text": "that is, remove this infinite loop,"
+ },
+ {
+  "id": 1962,
+  "text": "and see what happens."
+ },
+ {
+  "id": 1963,
+  "text": "We'll just get a feel for it."
+ },
+ {
+  "id": 1964,
+  "text": "So this,"
+ },
+ {
+  "id": 1965,
+  "text": "this test program,"
+ },
+ {
+  "id": 1966,
+  "text": "is this function."
+ },
+ {
+  "id": 1967,
+  "text": "This function,"
+ },
+ {
+  "id": 1968,
+  "text": "it's trap_test."
+ },
+ {
+  "id": 1969,
+  "text": "This function is actually in user.c."
+ },
+ {
+  "id": 1970,
+  "text": "It will be removed here."
+ },
+ {
+  "id": 1971,
+  "text": "That is, we're in"
+ },
+ {
+  "id": 1972,
+  "text": "this example, since it's based on the previous"
+ },
+ {
+  "id": 1973,
+  "text": "cooperative multitasking example, modified from it,"
+ },
+ {
+  "id": 1974,
+  "text": "so we're actually inside"
+ },
+ {
+  "id": 1975,
+  "text": "the user_task0 task,"
+ },
+ {
+  "id": 1976,
+  "text": "after we come in,"
+ },
+ {
+  "id": 1977,
+  "text": "as soon as we come in,"
+ },
+ {
+  "id": 1978,
+  "text": "we do nothing at all,"
+ },
+ {
+  "id": 1979,
+  "text": "and just call trap_test directly."
+ },
+ {
+  "id": 1980,
+  "text": "and then it will trigger this exception of ours"
+ },
+ {
+  "id": 1981,
+  "text": "As for triggering an exception,"
+ },
+ {
+  "id": 1982,
+  "text": "there are many ways to do it."
+ },
+ {
+  "id": 1983,
+  "text": "One way is,"
+ },
+ {
+  "id": 1984,
+  "text": "what is this line doing?"
+ },
+ {
+  "id": 1985,
+  "text": "Take a look, everyone."
+ },
+ {
+  "id": 1986,
+  "text": "This line is essentially saying,"
+ },
+ {
+  "id": 1987,
+  "text": "I write a value to the address 0x00,"
+ },
+ {
+  "id": 1988,
+  "text": "right?"
+ },
+ {
+  "id": 1989,
+  "text": "But as you all know,"
+ },
+ {
+  "id": 1990,
+  "text": "this address is actually"
+ },
+ {
+  "id": 1991,
+  "text": "not within our legitimate memory"
+ },
+ {
+  "id": 1992,
+  "text": "map table,"
+ },
+ {
+  "id": 1993,
+  "text": "the Memory Map table,"
+ },
+ {
+  "id": 1994,
+  "text": "it's actually an illegal address."
+ },
+ {
+  "id": 1995,
+  "text": "In fact, it will trigger an access exception,"
+ },
+ {
+  "id": 1996,
+  "text": "an access failure."
+ },
+ {
+  "id": 1997,
+  "text": "So,"
+ },
+ {
+  "id": 1998,
+  "text": "once this exception occurs,"
+ },
+ {
+  "id": 1999,
+  "text": "as we know, once the program"
+ },
+ {
+  "id": 2000,
+  "text": "As soon as this instruction executes"
+ },
+ {
+  "id": 2001,
+  "text": "based on our understanding,"
+ },
+ {
+  "id": 2002,
+  "text": "this exception should get triggered."
+ },
+ {
+  "id": 2003,
+  "text": "Once it is triggered,"
+ },
+ {
+  "id": 2004,
+  "text": "it should go into our trap"
+ },
+ {
+  "id": 2005,
+  "text": "handle function."
+ },
+ {
+  "id": 2006,
+  "text": "Inside the trap function,"
+ },
+ {
+  "id": 2007,
+  "text": "we will see it go and print"
+ },
+ {
+  "id": 2008,
+  "text": "this message,"
+ },
+ {
+  "id": 2009,
+  "text": "print it out."
+ },
+ {
+  "id": 2010,
+  "text": "Of course, after we print it out,"
+ },
+ {
+  "id": 2011,
+  "text": "since we didn't do anything here,"
+ },
+ {
+  "id": 2012,
+  "text": "it will return."
+ },
+ {
+  "id": 2013,
+  "text": "After it returns,"
+ },
+ {
+  "id": 2014,
+  "text": "as you know, when it returns,"
+ },
+ {
+  "id": 2015,
+  "text": "as we just explained,"
+ },
+ {
+  "id": 2016,
+  "text": "it will return to this instruction of ours,"
+ },
+ {
+  "id": 2017,
+  "text": "and continue with the instruction."
+ },
+ {
+  "id": 2018,
+  "text": "So,"
+ },
+ {
+  "id": 2019,
+  "text": "if we were to..."
+ },
+ {
+  "id": 2020,
+  "text": "Without this special handling,"
+ },
+ {
+  "id": 2021,
+  "text": "we would see this print statement"
+ },
+ {
+  "id": 2022,
+  "text": "being printed over and over again."
+ },
+ {
+  "id": 2023,
+  "text": "If you see this happening,"
+ },
+ {
+  "id": 2024,
+  "text": "think it through based on our explanation:"
+ },
+ {
+  "id": 2025,
+  "text": "this is an exception."
+ },
+ {
+  "id": 2026,
+  "text": "After the jump returns,"
+ },
+ {
+  "id": 2027,
+  "text": "it comes back to this instruction,"
+ },
+ {
+  "id": 2028,
+  "text": "and continues to re-execute it."
+ },
+ {
+  "id": 2029,
+  "text": "Let's see if that's really the case."
+ },
+ {
+  "id": 2030,
+  "text": "Let's recompile it."
+ },
+ {
+  "id": 2031,
+  "text": "Let's run it."
+ },
+ {
+  "id": 2032,
+  "text": "It just keeps printing like crazy."
+ },
+ {
+  "id": 2033,
+  "text": "It almost won't stop."
+ },
+ {
+  "id": 2034,
+  "text": "I had to force it to stop."
+ },
+ {
+  "id": 2035,
+  "text": "As you can see,"
+ },
+ {
+  "id": 2036,
+  "text": "it just keeps printing this one line over and over again."
+ },
+ {
+  "id": 2037,
+  "text": "Right?"
+ },
+ {
+  "id": 2038,
+  "text": "So why does it print this one line?"
+ },
+ {
+  "id": 2039,
+  "text": "I just explained it to you."
+ },
+ {
+  "id": 2040,
+  "text": "That's exactly the reason."
+ },
+ {
+  "id": 2041,
+  "text": "Now, of course,"
+ },
+ {
+  "id": 2042,
+  "text": "in the code we gave you,"
+ },
+ {
+  "id": 2043,
+  "text": "we actually added a panic."
+ },
+ {
+  "id": 2044,
+  "text": "With the panic added,"
+ },
+ {
+  "id": 2045,
+  "text": "it's actually an infinite loop inside."
+ },
+ {
+  "id": 2046,
+  "text": "It just stops printing."
+ },
+ {
+  "id": 2047,
+  "text": "So if we restore it to this state,"
+ },
+ {
+  "id": 2048,
+  "text": "let's run it again."
+ },
+ {
+  "id": 2049,
+  "text": "You can see it actually stops right here."
+ },
+ {
+  "id": 2050,
+  "text": "And stopping here,"
+ },
+ {
+  "id": 2051,
+  "text": "well, it basically prevents the exception from continuing."
+ },
+ {
+  "id": 2052,
+  "text": "Actually, the exception never returns at all."
+ },
+ {
+  "id": 2053,
+  "text": "So through this example,"
+ },
+ {
+  "id": 2054,
+  "text": "we got a sense of how exceptions work."
+ },
+ {
+  "id": 2055,
+  "text": "Now, of course, suppose"
+ },
+ {
+  "id": 2056,
+  "text": "you still want to come back,"
+ },
+ {
+  "id": 2057,
+  "text": "there's actually another way."
+ },
+ {
+  "id": 2058,
+  "text": "That is, you force a change to"
+ },
+ {
+  "id": 2059,
+  "text": "the return address yourself."
+ },
+ {
+  "id": 2060,
+  "text": "Because, for example, on your side, didn't we"
+ },
+ {
+  "id": 2061,
+  "text": "already pass this return value back"
+ },
+ {
+  "id": 2062,
+  "text": "through the sret?"
+ },
+ {
+  "id": 2063,
+  "text": "So what we can do here"
+ },
+ {
+  "id": 2064,
+  "text": "is forcibly add 4 to this value."
+ },
+ {
+  "id": 2065,
+  "text": "In effect, what that means is it won't jump back to"
+ },
+ {
+  "id": 2066,
+  "text": "when it returns,"
+ },
+ {
+  "id": 2067,
+  "text": "it won't go back to that original instruction,"
+ },
+ {
+  "id": 2068,
+  "text": "but instead to the instruction right after it."
+ },
+ {
+  "id": 2069,
+  "text": "And as for the instruction right after it,"
+ },
+ {
+  "id": 2070,
+  "text": "that's essentially equivalent to this being commented out."
+ },
+ {
+  "id": 2071,
+  "text": "So it will actually go and print a"
+ },
+ {
+  "id": 2072,
+  "text": "\"Yeah I'm written back\"."
+ },
+ {
+  "id": 2073,
+  "text": "Let's see the effect."
+ },
+ {
+  "id": 2074,
+  "text": "We remove this infinite loop,"
+ },
+ {
+  "id": 2075,
+  "text": "and then we forcibly add 4 to the return value."
+ },
+ {
+  "id": 2076,
+  "text": "Adding 4 actually means you know,"
+ },
+ {
+  "id": 2077,
+  "text": "because on 32-bit, the way we're compiling it now,"
+ },
+ {
+  "id": 2078,
+  "text": "one instruction takes up 4 bytes."
+ },
+ {
+  "id": 2079,
+  "text": "Adding 4 actually jumps to the next instruction."
+ },
+ {
+  "id": 2080,
+  "text": "The next instruction."
+ },
+ {
+  "id": 2081,
+  "text": "Then, as we discussed earlier,"
+ },
+ {
+  "id": 2082,
+  "text": "that is, for this Entries,"
+ },
+ {
+  "id": 2083,
+  "text": "when it returns,"
+ },
+ {
+  "id": 2084,
+  "text": "we know that there is a"
+ },
+ {
+  "id": 2085,
+  "text": "it will, based on this,"
+ },
+ {
+  "id": 2086,
+  "text": "based on the returned a0,"
+ },
+ {
+  "id": 2087,
+  "text": "rewrite the return value to overwrite mepc."
+ },
+ {
+  "id": 2088,
+  "text": "We know that overwriting mepc,"
+ },
+ {
+  "id": 2089,
+  "text": "in effect, will cause"
+ },
+ {
+  "id": 2090,
+  "text": "that when it does mret,"
+ },
+ {
+  "id": 2091,
+  "text": "it returns based on this value."
+ },
+ {
+  "id": 2092,
+  "text": "So once we take its return value,"
+ },
+ {
+  "id": 2093,
+  "text": "and add 4 to it,"
+ },
+ {
+  "id": 2094,
+  "text": "it will actually jump to the next instruction."
+ },
+ {
+  "id": 2095,
+  "text": "Let's take a look at this,"
+ },
+ {
+  "id": 2096,
+  "text": "and see if that's the case."
+ },
+ {
+  "id": 2097,
+  "text": "This is the modified version."
+ },
+ {
+  "id": 2098,
+  "text": "Let's run it."
+ },
+ {
+  "id": 2099,
+  "text": "As you can see,"
+ },
+ {
+  "id": 2100,
+  "text": "Now you can see here"
+ },
+ {
+  "id": 2101,
+  "text": "the exception did indeed occur"
+ },
+ {
+  "id": 2102,
+  "text": "But after this exception happened,"
+ },
+ {
+  "id": 2103,
+  "text": "it did not enter an infinite loop."
+ },
+ {
+  "id": 2104,
+  "text": "It does not repeatedly execute this instruction again,"
+ },
+ {
+  "id": 2105,
+  "text": "but instead prints out this line:"
+ },
+ {
+  "id": 2106,
+  "text": "I'm returned from trap"
+ },
+ {
+  "id": 2107,
+  "text": "So at least it can come back,"
+ },
+ {
+  "id": 2108,
+  "text": "as I just introduced to you."
+ },
+ {
+  "id": 2109,
+  "text": "That is to say,"
+ },
+ {
+  "id": 2110,
+  "text": "it is precisely because of this instruction,"
+ },
+ {
+  "id": 2111,
+  "text": "once the exception is triggered,"
+ },
+ {
+  "id": 2112,
+  "text": "when it returns,"
+ },
+ {
+  "id": 2113,
+  "text": "when it jumps back,"
+ },
+ {
+  "id": 2114,
+  "text": "it actually comes back to here,"
+ },
+ {
+  "id": 2115,
+  "text": "comes back here,"
+ },
+ {
+  "id": 2116,
+  "text": "and so it returns."
+ },
+ {
+  "id": 2117,
+  "text": "Now over here,"
+ },
+ {
+  "id": 2118,
+  "text": "what comes next,"
+ },
+ {
+  "id": 2119,
+  "text": "is this task:"
+ },
+ {
+  "id": 2120,
+  "text": "and it just keeps running."
+ },
+ {
+  "id": 2121,
+  "text": "Of course,"
+ },
+ {
+  "id": 2122,
+  "text": "here, because of this trap test,"
+ },
+ {
+  "id": 2123,
+  "text": "it should be executed repeatedly here."
+ },
+ {
+  "id": 2124,
+  "text": "The main point is that it will continue executing on this side,"
+ },
+ {
+  "id": 2125,
+  "text": "so this exception"
+ },
+ {
+  "id": 2126,
+  "text": "will be inside this while loop here,"
+ },
+ {
+  "id": 2127,
+  "text": "and will be triggered repeatedly."
+ },
+ {
+  "id": 2128,
+  "text": "But anyway,"
+ },
+ {
+  "id": 2129,
+  "text": "let me demonstrate this for everyone here."
+ },
+ {
+  "id": 2130,
+  "text": "That is, we can actually modify"
+ },
+ {
+  "id": 2131,
+  "text": "its return value,"
+ },
+ {
+  "id": 2132,
+  "text": "so that it doesn't necessarily mean"
+ },
+ {
+  "id": 2133,
+  "text": "skipping this,"
+ },
+ {
+  "id": 2134,
+  "text": "so that it won't repeatedly execute"
+ },
+ {
+  "id": 2135,
+  "text": "the exception handler,"
+ },
+ {
+  "id": 2136,
+  "text": "it will not re-execute"
+ },
+ {
+  "id": 2137,
+  "text": "the instruction that triggered the exception."
+ },
+ {
+  "id": 2138,
+  "text": "Through this example,"
+ },
+ {
+  "id": 2139,
+  "text": "you can go back and take a look at it yourselves."
+ },
+ {
+  "id": 2140,
+  "text": "Now, regarding this trap"
+ },
+ {
+  "id": 2141,
+  "text": "and the concept behind it,"
+ },
+ {
+  "id": 2142,
+  "text": "as well as what's involved with exceptions,"
+ },
+ {
+  "id": 2143,
+  "text": "and this kind of basic handling,"
+ },
+ {
+  "id": 2144,
+  "text": "we'll wrap up our introduction here."
+ }
+]

@@ -1,0 +1,1875 @@
+1
+00:00:00,590 --> 00:00:22,180
+Chapter 6. From Chapter 1 to Chapter 5, we've basically covered all the prerequisite material for you.
+
+2
+00:00:22,180 --> 00:00:23,940
+That is to say, from here on,
+
+3
+00:00:23,940 --> 00:00:24,580
+we're going to start
+
+4
+00:00:24,580 --> 00:00:26,820
+to actually write a
+
+5
+00:00:26,820 --> 00:00:29,280
+try our hand at writing an operating system from scratch.
+
+6
+00:00:29,280 --> 00:00:31,340
+Now, before writing an operating system,
+
+7
+00:00:31,340 --> 00:00:33,420
+there's a lot of knowledge we need to lay down first.
+
+8
+00:00:33,420 --> 00:00:35,720
+That's what we covered in the earlier parts.
+
+9
+00:00:35,720 --> 00:00:36,480
+So you can see
+
+10
+00:00:36,480 --> 00:00:38,800
+there really is quite a lot of content involved.
+
+11
+00:00:38,800 --> 00:00:41,280
+Why do we say writing an operating system is rather hard?
+
+12
+00:00:41,280 --> 00:00:43,020
+Well, it's because of all the
+
+13
+00:00:43,020 --> 00:00:45,580
+basic knowledge you have to master beforehand, and there's quite a bit of it.
+
+14
+00:00:45,580 --> 00:00:48,420
+So getting started is not exactly easy.
+
+15
+00:00:48,420 --> 00:00:53,360
+So from Chapter 6 all the way to the end,
+
+16
+00:00:53,360 --> 00:00:55,340
+what we're going to do is write a
+
+17
+00:00:55,340 --> 00:00:57,020
+small, simple operating system for you.
+
+18
+00:00:57,020 --> 00:00:58,300
+And through this study,
+
+19
+00:00:58,300 --> 00:00:58,920
+you'll get to know a bit more,
+
+20
+00:00:58,920 --> 00:01:02,000
+and go deeper into some of the RISC-V details.
+
+21
+00:01:02,000 --> 00:01:03,820
+especially privileged instructions
+
+22
+00:01:03,820 --> 00:01:06,020
+and some things in the privileged architecture
+
+23
+00:01:06,020 --> 00:01:10,260
+Let's first take a look at this Chapter 6
+
+24
+00:01:10,260 --> 00:01:10,940
+Chapter 6 is actually
+
+25
+00:01:10,940 --> 00:01:11,980
+still a
+
+26
+00:01:11,980 --> 00:01:14,380
+kind of introduction to our second part
+
+27
+00:01:14,380 --> 00:01:21,680
+Let me quickly walk you through it
+
+28
+00:01:21,680 --> 00:01:29,210
+roughly four parts
+
+29
+00:01:29,210 --> 00:01:30,170
+namely the definition of the operating system
+
+30
+00:01:30,170 --> 00:01:31,010
+operating system classification
+
+31
+00:01:31,010 --> 00:01:32,410
+typical RTOSes
+
+32
+00:01:32,410 --> 00:01:34,750
+and a brief introduction to the course project
+
+33
+00:01:34,750 --> 00:01:38,510
+So this covers just this little bit
+
+34
+00:01:38,510 --> 00:01:39,490
+I won't go into that
+
+35
+00:01:39,490 --> 00:01:40,190
+the reference manual
+
+36
+00:01:40,190 --> 00:01:42,410
+As for the operating system,
+
+37
+00:01:42,410 --> 00:01:44,890
+we mentioned it earlier,
+
+38
+00:01:44,890 --> 00:01:46,190
+and we'll review it here
+
+39
+00:01:46,190 --> 00:01:47,490
+That is, the operating system,
+
+40
+00:01:47,490 --> 00:01:49,930
+which in English is called Operating System
+
+41
+00:01:49,930 --> 00:01:51,030
+which is short for OS
+
+42
+00:01:51,030 --> 00:01:52,510
+and so it,
+
+43
+00:01:52,510 --> 00:01:54,750
+is actually also a collection of software,
+
+44
+00:01:54,750 --> 00:01:55,090
+right?
+
+45
+00:01:55,090 --> 00:01:56,350
+We say that the operating system,
+
+46
+00:01:56,350 --> 00:01:58,670
+actually also branched out from software.
+
+47
+00:01:58,670 --> 00:02:02,570
+The part that floats upward,
+
+48
+00:02:02,570 --> 00:02:03,570
+became application software,
+
+49
+00:02:03,570 --> 00:02:05,190
+and the part that sinks down became the operating system.
+
+50
+00:02:05,190 --> 00:02:07,070
+Now this diagram,
+
+51
+00:02:07,070 --> 00:02:08,150
+is also a figure we found
+
+52
+00:02:08,150 --> 00:02:09,270
+on Wikipedia,
+
+53
+00:02:09,270 --> 00:02:09,930
+and you can take a look.
+
+54
+00:02:09,930 --> 00:02:10,670
+It shows where the operating system sits
+
+55
+00:02:10,670 --> 00:02:14,830
+within the overall software system.
+
+56
+00:02:14,830 --> 00:02:16,570
+That is to say, our operating system,
+
+57
+00:02:16,570 --> 00:02:17,250
+including this,
+
+58
+00:02:17,250 --> 00:02:18,310
+especially the operating system in the narrow sense,
+
+59
+00:02:18,310 --> 00:02:19,810
+namely the kernel of the operating system,
+
+60
+00:02:19,810 --> 00:02:22,310
+is actually sandwiched between
+
+61
+00:02:22,310 --> 00:02:23,950
+it actually includes this
+
+62
+00:02:23,950 --> 00:02:25,350
+the driver is also part of the kernel
+
+63
+00:02:25,350 --> 00:02:28,350
+so this, between the hardware and
+
+64
+00:02:28,350 --> 00:02:29,730
+the application program
+
+65
+00:02:29,730 --> 00:02:30,990
+the application program is on top
+
+66
+00:02:30,990 --> 00:02:31,950
+and in the middle
+
+67
+00:02:31,950 --> 00:02:32,870
+through a system call
+
+68
+00:02:32,870 --> 00:02:33,110
+right
+
+69
+00:02:33,110 --> 00:02:33,650
+this diagram
+
+70
+00:02:33,650 --> 00:02:36,090
+should be a classic one to all of you
+
+71
+00:02:36,090 --> 00:02:37,610
+so as for the operating system
+
+72
+00:02:37,610 --> 00:02:38,130
+we say
+
+73
+00:02:38,130 --> 00:02:42,950
+there is a distinction between the broad sense and the narrow sense
+
+74
+00:02:42,950 --> 00:02:45,130
+so in the narrow sense
+
+75
+00:02:45,130 --> 00:02:46,330
+it is really just the kernel
+
+76
+00:02:46,330 --> 00:02:47,970
+that is what we usually talk about
+
+77
+00:02:47,970 --> 00:02:48,530
+things like Linux
+
+78
+00:02:48,530 --> 00:02:50,030
+that Linux thing
+
+79
+00:02:50,030 --> 00:02:51,430
+is really just a kernel
+
+80
+00:02:51,430 --> 00:02:52,190
+right
+
+81
+00:02:52,190 --> 00:02:56,150
+There are many kinds of operating systems in the broad sense.
+
+82
+00:02:56,150 --> 00:02:57,350
+For example, what we call Ubuntu,
+
+83
+00:02:57,350 --> 00:03:00,010
+and things like Debian,
+
+84
+00:03:00,010 --> 00:03:00,770
+right?
+
+85
+00:03:00,770 --> 00:03:02,110
+Now, these things,
+
+86
+00:03:02,110 --> 00:03:03,950
+we also call them operating systems.
+
+87
+00:03:03,950 --> 00:03:05,850
+But actually, that is a broad concept.
+
+88
+00:03:05,850 --> 00:03:07,410
+In other words, it is really a distribution package.
+
+89
+00:03:07,410 --> 00:03:08,890
+You all should know about this, right?
+
+90
+00:03:08,890 --> 00:03:10,810
+That is to say, take Ubuntu for example,
+
+91
+00:03:10,810 --> 00:03:14,110
+it is nothing more than a Linux kernel,
+
+92
+00:03:14,110 --> 00:03:16,570
+plus some upper-layer software,
+
+93
+00:03:16,570 --> 00:03:19,490
+installation packages and so on, put together.
+
+94
+00:03:19,490 --> 00:03:20,450
+It is actually a distribution package.
+
+95
+00:03:20,450 --> 00:03:22,890
+But in the broad sense, we also call it an operating system.
+
+96
+00:03:22,890 --> 00:03:25,950
+Our Windows is also a broad-sense operating system.
+
+97
+00:03:25,950 --> 00:03:27,530
+Because Windows also has a kernel,
+
+98
+00:03:27,530 --> 00:03:28,870
+it is just that we probably don't really,
+
+99
+00:03:28,870 --> 00:03:29,590
+it is not open source,
+
+100
+00:03:29,590 --> 00:03:30,850
+so we don't really look into it much.
+
+101
+00:03:30,850 --> 00:03:33,070
+But it also has this concept inside it.
+
+102
+00:03:33,070 --> 00:03:39,110
+So that's the basic concept of an operating system.
+
+103
+00:03:39,110 --> 00:03:41,790
+Now, when we talk about operating systems,
+
+104
+00:03:41,790 --> 00:03:45,750
+based on certain application scenarios,
+
+105
+00:03:45,750 --> 00:03:48,270
+we can divide them into a few major categories.
+
+106
+00:03:48,270 --> 00:03:50,610
+One classification puts them into three major categories.
+
+107
+00:03:50,610 --> 00:03:53,470
+The first type we call a bare-metal system.
+
+108
+00:03:53,470 --> 00:03:55,530
+This kind of system,
+
+109
+00:03:55,530 --> 00:03:56,610
+it's very small,
+
+110
+00:03:56,610 --> 00:03:57,770
+and it doesn't really have any layering.
+
+111
+00:03:57,770 --> 00:03:59,690
+It mainly runs in some
+
+112
+00:03:59,690 --> 00:04:02,290
+what we'd call small embedded
+
+113
+00:04:02,290 --> 00:04:03,790
+small-scale controllers,
+
+114
+00:04:03,790 --> 00:04:06,110
+like microcontrollers, for example,
+
+115
+00:04:06,110 --> 00:04:10,150
+where it can only control some simple peripherals.
+
+116
+00:04:10,150 --> 00:04:14,970
+So when we talk about these three categories,
+
+117
+00:04:14,970 --> 00:04:16,770
+we can actually also take the opportunity to review
+
+118
+00:04:16,770 --> 00:04:18,690
+what we discussed earlier about RISC-V,
+
+119
+00:04:18,690 --> 00:04:22,090
+namely the concept of so-called privileged modes,
+
+120
+00:04:22,090 --> 00:04:23,570
+the concept of privilege levels.
+
+121
+00:04:23,570 --> 00:04:24,390
+This diagram,
+
+122
+00:04:24,390 --> 00:04:25,750
+that is, the diagram below,
+
+123
+00:04:25,750 --> 00:04:27,150
+I think you still remember it.
+
+124
+00:04:27,150 --> 00:04:28,190
+We talked about it earlier.
+
+125
+00:04:28,190 --> 00:04:28,610
+That is to say,
+
+126
+00:04:28,610 --> 00:04:30,430
+in RISC-V,
+
+127
+00:04:30,430 --> 00:04:32,810
+it takes these privilege levels
+
+128
+00:04:32,810 --> 00:04:33,410
+and divides them
+
+129
+00:04:33,410 --> 00:04:34,810
+into, currently, three major categories:
+
+130
+00:04:34,810 --> 00:04:35,910
+Machine,
+
+131
+00:04:35,910 --> 00:04:37,650
+and Supervisor,
+
+132
+00:04:37,650 --> 00:04:39,010
+and User Mode,
+
+133
+00:04:39,010 --> 00:04:39,390
+right?
+
+134
+00:04:39,390 --> 00:04:40,010
+Still remember?
+
+135
+00:04:40,010 --> 00:04:41,670
+Now, at the time, in this diagram,
+
+136
+00:04:41,670 --> 00:04:42,530
+he also mentioned this concept.
+
+137
+00:04:42,530 --> 00:04:43,890
+In fact, it corresponds to ours.
+
+138
+00:04:43,890 --> 00:04:45,810
+For example, this logical system,
+
+139
+00:04:45,810 --> 00:04:46,970
+let's just use this diagram
+
+140
+00:04:46,970 --> 00:04:47,790
+and go through it together.
+
+141
+00:04:47,790 --> 00:04:49,210
+Now, for the logical system,
+
+142
+00:04:49,210 --> 00:04:50,050
+as we just said,
+
+143
+00:04:50,050 --> 00:04:53,350
+it is a kind of
+
+144
+00:04:53,350 --> 00:04:54,310
+what actually corresponds to our,
+
+145
+00:04:54,310 --> 00:04:55,810
+that is, the kind of thing described here,
+
+146
+00:04:55,810 --> 00:04:58,970
+a simple embedded system,
+
+147
+00:04:58,970 --> 00:05:00,710
+is what we call a logical system.
+
+148
+00:05:00,710 --> 00:05:01,970
+Now, for this kind of system,
+
+149
+00:05:01,970 --> 00:05:02,810
+it actually is just,
+
+150
+00:05:02,810 --> 00:05:05,210
+we actually just directly
+
+151
+00:05:05,210 --> 00:05:07,210
+only need to implement our RISC-V's,
+
+152
+00:05:07,210 --> 00:05:08,730
+machine mode,
+
+153
+00:05:08,730 --> 00:05:09,890
+and that's actually enough.
+
+154
+00:05:09,890 --> 00:05:12,330
+Now, the second category,
+
+155
+00:05:12,330 --> 00:05:13,010
+it is also mentioned here,
+
+156
+00:05:13,010 --> 00:05:15,230
+that is, it includes M and,
+
+157
+00:05:15,230 --> 00:05:18,570
+machine mode and this user mode.
+
+158
+00:05:18,570 --> 00:05:20,190
+Now, it,
+
+159
+00:05:20,190 --> 00:05:21,390
+the main difference from the one above,
+
+160
+00:05:21,390 --> 00:05:21,870
+is that
+
+161
+00:05:21,870 --> 00:05:22,810
+What it mentions is that
+
+162
+00:05:22,810 --> 00:05:23,330
+it is a kind of
+
+163
+00:05:23,330 --> 00:05:25,250
+embedded system with a certain level of security
+
+164
+00:05:25,250 --> 00:05:26,610
+built into it.
+
+165
+00:05:26,610 --> 00:05:28,290
+So what does that mean?
+
+166
+00:05:28,290 --> 00:05:29,210
+This thing is actually somewhat
+
+167
+00:05:29,210 --> 00:05:30,690
+similar to what we commonly call
+
+168
+00:05:30,690 --> 00:05:31,870
+an RTOS,
+
+169
+00:05:31,870 --> 00:05:32,550
+that is, what we refer to as a
+
+170
+00:05:32,550 --> 00:05:33,310
+real-time operating system.
+
+171
+00:05:33,310 --> 00:05:34,890
+Now, for this kind of system,
+
+172
+00:05:34,890 --> 00:05:35,790
+what it has
+
+173
+00:05:35,790 --> 00:05:36,830
+so-called
+
+174
+00:05:36,830 --> 00:05:37,730
+a certain level of security
+
+175
+00:05:37,730 --> 00:05:38,290
+is reflected in the fact that
+
+176
+00:05:38,290 --> 00:05:40,410
+it can distinguish
+
+177
+00:05:40,410 --> 00:05:42,690
+at least two modes:
+
+178
+00:05:42,690 --> 00:05:44,010
+one is machine mode,
+
+179
+00:05:44,010 --> 00:05:45,370
+and one is user mode.
+
+180
+00:05:45,370 --> 00:05:46,230
+In other words,
+
+181
+00:05:46,230 --> 00:05:48,950
+Ordinary applications,
+
+182
+00:05:48,950 --> 00:05:51,070
+they run in User mode.
+
+183
+00:05:51,070 --> 00:05:52,450
+The kernel,
+
+184
+00:05:52,450 --> 00:05:55,130
+including some low-level drivers,
+
+185
+00:05:55,130 --> 00:05:57,470
+may run in Machine mode.
+
+186
+00:05:57,470 --> 00:06:01,730
+Now, in User mode,
+
+187
+00:06:01,730 --> 00:06:03,750
+our access to the underlying layer,
+
+188
+00:06:03,750 --> 00:06:05,230
+it is protected.
+
+189
+00:06:05,230 --> 00:06:08,810
+We cannot directly access certain special physical devices,
+
+190
+00:06:08,810 --> 00:06:09,710
+including memory.
+
+191
+00:06:09,710 --> 00:06:12,110
+Under these circumstances,
+
+192
+00:06:12,110 --> 00:06:13,530
+in general,
+
+193
+00:06:13,530 --> 00:06:15,250
+we would need the processor to
+
+194
+00:06:15,250 --> 00:06:18,190
+support what we mentioned for RISC-V,
+
+195
+00:06:18,190 --> 00:06:20,730
+a feature called physical memory protection.
+
+196
+00:06:20,730 --> 00:06:21,930
+Of course, it doesn't have to be supported.
+
+197
+00:06:21,930 --> 00:06:23,770
+But having it is of course better.
+
+198
+00:06:23,770 --> 00:06:28,050
+Now, the real-time operating systems we often talk about,
+
+199
+00:06:28,050 --> 00:06:29,670
+most of them fall into this category.
+
+200
+00:06:29,670 --> 00:06:31,830
+In that case,
+
+201
+00:06:31,830 --> 00:06:34,230
+And the third case below,
+
+202
+00:06:34,230 --> 00:06:36,030
+the main difference is that
+
+203
+00:06:36,030 --> 00:06:38,190
+let's look at the third one.
+
+204
+00:06:38,190 --> 00:06:39,050
+The third one
+
+205
+00:06:39,050 --> 00:06:41,750
+corresponds to what RISC-V calls
+
+206
+00:06:41,750 --> 00:06:45,170
+an operating system that combines all three modes.
+
+207
+00:06:45,170 --> 00:06:46,330
+Now, for this kind of system,
+
+208
+00:06:46,330 --> 00:06:49,110
+he believes the main point is this:
+
+209
+00:06:49,110 --> 00:06:50,590
+the typical application,
+
+210
+00:06:50,590 --> 00:06:53,490
+that is, so-called Unix-like operating systems,
+
+211
+00:06:53,490 --> 00:06:56,090
+systems like Linux,
+
+212
+00:06:56,090 --> 00:06:58,610
+FreeBSD,
+
+213
+00:06:58,610 --> 00:07:02,290
+these kinds of systems.
+
+214
+00:07:02,290 --> 00:07:04,130
+For this type of system,
+
+215
+00:07:04,130 --> 00:07:05,930
+the main difference from the ones above is that
+
+216
+00:07:05,930 --> 00:07:08,350
+it adds one more level in between, called Supervisor Type.
+
+217
+00:07:08,350 --> 00:07:09,910
+This Supervisor Type,
+
+218
+00:07:09,910 --> 00:07:10,330
+in other words,
+
+219
+00:07:10,330 --> 00:07:13,570
+when it enters Supervisor Type,
+
+220
+00:07:13,570 --> 00:07:14,690
+the most crucial thing is
+
+221
+00:07:14,690 --> 00:07:16,610
+The most important difference is
+
+222
+00:07:16,610 --> 00:07:19,610
+that it introduces the virtual memory mechanism, that is, virtual addresses
+
+223
+00:07:19,610 --> 00:07:20,650
+so it can support the concept of processes
+
+224
+00:07:20,650 --> 00:07:23,830
+It can separate this virtual address
+
+225
+00:07:23,830 --> 00:07:26,430
+from the physical address, and above that
+
+226
+00:07:26,430 --> 00:07:29,130
+this mode and the mode above it
+
+227
+00:07:29,130 --> 00:07:30,270
+In Machine mode, it actually
+
+228
+00:07:30,270 --> 00:07:32,690
+accesses memory directly using physical addresses
+
+229
+00:07:32,690 --> 00:07:33,930
+including some modes here
+
+230
+00:07:33,930 --> 00:07:36,350
+they all use physical addresses for access
+
+231
+00:07:36,350 --> 00:07:38,790
+Now, this is what we call the classification of hypervisors
+
+232
+00:07:38,790 --> 00:07:39,730
+roughly like this
+
+233
+00:07:39,730 --> 00:07:44,070
+In this course
+
+234
+00:07:44,690 --> 00:07:48,670
+we actually focus more on the two levels above
+
+235
+00:07:48,670 --> 00:07:49,770
+In this course
+
+236
+00:07:49,770 --> 00:07:52,570
+since our time is limited
+
+237
+00:07:52,570 --> 00:07:54,990
+we won't get into concepts related to very complex advanced hypervisors
+
+238
+00:07:54,990 --> 00:07:56,270
+In this course of ours,
+
+239
+00:07:56,270 --> 00:07:58,510
+our time is actually limited,
+
+240
+00:07:58,510 --> 00:08:03,850
+so we won't get into the more complex advanced hypervisor concepts.
+
+241
+00:08:03,850 --> 00:08:07,490
+We actually still build on top of those two kinds.
+
+242
+00:08:07,490 --> 00:08:11,350
+So this one.
+
+243
+00:08:11,350 --> 00:08:17,070
+So let's take a look at what some typical RTOSs are.
+
+244
+00:08:17,070 --> 00:08:19,090
+This is just something for you to be aware of.
+
+245
+00:08:19,090 --> 00:08:21,850
+There are actually quite a lot of RTOSs out there.
+
+246
+00:08:21,850 --> 00:08:23,330
+If you search for them online,
+
+247
+00:08:23,330 --> 00:08:24,090
+you'll actually find quite a lot.
+
+248
+00:08:24,090 --> 00:08:25,010
+So I'll just
+
+249
+00:08:25,010 --> 00:08:26,770
+briefly introduce the common ones to you.
+
+250
+00:08:26,770 --> 00:08:28,530
+For example, one of the more famous ones
+
+251
+00:08:28,530 --> 00:08:30,350
+is called FreeRTOS.
+
+252
+00:08:30,350 --> 00:08:31,770
+I don't know if you've heard of it.
+
+253
+00:08:31,770 --> 00:08:35,270
+FreeRTOS is very popular.
+
+254
+00:08:35,270 --> 00:08:36,430
+It seems that nowadays
+
+255
+00:08:36,430 --> 00:08:38,030
+Amazon or whoever it is
+
+256
+00:08:38,030 --> 00:08:39,130
+uses it quite a lot too.
+
+257
+00:08:39,130 --> 00:08:41,770
+When they're developing some small devices,
+
+258
+00:08:41,770 --> 00:08:43,990
+they tend to prefer this kind of thing.
+
+259
+00:08:43,990 --> 00:08:48,790
+It was created back in 2003,
+
+260
+00:08:48,790 --> 00:08:51,410
+and it uses this kind of MIT license.
+
+261
+00:08:51,410 --> 00:08:53,130
+This license is also quite flexible,
+
+262
+00:08:53,130 --> 00:08:54,230
+and fairly open as well.
+
+263
+00:08:54,230 --> 00:08:57,490
+The design is also quite compact.
+
+264
+00:08:57,490 --> 00:09:00,430
+Its entire core code is only about 3 to 4 C files,
+
+265
+00:09:00,430 --> 00:09:02,650
+so it's very easy to read and understand
+
+266
+00:09:02,650 --> 00:09:04,610
+the general functionality it implements.
+
+267
+00:09:04,610 --> 00:09:06,050
+Maintainability is very strong,
+
+268
+00:09:06,050 --> 00:09:08,190
+since most of it is written in C,
+
+269
+00:09:08,190 --> 00:09:10,510
+so the readability is quite good.
+
+270
+00:09:10,510 --> 00:09:12,570
+But for an operating system,
+
+271
+00:09:12,570 --> 00:09:15,250
+there are still some parts that cannot do without assembly.
+
+272
+00:09:15,250 --> 00:09:17,350
+So assembly is also very important for us.
+
+273
+00:09:17,350 --> 00:09:20,510
+Now, it implements some
+
+274
+00:09:20,510 --> 00:09:23,250
+basic features of our operating system,
+
+275
+00:09:23,250 --> 00:09:24,550
+including, for example, multi-threading,
+
+276
+00:09:24,550 --> 00:09:26,470
+mutual exclusion, semaphores,
+
+277
+00:09:26,470 --> 00:09:27,710
+and these concepts
+
+278
+00:09:27,710 --> 00:09:30,550
+we will also mention later on.
+
+279
+00:09:30,550 --> 00:09:34,750
+Its support for architectures is also quite good,
+
+280
+00:09:34,750 --> 00:09:38,850
+for some of the popular CPUs we use.
+
+281
+00:09:38,850 --> 00:09:39,810
+They all support it.
+
+282
+00:09:39,810 --> 00:09:40,910
+For example, ARM,
+
+283
+00:09:40,910 --> 00:09:41,690
+x86 and such,
+
+284
+00:09:41,690 --> 00:09:43,470
+RISC-V is also supported.
+
+285
+00:09:43,470 --> 00:09:48,770
+And it supports quite a number of microprocessor processors.
+
+286
+00:09:48,770 --> 00:09:51,930
+Now, this RTOS is from abroad,
+
+287
+00:09:51,930 --> 00:09:52,570
+a fairly typical one.
+
+288
+00:09:52,570 --> 00:09:53,810
+Then, for the corresponding one from our domestic side,
+
+289
+00:09:53,810 --> 00:09:54,810
+let me introduce it to you as well.
+
+290
+00:09:54,810 --> 00:09:56,730
+Have you heard of
+
+291
+00:09:56,730 --> 00:09:59,010
+the operating system called RT-Thread?
+
+292
+00:09:59,010 --> 00:10:01,170
+It is also a real-time operating system,
+
+293
+00:10:01,170 --> 00:10:06,770
+basically corresponding quite well to the FreeRTOS we just mentioned.
+
+294
+00:10:06,770 --> 00:10:08,970
+Its application scenarios are also similar.
+
+295
+00:10:08,970 --> 00:10:10,910
+As for when it came into being,
+
+296
+00:10:10,910 --> 00:10:12,250
+it was slightly later than the previous one,
+
+297
+00:10:12,250 --> 00:10:13,890
+around 2006.
+
+298
+00:10:13,890 --> 00:10:15,050
+The license is Apache.
+
+299
+00:10:15,050 --> 00:10:18,110
+As for the specific features,
+
+300
+00:10:18,110 --> 00:10:18,810
+I have also listed them here.
+
+301
+00:10:18,810 --> 00:10:20,510
+This is actually copied from its official website.
+
+302
+00:10:20,510 --> 00:10:22,670
+I won't read it out here.
+
+303
+00:10:22,670 --> 00:10:23,210
+As you can see,
+
+304
+00:10:23,210 --> 00:10:25,370
+for this kind of typical RTOS,
+
+305
+00:10:25,370 --> 00:10:26,910
+they're basically all like this.
+
+306
+00:10:26,910 --> 00:10:30,730
+And as for RISC-V,
+
+307
+00:10:30,730 --> 00:10:31,990
+it also has a certain level of support.
+
+308
+00:10:31,990 --> 00:10:37,330
+So those are the two we covered earlier,
+
+309
+00:10:37,330 --> 00:10:38,890
+which are fairly typical.
+
+310
+00:10:38,890 --> 00:10:41,110
+Now this RTOS,
+
+311
+00:10:41,110 --> 00:10:43,690
+is actually the system we're going to develop ourselves today.
+
+312
+00:10:43,690 --> 00:10:44,810
+I just gave it a name,
+
+313
+00:10:44,810 --> 00:10:45,870
+so it's easier to refer to.
+
+314
+00:10:45,870 --> 00:10:49,170
+It's not some real external,
+
+315
+00:10:49,170 --> 00:10:51,490
+actual project out there.
+
+316
+00:10:51,490 --> 00:10:53,370
+Actually, it's just our—
+
+317
+00:10:53,370 --> 00:10:55,330
+did I write this link wrong?
+
+318
+00:10:55,330 --> 00:10:56,170
+I messed it up.
+
+319
+00:10:56,170 --> 00:10:59,050
+I'll go back and fix this link later.
+
+320
+00:10:59,050 --> 00:10:59,550
+Sorry about that.
+
+321
+00:10:59,550 --> 00:11:04,590
+This link seems to use rCore-Tutorial
+
+322
+00:11:04,590 --> 00:11:05,310
+That's not right.
+
+323
+00:11:05,310 --> 00:11:07,450
+Skip this one.
+
+324
+00:11:07,450 --> 00:11:10,230
+Actually, this thing...
+
+325
+00:11:10,230 --> 00:11:11,270
+It's actually our...
+
+326
+00:11:11,270 --> 00:11:13,770
+the little system we wrote ourselves.
+
+327
+00:11:13,770 --> 00:11:15,110
+Well, it...
+
+328
+00:11:15,110 --> 00:11:16,970
+is really entirely for...
+
+329
+00:11:16,970 --> 00:11:19,790
+our current teaching and course development.
+
+330
+00:11:19,790 --> 00:11:22,230
+It was born in 2021,
+
+331
+00:11:22,230 --> 00:11:22,670
+which is this year.
+
+332
+00:11:22,670 --> 00:11:24,570
+In fact, I only wrote it today.
+
+333
+00:11:24,570 --> 00:11:25,590
+It took me some time.
+
+334
+00:11:25,590 --> 00:11:27,090
+To teach you this course,
+
+335
+00:11:27,090 --> 00:11:29,170
+I just wrote it myself, simply.
+
+336
+00:11:29,170 --> 00:11:30,590
+As for the license,
+
+337
+00:11:30,590 --> 00:11:31,430
+we use BSD.
+
+338
+00:11:31,430 --> 00:11:33,290
+This license is pretty good too.
+
+339
+00:11:33,290 --> 00:11:34,530
+Basically, it means everyone can use it freely,
+
+340
+00:11:34,530 --> 00:11:35,730
+though of course it might not be of much use.
+
+341
+00:11:35,730 --> 00:11:41,950
+And so our code is quite small.
+
+342
+00:11:41,950 --> 00:11:43,410
+Actually, our lab has limited functionality,
+
+343
+00:11:43,410 --> 00:11:45,290
+because we are not
+
+344
+00:11:45,290 --> 00:11:46,170
+trying to build
+
+345
+00:11:46,170 --> 00:11:47,090
+actually trying to build
+
+346
+00:11:47,090 --> 00:11:48,390
+a truly practical system.
+
+347
+00:11:48,390 --> 00:11:49,690
+It is entirely for the purpose of
+
+348
+00:11:49,690 --> 00:11:52,170
+learning some RISC-V stuff,
+
+349
+00:11:52,170 --> 00:11:53,090
+and we also
+
+350
+00:11:53,090 --> 00:11:54,390
+learn how to develop
+
+351
+00:11:54,390 --> 00:11:56,070
+a small system of our own from scratch.
+
+352
+00:11:56,070 --> 00:12:00,890
+So as for the code part,
+
+353
+00:12:00,890 --> 00:12:02,310
+we use C and assembly,
+
+354
+00:12:02,310 --> 00:12:04,410
+and then,
+
+355
+00:12:04,410 --> 00:12:05,230
+below,
+
+356
+00:12:05,230 --> 00:12:05,790
+what follows mainly
+
+357
+00:12:05,790 --> 00:12:07,210
+involves content that we will
+
+358
+00:12:07,210 --> 00:12:08,250
+cover in the later parts of this course.
+
+359
+00:12:08,250 --> 00:12:09,210
+The first part,
+
+360
+00:12:09,210 --> 00:12:09,730
+we simply
+
+361
+00:12:09,730 --> 00:12:10,910
+demonstrated some
+
+362
+00:12:10,910 --> 00:12:12,550
+basic memory allocation,
+
+363
+00:12:12,550 --> 00:12:14,430
+how to implement some memory allocation.
+
+364
+00:12:14,430 --> 00:12:15,310
+Now here,
+
+365
+00:12:15,310 --> 00:12:16,530
+since we are not dealing with
+
+366
+00:12:16,530 --> 00:12:17,530
+virtual memory management,
+
+367
+00:12:17,530 --> 00:12:17,990
+so
+
+368
+00:12:17,990 --> 00:12:18,590
+our approach,
+
+369
+00:12:18,590 --> 00:12:20,510
+compared to, say,
+
+370
+00:12:20,510 --> 00:12:22,610
+Linux,
+
+371
+00:12:22,610 --> 00:12:23,730
+is quite a bit simpler.
+
+372
+00:12:23,730 --> 00:12:24,530
+This is also to
+
+373
+00:12:24,530 --> 00:12:25,890
+reduce the difficulty of learning for everyone.
+
+374
+00:12:25,890 --> 00:12:27,090
+Time
+
+375
+00:12:27,090 --> 00:12:28,510
+is still limited here,
+
+376
+00:12:28,510 --> 00:12:29,430
+and we can't possibly
+
+377
+00:12:29,430 --> 00:12:31,390
+spend too much
+
+378
+00:12:31,390 --> 00:12:32,390
+effort discussing
+
+379
+00:12:32,390 --> 00:12:32,950
+because memory —
+
+380
+00:12:32,950 --> 00:12:34,250
+the whole memory allocation area
+
+381
+00:12:34,250 --> 00:12:35,550
+it's a very complicated piece of things.
+
+382
+00:12:35,550 --> 00:12:37,650
+Once virtual memory comes into play,
+
+383
+00:12:37,650 --> 00:12:39,290
+a lot of things become very complicated.
+
+384
+00:12:39,290 --> 00:12:42,470
+So for now, we've cut this part out.
+
+385
+00:12:42,470 --> 00:12:43,930
+Then if there's a chance later on,
+
+386
+00:12:43,930 --> 00:12:46,190
+we can come back and introduce it to you.
+
+387
+00:12:46,190 --> 00:12:48,370
+Now, the second thing is,
+
+388
+00:12:48,370 --> 00:12:50,650
+as far as a so-called hyper system goes,
+
+389
+00:12:50,650 --> 00:12:52,390
+a very core function
+
+390
+00:12:52,390 --> 00:12:54,230
+is to implement the concept of multitasking,
+
+391
+00:12:54,230 --> 00:12:54,930
+that is, multithreading.
+
+392
+00:12:54,930 --> 00:12:57,730
+And we do support this as well.
+
+393
+00:12:57,730 --> 00:12:59,770
+Moreover, we've also implemented
+
+394
+00:12:59,770 --> 00:13:01,650
+the concept of preemptibility.
+
+395
+00:13:01,650 --> 00:13:03,290
+You can all go check it out;
+
+396
+00:13:03,290 --> 00:13:04,590
+we'll introduce it to you later on.
+
+397
+00:13:04,590 --> 00:13:07,030
+Now, once we have multithreading,
+
+398
+00:13:07,030 --> 00:13:08,930
+that brings in the concept of task mutual exclusion.
+
+399
+00:13:08,930 --> 00:13:09,610
+So on that note,
+
+400
+00:13:09,610 --> 00:13:10,570
+we'll also cover that for you.
+
+401
+00:13:10,570 --> 00:13:11,830
+And then, another thing is that
+
+402
+00:13:11,830 --> 00:13:13,470
+in our operating system,
+
+403
+00:13:13,470 --> 00:13:14,450
+an essential
+
+404
+00:13:14,450 --> 00:13:16,390
+component is the timer.
+
+405
+00:13:16,390 --> 00:13:20,170
+Now, we have hardware timers,
+
+406
+00:13:20,170 --> 00:13:21,210
+and we also have software timers.
+
+407
+00:13:21,210 --> 00:13:23,690
+We use both of these here.
+
+408
+00:13:23,690 --> 00:13:24,510
+So here,
+
+409
+00:13:24,510 --> 00:13:26,730
+we also gave you all a
+
+410
+00:13:26,730 --> 00:13:29,070
+simple demonstration.
+
+411
+00:13:29,070 --> 00:13:30,790
+As we just said,
+
+412
+00:13:30,790 --> 00:13:31,930
+this M plus U is the kind of
+
+413
+00:13:31,930 --> 00:13:33,030
+mode with a certain degree of security,
+
+414
+00:13:33,030 --> 00:13:37,350
+that is, the M plus U mode offers some protection.
+
+415
+00:13:37,350 --> 00:13:40,550
+In other words, even though we haven't implemented virtual memory,
+
+416
+00:13:40,550 --> 00:13:43,770
+we can still achieve some basic protection.
+
+417
+00:13:43,770 --> 00:13:48,950
+That is, by splitting things into layers internally and using system calls to achieve it.
+
+418
+00:13:48,950 --> 00:13:54,150
+And then, one more thing to mention is that since we're using RISC-V,
+
+419
+00:13:54,150 --> 00:13:57,650
+what we've implemented so far is RV32.
+
+420
+00:13:57,650 --> 00:13:58,610
+Everyone understands this, right?
+
+421
+00:13:58,610 --> 00:14:02,210
+That is to say, we're using 32-bit instructions
+
+422
+00:14:02,210 --> 00:14:04,290
+as the basis for our explanation.
+
+423
+00:14:04,290 --> 00:14:05,690
+As for 32-bit,
+
+424
+00:14:05,690 --> 00:14:07,010
+in actual practice,
+
+425
+00:14:07,010 --> 00:14:07,630
+most things
+
+426
+00:14:07,630 --> 00:14:09,750
+have already moved on to 64-bit.
+
+427
+00:14:09,750 --> 00:14:10,130
+So,
+
+428
+00:14:10,130 --> 00:14:12,630
+of course, some small CPUs still use 32-bit.
+
+429
+00:14:12,630 --> 00:14:13,530
+Now, for teaching purposes,
+
+430
+00:14:13,530 --> 00:14:14,610
+we chose 32-bit mainly
+
+431
+00:14:14,610 --> 00:14:17,010
+to make it easier for you to read,
+
+432
+00:14:17,010 --> 00:14:19,110
+because, as you know, when we do internal debugging,
+
+433
+00:14:19,110 --> 00:14:21,930
+we look at the memory inside,
+
+434
+00:14:21,930 --> 00:14:22,810
+the instructions and so on.
+
+435
+00:14:22,810 --> 00:14:26,730
+64-bit is always a bit harder to read than 32-bit,
+
+436
+00:14:26,730 --> 00:14:27,810
+because it's so large, right?
+
+437
+00:14:27,810 --> 00:14:28,670
+32-bit is more compact.
+
+438
+00:14:28,670 --> 00:14:31,310
+So that was one of our goals in choosing it.
+
+439
+00:14:31,310 --> 00:14:33,710
+And for our development,
+
+440
+00:14:33,710 --> 00:14:35,910
+since it's also based on a
+
+441
+00:14:35,910 --> 00:14:38,430
+It would have to be based on real hardware anyway
+
+442
+00:14:38,430 --> 00:14:40,090
+But to make debugging easier for everyone,
+
+443
+00:14:40,090 --> 00:14:42,630
+we're actually using an emulator to do this.
+
+444
+00:14:42,630 --> 00:14:43,510
+So the way we do it,
+
+445
+00:14:43,510 --> 00:14:45,890
+the hardware platform we're targeting,
+
+446
+00:14:45,890 --> 00:14:46,850
+is actually an emulator.
+
+447
+00:14:46,850 --> 00:14:49,570
+But you can imagine that this code,
+
+448
+00:14:49,570 --> 00:14:51,190
+with just a slight modification,
+
+449
+00:14:51,190 --> 00:14:53,430
+should have no problem running on real hardware either.
+
+450
+00:14:53,430 --> 00:14:56,830
+If you have some money,
+
+451
+00:14:56,830 --> 00:14:58,830
+or if time permits,
+
+452
+00:14:58,830 --> 00:14:59,670
+you can also go and
+
+453
+00:14:59,670 --> 00:15:01,230
+now that the RISC-V
+
+454
+00:15:01,230 --> 00:15:02,570
+chips are out,
+
+455
+00:15:02,570 --> 00:15:04,310
+and there are some small boards available,
+
+456
+00:15:04,310 --> 00:15:05,650
+you can go buy one.
+
+457
+00:15:05,650 --> 00:15:06,750
+If, that is to say,
+
+458
+00:15:06,750 --> 00:15:08,150
+you have the means,
+
+459
+00:15:08,150 --> 00:15:09,330
+you can also give it a try.
+
+460
+00:15:09,330 --> 00:15:12,150
+Alright, so about this
+
+461
+00:15:12,150 --> 00:15:13,490
+So for this project,
+
+462
+00:15:13,490 --> 00:15:14,790
+that's actually all we'll cover in our course introduction.
+
+463
+00:15:14,790 --> 00:15:15,630
+I'll stop here for today.
+
+464
+00:15:15,630 --> 00:15:21,350
+Let's take a break.
+
+465
+00:15:21,350 --> 00:15:22,210
+Then next,
+
+466
+00:15:22,210 --> 00:15:23,850
+in the final lecture,
+
+467
+00:15:23,850 --> 00:15:25,690
+we'll move on to our
+
+468
+00:15:25,690 --> 00:15:27,930
+combined part of the course,
+
+469
+00:15:27,930 --> 00:15:28,330
+alright.
